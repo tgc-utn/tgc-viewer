@@ -1,0 +1,365 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0A4E6948-AB74-48A5-99E1-6BD1C3949006}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Examples</RootNamespace>
+    <AssemblyName>Examples</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>.\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ionic.Zip, Version=1.9.1.2, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\WINDOWS\Microsoft.NET\Managed DirectX\v9.05.132\Microsoft.DirectX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\WINDOWS\Microsoft.NET\Managed DirectX\v9.05.132\Microsoft.DirectX.Direct3D.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2904.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\WINDOWS\Microsoft.NET\Managed DirectX\v9.05.132\Microsoft.DirectX.Direct3DX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.DirectDraw, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\WINDOWS\Microsoft.NET\Managed DirectX\v9.05.132\Microsoft.DirectX.DirectDraw.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\WINDOWS\Microsoft.NET\Managed DirectX\v9.05.132\Microsoft.DirectX.DirectInput.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.DirectPlay, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="Microsoft.DirectX.DirectSound, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\WINDOWS\Microsoft.NET\Managed DirectX\v9.05.132\Microsoft.DirectX.DirectSound.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlphaBlending\AlphaBlendingManual.cs" />
+    <Compile Include="AlphaBlending\AlphaBlendingFramework.cs" />
+    <Compile Include="AlphaBlending\EjemploModeloAlpha.cs" />
+    <Compile Include="Collision\EjemploBoundingBoxTests.cs" />
+    <Compile Include="Collision\ElipsoidCollision.cs" />
+    <Compile Include="Collision\SeleccionMultiplePicking.cs" />
+    <Compile Include="Collision\MovimientoPorPicking.cs" />
+    <Compile Include="Collision\SphereTriangleCollision\BoundingBoxCollider.cs" />
+    <Compile Include="Collision\SphereTriangleCollision\Collider.cs" />
+    <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
+    <Compile Include="Collision\SphereCollision\SphereCollision.cs" />
+    <Compile Include="Collision\DetectarColisionCamara.cs" />
+    <Compile Include="Collision\EjemploPicking.cs" />
+    <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollision.cs" />
+    <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollisionManager.cs" />
+    <Compile Include="Collision\SphereTriangleCollision\TriangleMeshCollider.cs" />
+    <Compile Include="GeometryBasics\CrearEditableLand.cs" />
+    <Compile Include="Lights\EjemploSkeletalPointLight.cs" />
+    <Compile Include="Lights\EjemploIntegrador.cs" />
+    <Compile Include="Lights\EjemploSimpleEnvironmentMap.cs" />
+    <Compile Include="Lights\EjemploEnvironmentMap.cs" />
+    <Compile Include="Lights\EjemploBumpMapping.cs" />
+    <Compile Include="Lights\EjemploSpotLight.cs" />
+    <Compile Include="Lights\EjemploMultipleLights.cs" />
+    <Compile Include="Lights\EjemploMultiDiffuseLights.cs" />
+    <Compile Include="Lights\EjemploPointLight.cs" />
+    <Compile Include="Lights\TgcMeshBumpMapping.cs" />
+    <Compile Include="Otros\EjemploDefault.cs" />
+    <Compile Include="Fog\EfectoNiebla.cs" />
+    <Compile Include="GeometryBasics\Caja.cs" />
+    <Compile Include="GeometryBasics\CajaDebug.cs" />
+    <Compile Include="GeometryBasics\CrearQuad.cs" />
+    <Compile Include="GeometryBasics\CrearFlecha.cs" />
+    <Compile Include="GeometryBasics\CrearLineaConGrosor.cs" />
+    <Compile Include="GeometryBasics\EjemploPlaneWall.cs" />
+    <Compile Include="MeshCreator\Gizmos\ScaleGizmo.cs" />
+    <Compile Include="MeshCreator\Gizmos\EditorGizmo.cs" />
+    <Compile Include="MeshCreator\Gizmos\TranslateGizmo.cs" />
+    <Compile Include="MeshCreator\Grid.cs" />
+    <Compile Include="MeshCreator\MeshCreatorUtils.cs" />
+    <Compile Include="MeshCreator\Primitives\BoxPrimitive.cs" />
+    <Compile Include="MeshCreator\Primitives\PlaneYZPrimitive.cs" />
+    <Compile Include="MeshCreator\Primitives\PlaneXYPrimitive.cs" />
+    <Compile Include="MeshCreator\Primitives\EditorPrimitive.cs" />
+    <Compile Include="MeshCreator\MeshCreatorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MeshCreator\MeshCreatorControl.Designer.cs">
+      <DependentUpon>MeshCreatorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MeshCreator\MeshCreatorModifier.cs" />
+    <Compile Include="MeshCreator\Primitives\MeshPrimitive.cs" />
+    <Compile Include="MeshCreator\Primitives\PlaneXZPrimitive.cs" />
+    <Compile Include="MeshCreator\SelectionRectangle.cs" />
+    <Compile Include="MeshCreator\TgcMeshCreator.cs" />
+    <Compile Include="MeshCreator\MeshCreatorCamera.cs" />
+    <Compile Include="Multiplayer\VehiculosMultiplayer.cs" />
+    <Compile Include="Multiplayer\EjemploNetworkingModifier.cs" />
+    <Compile Include="Multiplayer\EjemploServer.cs" />
+    <Compile Include="Multiplayer\EjemploClient.cs" />
+    <Compile Include="Optimizacion\GrillaRegular\EjemploGrillaRegular.cs" />
+    <Compile Include="Optimizacion\GrillaRegular\GrillaRegular.cs" />
+    <Compile Include="Optimizacion\GrillaRegular\GrillaRegularNode.cs" />
+    <Compile Include="Optimizacion\KdtTree\EjemploKdTree.cs" />
+    <Compile Include="Optimizacion\KdtTree\KdTree.cs" />
+    <Compile Include="Optimizacion\KdtTree\KdTreeBuilder.cs" />
+    <Compile Include="Optimizacion\KdtTree\KdTreeNode.cs" />
+    <Compile Include="Optimizacion\Octree\EjemploOctree.cs" />
+    <Compile Include="Optimizacion\Octree\OctreeBuilder.cs" />
+    <Compile Include="Optimizacion\Octree\OctreeNode.cs" />
+    <Compile Include="Optimizacion\Octree\Octree.cs" />
+    <Compile Include="Optimizacion\Quadtree\EjemploQuadtree.cs" />
+    <Compile Include="Optimizacion\Quadtree\Quadtree.cs" />
+    <Compile Include="Optimizacion\Quadtree\QuadtreeBuilder.cs" />
+    <Compile Include="Optimizacion\Quadtree\QuadtreeNode.cs" />
+    <Compile Include="Otros\EjemploBatchPrimitivesDx.cs" />
+    <Compile Include="Otros\EjemploBatchPrimitives.cs" />
+    <Compile Include="GeometryBasics\CrearSkyBox.cs" />
+    <Compile Include="Otros\EjemploDisposeMesh.cs" />
+    <Compile Include="Otros\EjemploPanView.cs" />
+    <Compile Include="Particles\EmisorDeParticulas.cs" />
+    <Compile Include="PortalRendering\PortalRenderingFramework.cs" />
+    <Compile Include="PostProcess\EfectoBlur.cs" />
+    <Compile Include="PostProcess\EfectoOndas.cs" />
+    <Compile Include="PostProcess\EfectoOscurecer.cs" />
+    <Compile Include="PostProcess\EfectoAlarma.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Quake3Loader\BspCollisionManager.cs" />
+    <Compile Include="Quake3Loader\BspLoader.cs" />
+    <Compile Include="Quake3Loader\BspMap.cs" />
+    <Compile Include="Quake3Loader\BspMapData.cs" />
+    <Compile Include="Quake3Loader\BspStructs.cs" />
+    <Compile Include="Quake3Loader\EjemploEmpaquetarQ3Level.cs" />
+    <Compile Include="Quake3Loader\EjemploLoadQ3Level.cs" />
+    <Compile Include="Quake3Loader\Q3FpsCamera.cs" />
+    <Compile Include="Quake3Loader\Q3ShaderParser.cs" />
+    <Compile Include="RoomsEditor\RoomsEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RoomsEditor\RoomsEditorControl.Designer.cs">
+      <DependentUpon>RoomsEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoomsEditor\RoomsEditorHelpWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RoomsEditor\RoomsEditorHelpWindow.Designer.cs">
+      <DependentUpon>RoomsEditorHelpWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoomsEditor\RoomsEditorMapView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RoomsEditor\RoomsEditorMapView.Designer.cs">
+      <DependentUpon>RoomsEditorMapView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoomsEditor\RoomsEditorModifier.cs" />
+    <Compile Include="RoomsEditor\RoomsEditorRoom.cs" />
+    <Compile Include="RoomsEditor\RoomsEditorTexturesEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RoomsEditor\RoomsEditorTexturesEdit.Designer.cs">
+      <DependentUpon>RoomsEditorTexturesEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoomsEditor\RoomsEditorWall.cs" />
+    <Compile Include="RoomsEditor\TgcRoomsEditor.cs" />
+    <Compile Include="SceneEditor\SceneEditorHelpWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SceneEditor\SceneEditorHelpWindow.Designer.cs">
+      <DependentUpon>SceneEditorHelpWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SceneEditor\SceneEditorMeshObject.cs" />
+    <Compile Include="SceneEditor\SceneEditorTranslateGizmo.cs" />
+    <Compile Include="SceneLoader\EjemploCustomMesh.cs" />
+    <Compile Include="SceneLoader\EjemploInstanciasPalmeras.cs" />
+    <Compile Include="SceneLoader\EjemploMeshInstance.cs" />
+    <Compile Include="SceneLoader\EjemploExportarMesh.cs" />
+    <Compile Include="Shaders\EjemploLinternaPhong.cs" />
+    <Compile Include="Shaders\EjemploToonShader.cs" />
+    <Compile Include="Shaders\EjemploPhongShading.cs" />
+    <Compile Include="Shaders\EjemploShaderTgcMesh.cs" />
+    <Compile Include="Shaders\EjemploShader.cs" />
+    <Compile Include="Shaders\TgcMeshShader.cs" />
+    <Compile Include="Shaders\WorkshopShaders\BasicShader.cs" />
+    <Compile Include="Shaders\WorkshopShaders\DemoShaders.cs" />
+    <Compile Include="Shaders\WorkshopShaders\EnvMap.cs" />
+    <Compile Include="Shaders\WorkshopShaders\MyMesh.cs" />
+    <Compile Include="Shaders\WorkshopShaders\MySimpleTerrain.cs" />
+    <Compile Include="Shaders\WorkshopShaders\PhongShading.cs" />
+    <Compile Include="Shaders\WorkshopShaders\ShadowMap.cs" />
+    <Compile Include="Shaders\WorkshopShaders\ToonShading.cs" />
+    <Compile Include="SkeletalAnimation\EjemploCustomSkeletalMesh.cs" />
+    <Compile Include="SkeletalAnimation\EjemploBasicHuman.cs" />
+    <Compile Include="SkeletalAnimation\EjemploMeshInstance.cs" />
+    <Compile Include="SkeletalAnimation\EjemploSkeletalLoader.cs" />
+    <Compile Include="Engine2D\Asteroide.cs" />
+    <Compile Include="Collision\EjemploColisionesThirdPerson.cs" />
+    <Compile Include="Collision\EjemploColisiones.cs" />
+    <Compile Include="Collision\EjemploBoundingBox.cs" />
+    <Compile Include="EjemploEnBlanco.cs" />
+    <Compile Include="Engine2D\GameManager.cs" />
+    <Compile Include="DirectXMesh\Lighting.cs" />
+    <Compile Include="Outdoor\EjemploSimpleTerrain.cs" />
+    <Compile Include="SceneLoader\EjemploMeshLoader.cs" />
+    <Compile Include="SceneLoader\Escenario4toPiso.cs" />
+    <Compile Include="DirectXMesh\EjemploTeapotConCamara.cs" />
+    <Compile Include="Engine2D\Bitmap.cs" />
+    <Compile Include="Engine2D\Drawer.cs" />
+    <Compile Include="Engine2D\Ejemplo2D.cs" />
+    <Compile Include="Engine2D\GameObject.cs" />
+    <Compile Include="Engine2D\Misil.cs" />
+    <Compile Include="Engine2D\Spaceship.cs" />
+    <Compile Include="Engine2D\Sprite.cs" />
+    <Compile Include="GeometryBasics\TrianguloBasico.cs" />
+    <Compile Include="GeometryBasics\TrianguloVertexBuffer.cs" />
+    <Compile Include="GeometryBasics\TrianguloEditable.cs" />
+    <Compile Include="DirectXMesh\EjemploCrearTeapot.cs" />
+    <Compile Include="KeyFrameAnimation\EjemploKeyFrameLoader.cs" />
+    <Compile Include="Outdoor\CrearHeightmapManual.cs" />
+    <Compile Include="DirectXMesh\DirectXMeshViewer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SceneEditor\TgcSceneEditor.cs" />
+    <Compile Include="SceneEditor\SceneEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SceneEditor\SceneEditorControl.Designer.cs">
+      <DependentUpon>SceneEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SceneEditor\SceneEditorModifier.cs" />
+    <Compile Include="Sound\PlaySound3D.cs" />
+    <Compile Include="Sound\PlayStaticSound.cs" />
+    <Compile Include="Sound\PlayMp3.cs" />
+    <Compile Include="Sprites2D\EjemploAnimatedSprite.cs" />
+    <Compile Include="Sprites2D\EjemploSprite2D.cs" />
+    <Compile Include="TextureMapping\EjemploTextureFiltering.cs" />
+    <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
+    <Compile Include="Transformations\EjemploQuaternions.cs" />
+    <Compile Include="Transformations\Transformations.cs" />
+    <Compile Include="UserInterface\EjemploTexto2d.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TgcViewer\TgcViewer.csproj">
+      <Project>{990E714F-7FF2-4A87-86B1-E5FC8D4C2F4C}</Project>
+      <Name>TgcViewer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MeshCreator\MeshCreatorControl.resx">
+      <DependentUpon>MeshCreatorControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoomsEditor\RoomsEditorControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RoomsEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoomsEditor\RoomsEditorHelpWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RoomsEditorHelpWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoomsEditor\RoomsEditorMapView.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RoomsEditorMapView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoomsEditor\RoomsEditorTexturesEdit.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>RoomsEditorTexturesEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SceneEditor\SceneEditorControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SceneEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SceneEditor\SceneEditorHelpWindow.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SceneEditorHelpWindow.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\WorkshopShaders\Shaders\BasicShader.fx" />
+    <None Include="Shaders\WorkshopShaders\Shaders\Demo.fx" />
+    <None Include="Shaders\WorkshopShaders\Shaders\EnvMap.fx" />
+    <None Include="Shaders\WorkshopShaders\Shaders\PhongShading.fx" />
+    <None Include="Shaders\WorkshopShaders\Shaders\ShadowMap.fx" />
+    <None Include="Shaders\WorkshopShaders\Shaders\ToonShading.fx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
