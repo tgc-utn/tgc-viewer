@@ -1,0 +1,21 @@
+<tgcKeyFrameMesh>
+	<texturesExport enabled='true' dir='Textures'/>
+	<materials count='1'>
+		<m name='01 - Default' type='Standardmaterial'>
+			<ambient>[150.0,150.0,150.0,255.0]</ambient>
+			<diffuse>[150.0,150.0,150.0,255.0]</diffuse>
+			<specular>[229.5,229.5,229.5,255.0]</specular>
+			<opacity>100.0</opacity>
+			<bitmap uvTiling='[1.0,1.0]' uvOffset='[0.0,0.0]'>cartelera2.jpg</bitmap>
+		</m>
+	</materials>
+	<mesh name='Box01' pos='[-71.7401,1.83175,0]' matId='0' color='[214.0,228.0,153.0]' visibility='1.0'>
+		<coordinatesIdx count='36'>0 2 3 3 1 0 4 5 7 7 6 4 0 1 5 5 4 0 1 3 7 7 5 1 3 2 6 6 7 3 2 0 4 4 6 2 </coordinatesIdx>
+		<textCoordsIdx count='36'>9 11 10 10 8 9 8 9 11 11 10 8 4 5 7 7 6 4 0 1 3 3 2 0 4 5 7 7 6 4 0 1 3 3 2 0 </textCoordsIdx>
+		<colorsIdx count='36'>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </colorsIdx>
+		<matIds count='1'>0</matIds>
+		<vertices count='24'>-88.7748 0.0 -17.4271 -54.7054 0.0 -17.4271 -88.7748 0.0 21.0906 -54.7054 0.0 21.0906 -88.7748 31.398 -17.4271 -54.7054 31.398 -17.4271 -88.7748 31.398 21.0906 -54.7054 31.398 21.0906 </vertices>
+		<texCoords count='24'>0.0 0.0 1.0 0.0 0.0 -1.0 1.0 -1.0 0.0 0.0 1.0 0.0 0.0 -1.0 1.0 -1.0 0.0 0.0 1.0 0.0 0.0 -1.0 1.0 -1.0 </texCoords>
+		<colors count='3'>255 255 255 </colors>
+	</mesh>
+</tgcKeyFrameMesh>

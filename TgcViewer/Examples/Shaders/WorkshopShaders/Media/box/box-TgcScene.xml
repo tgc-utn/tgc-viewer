@@ -1,0 +1,83 @@
+<tgcScene>
+	<name>Scene01</name>
+	<texturesExport enabled='true' dir='Textures'/>
+	<lightmapExport enabled='false' dir='LightMaps'/>
+	<sceneBoundingBox min='[-2.65869,0,-6.93572]' max='[38.2961,40.6679,20.4509]'/>
+	<materials count='1'>
+		<m name='08 - Default' type='Standardmaterial'>
+			<ambient>[150.0,150.0,150.0,255.0]</ambient>
+			<diffuse>[150.0,150.0,150.0,255.0]</diffuse>
+			<specular>[229.5,229.5,229.5,255.0]</specular>
+			<opacity>100.0</opacity>
+			<bitmap uvTiling='[1.0,1.0]' uvOffset='[0.0,0.0]'>red.bmp</bitmap>
+		</m>
+	</materials>
+	<meshes count='6' >
+		<mesh name='cara_up' layer='0' type='Original' matId='0' color='[198.0,224.0,87.0]' visibility='1.0' lightmap=''>
+			<boundingBox min='[-2.65869,40.6679,-6.93572]' max='[38.2961,40.6679,20.4509]'/>
+			<coordinatesIdx count='6'>0 1 3 3 2 0 </coordinatesIdx>
+			<textCoordsIdx count='6'>0 1 3 3 2 0 </textCoordsIdx>
+			<colorsIdx count='6'>0 0 0 0 0 0 </colorsIdx>
+			<matIds count='1'>0</matIds>
+			<vertices count='12'>-2.65869 40.6679 -6.93572 38.2961 40.6679 -6.93572 -2.65869 40.6679 20.4509 38.2961 40.6679 20.4509 </vertices>
+			<normals count='12'>0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 </normals>
+			<texCoords count='8'>0.0 0.0 1.0 0.0 0.0 -1.0 1.0 -1.0 </texCoords>
+			<colors count='3'>255 255 255 </colors>
+		</mesh>
+		<mesh name='cara_right' layer='0' type='Original' matId='0' color='[198.0,224.0,87.0]' visibility='1.0' lightmap=''>
+			<boundingBox min='[-2.65869,0,-6.93572]' max='[38.2961,40.6679,-6.93572]'/>
+			<coordinatesIdx count='6'>1 2 3 3 0 1 </coordinatesIdx>
+			<textCoordsIdx count='6'>1 2 3 3 0 1 </textCoordsIdx>
+			<colorsIdx count='6'>0 0 0 0 0 0 </colorsIdx>
+			<matIds count='1'>0</matIds>
+			<vertices count='12'>-2.65869 40.6679 -6.93572 -2.65869 0.0 -6.93572 38.2961 0.0 -6.93572 38.2961 40.6679 -6.93572 </vertices>
+			<normals count='12'>0.0 0.0 -1.0 0.0 0.0 -1.0 0.0 0.0 -1.0 0.0 0.0 -1.0 </normals>
+			<texCoords count='8'>0.0 -1.0 0.0 0.0 1.0 0.0 1.0 -1.0 </texCoords>
+			<colors count='3'>255 255 255 </colors>
+		</mesh>
+		<mesh name='cara_right01' layer='0' type='Original' matId='0' color='[198.0,224.0,87.0]' visibility='1.0' lightmap=''>
+			<boundingBox min='[-2.65869,0,20.4509]' max='[38.2961,40.6679,20.4509]'/>
+			<coordinatesIdx count='6'>2 1 0 0 3 2 </coordinatesIdx>
+			<textCoordsIdx count='6'>2 1 0 0 3 2 </textCoordsIdx>
+			<colorsIdx count='6'>0 0 0 0 0 0 </colorsIdx>
+			<matIds count='1'>0</matIds>
+			<vertices count='12'>-2.65869 40.6679 20.4509 -2.65869 0.0 20.4509 38.2961 0.0 20.4509 38.2961 40.6679 20.4509 </vertices>
+			<normals count='12'>0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 </normals>
+			<texCoords count='8'>1.0 -1.0 1.0 0.0 0.0 0.0 0.0 -1.0 </texCoords>
+			<colors count='3'>255 255 255 </colors>
+		</mesh>
+		<mesh name='cara_atras' layer='0' type='Original' matId='0' color='[198.0,224.0,87.0]' visibility='1.0' lightmap=''>
+			<boundingBox min='[38.2961,0,-6.93572]' max='[38.2961,40.6679,20.4509]'/>
+			<coordinatesIdx count='6'>2 3 1 1 0 2 </coordinatesIdx>
+			<textCoordsIdx count='6'>2 3 1 1 0 2 </textCoordsIdx>
+			<colorsIdx count='6'>0 0 0 0 0 0 </colorsIdx>
+			<matIds count='1'>0</matIds>
+			<vertices count='12'>38.2961 40.6679 -6.93572 38.2961 40.6679 20.4509 38.2961 0.0 -6.93572 38.2961 0.0 20.4509 </vertices>
+			<normals count='12'>1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 </normals>
+			<texCoords count='8'>0.0 -1.0 1.0 -1.0 0.0 0.0 1.0 0.0 </texCoords>
+			<colors count='3'>255 255 255 </colors>
+		</mesh>
+		<mesh name='piso' layer='0' type='Original' matId='0' color='[198.0,224.0,87.0]' visibility='1.0' lightmap=''>
+			<boundingBox min='[-2.65869,0,-6.93572]' max='[38.2961,0,20.4509]'/>
+			<coordinatesIdx count='6'>0 2 3 3 1 0 </coordinatesIdx>
+			<textCoordsIdx count='6'>1 3 2 2 0 1 </textCoordsIdx>
+			<colorsIdx count='6'>0 0 0 0 0 0 </colorsIdx>
+			<matIds count='1'>0</matIds>
+			<vertices count='12'>-2.65869 0.0 -6.93572 38.2961 0.0 -6.93572 -2.65869 0.0 20.4509 38.2961 0.0 20.4509 </vertices>
+			<normals count='12'>0.0 -1.0 0.0 0.0 -1.0 0.0 0.0 -1.0 0.0 0.0 -1.0 0.0 </normals>
+			<texCoords count='8'>0.0 0.0 1.0 0.0 0.0 -1.0 1.0 -1.0 </texCoords>
+			<colors count='3'>255 255 255 </colors>
+		</mesh>
+		<mesh name='cara1' layer='0' type='Original' matId='0' color='[198.0,224.0,87.0]' visibility='1.0' lightmap=''>
+			<boundingBox min='[-2.65869,0,-6.93572]' max='[-2.65869,40.6679,20.4509]'/>
+			<coordinatesIdx count='6'>1 0 2 2 3 1 </coordinatesIdx>
+			<textCoordsIdx count='6'>1 0 2 2 3 1 </textCoordsIdx>
+			<colorsIdx count='6'>0 0 0 0 0 0 </colorsIdx>
+			<matIds count='1'>0</matIds>
+			<vertices count='12'>-2.65869 0.0 -6.93572 -2.65869 0.0 20.4509 -2.65869 40.6679 -6.93572 -2.65869 40.6679 20.4509 </vertices>
+			<normals count='12'>-1.0 0.0 0.0 -1.0 0.0 0.0 -1.0 0.0 0.0 -1.0 0.0 0.0 </normals>
+			<texCoords count='8'>1.0 0.0 0.0 0.0 1.0 -1.0 0.0 -1.0 </texCoords>
+			<colors count='3'>255 255 255 </colors>
+		</mesh>
+	</meshes>
+</tgcScene>
