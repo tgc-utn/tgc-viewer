@@ -214,7 +214,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 dirtyValues = false;
             }
 
-            GuiController.Instance.Shaders.setShaderMatrix(this.effect, Matrix.Identity);
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.effect);
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = this.technique;
 

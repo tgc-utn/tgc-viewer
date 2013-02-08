@@ -249,6 +249,23 @@ namespace TgcViewer.Utils.Shaders
             effect.SetValue("matInverseTransposeWorld", Matrix.TransposeMatrix(Matrix.Invert(world)));
         }
 
+        /// <summary>
+        /// Cargar todas la matrices generales que necesita el shader, tomando
+        /// como primicia que la matriz de world es la identidad.
+        /// Simplica los calculos respecto a setShaderMatrix()
+        /// </summary>
+        public void setShaderMatrixIdentity(Effect effect)
+        {
+            Device device = GuiController.Instance.D3dDevice;
+
+            Matrix matWorldView = device.Transform.View;
+            Matrix matWorldViewProj = matWorldView * device.Transform.Projection;
+            effect.SetValue("matWorld", Matrix.Identity);
+            effect.SetValue("matWorldView", matWorldView);
+            effect.SetValue("matWorldViewProj", matWorldViewProj);
+            effect.SetValue("matInverseTransposeWorld", Matrix.Identity);
+        }
+
 
         /// <summary>
         /// FVF para formato de vertice PositionColoredTextured

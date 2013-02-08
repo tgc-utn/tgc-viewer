@@ -388,7 +388,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 this.technique = TgcShaders.T_POSITION_COLORED_ALPHA;
             }
 
-            GuiController.Instance.Shaders.setShaderMatrix(this.effect, Matrix.Identity);
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.effect);
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = this.technique;
             d3dDevice.SetStreamSource(0, vertexBuffer, 0);
