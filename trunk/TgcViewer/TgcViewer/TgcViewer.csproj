@@ -237,6 +237,7 @@
     <Compile Include="Utils\Terrain\TgcSimpleTerrain.cs" />
     <Compile Include="Utils\TgcGeometry\TgcElipsoid.cs" />
     <Compile Include="Utils\TgcGeometry\TgcEditableLand.cs" />
+    <Compile Include="Utils\TgcGeometry\TgcObb.cs" />
     <Compile Include="Utils\TgcGeometry\TgcQuad.cs" />
     <Compile Include="Utils\TgcGeometry\TgcConvexPolygon.cs" />
     <Compile Include="Utils\TgcGeometry\TgcConvexPolyhedron.cs" />

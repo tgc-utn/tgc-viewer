@@ -434,7 +434,6 @@ namespace TgcViewer.Utils.TgcGeometry
             {
                 this.transform = Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix.Translation(translation);
             }
-            d3dDevice.Transform.World = this.transform;
 
             //Activar AlphaBlending
             activateAlphaBlend();

@@ -363,7 +363,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
             texturesManager.shaderSet(effect, "texDiffuseMap", texture);
             texturesManager.clear(1);
-            GuiController.Instance.Shaders.setShaderMatrix(this.effect, Matrix.Identity);
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.effect);
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
             effect.Technique = this.technique;
 
