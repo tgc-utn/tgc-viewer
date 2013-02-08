@@ -266,8 +266,20 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>Mínima distacia al cuadrado</returns>
         public static float sqDistPointAABB(Vector3 p, TgcBoundingBox aabb)
         {
-            float[] aabbMin = toArray(aabb.PMin);
-            float[] aabbMax = toArray(aabb.PMax);
+            return TgcCollisionUtils.sqDistPointAABB(p, aabb.toStruct());
+        }
+
+        /// <summary>
+        /// Calcula la mínima distancia al cuadrado entre el punto p y el BoundingBox.
+        /// Si no se necesita saber el punto exacto de colisión es más ágil que utilizar closestPointAABB(). 
+        /// </summary>
+        /// <param name="p">Punto a testear</param>
+        /// <param name="aabb">BoundingBox</param>
+        /// <returns>Mínima distacia al cuadrado</returns>
+        public static float sqDistPointAABB(Vector3 p, TgcBoundingBox.AABBStruct aabb)
+        {
+            float[] aabbMin = toArray(aabb.min);
+            float[] aabbMax = toArray(aabb.max);
             float[] pArray = toArray(p);
             float sqDist = 0.0f;
 
@@ -289,12 +301,58 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>True si hay colisión</returns>
         public static bool testSphereAABB(TgcBoundingSphere sphere, TgcBoundingBox aabb)
         {
+            return TgcCollisionUtils.testSphereAABB(sphere.toStruct(), aabb.toStruct());
+        }
+
+        /// <summary>
+        /// Indica si un BoundingSphere colisiona con un BoundingBox.
+        /// </summary>
+        /// <param name="sphere">BoundingSphere</param>
+        /// <param name="aabb">BoundingBox</param>
+        /// <returns>True si hay colisión</returns>
+        public static bool testSphereAABB(TgcBoundingSphere.SphereStruct sphere, TgcBoundingBox.AABBStruct aabb)
+        {
             //Compute squared distance between sphere center and AABB
-            float sqDist = TgcCollisionUtils.sqDistPointAABB(sphere.Center, aabb);
+            float sqDist = TgcCollisionUtils.sqDistPointAABB(sphere.center, aabb);
             //Sphere and AABB intersect if the (squared) distance
             //between them is less than the (squared) sphere radius
-            return sqDist <= sphere.Radius * sphere.Radius;
+            return sqDist <= sphere.radius * sphere.radius;
         }
+
+        /// <summary>
+        /// Indica si un BoundingSphere colisiona con un BoundingBox.
+        /// </summary>
+        /// <param name="sphere">BoundingSphere</param>
+        /// <param name="aabb">BoundingBox</param>
+        /// <returns>True si hay colisión</returns>
+        public static bool testSphereOBB(TgcBoundingSphere sphere, TgcObb obb)
+        {
+            return TgcCollisionUtils.testSphereOBB(sphere.toStruct(), obb.toStruct());
+        }
+
+        /// <summary>
+        /// Indica si un BoundingSphere colisiona con un BoundingBox.
+        /// </summary>
+        /// <param name="sphere">BoundingSphere</param>
+        /// <param name="aabb">BoundingBox</param>
+        /// <returns>True si hay colisión</returns>
+        public static bool testSphereOBB(TgcBoundingSphere.SphereStruct sphere, TgcObb.OBBStruct obb)
+        {
+            //Transformar esfera a OBB-Space
+            TgcBoundingSphere.SphereStruct sphere2 = new TgcBoundingSphere.SphereStruct();
+            sphere2.center = obb.toObbSpace(sphere.center);
+            sphere2.radius = sphere.radius;
+
+            //Crear AABB que representa al OBB
+            Vector3 min = -obb.extents;
+            Vector3 max = obb.extents;
+            TgcBoundingBox.AABBStruct aabb = new TgcBoundingBox.AABBStruct();
+            aabb.min = min;
+            aabb.max = max;
+
+            return TgcCollisionUtils.testSphereAABB(sphere2, aabb);
+        }
+
 
         /// <summary>
         /// Clasifica un BoundingBox respecto de un Plano.
@@ -1608,6 +1666,135 @@ namespace TgcViewer.Utils.TgcGeometry
             return true;
         }
 
+        /// <summary>
+        /// Detecta colision entre un segmento pq y un triangulo abc.
+        /// Devuelve true si hay colision y carga las coordenadas barycentricas (u,v,w) de la colision, el
+        /// instante t de colision y el punto c de colision.
+        /// Basado en: Real Time Collision Detection pag 191
+        /// </summary>
+        /// <param name="p">Inicio del segmento</param>
+        /// <param name="q">Fin del segmento</param>
+        /// <param name="a">Vertice 1 del triangulo</param>
+        /// <param name="b">Vertice 2 del triangulo</param>
+        /// <param name="c">Vertice 3 del triangulo</param>
+        /// <param name="uvw">Coordenadas barycentricas de colision</param>
+        /// <param name="t">Instante de colision</param>
+        /// <param name="col">Punto de colision</param>
+        /// <returns>True si hay colision</returns>
+        public static bool intersectSegmentTriangle(Vector3 p, Vector3 q, Vector3 a, Vector3 b, Vector3 c, out Vector3 uvw, out float t, out Vector3 col)
+        {
+            float u;
+            float v;
+            float w;
+            uvw = Vector3.Empty;
+            col = Vector3.Empty;
+            t = -1;
+
+            Vector3 ab = b - a;
+            Vector3 ac = c - a;
+            Vector3 qp = p - q;
+
+            // Compute triangle normal. Can be precalculated or cached if
+            // intersecting multiple segments against the same triangle
+            Vector3 n = Vector3.Cross(ab, ac);
+
+            // Compute denominator d. If d <= 0, segment is parallel to or points
+            // away from triangle, so exit early
+            float d = Vector3.Dot(qp, n);
+            if (d <= 0.0f) return false;
+
+            // Compute intersection t value of pq with plane of triangle. A ray
+            // intersects iff 0 <= t. Segment intersects iff 0 <= t <= 1. Delay
+            // dividing by d until intersection has been found to pierce triangle
+            Vector3 ap = p - a;
+            t = Vector3.Dot(ap, n);
+            if (t < 0.0f) return false;
+            if (t > d) return false; // For segment; exclude this code line for a ray test
+
+            // Compute barycentric coordinate components and test if within bounds
+            Vector3 e = Vector3.Cross(qp, ap);
+            v = Vector3.Dot(ac, e);
+            if (v < 0.0f || v > d) return false;
+            w = -Vector3.Dot(ab, e);
+            if (w < 0.0f || v + w > d) return false;
+
+            // Segment/ray intersects triangle. Perform delayed division and
+            // compute the last barycentric coordinate component
+            float ood = 1.0f / d;
+            t *= ood;
+            v *= ood;
+            w *= ood;
+            u = 1.0f - v - w;
+
+            uvw.X = u;
+            uvw.Y = v;
+            uvw.Z = w;
+            col = p + t * (p - q);
+            return true;
+        }
+
+        /// <summary>
+        /// Interseccion entre una Linea pq y un Triangulo abc
+        /// Devuelve true si hay colision y carga las coordenadas barycentricas (u,v,w) de la colision, el
+        /// instante t de colision y el punto c de colision.
+        /// Basado en: Real Time Collision Detection pag 186
+        /// </summary>
+        /// <param name="p">Inicio del segmento</param>
+        /// <param name="q">Fin del segmento</param>
+        /// <param name="a">Vertice 1 del triangulo</param>
+        /// <param name="b">Vertice 2 del triangulo</param>
+        /// <param name="c">Vertice 3 del triangulo</param>
+        /// <param name="uvw">Coordenadas barycentricas de colision</param>
+        /// <param name="t">Instante de colision</param>
+        /// <param name="col">Punto de colision</param>
+        /// <returns>True si hay colision</returns>
+        public static bool intersectLineTriangle(Vector3 p, Vector3 q, Vector3 a, Vector3 b, Vector3 c, out Vector3 uvw, out float t, out Vector3 col)
+        {
+            float u;
+            float v;
+            float w;
+            uvw = Vector3.Empty;
+            col = Vector3.Empty;
+            t = -1;
+
+            Vector3 pq = q - p;
+            Vector3 pa = a - p;
+            Vector3 pb = b - p;
+            Vector3 pc = c - p;
+
+            /*
+            // Test if pq is inside the edges bc, ca and ab. Done by testing
+            // that the signed tetrahedral volumes, computed using scalar triple
+            // products, are all positive
+            u = scalarTriple(pq, pc, pb);
+            if (u < 0.0f) return false;
+            v = ScalarTriple(pq, pa, pc);
+            if (v < 0.0f) return false;
+            w = scalarTriple(pq, pb, pa);
+            if (w < 0.0f) return false;
+            */
+
+            //For a double-sided test the same code would instead read:
+            Vector3 m = Vector3.Cross(pq, pc);
+            u = Vector3.Dot(pb, m); // scalarTriple(pq, pc, pb);
+            v = -Vector3.Dot(pa, m); // scalarTriple(pq, pa, pc);
+            if (!TgcCollisionUtils.sameSign(u, v)) return false;
+            w = TgcCollisionUtils.scalarTriple(pq, pb, pa);
+            if (!TgcCollisionUtils.sameSign(u, w)) return false;
+
+            // Compute the barycentric coordinates (u, v, w) determining the
+            // intersection point r, r = u*a + v*b + w*c
+            float denom = 1.0f / (u + v + w);
+            u *= denom;
+            v *= denom;
+            w *= denom; // w = 1.0f - u - v;
+
+            uvw.X = u;
+            uvw.Y = v;
+            uvw.Z = w;
+            col = p + t * pq;
+            return true;
+        }
 
 
         #endregion
@@ -1694,25 +1881,36 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>True si hay colision</returns>
         public static bool testObbObb(TgcObb a, TgcObb b)
         {
+            return TgcCollisionUtils.testObbObb(a.toStruct(), b.toStruct());
+        }
+
+        /// <summary>
+        /// Testear si hay olision entre dos OBB
+        /// </summary>
+        /// <param name="a">Primer OBB</param>
+        /// <param name="b">Segundo OBB</param>
+        /// <returns>True si hay colision</returns>
+        public static bool testObbObb(TgcObb.OBBStruct a, TgcObb.OBBStruct b)
+        {
             float ra, rb;
             float[,] R = new float[3, 3];
             float[,] AbsR = new float[3, 3];
-            float[] ae = toArray(a.Extents);
-            float[] be = toArray(b.Extents);
+            float[] ae = toArray(a.extents);
+            float[] be = toArray(b.extents);
 
 
             // Compute rotation matrix expressing b in a’s coordinate frame
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
-                    R[i, j] = Vector3.Dot(a.Orientation[i], b.Orientation[j]);
+                    R[i, j] = Vector3.Dot(a.orientation[i], b.orientation[j]);
 
             // Compute translation vector t
-            Vector3 tVec = b.Center - a.Center;
+            Vector3 tVec = b.center - a.center;
             // Bring translation into a’s coordinate frame
             float[] t = new float[3];
-            t[0] = Vector3.Dot(tVec, a.Orientation[0]);
-            t[1] = Vector3.Dot(tVec, a.Orientation[1]);
-            t[2] = Vector3.Dot(tVec, a.Orientation[2]);
+            t[0] = Vector3.Dot(tVec, a.orientation[0]);
+            t[1] = Vector3.Dot(tVec, a.orientation[1]);
+            t[2] = Vector3.Dot(tVec, a.orientation[2]);
 
             // Compute common subexpressions. Add in an epsilon term to
             // counteract arithmetic errors when two edges are parallel and
@@ -1820,6 +2018,31 @@ namespace TgcViewer.Utils.TgcGeometry
             return false;
         }
 
+        /// <summary>
+        /// Testear si hay olision entre un OBB y un AABB
+        /// </summary>
+        /// <param name="a">OBB</param>
+        /// <param name="b">AABB</param>
+        /// <returns>True si hay colision</returns>
+        public static bool testObbAABB(TgcObb obb, TgcBoundingBox aabb)
+        {
+            return TgcCollisionUtils.testObbAABB(obb.toStruct(), aabb.toStruct());
+        }
+
+        /// <summary>
+        /// Testear si hay olision entre un OBB y un AABB
+        /// </summary>
+        /// <param name="a">OBB</param>
+        /// <param name="b">AABB</param>
+        /// <returns>True si hay colision</returns>
+        public static bool testObbAABB(TgcObb.OBBStruct obb, TgcBoundingBox.AABBStruct aabb)
+        {
+            //Crear un OBB que represente al AABB
+            TgcObb.OBBStruct obb2 = TgcObb.computeFromAABB(aabb);
+
+            //Hacer colision obb-obb
+            return TgcCollisionUtils.testObbObb(obb, obb2);
+        }
 
         #endregion
 
@@ -1919,7 +2142,25 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
         }
-  
+
+        /// <summary>
+        /// Compara el signo de dos float.
+        /// Devuelve TRUE si tienen el mismo signo.
+        /// </summary>
+        public static bool sameSign(float a, float b)
+        {
+            return a * b >= 0;
+        }
+
+        /// <summary>
+        /// Expresion: (u x v) . w
+        /// Devuelve un escalar
+        /// </summary>
+        public static float scalarTriple(Vector3 u, Vector3 v, Vector3 w)
+        {
+            return Vector3.Dot(Vector3.Cross(u, v), w);
+        }
+
 
         #endregion
 
