@@ -59,5 +59,25 @@ namespace TgcViewer.Utils.TgcGeometry
             return new Vector3(t.X, t.Y, t.Z);
         }
 
+        /// <summary>
+        /// Aplica el valor absoluto a todos los componentes del vector
+        /// </summary>
+        /// <param name="v">Vector</param>
+        /// <returns>Vector resultante</returns>
+        public static Vector3 abs(Vector3 v)
+        {
+            return new Vector3(FastMath.Abs(v.X), FastMath.Abs(v.Y), FastMath.Abs(v.Z));
+        }
+
+        /// <summary>
+        /// Devuelve el menor valor de los 3 componentes del vector
+        /// </summary>
+        /// <param name="v">Vector</param>
+        /// <returns>Menor valor de los tres</returns>
+        public static float min(Vector3 v)
+        {
+            return FastMath.Min(FastMath.Min(v.X, v.Y), v.Z);
+        }
+
     }
 }

@@ -116,7 +116,7 @@ namespace TgcViewer.Utils.TgcGeometry
             texturesManager.clear(0);
             texturesManager.clear(1);
 
-            GuiController.Instance.Shaders.setShaderMatrix(this.effect, Matrix.Identity);
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.effect);
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = this.technique;
             d3dDevice.SetStreamSource(0, vertexBuffer, 0);

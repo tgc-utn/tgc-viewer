@@ -47,18 +47,15 @@ namespace Examples.Collision
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-            //Cargar modelo estatico Box
+            //Cargar modelo estatico
             TgcSceneLoader loader = new TgcSceneLoader();
             TgcScene scene = loader.loadSceneFromFile(
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml",
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\");
+                GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Buggy\\Buggy-TgcScene.xml");
             mesh = scene.Meshes[0];
 
-            //Desplazarlo
-            mesh.move(0,10,0);
 
-            //Alejar camara rotacional
-            GuiController.Instance.RotCamera.CameraDistance = 100f;
+            //Alejar camara rotacional segun tamaño del BoundingBox del objeto
+            GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
         }
 
 

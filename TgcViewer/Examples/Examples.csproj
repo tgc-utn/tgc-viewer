@@ -92,6 +92,7 @@
     <Compile Include="AlphaBlending\AlphaBlendingManual.cs" />
     <Compile Include="AlphaBlending\AlphaBlendingFramework.cs" />
     <Compile Include="AlphaBlending\EjemploModeloAlpha.cs" />
+    <Compile Include="Collision\EjemploOBB.cs" />
     <Compile Include="Collision\EjemploBoundingBoxTests.cs" />
     <Compile Include="Collision\ElipsoidCollision.cs" />
     <Compile Include="Collision\SeleccionMultiplePicking.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollision.cs" />
     <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollisionManager.cs" />
     <Compile Include="Collision\SphereTriangleCollision\TriangleMeshCollider.cs" />
+    <Compile Include="Collision\EjemploComputeObb.cs" />
     <Compile Include="GeometryBasics\CrearEditableLand.cs" />
     <Compile Include="Lights\EjemploSkeletalPointLight.cs" />
     <Compile Include="Lights\EjemploIntegrador.cs" />

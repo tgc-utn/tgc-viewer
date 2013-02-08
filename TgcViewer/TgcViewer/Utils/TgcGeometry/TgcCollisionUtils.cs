@@ -1684,6 +1684,146 @@ namespace TgcViewer.Utils.TgcGeometry
         #endregion
 
 
+        #region OBB
+
+        /// <summary>
+        /// Testear si hay olision entre dos OBB
+        /// </summary>
+        /// <param name="a">Primer OBB</param>
+        /// <param name="b">Segundo OBB</param>
+        /// <returns>True si hay colision</returns>
+        public static bool testObbObb(TgcObb a, TgcObb b)
+        {
+            float ra, rb;
+            float[,] R = new float[3, 3];
+            float[,] AbsR = new float[3, 3];
+            float[] ae = toArray(a.Extents);
+            float[] be = toArray(b.Extents);
+
+
+            // Compute rotation matrix expressing b in a’s coordinate frame
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    R[i, j] = Vector3.Dot(a.Orientation[i], b.Orientation[j]);
+
+            // Compute translation vector t
+            Vector3 tVec = b.Center - a.Center;
+            // Bring translation into a’s coordinate frame
+            float[] t = new float[3];
+            t[0] = Vector3.Dot(tVec, a.Orientation[0]);
+            t[1] = Vector3.Dot(tVec, a.Orientation[1]);
+            t[2] = Vector3.Dot(tVec, a.Orientation[2]);
+
+            // Compute common subexpressions. Add in an epsilon term to
+            // counteract arithmetic errors when two edges are parallel and
+            // their cross product is (near) null (see text for details)
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    AbsR[i, j] = FastMath.Abs(R[i, j]) + float.Epsilon;
+
+            // Test axes L = A0, L = A1, L = A2
+            for (int i = 0; i < 3; i++)
+            {
+                ra = ae[i];
+                rb = be[0] * AbsR[i, 0] + be[1] * AbsR[i, 1] + be[2] * AbsR[i, 2];
+                if (FastMath.Abs(t[i]) > ra + rb) return false;
+            }
+
+            // Test axes L = B0, L = B1, L = B2
+            for (int i = 0; i < 3; i++)
+            {
+                ra = ae[0] * AbsR[0, i] + ae[1] * AbsR[1, i] + ae[2] * AbsR[2, i];
+                rb = be[i];
+                if (FastMath.Abs(t[0] * R[0, i] + t[1] * R[1, i] + t[2] * R[2, i]) > ra + rb) return false;
+            }
+
+            // Test axis L = A0 x B0
+            ra = ae[1] * AbsR[2, 0] + ae[2] * AbsR[1, 0];
+            rb = be[1] * AbsR[0, 2] + be[2] * AbsR[0, 1];
+            if (FastMath.Abs(t[2] * R[1, 0] - t[1] * R[2, 0]) > ra + rb) return false;
+
+            // Test axis L = A0 x B1
+            ra = ae[1] * AbsR[2, 1] + ae[2] * AbsR[1, 1];
+            rb = be[0] * AbsR[0, 2] + be[2] * AbsR[0, 0];
+            if (FastMath.Abs(t[2] * R[1, 1] - t[1] * R[2, 1]) > ra + rb) return false;
+
+            // Test axis L = A0 x B2
+            ra = ae[1] * AbsR[2, 2] + ae[2] * AbsR[1, 2];
+            rb = be[0] * AbsR[0, 1] + be[1] * AbsR[0, 0];
+            if (FastMath.Abs(t[2] * R[1, 2] - t[1] * R[2, 2]) > ra + rb) return false;
+
+            // Test axis L = A1 x B0
+            ra = ae[0] * AbsR[2, 0] + ae[2] * AbsR[0, 0];
+            rb = be[1] * AbsR[1, 2] + be[2] * AbsR[1, 1];
+            if (FastMath.Abs(t[0] * R[2, 0] - t[2] * R[0, 0]) > ra + rb) return false;
+
+            // Test axis L = A1 x B1
+            ra = ae[0] * AbsR[2, 1] + ae[2] * AbsR[0, 1];
+            rb = be[0] * AbsR[1, 2] + be[2] * AbsR[1, 0];
+            if (FastMath.Abs(t[0] * R[2, 1] - t[2] * R[0, 1]) > ra + rb) return false;
+
+            // Test axis L = A1 x B2
+            ra = ae[0] * AbsR[2, 2] + ae[2] * AbsR[0, 2];
+            rb = be[0] * AbsR[1, 1] + be[1] * AbsR[1, 0];
+            if (FastMath.Abs(t[0] * R[2, 2] - t[2] * R[0, 2]) > ra + rb) return false;
+
+            // Test axis L = A2 x B0
+            ra = ae[0] * AbsR[1, 0] + ae[1] * AbsR[0, 0];
+            rb = be[1] * AbsR[2, 2] + be[2] * AbsR[2, 1];
+            if (FastMath.Abs(t[1] * R[0, 0] - t[0] * R[1, 0]) > ra + rb) return false;
+
+            // Test axis L = A2 x B1
+            ra = ae[0] * AbsR[1, 1] + ae[1] * AbsR[0, 1];
+            rb = be[0] * AbsR[2, 2] + be[2] * AbsR[2, 0];
+            if (FastMath.Abs(t[1] * R[0, 1] - t[0] * R[1, 1]) > ra + rb) return false;
+
+            // Test axis L = A2 x B2
+            ra = ae[0] * AbsR[1, 2] + ae[1] * AbsR[0, 2];
+            rb = be[0] * AbsR[2, 1] + be[1] * AbsR[2, 0];
+            if (FastMath.Abs(t[1] * R[0, 2] - t[0] * R[1, 2]) > ra + rb) return false;
+
+
+            // Since no separating axis is found, the OBBs must be intersecting
+            return true;
+        }
+
+        /// <summary>
+        /// Interseccion Ray-OBB.
+        /// Devuelve true y el punto q de colision si hay interseccion.
+        /// </summary>
+        public static bool intersectRayObb(TgcRay ray, TgcObb obb, out Vector3 q)
+        {
+            //Transformar Ray a OBB-space
+            Vector3 a = ray.Origin;
+            Vector3 b = ray.Origin + ray.Direction;
+            a = obb.toObbSpace(a);
+            b = obb.toObbSpace(b);
+            TgcRay.RayStruct ray2 = new TgcRay.RayStruct();
+            ray2.origin = a;
+            ray2.direction = Vector3.Normalize(b - a);
+
+            //Crear AABB que representa al OBB
+            Vector3 min = -obb.Extents;
+            Vector3 max = obb.Extents;
+            TgcBoundingBox.AABBStruct aabb = new TgcBoundingBox.AABBStruct();
+            aabb.min = min;
+            aabb.max = max;
+
+            //Hacer interseccion Ray-AABB
+            if (TgcCollisionUtils.intersectRayAABB(ray2, aabb, out q))
+            {
+                //Pasar q a World-Space
+                q = obb.toWorldSpace(q);
+                return true;
+            }
+
+            return false;
+        }
+
+
+        #endregion
+
+
         #region Herramientas generales
 
         /// <summary>
