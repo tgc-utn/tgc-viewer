@@ -10,6 +10,7 @@ using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Input;
 using Microsoft.DirectX.DirectInput;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace Examples.Collision
 {
@@ -31,6 +32,7 @@ namespace Examples.Collision
         CustomVertex.PositionColored[] triangle;
         TgcBoundingBox triagleAABB;
         TgcBoundingSphere sphere;
+        TgcObb obb;
 
         public override string getCategory()
         {
@@ -66,6 +68,15 @@ namespace Examples.Collision
 
             //sphere
             sphere = new TgcBoundingSphere(new Vector3(30, 20, -20), 15);
+
+            //OBB: computar OBB a partir del AABB del mesh.
+            TgcSceneLoader loader = new TgcSceneLoader();
+            TgcMesh meshObb = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-ATST\\StarWars-ATST-TgcScene.xml").Meshes[0];
+            obb = TgcObb.computeFromAABB(meshObb.BoundingBox);
+            meshObb.dispose();
+            obb.move(new Vector3(100, 0, 30));
+            obb.setRotation(new Vector3(0, FastMath.PI / 4, 0));
+
 
             //Configurar camara en Tercer Persona
             GuiController.Instance.ThirdPersonCamera.Enable = true;
@@ -157,12 +168,23 @@ namespace Examples.Collision
                 sphere.setRenderColor(Color.Yellow);
             }
 
+            //Detectar colision con la obb
+            if (TgcCollisionUtils.testObbAABB(obb, box.BoundingBox))
+            {
+                box.BoundingBox.render();
+                obb.setRenderColor(Color.Red);
+            }
+            else
+            {
+                obb.setRenderColor(Color.Yellow);
+            }
 
 
             //Dibujar
             box.render();
             box2.render();
             sphere.render();
+            obb.render();
 
 
             //triangulo
@@ -177,6 +199,7 @@ namespace Examples.Collision
             box2.dispose();
             sphere.dispose();
             triagleAABB.dispose();
+            obb.dispose();
         }
 
     }

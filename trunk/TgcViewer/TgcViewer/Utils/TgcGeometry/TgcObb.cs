@@ -333,7 +333,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>OBB calculado</returns>
         public static TgcObb computeFromPoints(Vector3[] points)
         {
-            return TgcObb.computeFromPointsRecursive(points, new Vector3(0, 0, 0), new Vector3(360, 360, 360), 10f);
+            return TgcObb.computeFromPointsRecursive(points, new Vector3(0, 0, 0), new Vector3(360, 360, 360), 10f).toClass();
         }
 
 
@@ -343,9 +343,9 @@ namespace TgcViewer.Utils.TgcGeometry
         /// Continua recursivamente hasta llegar a un step menor a 0.01f
         /// </summary>
         /// <returns></returns>
-        private static TgcObb computeFromPointsRecursive(Vector3[] points, Vector3 initValues, Vector3 endValues, float step)
+        private static OBBStruct computeFromPointsRecursive(Vector3[] points, Vector3 initValues, Vector3 endValues, float step)
         {
-            TgcObb minObb = new TgcObb();
+            OBBStruct minObb = new OBBStruct();
             float minVolume = float.MaxValue;
             Vector3 minInitValues = Vector3.Empty;
             Vector3 minEndValues = Vector3.Empty;
@@ -429,9 +429,20 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>OBB generado</returns>
         public static TgcObb computeFromAABB(TgcBoundingBox aabb)
         {
-            TgcObb obb = new TgcObb();
-            obb.center = aabb.calculateBoxCenter();
-            obb.extents = aabb.calculateAxisRadius();
+            return TgcObb.computeFromAABB(aabb.toStruct()).toClass();
+        }
+
+        /// <summary>
+        /// Generar OBB a partir de AABB
+        /// </summary>
+        /// <param name="aabb">BoundingBox</param>
+        /// <returns>OBB generado</returns>
+        public static TgcObb.OBBStruct computeFromAABB(TgcBoundingBox.AABBStruct aabb)
+        {
+            OBBStruct obb = new OBBStruct();
+            obb.extents = (aabb.max - aabb.min) * 0.5f;
+            obb.center = aabb.min + obb.extents;
+            
             obb.orientation = new Vector3[] { new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1) };
             return obb;
         }
@@ -457,6 +468,64 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             return center + p.X * orientation[0] + p.Y * orientation[1] + p.Z * orientation[2];
         }
+
+
+
+        /// <summary>
+        /// Convertir a struct
+        /// </summary>
+        public OBBStruct toStruct()
+        {
+            OBBStruct obbStruct = new OBBStruct();
+            obbStruct.center = center;
+            obbStruct.orientation = orientation;
+            obbStruct.extents = extents;
+            return obbStruct;
+        }
+
+        /// <summary>
+        /// OBB en un struct liviano
+        /// </summary>
+        public struct OBBStruct
+        {
+            public Vector3 center;
+            public Vector3[] orientation;
+            public Vector3 extents;
+
+            /// <summary>
+            /// Convertir a clase
+            /// </summary>
+            public TgcObb toClass()
+            {
+                TgcObb obb = new TgcObb();
+                obb.center = center;
+                obb.orientation = orientation;
+                obb.extents = extents;
+                return obb;
+            }
+
+            /// <summary>
+            /// Convertir un punto de World-Space espacio de coordenadas del OBB (OBB-Space)
+            /// </summary>
+            /// <param name="p">Punto en World-space</param>
+            /// <returns>Punto convertido a OBB-space</returns>
+            public Vector3 toObbSpace(Vector3 p)
+            {
+                Vector3 t = p - center;
+                return new Vector3(Vector3.Dot(t, orientation[0]), Vector3.Dot(t, orientation[1]), Vector3.Dot(t, orientation[2]));
+            }
+
+            /// <summary>
+            /// Convertir un punto de OBB-space a World-space
+            /// </summary>
+            /// <param name="p">Punto en OBB-space</param>
+            /// <returns>Punto convertido a World-space</returns>
+            public Vector3 toWorldSpace(Vector3 p)
+            {
+                return center + p.X * orientation[0] + p.Y * orientation[1] + p.Z * orientation[2];
+            }
+        }
+
 
     }
 }
