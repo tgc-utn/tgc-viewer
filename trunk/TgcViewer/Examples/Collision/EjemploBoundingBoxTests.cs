@@ -186,7 +186,6 @@ namespace Examples.Collision
             sphere.render();
             obb.render();
 
-
             //triangulo
             d3dDevice.Transform.World = Matrix.Identity;
             d3dDevice.VertexFormat = CustomVertex.PositionColored.Format;

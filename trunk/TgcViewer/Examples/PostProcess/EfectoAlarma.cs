@@ -145,6 +145,9 @@ namespace Examples.PostProcess
             //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
             drawSceneToRenderTarget(d3dDevice);
 
+            //Liberar memoria de surface de Render Target
+            pSurf.Dispose();
+
             //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
             //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
 
