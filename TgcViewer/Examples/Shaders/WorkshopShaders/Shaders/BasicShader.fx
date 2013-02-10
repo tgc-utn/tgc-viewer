@@ -2,23 +2,34 @@
 // Ejemplo shader Minimo:
 // ---------------------------------------------------------
 
-float4x4 matWorld;
-float4x4 matWorldView;
-float4x4 matWorldViewProj;
-float4x4 matWorldInverseTranspose;
+/**************************************************************************************/
+/* Variables comunes */
+/**************************************************************************************/
+
+//Matrices de transformacion
+float4x4 matWorld; //Matriz de transformacion World
+float4x4 matWorldView; //Matriz World * View
+float4x4 matWorldViewProj; //Matriz World * View * Projection
+float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
+
+//Textura para DiffuseMap
+texture texDiffuseMap;
+sampler2D diffuseMap = sampler_state
+{
+	Texture = (texDiffuseMap);
+	ADDRESSU = WRAP;
+	ADDRESSV = WRAP;
+	MINFILTER = LINEAR;
+	MAGFILTER = LINEAR;
+	MIPFILTER = LINEAR;
+};
 
 float time = 0;
 
-// Textura y sampler de textura
-texture base_Tex;
-sampler2D baseMap =
-sampler_state
-{
-   Texture = (base_Tex);
-   MINFILTER = LINEAR;
-   MAGFILTER = LINEAR;
-   MIPFILTER = LINEAR;
-};
+
+/**************************************************************************************/
+/* RenderScene */
+/**************************************************************************************/
 
 //Input del Vertex Shader
 struct VS_INPUT 
@@ -36,6 +47,8 @@ struct VS_OUTPUT
    float4 Color :			COLOR0;
 };
 
+
+
 //Vertex Shader
 VS_OUTPUT vs_main( VS_INPUT Input )
 {
@@ -51,17 +64,6 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 
    return( Output );
    
-}
-
-//Pixel Shader
-float4 ps_main( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
-{      
-	// Obtener el texel de textura
-	// baseMap es el sampler, Texcoord son las coordenadas interpoladas
-	float4 fvBaseColor = tex2D( baseMap, Texcoord );
-	// combino color y textura
-	// en este ejemplo combino un 80% el color de la textura y un 20%el del vertice
-	return 0.8*fvBaseColor + 0.2*Color;
 }
 
 
@@ -92,6 +94,18 @@ VS_OUTPUT vs_main2( VS_INPUT Input )
    return( Output );
    
 }
+
+//Pixel Shader
+float4 ps_main( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
+{      
+	// Obtener el texel de textura
+	// diffuseMap es el sampler, Texcoord son las coordenadas interpoladas
+	float4 fvBaseColor = tex2D( diffuseMap, Texcoord );
+	// combino color y textura
+	// en este ejemplo combino un 80% el color de la textura y un 20%el del vertice
+	return 0.8*fvBaseColor + 0.2*Color;
+}
+
 
 // ------------------------------------------------------------------
 technique RenderScene

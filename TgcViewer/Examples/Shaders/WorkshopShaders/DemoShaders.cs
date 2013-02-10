@@ -11,6 +11,7 @@ using System.Drawing;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Input;
+using TgcViewer.Utils.Shaders;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -19,7 +20,8 @@ namespace Examples.Shaders.WorkshopShaders
     /// Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     /// 
-    /// Ejemplo avanzado. Ver primero ejemplo "SceneLoader/CustomMesh" y luego "Shaders/WorkshopShaders/BasicShader".
+    /// Ejemplo avanzado. Ver primero ejemplo "Shaders/WorkshopShaders/BasicShader".
+    /// 
     /// Demo general que integra diversos efectos de shaders.
     /// 
     /// Autor: Mariano Banquiero
@@ -28,8 +30,8 @@ namespace Examples.Shaders.WorkshopShaders
     public class DemoShaders: TgcExample
     {
         TgcScene scene,scene2,scene3,scene4;
-        MyMesh mesh,piso;
-        MyMesh palmera, canoa;
+        TgcMesh mesh,piso;
+        TgcMesh palmera, canoa;
         Effect effect;
         List<TgcMesh> bosque;
         TgcArrow arrow;
@@ -92,8 +94,6 @@ namespace Examples.Shaders.WorkshopShaders
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
 
-            //Configurar MeshFactory customizado
-            loader.MeshFactory = new MyCustomMeshFactory();
 
             // ------------------------------------------------------------
             // Creo el Heightmap para el terreno:
@@ -122,19 +122,19 @@ namespace Examples.Shaders.WorkshopShaders
             //Cargar los mesh:
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                             + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml");
-            mesh = (MyMesh)scene.Meshes[0];
+            mesh = scene.Meshes[0];
             
             scene2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                             + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
-            palmera = (MyMesh)scene2.Meshes[0];
+            palmera = scene2.Meshes[0];
             
             scene3 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                             + "MeshCreator\\Meshes\\Vehiculos\\Canoa\\Canoa-TgcScene.xml");
-            canoa = (MyMesh)scene3.Meshes[0];
+            canoa = scene3.Meshes[0];
 
             scene4 = loader.loadSceneFromFile(GuiController.Instance.ExamplesDir
                             + "Shaders\\WorkshopShaders\\Media\\Piso\\Agua-TgcScene.xml");
-            piso = (MyMesh)scene4.Meshes[0];
+            piso = scene4.Meshes[0];
 
             mesh.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             mesh.Position = new Vector3(0f, 0f, 0f);
@@ -196,19 +196,18 @@ namespace Examples.Shaders.WorkshopShaders
 
             g_pCubeMapAgua = null;
 
-            //Cargar Shader
-            string compilationErrors;
-            effect = Effect.FromFile(d3dDevice, GuiController.Instance.ExamplesDir
-                    + "Shaders\\WorkshopShaders\\Shaders\\Demo.fx", null, null, ShaderFlags.None, null, out compilationErrors);
-            if (effect == null)
-            {
-                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
-            }
+            //Cargar Shader personalizado
+            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\Demo.fx");
+
             // le asigno el efecto a las mallas 
-            mesh.effect = effect;
-            piso.effect = effect;
-            palmera.effect = effect;
-            canoa.effect = effect;
+            mesh.Effect = effect;
+            mesh.Technique = "RenderScene";
+            piso.Effect = effect;
+            piso.Technique = "RenderScene";
+            palmera.Effect = effect;
+            palmera.Technique = "RenderScene";
+            canoa.Effect = effect;
+            canoa.Technique = "RenderScene";
 
             //--------------------------------------------------------------------------------------
             // Creo el shadowmap. 
@@ -318,7 +317,6 @@ namespace Examples.Shaders.WorkshopShaders
                     vel_tanque = 1;
             }
 
-            effect.Technique = "RenderScene";
             if (timer_preview>0)
             {
                 timer_preview -= elapsedTime;
@@ -515,11 +513,11 @@ namespace Examples.Shaders.WorkshopShaders
 
                 // Ahora dibujo el agua
                 device.RenderState.AlphaBlendEnable = true;
-                effect.Technique = "RenderAgua";
                 effect.SetValue("aux_Tex", terrain.terrainTexture);
                 // posicion de la canoa (divido por la escala)
                 effect.SetValue("canoa_x", x0 / 10.0f);
                 effect.SetValue("canoa_y", z0 / 10.0f);
+                piso.Technique = "RenderAgua";
                 piso.render();
             }
             
@@ -591,7 +589,7 @@ namespace Examples.Shaders.WorkshopShaders
             if (!cubemap)
             {
                 // dibujo el mesh
-                effect.Technique = "RenderCubeMap";
+                mesh.Technique = "RenderScene";
                 mesh.render();
             }
         }
@@ -699,8 +697,6 @@ namespace Examples.Shaders.WorkshopShaders
             // inicializacion standard: 
             effect.SetValue("g_mProjLight", g_mShadowProj);
             effect.SetValue("g_mViewLightProj", g_LightView * g_mShadowProj);
-            // Seteo la tecnica: estoy generando la sombra o estoy dibujando la escena
-            effect.Technique = "RenderShadow";
 
             // Primero genero el shadow map, para ello dibujo desde el pto de vista de luz
             // a una textura, con el VS y PS que generan un mapa de profundidades. 
@@ -717,9 +713,14 @@ namespace Examples.Shaders.WorkshopShaders
             //Renderizar terreno
             terrain.executeRender(effect);
             // dibujo el bosque
-            foreach (MyMesh instance in bosque)
+            foreach (TgcMesh instance in bosque)
+            {
                 instance.render();
+            }
+                
             // el tanque
+            // Seteo la tecnica: estoy generando la sombra o estoy dibujando la escena
+            mesh.Technique = "RenderShadow";
             mesh.render();
             // Termino 
             device.EndScene();

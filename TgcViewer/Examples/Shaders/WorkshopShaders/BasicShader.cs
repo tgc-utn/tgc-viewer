@@ -11,6 +11,7 @@ using System.Drawing;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Input;
+using TgcViewer.Utils.Shaders;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -29,7 +30,7 @@ namespace Examples.Shaders.WorkshopShaders
     {
         Effect effect;
         TgcScene scene;
-        MyMesh mesh;
+        TgcMesh mesh;
         float time;
 
 
@@ -54,27 +55,22 @@ namespace Examples.Shaders.WorkshopShaders
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
 
-            //Configurar MeshFactory customizado
-            loader.MeshFactory = new MyCustomMeshFactory();
-
             //Cargar los mesh:
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                             + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml");
-            mesh = (MyMesh)scene.Meshes[0];
+            mesh = scene.Meshes[0];
             mesh.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             mesh.Position = new Vector3(0f, 0f, 0f);
 
-            //Cargar Shader
-            string compilationErrors;
-            effect = Effect.FromFile(d3dDevice, GuiController.Instance.ExamplesDir
-                + "Shaders\\WorkshopShaders\\Shaders\\BasicShader.fx", null, null, ShaderFlags.None, null, out compilationErrors);
-            if (effect == null)
-            {
-                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
-            }
+            //Cargar Shader personalizado
+            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\BasicShader.fx");
 
             // le asigno el efecto a la malla 
-            mesh.effect = effect;
+            mesh.Effect = effect;
+
+            // indico que tecnica voy a usar 
+            // Hay effectos que estan organizados con mas de una tecnica.
+            mesh.Technique = "RenderScene";
 
             //Centrar camara rotacional respecto a este mesh
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
@@ -91,10 +87,6 @@ namespace Examples.Shaders.WorkshopShaders
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
             GuiController.Instance.CurrentCamera.updateCamera();
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-
-            // indico que tecnica voy a usar 
-            // Hay effectos que estan organizados con mas de una tecnica.
-            effect.Technique = "RenderScene";
 
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
