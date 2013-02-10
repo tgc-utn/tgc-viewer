@@ -19,9 +19,8 @@ namespace Examples.Otros
     /// </summary>
     public class EjemploDefault : TgcExample
     {
-        TgcMeshShader mesh;
+        TgcMesh mesh;
         float[] lightPos = new float[]{0, 50, 300};
-        InterpoladorVaiven interp;
 
         public override string getCategory()
         {
@@ -45,16 +44,12 @@ namespace Examples.Otros
             //Cargar mesh
             TgcSceneLoader loader = new TgcSceneLoader();
             loader.MeshFactory = new CustomMeshShaderFactory();
-            mesh = (TgcMeshShader)loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
+            mesh = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
 
-            //Cargar Shader de PhonhShading
-            string compilationErrors;
-            mesh.Effect = Effect.FromFile(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Shaders\\PhongShading.fx", null, null, ShaderFlags.None, null, out compilationErrors);
-            if (mesh.Effect == null)
-            {
-                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
-            }
-            mesh.Effect.Technique = "NoTextureTechnique";
+            //Cargar Shader de PhongShading
+            mesh.Effect = GuiController.Instance.Shaders.TgcMeshPhongShader;
+            mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
+            
 
             GuiController.Instance.RotCamera.Enable = true;
             GuiController.Instance.RotCamera.CameraCenter = new Vector3(0, 0, 0);
@@ -62,12 +57,6 @@ namespace Examples.Otros
 
             GuiController.Instance.BackgroundColor = Color.Black;
 
-            //Interpolador para luz
-            interp = new InterpoladorVaiven();
-            interp.Min = -300;
-            interp.Max = 300;
-            interp.Speed = 200;
-            interp.reset();
         }
 
 
@@ -75,14 +64,14 @@ namespace Examples.Otros
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-            //Cargar variables de shader
-            lightPos[0] = interp.update();
-            mesh.Effect.SetValue("fvLightPosition", lightPos);
-            mesh.Effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.RotCamera.getPosition()));
-            mesh.Effect.SetValue("fvAmbient", ColorValue.FromColor(Color.Black));
-            mesh.Effect.SetValue("fvDiffuse", ColorValue.FromColor(Color.LightBlue));
-            mesh.Effect.SetValue("fvSpecular", ColorValue.FromColor(Color.White));
-            mesh.Effect.SetValue("fSpecularPower", 10);
+            //Cargar variables shader
+            mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(Color.Gray));
+            mesh.Effect.SetValue("diffuseColor", ColorValue.FromColor(Color.LightBlue));
+            mesh.Effect.SetValue("specularColor", ColorValue.FromColor(Color.White));
+            mesh.Effect.SetValue("specularExp", 10f);
+            mesh.Effect.SetValue("lightPosition", lightPos);
+            mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.FpsCamera.getPosition()));
+
 
             mesh.rotateY(-elapsedTime/2);
             mesh.render();
@@ -90,7 +79,6 @@ namespace Examples.Otros
 
         public override void close()
         {
-            mesh.Effect.Dispose();
             mesh.dispose();
         }
 

@@ -45,6 +45,16 @@ namespace TgcViewer.Utils.Shaders
             set { tgcMeshShader = value; }
         }
 
+        Effect tgcMeshPhongShader;
+        /// <summary>
+        /// Shader para TgcMesh con iluminacion dinamica con PhongShading
+        /// </summary>
+        public Effect TgcMeshPhongShader
+        {
+            get { return tgcMeshPhongShader; }
+            set { tgcMeshPhongShader = value; }
+        }
+
         Effect tgcMeshPointLightShader;
         /// <summary>
         /// Shader para TgcMesh con iluminacion dinamica por PointLight
@@ -149,6 +159,7 @@ namespace TgcViewer.Utils.Shaders
             //Cargar shaders genericos para todo el framework
             string shadersPath = GuiController.Instance.ExamplesMediaDir + "Shaders\\TgcViewer\\";
             this.tgcMeshShader = TgcShaders.loadEffect(shadersPath + "TgcMeshShader.fx");
+            this.tgcMeshPhongShader = TgcShaders.loadEffect(shadersPath + "TgcMeshPhongShader.fx");
             this.tgcMeshPointLightShader = TgcShaders.loadEffect(shadersPath + "TgcMeshPointLightShader.fx");
             this.tgcMeshSpotLightShader = TgcShaders.loadEffect(shadersPath + "TgcMeshSpotLightShader.fx");
             this.tgcSkeletalMeshShader = TgcShaders.loadEffect(shadersPath + "TgcSkeletalMeshShader.fx");
