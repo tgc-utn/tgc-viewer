@@ -130,15 +130,6 @@ namespace Examples.Shaders
         }
 
 
-        /// <summary>
-        /// Evento que se llama antes de ejecutar el shader de un mesh particular.
-        /// Ideal para cargar parametros de shader propios de cada mesh
-        /// </summary>
-        public void mesh_ShaderBegin(TgcMeshShader mesh)
-        {
-            //nada en este ejemplo
-        }
-
 
         public override void close()
         {

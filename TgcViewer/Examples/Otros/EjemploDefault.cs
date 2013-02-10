@@ -43,7 +43,6 @@ namespace Examples.Otros
 
             //Cargar mesh
             TgcSceneLoader loader = new TgcSceneLoader();
-            loader.MeshFactory = new CustomMeshShaderFactory();
             mesh = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
 
             //Cargar Shader de PhongShading
