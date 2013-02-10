@@ -233,7 +233,6 @@
     <Compile Include="SceneLoader\EjemploExportarMesh.cs" />
     <Compile Include="Shaders\EjemploPhongShading.cs" />
     <Compile Include="Shaders\EjemploShaderTgcMesh.cs" />
-    <Compile Include="Shaders\TgcMeshShader.cs" />
     <Compile Include="Shaders\WorkshopShaders\BasicShader.cs" />
     <Compile Include="Shaders\WorkshopShaders\DemoShaders.cs" />
     <Compile Include="Shaders\WorkshopShaders\EnvMap.cs" />

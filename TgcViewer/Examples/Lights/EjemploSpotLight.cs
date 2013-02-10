@@ -59,7 +59,6 @@ namespace Examples.Lights
             //Cargar escenario
             TgcSceneLoader loader = new TgcSceneLoader();
             //Configurar MeshFactory customizado
-            loader.MeshFactory = new CustomMeshShaderFactory();
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
