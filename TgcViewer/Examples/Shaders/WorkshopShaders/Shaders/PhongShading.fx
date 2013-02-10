@@ -1,5 +1,28 @@
-// Ejemplo shader Trivial: Phong Shading
 // ---------------------------------------------------------
+// Ejemplo shader Trivial: Phong Shading:
+// ---------------------------------------------------------
+
+/**************************************************************************************/
+/* Variables comunes */
+/**************************************************************************************/
+
+//Matrices de transformacion
+float4x4 matWorld; //Matriz de transformacion World
+float4x4 matWorldView; //Matriz World * View
+float4x4 matWorldViewProj; //Matriz World * View * Projection
+float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
+
+//Textura para DiffuseMap
+texture texDiffuseMap;
+sampler2D diffuseMap = sampler_state
+{
+	Texture = (texDiffuseMap);
+	ADDRESSU = WRAP;
+	ADDRESSV = WRAP;
+	MINFILTER = LINEAR;
+	MAGFILTER = LINEAR;
+	MIPFILTER = LINEAR;
+};
 
 float3 fvLightPosition = float3( -100.00, 100.00, -100.00 );
 float3 fvEyePosition = float3( 0.00, 0.00, -100.00 );
@@ -8,22 +31,12 @@ float k_ld = 0.9;							// luz difusa
 float k_ls = 0.4;							// luz specular
 float fSpecularPower = 16.84;				// exponente de la luz specular
 
-float4x4 matWorld;
-float4x4 matWorldView;
-float4x4 matWorldViewProj;
-float4x4 matWorldInverseTranspose;
 
-texture base_Tex;
-sampler2D baseMap =
-sampler_state
-{
-   Texture = (base_Tex);
-   ADDRESSU = MIRROR;
-   ADDRESSV = MIRROR;
-   MINFILTER = LINEAR;
-   MAGFILTER = LINEAR;
-   MIPFILTER = LINEAR;
-};
+
+
+/**************************************************************************************/
+/* DefaultTechnique */
+/**************************************************************************************/
 
 //Input del Vertex Shader
 struct VS_INPUT 
@@ -62,7 +75,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
    Output.Pos = float3(pos_real.x,pos_real.y,pos_real.z);
    
    // Transformo la normal y la normalizo (si la escala no es uniforme usar la inversa Traspta)
-   //Output.Norm = normalize(mul(Input.Normal,matWorldInverseTranspose));
+   //Output.Norm = normalize(mul(Input.Normal,matInverseTransposeWorld));
    Output.Norm = normalize(mul(Input.Normal,matWorld));
    return( Output );
    
@@ -103,7 +116,7 @@ float4 ps_main( float3 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
 	le += ks*k_ls;
 
 	//Obtener el texel de textura
-	float4 fvBaseColor = tex2D( baseMap, Texcoord );
+	float4 fvBaseColor = tex2D( diffuseMap, Texcoord );
 	//float4 fvBaseColor      = float4(1,0.5,0.5,1);
 	
 	// suma luz diffusa, ambiente y especular

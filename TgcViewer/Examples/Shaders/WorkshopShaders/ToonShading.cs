@@ -11,6 +11,7 @@ using System.Drawing;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Input;
+using TgcViewer.Utils.Shaders;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -20,7 +21,8 @@ namespace Examples.Shaders.WorkshopShaders
     /// Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     /// 
-    /// Ejemplo avanzado. Ver primero ejemplo "SceneLoader/CustomMesh" y luego "Shaders/WorkshopShaders/BasicShader".
+    /// Ejemplo avanzado. Ver primero ejemplo "Shaders/WorkshopShaders/BasicShader".
+    /// 
     /// Muestra como utilizar el efecto de ToonShading, que le da a un mesh un aspecto de caricatura.
     /// 
     /// Autor: Mariano Banquiero
@@ -31,8 +33,8 @@ namespace Examples.Shaders.WorkshopShaders
         string MyMediaDir;
         string MyShaderDir;
         TgcScene scene;
-        MyMesh mesh;
-        List<MyMesh> instances;
+        TgcMesh mesh;
+        List<TgcMesh> instances;
         Effect effect;
         Surface g_pDepthStencil;     // Depth-stencil buffer 
         Texture g_pRenderTarget;
@@ -65,14 +67,11 @@ namespace Examples.Shaders.WorkshopShaders
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
 
-            //Configurar MeshFactory customizado
-            loader.MeshFactory = new MyCustomMeshFactory();
-
             //Cargar mesh
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                         + "ModelosTgc\\Teapot\\Teapot-TgcScene.xml");
 
-            mesh = (MyMesh)scene.Meshes[0];
+            mesh = scene.Meshes[0];
             mesh.Scale = new Vector3(1f, 1f, 1f);
             mesh.Position = new Vector3(-100f, -5f, 0f);
 
@@ -81,24 +80,19 @@ namespace Examples.Shaders.WorkshopShaders
             mesh.D3dMesh.GenerateAdjacency(0,adj);
             mesh.D3dMesh.ComputeNormals(adj); 
 
-            //Cargar Shader
-            string compilationErrors;
-            effect = Effect.FromFile(d3dDevice, MyShaderDir + "ToonShading.fx", null, null, ShaderFlags.None, null, out compilationErrors);
-            if (effect == null)
-            {
-                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
-            }
-            //Configurar Technique
-            effect.Technique = "DefaultTechnique";
+            //Cargar Shader personalizado
+            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\ToonShading.fx");
+
             // le asigno el efecto a la malla 
-            mesh.effect = effect;
+            mesh.Effect = effect;
+            mesh.Technique = "DefaultTechnique";
 
             // Creo las instancias de malla
-            instances = new List<MyMesh>();
+            instances = new List<TgcMesh>();
             for (int i = -5; i < 5; i++)
                 for (int j = -5; j < 5; j++)
                 {
-                    MyMesh instance = mesh.createMeshInstance(mesh.Name + i);
+                    TgcMesh instance = mesh.createMeshInstance(mesh.Name + i);
                     instance.move(i * 50, (i + j) * 5, j * 50);
                     instances.Add(instance);
                 }
@@ -207,7 +201,6 @@ namespace Examples.Shaders.WorkshopShaders
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.Space))
                 efecto_blur = !efecto_blur;
 
-            effect.Technique = "DefaultTechnique";
 
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(lightPosition));
@@ -233,8 +226,9 @@ namespace Examples.Shaders.WorkshopShaders
 
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             device.BeginScene();
-            foreach (MyMesh instance in instances)
+            foreach (TgcMesh instance in instances)
             {
+                instance.Technique = "DefaultTechnique";
                 instance.render();
             }
             device.EndScene();
@@ -242,13 +236,13 @@ namespace Examples.Shaders.WorkshopShaders
 
 
             // genero el normal map: 
-            effect.Technique = "NormalMap";
             pSurf = g_pNormals.GetSurfaceLevel(0);
             device.SetRenderTarget(0, pSurf);
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             device.BeginScene();
-            foreach (MyMesh instance in instances)
+            foreach (TgcMesh instance in instances)
             {
+                instance.Technique = "NormalMap";
                 instance.render();
             }
 

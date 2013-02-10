@@ -11,6 +11,7 @@ using System.Drawing;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Input;
+using TgcViewer.Utils.Shaders;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -19,7 +20,8 @@ namespace Examples.Shaders.WorkshopShaders
     /// Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     /// 
-    /// Ejemplo avanzado. Ver primero ejemplo "SceneLoader/CustomMesh" y luego "Shaders/WorkshopShaders/BasicShader".
+    /// Ejemplo avanzado. Ver primero ejemplo "Shaders/WorkshopShaders/BasicShader".
+    /// 
     /// Muestra como generar efecto de sombras en tiempo real utilizando la técnicade ShadowMap.
     /// 
     /// Autor: Mariano Banquiero
@@ -32,7 +34,7 @@ namespace Examples.Shaders.WorkshopShaders
         TgcScene scene, scene2;
         TgcArrow arrow;
         Effect effect;
-        MyMesh avion;
+        TgcMesh avion;
 
         // Shadow map
         readonly int SHADOWMAP_SIZE = 1024;
@@ -72,9 +74,6 @@ namespace Examples.Shaders.WorkshopShaders
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
 
-            //Configurar MeshFactory customizado
-            loader.MeshFactory = new MyCustomMeshFactory();
-
             // ------------------------------------------------------------
             //Cargar la escena
             scene = loader.loadSceneFromFile(MyMediaDir
@@ -82,7 +81,7 @@ namespace Examples.Shaders.WorkshopShaders
 
             scene2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                     + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
-            avion = (MyMesh)scene2.Meshes[0];
+            avion = scene2.Meshes[0];
 
             avion.Scale = new Vector3(0.1f, 0.1f, 0.1f);
             avion.Position = new Vector3(100f, 100f, 0f);
@@ -92,21 +91,16 @@ namespace Examples.Shaders.WorkshopShaders
             GuiController.Instance.RotCamera.CameraDistance = 600;
             GuiController.Instance.RotCamera.RotationSpeed = 1.5f;
 
-            //Cargar Shader
-            string compilationErrors;
-            effect = Effect.FromFile(d3dDevice, MyShaderDir + "ShadowMap.fx", null, null, ShaderFlags.None, null, out compilationErrors);
-            if (effect == null)
-            {
-                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
-            }
-            
+            //Cargar Shader personalizado
+            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\ShadowMap.fx");
+
             // le asigno el efecto a las mallas 
-            foreach (MyMesh T in scene.Meshes)
+            foreach (TgcMesh T in scene.Meshes)
             {
                 T.Scale = new Vector3(1f, 1f, 1f);
-                T.effect = effect;
+                T.Effect = effect;
             }
-            avion.effect = effect;
+            avion.Effect = effect;
 
             //--------------------------------------------------------------------------------------
             // Creo el shadowmap. 
@@ -184,7 +178,6 @@ namespace Examples.Shaders.WorkshopShaders
 
             device.BeginScene();
             // dibujo la escena pp dicha
-            effect.Technique = "RenderScene";
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             RenderScene(false);
 
@@ -209,8 +202,6 @@ namespace Examples.Shaders.WorkshopShaders
             // inicializacion standard: 
             effect.SetValue("g_mProjLight", g_mShadowProj);
             effect.SetValue("g_mViewLightProj", g_LightView * g_mShadowProj);
-            // Seteo la tecnica: estoy generando la sombra o estoy dibujando la escena
-            effect.Technique = "RenderShadow";
 
             // Primero genero el shadow map, para ello dibujo desde el pto de vista de luz
             // a una textura, con el VS y PS que generan un mapa de profundidades. 
@@ -239,9 +230,29 @@ namespace Examples.Shaders.WorkshopShaders
 
         public void RenderScene(bool shadow)
         {
-            foreach (MyMesh T in scene.Meshes)
+            foreach (TgcMesh T in scene.Meshes)
+            {
+                if (shadow)
+                {
+                    T.Technique = "RenderShadow";
+                }
+                else
+                {
+                    T.Technique = "RenderScene";
+                }
+                
                 T.render();
+            }
+                
             // avion
+            if (shadow)
+            {
+                avion.Technique = "RenderShadow";
+            }
+            else
+            {
+                avion.Technique = "RenderScene";
+            }
             avion.render();
         }
 

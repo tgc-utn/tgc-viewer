@@ -253,13 +253,10 @@ namespace Examples.Shaders.WorkshopShaders
         public void executeRender(Effect effect)
         {
             Device device = GuiController.Instance.D3dDevice;
-            device.Transform.World = Matrix.Identity;
-            effect.SetValue("matWorld", device.Transform.World);
-            effect.SetValue("matWorldView", device.Transform.World * device.Transform.View);
-            effect.SetValue("matWorldViewProj", device.Transform.World * device.Transform.View * device.Transform.Projection);
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
 
             //Render terrain 
-            effect.SetValue("base_Tex", terrainTexture);
+            effect.SetValue("texDiffuseMap", terrainTexture);
 
             device.VertexFormat = CustomVertex.PositionTextured.Format;
             device.SetStreamSource(0, vbTerrain, 0);

@@ -1,4 +1,30 @@
-// Enviroment Map:
+// ---------------------------------------------------------
+// Enviroment Map
+// ---------------------------------------------------------
+
+
+
+/**************************************************************************************/
+/* Variables comunes */
+/**************************************************************************************/
+
+//Matrices de transformacion
+float4x4 matWorld; //Matriz de transformacion World
+float4x4 matWorldView; //Matriz World * View
+float4x4 matWorldViewProj; //Matriz World * View * Projection
+float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
+
+//Textura para DiffuseMap
+texture texDiffuseMap;
+sampler2D diffuseMap = sampler_state
+{
+	Texture = (texDiffuseMap);
+	ADDRESSU = WRAP;
+	ADDRESSV = WRAP;
+	MINFILTER = LINEAR;
+	MAGFILTER = LINEAR;
+	MIPFILTER = LINEAR;
+};
 
 float3 fvLightPosition = float3( -100.00, 100.00, -100.00 );
 float3 fvEyePosition = float3( 0.00, 0.00, -100.00 );
@@ -6,11 +32,6 @@ float3 fvEyePosition = float3( 0.00, 0.00, -100.00 );
 float FBias = 0.4;
 int FPower = 1;
 float FEscala = 0.5;
-// Transformaciones
-float4x4 matWorld;
-float4x4 matWorldView;
-float4x4 matWorldViewProj;
-float4x4 matWorldInverseTranspose;
 
 float k_la = 0.7;							// luz ambiente global
 float k_ld = 0.4;							// luz difusa
@@ -21,16 +42,6 @@ float kx = 0.5;							// coef. de reflexion
 float kc = 0.5;							// coef. de refraccion
 bool usar_fresnel = 1;
 
-// Textura basica:
-texture base_Tex;
-sampler2D baseMap =
-sampler_state
-{
-   Texture = (base_Tex);
-   MINFILTER = LINEAR;
-   MAGFILTER = LINEAR;
-   MIPFILTER = LINEAR;
-};
 
 // Textura auxiliar:
 texture aux_Tex;
@@ -57,6 +68,11 @@ sampler_state
 };
 
 
+
+/**************************************************************************************/
+/* RenderScene */
+/**************************************************************************************/
+
 //Output del Vertex Shader
 struct VS_OUTPUT 
 {
@@ -77,7 +93,7 @@ VS_OUTPUT vs_main( float4 Pos:POSITION,float3 Normal:NORMAL, float2 Texcoord:TEX
    // Calculo la posicion real
    Output.Pos = mul(Pos,matWorld).xyz;
    // Transformo la normal y la normalizo
-	Output.Norm = normalize(mul(Normal,matWorldInverseTranspose));
+	Output.Norm = normalize(mul(Normal,matInverseTransposeWorld));
 	//Output.Norm = normalize(mul(Normal,matWorld));
    return( Output );
 }
@@ -107,7 +123,7 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
 	le += ks*k_ls;
 
 	//Obtener el texel de textura
-	float4 fvBaseColor      = tex2D( baseMap, Texcoord);
+	float4 fvBaseColor      = tex2D( diffuseMap, Texcoord);
 	
 	// suma luz diffusa, ambiente y especular
 	float4 RGBColor = 0;
@@ -125,7 +141,9 @@ technique RenderScene
 
 }
 
-//------------------------------------------------------------------------------
+/**************************************************************************************/
+/* RenderCubeMap */
+/**************************************************************************************/
 void VSCubeMap( float4 Pos : POSITION,
                 float3 Normal : NORMAL,
                 float2 Texcoord : TEXCOORD0,
@@ -197,7 +215,7 @@ float4 PSCubeMap(	float3 EnvTex: TEXCOORD0,
 	//Obtener el texel de textura
 	float k = 0.60;
 	float4 fvBaseColor = k*texCUBE( g_samCubeMap, EnvTex ) +
-						(1-k)*tex2D( baseMap, Texcoord );
+						(1-k)*tex2D( diffuseMap, Texcoord );
 	
 	// suma luz diffusa, ambiente y especular
 	fvBaseColor.rgb = saturate(fvBaseColor*(saturate(k_la+ld)) + le);

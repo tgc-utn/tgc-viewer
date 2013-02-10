@@ -11,6 +11,7 @@ using System.Drawing;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Input;
+using TgcViewer.Utils.Shaders;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -20,7 +21,8 @@ namespace Examples.Shaders.WorkshopShaders
     /// Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     /// 
-    /// Ejemplo avanzado. Ver primero ejemplo "SceneLoader/CustomMesh" y luego "Shaders/WorkshopShaders/BasicShader".
+    /// Ejemplo avanzado. Ver primero ejemplo "Shaders/WorkshopShaders/BasicShader".
+    /// 
     /// El phongShading es el hola mundo de los shaders
     /// Aplica el mismo algoritmo de iluminacion standard del directX
     /// pero por pixel. Es decir que la iluminacion se calcula pixel por pixel
@@ -35,7 +37,7 @@ namespace Examples.Shaders.WorkshopShaders
         string MyMediaDir;
         string MyShaderDir;
         TgcScene scene;
-        MyMesh mesh;
+        TgcMesh mesh;
         Effect effect;
         TgcBox lightBox;
         Viewport View1,View2,View3,ViewF;
@@ -65,26 +67,19 @@ namespace Examples.Shaders.WorkshopShaders
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
 
-            //Configurar MeshFactory customizado
-            loader.MeshFactory = new MyCustomMeshFactory();
-
             // Cargo la escena del cornell box.
             scene = loader.loadSceneFromFile(MyMediaDir + "cornell_box\\cornell_box-TgcScene.xml");
 
-            mesh = (MyMesh)scene.Meshes[0];
+            mesh = scene.Meshes[0];
 
-            //Cargar Shader
-            string compilationErrors;
-            effect = Effect.FromFile(d3dDevice, MyShaderDir  + "PhongShading.fx", null, null, ShaderFlags.None, null, out compilationErrors);
-            if (effect == null)
-            {
-                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
-            }
+
+            //Cargar Shader personalizado
+            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\PhongShading.fx");
+
             // Pasos standard: 
-            // configurar la tecnica 
-            effect.Technique = "DefaultTechnique";
             // le asigno el efecto a la malla 
-            mesh.effect = effect;
+            mesh.Effect = effect;
+            mesh.Technique = "DefaultTechnique";
 
             GuiController.Instance.Modifiers.addVertex3f("LightPosition", new Vector3(-100, -100, -100), new Vector3(100, 100, 100), new Vector3(0, 40, 0));
             GuiController.Instance.Modifiers.addFloat("Ambient", 0, 1, 0.5f);
@@ -147,8 +142,6 @@ namespace Examples.Shaders.WorkshopShaders
                 vista_unica = !vista_unica;
 
             Vector3 lightPosition = (Vector3)GuiController.Instance.Modifiers["LightPosition"];
-
-            effect.Technique = "DefaultTechnique";
             
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(lightPosition));
@@ -166,9 +159,10 @@ namespace Examples.Shaders.WorkshopShaders
                 // solo una vista
                 device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 device.Viewport = ViewF;
-                foreach (MyMesh m in scene.Meshes)
+                foreach (TgcMesh m in scene.Meshes)
                 {
-                    m.effect = effect;
+                    m.Effect = effect;
+                    m.Technique = "DefaultTechnique";
                     m.render();
                 }
                 lightBox.render();
@@ -179,9 +173,10 @@ namespace Examples.Shaders.WorkshopShaders
                 // 1- vista: usando el shader
                 device.Viewport = View1;
                 device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-                foreach (MyMesh m in scene.Meshes)
+                foreach (TgcMesh m in scene.Meshes)
                 {
-                    m.effect = effect;
+                    m.Effect = effect;
+                    m.Technique = "DefaultTechnique";
                     m.render();
                 }
                 lightBox.render();
@@ -195,7 +190,11 @@ namespace Examples.Shaders.WorkshopShaders
 
                 device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 foreach (TgcMesh m in scene.Meshes)
+                {
+                    m.Technique = "DefaultTechnique";
                     m.render();
+                }
+                    
                 lightBox.render();
 
 
@@ -204,7 +203,11 @@ namespace Examples.Shaders.WorkshopShaders
                 device.SetRenderState(RenderStates.Lighting, false);
                 device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 foreach (TgcMesh m in scene.Meshes)
+                {
+                    m.Technique = "DefaultTechnique";
                     m.render();
+                }
+                    
                 lightBox.render();
 
             }
