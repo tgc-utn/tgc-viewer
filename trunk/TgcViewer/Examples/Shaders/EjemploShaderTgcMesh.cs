@@ -6,6 +6,7 @@ using TgcViewer;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.Shaders;
 
 namespace Examples.Shaders
 {
@@ -14,8 +15,7 @@ namespace Examples.Shaders
     /// Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     /// 
-    /// Ejemplo avanzado. Ver primero ejemplo "SceneLoader/CustomMesh".
-    /// Muestra como extender la clase TgcMesh para renderizado comportamiento de Shaders.
+    /// Muestra como utilizar shaders con un TgcMesh.
     /// Carga un shader en formato .fx que posee varios Techniques.
     /// El ejemplo permite elegir que Technique renderizar.
     /// 
@@ -25,7 +25,7 @@ namespace Examples.Shaders
     public class EjemploShaderTgcMesh: TgcExample
     {
 
-        TgcMeshShader mesh;
+        TgcMesh mesh;
         Random r;
 
 
@@ -41,7 +41,7 @@ namespace Examples.Shaders
 
         public override string getDescription()
         {
-            return "Muestra como extender la clase TgcMesh para renderizado comportamiento de Shaders.";
+            return "Muestra como utilizar shaders en un TgcMesh.";
         }
 
         public override void init()
@@ -51,20 +51,12 @@ namespace Examples.Shaders
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
 
-            //Configurar MeshFactory customizado
-            loader.MeshFactory = new CustomMeshShaderFactory();
-
             //Cargar mesh
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\GruaExcavadora\\GruaExcavadora-TgcScene.xml");
-            mesh = (TgcMeshShader)scene.Meshes[0];
+            mesh = scene.Meshes[0];
 
-            //Cargar Shader
-            string compilationErrors;
-            mesh.Effect = Effect.FromFile(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Shaders\\Ejemplo1.fx", null, null, ShaderFlags.None, null, out compilationErrors);
-            if (mesh.Effect == null)
-            {
-                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
-            }
+            //Cargar Shader personalizado
+            mesh.Effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\Ejemplo1.fx");
 
 
             //Modifier para Technique de shader
@@ -96,7 +88,7 @@ namespace Examples.Shaders
 
 
             //Actualizar Technique
-            mesh.Effect.Technique = (string)GuiController.Instance.Modifiers["Technique"];
+            mesh.Technique = (string)GuiController.Instance.Modifiers["Technique"];
 
             //Cargar variables de shader
             mesh.Effect.SetValue("darkFactor", (float)GuiController.Instance.Modifiers["darkFactor"]);

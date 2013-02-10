@@ -1,30 +1,41 @@
+// ---------------------------------------------------------
 // Sombras en el image space con la tecnica de Shadows Map
+// ---------------------------------------------------------
+
+/**************************************************************************************/
+/* Variables comunes */
+/**************************************************************************************/
+
+//Matrices de transformacion
+float4x4 matWorld; //Matriz de transformacion World
+float4x4 matWorldView; //Matriz World * View
+float4x4 matWorldViewProj; //Matriz World * View * Projection
+float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
+
+//Textura para DiffuseMap
+texture texDiffuseMap;
+sampler2D diffuseMap = sampler_state
+{
+	Texture = (texDiffuseMap);
+	ADDRESSU = WRAP;
+	ADDRESSV = WRAP;
+	MINFILTER = LINEAR;
+	MAGFILTER = LINEAR;
+	MIPFILTER = LINEAR;
+};
+
+
+
 #define SMAP_SIZE 1024
 #define EPSILON 0.05f
 
 float time = 0;
-
-// Transformaciones
-float4x4 matWorld;
-float4x4 matWorldView;
-float4x4 matWorldViewProj;
-float4x4 matWorldInverseTranspose;
 
 float4x4 g_mViewLightProj;
 float4x4 g_mProjLight;
 float3   g_vLightPos;  // posicion de la luz (en World Space) = pto que representa patch emisor Bj 
 float3   g_vLightDir;  // Direcion de la luz (en World Space) = normal al patch Bj
 
-// Textura basica:
-texture base_Tex;
-sampler2D baseMap =
-sampler_state
-{
-   Texture = (base_Tex);
-   MINFILTER = LINEAR;
-   MAGFILTER = LINEAR;
-   MIPFILTER = LINEAR;
-};
 
 
 texture  g_txShadow;	// textura para el shadow map
@@ -173,7 +184,7 @@ float4 PixScene(	float2 Tex : TEXCOORD0,
 		K = I;
     }     
 		
-	float4 color_base = tex2D( baseMap, Tex);
+	float4 color_base = tex2D( diffuseMap, Tex);
 	color_base.rgb *= 0.5 + 0.5*K;
 	return color_base;	
 }	

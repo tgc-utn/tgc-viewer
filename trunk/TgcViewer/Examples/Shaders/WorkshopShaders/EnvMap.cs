@@ -11,6 +11,7 @@ using System.Drawing;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Input;
+using TgcViewer.Utils.Shaders;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -20,7 +21,7 @@ namespace Examples.Shaders.WorkshopShaders
     /// Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     /// 
-    /// Ejemplo avanzado. Ver primero ejemplo "SceneLoader/CustomMesh" y luego "Shaders/WorkshopShaders/BasicShader".
+    /// Ejemplo avanzado. Ver primero ejemplo "Shaders/WorkshopShaders/BasicShader".
     /// Muestra como reflejar un Enviroment Map en un mesh.
     /// 
     /// Autor: Mariano Banquiero
@@ -31,13 +32,14 @@ namespace Examples.Shaders.WorkshopShaders
         string MyMediaDir;
         string MyShaderDir;
         TgcScene scene, scene2, scene3, sceneX;
-        MyMesh mesh,meshX;
+        TgcMesh mesh, meshX;
         TgcMesh palmera, avion;
         Effect effect;
         List<TgcMesh> bosque;
 
         // enviroment map
-        TgcSimpleTerrain terrain;
+        TgcSimpleTerrain 
+terrain;
         string currentHeightmap;
         string currentTexture;
         float currentScaleXZ;
@@ -79,9 +81,6 @@ namespace Examples.Shaders.WorkshopShaders
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
 
-            //Configurar MeshFactory customizado
-            loader.MeshFactory = new MyCustomMeshFactory();
-
             // ------------------------------------------------------------
             // Creo el Heightmap para el terreno:
             Vector3 PosTerrain = new Vector3(0, 0, 0);
@@ -112,17 +111,17 @@ namespace Examples.Shaders.WorkshopShaders
             //Cargar los mesh:
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                             + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml");
-            mesh = (MyMesh)scene.Meshes[0];
+            mesh = scene.Meshes[0];
 
             sceneX = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                             + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml");
-            meshX = (MyMesh)sceneX.Meshes[0];
+            meshX = sceneX.Meshes[0];
 
 
 
             scene2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                             + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
-            palmera = (MyMesh)scene2.Meshes[0];
+            palmera = scene2.Meshes[0];
             
             scene3 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
                     + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
@@ -170,16 +169,13 @@ namespace Examples.Shaders.WorkshopShaders
                 meshX.D3dMesh.ComputeNormals(adj);
             }
              
-            //Cargar Shader
-            string compilationErrors;
-            effect = Effect.FromFile(d3dDevice, MyShaderDir + "EnvMap.fx", null, null, ShaderFlags.None, null, out compilationErrors);
-            if (effect == null)
-            {
-                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
-            }
+
+            //Cargar Shader personalizado
+            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\EnvMap.fx");
+
             // le asigno el efecto a la malla 
-            mesh.effect = effect;
-            meshX.effect = effect;
+            mesh.Effect = effect;
+            meshX.Effect = effect;
 
             vel_tanque = 10;
 
@@ -210,12 +206,11 @@ namespace Examples.Shaders.WorkshopShaders
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.S))
             {
                 // swap mesh
-                MyMesh mesh_aux = mesh;
+                TgcMesh mesh_aux = mesh;
                 mesh = meshX;
                 meshX = mesh;
             }
 
-            effect.Technique = "RenderScene";
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", new Vector4(0,400,0,0));
             effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.RotCamera.getPosition()));
@@ -364,14 +359,18 @@ namespace Examples.Shaders.WorkshopShaders
             skyBox.render();
             // dibujo el bosque
             foreach (TgcMesh instance in bosque)
+            {
                 instance.render();
+            }
+                
             // avion
+            //avion.Technique = cubemap ? "RenderCubeMap" : "RenderScene";
             avion.render();
 
             if (!cubemap)
             {
                 // dibujo el mesh
-                effect.Technique = "RenderCubeMap";
+                mesh.Technique = "RenderCubeMap";
                 mesh.render();
             }
         }

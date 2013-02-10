@@ -1,4 +1,29 @@
+// ---------------------------------------------------------
 // demo shaders
+// ---------------------------------------------------------
+
+/**************************************************************************************/
+/* Variables comunes */
+/**************************************************************************************/
+
+//Matrices de transformacion
+float4x4 matWorld; //Matriz de transformacion World
+float4x4 matWorldView; //Matriz World * View
+float4x4 matWorldViewProj; //Matriz World * View * Projection
+float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
+
+//Textura para DiffuseMap
+texture texDiffuseMap;
+sampler2D diffuseMap = sampler_state
+{
+	Texture = (texDiffuseMap);
+	ADDRESSU = WRAP;
+	ADDRESSV = WRAP;
+	MINFILTER = LINEAR;
+	MAGFILTER = LINEAR;
+	MIPFILTER = LINEAR;
+};
+
 
 float3 fvLightPosition = float3( -100.00, 100.00, -100.00 );
 float3 fvEyePosition = float3( 0.00, 0.00, -100.00 );
@@ -15,12 +40,6 @@ float canoa_x = 0;
 float canoa_y = 0;
 float fHeightMapScale = 0.2;
 
-// Transformaciones
-float4x4 matWorld;
-float4x4 matWorldView;
-float4x4 matWorldViewProj;
-float4x4 matWorldInverseTranspose;
-
 float k_la = 0.7;							// luz ambiente global
 float k_ld = 0.4;							// luz difusa
 float k_ls = 1.0;							// luz specular
@@ -32,16 +51,6 @@ float3   g_vLightPos;  // posicion de la luz (en World Space) = pto que represen
 float3   g_vLightDir;  // Direcion de la luz (en World Space) = normal al patch Bj
 
 
-// Textura basica:
-texture base_Tex;
-sampler2D baseMap =
-sampler_state
-{
-   Texture = (base_Tex);
-   MINFILTER = LINEAR;
-   MAGFILTER = LINEAR;
-   MIPFILTER = LINEAR;
-};
 
 // Textura auxiliar:
 texture aux_Tex;
@@ -97,6 +106,11 @@ sampler_state
 };
 
 
+
+/**************************************************************************************/
+/* RenderScene */
+/**************************************************************************************/
+
 //Output del Vertex Shader
 struct VS_OUTPUT 
 {
@@ -117,7 +131,7 @@ VS_OUTPUT vs_main( float4 Pos:POSITION,float3 Normal:NORMAL, float2 Texcoord:TEX
    // Calculo la posicion real
    Output.Pos = mul(Pos,matWorld).xyz;
    // Transformo la normal y la normalizo
-	Output.Norm = normalize(mul(Normal,matWorldInverseTranspose));
+	Output.Norm = normalize(mul(Normal,matInverseTransposeWorld));
 	//Output.Norm = normalize(mul(Normal,matWorld));
    return( Output );
 }
@@ -147,7 +161,7 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float3 N:TEXCOORD1,
 	le += ks*k_ls;
 
 	//Obtener el texel de textura
-	float4 fvBaseColor      = tex2D( baseMap, Texcoord);
+	float4 fvBaseColor      = tex2D( diffuseMap, Texcoord);
 	
 	// suma luz diffusa, ambiente y especular
 	float4 RGBColor = 0;
@@ -165,7 +179,11 @@ technique RenderScene
 
 }
 
-//------------------------------------------------------------------------------
+
+/**************************************************************************************/
+/* RenderCubeMap */
+/**************************************************************************************/
+
 void VSCubeMap( float4 Pos : POSITION,
                 float3 Normal : NORMAL,
                 float2 Texcoord : TEXCOORD0,
@@ -236,7 +254,7 @@ float4 PSCubeMap(	float3 EnvTex: TEXCOORD0,
 	//Obtener el texel de textura
 	float k = 0.3;
 	float4 fvBaseColor = k*texCUBE( g_samCubeMap, EnvTex ) +
-						(1-k)*tex2D( baseMap, Texcoord );
+						(1-k)*tex2D( diffuseMap, Texcoord );
 	
 	// suma luz diffusa, ambiente y especular
 	fvBaseColor.rgb = saturate(fvBaseColor*(saturate(k_la+ld)) + le);
@@ -268,7 +286,11 @@ technique RenderCubeMap
 }
 
 
-// -------------------------------------------------------------------------------------
+/**************************************************************************************/
+/* RenderAgua */
+/**************************************************************************************/
+
+
 void VSAgua( float4 Pos : POSITION,
              float2 Texcoord : TEXCOORD0,
              float3 normal : NORMAL,
@@ -368,7 +390,7 @@ float4 PSAgua(	float3 Pos: POSITION,
 	fCurrH = (fCurrH * 0.04 + 0.01)/tsEye.z;
 
 	Texcoord += tsEye.xy * fCurrH;
-	vCurrSample = tex2D( baseMap, Texcoord*0.1);
+	vCurrSample = tex2D( diffuseMap, Texcoord*0.1);
 	
 	// enviroment map 
 	float dist = distance(float2(x,y),vortice);
@@ -441,9 +463,10 @@ technique RenderAgua
 }
 
 
-// -------------------------------------------------------------------------------------
-// Shadow map
-// -------------------------------------------------------------------------------------
+
+/**************************************************************************************/
+/* RenderSceneShadows: Shadow map */
+/**************************************************************************************/
 //-----------------------------------------------------------------------------
 // Vertex Shader que implementa un shadow map. Lo necesito para calcular
 // el valor de la funcion de visibilidad de la ecuacion de radiosity
@@ -547,7 +570,7 @@ float4 PixSceneShadows(	float2 Tex : TEXCOORD0,
         K = lerp( lerp( s0, s1, vecino.x ),lerp( s2, s3, vecino.x ),vecino.y);
     }     
 		
-	float4 color_base = tex2D( baseMap, Tex);
+	float4 color_base = tex2D( diffuseMap, Tex);
 	color_base.rgb *= 0.7 + 0.3*K;
 	return color_base;	
 }
