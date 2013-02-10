@@ -1,12 +1,33 @@
-/*********************************************** Variables ***************************************************/
+/*
+* Shader utilizado en ejemplo "EjemploShaderTgcMesh"
+* Tiene varias techniques para hacer distintos tipos de efectos simples
+*/
 
-float4x4 matWorld;
-float4x4 matWorldView;
-float4x4 matWorldViewProj;
+/**************************************************************************************/
+/* Variables comunes */
+/**************************************************************************************/
+
+//Matrices de transformacion
+float4x4 matWorld; //Matriz de transformacion World
+float4x4 matWorldView; //Matriz World * View
+float4x4 matWorldViewProj; //Matriz World * View * Projection
+float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
+
+//Textura para DiffuseMap
+texture texDiffuseMap;
+sampler2D diffuseMap = sampler_state
+{
+	Texture = (texDiffuseMap);
+	ADDRESSU = WRAP;
+	ADDRESSV = WRAP;
+	MINFILTER = LINEAR;
+	MAGFILTER = LINEAR;
+	MIPFILTER = LINEAR;
+};
+
 float darkFactor;
 float random;
 float textureOffset;
-
 
 /*********************************************** Vertex Shaders ***************************************************/
 
@@ -85,12 +106,6 @@ VS_OUTPUT VS_textureOffset (
 
 /*********************************************** Pixel Shaders ***************************************************/
 
-//Textura utilizada por el Pixel Shader
-texture diffuseMap_Tex;
-sampler2D diffuseMap = sampler_state
-{
-   Texture = (diffuseMap_Tex);
-};
 
 float4 PS_onlyColor(VS_OUTPUT In): COLOR
 {
