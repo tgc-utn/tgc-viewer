@@ -231,16 +231,12 @@
     <Compile Include="SceneLoader\EjemploInstanciasPalmeras.cs" />
     <Compile Include="SceneLoader\EjemploMeshInstance.cs" />
     <Compile Include="SceneLoader\EjemploExportarMesh.cs" />
-    <Compile Include="Shaders\EjemploLinternaPhong.cs" />
-    <Compile Include="Shaders\EjemploToonShader.cs" />
     <Compile Include="Shaders\EjemploPhongShading.cs" />
     <Compile Include="Shaders\EjemploShaderTgcMesh.cs" />
-    <Compile Include="Shaders\EjemploShader.cs" />
     <Compile Include="Shaders\TgcMeshShader.cs" />
     <Compile Include="Shaders\WorkshopShaders\BasicShader.cs" />
     <Compile Include="Shaders\WorkshopShaders\DemoShaders.cs" />
     <Compile Include="Shaders\WorkshopShaders\EnvMap.cs" />
-    <Compile Include="Shaders\WorkshopShaders\MyMesh.cs" />
     <Compile Include="Shaders\WorkshopShaders\MySimpleTerrain.cs" />
     <Compile Include="Shaders\WorkshopShaders\PhongShading.cs" />
     <Compile Include="Shaders\WorkshopShaders\ShadowMap.cs" />
