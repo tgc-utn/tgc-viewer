@@ -1,5 +1,6 @@
 /*
-* Shader con tecnicas varias utilizadas por diversas herramientas del framework
+* Shader con tecnicas varias utilizadas por diversas herramientas del framework,
+* como: TgcBox, TgcArrow, TgcPlaneWall, TgcBoundingBox, TgcBoundingSphere, etc.
 * Hay varias Techniques, una para cada combinación utilizada en el framework de formato de vertice:
 *	- PositionColoredTextured
 *	- PositionTextured
