@@ -207,7 +207,7 @@ namespace TgcViewer.Utils.TgcGeometry
         }
         
         /// <summary>
-        /// Devuelve el número entero más pequeño mayor o igual que el número decimal especificado.
+        /// Devuelve el siguiente entero mayor o igual que el número decimal especificado.
         /// </summary>
         /// <param name="x">Número decimal.</param>
         /// <returns>El número entero más pequeño mayor o igual que x.</returns>
@@ -217,7 +217,7 @@ namespace TgcViewer.Utils.TgcGeometry
         }
         
         /// <summary>
-        /// Devuelve el entero más grande mayor o igual que el número de punto flotante
+        /// Devuelve el siguiente entero menor o igual que el número de punto flotante
         /// de precisión doble especificado.
         /// </summary>
         /// <param name="x">Número decimal.</param>
