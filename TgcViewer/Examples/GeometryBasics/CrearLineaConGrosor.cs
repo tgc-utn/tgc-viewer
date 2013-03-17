@@ -38,7 +38,7 @@ namespace Examples.GeometryBasics
 
         public override string getDescription()
         {
-            return "Muestra como crear una linea 3D con grosor configurable, utilizando la herramienta TgcBoxLine.";
+            return "Muestra como crear una linea 3D con grosor configurable, utilizando la herramienta TgcBoxLine. Movimiento con mouse.";
         }
 
         public override void init()

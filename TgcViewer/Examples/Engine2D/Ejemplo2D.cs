@@ -38,7 +38,7 @@ namespace Examples.Engine2D
 
         public override string getDescription()
         {
-            return "Ejemplo 2D utilizando Sprites";
+            return "Ejemplo 2D utilizando Sprites. Hacer clic con el mouse para mover la nave.";
         }
 
         public override void init()

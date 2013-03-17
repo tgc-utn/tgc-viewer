@@ -40,7 +40,7 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Carga un modelo 3D estático mediante la herramienta TgcSceneLoader y muestra como renderizar su BoundingBox.";
+            return "Carga un modelo 3D estático mediante la herramienta TgcSceneLoader y muestra como renderizar su BoundingBox. Movimiento con mouse.";
         }
 
         public override void init()

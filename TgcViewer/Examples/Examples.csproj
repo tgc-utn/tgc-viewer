@@ -16,7 +16,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -31,7 +31,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -170,6 +169,12 @@
     <Compile Include="Otros\EjemploBatchPrimitivesDx.cs" />
     <Compile Include="Otros\EjemploBatchPrimitives.cs" />
     <Compile Include="GeometryBasics\CrearSkyBox.cs" />
+    <Compile Include="Otros\EjemploDefaultHelpForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Otros\EjemploDefaultHelpForm.Designer.cs">
+      <DependentUpon>EjemploDefaultHelpForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Otros\EjemploDisposeMesh.cs" />
     <Compile Include="Otros\EjemploPanView.cs" />
     <Compile Include="Particles\EmisorDeParticulas.cs" />
@@ -300,6 +305,9 @@
     <EmbeddedResource Include="MeshCreator\MeshCreatorControl.resx">
       <DependentUpon>MeshCreatorControl.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Otros\EjemploDefaultHelpForm.resx">
+      <DependentUpon>EjemploDefaultHelpForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
