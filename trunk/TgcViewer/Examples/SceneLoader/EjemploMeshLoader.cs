@@ -52,7 +52,7 @@ namespace Examples.SceneLoader
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
             //Malla default
-            string initialMeshFile = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml";
+            string initialMeshFile = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml";
 
             //Modifiers
             currentScene = null;

@@ -38,7 +38,7 @@ namespace Examples.GeometryBasics
 
         public override string getDescription()
         {
-            return "Muestra como crear una flecha 3D, utilizando la herramienta TgcArrow.";
+            return "Muestra como crear una flecha 3D, utilizando la herramienta TgcArrow. Movimiento con mouse.";
         }
 
         public override void init()

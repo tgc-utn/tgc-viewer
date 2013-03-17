@@ -54,7 +54,7 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Ejemplo de Detección de Colisiones y manejo de Input";
+            return "Ejemplo de Detección de Colisiones y manejo de Input. Movimiento con W, A, S, D.";
         }
 
         public override void init()

@@ -47,7 +47,7 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Detecta los objetos que se interponen en la visión de la cámara en 3ra persona y renderiza solo su BoundingBox";
+            return "Detecta los objetos que se interponen en la visión de la cámara en 3ra persona y renderiza solo su BoundingBox. Movimiento con W, A, S, D.";
         }
 
         public override void init()

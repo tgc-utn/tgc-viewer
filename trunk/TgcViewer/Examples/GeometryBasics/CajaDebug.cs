@@ -42,7 +42,7 @@ namespace Examples.GeometryBasics
 
         public override string getDescription()
         {
-            return "Muestra como crear una caja que solo renderiza sus aristas, y no sus caras.";
+            return "Muestra como crear una caja que solo renderiza sus aristas, y no sus caras. Movimiento con mouse.";
         }
 
         public override void init()

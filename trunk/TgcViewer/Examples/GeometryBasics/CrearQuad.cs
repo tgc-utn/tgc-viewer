@@ -40,7 +40,7 @@ namespace Examples.GeometryBasics
 
         public override string getDescription()
         {
-            return "Muestra como crear una cara rectanglar 3D (Quad) orientable en base a un vector normal.";
+            return "Muestra como crear una cara rectanglar 3D (Quad) orientable en base a un vector normal. Movimiento con mouse.";
         }
 
         public override void init()

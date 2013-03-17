@@ -78,7 +78,7 @@ namespace Examples
 
 
             //Modifier para habilitar o deshabilitar FrustumCulling
-            GuiController.Instance.Modifiers.addBoolean("culling", "Frustum culling", false);
+            GuiController.Instance.Modifiers.addBoolean("culling", "Frustum culling", true);
 
             //UserVar para contar la cantidad de meshes que se renderizan
             GuiController.Instance.UserVars.addVar("Meshes renderizadas");

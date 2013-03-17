@@ -43,7 +43,7 @@ namespace Examples.GeometryBasics
 
         public override string getDescription()
         {
-            return "Muestra un triangulo 3D al que se le pueden modificar sus atributos básicos.";
+            return "Muestra un triangulo 3D al que se le pueden modificar sus atributos básicos. Movimiento con mouse.";
         }
 
         public override void init()

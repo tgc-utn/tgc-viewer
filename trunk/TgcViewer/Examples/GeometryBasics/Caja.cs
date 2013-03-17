@@ -41,7 +41,7 @@ namespace Examples.GeometryBasics
         public override string getDescription()
         {
             return "Muestra como crear una caja 3D con la herramienta TgcBox, cuyos parámetros " +
-                "pueden ser modificados.";
+                "pueden ser modificados. Movimiento con mouse.";
         }
 
         public override void init()

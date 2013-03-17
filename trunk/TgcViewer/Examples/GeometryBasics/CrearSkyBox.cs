@@ -42,7 +42,7 @@ namespace Examples.Otros
 
         public override string getDescription()
         {
-            return "Muestra como utilizar la herramienta TgcSkyBox para crear un cielo envolvente en la escena.";
+            return "Muestra como utilizar la herramienta TgcSkyBox para crear un cielo envolvente en la escena. Movimiento con mouse.";
         }
 
 

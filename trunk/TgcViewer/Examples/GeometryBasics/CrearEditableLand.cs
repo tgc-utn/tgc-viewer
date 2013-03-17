@@ -38,7 +38,7 @@ namespace Examples.GeometryBasics
 
         public override string getDescription()
         {
-            return "Muestra como utilizar la utilidad TgcEditableLand para crear una grilla de terreno editable de 4x4 poligonos.";
+            return "Muestra como utilizar la utilidad TgcEditableLand para crear una grilla de terreno editable de 4x4 poligonos. Movimiento con mouse.";
         }
 
         public override void init()

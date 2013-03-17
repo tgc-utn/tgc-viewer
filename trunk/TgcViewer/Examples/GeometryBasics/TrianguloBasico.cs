@@ -40,7 +40,7 @@ namespace Examples.GeometryBasics
 
         public override string getDescription()
         {
-            return "Crea un triangulo 3D básico con color";
+            return "Crea un triangulo 3D básico con color. Movimiento con mouse.";
         }
 
         public override void init()
