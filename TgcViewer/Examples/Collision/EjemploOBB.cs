@@ -42,7 +42,7 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Muestra como crear un Oriented BoundingBox a partir de un mesh.";
+            return "Muestra como crear un Oriented BoundingBox a partir de un mesh. Movimiento con mouse.";
         }
 
         public override void init()

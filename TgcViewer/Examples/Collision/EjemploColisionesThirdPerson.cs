@@ -55,7 +55,7 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Ejemplo de Detección de Colisiones utilizando la cámara en Tercera Persona";
+            return "Ejemplo de Detección de Colisiones utilizando la cámara en Tercera Persona. Movimiento con W, A, S, D.";
         }
 
         public override void init()

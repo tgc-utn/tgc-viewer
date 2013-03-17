@@ -63,7 +63,7 @@ namespace Examples.Collision.SphereTriangleCollision
 
         public override string getDescription()
         {
-            return "Estrategia integral de colisión: BoundingSphere contra triángulos + Gravedad + Sliding + Jump.";
+            return "Estrategia integral de colisión: BoundingSphere contra triángulos + Gravedad + Sliding + Jump. Movimiento con W, A, S, D, Space.";
         }
 
         public override void init()

@@ -19,7 +19,11 @@ namespace Examples.Collision
     /// Unidades Involucradas:
     ///     # Unidad 6 - Detección de Colisiones - BoundingBox
     /// 
-    /// Muestra como hacer colisiones entre un BoundingBox y distintas figuras geométricas.
+    /// Muestra como hacer colisiones entre un BoundingBox y distintas figuras geométricas:
+    /// - BoundingBox vs Triangulo
+    /// - BoundingBox vs otro BoundingBox
+    /// - BoundingBox vs Esfera
+    /// - BoundingBox vs OBB
     /// 
     /// 
     /// Autor: Matías Leone, Leandro Barbagallo
@@ -46,7 +50,7 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Muestra como hacer colisiones entre un BoundingBox y distintas figuras geométricas.";
+            return "Muestra como hacer colisiones entre un BoundingBox y distintas figuras geométricas (AABB, Triangle, Sphere, OBB). Movimiento con W, A, S, D.";
         }
 
         public override void init()

@@ -42,7 +42,7 @@ namespace Examples.GeometryBasics
         public override string getDescription()
         {
             return "Muestra como utilizar la herramienta TgcPlaneWall para crear paredes planas con textura." +
-                "Permite editar su posición, tamaño, textura y mapeo de textura.";
+                "Permite editar su posición, tamaño, textura y mapeo de textura. Movimiento con mouse.";
         }
 
         

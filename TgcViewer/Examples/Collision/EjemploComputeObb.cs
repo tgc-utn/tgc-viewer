@@ -43,7 +43,7 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Muestra como calcular un Oriented BoundingBox (OBB) a partir de una nueva aleatoria de puntos";
+            return "Muestra como calcular un Oriented BoundingBox (OBB) a partir de una nueva aleatoria de puntos. Movimiento con mouse.";
         }
 
         public override void init()

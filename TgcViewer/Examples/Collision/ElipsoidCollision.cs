@@ -67,7 +67,7 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Colisión de un Elipsoide contra todo un escenario, aplicando gravedad y sliding.";
+            return "Colisión de un Elipsoide contra todo un escenario, aplicando gravedad y sliding. Movimiento con W, A, S, D, Space.";
         }
 
         public override void init()
