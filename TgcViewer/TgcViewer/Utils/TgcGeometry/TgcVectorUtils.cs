@@ -8,7 +8,7 @@ namespace TgcViewer.Utils.TgcGeometry
     /// <summary>
     /// Herramientas de manipulación de vectores
     /// </summary>
-    public class TgcVectorUtils
+    public abstract class TgcVectorUtils
     {
 
         /// <summary>

@@ -145,7 +145,7 @@ float4 ps_VertexColor(PS_INPUT_VERTEX_COLOR input) : COLOR0
 	
 	/* Color final: modular (Emissive + Ambient + Diffuse) por el color del mesh, y luego sumar Specular.
 	   El color Alpha sale del diffuse material */
-	float4 finalColor = float4((materialEmissiveColor + ambientLight + diffuseLight) * input.Color + specularLight , materialDiffuseColor.a);
+	float4 finalColor = float4(saturate(materialEmissiveColor + ambientLight + diffuseLight) * input.Color + specularLight , materialDiffuseColor.a);
 	
 	
 	return finalColor;
@@ -261,7 +261,7 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	
 	/* Color final: modular (Emissive + Ambient + Diffuse) por el color de la textura, y luego sumar Specular.
 	   El color Alpha sale del diffuse material */
-	float4 finalColor = float4((materialEmissiveColor + ambientLight + diffuseLight) * texelColor + specularLight, materialDiffuseColor.a);
+	float4 finalColor = float4(saturate(materialEmissiveColor + ambientLight + diffuseLight) * texelColor + specularLight, materialDiffuseColor.a);
 	
 	
 	return finalColor;
@@ -387,7 +387,7 @@ float4 ps_diffuseMapAndLightmap(PS_INPUT_DIFFUSE_MAP_AND_LIGHTMAP input) : COLOR
 	
 	/* Color final: modular (Emissive + Ambient + Diffuse) por el color de la textura, y luego sumar Specular.
 	   El color Alpha sale del diffuse material */
-	float4 finalColor = float4((materialEmissiveColor + ambientLight + diffuseLight) * (texelColor * lightmapColor) + specularLight, materialDiffuseColor.a);
+	float4 finalColor = float4(saturate(materialEmissiveColor + ambientLight + diffuseLight) * (texelColor * lightmapColor) + specularLight, materialDiffuseColor.a);
 	
 	
 	return finalColor;

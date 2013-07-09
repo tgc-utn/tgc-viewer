@@ -128,7 +128,7 @@ float4 ps_VertexColor(PS_INPUT_VERTEX_COLOR input) : COLOR0
 	
 	
 	//Color final: modular (Ambient + Diffuse) por el color del mesh, y luego sumar Specular.
-	float4 finalColor = float4((ambientColor + diffuseLight) * input.Color.rgb + specularLight , input.Color.a);
+	float4 finalColor = float4(saturate(ambientColor + diffuseLight) * input.Color.rgb + specularLight , input.Color.a);
 	
 	
 	return finalColor;
@@ -233,7 +233,7 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 			: specularColor * pow(max( 0.0, n_dot_h), specularExp);
 	
 	//Color final: modular (Ambient + Diffuse) por el color de la textura, y luego sumar Specular.
-	float4 finalColor = float4((ambientColor + diffuseLight) * texelColor + specularLight, texelColor.a);
+	float4 finalColor = float4(saturate(ambientColor + diffuseLight) * texelColor + specularLight, texelColor.a);
 	
 	
 	return finalColor;
@@ -347,7 +347,7 @@ float4 ps_diffuseMapAndLightmap(PS_INPUT_DIFFUSE_MAP_AND_LIGHTMAP input) : COLOR
 			: (specularColor * pow(max( 0.0, n_dot_h), specularExp));
 	
 	//Color final: modular (Ambient + Diffuse) por el color de la textura, y luego sumar Specular.
-	float4 finalColor = float4((ambientColor + diffuseLight) * (texelColor * lightmapColor) + specularLight, texelColor.a);
+	float4 finalColor = float4(saturate(ambientColor + diffuseLight) * (texelColor * lightmapColor) + specularLight, texelColor.a);
 	
 	
 	return finalColor;

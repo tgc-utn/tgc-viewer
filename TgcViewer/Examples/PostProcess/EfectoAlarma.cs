@@ -10,6 +10,7 @@ using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Interpolation;
 using TgcViewer.Utils;
+using TgcViewer.Utils.Shaders;
 
 namespace Examples.PostProcess
 {
@@ -91,14 +92,8 @@ namespace Examples.PostProcess
 
 
             //Cargar shader con efectos de Post-Procesado
-            string compilationErrors;
-            effect = Effect.FromFile(GuiController.Instance.D3dDevice,
-                GuiController.Instance.ExamplesMediaDir + "Shaders\\PostProcess.fx",
-                null, null, ShaderFlags.None, null, out compilationErrors);
-            if (effect == null)
-            {
-                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
-            }
+            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\PostProcess.fx");
+
             //Configurar Technique dentro del shader
             effect.Technique = "AlarmaTechnique";
 

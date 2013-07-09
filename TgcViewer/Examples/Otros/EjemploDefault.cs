@@ -88,7 +88,7 @@ namespace Examples.Otros
             mesh.Effect.SetValue("specularColor", ColorValue.FromColor(Color.White));
             mesh.Effect.SetValue("specularExp", 10f);
             mesh.Effect.SetValue("lightPosition", lightPos);
-            mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.FpsCamera.getPosition()));
+            mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.RotCamera.getPosition()));
 
 
             mesh.rotateY(-elapsedTime/2);
