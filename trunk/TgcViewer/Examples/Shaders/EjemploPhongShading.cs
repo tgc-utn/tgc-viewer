@@ -115,7 +115,7 @@ namespace Examples.Shaders
 
                 //Cargar variables shader
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
-                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.FpsCamera.getPosition()));
+                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.RotCamera.getPosition()));
                 mesh.Effect.SetValue("ambientColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["ambient"]));
                 mesh.Effect.SetValue("diffuseColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["diffuse"]));
                 mesh.Effect.SetValue("specularColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["specular"]));

@@ -441,5 +441,20 @@ namespace TgcViewer.Utils.TgcSceneLoader
         {
             return new Plane(f[0], f[1], f[2], f[3]);
         }
+
+        /// <summary>
+        /// Convierte un array de Vector2 a un array de float
+        /// </summary>
+        public static float[] vector2ArrayToFloat2Array(Vector2[] values)
+        {
+            float[] data = new float[values.Length * 2];
+            for (int i = 0; i < values.Length; i++)
+            {
+                data[i * 2] = values[i].X;
+                data[i * 2 + 1] = values[i].Y;
+            }
+            return data;
+        }
+
     }
 }
