@@ -9,10 +9,8 @@ namespace TgcViewer.Utils.TgcGeometry
     /// <summary>
     /// Funciones matemáticas rápidas y optimizadas
     /// </summary>
-    public class FastMath
+    public abstract class FastMath
     {
-
-        #region Utilidades generales de Matemática
 
         /// <summary>
         /// Representa la relación entre la longitud de la circunferencia de un círculo
@@ -29,6 +27,11 @@ namespace TgcViewer.Utils.TgcGeometry
         /// 2 PI
         /// </summary>
         public static readonly float TWO_PI = 2.0f * PI;
+
+        /// <summary>
+        /// PI / 4
+        /// </summary>
+        public static readonly float QUARTER_PI = PI / 4;
 
         /// <summary>
         /// Representa la base logarítmica natural, especificada por la constante, e.
@@ -350,14 +353,32 @@ namespace TgcViewer.Utils.TgcGeometry
             return (float)Math.Exp(n);
         }
 
-        #endregion
+        /// <summary>
+        /// Calculo de funcion de Gauss
+        /// </summary>
+        /// <param name="x">valor de X</param>
+        /// <param name="y">valor de Y</param>
+        /// <param name="rho">standard deviation</param>
+        /// <returns>valor de la funcion de distribucion de Gauss</returns>
+        public static float GaussianDistribution(float x, float y, float rho)
+        {
+            float g = 1.0f / FastMath.Sqrt(2.0f * FastMath.PI * rho * rho);
+            g *= FastMath.Exp(-(x * x + y * y) / (2 * rho * rho));
+            return g;
+        }
 
-
-        #region Utilidades con Vectores de DirectX
-
-
-
-        #endregion
+        /// <summary>
+        /// Calculo de funcion de Gauss
+        /// </summary>
+        /// <param name="x">valor de X</param>
+        /// <param name="rho">standard deviation</param>
+        /// <returns>valor de la funcion de distribucion de Gauss</returns>
+        public static float GaussianDistribution(float x, float rho)
+        {
+            float g = 1.0f / FastMath.Sqrt(2.0f * FastMath.PI * rho * rho);
+            g *= FastMath.Exp(-(x * x) / (2 * rho * rho));
+            return g;
+        }
 
     }
 

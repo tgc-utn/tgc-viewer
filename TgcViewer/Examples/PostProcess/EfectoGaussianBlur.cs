@@ -16,27 +16,25 @@ namespace Examples.PostProcess
 {
 
     /// <summary>
-    /// Ejemplo EfectoBlur:
+    /// Ejemplo EfectoGaussianBlur:
     /// Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     /// 
-    /// Ejemplo avanzado. Ver primero ejemplo "Shaders/EjemploShaderTgcMesh".
+    /// Ejemplo avanzado. Ver primero ejemplo "PostProcess/EfectoBlur"
     /// Muestra como utilizar la tenica de Render Target para lograr efectos de Post-Procesado.
     /// Toda la escena no se dibuja a pantalla sino que se dibuja a una textura auxiliar.
-    /// Luego se crea un unico mesh (un Quad) que ocupa toda la pantalla y se le carga como textura
-    /// esta imagen generada antes.
-    /// De esta forma se pueden hacer diversos efectos 2D con pixels shaders sobre la imagen final.
-    /// En este caso, la imagen final se borronea (blurring) promediando muestras de texels vecinos.
-    /// No es un blur real sino que es un Box filter. Para obtener un blur mas real ver ejemplo "PostProcess/EfectoGaussianBlur"
+    /// Luego esa textura es renderizada con una pasada de Gaussian blur horizontal.
+    /// Y por ultimo se hace otra pasada mas de Gaussian blur pero vertical.
     /// 
     /// Autor: Matías Leone, Leandro Barbagallo
     /// 
     /// </summary>
-    public class EfectoBlur : TgcExample
+    public class EfectoGaussianBlur : TgcExample
     {
 
-        VertexBuffer screenQuadVB;
-        Texture renderTarget2D;
+        TgcScreenQuad screenQuad;
+        Texture sceneRT;
+        Texture blurTempRT;
         Surface pOldRT;
         Effect effect;
         List<TgcMesh> meshes;
@@ -49,12 +47,12 @@ namespace Examples.PostProcess
 
         public override string getName()
         {
-            return "Efecto Blur";
+            return "Efecto Gaussian Blur";
         }
 
         public override string getDescription()
         {
-            return "Graba la escena a un Render Target y luego con un pixel shader se borronea la imagen.";
+            return "Graba la escena a un Render Target y luego con un pixel shader se borronea la imagen con Gaussian Blur.";
         }
 
         public override void init()
@@ -65,35 +63,27 @@ namespace Examples.PostProcess
             //La responsabilidad cae toda de nuestro lado
             GuiController.Instance.CustomRenderEnabled = true;
 
+            //Creamos un FullScreen Quad
+            screenQuad = new TgcScreenQuad();
+            
 
-            //Se crean 2 triangulos (o Quad) con las dimensiones de la pantalla con sus posiciones ya transformadas
-            // x = -1 es el extremo izquiedo de la pantalla, x = 1 es el extremo derecho
-            // Lo mismo para la Y con arriba y abajo
-            // la Z en 1 simpre
-            CustomVertex.PositionTextured[] screenQuadVertices = new CustomVertex.PositionTextured[]
-		    {
-    			new CustomVertex.PositionTextured( -1, 1, 1, 0,0), 
-			    new CustomVertex.PositionTextured(1,  1, 1, 1,0),
-			    new CustomVertex.PositionTextured(-1, -1, 1, 0,1),
-			    new CustomVertex.PositionTextured(1,-1, 1, 1,1)
-    		};
-            //vertex buffer de los triangulos
-            screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured),
-                    4, d3dDevice, Usage.Dynamic | Usage.WriteOnly,
-                        CustomVertex.PositionTextured.Format, Pool.Default);
-            screenQuadVB.SetData(screenQuadVertices, 0, LockFlags.None);
+            //Creamos un Render Targer sobre el cual se va a dibujar toda la escena original
+            int backBufferWidth = d3dDevice.PresentationParameters.BackBufferWidth;
+            int backBufferHeight = d3dDevice.PresentationParameters.BackBufferHeight;
+            sceneRT = new Texture(d3dDevice, backBufferWidth, backBufferHeight, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
 
-            //Creamos un Render Targer sobre el cual se va a dibujar la pantalla
-            renderTarget2D = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                    , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                        Format.X8R8G8B8, Pool.Default);
+            //Definimos el tamaño de una textura que sea de 1/4 x 1/4 de la original, y que sean divisibles por 8 para facilitar los calculos de sampleo
+            int cropWidth = (backBufferWidth - backBufferWidth % 8) / 4;
+            int cropHeight = (backBufferHeight - backBufferHeight % 8) / 4;
+
+            //Creamos un Render Target para auxiliar para almacenar la pasada horizontal de blur
+            blurTempRT = new Texture(d3dDevice, cropWidth, cropHeight, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
 
 
             //Cargar shader con efectos de Post-Procesado
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\PostProcess.fx");
-
+            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\GaussianBlur.fx");
             //Configurar Technique dentro del shader
-            effect.Technique = "BlurTechnique";
+            effect.Technique = "GaussianBlurPass";
 
 
             //Cargamos un escenario
@@ -104,12 +94,13 @@ namespace Examples.PostProcess
 
             //Camara en primera personas
             GuiController.Instance.FpsCamera.Enable = true;
+            GuiController.Instance.FpsCamera.MovementSpeed *= 2;
             GuiController.Instance.FpsCamera.setCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f), new Vector3(-182.0957f, 82.3147f, -810.9479f));
             
 
             //Modifier para activar/desactivar efecto
             GuiController.Instance.Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
-            GuiController.Instance.Modifiers.addFloat("blur_intensity", 0.001f, 0.05f, 0.01f);
+            GuiController.Instance.Modifiers.addFloat("deviation", 1, 5, 1);
         }
 
 
@@ -120,7 +111,7 @@ namespace Examples.PostProcess
             //Cargamos el Render Targer al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
             //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro Render Target.
             pOldRT = d3dDevice.GetRenderTarget(0);
-            Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
+            Surface pSurf = sceneRT.GetSurfaceLevel(0);
             d3dDevice.SetRenderTarget(0, pSurf);
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
@@ -133,10 +124,6 @@ namespace Examples.PostProcess
 
             //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
             //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
-
-
-            //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
-            d3dDevice.SetRenderTarget(0, pOldRT);
 
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
@@ -153,13 +140,6 @@ namespace Examples.PostProcess
         {
             //Arrancamos el renderizado. Esto lo tenemos que hacer nosotros a mano porque estamos en modo CustomRenderEnabled = true
             d3dDevice.BeginScene();
-
-
-            //Como estamos en modo CustomRenderEnabled, tenemos que dibujar todo nosotros, incluso el contador de FPS
-            GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
-
-            //Tambien hay que dibujar el indicador de los ejes cartesianos
-            GuiController.Instance.AxisLines.render();
 
             //Dibujamos todos los meshes del escenario
             foreach (TgcMesh m in meshes)
@@ -181,33 +161,56 @@ namespace Examples.PostProcess
             //Arrancamos la escena
             d3dDevice.BeginScene();
 
-            //Cargamos para renderizar el unico modelo que tenemos, un Quad que ocupa toda la pantalla, con la textura de todo lo dibujado antes
-            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
-            d3dDevice.SetStreamSource(0, screenQuadVB, 0);
-
             //Ver si el efecto de oscurecer esta activado, configurar Technique del shader segun corresponda
             bool activar_efecto = (bool)GuiController.Instance.Modifiers["activar_efecto"];
+
+            //Hacer blur
             if (activar_efecto)
             {
-                effect.Technique = "BlurTechnique";
+                float deviation = (float)GuiController.Instance.Modifiers["deviation"];
+                Surface blurTempS = blurTempRT.GetSurfaceLevel(0);
+
+                //Gaussian blur horizontal
+                Vector2[] texCoordOffsets;
+                float[] colorWeights;
+                TgcPostProcessingUtils.computeGaussianBlurSampleOffsets15(blurTempS.Description.Width, deviation, 1, true, out texCoordOffsets, out colorWeights);
+                effect.Technique = "GaussianBlurPass";
+                effect.SetValue("texSceneRT", sceneRT);
+                effect.SetValue("gauss_offsets", TgcParserUtils.vector2ArrayToFloat2Array(texCoordOffsets));
+                effect.SetValue("gauss_weights", colorWeights);
+                d3dDevice.SetRenderTarget(0, blurTempS);
+                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                screenQuad.render(effect);
+                
+                //Gaussian blur vertical
+                TgcPostProcessingUtils.computeGaussianBlurSampleOffsets15(blurTempS.Description.Height, deviation, 1, false, out texCoordOffsets, out colorWeights);
+                effect.Technique = "GaussianBlurPass";
+                effect.SetValue("texSceneRT", blurTempRT);
+                effect.SetValue("gauss_offsets", TgcParserUtils.vector2ArrayToFloat2Array(texCoordOffsets));
+                effect.SetValue("gauss_weights", colorWeights);
+                d3dDevice.SetRenderTarget(0, pOldRT);
+                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                screenQuad.render(effect);
+
+                blurTempS.Dispose();
             }
+            //No hacer blur
             else
             {
                 effect.Technique = "DefaultTechnique";
+                effect.SetValue("texSceneRT", sceneRT);
+                d3dDevice.SetRenderTarget(0, pOldRT);
+                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                screenQuad.render(effect);
             }
 
-            //Cargamos parametros en el shader de Post-Procesado
-            effect.SetValue("render_target2D", renderTarget2D);
-            effect.SetValue("blur_intensity", (float)GuiController.Instance.Modifiers["blur_intensity"]);
-            
 
-            //Limiamos la pantalla y ejecutamos el render del shader
-            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            effect.Begin(FX.None);
-            effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
-            effect.EndPass();
-            effect.End();
+            //Como estamos en modo CustomRenderEnabled, tenemos que dibujar todo nosotros, incluso el contador de FPS
+            GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+
+            //Tambien hay que dibujar el indicador de los ejes cartesianos
+            GuiController.Instance.AxisLines.render();
+
 
             //Terminamos el renderizado de la escena
             d3dDevice.EndScene();
@@ -222,8 +225,10 @@ namespace Examples.PostProcess
                 m.dispose();
             }
             effect.Dispose();
-            screenQuadVB.Dispose();
-            renderTarget2D.Dispose();
+            screenQuad.dispose();
+            sceneRT.Dispose();
+            blurTempRT.Dispose();
+            pOldRT.Dispose();
         }
 
     }

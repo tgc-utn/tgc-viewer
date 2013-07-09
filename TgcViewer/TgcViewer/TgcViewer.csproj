@@ -230,6 +230,8 @@
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingParser.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingPortal.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingPortalData.cs" />
+    <Compile Include="Utils\Shaders\TgcPostProcessingUtils.cs" />
+    <Compile Include="Utils\Shaders\TgcScreenQuad.cs" />
     <Compile Include="Utils\Shaders\TgcShaders.cs" />
     <Compile Include="Utils\Sound\Tgc3dSound.cs" />
     <Compile Include="Utils\Sound\TgcMp3Player.cs" />
