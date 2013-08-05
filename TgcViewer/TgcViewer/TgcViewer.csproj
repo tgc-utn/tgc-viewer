@@ -277,6 +277,7 @@
     <Compile Include="Utils\TgcGeometry\TgcPickingRay.cs" />
     <Compile Include="Utils\TgcGeometry\TgcPlaneWall.cs" />
     <Compile Include="Utils\TgcGeometry\TgcRay.cs" />
+    <Compile Include="Utils\TgcGeometry\TgcSphere.cs" />
     <Compile Include="Utils\TgcGeometry\TgcTriangle.cs" />
     <Compile Include="Utils\TgcGeometry\TgcTriangleArray.cs" />
     <Compile Include="Utils\TgcGeometry\TgcVectorUtils.cs" />
