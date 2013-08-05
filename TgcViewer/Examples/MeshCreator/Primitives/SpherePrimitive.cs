@@ -166,7 +166,7 @@ namespace Examples.MeshCreator.Primitives
         public override Vector3 Position
         {
             get { return mesh.Position; }
-            set { mesh.Position = value; }
+            set { mesh.Position = value; updateBB(); }
         }
 
         public override Vector3 Rotation
