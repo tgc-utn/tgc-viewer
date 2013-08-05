@@ -767,6 +767,21 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Clic en "Crear Sphere"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void radioButtonPrimitive_Sphere_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (radioButtonPrimitive_Sphere.Checked)
+            {
+                untoggleAllRadioButtons(radioButtonPrimitive_Sphere);
+                currentState = State.CreatePrimitiveSelected;
+                creatingPrimitive = new SpherePrimitive(this);
+            }
+        }
+        /// <summary>
         /// Clic en "Crear Plano XZ"
         /// </summary>
         private void radioButtonPrimitive_PlaneXZ_CheckedChanged(object sender, EventArgs e)
@@ -1222,6 +1237,8 @@ namespace Examples.MeshCreator
 
 
         #endregion
+
+      
 
 
 

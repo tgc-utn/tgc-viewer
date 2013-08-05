@@ -122,6 +122,7 @@
     <Compile Include="Lights\EjemploMultiDiffuseLights.cs" />
     <Compile Include="Lights\EjemploPointLight.cs" />
     <Compile Include="Lights\TgcMeshBumpMapping.cs" />
+    <Compile Include="MeshCreator\Primitives\SpherePrimitive.cs" />
     <Compile Include="Otros\EjemploDefault.cs" />
     <Compile Include="Fog\EfectoNiebla.cs" />
     <Compile Include="GeometryBasics\Caja.cs" />
