@@ -93,6 +93,7 @@
             this.dataGridViewMeshes = new System.Windows.Forms.DataGridView();
             this.meshesColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.meshesColumnVisible = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.radioButtonPrimitive_Sphere = new System.Windows.Forms.RadioButton();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.tabPageCreate.SuspendLayout();
@@ -242,13 +243,14 @@
             this.tabPageCreate.Location = new System.Drawing.Point(4, 22);
             this.tabPageCreate.Name = "tabPageCreate";
             this.tabPageCreate.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCreate.Size = new System.Drawing.Size(0, 0);
+            this.tabPageCreate.Size = new System.Drawing.Size(192, 974);
             this.tabPageCreate.TabIndex = 0;
             this.tabPageCreate.Text = "Create";
             this.tabPageCreate.UseVisualStyleBackColor = true;
             // 
             // groupBoxPrimitive
             // 
+            this.groupBoxPrimitive.Controls.Add(this.radioButtonPrimitive_Sphere);
             this.groupBoxPrimitive.Controls.Add(this.radioButtonPrimitive_PlaneYZ);
             this.groupBoxPrimitive.Controls.Add(this.radioButtonPrimitive_PlaneXY);
             this.groupBoxPrimitive.Controls.Add(this.buttonImportMesh);
@@ -256,7 +258,7 @@
             this.groupBoxPrimitive.Controls.Add(this.radioButtonPrimitive_Box);
             this.groupBoxPrimitive.Location = new System.Drawing.Point(4, 11);
             this.groupBoxPrimitive.Name = "groupBoxPrimitive";
-            this.groupBoxPrimitive.Size = new System.Drawing.Size(101, 173);
+            this.groupBoxPrimitive.Size = new System.Drawing.Size(101, 204);
             this.groupBoxPrimitive.TabIndex = 0;
             this.groupBoxPrimitive.TabStop = false;
             this.groupBoxPrimitive.Text = "Primitive";
@@ -264,7 +266,7 @@
             // radioButtonPrimitive_PlaneYZ
             // 
             this.radioButtonPrimitive_PlaneYZ.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonPrimitive_PlaneYZ.Location = new System.Drawing.Point(10, 109);
+            this.radioButtonPrimitive_PlaneYZ.Location = new System.Drawing.Point(10, 143);
             this.radioButtonPrimitive_PlaneYZ.Name = "radioButtonPrimitive_PlaneYZ";
             this.radioButtonPrimitive_PlaneYZ.Size = new System.Drawing.Size(85, 24);
             this.radioButtonPrimitive_PlaneYZ.TabIndex = 8;
@@ -277,7 +279,7 @@
             // radioButtonPrimitive_PlaneXY
             // 
             this.radioButtonPrimitive_PlaneXY.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonPrimitive_PlaneXY.Location = new System.Drawing.Point(10, 79);
+            this.radioButtonPrimitive_PlaneXY.Location = new System.Drawing.Point(10, 113);
             this.radioButtonPrimitive_PlaneXY.Name = "radioButtonPrimitive_PlaneXY";
             this.radioButtonPrimitive_PlaneXY.Size = new System.Drawing.Size(85, 24);
             this.radioButtonPrimitive_PlaneXY.TabIndex = 7;
@@ -289,7 +291,7 @@
             // 
             // buttonImportMesh
             // 
-            this.buttonImportMesh.Location = new System.Drawing.Point(10, 139);
+            this.buttonImportMesh.Location = new System.Drawing.Point(10, 173);
             this.buttonImportMesh.Name = "buttonImportMesh";
             this.buttonImportMesh.Size = new System.Drawing.Size(85, 25);
             this.buttonImportMesh.TabIndex = 6;
@@ -300,7 +302,7 @@
             // radioButtonPrimitive_PlaneXZ
             // 
             this.radioButtonPrimitive_PlaneXZ.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonPrimitive_PlaneXZ.Location = new System.Drawing.Point(10, 49);
+            this.radioButtonPrimitive_PlaneXZ.Location = new System.Drawing.Point(10, 83);
             this.radioButtonPrimitive_PlaneXZ.Name = "radioButtonPrimitive_PlaneXZ";
             this.radioButtonPrimitive_PlaneXZ.Size = new System.Drawing.Size(85, 24);
             this.radioButtonPrimitive_PlaneXZ.TabIndex = 1;
@@ -337,7 +339,7 @@
             this.tabPageModify.Location = new System.Drawing.Point(4, 22);
             this.tabPageModify.Name = "tabPageModify";
             this.tabPageModify.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageModify.Size = new System.Drawing.Size(0, 0);
+            this.tabPageModify.Size = new System.Drawing.Size(192, 974);
             this.tabPageModify.TabIndex = 1;
             this.tabPageModify.Text = "Modify";
             this.tabPageModify.UseVisualStyleBackColor = true;
@@ -919,7 +921,7 @@
             this.tabPageMeshes.Location = new System.Drawing.Point(4, 22);
             this.tabPageMeshes.Name = "tabPageMeshes";
             this.tabPageMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMeshes.Size = new System.Drawing.Size(0, 0);
+            this.tabPageMeshes.Size = new System.Drawing.Size(192, 974);
             this.tabPageMeshes.TabIndex = 3;
             this.tabPageMeshes.Text = "Meshes";
             this.tabPageMeshes.UseVisualStyleBackColor = true;
@@ -957,6 +959,19 @@
             this.meshesColumnVisible.Name = "meshesColumnVisible";
             this.meshesColumnVisible.TrueValue = "true";
             this.meshesColumnVisible.Width = 35;
+            // 
+            // radioButtonPrimitive_Sphere
+            // 
+            this.radioButtonPrimitive_Sphere.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonPrimitive_Sphere.Location = new System.Drawing.Point(10, 49);
+            this.radioButtonPrimitive_Sphere.Name = "radioButtonPrimitive_Sphere";
+            this.radioButtonPrimitive_Sphere.Size = new System.Drawing.Size(85, 24);
+            this.radioButtonPrimitive_Sphere.TabIndex = 9;
+            this.radioButtonPrimitive_Sphere.TabStop = true;
+            this.radioButtonPrimitive_Sphere.Text = "Sphere";
+            this.radioButtonPrimitive_Sphere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonPrimitive_Sphere.UseVisualStyleBackColor = true;
+            this.radioButtonPrimitive_Sphere.CheckedChanged += new System.EventHandler(this.radioButtonPrimitive_Sphere_CheckedChanged);
             // 
             // MeshCreatorControl
             // 
@@ -1074,5 +1089,6 @@
         private System.Windows.Forms.DataGridView dataGridViewMeshes;
         private System.Windows.Forms.DataGridViewTextBoxColumn meshesColumnName;
         private System.Windows.Forms.DataGridViewCheckBoxColumn meshesColumnVisible;
+        private System.Windows.Forms.RadioButton radioButtonPrimitive_Sphere;
     }
 }
