@@ -295,6 +295,17 @@
     <Compile Include="Sound\PlayMp3.cs" />
     <Compile Include="Sprites2D\EjemploAnimatedSprite.cs" />
     <Compile Include="Sprites2D\EjemploSprite2D.cs" />
+    <Compile Include="TerrainEditor\Brushes\RoundBrush.cs" />
+    <Compile Include="TerrainEditor\Brushes\TerrainBrush.cs" />
+    <Compile Include="TerrainEditor\EditableTerrain.cs" />
+    <Compile Include="TerrainEditor\Panel\TerrainEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TerrainEditor\Panel\TerrainEditorControl.Designer.cs">
+      <DependentUpon>TerrainEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TerrainEditor\Panel\TerrainEditorModifier.cs" />
+    <Compile Include="TerrainEditor\TerrainEditor.cs" />
     <Compile Include="TextureMapping\EjemploTextureFiltering.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
@@ -344,6 +355,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>SceneEditorHelpWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TerrainEditor\Panel\TerrainEditorControl.resx">
+      <DependentUpon>TerrainEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -379,6 +393,7 @@
     <None Include="Shaders\WorkshopShaders\Shaders\PhongShading.fx" />
     <None Include="Shaders\WorkshopShaders\Shaders\ShadowMap.fx" />
     <None Include="Shaders\WorkshopShaders\Shaders\ToonShading.fx" />
+    <None Include="TerrainEditor\Shaders\EditableHeightmap.fx" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
