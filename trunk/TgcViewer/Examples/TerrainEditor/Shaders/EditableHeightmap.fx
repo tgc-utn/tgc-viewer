@@ -183,7 +183,7 @@ VS_OUTPUT_Brush vs_PositionColoredTexturedWithSquareBrush(float4 Position:POSITI
 	if(abs(dx)>brushRadius2 || abs(dz)>brushRadius2)output.Color = brushColor2;
 	else output.Color = brushColor1;
 
-	output.Color[3] =  0.8*(1 - (max(abs(dx),abs(dz))/brushRadius)) ;
+	output.Color[3] =  0.9*(1 - (max(abs(dx),abs(dz))/brushRadius)) ;
 	
 	
 	if(output.Color[3]<0) output.Color[3]=0;
