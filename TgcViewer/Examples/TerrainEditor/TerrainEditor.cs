@@ -11,6 +11,7 @@ using TgcViewer.Utils.Input;
 using Examples.TerrainEditor.Brushes;
 using Examples.TerrainEditor.Panel;
 using System.Drawing.Imaging;
+using Examples.TerrainEditor.Brushes.Level;
 
 
 namespace Examples.TerrainEditor
@@ -52,7 +53,6 @@ namespace Examples.TerrainEditor
             terrain.Effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "TerrainEditor\\Shaders\\EditableHeightmap.fx");
             terrain.Technique = "PositionTextured";
 
-            Brush = new RoundBrush();
 
             modifierPanel = new TerrainEditorModifier("Panel", this);
             GuiController.Instance.Modifiers.add(modifierPanel);
@@ -98,7 +98,7 @@ namespace Examples.TerrainEditor
                 Vector3 pos;
                 if (terrain.intersectRay(pickingRay.Ray, out pos))
                 {
-                    Brush.Position = new Vector2(pos.X, pos.Z);
+                    Brush.Position = pos;
 
                 }
                 else brushOut = true;
@@ -118,17 +118,22 @@ namespace Examples.TerrainEditor
 
             if (modifierPanel.Control.Editing && !brushOut)
             {
-                 if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+                if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                 {
                     bool invert = GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.LeftAlt);
-              
-                    bool direction = modifierPanel.Control.Raise ^ invert;
-                    if (Brush.editTerrain(terrain, direction))
+
+                    bool oldInvert = Brush.Invert;
+                    Brush.Invert ^= invert;
+                    if (!Brush.Editing) Brush.beginEdition(terrain);
+                    if (Brush.editTerrain())
                     {
                         ChangesMade = true;
                         terrain.updateVertices();
                     }
+
+                    Brush.Invert = oldInvert;
                 }
+                else { if (Brush.Editing) Brush.endEdition(); }
          
                 Brush.configureTerrainEffect(terrain);
 

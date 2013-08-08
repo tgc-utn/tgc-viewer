@@ -6,6 +6,8 @@ using TgcViewer.Utils.Modifiers;
 using TgcViewer;
 using Examples.MeshCreator;
 using Examples.TerrainEditor.Brushes;
+using Examples.TerrainEditor.Brushes.Level;
+using Examples.TerrainEditor.Brushes.LevelBrush;
 
 namespace Examples.TerrainEditor.Panel
 {
@@ -16,6 +18,13 @@ namespace Examples.TerrainEditor.Panel
         TgcTextureBrowser heightmapBrowser;
         TgcTextureBrowser textureBrowser;
 
+        
+        public TerrainBrush SelectedBrush
+        {
+            get { return terrainEditor.Brush; }
+            set{setBrush(value);}
+
+        }
        
         
         public TerrainEditorControl(TgcTerrainEditor terrainEditor)
@@ -37,12 +46,12 @@ namespace Examples.TerrainEditor.Panel
             terrainEditor.terrain.loadTexture(textureBrowser.SelectedImage);
 
             //Pincel
-            terrainEditor.Brush.Hardness = tbHardness.Value;
-            terrainEditor.Brush.Intensity = tbIntensity.Value;
-            terrainEditor.Brush.Radius = tbRadius.Value;
+            SelectedBrush = new Shovel();
 
             //Info
             setInfo();
+
+            
           
 
         }
@@ -119,8 +128,7 @@ namespace Examples.TerrainEditor.Panel
         }
 
         public bool Editing { get { return tabControl.SelectedTab.Name.Equals("pageEdit"); } }
-        public TerrainBrush SelectedBrush { get; set; }
-        public bool Raise { get { return !checkBoxDir.Checked; } }
+      
 
         private void buttonNewHeightmap_Click(object sender, EventArgs e)
         {
@@ -150,6 +158,47 @@ namespace Examples.TerrainEditor.Panel
             terrainEditor.Brush.GetType().GetProperty(prop).SetValue(terrainEditor.Brush, (float)tb.Value, null);
         }
 
+        private void cbInvert_CheckedChanged(object sender, EventArgs e)
+        {
+            terrainEditor.Brush.Invert = cbInvert.Checked;
+        }
+
+        private void cbRounded_CheckedChanged(object sender, EventArgs e)
+        {
+            terrainEditor.Brush.Rounded = cbRounded.Checked;
+        }
+
+       
+
+
+        private void rbShovel_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbShovel.Checked) SelectedBrush = new Shovel();
+           
+
+        }
+
+        private void bSteamroller_CheckedChanged(object sender, EventArgs e)
+        {
+            if (bSteamroller.Checked) SelectedBrush = new Steamroller();
+           
+        }
+
+        private void setBrush(TerrainBrush brush)
+        {
+            
+            brush.Hardness = tbHardness.Value;
+            brush.Intensity = tbIntensity.Value;
+            brush.Radius = tbRadius.Value;
+            brush.Invert = cbInvert.Checked;
+            brush.Rounded = cbRounded.Checked;
+
+            terrainEditor.Brush = brush;
+
+        }
+
+
+    
        
 
      

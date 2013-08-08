@@ -110,7 +110,9 @@
     <Compile Include="Collision\EjemploComputeObb.cs" />
     <Compile Include="GeometryBasics\CrearEditableLand.cs" />
     <Compile Include="GeometryBasics\EjemploSphere.cs" />
-    <Compile Include="Lights\EjemploHDR.cs" />
+    <Compile Include="Lights\EjemploHDR.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Lights\EjemploIntegrador2.cs" />
     <Compile Include="Lights\EjemploSkeletalPointLight.cs" />
     <Compile Include="Lights\EjemploIntegrador.cs" />
@@ -184,8 +186,10 @@
     <Compile Include="Otros\EjemploPanView.cs" />
     <Compile Include="Particles\EmisorDeParticulas.cs" />
     <Compile Include="PortalRendering\PortalRenderingFramework.cs" />
-    <Compile Include="PostProcess\EfectoGaussianBlur.cs" />
     <Compile Include="PostProcess\EfectoBlur.cs" />
+    <Compile Include="PostProcess\EfectoGaussianBlur.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PostProcess\EfectoOndas.cs" />
     <Compile Include="PostProcess\EfectoOscurecer.cs" />
     <Compile Include="PostProcess\EfectoAlarma.cs" />
@@ -295,7 +299,8 @@
     <Compile Include="Sound\PlayMp3.cs" />
     <Compile Include="Sprites2D\EjemploAnimatedSprite.cs" />
     <Compile Include="Sprites2D\EjemploSprite2D.cs" />
-    <Compile Include="TerrainEditor\Brushes\RoundBrush.cs" />
+    <Compile Include="TerrainEditor\Brushes\LevelBrush\Shovel.cs" />
+    <Compile Include="TerrainEditor\Brushes\LevelBrush\Steamroller.cs" />
     <Compile Include="TerrainEditor\Brushes\TerrainBrush.cs" />
     <Compile Include="TerrainEditor\EditableTerrain.cs" />
     <Compile Include="TerrainEditor\Panel\TerrainEditorControl.cs">
@@ -394,6 +399,12 @@
     <None Include="Shaders\WorkshopShaders\Shaders\ShadowMap.fx" />
     <None Include="Shaders\WorkshopShaders\Shaders\ToonShading.fx" />
     <None Include="TerrainEditor\Shaders\EditableHeightmap.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\steamroller.gif" />
+    <None Include="Resources\shovel.gif" />
+    <Content Include="TerrainEditor\Panel\Icons\shovel.gif" />
+    <Content Include="TerrainEditor\Panel\Icons\steamroller.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
