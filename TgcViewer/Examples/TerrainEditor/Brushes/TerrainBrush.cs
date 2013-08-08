@@ -1,11 +1,16 @@
 ﻿using Microsoft.DirectX;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer;
+using System.Drawing;
 
 namespace Examples.TerrainEditor.Brushes
 {
     public abstract class TerrainBrush
     {
+        protected TgcBox bBrush;
+        public Color Color1 { get; set; }
+        public Color Color2 { get; set; }
+
         private float radius;
         /// <summary>
         /// Radio del pincel.
@@ -15,7 +20,8 @@ namespace Examples.TerrainEditor.Brushes
         /// <summary>
         /// Posicion del pincel
         /// </summary>
-        public Vector3 Position { get; set; }
+        private Vector3 position;
+        public Vector3 Position { get { return position; } set { this.position = value; bBrush.Position = value + new Vector3(0, 50, 0); } }
 
         private float intensity;
         /// <summary>
@@ -36,22 +42,28 @@ namespace Examples.TerrainEditor.Brushes
 
         private bool editing;
         public bool Editing { get { return editing; } }
-     
-        public abstract void configureTerrainEffect(EditableTerrain effect);
-
        
+        /// <summary>
+        /// Setea y configura la technique que muestra el pincel sobre el terreno.
+        /// </summary>
+        /// <param name="terrain"></param>
+        public virtual void configureTerrainEffect(EditableTerrain terrain)
+        {
+            if (Rounded) terrain.Technique = "PositionColoredTexturedWithRoundBrush";
+            else terrain.Technique = "PositionColoredTexturedWithSquareBrush";
+            terrain.Effect.SetValue("brushPosition", new float[] { Position.X, Position.Z });
+            terrain.Effect.SetValue("brushRadius", Radius);
+            terrain.Effect.SetValue("brushHardness", Hardness);
+            terrain.Effect.SetValue("brushColor1", Color1.ToArgb());
+            terrain.Effect.SetValue("brushColor2", Color2.ToArgb());
 
+        }
+       
         public virtual void beginEdition(EditableTerrain terrain) { this.terrain = terrain; editing = true; }
-
-        public virtual void endEdition() { editing = false; }
-         
-        protected EditableTerrain terrain;
-
-
 
         public virtual bool editTerrain()
         {
-            float speed = GuiController.Instance.ElapsedTime*getSpeedAdjustment();
+            float speed = GuiController.Instance.ElapsedTime * getSpeedAdjustment();
             if (Invert) speed *= -1;
 
             float radius = Radius / terrain.ScaleXZ;
@@ -95,7 +107,7 @@ namespace Examples.TerrainEditor.Brushes
                     {
 
                         float intensity = intensityFor(heightmapData, i, j);
-                    
+
                         if (intensity != 0)
                         {
 
@@ -129,9 +141,39 @@ namespace Examples.TerrainEditor.Brushes
                 }
             }
 
-            if (changed) terrain.setHeightmapData(heightmapData);
+            if (changed)
+            {
+                terrain.setHeightmapData(heightmapData);
+
+                float y;
+                terrain.interpoledHeight(bBrush.Position.X, bBrush.Position.Z, out y);
+                bBrush.Position = new Vector3(bBrush.Position.X, y + 50, bBrush.Position.Z);
+
+            }
             return changed;
         }
+
+        public virtual void endEdition()
+        {
+            editing = false;
+        }
+         
+        protected EditableTerrain terrain;
+
+
+        public TerrainBrush(){
+
+
+           bBrush = TgcBox.fromSize(new Vector3(10, 100, 10));
+
+        }
+        public void render()
+        {
+            bBrush.render();
+
+        }
+
+
 
         protected virtual float getSpeedAdjustment()
         {
