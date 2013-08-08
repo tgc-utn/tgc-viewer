@@ -1,7 +1,5 @@
 ﻿using Microsoft.DirectX;
-using Examples.TerrainEditor;
 using TgcViewer.Utils.TgcGeometry;
-using Microsoft.DirectX.Direct3D;
 using TgcViewer;
 
 namespace Examples.TerrainEditor.Brushes
@@ -15,9 +13,9 @@ namespace Examples.TerrainEditor.Brushes
         public float Radius { get { return radius; } set { radius = FastMath.Max(value, 0); } }
         
         /// <summary>
-        /// Posicion XZ en el terreno.
+        /// Posicion del pincel
         /// </summary>
-        public Vector2 Position { get; set; }
+        public Vector3 Position { get; set; }
 
         private float intensity;
         /// <summary>
@@ -31,26 +29,45 @@ namespace Examples.TerrainEditor.Brushes
         /// radio interno, el efecto del pincel es menor.
         /// </summary>
         public float Hardness { get { return hardness; } set { hardness = FastMath.Max(0, FastMath.Min(value, 100)); } }
-        
-        
-       
+
+        public bool Rounded { get; set; }
+
+        public bool Invert { get; set; }
+
+        private bool editing;
+        public bool Editing { get { return editing; } }
+     
         public abstract void configureTerrainEffect(EditableTerrain effect);
 
-        public bool editTerrain(EditableTerrain terrain, bool up)
+       
+
+        public virtual void beginEdition(EditableTerrain terrain) { this.terrain = terrain; editing = true; }
+
+        public virtual void endEdition() { editing = false; }
+         
+        protected EditableTerrain terrain;
+
+
+
+        public virtual bool editTerrain()
         {
+            float speed = GuiController.Instance.ElapsedTime*getSpeedAdjustment();
+            if (Invert) speed *= -1;
+
             float radius = Radius / terrain.ScaleXZ;
-            float speed = GuiController.Instance.ElapsedTime;
-            if (!up) speed *= -1;
+            float innerRadius = radius * Hardness / 100;
             float radius2 = FastMath.Pow2(radius);
-            float innerRadius2 = radius2 * Hardness / 100;
+            float innerRadius2 = innerRadius * innerRadius;
 
             Vector2 coords;
             float[,] heightmapData = terrain.HeightmapData;
             bool changed = false;
 
 
-            if (!terrain.xzToHeightmapCoords(Position.X, Position.Y, out coords)) return false;
 
+            if (!terrain.xzToHeightmapCoords(Position.X, Position.Z, out coords)) return false;
+
+            //Calculo un cuadrado alrededor del vertice seleccionado
             int[] min = new int[] { (int)(coords.X - radius), (int)(coords.Y - radius) };
 
             int[] max = new int[] { (int)(coords.X + radius), (int)(coords.Y + radius) };
@@ -61,35 +78,67 @@ namespace Examples.TerrainEditor.Brushes
                 if (max[i] > heightmapData.GetLength(i)) max[i] = heightmapData.GetLength(i);
             }
 
+
             for (int i = min[0]; i < max[0]; i++)
             {
 
                 for (int j = min[1]; j < max[1]; j++)
                 {
-                    float d2 = FastMath.Pow2(i - coords.X) + FastMath.Pow2(j - coords.Y);
-                    if (d2 <= radius2)
+                    float dx = i - coords.X;
+                    float dz = j - coords.Y;
+
+
+                    float d2 = FastMath.Pow2(dx) + FastMath.Pow2(dz);
+
+                    //Si es cuadrado o el vertice esta dentro del circulo
+                    if (!Rounded || d2 <= radius2)
                     {
 
-                        float newHeight = editVertice(speed, radius2, innerRadius2, heightmapData[i, j], d2);
-                        if (heightmapData[i, j] != newHeight)
+                        float intensity = intensityFor(heightmapData, i, j);
+                    
+                        if (intensity != 0)
                         {
 
-                            heightmapData[i, j] = newHeight;
-                            changed = true;
+                            if (innerRadius != radius)
+                            {
+                                //Si esta entre el circulo/cuadrado interno, disminuyo la intensidad.
+                                if (Rounded && d2 > innerRadius2)
+                                {
+                                    intensity = intensity * (1 - ((d2 - innerRadius2) / (radius2 - innerRadius2)));
+
+                                }
+                                else if (!Rounded && (FastMath.Abs(dx) > innerRadius || FastMath.Abs(dz) > innerRadius))
+                                {
+                                    intensity = intensity * (1 - ((FastMath.Max(FastMath.Abs(dx), FastMath.Abs(dz)) - innerRadius) / (radius - innerRadius)));
+
+                                }
+                            }
+
+
+
+                            float newHeight = FastMath.Max(0, FastMath.Min(heightmapData[i, j] + intensity * speed, 255));
+
+                            if (heightmapData[i, j] != newHeight)
+                            {
+                                heightmapData[i, j] = newHeight;
+                                changed = true;
+                            }
+
                         }
                     }
                 }
             }
-           
+
             if (changed) terrain.setHeightmapData(heightmapData);
-              
-            
             return changed;
         }
 
-        protected abstract float editVertice(float speed, float radius2, float innerRadius2, float p, float d2);
-       
+        protected virtual float getSpeedAdjustment()
+        {
+            return 1;
+        }
 
+        protected abstract float intensityFor(float[,] heightmapData, int i, int j);
         
     }
 }

@@ -5,7 +5,6 @@ using System.Drawing;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer;
-using System;
 
 namespace Examples.TerrainEditor
 {
@@ -21,7 +20,7 @@ namespace Examples.TerrainEditor
         private VertexBuffer vbTerrain;
         private CustomVertex.PositionColoredTextured[] vertices;
         private Texture terrainTexture;       
-    
+        
        
         #endregion
 
@@ -358,10 +357,13 @@ namespace Examples.TerrainEditor
             d3dDevice.SetStreamSource(0, vbTerrain, 0);
 
             //Render con shader
-            effect.Begin(0);
-            effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
-            effect.EndPass();
+            int p = effect.Begin(0);
+            for (int i = 0; i < p; i++)
+            {
+                effect.BeginPass(i);
+                d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
+                effect.EndPass();
+            }
             effect.End();
 
         }
@@ -408,7 +410,7 @@ namespace Examples.TerrainEditor
         /// <summary>
         /// Obtiene la altura de un punto, si el punto pertenece al heightmap.
         /// </summary>
-        private bool getY(float x, float z, out float y)
+        public bool getY(float x, float z, out float y)
         {
             y = 0;
             Vector2 coords;
@@ -539,11 +541,13 @@ namespace Examples.TerrainEditor
         }
         #endregion
 
-    
-                     
-            
+
+
+
+
+
+
         
-           
     }
  }
 
