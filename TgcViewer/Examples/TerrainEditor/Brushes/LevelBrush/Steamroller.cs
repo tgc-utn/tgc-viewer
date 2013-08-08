@@ -10,6 +10,14 @@ namespace Examples.TerrainEditor.Brushes.LevelBrush
     {
         private float level;
 
+        public Steamroller():base()
+        {
+
+            Color1 = Color.LightGoldenrodYellow; 
+           Color2 = Color.White;
+           bBrush.Color = Color1;
+           bBrush.updateValues();
+        }
       
 
         protected override float getSpeedAdjustment()
@@ -32,17 +40,7 @@ namespace Examples.TerrainEditor.Brushes.LevelBrush
             return intensity;
         }
 
-        public override void configureTerrainEffect(EditableTerrain terrain)
-        {
-            if (Rounded) terrain.Technique = "PositionColoredTexturedWithRoundBrush";
-            else terrain.Technique = "PositionColoredTexturedWithSquareBrush";
-            terrain.Effect.SetValue("brushPosition", new float[] { Position.X, Position.Z });
-            terrain.Effect.SetValue("brushRadius", Radius);
-            terrain.Effect.SetValue("brushHardness", Hardness);
-            terrain.Effect.SetValue("brushColor1", Color.LightSalmon.ToArgb());
-            terrain.Effect.SetValue("brushColor2", Color.LightGoldenrodYellow.ToArgb());
-       
-        }
+     
       
         /// <summary>
         /// Me guardo la altura del primer vertice.
@@ -53,7 +51,7 @@ namespace Examples.TerrainEditor.Brushes.LevelBrush
             base.beginEdition(terrain);
             Vector2 coords;
             if (terrain.xzToHeightmapCoords(Position.X, Position.Z, out coords))
-                level = terrain.HeightmapData[(int)coords.X, (int)coords.Y];          
+                terrain.interpoledIntensity(coords.X, coords.Y, out level);        
 
         }
 

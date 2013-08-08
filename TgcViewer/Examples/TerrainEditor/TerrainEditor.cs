@@ -11,7 +11,6 @@ using TgcViewer.Utils.Input;
 using Examples.TerrainEditor.Brushes;
 using Examples.TerrainEditor.Panel;
 using System.Drawing.Imaging;
-using Examples.TerrainEditor.Brushes.Level;
 
 
 namespace Examples.TerrainEditor
@@ -26,6 +25,7 @@ namespace Examples.TerrainEditor
         public TerrainBrush Brush {get;set;}
         bool brushOut;
         TerrainEditorModifier modifierPanel;
+       
        
         public override string getCategory()
         {
@@ -47,7 +47,7 @@ namespace Examples.TerrainEditor
             Device d3dDevice = GuiController.Instance.D3dDevice;
           
             terrain = new EditableTerrain();
-          
+           
 
             //Shader
             terrain.Effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "TerrainEditor\\Shaders\\EditableHeightmap.fx");
@@ -72,13 +72,14 @@ namespace Examples.TerrainEditor
             GuiController.Instance.FpsCamera.setCamera(new Vector3(-722.6171f, 495.0046f, -31.2611f), new Vector3(164.9481f, 35.3185f, -61.5394f));
             
         }
+   
 
       
 
         void Panel3d_MouseLeave(object sender, EventArgs e)
         {
              brushOut = true;
-           
+            
         }
 
         void Panel3d_MouseMove(object sender, MouseEventArgs e)
@@ -92,16 +93,19 @@ namespace Examples.TerrainEditor
 
             if (modifierPanel.Control.Editing)
             {
+                
+                
                 brushOut = false;
                 //Actualizar Ray de colisión en base a posición del mouse
                 pickingRay.updateRay();
                 Vector3 pos;
                 if (terrain.intersectRay(pickingRay.Ray, out pos))
-                {
-                    Brush.Position = pos;
-
-                }
-                else brushOut = true;
+                
+                    Brush.Position = pos;      
+                else
+                
+                    brushOut = true;                   
+                
             }
         }
 
@@ -113,7 +117,7 @@ namespace Examples.TerrainEditor
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-
+            
             terrain.Technique = "PositionColoredTextured";
 
             if (modifierPanel.Control.Editing && !brushOut)
@@ -133,15 +137,18 @@ namespace Examples.TerrainEditor
 
                     Brush.Invert = oldInvert;
                 }
-                else { if (Brush.Editing) Brush.endEdition(); }
-         
+                else { if (Brush.Editing)  Brush.endEdition(); }
+
                 Brush.configureTerrainEffect(terrain);
+                Brush.render();
 
             }
+           
            
             
             //Renderizar terreno
             terrain.render();
+            
            
         }
       
@@ -171,6 +178,7 @@ namespace Examples.TerrainEditor
             bitmap.Save(path, ImageFormat.Jpeg);
             bitmap.Dispose();
         }
+
         public override void close()
         {
             terrain.dispose();

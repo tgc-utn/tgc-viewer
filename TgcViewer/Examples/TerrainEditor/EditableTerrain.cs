@@ -5,6 +5,7 @@ using System.Drawing;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer;
+using System;
 
 namespace Examples.TerrainEditor
 {
@@ -19,9 +20,8 @@ namespace Examples.TerrainEditor
         private Vector3 traslation;
         private VertexBuffer vbTerrain;
         private CustomVertex.PositionColoredTextured[] vertices;
-        private Texture terrainTexture;       
-        
-       
+        private Texture terrainTexture;
+        private TgcBoundingBox aabb;
         #endregion
 
 
@@ -113,6 +113,8 @@ namespace Examples.TerrainEditor
             //Shader
             this.effect = GuiController.Instance.Shaders.VariosShader;
             this.technique = TgcShaders.T_POSITION_COLORED_TEXTURED;
+
+            aabb = new TgcBoundingBox();
             
         }
 
@@ -303,6 +305,9 @@ namespace Examples.TerrainEditor
                     dataIdx += 6;
                 }
                 vbTerrain.SetData(vertices, 0, LockFlags.None);
+           
+                aabb.setExtremes(new Vector3(0, minIntensity, 0), new Vector3(HeightmapData.GetLength(0), maxIntensity, HeightmapData.GetLength(1)));
+          
             }
         }
         #endregion
@@ -348,7 +353,6 @@ namespace Examples.TerrainEditor
             effect.SetValue("matTransform", transform);
             
 
-
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrix(this.effect, Matrix.Identity);
@@ -389,15 +393,77 @@ namespace Examples.TerrainEditor
         #endregion
 
         #region Utils
+     
+
+   
         /// <summary>
-        /// Transforma coordenadas del mundo en coordenadas de HeightmapData
+        /// Retorna true si hubo interseccion con el terreno y setea el collisionPoint.
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <param name="collisionPoint"></param>
+        /// <returns></returns>
+        public bool intersectRay(TgcRay ray, out Vector3 collisionPoint)
+        {
+            collisionPoint = Vector3.Empty;
+            Matrix scaleInv = Matrix.Scaling(new Vector3(1/ScaleXZ, 1/ScaleY, 1/ScaleXZ));
+            Vector3 a = Vector3.TransformCoordinate(ray.Origin, scaleInv) - traslation; 
+            Vector3 r = Vector3.TransformCoordinate(ray.Direction, scaleInv);
+                       
+
+            if (a.Y < minIntensity) return false;
+            
+            Vector3 q;
+            //Me fijo si intersecta con el BB del terreno.
+            if (!TgcCollisionUtils.intersectRayAABB(new TgcRay(a, r).toStruct(), aabb.toStruct(), out q)) return false;
+            
+            float minT=0;
+            //Obtengo el T de la interseccion.
+            if (q != a)
+            {
+                if (r.X != 0) minT = (q.X - a.X) / r.X;
+                else if (r.Y != 0) minT = (q.Y - a.Y) / r.Y;
+                else if (r.Z != 0) minT = (q.Z - a.Z) / r.Z;
+            }
+            
+
+            //Me desplazo por el rayo hasta que su altura sea menor a la del terreno en ese punto
+            //o me salga del AABB.
+            float t=0;
+            float step = 1;
+          
+            for (t = minT; ; t += step)
+            {
+                collisionPoint = a + t * r;
+                float y;
+                
+                if(!interpoledIntensity(collisionPoint.X, collisionPoint.Z, out y))  return false;
+
+                                 
+                if (collisionPoint.Y <= y + float.Epsilon)
+                {
+                    collisionPoint.Y = y;
+                    collisionPoint = Vector3.TransformCoordinate(collisionPoint + traslation, Matrix.Scaling(ScaleXZ, ScaleY, ScaleXZ));
+                    return true;
+                }
+
+            }    
+
+
+
+        }
+       
+
+
+
+        /// <summary>
+        /// Transforma coordenadas del mundo en coordenadas del heightmap.
         /// </summary>
         public bool xzToHeightmapCoords(float x, float z, out Vector2 coords)
         {
-            int i, j;
+            float i, j;
 
-            i = (int)(x / ScaleXZ - traslation.X);
-            j = (int)(z /ScaleXZ - traslation.Z);
+            i = x / ScaleXZ - traslation.X;
+            j = z / ScaleXZ - traslation.Z;
 
 
             coords = new Vector2(i, j);
@@ -408,146 +474,65 @@ namespace Examples.TerrainEditor
         }
 
         /// <summary>
-        /// Obtiene la altura de un punto, si el punto pertenece al heightmap.
+        /// Retorna la altura del terreno en ese punto utilizando interpolacion bilineal.
         /// </summary>
-        public bool getY(float x, float z, out float y)
+        /// <param name="x"></param>
+        /// <param name="z"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool interpoledHeight(float x, float z, out float y)
         {
-            y = 0;
             Vector2 coords;
-            if (!this.xzToHeightmapCoords(x, z, out coords)) return false;
+            float i;
+            y = 0;
+           
+            if(!xzToHeightmapCoords(x, z, out coords)) return false;
+            interpoledIntensity(coords.X, coords.Y, out i);
 
-
-            y = (HeightmapData[(int)coords.X, (int)coords.Y] + traslation.Y)* ScaleY;
-
+            y = (i + traslation.Y) * ScaleY;
             return true;
         }
-
-     
+       
         /// <summary>
-        /// Retorna true si hubo interseccion con el terreno y setea el collisionPoint.
+        /// Retorna la intensidad del heightmap en ese punto utilizando interpolacion bilineal.
         /// </summary>
-        /// <param name="ray"></param>
-        /// <param name="collisionPoint"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <param name="i"></param>
         /// <returns></returns>
-        public bool intersectRay(TgcRay ray, out Vector3 collisionPoint)
+        public bool interpoledIntensity(float u, float v, out float i)
         {
-            collisionPoint = Vector3.Empty;
-            
-            Vector3 a = ray.Origin;
-            Vector3 r = ray.Direction;
+             i =0;
 
-            float maxHeight = (maxIntensity + traslation.Y) * ScaleY;
-            float minHeight = (minIntensity + traslation.Y) * ScaleY;
-          
-            if (a.Y < minHeight) return false;
-            float minT = 0;
-            bool inside = true;
-            float[] aabbMin = new float[] { (Center.X - halfwidth) * ScaleXZ, minHeight, (Center.Z - halflength) * ScaleXZ };
-            float[] aabbMax = new float[] { (Center.X + halfwidth) * ScaleXZ, maxHeight, (Center.Z + halflength) * ScaleXZ };
-            float[] rayOrigin = new float[]{a.X, a.Y, a.Z};
-            float[] rayDir = new float[] { r.X, r.Y, r.Z };
-
-            float[] max_t = new float[3] { -1.0f, -1.0f, -1.0f };
-            float[] coord = new float[3];
-            
-            //Primero calculo la t del ray que hace que intersecte con el AABB del terreno.
-            for (uint i = 0; i < 3; ++i)
-            {
-                if (rayOrigin[i] < aabbMin[i])
-                {
-                    inside = false;
-                    coord[i] = aabbMin[i];
-
-                    if (rayDir[i] != 0.0f)
-                    {
-                        max_t[i] = (aabbMin[i] - rayOrigin[i]) / rayDir[i];
-                    }
-                }
-                else if (rayOrigin[i] > aabbMax[i])
-                {
-                    inside = false;
-                    coord[i] = aabbMax[i];
-
-                    if (rayDir[i] != 0.0f)
-                    {
-                        max_t[i] = (aabbMax[i] - rayOrigin[i]) / rayDir[i];
-                    }
-                }
-            }
-            bool intersects = false;
-            
-            //Si no estoy adentro, uso la t mas alta, sino uso t=0
-            if (!inside)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    if (max_t[i] > 0)
-                    {
-                        intersects = true;
-                        if (max_t[i] > minT) minT = max_t[i] - 1;
-                        
-                    }
-                }
-              
-            }
-            if (!inside && !intersects) return false;
-
-
-            //Me desplazo por el rayo hasta que su altura sea menor a la del terreno en ese punto
-            //o me salga del AABB.
-            float step = 1;
-            for (float t = minT; ; t+=step)
-            {
-                collisionPoint = a + t * r;
-               
-                float y;
-                bool valid = getY(collisionPoint.X, collisionPoint.Z, out y);
+            float maxX =HeightmapData.GetLength(0);
+            float maxZ = HeightmapData.GetLength(1);
+            if (u >= maxX || v >= maxZ || v < 0 ||u < 0)return false;
                 
-                if (valid)
-                {
-                    
-                    
-                    if (collisionPoint.Y <= y + 0.5f)
-                    {
-                        if (collisionPoint.Y < y - 0.5f && t!=minT)
-                        {
-                            collisionPoint = a + (t - 0.5f) * r;
-                            getY(collisionPoint.X, collisionPoint.Z, out y);
-                            
-                        }
-                        return true;
+            int x1, x2, z1, z2;
+            float s, t;
 
-                    }
-                }
-                else if (collisionPoint.Y < minHeight || t==0)
-                {
-
-                    collisionPoint = a + (t-0.5f)* r;
-                    
-
-                    return getY(collisionPoint.X, collisionPoint.Z, out collisionPoint.Y);
-
-                }
-                else return false;
-               
-               
-
-            }
-
-
+            x1 = (int)FastMath.Floor(u);
+            x2 = x1 + 1;
+            s = u - x1;
             
-                     
-            
+            z1 = (int)FastMath.Floor(v);
+            z2 = z1 + 1;
+            t = v - z1;
+             
+            if(z2>=maxZ) z2--;
+            if(x2>=maxX) x2--;
+             
+            float i1 = HeightmapData[x1,z1] + s*(HeightmapData[x2,z1]-HeightmapData[x1,z1]);
+            float i2 = HeightmapData[x1,z2] + s*(HeightmapData[x2,z2]-HeightmapData[x1,z2]);
+
+            i = i1 + t*(i2-i1);
+            return true;
+
+
         }
+
+
         #endregion
-
-
-
-
-
-
-
-        
     }
  }
 
