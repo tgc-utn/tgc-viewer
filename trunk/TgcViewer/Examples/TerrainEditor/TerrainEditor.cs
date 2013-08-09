@@ -22,10 +22,12 @@ namespace Examples.TerrainEditor
 
         public EditableTerrain terrain;
         TgcPickingRay pickingRay;
-        public TerrainBrush Brush {get;set;}
+        private TerrainBrush brush;
+        public TerrainBrush Brush { get { return brush; } set { if (brush != null) brush.dispose(); brush = value; } }
         bool brushOut;
         TerrainEditorModifier modifierPanel;
-       
+
+        public bool PlanePicking { get; set; }
        
         public override string getCategory()
         {
@@ -98,13 +100,16 @@ namespace Examples.TerrainEditor
                 brushOut = false;
                 //Actualizar Ray de colisión en base a posición del mouse
                 pickingRay.updateRay();
+                
                 Vector3 pos;
-                if (terrain.intersectRay(pickingRay.Ray, out pos))
-                
-                    Brush.Position = pos;      
+
+                if (PlanePicking) 
+                    brushOut = !terrain.intersectRayPlane(pickingRay.Ray, out pos);
                 else
+                    brushOut = !terrain.intersectRay(pickingRay.Ray, out pos);
                 
-                    brushOut = true;                   
+                if (!brushOut)  Brush.Position = pos;
+                               
                 
             }
         }
@@ -182,6 +187,7 @@ namespace Examples.TerrainEditor
         public override void close()
         {
             terrain.dispose();
+            Brush.dispose();
         }
 
     }

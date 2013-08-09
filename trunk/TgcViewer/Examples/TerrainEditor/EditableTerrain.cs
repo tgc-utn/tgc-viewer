@@ -15,8 +15,6 @@ namespace Examples.TerrainEditor
        
         private float maxIntensity;
         private float minIntensity;
-        private float halfwidth;
-        private float halflength;
         private Vector3 traslation;
         private VertexBuffer vbTerrain;
         private CustomVertex.PositionColoredTextured[] vertices;
@@ -142,10 +140,6 @@ namespace Examples.TerrainEditor
                 }
 
             }
-
-            halfwidth = length / 2;
-            halflength = width / 2;
-
             bitmap.Dispose();
             return heightmap;
         }
@@ -175,24 +169,19 @@ namespace Examples.TerrainEditor
             //crear heightmap con ese level
             heightmapData = new float[length, width];
             if (level < 0) level = 0; else if (level > 255) level = 255;
-            for (int i = 0; i < length; i++) for (int j = 0; j < width; j++) heightmapData[i,j] = level;
+            for (int i = 0; i < length; i++) for (int j = 0; j < width; j++) heightmapData[i, j] = level;
 
             //Crear vertexBuffer
-            totalVertices = 2 * 3 * (width-1) * (length-1);
+            totalVertices = 2 * 3 * (length - 1) * (width - 1);
             vbTerrain = new VertexBuffer(typeof(CustomVertex.PositionColoredTextured), totalVertices, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColoredTextured.Format, Pool.Default);
 
-            
             traslation.X = center.X - (length / 2);
-            traslation.Y = center.Y - level; //Lo bajo para que el nivel más bajo quede a esa altura.
+            traslation.Y = center.Y - level;
             this.center.Y = traslation.Y;
             traslation.Z = center.Z - (width / 2);
 
-            halfwidth = length / 2;
-            halflength = width / 2;
-
             //Cargar vertices
             loadVertices();
-
         }
 
         /// <summary>
@@ -238,6 +227,10 @@ namespace Examples.TerrainEditor
 
         #region Load & update vertices
 
+        /// <summary>
+        /// Cambia el heightmapData por uno de igual ancho y largo.
+        /// </summary>
+        /// <param name="heightmapData"></param>
         public void setHeightmapData(float[,] heightmapData)
         {
             if (heightmapData.GetLength(0) == this.heightmapData.GetLength(0) && this.heightmapData.GetLength(1) == heightmapData.GetLength(1))
@@ -247,18 +240,34 @@ namespace Examples.TerrainEditor
 
 
         }
+
+        /// <summary>
+        /// Actualiza los vertices segun los valores de HeightmapData
+        /// </summary>
         public void updateVertices()
         {
-
+            minIntensity = -1;
+            maxIntensity = 0;
             for(int i=0; i< vertices.Length; i++)
             {
                 CustomVertex.PositionColoredTextured v = vertices[i];
-                vertices[i].Y = heightmapData[(int)vertices[i].X, (int)vertices[i].Z];
+                float intensity = heightmapData[(int)vertices[i].X, (int)vertices[i].Z];
+                vertices[i].Y = intensity;
+                if (intensity > maxIntensity) maxIntensity = intensity;
+                if (minIntensity == -1 || intensity < minIntensity) minIntensity = intensity;
+                   
+                
             }
 
             vbTerrain.SetData(vertices, 0, LockFlags.None);
+            aabb.setExtremes(new Vector3(0, minIntensity, 0), new Vector3(HeightmapData.GetLength(0), maxIntensity, HeightmapData.GetLength(1)));
+          
+      
         }
-    
+
+        /// <summary>
+        /// Crea los vertices
+        /// </summary>
         private void loadVertices()
         {
             int dataIdx = 0;
@@ -451,10 +460,31 @@ namespace Examples.TerrainEditor
 
 
         }
+
+
+
+
+        /// <summary>
+        /// Retorna true si hubo interseccion con el plano del terreno y setea el collisionPoint con la altura en ese punto. 
+        /// </summary>
+        /// <param name="ray"></param>
+        /// <param name="collisionPoint"></param>
+        /// <returns></returns>
+        public bool intersectRayPlane(TgcRay ray, out Vector3 collisionPoint)
+        {
+
+            collisionPoint = Vector3.Empty;
+           float minHeight = (minIntensity + traslation.Y) * ScaleY;
+
+
+            float t;
+            //Me fijo si intersecta con el BB del terreno.
+            if (!TgcCollisionUtils.intersectRayPlane(ray, new Plane(0, 1, 0, -minHeight), out t, out collisionPoint)) return false;
+
+            return interpoledHeight(collisionPoint.X, collisionPoint.Z, out collisionPoint.Y);
+
+        }
        
-
-
-
         /// <summary>
         /// Transforma coordenadas del mundo en coordenadas del heightmap.
         /// </summary>
