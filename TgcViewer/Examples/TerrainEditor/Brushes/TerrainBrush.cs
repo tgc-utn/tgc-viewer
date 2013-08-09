@@ -172,7 +172,10 @@ namespace Examples.TerrainEditor.Brushes
 
         }
 
-
+        public void dispose()
+        {
+            bBrush.dispose();
+        }
 
         protected virtual float getSpeedAdjustment()
         {
