@@ -37,6 +37,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.pictureBoxModifyHeightmap = new System.Windows.Forms.PictureBox();
+            this.pictureBoxModifyTexture = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.labelModifyTextureImage = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -48,6 +50,9 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.pageEdit = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.rbPPlane = new System.Windows.Forms.RadioButton();
+            this.rbPTerrain = new System.Windows.Forms.RadioButton();
             this.brushSettings = new System.Windows.Forms.GroupBox();
             this.cbInvert = new System.Windows.Forms.CheckBox();
             this.cbRounded = new System.Windows.Forms.CheckBox();
@@ -59,6 +64,8 @@
             this.tbRadius = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.bSteamroller = new System.Windows.Forms.RadioButton();
+            this.rbShovel = new System.Windows.Forms.RadioButton();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.buttonSave = new System.Windows.Forms.Button();
@@ -109,21 +116,20 @@
             this.Tag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.bSteamroller = new System.Windows.Forms.RadioButton();
-            this.rbShovel = new System.Windows.Forms.RadioButton();
-            this.pictureBoxModifyHeightmap = new System.Windows.Forms.PictureBox();
-            this.pictureBoxModifyTexture = new System.Windows.Forms.PictureBox();
             this.tabControl.SuspendLayout();
             this.tabTerrain.SuspendLayout();
             this.groupBoxModifyScale.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudScaleY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScaleXZ)).BeginInit();
             this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxModifyHeightmap)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxModifyTexture)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nupHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nupWidth)).BeginInit();
             this.pageEdit.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.brushSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbHardness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbIntensity)).BeginInit();
@@ -134,8 +140,6 @@
             this.tabPage2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbTerrain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxModifyHeightmap)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxModifyTexture)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -247,6 +251,32 @@
             this.groupBox5.TabIndex = 50;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Import";
+            // 
+            // pictureBoxModifyHeightmap
+            // 
+            this.pictureBoxModifyHeightmap.BackColor = System.Drawing.Color.Black;
+            this.pictureBoxModifyHeightmap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxModifyHeightmap.Location = new System.Drawing.Point(35, 27);
+            this.pictureBoxModifyHeightmap.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBoxModifyHeightmap.Name = "pictureBoxModifyHeightmap";
+            this.pictureBoxModifyHeightmap.Size = new System.Drawing.Size(80, 80);
+            this.pictureBoxModifyHeightmap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxModifyHeightmap.TabIndex = 37;
+            this.pictureBoxModifyHeightmap.TabStop = false;
+            this.pictureBoxModifyHeightmap.Click += new System.EventHandler(this.pictureBoxModifyHeightmap_Click);
+            // 
+            // pictureBoxModifyTexture
+            // 
+            this.pictureBoxModifyTexture.BackColor = System.Drawing.Color.Black;
+            this.pictureBoxModifyTexture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxModifyTexture.Location = new System.Drawing.Point(35, 126);
+            this.pictureBoxModifyTexture.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBoxModifyTexture.Name = "pictureBoxModifyTexture";
+            this.pictureBoxModifyTexture.Size = new System.Drawing.Size(80, 80);
+            this.pictureBoxModifyTexture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxModifyTexture.TabIndex = 37;
+            this.pictureBoxModifyTexture.TabStop = false;
+            this.pictureBoxModifyTexture.Click += new System.EventHandler(this.pictureBoxModifyTexture_Click);
             // 
             // label1
             // 
@@ -379,6 +409,7 @@
             // pageEdit
             // 
             this.pageEdit.BackColor = System.Drawing.Color.White;
+            this.pageEdit.Controls.Add(this.groupBox6);
             this.pageEdit.Controls.Add(this.brushSettings);
             this.pageEdit.Controls.Add(this.groupBox3);
             this.pageEdit.Location = new System.Drawing.Point(4, 22);
@@ -387,6 +418,42 @@
             this.pageEdit.Size = new System.Drawing.Size(215, 480);
             this.pageEdit.TabIndex = 1;
             this.pageEdit.Text = "Edit";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.rbPPlane);
+            this.groupBox6.Controls.Add(this.rbPTerrain);
+            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox6.Location = new System.Drawing.Point(3, 338);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(209, 47);
+            this.groupBox6.TabIndex = 10;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Picking";
+            // 
+            // rbPPlane
+            // 
+            this.rbPPlane.AutoSize = true;
+            this.rbPPlane.Location = new System.Drawing.Point(106, 19);
+            this.rbPPlane.Name = "rbPPlane";
+            this.rbPPlane.Size = new System.Drawing.Size(52, 17);
+            this.rbPPlane.TabIndex = 1;
+            this.rbPPlane.TabStop = true;
+            this.rbPPlane.Text = "Plane";
+            this.rbPPlane.UseVisualStyleBackColor = true;
+            this.rbPPlane.CheckedChanged += new System.EventHandler(this.rbPPlane_CheckedChanged);
+            // 
+            // rbPTerrain
+            // 
+            this.rbPTerrain.AutoSize = true;
+            this.rbPTerrain.Checked = true;
+            this.rbPTerrain.Location = new System.Drawing.Point(33, 19);
+            this.rbPTerrain.Name = "rbPTerrain";
+            this.rbPTerrain.Size = new System.Drawing.Size(58, 17);
+            this.rbPTerrain.TabIndex = 0;
+            this.rbPTerrain.TabStop = true;
+            this.rbPTerrain.Text = "Terrain";
+            this.rbPTerrain.UseVisualStyleBackColor = true;
             // 
             // brushSettings
             // 
@@ -520,6 +587,43 @@
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Brushes";
+            // 
+            // bSteamroller
+            // 
+            this.bSteamroller.AutoSize = true;
+            this.bSteamroller.Dock = System.Windows.Forms.DockStyle.Left;
+            this.bSteamroller.ForeColor = System.Drawing.Color.Black;
+            this.bSteamroller.Image = ((System.Drawing.Image)(resources.GetObject("bSteamroller.Image")));
+            this.bSteamroller.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.bSteamroller.Location = new System.Drawing.Point(71, 16);
+            this.bSteamroller.Name = "bSteamroller";
+            this.bSteamroller.Padding = new System.Windows.Forms.Padding(10, 0, 0, 2);
+            this.bSteamroller.Size = new System.Drawing.Size(87, 64);
+            this.bSteamroller.TabIndex = 1;
+            this.bSteamroller.Text = "Steamroller";
+            this.bSteamroller.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.bSteamroller.UseVisualStyleBackColor = true;
+            this.bSteamroller.CheckedChanged += new System.EventHandler(this.bSteamroller_CheckedChanged);
+            // 
+            // rbShovel
+            // 
+            this.rbShovel.AutoSize = true;
+            this.rbShovel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.rbShovel.Checked = true;
+            this.rbShovel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.rbShovel.Image = ((System.Drawing.Image)(resources.GetObject("rbShovel.Image")));
+            this.rbShovel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.rbShovel.Location = new System.Drawing.Point(3, 16);
+            this.rbShovel.Margin = new System.Windows.Forms.Padding(0);
+            this.rbShovel.Name = "rbShovel";
+            this.rbShovel.Padding = new System.Windows.Forms.Padding(10, 0, 0, 2);
+            this.rbShovel.Size = new System.Drawing.Size(68, 64);
+            this.rbShovel.TabIndex = 0;
+            this.rbShovel.TabStop = true;
+            this.rbShovel.Text = "Shovel";
+            this.rbShovel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.rbShovel.UseVisualStyleBackColor = true;
+            this.rbShovel.CheckedChanged += new System.EventHandler(this.rbShovel_CheckedChanged);
             // 
             // tabPage1
             // 
@@ -898,69 +1002,6 @@
             this.saveFileDialog1.Filter = "Images|*.jpg";
             this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
             // 
-            // bSteamroller
-            // 
-            this.bSteamroller.AutoSize = true;
-            this.bSteamroller.Dock = System.Windows.Forms.DockStyle.Left;
-            this.bSteamroller.ForeColor = System.Drawing.Color.Black;
-            this.bSteamroller.Image = ((System.Drawing.Image)(resources.GetObject("bSteamroller.Image")));
-            this.bSteamroller.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.bSteamroller.Location = new System.Drawing.Point(71, 16);
-            this.bSteamroller.Name = "bSteamroller";
-            this.bSteamroller.Padding = new System.Windows.Forms.Padding(10, 0, 0, 2);
-            this.bSteamroller.Size = new System.Drawing.Size(87, 64);
-            this.bSteamroller.TabIndex = 1;
-            this.bSteamroller.Text = "Steamroller";
-            this.bSteamroller.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.bSteamroller.UseVisualStyleBackColor = true;
-            this.bSteamroller.CheckedChanged += new System.EventHandler(this.bSteamroller_CheckedChanged);
-            // 
-            // rbShovel
-            // 
-            this.rbShovel.AutoSize = true;
-            this.rbShovel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.rbShovel.Checked = true;
-            this.rbShovel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.rbShovel.Image = ((System.Drawing.Image)(resources.GetObject("rbShovel.Image")));
-            this.rbShovel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.rbShovel.Location = new System.Drawing.Point(3, 16);
-            this.rbShovel.Margin = new System.Windows.Forms.Padding(0);
-            this.rbShovel.Name = "rbShovel";
-            this.rbShovel.Padding = new System.Windows.Forms.Padding(10, 0, 0, 2);
-            this.rbShovel.Size = new System.Drawing.Size(68, 64);
-            this.rbShovel.TabIndex = 0;
-            this.rbShovel.TabStop = true;
-            this.rbShovel.Text = "Shovel";
-            this.rbShovel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.rbShovel.UseVisualStyleBackColor = true;
-            this.rbShovel.CheckedChanged += new System.EventHandler(this.rbShovel_CheckedChanged);
-            // 
-            // pictureBoxModifyHeightmap
-            // 
-            this.pictureBoxModifyHeightmap.BackColor = System.Drawing.Color.Black;
-            this.pictureBoxModifyHeightmap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxModifyHeightmap.Location = new System.Drawing.Point(35, 27);
-            this.pictureBoxModifyHeightmap.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBoxModifyHeightmap.Name = "pictureBoxModifyHeightmap";
-            this.pictureBoxModifyHeightmap.Size = new System.Drawing.Size(80, 80);
-            this.pictureBoxModifyHeightmap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxModifyHeightmap.TabIndex = 37;
-            this.pictureBoxModifyHeightmap.TabStop = false;
-            this.pictureBoxModifyHeightmap.Click += new System.EventHandler(this.pictureBoxModifyHeightmap_Click);
-            // 
-            // pictureBoxModifyTexture
-            // 
-            this.pictureBoxModifyTexture.BackColor = System.Drawing.Color.Black;
-            this.pictureBoxModifyTexture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxModifyTexture.Location = new System.Drawing.Point(35, 126);
-            this.pictureBoxModifyTexture.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBoxModifyTexture.Name = "pictureBoxModifyTexture";
-            this.pictureBoxModifyTexture.Size = new System.Drawing.Size(80, 80);
-            this.pictureBoxModifyTexture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxModifyTexture.TabIndex = 37;
-            this.pictureBoxModifyTexture.TabStop = false;
-            this.pictureBoxModifyTexture.Click += new System.EventHandler(this.pictureBoxModifyTexture_Click);
-            // 
             // TerrainEditorControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -977,12 +1018,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudScaleXZ)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxModifyHeightmap)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxModifyTexture)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nupLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nupHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nupWidth)).EndInit();
             this.pageEdit.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.brushSettings.ResumeLayout(false);
             this.brushSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbHardness)).EndInit();
@@ -997,8 +1042,6 @@
             this.groupBox2.PerformLayout();
             this.gbTerrain.ResumeLayout(false);
             this.gbTerrain.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxModifyHeightmap)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxModifyTexture)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1089,6 +1132,9 @@
         private System.Windows.Forms.RadioButton bSteamroller;
         private System.Windows.Forms.RadioButton rbShovel;
         private System.Windows.Forms.CheckBox cbInvert;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.RadioButton rbPPlane;
+        private System.Windows.Forms.RadioButton rbPTerrain;
 
     }
 }

@@ -197,6 +197,12 @@ namespace Examples.TerrainEditor.Panel
 
         }
 
+        private void rbPPlane_CheckedChanged(object sender, EventArgs e)
+        {
+            terrainEditor.PlanePicking = rbPPlane.Checked;
+        }
+
+     
 
     
        
