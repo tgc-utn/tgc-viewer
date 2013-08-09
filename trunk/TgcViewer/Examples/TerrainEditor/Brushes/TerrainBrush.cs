@@ -69,7 +69,7 @@ namespace Examples.TerrainEditor.Brushes
             float radius = Radius / terrain.ScaleXZ;
             float innerRadius = radius * Hardness / 100;
             float radius2 = FastMath.Pow2(radius);
-            float innerRadius2 = innerRadius * innerRadius;
+            float innerRadius2 = FastMath.Pow2(innerRadius);
 
             Vector2 coords;
             float[,] heightmapData = terrain.HeightmapData;
@@ -121,12 +121,11 @@ namespace Examples.TerrainEditor.Brushes
                                 }
                                 else if (!Rounded && (FastMath.Abs(dx) > innerRadius || FastMath.Abs(dz) > innerRadius))
                                 {
-                                    intensity = intensity * (1 - ((FastMath.Max(FastMath.Abs(dx), FastMath.Abs(dz)) - innerRadius) / (radius - innerRadius)));
+                                    intensity = intensity * (1 - ((FastMath.Min(radius, FastMath.Max(FastMath.Abs(dx), FastMath.Abs(dz))) - innerRadius) / (radius - innerRadius)));
 
                                 }
                             }
-
-
+                          
 
                             float newHeight = FastMath.Max(0, FastMath.Min(heightmapData[i, j] + intensity * speed, 255));
 
