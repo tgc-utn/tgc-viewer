@@ -10,7 +10,7 @@ namespace Examples.TerrainEditor.Brushes.Level
         public Shovel()
         {
             Color1 = Color.Aqua;
-            Color2 = Color.LightPink;
+            Color2 = Color.Red;
             bBrush.Color = Color1;
             bBrush.updateValues();
         }
