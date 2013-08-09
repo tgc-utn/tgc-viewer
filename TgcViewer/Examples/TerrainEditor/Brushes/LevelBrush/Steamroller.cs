@@ -13,8 +13,8 @@ namespace Examples.TerrainEditor.Brushes.LevelBrush
         public Steamroller():base()
         {
 
-            Color1 = Color.LightGoldenrodYellow; 
-           Color2 = Color.White;
+           Color1 = Color.LightGoldenrodYellow; 
+           Color2 = Color.Purple;
            bBrush.Color = Color1;
            bBrush.updateValues();
         }

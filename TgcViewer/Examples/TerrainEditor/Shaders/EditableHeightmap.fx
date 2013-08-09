@@ -22,7 +22,6 @@ sampler2D diffuseMap = sampler_state
 };
 
 
-
 //Input del Vertex Shader
 struct VS_INPUT_PositionColoredTextured
 {
@@ -95,42 +94,37 @@ float4 brushColor2;
 float brushRadius;
 float brushHardness;
 
-//Input del Vertex Shader
-struct VS_OUTPUT_Brush
-{
-   float4 Position : POSITION0;
-   float4 Color : COLOR; 
-
-};
 
 
 //Pixel Shader
-float4 ps_PositionColoredTexturedWithBrush(float4 Color:COLOR0) : COLOR0
+float4 ps_PositionColoredTexturedWithBrush(PS_INPUT_PositionColoredTextured input) : COLOR0
 {      
-		
-	return Color;
-
+	float4 color = tex2D(diffuseMap, input.Texcoord);
+	float alpha = input.Color[3]; 
+	
+	color = input.Color*alpha + color*(1-alpha);
+	color[3] = 1;
+	
+	return color;
 }
 
 
 /**************************************************************************************/
 /* PositionColoredTexturedWithRoundBrush */
 /**************************************************************************************/
-VS_OUTPUT_Brush vs_PositionColoredTexturedWithRoundBrush(float4 Position:POSITION0)
+VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithRoundBrush(VS_INPUT_PositionColoredTextured input)
 {
-	VS_OUTPUT_Brush output;
+	VS_INPUT_PositionColoredTextured output;
 
 	//Aplicar escala y desplazamiento
-	
-	output.Position = mul(Position, matTransform);
+	float dr2 = brushRadius*brushRadius;
+	output.Position = mul(input.Position, matTransform);
 	
 	//Coloreo el vertice de acuerdo a la posicion y radio del pincel
 	float dx = output.Position[0]- brushPosition[0];
 	float dz = output.Position[2]- brushPosition[1];
 	
 	float dl2 = dx*dx+dz*dz;
-	float dr2 = brushRadius*brushRadius;
-
 	if(dl2<=dr2*brushHardness/100) 
 		output.Color = brushColor1;
 	else 
@@ -143,38 +137,43 @@ VS_OUTPUT_Brush vs_PositionColoredTexturedWithRoundBrush(float4 Position:POSITIO
 	
 
 	//Proyectar posicion
-	output.Position = mul(output.Position, matWorldViewProj);	
+	output.Position = mul(output.Position, matWorldViewProj);
+
+	//Enviar Texcoord directamente
+	output.Texcoord = input.Texcoord;	
 	
 	return output;
 }
+
+
+
+
+
 
 
 technique PositionColoredTexturedWithRoundBrush
 {
    pass Pass_0
    {
-	  VertexShader = compile vs_2_0 vs_PositionColoredTextured();
-	  PixelShader = compile ps_2_0 ps_PositionColoredTextured();
-   }
-    pass Pass_1
-   {
-		AlphaBlendEnable	= true;
 	  VertexShader = compile vs_2_0 vs_PositionColoredTexturedWithRoundBrush();
 	  PixelShader = compile ps_2_0 ps_PositionColoredTexturedWithBrush();
    }
+
 }
 
 /**************************************************************************************/
 /* PositionColoredTexturedWithSquareBrush */
 /**************************************************************************************/
 
-VS_OUTPUT_Brush vs_PositionColoredTexturedWithSquareBrush(float4 Position:POSITION0)
+VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithSquareBrush(VS_INPUT_PositionColoredTextured input)
 {
-	VS_OUTPUT_Brush output;
+	VS_INPUT_PositionColoredTextured output;
+
+		
 	float brushRadius2 = brushRadius*brushHardness/100;
 	//Aplicar escala y desplazamiento
 	
-	output.Position = mul(Position, matTransform);
+	output.Position = mul(input.Position, matTransform);
 	
 	//Coloreo el vertice de acuerdo a la posicion y radio del pincel
 	float dx = output.Position[0]- brushPosition[0];
@@ -188,23 +187,26 @@ VS_OUTPUT_Brush vs_PositionColoredTexturedWithSquareBrush(float4 Position:POSITI
 	
 	if(output.Color[3]<0) output.Color[3]=0;
 
+
 	//Proyectar posicion
-	output.Position = mul(output.Position, matWorldViewProj);	
+	output.Position = mul(output.Position, matWorldViewProj);
+
+	//Enviar Texcoord directamente
+	output.Texcoord = input.Texcoord;	
 	
 	return output;
 }
 
+
+
 technique PositionColoredTexturedWithSquareBrush
 {
+	
    pass Pass_0
    {
-	  VertexShader = compile vs_2_0 vs_PositionColoredTextured();
-	  PixelShader = compile ps_2_0 ps_PositionColoredTextured();
-   }
-    pass Pass_1
-   {
-		AlphaBlendEnable	= true;
+	 
 	  VertexShader = compile vs_2_0 vs_PositionColoredTexturedWithSquareBrush();
-	  PixelShader = compile ps_2_0 ps_PositionColoredTexturedWithBrush();
+	  PixelShader = compile ps_2_0  ps_PositionColoredTexturedWithBrush();
    }
+ 
 }
