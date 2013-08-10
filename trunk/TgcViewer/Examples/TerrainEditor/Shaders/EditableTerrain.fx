@@ -7,7 +7,7 @@ float4x4 matWorld; //Matriz de transformacion World
 float4x4 matWorldView; //Matriz World * View
 float4x4 matWorldViewProj; //Matriz World * View * Projection
 float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
-float4x4 matTransform;
+
 
 //Textura para DiffuseMap
 texture texDiffuseMap;
@@ -48,10 +48,8 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTextured(VS_INPUT_PositionCol
 {
 	VS_INPUT_PositionColoredTextured output;
 
-	//Aplicar escala y desplazamiento
-	output.Position = mul(input.Position, matTransform);
 	//Proyectar posicion
-	output.Position = mul(output.Position, matWorldViewProj);
+	output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar Texcoord directamente
 	output.Texcoord = input.Texcoord;
@@ -116,11 +114,10 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithRoundBrush(VS_INP
 {
 	VS_INPUT_PositionColoredTextured output;
 
-	//Aplicar escala y desplazamiento
 	float brushRadius2 = pow(brushRadius,2);
 	float brushInnerRadius2=pow(brushRadius*brushHardness/100,2);
 	
-	output.Position = mul(input.Position, matTransform);
+	output.Position = mul(input.Position, matWorld);
 	
 	//Coloreo el vertice de acuerdo a la posicion y radio del pincel
 	float dx = output.Position[0]- brushPosition[0];
@@ -140,7 +137,7 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithRoundBrush(VS_INP
 	
 
 	//Proyectar posicion
-	output.Position = mul(output.Position, matWorldViewProj);
+	output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar Texcoord directamente
 	output.Texcoord = input.Texcoord;	
@@ -177,7 +174,7 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithSquareBrush(VS_IN
 
 	//Aplicar escala y desplazamiento
 	
-	output.Position = mul(input.Position, matTransform);
+	output.Position = mul(input.Position, matWorld);
 	
 	//Coloreo el vertice de acuerdo a la posicion y radio del pincel
 	float dx = output.Position[0]- brushPosition[0];
@@ -193,7 +190,7 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithSquareBrush(VS_IN
 
 
 	//Proyectar posicion
-	output.Position = mul(output.Position, matWorldViewProj);
+	output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar Texcoord directamente
 	output.Texcoord = input.Texcoord;	

@@ -46,11 +46,6 @@ namespace Examples.TerrainEditor
             Device d3dDevice = GuiController.Instance.D3dDevice;
           
             terrain = new EditableTerrain();
-           
-
-            //Shader
-            terrain.Effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "TerrainEditor\\Shaders\\EditableHeightmap.fx");
-            terrain.Technique = "PositionTextured";
 
             this.brush = new DummyBrush();
 
@@ -129,7 +124,7 @@ namespace Examples.TerrainEditor
                 {
 
                     int intensity = (int)terrain.HeightmapData[i, j];
-                    Color pixel = Color.FromArgb(intensity, intensity, intensity); //Si R=G=B el color es blanco, gris o negro
+                    Color pixel = Color.FromArgb(intensity, intensity, intensity); 
                     bitmap.SetPixel(j, i, pixel);
 
 

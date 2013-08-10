@@ -108,9 +108,9 @@ namespace Examples.TerrainEditor
             enabled = true;
             alphaBlendEnable = false;
 
-            //Shader
-            this.effect = GuiController.Instance.Shaders.VariosShader;
-            this.technique = TgcShaders.T_POSITION_COLORED_TEXTURED;
+            //Shader     
+            Effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "TerrainEditor\\Shaders\\EditableTerrain.fx");
+            Technique = "PositionColoredTextured";
 
             aabb = new TgcBoundingBox();
             
@@ -359,12 +359,11 @@ namespace Examples.TerrainEditor
           
             //Textura
             effect.SetValue("texDiffuseMap", terrainTexture);
-            effect.SetValue("matTransform", transform);
             
 
             texturesManager.clear(1);
 
-            GuiController.Instance.Shaders.setShaderMatrix(this.effect, Matrix.Identity);
+            GuiController.Instance.Shaders.setShaderMatrix(this.effect, transform);
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColoredTextured;
             effect.Technique = this.technique;
             d3dDevice.SetStreamSource(0, vbTerrain, 0);
