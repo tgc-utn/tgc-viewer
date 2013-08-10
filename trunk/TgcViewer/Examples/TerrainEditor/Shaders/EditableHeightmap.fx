@@ -117,7 +117,9 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithRoundBrush(VS_INP
 	VS_INPUT_PositionColoredTextured output;
 
 	//Aplicar escala y desplazamiento
-	float dr2 = brushRadius*brushRadius;
+	float brushRadius2 = pow(brushRadius,2);
+	float brushInnerRadius2=pow(brushRadius*brushHardness/100,2);
+	
 	output.Position = mul(input.Position, matTransform);
 	
 	//Coloreo el vertice de acuerdo a la posicion y radio del pincel
@@ -125,12 +127,13 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithRoundBrush(VS_INP
 	float dz = output.Position[2]- brushPosition[1];
 	
 	float dl2 = dx*dx+dz*dz;
-	if(dl2<=dr2*brushHardness/100) 
+	
+	if(dl2<=brushInnerRadius2)
 		output.Color = brushColor1;
 	else 
 		output.Color = brushColor2;
 
-	output.Color[3] =  0.8*(1 - (dl2/dr2)) ;
+	output.Color[3] =  0.8*(1 - (dl2/brushRadius2)) ;
 	
 	
 	if(output.Color[3]<0) output.Color[3]=0;
@@ -170,7 +173,8 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithSquareBrush(VS_IN
 	VS_INPUT_PositionColoredTextured output;
 
 		
-	float brushRadius2 = brushRadius*brushHardness/100;
+	float brushInnerRadius = brushRadius*brushHardness/100;
+
 	//Aplicar escala y desplazamiento
 	
 	output.Position = mul(input.Position, matTransform);
@@ -179,7 +183,7 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithSquareBrush(VS_IN
 	float dx = output.Position[0]- brushPosition[0];
 	float dz = output.Position[2]- brushPosition[1];
 	
-	if(abs(dx)>brushRadius2 || abs(dz)>brushRadius2)output.Color = brushColor2;
+	if(abs(dx)>brushInnerRadius || abs(dz)>brushInnerRadius)output.Color = brushColor2;
 	else output.Color = brushColor1;
 
 	output.Color[3] =  0.9*(1 - (max(abs(dx),abs(dz))/brushRadius)) ;

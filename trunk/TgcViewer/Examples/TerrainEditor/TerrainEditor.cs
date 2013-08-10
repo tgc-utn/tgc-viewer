@@ -7,7 +7,6 @@ using Microsoft.DirectX;
 using System.Windows.Forms;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.Input;
 using Examples.TerrainEditor.Brushes;
 using Examples.TerrainEditor.Panel;
 using System.Drawing.Imaging;
@@ -21,14 +20,12 @@ namespace Examples.TerrainEditor
     {
 
         public EditableTerrain terrain;
-        TgcPickingRay pickingRay;
-        private TerrainBrush brush;
-        public TerrainBrush Brush { get { return brush; } set { if (brush != null) brush.dispose(); brush = value; } }
-        bool brushOut;
-        TerrainEditorModifier modifierPanel;
-
+        private TgcPickingRay pickingRay;
+        private ITerrainEditorBrush brush;
+        public ITerrainEditorBrush Brush { get { return brush; } set { if (value == null) brush = new DummyBrush(); else brush = value; } }
+        private TerrainEditorModifier modifierPanel;
         public bool PlanePicking { get; set; }
-       
+
         public override string getCategory()
         {
             return "Utils";
@@ -55,17 +52,17 @@ namespace Examples.TerrainEditor
             terrain.Effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "TerrainEditor\\Shaders\\EditableHeightmap.fx");
             terrain.Technique = "PositionTextured";
 
+            this.brush = new DummyBrush();
 
             modifierPanel = new TerrainEditorModifier("Panel", this);
             GuiController.Instance.Modifiers.add(modifierPanel);
 
             pickingRay = new TgcPickingRay();
-
           
 
             GuiController.Instance.Panel3d.MouseMove += new MouseEventHandler(Panel3d_MouseMove);
             GuiController.Instance.Panel3d.MouseLeave += new EventHandler(Panel3d_MouseLeave);
-
+            
             //Configurar FPS Camara
             GuiController.Instance.FpsCamera.Enable = true;
             GuiController.Instance.FpsCamera.MovementSpeed = 300f;
@@ -80,40 +77,26 @@ namespace Examples.TerrainEditor
 
         void Panel3d_MouseLeave(object sender, EventArgs e)
         {
-             brushOut = true;
+            if (Brush.mouseLeave(this)) ChangesMade = true;
             
         }
 
         void Panel3d_MouseMove(object sender, MouseEventArgs e)
         {
-           updateBrushPosition();
-             
+            if (Brush.mouseMove(this)) ChangesMade = true;       
         }
 
-        private void updateBrushPosition()
+    
+
+        public bool mousePositionInTerrain(out Vector3 position)
         {
+            pickingRay.updateRay();
 
-            if (modifierPanel.Control.Editing)
-            {
-                
-                
-                brushOut = false;
-                //Actualizar Ray de colisión en base a posición del mouse
-                pickingRay.updateRay();
-                
-                Vector3 pos;
-
-                if (PlanePicking) 
-                    brushOut = !terrain.intersectRayPlane(pickingRay.Ray, out pos);
-                else
-                    brushOut = !terrain.intersectRay(pickingRay.Ray, out pos);
-                
-                if (!brushOut)  Brush.Position = pos;
-                               
-                
-            }
+            if (PlanePicking)
+               return terrain.intersectRayPlane(pickingRay.Ray, out position);
+            else
+                return terrain.intersectRay(pickingRay.Ray, out position);
         }
-
 
 
         public bool ChangesMade { get; set; }
@@ -125,38 +108,12 @@ namespace Examples.TerrainEditor
             
             terrain.Technique = "PositionColoredTextured";
 
-            if (modifierPanel.Control.Editing && !brushOut)
-            {
-                if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
-                {
-                    bool invert = GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.LeftAlt);
+            if (Brush.update(this)) ChangesMade = true;
 
-                    bool oldInvert = Brush.Invert;
-                    Brush.Invert ^= invert;
-                    if (!Brush.Editing) Brush.beginEdition(terrain);
-                    if (Brush.editTerrain())
-                    {
-                        ChangesMade = true;
-                        terrain.updateVertices();
-                    }
-
-                    Brush.Invert = oldInvert;
-                }
-                else { if (Brush.Editing)  Brush.endEdition(); }
-
-                Brush.configureTerrainEffect(terrain);
-                Brush.render();
-
-            }
-           
-           
-            
-            //Renderizar terreno
-            terrain.render();
+            Brush.render(this);
             
            
-        }
-      
+        }               
         
 
         public void save(String path)
@@ -182,6 +139,7 @@ namespace Examples.TerrainEditor
 
             bitmap.Save(path, ImageFormat.Jpeg);
             bitmap.Dispose();
+            ChangesMade = false;
         }
 
         public override void close()
@@ -190,5 +148,33 @@ namespace Examples.TerrainEditor
             Brush.dispose();
         }
 
+    }
+
+    public class DummyBrush : ITerrainEditorBrush
+    {
+        public bool mouseMove(TgcTerrainEditor editor)
+        {
+            return false;
+        }
+
+        public bool mouseLeave(TgcTerrainEditor editor)
+        {
+            return false;
+        }
+
+        public bool update(TgcTerrainEditor editor)
+        {
+            return false;
+        }
+
+        public void render(TgcTerrainEditor editor)
+        {
+            editor.terrain.render();
+        }
+
+        public void dispose()
+        {
+            return;
+        }
     }
 }

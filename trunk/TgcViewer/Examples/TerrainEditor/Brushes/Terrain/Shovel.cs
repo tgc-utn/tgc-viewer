@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Examples.TerrainEditor.Brushes.Level
+namespace Examples.TerrainEditor.Brushes.Terrain
 {
     /// <summary>
     /// Eleva o hunde el terreno

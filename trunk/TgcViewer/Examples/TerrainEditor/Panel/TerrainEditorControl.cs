@@ -2,12 +2,10 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer;
 using Examples.MeshCreator;
-using Examples.TerrainEditor.Brushes;
-using Examples.TerrainEditor.Brushes.Level;
-using Examples.TerrainEditor.Brushes.LevelBrush;
+using Examples.TerrainEditor.Brushes.Terrain;
+using TgcViewer;
+using TgcViewer.Utils.Modifiers;
 
 namespace Examples.TerrainEditor.Panel
 {
@@ -18,14 +16,8 @@ namespace Examples.TerrainEditor.Panel
         TgcTextureBrowser heightmapBrowser;
         TgcTextureBrowser textureBrowser;
 
-        
-        public TerrainBrush SelectedBrush
-        {
-            get { return terrainEditor.Brush; }
-            set{setBrush(value);}
-
-        }
-       
+        TerrainBrush TerrainBrush { get { return (TerrainBrush)terrainEditor.Brush; } set { if (terrainEditor.Brush != null) terrainEditor.Brush.dispose(); setBrush(value); } }
+   
         
         public TerrainEditorControl(TgcTerrainEditor terrainEditor)
         {
@@ -45,13 +37,9 @@ namespace Examples.TerrainEditor.Panel
             terrainEditor.terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value, (float)nudScaleY.Value, new Microsoft.DirectX.Vector3(0, 0, 0));
             terrainEditor.terrain.loadTexture(textureBrowser.SelectedImage);
 
-            //Pincel
-            SelectedBrush = new Shovel();
 
             //Info
-            setInfo();
-
-            
+            setInfo();          
           
 
         }
@@ -92,11 +80,9 @@ namespace Examples.TerrainEditor.Panel
                 pictureBoxModifyHeightmap.ImageLocation = heightmapBrowser.SelectedImage;
 
                 terrainEditor.terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value, (float)nudScaleY.Value, new Microsoft.DirectX.Vector3(0, 0, 0));
+                terrainEditor.ChangesMade = false;
                 setInfo();
             }
-
-            terrainEditor.ChangesMade = false;
-
         }
 
         private void pictureBoxModifyTexture_Click(object sender, EventArgs e)
@@ -115,8 +101,7 @@ namespace Examples.TerrainEditor.Panel
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.ShowDialog(this);
-           
+            saveFileDialog1.ShowDialog(this);           
         }
 
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
@@ -124,11 +109,8 @@ namespace Examples.TerrainEditor.Panel
             terrainEditor.save(saveFileDialog1.FileName);
             heightmapBrowser.setSelectedImage(saveFileDialog1.FileName);
             pictureBoxModifyHeightmap.ImageLocation = heightmapBrowser.SelectedImage;
-            terrainEditor.ChangesMade = false;
         }
-
-        public bool Editing { get { return tabControl.SelectedTab.Name.Equals("pageEdit"); } }
-      
+              
 
         private void buttonNewHeightmap_Click(object sender, EventArgs e)
         {
@@ -151,36 +133,33 @@ namespace Examples.TerrainEditor.Panel
             setInfo();
         }
 
-        private void tbBrsuh_Scroll(object sender, EventArgs e)
+        private void tbBrush_Scroll(object sender, EventArgs e)
         {
             TrackBar tb = (TrackBar)sender;
-            String prop = (string)tb.Tag;
-            terrainEditor.Brush.GetType().GetProperty(prop).SetValue(terrainEditor.Brush, (float)tb.Value, null);
+            String prop = (string)tb.Tag; 
+            //Reflection para escribir menos :P
+            terrainEditor.Brush.GetType().GetProperty(prop).SetValue(terrainEditor.Brush, tb.Value, null);
         }
 
-        private void cbInvert_CheckedChanged(object sender, EventArgs e)
+        private void cbBrush_CheckedChanged(object sender, EventArgs e)
         {
-            terrainEditor.Brush.Invert = cbInvert.Checked;
-        }
-
-        private void cbRounded_CheckedChanged(object sender, EventArgs e)
-        {
-            terrainEditor.Brush.Rounded = cbRounded.Checked;
-        }
-
+            CheckBox cb = (CheckBox)sender;
+            String prop = (string)cb.Tag; 
+            //Reflection para escribir menos :P
+            terrainEditor.Brush.GetType().GetProperty(prop).SetValue(terrainEditor.Brush, cb.Checked, null);
        
+        }       
 
 
         private void rbShovel_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbShovel.Checked) SelectedBrush = new Shovel();
-           
+            if (rbShovel.Checked) TerrainBrush = new Shovel();           
 
         }
 
         private void bSteamroller_CheckedChanged(object sender, EventArgs e)
         {
-            if (bSteamroller.Checked) SelectedBrush = new Steamroller();
+            if (bSteamroller.Checked) TerrainBrush = new Steamroller();
            
         }
 
@@ -202,9 +181,19 @@ namespace Examples.TerrainEditor.Panel
             terrainEditor.PlanePicking = rbPPlane.Checked;
         }
 
-     
+        private void pageEdit_Enter(object sender, EventArgs e)
+        {
+            if (rbShovel.Checked) TerrainBrush = new Shovel();
+            else if (bSteamroller.Checked) TerrainBrush = new Steamroller();
+        }
 
-    
+        private void noBrushTab_Enter(object sender, EventArgs e)
+        {
+            terrainEditor.Brush = null;
+        }
+
+        
+
        
 
      
