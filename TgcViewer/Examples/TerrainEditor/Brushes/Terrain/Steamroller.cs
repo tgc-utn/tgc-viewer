@@ -1,7 +1,7 @@
-﻿using Microsoft.DirectX;
-using System.Drawing;
+﻿using System.Drawing;
+using Microsoft.DirectX;
 
-namespace Examples.TerrainEditor.Brushes.LevelBrush
+namespace Examples.TerrainEditor.Brushes.Terrain
 {
     /// <summary>
     /// Aplana el terreno tomando como altura la del primer vertice seleccionado.

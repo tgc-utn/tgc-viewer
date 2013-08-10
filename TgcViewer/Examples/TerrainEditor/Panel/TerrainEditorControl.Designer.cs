@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TerrainEditorControl));
             this.tabControl = new System.Windows.Forms.TabControl();
-            this.tabTerrain = new System.Windows.Forms.TabPage();
+            this.pageTerrain = new System.Windows.Forms.TabPage();
             this.groupBoxModifyScale = new System.Windows.Forms.GroupBox();
             this.nudScaleY = new System.Windows.Forms.NumericUpDown();
             this.nudScaleXZ = new System.Windows.Forms.NumericUpDown();
@@ -66,10 +66,10 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.bSteamroller = new System.Windows.Forms.RadioButton();
             this.rbShovel = new System.Windows.Forms.RadioButton();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.pageExport = new System.Windows.Forms.TabPage();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.buttonSave = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pageInfo = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lheight = new System.Windows.Forms.Label();
             this.lwidth = new System.Windows.Forms.Label();
@@ -117,7 +117,7 @@
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.tabControl.SuspendLayout();
-            this.tabTerrain.SuspendLayout();
+            this.pageTerrain.SuspendLayout();
             this.groupBoxModifyScale.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudScaleY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudScaleXZ)).BeginInit();
@@ -135,19 +135,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbIntensity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbRadius)).BeginInit();
             this.groupBox3.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.pageExport.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.pageInfo.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbTerrain.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
             // 
-            this.tabControl.Controls.Add(this.tabTerrain);
+            this.tabControl.Controls.Add(this.pageTerrain);
             this.tabControl.Controls.Add(this.pageEdit);
-            this.tabControl.Controls.Add(this.tabPage1);
-            this.tabControl.Controls.Add(this.tabPage2);
+            this.tabControl.Controls.Add(this.pageExport);
+            this.tabControl.Controls.Add(this.pageInfo);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -155,18 +155,19 @@
             this.tabControl.Size = new System.Drawing.Size(223, 506);
             this.tabControl.TabIndex = 0;
             // 
-            // tabTerrain
+            // pageTerrain
             // 
-            this.tabTerrain.BackColor = System.Drawing.Color.White;
-            this.tabTerrain.Controls.Add(this.groupBoxModifyScale);
-            this.tabTerrain.Controls.Add(this.groupBox5);
-            this.tabTerrain.Controls.Add(this.groupBox1);
-            this.tabTerrain.Location = new System.Drawing.Point(4, 22);
-            this.tabTerrain.Name = "tabTerrain";
-            this.tabTerrain.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTerrain.Size = new System.Drawing.Size(215, 480);
-            this.tabTerrain.TabIndex = 0;
-            this.tabTerrain.Text = "General";
+            this.pageTerrain.BackColor = System.Drawing.Color.White;
+            this.pageTerrain.Controls.Add(this.groupBoxModifyScale);
+            this.pageTerrain.Controls.Add(this.groupBox5);
+            this.pageTerrain.Controls.Add(this.groupBox1);
+            this.pageTerrain.Location = new System.Drawing.Point(4, 22);
+            this.pageTerrain.Name = "pageTerrain";
+            this.pageTerrain.Padding = new System.Windows.Forms.Padding(3);
+            this.pageTerrain.Size = new System.Drawing.Size(215, 480);
+            this.pageTerrain.TabIndex = 0;
+            this.pageTerrain.Text = "General";
+            this.pageTerrain.Enter += new System.EventHandler(this.noBrushTab_Enter);
             // 
             // groupBoxModifyScale
             // 
@@ -418,6 +419,7 @@
             this.pageEdit.Size = new System.Drawing.Size(215, 480);
             this.pageEdit.TabIndex = 1;
             this.pageEdit.Text = "Edit";
+            this.pageEdit.Enter += new System.EventHandler(this.pageEdit_Enter);
             // 
             // groupBox6
             // 
@@ -481,9 +483,10 @@
             this.cbInvert.Name = "cbInvert";
             this.cbInvert.Size = new System.Drawing.Size(53, 17);
             this.cbInvert.TabIndex = 15;
+            this.cbInvert.Tag = "Invert";
             this.cbInvert.Text = "Invert";
             this.cbInvert.UseVisualStyleBackColor = true;
-            this.cbInvert.CheckedChanged += new System.EventHandler(this.cbInvert_CheckedChanged);
+            this.cbInvert.CheckedChanged += new System.EventHandler(this.cbBrush_CheckedChanged);
             // 
             // cbRounded
             // 
@@ -494,9 +497,10 @@
             this.cbRounded.Name = "cbRounded";
             this.cbRounded.Size = new System.Drawing.Size(70, 17);
             this.cbRounded.TabIndex = 14;
+            this.cbRounded.Tag = "Rounded";
             this.cbRounded.Text = "Rounded";
             this.cbRounded.UseVisualStyleBackColor = true;
-            this.cbRounded.CheckedChanged += new System.EventHandler(this.cbRounded_CheckedChanged);
+            this.cbRounded.CheckedChanged += new System.EventHandler(this.cbBrush_CheckedChanged);
             // 
             // label5
             // 
@@ -519,7 +523,7 @@
             this.tbHardness.TabIndex = 11;
             this.tbHardness.Tag = "Hardness";
             this.tbHardness.Value = 100;
-            this.tbHardness.Scroll += new System.EventHandler(this.tbBrsuh_Scroll);
+            this.tbHardness.Scroll += new System.EventHandler(this.tbBrush_Scroll);
             // 
             // label4
             // 
@@ -541,7 +545,7 @@
             this.tbIntensity.TabIndex = 9;
             this.tbIntensity.Tag = "Intensity";
             this.tbIntensity.Value = 125;
-            this.tbIntensity.Scroll += new System.EventHandler(this.tbBrsuh_Scroll);
+            this.tbIntensity.Scroll += new System.EventHandler(this.tbBrush_Scroll);
             // 
             // label3
             // 
@@ -564,7 +568,7 @@
             this.tbRadius.TabIndex = 9;
             this.tbRadius.Tag = "Radius";
             this.tbRadius.Value = 100;
-            this.tbRadius.Scroll += new System.EventHandler(this.tbBrsuh_Scroll);
+            this.tbRadius.Scroll += new System.EventHandler(this.tbBrush_Scroll);
             // 
             // label2
             // 
@@ -625,16 +629,17 @@
             this.rbShovel.UseVisualStyleBackColor = true;
             this.rbShovel.CheckedChanged += new System.EventHandler(this.rbShovel_CheckedChanged);
             // 
-            // tabPage1
+            // pageExport
             // 
-            this.tabPage1.Controls.Add(this.groupBox4);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(215, 480);
-            this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "Export";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.pageExport.Controls.Add(this.groupBox4);
+            this.pageExport.Location = new System.Drawing.Point(4, 22);
+            this.pageExport.Name = "pageExport";
+            this.pageExport.Padding = new System.Windows.Forms.Padding(3);
+            this.pageExport.Size = new System.Drawing.Size(215, 480);
+            this.pageExport.TabIndex = 2;
+            this.pageExport.Text = "Export";
+            this.pageExport.UseVisualStyleBackColor = true;
+            this.pageExport.Enter += new System.EventHandler(this.noBrushTab_Enter);
             // 
             // groupBox4
             // 
@@ -658,17 +663,18 @@
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
-            // tabPage2
+            // pageInfo
             // 
-            this.tabPage2.Controls.Add(this.groupBox2);
-            this.tabPage2.Controls.Add(this.gbTerrain);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(215, 480);
-            this.tabPage2.TabIndex = 3;
-            this.tabPage2.Text = "Info";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.pageInfo.Controls.Add(this.groupBox2);
+            this.pageInfo.Controls.Add(this.gbTerrain);
+            this.pageInfo.Location = new System.Drawing.Point(4, 22);
+            this.pageInfo.Name = "pageInfo";
+            this.pageInfo.Padding = new System.Windows.Forms.Padding(3);
+            this.pageInfo.Size = new System.Drawing.Size(215, 480);
+            this.pageInfo.TabIndex = 3;
+            this.pageInfo.Text = "Info";
+            this.pageInfo.UseVisualStyleBackColor = true;
+            this.pageInfo.Enter += new System.EventHandler(this.noBrushTab_Enter);
             // 
             // groupBox2
             // 
@@ -1011,7 +1017,7 @@
             this.Name = "TerrainEditorControl";
             this.Size = new System.Drawing.Size(223, 506);
             this.tabControl.ResumeLayout(false);
-            this.tabTerrain.ResumeLayout(false);
+            this.pageTerrain.ResumeLayout(false);
             this.groupBoxModifyScale.ResumeLayout(false);
             this.groupBoxModifyScale.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudScaleY)).EndInit();
@@ -1035,9 +1041,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbRadius)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.tabPage1.ResumeLayout(false);
+            this.pageExport.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
+            this.pageInfo.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.gbTerrain.ResumeLayout(false);
@@ -1049,7 +1055,7 @@
         #endregion
 
         private System.Windows.Forms.TabControl tabControl;
-        private System.Windows.Forms.TabPage tabTerrain;
+        private System.Windows.Forms.TabPage pageTerrain;
         private System.Windows.Forms.TabPage pageEdit;
         private System.Windows.Forms.DataGridViewCheckBoxColumn visibleDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn useWaitCursorDataGridViewCheckBoxColumn;
@@ -1087,7 +1093,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Value;
         private System.Windows.Forms.DataGridViewTextBoxColumn Tag;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage pageExport;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.GroupBox groupBox4;
@@ -1109,7 +1115,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage pageInfo;
         private System.Windows.Forms.Label labelVerticesCount;
         private System.Windows.Forms.GroupBox gbTerrain;
         private System.Windows.Forms.Label lbScaleY;

@@ -419,11 +419,13 @@ namespace Examples.TerrainEditor
             Vector3 r = Vector3.TransformCoordinate(ray.Direction, scaleInv);
                        
 
-            if (a.Y < minIntensity) return false;
+            if (a.Y < minIntensity) 
+                return false;
             
             Vector3 q;
             //Me fijo si intersecta con el BB del terreno.
-            if (!TgcCollisionUtils.intersectRayAABB(new TgcRay(a, r).toStruct(), aabb.toStruct(), out q)) return false;
+            if (!TgcCollisionUtils.intersectRayAABB(new TgcRay(a, r).toStruct(), aabb.toStruct(), out q)) 
+                return false;
             
             float minT=0;
             //Obtengo el T de la interseccion.
@@ -445,7 +447,8 @@ namespace Examples.TerrainEditor
                 collisionPoint = a + t * r;
                 float y;
                 
-                if(!interpoledIntensity(collisionPoint.X, collisionPoint.Z, out y))  return false;
+                if(!interpoledIntensity(collisionPoint.X, collisionPoint.Z, out y))  
+                    return false;
 
                                  
                 if (collisionPoint.Y <= y + float.Epsilon)
