@@ -299,9 +299,12 @@
     <Compile Include="Sound\PlayMp3.cs" />
     <Compile Include="Sprites2D\EjemploAnimatedSprite.cs" />
     <Compile Include="Sprites2D\EjemploSprite2D.cs" />
-    <Compile Include="TerrainEditor\Brushes\LevelBrush\Shovel.cs" />
-    <Compile Include="TerrainEditor\Brushes\LevelBrush\Steamroller.cs" />
-    <Compile Include="TerrainEditor\Brushes\TerrainBrush.cs" />
+    <Compile Include="TerrainEditor\Brushes\ITerrainEditorBrush.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TerrainEditor\Brushes\Terrain\Shovel.cs" />
+    <Compile Include="TerrainEditor\Brushes\Terrain\Steamroller.cs" />
+    <Compile Include="TerrainEditor\Brushes\Terrain\TerrainBrush.cs" />
     <Compile Include="TerrainEditor\EditableTerrain.cs" />
     <Compile Include="TerrainEditor\Panel\TerrainEditorControl.cs">
       <SubType>UserControl</SubType>

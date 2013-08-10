@@ -1,13 +1,16 @@
-﻿using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+﻿using System.Drawing;
+using Microsoft.DirectX;
 using TgcViewer;
-using System.Drawing;
+using TgcViewer.Utils.Input;
+using TgcViewer.Utils.TgcGeometry;
 
-namespace Examples.TerrainEditor.Brushes
+namespace Examples.TerrainEditor.Brushes.Terrain
 {
-    public abstract class TerrainBrush
+    public abstract class TerrainBrush:ITerrainEditorBrush
     {
         protected TgcBox bBrush;
+
+        #region Properties
         public Color Color1 { get; set; }
         public Color Color2 { get; set; }
 
@@ -42,7 +45,83 @@ namespace Examples.TerrainEditor.Brushes
 
         private bool editing;
         public bool Editing { get { return editing; } }
-       
+
+        public bool Enabled { get; set; }
+
+        #endregion
+
+        public TerrainBrush()
+        {
+
+            bBrush = TgcBox.fromSize(new Vector3(10, 100, 10));
+
+        }
+
+        #region TerrainEditorBrush
+
+
+        public bool mouseMove(TgcTerrainEditor editor)
+        {
+            Vector3 pos;
+            Enabled = editor.mousePositionInTerrain(out pos);
+            this.Position = pos;
+            return false;
+        }
+
+
+
+        public bool mouseLeave(TgcTerrainEditor editor)
+        {
+            Enabled = false;
+            return false;
+        }
+
+
+        public bool update(TgcTerrainEditor editor)
+        {
+            bool changes = false;
+            if (Enabled)
+            {
+                if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+                {
+                    bool invert = GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.LeftAlt);
+
+                    bool oldInvert = Invert;
+                    Invert ^= invert;
+                    if (!Editing) beginEdition(editor.terrain);
+                    if (editTerrain())
+                    {
+                        changes = true;
+                        terrain.updateVertices();
+
+                    }
+                    Invert = oldInvert;
+                }
+                else { if (Editing) endEdition(); }
+
+            }
+
+            return changes;
+        }
+
+        public void render(TgcTerrainEditor editor)
+        {
+            if (Enabled)
+            {
+                configureTerrainEffect(editor.terrain);
+                bBrush.render();
+            }
+            editor.terrain.render();
+        }
+
+
+        public void dispose()
+        {
+            bBrush.dispose();
+        }
+
+        #endregion
+
         /// <summary>
         /// Setea y configura la technique que muestra el pincel sobre el terreno.
         /// </summary>
@@ -58,7 +137,10 @@ namespace Examples.TerrainEditor.Brushes
             terrain.Effect.SetValue("brushColor2", Color2.ToArgb());
 
         }
-       
+
+
+
+        protected EditableTerrain terrain;     
         public virtual void beginEdition(EditableTerrain terrain) { this.terrain = terrain; editing = true; }
 
         public virtual bool editTerrain()
@@ -156,26 +238,7 @@ namespace Examples.TerrainEditor.Brushes
         {
             editing = false;
         }
-         
-        protected EditableTerrain terrain;
-
-
-        public TerrainBrush(){
-
-
-           bBrush = TgcBox.fromSize(new Vector3(10, 100, 10));
-
-        }
-        public void render()
-        {
-            bBrush.render();
-
-        }
-
-        public void dispose()
-        {
-            bBrush.dispose();
-        }
+       
 
         protected virtual float getSpeedAdjustment()
         {
@@ -183,6 +246,7 @@ namespace Examples.TerrainEditor.Brushes
         }
 
         protected abstract float intensityFor(float[,] heightmapData, int i, int j);
+
         
     }
 }

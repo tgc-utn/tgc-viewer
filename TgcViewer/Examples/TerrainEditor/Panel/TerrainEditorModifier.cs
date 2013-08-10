@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TgcViewer.Utils.Modifiers;
+﻿using TgcViewer.Utils.Modifiers;
 
 
 namespace Examples.TerrainEditor.Panel
