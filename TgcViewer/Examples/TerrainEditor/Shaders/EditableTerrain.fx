@@ -115,7 +115,7 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithRoundBrush(VS_INP
 	VS_INPUT_PositionColoredTextured output;
 
 	float brushRadius2 = pow(brushRadius,2);
-	float brushInnerRadius2=pow(brushRadius*brushHardness/100,2);
+	float brushInnerRadius2=pow(brushRadius*(brushHardness/100),2);
 	
 	output.Position = mul(input.Position, matWorld);
 	
@@ -125,12 +125,20 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithRoundBrush(VS_INP
 	
 	float dl2 = dx*dx+dz*dz;
 	
-	if(dl2<=brushInnerRadius2)
-		output.Color = brushColor1;
-	else 
-		output.Color = brushColor2;
+	if(dl2<=brushInnerRadius2){
+		
+		if(brushHardness<100)
+		{
+			float alpha = dl2/brushInnerRadius2;
+			output.Color = brushColor1*(1-alpha)+brushColor2*(alpha);
 
-	output.Color[3] =  0.8*(1 - (dl2/brushRadius2)) ;
+		}else output.Color = brushColor1;
+
+	}else output.Color = brushColor2;
+		
+	
+	//Cuanto mas lejos se encuentra del centro, mas traslucido.
+	output.Color[3] =  0.9*(1 - (dl2/brushRadius2)) ;
 	
 	
 	if(output.Color[3]<0) output.Color[3]=0;
@@ -170,7 +178,7 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithSquareBrush(VS_IN
 	VS_INPUT_PositionColoredTextured output;
 
 		
-	float brushInnerRadius = brushRadius*brushHardness/100;
+	float brushInnerRadius = brushRadius*(brushHardness/100);
 
 	//Aplicar escala y desplazamiento
 	
@@ -179,16 +187,17 @@ VS_INPUT_PositionColoredTextured vs_PositionColoredTexturedWithSquareBrush(VS_IN
 	//Coloreo el vertice de acuerdo a la posicion y radio del pincel
 	float dx = output.Position[0]- brushPosition[0];
 	float dz = output.Position[2]- brushPosition[1];
-	
-	if(abs(dx)>brushInnerRadius || abs(dz)>brushInnerRadius)output.Color = brushColor2;
-	else output.Color = brushColor1;
+	float maxD = max(abs(dx),abs(dz));
 
-	output.Color[3] =  0.9*(1 - (max(abs(dx),abs(dz))/brushRadius)) ;
-	
-	
-	if(output.Color[3]<0) output.Color[3]=0;
+	if(maxD<=brushRadius){
 
+		if (maxD < brushInnerRadius) output.Color = brushColor1;		
+		else output.Color = brushColor2;			
 
+		output.Color[3] =  0.35;
+
+	}else output.Color[3]=0;
+	
 	//Proyectar posicion
 	output.Position = mul(input.Position, matWorldViewProj);
 
