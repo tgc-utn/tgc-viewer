@@ -46,7 +46,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         /// Me guardo la altura del primer vertice.
         /// </summary>
         /// <param name="terrain"></param>
-        public override void beginEdition(EditableTerrain terrain)
+        public override void beginEdition(SmartTerrain terrain)
         {
             base.beginEdition(terrain);
             Vector2 coords;

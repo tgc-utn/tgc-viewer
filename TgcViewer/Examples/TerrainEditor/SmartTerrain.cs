@@ -6,10 +6,11 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer;
 using System;
+using System.Collections.Generic;
 
 namespace Examples.TerrainEditor
 {
-    public class EditableTerrain
+    public class SmartTerrain
     {
         #region Private fields
        
@@ -103,7 +104,7 @@ namespace Examples.TerrainEditor
 
 
 
-        public EditableTerrain()
+        public SmartTerrain()
         {
             enabled = true;
             alphaBlendEnable = false;
@@ -563,6 +564,19 @@ namespace Examples.TerrainEditor
 
         }
 
+        /// <summary>
+        /// Coloca el objeto a la altura correspondiente segun su posicion en el terreno. 
+        /// Retorna false si esta fuera del terreno.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public bool setObjectPosition(ITransformObject o)
+        {
+            float y;
+            if (!interpoledHeight(o.Position.X, o.Position.Z, out y)) return false;
+            o.Position = new Vector3(o.Position.X, y, o.Position.Z);
+            return true;
+        }
 
         #endregion
     }

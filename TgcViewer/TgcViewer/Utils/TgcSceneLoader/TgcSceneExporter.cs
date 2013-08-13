@@ -1052,7 +1052,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     meshNode.SetAttribute("layer", meshData.layerName);
                     meshNode.SetAttribute("type", TgcMeshData.ORIGINAL);
                     meshNode.SetAttribute("matId", meshData.materialId.ToString());
-                    meshNode.SetAttribute("color", TgcParserUtils.printFloat3Array(meshData.color));
+                    meshNode.SetAttribute("color", meshData.color != null ? TgcParserUtils.printFloat3Array(meshData.color) : TgcParserUtils.printFloat3Array(new float[]{1,1,1}));
                     meshNode.SetAttribute("visibility", meshData.alphaBlending ? "0" : "1.0");
                     meshNode.SetAttribute("lightmap", meshData.lightmap != null ? meshData.lightmap : "");
 
