@@ -53,7 +53,7 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
             {
                 Enabled = true;
                 Position = pos;
-                if (mesh == null) mesh = InstancesManager.Instance.newVegetationMeshInstance(vegetationName);
+                if (mesh == null) mesh = InstancesManager.Instance.newMeshInstanceOf(vegetationName);
                 mesh.Position = pos;
           
 
@@ -172,7 +172,7 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
         {
 
             editor.addVegetation(mesh);
-            TgcMesh copy = InstancesManager.Instance.newVegetationMeshInstance(vegetationName);
+            TgcMesh copy = InstancesManager.Instance.newMeshInstanceOf(vegetationName);
             copy.Position = mesh.Position;
             copy.Scale = mesh.Scale;
             copy.Rotation = mesh.Rotation;

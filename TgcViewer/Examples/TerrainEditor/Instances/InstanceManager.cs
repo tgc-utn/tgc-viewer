@@ -13,7 +13,7 @@ namespace Examples.TerrainEditor.Vegetation
 {
     public class InstancesManager
     {
-        private static InstancesManager instance;
+        protected static InstancesManager instance;
         public static InstancesManager Instance { get { if (instance == null) instance = new InstancesManager(); return instance; } }
 
 
@@ -28,7 +28,7 @@ namespace Examples.TerrainEditor.Vegetation
         }
 
 
-        private Dictionary<string, TgcMesh> meshes = new Dictionary<string, TgcMesh>();
+        protected Dictionary<string, TgcMesh> meshes = new Dictionary<string, TgcMesh>();
 
         /// <summary>
         /// Recibe el nombre de un mesh original y retorna una instancia. Si ese mesh no esta cargado,
@@ -36,7 +36,7 @@ namespace Examples.TerrainEditor.Vegetation
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public TgcMesh newVegetationMeshInstance(string name)
+        public TgcMesh newMeshInstanceOf(string name)
         {
 
             if (!meshes.ContainsKey(name))
@@ -48,9 +48,16 @@ namespace Examples.TerrainEditor.Vegetation
                 meshes.Add(name, scene.Meshes[0]);
             }
 
-            TgcMesh instance = meshes[name].createMeshInstance(meshes[name].Name + meshes[name].MeshInstances.Count.ToString());
-            instance.AlphaBlendEnable = meshes[name].AlphaBlendEnable;
-            return instance;
+           
+            return instanceOf(meshes[name]);
+        }
+
+        protected TgcMesh instanceOf(TgcMesh m)
+        {
+            TgcMesh i = m.createMeshInstance(m.Name+m.MeshInstances.Count.ToString());
+            i.AlphaBlendEnable = m.AlphaBlendEnable;
+            return i;
+
         }
 
         public void export(List<TgcMesh> meshes, string name, string saveFolderPath)
@@ -99,9 +106,7 @@ namespace Examples.TerrainEditor.Vegetation
                     //Si no tenia hijos, creo una instancia para que se vea.
                     if (m.MeshInstances.Count == 0)
                     {
-                        TgcMesh i = m.createMeshInstance(m.Name + "0");
-                        i.AlphaBlendEnable = m.AlphaBlendEnable;
-                        instances.Add(i);
+                        instances.Add(instanceOf(m));
 
                     }
                 }
@@ -110,7 +115,7 @@ namespace Examples.TerrainEditor.Vegetation
             return instances;
         }
 
-        private Vector3 parseVector3(string s)
+        protected Vector3 parseVector3(string s)
         {
             float[] f3 = TgcParserUtils.parseFloat3Array(s);
             return new Vector3(f3[0], f3[1], f3[2]);
