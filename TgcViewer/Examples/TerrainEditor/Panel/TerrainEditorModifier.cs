@@ -23,5 +23,10 @@ namespace Examples.TerrainEditor.Panel
         {
             return null;
         }
+
+        public void dispose()
+        {
+            control.dispose();
+        }
     }
 }

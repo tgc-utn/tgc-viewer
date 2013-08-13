@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TerrainEditorControl));
             this.tabControl = new System.Windows.Forms.TabControl();
             this.pageTerrain = new System.Windows.Forms.TabPage();
@@ -37,6 +38,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.bReload = new System.Windows.Forms.Button();
+            this.bImportVegetation = new System.Windows.Forms.Button();
             this.pictureBoxModifyHeightmap = new System.Windows.Forms.PictureBox();
             this.pictureBoxModifyTexture = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -50,9 +53,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.pageEdit = new System.Windows.Forms.TabPage();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.rbPPlane = new System.Windows.Forms.RadioButton();
-            this.rbPTerrain = new System.Windows.Forms.RadioButton();
             this.brushSettings = new System.Windows.Forms.GroupBox();
             this.cbInvert = new System.Windows.Forms.CheckBox();
             this.cbRounded = new System.Windows.Forms.CheckBox();
@@ -64,12 +64,30 @@
             this.tbRadius = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.bSteamroller = new System.Windows.Forms.RadioButton();
+            this.rbSteamroller = new System.Windows.Forms.RadioButton();
             this.rbShovel = new System.Windows.Forms.RadioButton();
+            this.tabVegetation = new System.Windows.Forms.TabPage();
+            this.label16 = new System.Windows.Forms.Label();
+            this.bVegetationClear = new System.Windows.Forms.Button();
+            this.bClearTF = new System.Windows.Forms.Button();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.rbRz = new System.Windows.Forms.RadioButton();
+            this.rbRy = new System.Windows.Forms.RadioButton();
+            this.rbRx = new System.Windows.Forms.RadioButton();
+            this.label14 = new System.Windows.Forms.Label();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.cbSz = new System.Windows.Forms.CheckBox();
+            this.cbSy = new System.Windows.Forms.CheckBox();
+            this.cbSx = new System.Windows.Forms.CheckBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.bChangeFolder = new System.Windows.Forms.Button();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.pbVegetationPreview = new System.Windows.Forms.PictureBox();
+            this.lbVegetation = new System.Windows.Forms.ListBox();
             this.pageExport = new System.Windows.Forms.TabPage();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.buttonSave = new System.Windows.Forms.Button();
-            this.pageInfo = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lheight = new System.Windows.Forms.Label();
             this.lwidth = new System.Windows.Forms.Label();
@@ -79,6 +97,18 @@
             this.lbScaleXZ = new System.Windows.Forms.Label();
             this.lbCenter = new System.Windows.Forms.Label();
             this.labelVerticesCount = new System.Windows.Forms.Label();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.buttonSaveVegetation = new System.Windows.Forms.Button();
+            this.buttonSaveHeightmap = new System.Windows.Forms.Button();
+            this.tabSettings = new System.Windows.Forms.TabPage();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.cbSound = new System.Windows.Forms.CheckBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.tbCameraJumpSpeed = new System.Windows.Forms.TrackBar();
+            this.label12 = new System.Windows.Forms.Label();
+            this.tbCameraMovementSpeed = new System.Windows.Forms.TrackBar();
+            this.label9 = new System.Windows.Forms.Label();
             this.visibleDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.useWaitCursorDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tagDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -115,7 +145,11 @@
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Tag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.saveFileHeightmap = new System.Windows.Forms.SaveFileDialog();
+            this.saveFileVegetation = new System.Windows.Forms.SaveFileDialog();
+            this.openFileVegetation = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl.SuspendLayout();
             this.pageTerrain.SuspendLayout();
             this.groupBoxModifyScale.SuspendLayout();
@@ -129,31 +163,44 @@
             ((System.ComponentModel.ISupportInitialize)(this.nupHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nupWidth)).BeginInit();
             this.pageEdit.SuspendLayout();
-            this.groupBox6.SuspendLayout();
             this.brushSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbHardness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbIntensity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbRadius)).BeginInit();
             this.groupBox3.SuspendLayout();
+            this.tabVegetation.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbVegetationPreview)).BeginInit();
             this.pageExport.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.pageInfo.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.gbTerrain.SuspendLayout();
+            this.groupBox11.SuspendLayout();
+            this.tabSettings.SuspendLayout();
+            this.groupBox12.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbCameraJumpSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbCameraMovementSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.pageTerrain);
             this.tabControl.Controls.Add(this.pageEdit);
+            this.tabControl.Controls.Add(this.tabVegetation);
             this.tabControl.Controls.Add(this.pageExport);
-            this.tabControl.Controls.Add(this.pageInfo);
+            this.tabControl.Controls.Add(this.tabSettings);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(223, 506);
+            this.tabControl.Size = new System.Drawing.Size(223, 577);
             this.tabControl.TabIndex = 0;
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_TabIndexChanged);
+            this.tabControl.TabIndexChanged += new System.EventHandler(this.tabControl_TabIndexChanged);
             // 
             // pageTerrain
             // 
@@ -164,10 +211,9 @@
             this.pageTerrain.Location = new System.Drawing.Point(4, 22);
             this.pageTerrain.Name = "pageTerrain";
             this.pageTerrain.Padding = new System.Windows.Forms.Padding(3);
-            this.pageTerrain.Size = new System.Drawing.Size(215, 480);
+            this.pageTerrain.Size = new System.Drawing.Size(215, 551);
             this.pageTerrain.TabIndex = 0;
             this.pageTerrain.Text = "General";
-            this.pageTerrain.Enter += new System.EventHandler(this.noBrushTab_Enter);
             // 
             // groupBoxModifyScale
             // 
@@ -176,9 +222,9 @@
             this.groupBoxModifyScale.Controls.Add(this.label10);
             this.groupBoxModifyScale.Controls.Add(this.label11);
             this.groupBoxModifyScale.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxModifyScale.Location = new System.Drawing.Point(3, 387);
+            this.groupBoxModifyScale.Location = new System.Drawing.Point(3, 457);
             this.groupBoxModifyScale.Name = "groupBoxModifyScale";
-            this.groupBoxModifyScale.Size = new System.Drawing.Size(209, 87);
+            this.groupBoxModifyScale.Size = new System.Drawing.Size(209, 88);
             this.groupBoxModifyScale.TabIndex = 51;
             this.groupBoxModifyScale.TabStop = false;
             this.groupBoxModifyScale.Text = "Scale ";
@@ -200,7 +246,7 @@
             0,
             0,
             65536});
-            this.nudScaleY.ValueChanged += new System.EventHandler(this.nudScaleY_ValueChanged);
+            this.nudScaleY.ValueChanged += new System.EventHandler(this.nudScale_ValueChanged);
             // 
             // nudScaleXZ
             // 
@@ -219,7 +265,7 @@
             0,
             0,
             0});
-            this.nudScaleXZ.ValueChanged += new System.EventHandler(this.nudScaleXZ_ValueChanged);
+            this.nudScaleXZ.ValueChanged += new System.EventHandler(this.nudScale_ValueChanged);
             // 
             // label10
             // 
@@ -241,6 +287,8 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.bReload);
+            this.groupBox5.Controls.Add(this.bImportVegetation);
             this.groupBox5.Controls.Add(this.pictureBoxModifyHeightmap);
             this.groupBox5.Controls.Add(this.pictureBoxModifyTexture);
             this.groupBox5.Controls.Add(this.label1);
@@ -248,10 +296,32 @@
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox5.Location = new System.Drawing.Point(3, 158);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(209, 229);
+            this.groupBox5.Size = new System.Drawing.Size(209, 299);
             this.groupBox5.TabIndex = 50;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Import";
+            // 
+            // bReload
+            // 
+            this.bReload.BackColor = System.Drawing.Color.LightCoral;
+            this.bReload.Location = new System.Drawing.Point(35, 110);
+            this.bReload.Name = "bReload";
+            this.bReload.Size = new System.Drawing.Size(80, 23);
+            this.bReload.TabIndex = 39;
+            this.bReload.Text = "Reload";
+            this.bReload.UseVisualStyleBackColor = false;
+            this.bReload.Click += new System.EventHandler(this.bReload_Click);
+            // 
+            // bImportVegetation
+            // 
+            this.bImportVegetation.BackColor = System.Drawing.Color.Transparent;
+            this.bImportVegetation.Location = new System.Drawing.Point(35, 259);
+            this.bImportVegetation.Name = "bImportVegetation";
+            this.bImportVegetation.Size = new System.Drawing.Size(80, 23);
+            this.bImportVegetation.TabIndex = 38;
+            this.bImportVegetation.Text = "Vegetation";
+            this.bImportVegetation.UseVisualStyleBackColor = false;
+            this.bImportVegetation.Click += new System.EventHandler(this.bImportVegetation_Click);
             // 
             // pictureBoxModifyHeightmap
             // 
@@ -270,7 +340,7 @@
             // 
             this.pictureBoxModifyTexture.BackColor = System.Drawing.Color.Black;
             this.pictureBoxModifyTexture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxModifyTexture.Location = new System.Drawing.Point(35, 126);
+            this.pictureBoxModifyTexture.Location = new System.Drawing.Point(35, 162);
             this.pictureBoxModifyTexture.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBoxModifyTexture.Name = "pictureBoxModifyTexture";
             this.pictureBoxModifyTexture.Size = new System.Drawing.Size(80, 80);
@@ -282,7 +352,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(52, 113);
+            this.label1.Location = new System.Drawing.Point(45, 149);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 36;
@@ -381,12 +451,14 @@
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.Color.LightCoral;
+            this.button2.ForeColor = System.Drawing.Color.Black;
             this.button2.Location = new System.Drawing.Point(40, 123);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 4;
             this.button2.Text = "Create";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.buttonNewHeightmap_Click);
             // 
             // label7
@@ -410,52 +482,14 @@
             // pageEdit
             // 
             this.pageEdit.BackColor = System.Drawing.Color.White;
-            this.pageEdit.Controls.Add(this.groupBox6);
             this.pageEdit.Controls.Add(this.brushSettings);
             this.pageEdit.Controls.Add(this.groupBox3);
             this.pageEdit.Location = new System.Drawing.Point(4, 22);
             this.pageEdit.Name = "pageEdit";
             this.pageEdit.Padding = new System.Windows.Forms.Padding(3);
-            this.pageEdit.Size = new System.Drawing.Size(215, 480);
+            this.pageEdit.Size = new System.Drawing.Size(215, 551);
             this.pageEdit.TabIndex = 1;
             this.pageEdit.Text = "Edit";
-            this.pageEdit.Enter += new System.EventHandler(this.pageEdit_Enter);
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.rbPPlane);
-            this.groupBox6.Controls.Add(this.rbPTerrain);
-            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox6.Location = new System.Drawing.Point(3, 338);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(209, 47);
-            this.groupBox6.TabIndex = 10;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Picking";
-            // 
-            // rbPPlane
-            // 
-            this.rbPPlane.AutoSize = true;
-            this.rbPPlane.Location = new System.Drawing.Point(106, 19);
-            this.rbPPlane.Name = "rbPPlane";
-            this.rbPPlane.Size = new System.Drawing.Size(52, 17);
-            this.rbPPlane.TabIndex = 1;
-            this.rbPPlane.TabStop = true;
-            this.rbPPlane.Text = "Plane";
-            this.rbPPlane.UseVisualStyleBackColor = true;
-            this.rbPPlane.CheckedChanged += new System.EventHandler(this.rbPPlane_CheckedChanged);
-            // 
-            // rbPTerrain
-            // 
-            this.rbPTerrain.AutoSize = true;
-            this.rbPTerrain.Checked = true;
-            this.rbPTerrain.Location = new System.Drawing.Point(33, 19);
-            this.rbPTerrain.Name = "rbPTerrain";
-            this.rbPTerrain.Size = new System.Drawing.Size(58, 17);
-            this.rbPTerrain.TabIndex = 0;
-            this.rbPTerrain.TabStop = true;
-            this.rbPTerrain.Text = "Terrain";
-            this.rbPTerrain.UseVisualStyleBackColor = true;
             // 
             // brushSettings
             // 
@@ -582,7 +616,7 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.bSteamroller);
+            this.groupBox3.Controls.Add(this.rbSteamroller);
             this.groupBox3.Controls.Add(this.rbShovel);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
@@ -592,22 +626,22 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Brushes";
             // 
-            // bSteamroller
+            // rbSteamroller
             // 
-            this.bSteamroller.AutoSize = true;
-            this.bSteamroller.Dock = System.Windows.Forms.DockStyle.Left;
-            this.bSteamroller.ForeColor = System.Drawing.Color.Black;
-            this.bSteamroller.Image = ((System.Drawing.Image)(resources.GetObject("bSteamroller.Image")));
-            this.bSteamroller.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.bSteamroller.Location = new System.Drawing.Point(71, 16);
-            this.bSteamroller.Name = "bSteamroller";
-            this.bSteamroller.Padding = new System.Windows.Forms.Padding(10, 0, 0, 2);
-            this.bSteamroller.Size = new System.Drawing.Size(87, 64);
-            this.bSteamroller.TabIndex = 1;
-            this.bSteamroller.Text = "Steamroller";
-            this.bSteamroller.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.bSteamroller.UseVisualStyleBackColor = true;
-            this.bSteamroller.CheckedChanged += new System.EventHandler(this.bSteamroller_CheckedChanged);
+            this.rbSteamroller.AutoSize = true;
+            this.rbSteamroller.Dock = System.Windows.Forms.DockStyle.Left;
+            this.rbSteamroller.ForeColor = System.Drawing.Color.Black;
+            this.rbSteamroller.Image = ((System.Drawing.Image)(resources.GetObject("rbSteamroller.Image")));
+            this.rbSteamroller.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.rbSteamroller.Location = new System.Drawing.Point(71, 16);
+            this.rbSteamroller.Name = "rbSteamroller";
+            this.rbSteamroller.Padding = new System.Windows.Forms.Padding(10, 0, 0, 2);
+            this.rbSteamroller.Size = new System.Drawing.Size(87, 64);
+            this.rbSteamroller.TabIndex = 1;
+            this.rbSteamroller.Text = "Steamroller";
+            this.rbSteamroller.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.rbSteamroller.UseVisualStyleBackColor = true;
+            this.rbSteamroller.CheckedChanged += new System.EventHandler(this.bSteamroller_CheckedChanged);
             // 
             // rbShovel
             // 
@@ -629,52 +663,271 @@
             this.rbShovel.UseVisualStyleBackColor = true;
             this.rbShovel.CheckedChanged += new System.EventHandler(this.rbShovel_CheckedChanged);
             // 
+            // tabVegetation
+            // 
+            this.tabVegetation.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tabVegetation.Controls.Add(this.label16);
+            this.tabVegetation.Controls.Add(this.bVegetationClear);
+            this.tabVegetation.Controls.Add(this.bClearTF);
+            this.tabVegetation.Controls.Add(this.groupBox9);
+            this.tabVegetation.Controls.Add(this.groupBox6);
+            this.tabVegetation.Controls.Add(this.groupBox7);
+            this.tabVegetation.Location = new System.Drawing.Point(4, 22);
+            this.tabVegetation.Name = "tabVegetation";
+            this.tabVegetation.Padding = new System.Windows.Forms.Padding(3);
+            this.tabVegetation.Size = new System.Drawing.Size(215, 551);
+            this.tabVegetation.TabIndex = 4;
+            this.tabVegetation.Text = "Vegetation";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label16.Location = new System.Drawing.Point(3, 536);
+            this.label16.Name = "label16";
+            this.label16.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
+            this.label16.Size = new System.Drawing.Size(176, 13);
+            this.label16.TabIndex = 3;
+            this.label16.Text = "Press Z to remove the last one";
+            // 
+            // bVegetationClear
+            // 
+            this.bVegetationClear.BackColor = System.Drawing.Color.LightCoral;
+            this.bVegetationClear.Dock = System.Windows.Forms.DockStyle.Top;
+            this.bVegetationClear.Location = new System.Drawing.Point(3, 508);
+            this.bVegetationClear.Name = "bVegetationClear";
+            this.bVegetationClear.Size = new System.Drawing.Size(209, 28);
+            this.bVegetationClear.TabIndex = 2;
+            this.bVegetationClear.Text = "Remove all ";
+            this.bVegetationClear.UseVisualStyleBackColor = false;
+            this.bVegetationClear.Click += new System.EventHandler(this.bVegetationClear_Click);
+            // 
+            // bClearTF
+            // 
+            this.bClearTF.Dock = System.Windows.Forms.DockStyle.Top;
+            this.bClearTF.Location = new System.Drawing.Point(3, 463);
+            this.bClearTF.Name = "bClearTF";
+            this.bClearTF.Size = new System.Drawing.Size(209, 45);
+            this.bClearTF.TabIndex = 5;
+            this.bClearTF.Text = "Clear transformations";
+            this.bClearTF.UseVisualStyleBackColor = true;
+            this.bClearTF.Click += new System.EventHandler(this.bClearTF_Click);
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.rbRz);
+            this.groupBox9.Controls.Add(this.rbRy);
+            this.groupBox9.Controls.Add(this.rbRx);
+            this.groupBox9.Controls.Add(this.label14);
+            this.groupBox9.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox9.Location = new System.Drawing.Point(3, 398);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(209, 65);
+            this.groupBox9.TabIndex = 4;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Rotation";
+            // 
+            // rbRz
+            // 
+            this.rbRz.AutoSize = true;
+            this.rbRz.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rbRz.Location = new System.Drawing.Point(107, 16);
+            this.rbRz.Name = "rbRz";
+            this.rbRz.Size = new System.Drawing.Size(32, 17);
+            this.rbRz.TabIndex = 6;
+            this.rbRz.Text = "Z";
+            this.rbRz.UseVisualStyleBackColor = true;
+            this.rbRz.CheckedChanged += new System.EventHandler(this.updateVBRotationAxis);
+            // 
+            // rbRy
+            // 
+            this.rbRy.AutoSize = true;
+            this.rbRy.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rbRy.Checked = true;
+            this.rbRy.Location = new System.Drawing.Point(68, 16);
+            this.rbRy.Name = "rbRy";
+            this.rbRy.Size = new System.Drawing.Size(32, 17);
+            this.rbRy.TabIndex = 5;
+            this.rbRy.TabStop = true;
+            this.rbRy.Text = "Y";
+            this.rbRy.UseVisualStyleBackColor = true;
+            this.rbRy.CheckedChanged += new System.EventHandler(this.updateVBRotationAxis);
+            // 
+            // rbRx
+            // 
+            this.rbRx.AutoSize = true;
+            this.rbRx.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.rbRx.Location = new System.Drawing.Point(28, 16);
+            this.rbRx.Name = "rbRx";
+            this.rbRx.Size = new System.Drawing.Size(32, 17);
+            this.rbRx.TabIndex = 4;
+            this.rbRx.Text = "X";
+            this.rbRx.UseVisualStyleBackColor = true;
+            this.rbRx.CheckedChanged += new System.EventHandler(this.updateVBRotationAxis);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(16, 36);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(184, 13);
+            this.label14.TabIndex = 3;
+            this.label14.Text = "Use LEFT and RIGHT arrow to rotate";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.label13);
+            this.groupBox6.Controls.Add(this.cbSz);
+            this.groupBox6.Controls.Add(this.cbSy);
+            this.groupBox6.Controls.Add(this.cbSx);
+            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox6.Location = new System.Drawing.Point(3, 332);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(209, 66);
+            this.groupBox6.TabIndex = 3;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Scale";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(17, 41);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(172, 13);
+            this.label13.TabIndex = 3;
+            this.label13.Text = "Use UP and DOWN arrow to scale";
+            // 
+            // cbSz
+            // 
+            this.cbSz.AutoSize = true;
+            this.cbSz.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cbSz.Checked = true;
+            this.cbSz.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSz.Location = new System.Drawing.Point(106, 21);
+            this.cbSz.Name = "cbSz";
+            this.cbSz.Size = new System.Drawing.Size(33, 17);
+            this.cbSz.TabIndex = 2;
+            this.cbSz.Text = "Z";
+            this.cbSz.UseVisualStyleBackColor = true;
+            this.cbSz.CheckedChanged += new System.EventHandler(this.updateVBScaleAxis);
+            // 
+            // cbSy
+            // 
+            this.cbSy.AutoSize = true;
+            this.cbSy.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cbSy.Checked = true;
+            this.cbSy.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSy.Location = new System.Drawing.Point(67, 21);
+            this.cbSy.Name = "cbSy";
+            this.cbSy.Size = new System.Drawing.Size(33, 17);
+            this.cbSy.TabIndex = 1;
+            this.cbSy.Text = "Y";
+            this.cbSy.UseVisualStyleBackColor = true;
+            this.cbSy.CheckedChanged += new System.EventHandler(this.updateVBScaleAxis);
+            // 
+            // cbSx
+            // 
+            this.cbSx.AutoSize = true;
+            this.cbSx.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cbSx.Checked = true;
+            this.cbSx.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSx.Location = new System.Drawing.Point(28, 21);
+            this.cbSx.Name = "cbSx";
+            this.cbSx.Size = new System.Drawing.Size(33, 17);
+            this.cbSx.TabIndex = 0;
+            this.cbSx.Text = "X";
+            this.cbSx.UseVisualStyleBackColor = true;
+            this.cbSx.CheckedChanged += new System.EventHandler(this.updateVBScaleAxis);
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.bChangeFolder);
+            this.groupBox7.Controls.Add(this.groupBox8);
+            this.groupBox7.Controls.Add(this.lbVegetation);
+            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox7.Location = new System.Drawing.Point(3, 3);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(209, 329);
+            this.groupBox7.TabIndex = 1;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Meshes";
+            // 
+            // bChangeFolder
+            // 
+            this.bChangeFolder.Location = new System.Drawing.Point(38, 148);
+            this.bChangeFolder.Name = "bChangeFolder";
+            this.bChangeFolder.Size = new System.Drawing.Size(114, 23);
+            this.bChangeFolder.TabIndex = 2;
+            this.bChangeFolder.Text = "Change folder";
+            this.bChangeFolder.UseVisualStyleBackColor = true;
+            this.bChangeFolder.Click += new System.EventHandler(this.bChangeFolder_Click);
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.pbVegetationPreview);
+            this.groupBox8.Location = new System.Drawing.Point(19, 172);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(152, 157);
+            this.groupBox8.TabIndex = 1;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Preview";
+            // 
+            // pbVegetationPreview
+            // 
+            this.pbVegetationPreview.BackColor = System.Drawing.Color.Black;
+            this.pbVegetationPreview.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pbVegetationPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbVegetationPreview.Location = new System.Drawing.Point(3, 16);
+            this.pbVegetationPreview.Margin = new System.Windows.Forms.Padding(0);
+            this.pbVegetationPreview.Name = "pbVegetationPreview";
+            this.pbVegetationPreview.Size = new System.Drawing.Size(146, 138);
+            this.pbVegetationPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbVegetationPreview.TabIndex = 2;
+            this.pbVegetationPreview.TabStop = false;
+            // 
+            // lbVegetation
+            // 
+            this.lbVegetation.FormattingEnabled = true;
+            this.lbVegetation.Location = new System.Drawing.Point(19, 25);
+            this.lbVegetation.Name = "lbVegetation";
+            this.lbVegetation.Size = new System.Drawing.Size(152, 121);
+            this.lbVegetation.TabIndex = 0;
+            this.lbVegetation.SelectedIndexChanged += new System.EventHandler(this.lbVegetation_SelectedIndexChanged);
+            // 
             // pageExport
             // 
-            this.pageExport.Controls.Add(this.groupBox4);
+            this.pageExport.Controls.Add(this.button1);
+            this.pageExport.Controls.Add(this.groupBox10);
+            this.pageExport.Controls.Add(this.groupBox11);
             this.pageExport.Location = new System.Drawing.Point(4, 22);
             this.pageExport.Name = "pageExport";
             this.pageExport.Padding = new System.Windows.Forms.Padding(3);
-            this.pageExport.Size = new System.Drawing.Size(215, 480);
+            this.pageExport.Size = new System.Drawing.Size(215, 551);
             this.pageExport.TabIndex = 2;
             this.pageExport.Text = "Export";
             this.pageExport.UseVisualStyleBackColor = true;
-            this.pageExport.Enter += new System.EventHandler(this.noBrushTab_Enter);
             // 
-            // groupBox4
+            // button1
             // 
-            this.groupBox4.Controls.Add(this.buttonSave);
-            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox4.Location = new System.Drawing.Point(3, 3);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(209, 71);
-            this.groupBox4.TabIndex = 1;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Heightmap";
+            this.button1.Location = new System.Drawing.Point(65, 397);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "About";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // buttonSave
+            // groupBox10
             // 
-            this.buttonSave.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonSave.Location = new System.Drawing.Point(3, 16);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(203, 52);
-            this.buttonSave.TabIndex = 0;
-            this.buttonSave.Text = "Save ";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
-            // pageInfo
-            // 
-            this.pageInfo.Controls.Add(this.groupBox2);
-            this.pageInfo.Controls.Add(this.gbTerrain);
-            this.pageInfo.Location = new System.Drawing.Point(4, 22);
-            this.pageInfo.Name = "pageInfo";
-            this.pageInfo.Padding = new System.Windows.Forms.Padding(3);
-            this.pageInfo.Size = new System.Drawing.Size(215, 480);
-            this.pageInfo.TabIndex = 3;
-            this.pageInfo.Text = "Info";
-            this.pageInfo.UseVisualStyleBackColor = true;
-            this.pageInfo.Enter += new System.EventHandler(this.noBrushTab_Enter);
+            this.groupBox10.Controls.Add(this.groupBox2);
+            this.groupBox10.Controls.Add(this.gbTerrain);
+            this.groupBox10.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox10.Location = new System.Drawing.Point(3, 136);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(209, 255);
+            this.groupBox10.TabIndex = 5;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Info";
             // 
             // groupBox2
             // 
@@ -682,10 +935,10 @@
             this.groupBox2.Controls.Add(this.lwidth);
             this.groupBox2.Controls.Add(this.lname);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(3, 128);
+            this.groupBox2.Location = new System.Drawing.Point(3, 141);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(209, 104);
-            this.groupBox2.TabIndex = 2;
+            this.groupBox2.Size = new System.Drawing.Size(203, 104);
+            this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Heightmap";
             // 
@@ -729,10 +982,10 @@
             this.gbTerrain.Controls.Add(this.lbCenter);
             this.gbTerrain.Controls.Add(this.labelVerticesCount);
             this.gbTerrain.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gbTerrain.Location = new System.Drawing.Point(3, 3);
+            this.gbTerrain.Location = new System.Drawing.Point(3, 16);
             this.gbTerrain.Name = "gbTerrain";
-            this.gbTerrain.Size = new System.Drawing.Size(209, 125);
-            this.gbTerrain.TabIndex = 1;
+            this.gbTerrain.Size = new System.Drawing.Size(203, 125);
+            this.gbTerrain.TabIndex = 5;
             this.gbTerrain.TabStop = false;
             this.gbTerrain.Text = "Terrain";
             // 
@@ -783,6 +1036,145 @@
             this.labelVerticesCount.TabIndex = 0;
             this.labelVerticesCount.Text = "vertices";
             this.labelVerticesCount.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.buttonSaveVegetation);
+            this.groupBox11.Controls.Add(this.buttonSaveHeightmap);
+            this.groupBox11.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox11.Location = new System.Drawing.Point(3, 3);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(209, 133);
+            this.groupBox11.TabIndex = 6;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Export";
+            // 
+            // buttonSaveVegetation
+            // 
+            this.buttonSaveVegetation.Location = new System.Drawing.Point(23, 80);
+            this.buttonSaveVegetation.Name = "buttonSaveVegetation";
+            this.buttonSaveVegetation.Size = new System.Drawing.Size(166, 41);
+            this.buttonSaveVegetation.TabIndex = 3;
+            this.buttonSaveVegetation.Text = "Vegetation";
+            this.buttonSaveVegetation.UseVisualStyleBackColor = true;
+            this.buttonSaveVegetation.Click += new System.EventHandler(this.buttonSaveVegetation_Click);
+            // 
+            // buttonSaveHeightmap
+            // 
+            this.buttonSaveHeightmap.Location = new System.Drawing.Point(23, 28);
+            this.buttonSaveHeightmap.Name = "buttonSaveHeightmap";
+            this.buttonSaveHeightmap.Size = new System.Drawing.Size(166, 40);
+            this.buttonSaveHeightmap.TabIndex = 2;
+            this.buttonSaveHeightmap.Text = "Heightmap";
+            this.buttonSaveHeightmap.UseVisualStyleBackColor = true;
+            this.buttonSaveHeightmap.Click += new System.EventHandler(this.buttonSaveHeightmap_Click);
+            // 
+            // tabSettings
+            // 
+            this.tabSettings.Controls.Add(this.groupBox12);
+            this.tabSettings.Controls.Add(this.groupBox4);
+            this.tabSettings.Location = new System.Drawing.Point(4, 22);
+            this.tabSettings.Name = "tabSettings";
+            this.tabSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSettings.Size = new System.Drawing.Size(215, 551);
+            this.tabSettings.TabIndex = 5;
+            this.tabSettings.Text = "Settings";
+            this.tabSettings.UseVisualStyleBackColor = true;
+            // 
+            // groupBox12
+            // 
+            this.groupBox12.Controls.Add(this.cbSound);
+            this.groupBox12.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox12.Location = new System.Drawing.Point(3, 167);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(209, 57);
+            this.groupBox12.TabIndex = 1;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Sound effects";
+            // 
+            // cbSound
+            // 
+            this.cbSound.AutoSize = true;
+            this.cbSound.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cbSound.Checked = true;
+            this.cbSound.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSound.Location = new System.Drawing.Point(30, 24);
+            this.cbSound.Name = "cbSound";
+            this.cbSound.Size = new System.Drawing.Size(65, 17);
+            this.cbSound.TabIndex = 0;
+            this.cbSound.Text = "Enabled";
+            this.cbSound.UseVisualStyleBackColor = true;
+            this.cbSound.CheckedChanged += new System.EventHandler(this.cbSound_CheckedChanged);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label15);
+            this.groupBox4.Controls.Add(this.tbCameraJumpSpeed);
+            this.groupBox4.Controls.Add(this.label12);
+            this.groupBox4.Controls.Add(this.tbCameraMovementSpeed);
+            this.groupBox4.Controls.Add(this.label9);
+            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox4.Location = new System.Drawing.Point(3, 3);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(209, 164);
+            this.groupBox4.TabIndex = 0;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Camera";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(32, 135);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(145, 13);
+            this.label15.TabIndex = 3;
+            this.label15.Text = "Press F for First Person Mode";
+            // 
+            // tbCameraJumpSpeed
+            // 
+            this.tbCameraJumpSpeed.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbCameraJumpSpeed.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tbCameraJumpSpeed.Location = new System.Drawing.Point(3, 87);
+            this.tbCameraJumpSpeed.Maximum = 600;
+            this.tbCameraJumpSpeed.Minimum = 30;
+            this.tbCameraJumpSpeed.Name = "tbCameraJumpSpeed";
+            this.tbCameraJumpSpeed.Size = new System.Drawing.Size(203, 45);
+            this.tbCameraJumpSpeed.TabIndex = 2;
+            this.tbCameraJumpSpeed.Value = 300;
+            this.tbCameraJumpSpeed.Scroll += new System.EventHandler(this.tbCameraJumpSpeed_Scroll);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label12.Location = new System.Drawing.Point(3, 74);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(67, 13);
+            this.label12.TabIndex = 1;
+            this.label12.Text = "Jump speed:";
+            // 
+            // tbCameraMovementSpeed
+            // 
+            this.tbCameraMovementSpeed.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbCameraMovementSpeed.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tbCameraMovementSpeed.Location = new System.Drawing.Point(3, 29);
+            this.tbCameraMovementSpeed.Maximum = 600;
+            this.tbCameraMovementSpeed.Minimum = 30;
+            this.tbCameraMovementSpeed.Name = "tbCameraMovementSpeed";
+            this.tbCameraMovementSpeed.Size = new System.Drawing.Size(203, 45);
+            this.tbCameraMovementSpeed.TabIndex = 0;
+            this.tbCameraMovementSpeed.Value = 400;
+            this.tbCameraMovementSpeed.Scroll += new System.EventHandler(this.tbCameraMovementSpeed_Scroll);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label9.Location = new System.Drawing.Point(3, 16);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(92, 13);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "Movement speed:";
             // 
             // visibleDataGridViewCheckBoxColumn
             // 
@@ -1002,11 +1394,25 @@
             this.dataGridViewTextBoxColumn1.HeaderText = "Property";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             // 
-            // saveFileDialog1
+            // saveFileHeightmap
             // 
-            this.saveFileDialog1.DefaultExt = "jpg";
-            this.saveFileDialog1.Filter = "Images|*.jpg";
-            this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
+            this.saveFileHeightmap.DefaultExt = "jpg";
+            this.saveFileHeightmap.Filter = "Images|*.jpg";
+            this.saveFileHeightmap.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
+            // 
+            // saveFileVegetation
+            // 
+            this.saveFileVegetation.AddExtension = false;
+            this.saveFileVegetation.DefaultExt = "xml";
+            this.saveFileVegetation.Filter = ".XML |*.xml";
+            this.saveFileVegetation.Title = "Export vegetation to a -TgcScene.xml file";
+            this.saveFileVegetation.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileVegetation_FileOk);
+            // 
+            // openFileVegetation
+            // 
+            this.openFileVegetation.Filter = "-TgcScene.xml |*-TgcScene.xml";
+            this.openFileVegetation.Title = "Import vegetation from a -TgcScene.xml file";
+            this.openFileVegetation.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileVegetation_FileOk);
             // 
             // TerrainEditorControl
             // 
@@ -1015,7 +1421,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.Controls.Add(this.tabControl);
             this.Name = "TerrainEditorControl";
-            this.Size = new System.Drawing.Size(223, 506);
+            this.Size = new System.Drawing.Size(223, 577);
             this.tabControl.ResumeLayout(false);
             this.pageTerrain.ResumeLayout(false);
             this.groupBoxModifyScale.ResumeLayout(false);
@@ -1032,8 +1438,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.nupHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nupWidth)).EndInit();
             this.pageEdit.ResumeLayout(false);
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
             this.brushSettings.ResumeLayout(false);
             this.brushSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbHardness)).EndInit();
@@ -1041,13 +1445,29 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbRadius)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.tabVegetation.ResumeLayout(false);
+            this.tabVegetation.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbVegetationPreview)).EndInit();
             this.pageExport.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.pageInfo.ResumeLayout(false);
+            this.groupBox10.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.gbTerrain.ResumeLayout(false);
             this.gbTerrain.PerformLayout();
+            this.groupBox11.ResumeLayout(false);
+            this.tabSettings.ResumeLayout(false);
+            this.groupBox12.ResumeLayout(false);
+            this.groupBox12.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbCameraJumpSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbCameraMovementSpeed)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1094,9 +1514,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Tag;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.TabPage pageExport;
-        private System.Windows.Forms.Button buttonSave;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.SaveFileDialog saveFileHeightmap;
         private System.Windows.Forms.GroupBox groupBoxModifyScale;
         private System.Windows.Forms.NumericUpDown nudScaleY;
         private System.Windows.Forms.NumericUpDown nudScaleXZ;
@@ -1115,16 +1533,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TabPage pageInfo;
-        private System.Windows.Forms.Label labelVerticesCount;
-        private System.Windows.Forms.GroupBox gbTerrain;
-        private System.Windows.Forms.Label lbScaleY;
-        private System.Windows.Forms.Label lbScaleXZ;
-        private System.Windows.Forms.Label lbCenter;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label lheight;
-        private System.Windows.Forms.Label lwidth;
-        private System.Windows.Forms.Label lname;
         private System.Windows.Forms.GroupBox brushSettings;
         private System.Windows.Forms.CheckBox cbRounded;
         private System.Windows.Forms.Label label5;
@@ -1135,12 +1543,57 @@
         private System.Windows.Forms.TrackBar tbRadius;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RadioButton bSteamroller;
+        private System.Windows.Forms.RadioButton rbSteamroller;
         private System.Windows.Forms.RadioButton rbShovel;
         private System.Windows.Forms.CheckBox cbInvert;
+        private System.Windows.Forms.TabPage tabVegetation;
+        private System.Windows.Forms.SaveFileDialog saveFileVegetation;
+        private System.Windows.Forms.Button bImportVegetation;
+        private System.Windows.Forms.Button bReload;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.ListBox lbVegetation;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.PictureBox pbVegetationPreview;
+        private System.Windows.Forms.Button bVegetationClear;
+        private System.Windows.Forms.OpenFileDialog openFileVegetation;
+        private System.Windows.Forms.Button bChangeFolder;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.TabPage tabSettings;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.TrackBar tbCameraMovementSpeed;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TrackBar tbCameraJumpSpeed;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.RadioButton rbPPlane;
-        private System.Windows.Forms.RadioButton rbPTerrain;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.CheckBox cbSz;
+        private System.Windows.Forms.CheckBox cbSy;
+        private System.Windows.Forms.CheckBox cbSx;
+        private System.Windows.Forms.RadioButton rbRz;
+        private System.Windows.Forms.RadioButton rbRy;
+        private System.Windows.Forms.RadioButton rbRx;
+        private System.Windows.Forms.Button bClearTF;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.Button buttonSaveVegetation;
+        private System.Windows.Forms.Button buttonSaveHeightmap;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label lheight;
+        private System.Windows.Forms.Label lwidth;
+        private System.Windows.Forms.Label lname;
+        private System.Windows.Forms.GroupBox gbTerrain;
+        private System.Windows.Forms.Label lbScaleY;
+        private System.Windows.Forms.Label lbScaleXZ;
+        private System.Windows.Forms.Label lbCenter;
+        private System.Windows.Forms.Label labelVerticesCount;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.CheckBox cbSound;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolTip toolTip1;
 
     }
 }

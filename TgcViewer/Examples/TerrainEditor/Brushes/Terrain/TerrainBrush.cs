@@ -3,17 +3,26 @@ using Microsoft.DirectX;
 using TgcViewer;
 using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.Sound;
 
 namespace Examples.TerrainEditor.Brushes.Terrain
 {
     public abstract class TerrainBrush:ITerrainEditorBrush
     {
         protected TgcBox bBrush;
-
+        private static TgcStaticSound sound;
+        private static int instances = 0;
         #region Properties
         public Color Color1 { get; set; }
         public Color Color2 { get; set; }
+        public bool SoundEnabled { get; set; }
+        private void reproduceSound(){
+            if (SoundEnabled)
+            {
+                sound.play();
 
+            }
+        }
         private float radius;
         /// <summary>
         /// Radio del pincel.
@@ -52,9 +61,14 @@ namespace Examples.TerrainEditor.Brushes.Terrain
 
         public TerrainBrush()
         {
-
+            SoundEnabled = true;
             bBrush = TgcBox.fromSize(new Vector3(10, 100, 10));
-
+            if (sound == null)
+            {
+                sound = new TgcStaticSound();
+                sound.loadSound(GuiController.Instance.ExamplesMediaDir + "Sound\\tierra.wav"); 
+            }
+            instances++;
         }
 
         #region TerrainEditorBrush
@@ -73,9 +87,9 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         public bool mouseLeave(TgcTerrainEditor editor)
         {
             Enabled = false;
+            if (Editing) endEdition();
             return false;
         }
-
 
         public bool update(TgcTerrainEditor editor)
         {
@@ -84,11 +98,15 @@ namespace Examples.TerrainEditor.Brushes.Terrain
             {
                 if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                 {
+                    reproduceSound();
                     bool invert = GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.LeftAlt);
 
                     bool oldInvert = Invert;
                     Invert ^= invert;
-                    if (!Editing) beginEdition(editor.terrain);
+                    if (!Editing)
+                    {
+                        beginEdition(editor.Terrain);
+                    }
                     if (editTerrain())
                     {
                         changes = true;
@@ -97,27 +115,39 @@ namespace Examples.TerrainEditor.Brushes.Terrain
                     }
                     Invert = oldInvert;
                 }
-                else { if (Editing) endEdition(); }
+                else if (Editing) endEdition();
+           
 
             }
-
+            if (changes) editor.updateVegetationY();
             return changes;
+        }
+
+        private void stopSound()
+        {
+            sound.stop();
         }
 
         public void render(TgcTerrainEditor editor)
         {
             if (Enabled)
             {
-                configureTerrainEffect(editor.terrain);
+                configureTerrainEffect(editor.Terrain);
                 bBrush.render();
             }
-            editor.terrain.render();
+            editor.doRender();
         }
 
 
         public void dispose()
         {
             bBrush.dispose();
+            instances--;
+            if (instances == 0 && sound!=null)
+            {
+                sound.dispose();
+                sound = null;
+            }
         }
 
         #endregion
@@ -126,7 +156,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         /// Setea y configura la technique que muestra el pincel sobre el terreno.
         /// </summary>
         /// <param name="terrain"></param>
-        public virtual void configureTerrainEffect(EditableTerrain terrain)
+        public virtual void configureTerrainEffect(SmartTerrain terrain)
         {
             if (Rounded) terrain.Technique = "PositionColoredTexturedWithRoundBrush";
             else terrain.Technique = "PositionColoredTexturedWithSquareBrush";
@@ -140,8 +170,8 @@ namespace Examples.TerrainEditor.Brushes.Terrain
 
 
 
-        protected EditableTerrain terrain;     
-        public virtual void beginEdition(EditableTerrain terrain) { this.terrain = terrain; editing = true; }
+        protected SmartTerrain terrain;
+        public virtual void beginEdition(SmartTerrain terrain) { this.terrain = terrain; editing = true; }
 
         public virtual bool editTerrain()
         {
@@ -237,6 +267,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         public virtual void endEdition()
         {
             editing = false;
+            stopSound();
         }
        
 
