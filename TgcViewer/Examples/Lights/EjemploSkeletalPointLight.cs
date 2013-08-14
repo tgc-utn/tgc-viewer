@@ -96,9 +96,21 @@ namespace Examples.Lights
             GuiController.Instance.Modifiers.addColor("mAmbient", Color.White);
             GuiController.Instance.Modifiers.addColor("mDiffuse", Color.White);
             GuiController.Instance.Modifiers.addColor("mSpecular", Color.White);
+
+            /*
+            //corregir normales
+            int[] adj = new int[mesh.D3dMesh.NumberFaces * 3];
+            mesh.D3dMesh.GenerateAdjacency(0, adj);
+            mesh.D3dMesh.ComputeNormals(adj);
+            */
+            mesh.computeNormals();
+            
         }
 
-        
+        private void computeNormals(TgcSkeletalMesh mesh)
+        {
+            mesh.getVertexPositions();
+        }
 
 
         public override void render(float elapsedTime)

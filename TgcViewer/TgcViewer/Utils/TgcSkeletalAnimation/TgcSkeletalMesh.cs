@@ -1215,6 +1215,74 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
+        /// Recalcula todas las normales del mesh
+        /// </summary>
+        public void computeNormals()
+        {
+            switch (renderType)
+            {
+                case MeshRenderType.VERTEX_COLOR:
+                    throw new NotImplementedException("Falta hacer");
+                    break;
+
+                case MeshRenderType.DIFFUSE_MAP:
+
+                    //Calcular normales usando DirectX
+                    int[] adj = new int[this.d3dMesh.NumberFaces * 3];
+                    this.d3dMesh.GenerateAdjacency(0, adj);
+                    this.d3dMesh.ComputeNormals(adj);
+
+                    //Obtener vertexBuffer original
+                    TgcSkeletalLoader.DiffuseMapVertex[] origVertexBuffer = (TgcSkeletalLoader.DiffuseMapVertex[])this.d3dMesh.LockVertexBuffer(
+                                typeof(TgcSkeletalLoader.DiffuseMapVertex), LockFlags.Discard, this.d3dMesh.NumberVertices);
+                    
+                    //Calcular normales recorriendo los triangulos
+                    int triCount = origVertexBuffer.Length / 3;
+                    Vector3[] normals = new Vector3[origVertexBuffer.Length];
+                    for (int i = 0; i < normals.Length; i++)
+                    {
+                        normals[i] = new Vector3(0, 0, 0);
+                    }
+                    for (int i = 0; i < triCount; i++)
+                    {
+                        //Los 3 vertices del triangulo
+                        /*
+                        TgcSkeletalLoader.DiffuseMapVertex v1 = origVertexBuffer[i * 3];
+                        TgcSkeletalLoader.DiffuseMapVertex v2 = origVertexBuffer[i * 3 + 1];
+                        TgcSkeletalLoader.DiffuseMapVertex v3 = origVertexBuffer[i * 3 + 2];
+
+                        //Face-normal (left-handend)
+                        Vector3 a = v2.Position - v1.Position;
+                        Vector3 b = v3.Position - v1.Position;
+                        Vector3 n = Vector3.Cross(b,a);
+
+                        //Normalizar
+                        n.Normalize();
+
+                        //Cargar normal
+                        origVertexBuffer[i * 3].Normal = n;
+                        origVertexBuffer[i * 3 + 1].Normal = n;
+                        origVertexBuffer[i * 3 + 2].Normal = n;
+                         */
+
+                        //Invetir normal
+                        origVertexBuffer[i * 3].Normal = -origVertexBuffer[i * 3].Normal;
+                        origVertexBuffer[i * 3 + 1].Normal = -origVertexBuffer[i * 3 + 1].Normal;
+                        origVertexBuffer[i * 3 + 2].Normal = -origVertexBuffer[i * 3 + 2].Normal;
+                    }
+
+                    
+                    //Aplicar cambios
+                    this.d3dMesh.SetVertexBufferData(origVertexBuffer, LockFlags.Discard);
+                    this.d3dMesh.UnlockVertexBuffer();
+
+
+                    break;
+            }
+            
+        }
+
+        /// <summary>
         /// Calcula el BoundingBox de la malla, en base a todos sus vertices.
         /// Llamar a este metodo cuando ha cambiado la estructura interna de la malla.
         /// </summary>
