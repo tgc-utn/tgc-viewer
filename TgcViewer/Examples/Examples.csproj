@@ -110,7 +110,9 @@
     <Compile Include="Collision\EjemploComputeObb.cs" />
     <Compile Include="GeometryBasics\CrearEditableLand.cs" />
     <Compile Include="GeometryBasics\EjemploSphere.cs" />
-    <Compile Include="Lights\EjemploHDR.cs" />
+    <Compile Include="Lights\EjemploHDR.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Lights\EjemploIntegrador2.cs" />
     <Compile Include="Lights\EjemploSkeletalPointLight.cs" />
     <Compile Include="Lights\EjemploIntegrador.cs" />
@@ -185,7 +187,9 @@
     <Compile Include="Particles\EmisorDeParticulas.cs" />
     <Compile Include="PortalRendering\PortalRenderingFramework.cs" />
     <Compile Include="PostProcess\EfectoBlur.cs" />
-    <Compile Include="PostProcess\EfectoGaussianBlur.cs" />
+    <Compile Include="PostProcess\EfectoGaussianBlur.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PostProcess\EfectoOndas.cs" />
     <Compile Include="PostProcess\EfectoOscurecer.cs" />
     <Compile Include="PostProcess\EfectoAlarma.cs" />
@@ -302,6 +306,7 @@
     <Compile Include="TerrainEditor\Brushes\Terrain\Steamroller.cs" />
     <Compile Include="TerrainEditor\Brushes\Terrain\TerrainBrush.cs" />
     <Compile Include="TerrainEditor\Brushes\Vegetation\VegetationBrush.cs" />
+    <Compile Include="TerrainEditor\Brushes\Vegetation\VegetationPicker.cs" />
     <Compile Include="TerrainEditor\SmartTerrain.cs" />
     <Compile Include="TerrainEditor\TerrainFPSCamera.cs" />
     <Compile Include="TerrainEditor\Panel\TerrainEditorControl.cs">
