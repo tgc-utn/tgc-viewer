@@ -11,6 +11,7 @@ using TgcViewer;
 using TgcViewer.Utils.Modifiers;
 using Microsoft.DirectX;
 using System.Collections.Generic;
+using Examples.TerrainEditor.Brushes;
 
 namespace Examples.TerrainEditor.Panel
 {
@@ -22,6 +23,7 @@ namespace Examples.TerrainEditor.Panel
         Shovel shovel;
         Steamroller steamroller;
         VegetationBrush vegetationBrush;
+        VegetationPicker vegetationPicker;
    
         public TerrainEditorControl(TgcTerrainEditor terrainEditor)
         {
@@ -44,6 +46,7 @@ namespace Examples.TerrainEditor.Panel
             shovel = new Shovel();
             vegetationBrush = new VegetationBrush();
             steamroller = new Steamroller();
+            vegetationPicker = new VegetationPicker();
 
             //Tooltips
             toolTip1.SetToolTip(rbShovel, "Pala.\nAumenta la altura del terreno.\nShovel sound by adough1@freesound");
@@ -81,7 +84,8 @@ namespace Examples.TerrainEditor.Panel
             else if (tabControl.SelectedTab == tabVegetation)
             {
                 terrainEditor.PlanePicking = false;
-                setBrush(vegetationBrush);
+                if (rbAddVegetation.Checked) setBrush(vegetationBrush);
+                else if (rbPickVegetation.Checked) setBrush(vegetationPicker);
             }
             else terrainEditor.Brush = null;
 
@@ -98,6 +102,13 @@ namespace Examples.TerrainEditor.Panel
             steamroller.dispose();
         }
 
+
+        private void setBrush(ITerrainEditorBrush brush)
+        {
+
+            terrainEditor.Brush = brush;
+
+        }
 
         #region General
 
@@ -180,12 +191,6 @@ namespace Examples.TerrainEditor.Panel
         #region Vegetation
 
 
-        private void setBrush(VegetationBrush brush)
-        {
-
-            terrainEditor.Brush = brush;
-
-        }
 
        
         private void fillVegetationList(string path)
@@ -258,6 +263,21 @@ namespace Examples.TerrainEditor.Panel
             vegetationBrush.ScaleAxis = scale;
         }
 
+        private void rbPickVegetation_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbPickVegetation.Checked)
+            {
+                setBrush(vegetationPicker);
+            }
+        }
+
+        private void rbAddVegetation_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbAddVegetation.Checked)
+            {
+                setBrush(vegetationBrush);
+            }
+        }
         private void updateVBRotationAxis(object sender, EventArgs e)
         {
             if (rbRx.Checked) vegetationBrush.Rotation = VegetationBrush.RotationAxis.X;
@@ -417,6 +437,11 @@ namespace Examples.TerrainEditor.Panel
         {
             MessageBox.Show("Desarrollado por Daniela Kazarian.\n","About", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+   
+
+
+       
 
        
 

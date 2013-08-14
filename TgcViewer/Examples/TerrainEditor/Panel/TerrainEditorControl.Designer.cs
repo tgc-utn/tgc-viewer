@@ -67,6 +67,7 @@
             this.rbSteamroller = new System.Windows.Forms.RadioButton();
             this.rbShovel = new System.Windows.Forms.RadioButton();
             this.tabVegetation = new System.Windows.Forms.TabPage();
+            this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.bVegetationClear = new System.Windows.Forms.Button();
             this.bClearTF = new System.Windows.Forms.Button();
@@ -85,6 +86,9 @@
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.pbVegetationPreview = new System.Windows.Forms.PictureBox();
             this.lbVegetation = new System.Windows.Forms.ListBox();
+            this.gbMode = new System.Windows.Forms.GroupBox();
+            this.rbAddVegetation = new System.Windows.Forms.RadioButton();
+            this.rbPickVegetation = new System.Windows.Forms.RadioButton();
             this.pageExport = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
@@ -174,6 +178,7 @@
             this.groupBox7.SuspendLayout();
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbVegetationPreview)).BeginInit();
+            this.gbMode.SuspendLayout();
             this.pageExport.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -197,7 +202,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(223, 577);
+            this.tabControl.Size = new System.Drawing.Size(223, 657);
             this.tabControl.TabIndex = 0;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_TabIndexChanged);
             this.tabControl.TabIndexChanged += new System.EventHandler(this.tabControl_TabIndexChanged);
@@ -211,7 +216,7 @@
             this.pageTerrain.Location = new System.Drawing.Point(4, 22);
             this.pageTerrain.Name = "pageTerrain";
             this.pageTerrain.Padding = new System.Windows.Forms.Padding(3);
-            this.pageTerrain.Size = new System.Drawing.Size(215, 551);
+            this.pageTerrain.Size = new System.Drawing.Size(215, 631);
             this.pageTerrain.TabIndex = 0;
             this.pageTerrain.Text = "General";
             // 
@@ -487,7 +492,7 @@
             this.pageEdit.Location = new System.Drawing.Point(4, 22);
             this.pageEdit.Name = "pageEdit";
             this.pageEdit.Padding = new System.Windows.Forms.Padding(3);
-            this.pageEdit.Size = new System.Drawing.Size(215, 551);
+            this.pageEdit.Size = new System.Drawing.Size(215, 631);
             this.pageEdit.TabIndex = 1;
             this.pageEdit.Text = "Edit";
             // 
@@ -666,35 +671,48 @@
             // tabVegetation
             // 
             this.tabVegetation.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tabVegetation.Controls.Add(this.label17);
             this.tabVegetation.Controls.Add(this.label16);
             this.tabVegetation.Controls.Add(this.bVegetationClear);
             this.tabVegetation.Controls.Add(this.bClearTF);
             this.tabVegetation.Controls.Add(this.groupBox9);
             this.tabVegetation.Controls.Add(this.groupBox6);
             this.tabVegetation.Controls.Add(this.groupBox7);
+            this.tabVegetation.Controls.Add(this.gbMode);
             this.tabVegetation.Location = new System.Drawing.Point(4, 22);
             this.tabVegetation.Name = "tabVegetation";
             this.tabVegetation.Padding = new System.Windows.Forms.Padding(3);
-            this.tabVegetation.Size = new System.Drawing.Size(215, 551);
+            this.tabVegetation.Size = new System.Drawing.Size(215, 631);
             this.tabVegetation.TabIndex = 4;
             this.tabVegetation.Text = "Vegetation";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label17.Location = new System.Drawing.Point(3, 604);
+            this.label17.Name = "label17";
+            this.label17.Padding = new System.Windows.Forms.Padding(10, 4, 0, 0);
+            this.label17.Size = new System.Drawing.Size(190, 17);
+            this.label17.TabIndex = 7;
+            this.label17.Text = "Press Z to select the last one added.";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label16.Location = new System.Drawing.Point(3, 536);
+            this.label16.Location = new System.Drawing.Point(3, 587);
             this.label16.Name = "label16";
-            this.label16.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.label16.Size = new System.Drawing.Size(176, 13);
+            this.label16.Padding = new System.Windows.Forms.Padding(10, 4, 0, 0);
+            this.label16.Size = new System.Drawing.Size(203, 17);
             this.label16.TabIndex = 3;
-            this.label16.Text = "Press Z to remove the last one";
+            this.label16.Text = "Press Supr to remove the selected one.";
             // 
             // bVegetationClear
             // 
             this.bVegetationClear.BackColor = System.Drawing.Color.LightCoral;
             this.bVegetationClear.Dock = System.Windows.Forms.DockStyle.Top;
-            this.bVegetationClear.Location = new System.Drawing.Point(3, 508);
+            this.bVegetationClear.Location = new System.Drawing.Point(3, 559);
             this.bVegetationClear.Name = "bVegetationClear";
             this.bVegetationClear.Size = new System.Drawing.Size(209, 28);
             this.bVegetationClear.TabIndex = 2;
@@ -705,7 +723,7 @@
             // bClearTF
             // 
             this.bClearTF.Dock = System.Windows.Forms.DockStyle.Top;
-            this.bClearTF.Location = new System.Drawing.Point(3, 463);
+            this.bClearTF.Location = new System.Drawing.Point(3, 514);
             this.bClearTF.Name = "bClearTF";
             this.bClearTF.Size = new System.Drawing.Size(209, 45);
             this.bClearTF.TabIndex = 5;
@@ -720,7 +738,7 @@
             this.groupBox9.Controls.Add(this.rbRx);
             this.groupBox9.Controls.Add(this.label14);
             this.groupBox9.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox9.Location = new System.Drawing.Point(3, 398);
+            this.groupBox9.Location = new System.Drawing.Point(3, 449);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(209, 65);
             this.groupBox9.TabIndex = 4;
@@ -781,7 +799,7 @@
             this.groupBox6.Controls.Add(this.cbSy);
             this.groupBox6.Controls.Add(this.cbSx);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox6.Location = new System.Drawing.Point(3, 332);
+            this.groupBox6.Location = new System.Drawing.Point(3, 383);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(209, 66);
             this.groupBox6.TabIndex = 3;
@@ -845,7 +863,7 @@
             this.groupBox7.Controls.Add(this.groupBox8);
             this.groupBox7.Controls.Add(this.lbVegetation);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox7.Location = new System.Drawing.Point(3, 3);
+            this.groupBox7.Location = new System.Drawing.Point(3, 54);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(209, 329);
             this.groupBox7.TabIndex = 1;
@@ -894,6 +912,46 @@
             this.lbVegetation.TabIndex = 0;
             this.lbVegetation.SelectedIndexChanged += new System.EventHandler(this.lbVegetation_SelectedIndexChanged);
             // 
+            // gbMode
+            // 
+            this.gbMode.Controls.Add(this.rbAddVegetation);
+            this.gbMode.Controls.Add(this.rbPickVegetation);
+            this.gbMode.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbMode.Location = new System.Drawing.Point(3, 3);
+            this.gbMode.Name = "gbMode";
+            this.gbMode.Size = new System.Drawing.Size(209, 51);
+            this.gbMode.TabIndex = 6;
+            this.gbMode.TabStop = false;
+            this.gbMode.Text = "Mode";
+            // 
+            // rbAddVegetation
+            // 
+            this.rbAddVegetation.AutoSize = true;
+            this.rbAddVegetation.Dock = System.Windows.Forms.DockStyle.Left;
+            this.rbAddVegetation.Location = new System.Drawing.Point(79, 16);
+            this.rbAddVegetation.Name = "rbAddVegetation";
+            this.rbAddVegetation.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.rbAddVegetation.Size = new System.Drawing.Size(74, 32);
+            this.rbAddVegetation.TabIndex = 1;
+            this.rbAddVegetation.Text = "Add";
+            this.rbAddVegetation.UseVisualStyleBackColor = true;
+            this.rbAddVegetation.CheckedChanged += new System.EventHandler(this.rbAddVegetation_CheckedChanged);
+            // 
+            // rbPickVegetation
+            // 
+            this.rbPickVegetation.AutoSize = true;
+            this.rbPickVegetation.Checked = true;
+            this.rbPickVegetation.Dock = System.Windows.Forms.DockStyle.Left;
+            this.rbPickVegetation.Location = new System.Drawing.Point(3, 16);
+            this.rbPickVegetation.Name = "rbPickVegetation";
+            this.rbPickVegetation.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.rbPickVegetation.Size = new System.Drawing.Size(76, 32);
+            this.rbPickVegetation.TabIndex = 0;
+            this.rbPickVegetation.TabStop = true;
+            this.rbPickVegetation.Text = "Pick";
+            this.rbPickVegetation.UseVisualStyleBackColor = true;
+            this.rbPickVegetation.CheckedChanged += new System.EventHandler(this.rbPickVegetation_CheckedChanged);
+            // 
             // pageExport
             // 
             this.pageExport.Controls.Add(this.button1);
@@ -902,7 +960,7 @@
             this.pageExport.Location = new System.Drawing.Point(4, 22);
             this.pageExport.Name = "pageExport";
             this.pageExport.Padding = new System.Windows.Forms.Padding(3);
-            this.pageExport.Size = new System.Drawing.Size(215, 551);
+            this.pageExport.Size = new System.Drawing.Size(215, 631);
             this.pageExport.TabIndex = 2;
             this.pageExport.Text = "Export";
             this.pageExport.UseVisualStyleBackColor = true;
@@ -1076,7 +1134,7 @@
             this.tabSettings.Location = new System.Drawing.Point(4, 22);
             this.tabSettings.Name = "tabSettings";
             this.tabSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSettings.Size = new System.Drawing.Size(215, 551);
+            this.tabSettings.Size = new System.Drawing.Size(215, 631);
             this.tabSettings.TabIndex = 5;
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
@@ -1421,7 +1479,7 @@
             this.BackColor = System.Drawing.SystemColors.ControlDark;
             this.Controls.Add(this.tabControl);
             this.Name = "TerrainEditorControl";
-            this.Size = new System.Drawing.Size(223, 577);
+            this.Size = new System.Drawing.Size(223, 657);
             this.tabControl.ResumeLayout(false);
             this.pageTerrain.ResumeLayout(false);
             this.groupBoxModifyScale.ResumeLayout(false);
@@ -1454,6 +1512,8 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbVegetationPreview)).EndInit();
+            this.gbMode.ResumeLayout(false);
+            this.gbMode.PerformLayout();
             this.pageExport.ResumeLayout(false);
             this.groupBox10.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -1594,6 +1654,10 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.GroupBox gbMode;
+        private System.Windows.Forms.RadioButton rbAddVegetation;
+        private System.Windows.Forms.RadioButton rbPickVegetation;
+        private System.Windows.Forms.Label label17;
 
     }
 }

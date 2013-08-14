@@ -40,8 +40,8 @@ namespace Examples.TerrainEditor
 
 
         #region Properties
-        
 
+        public List<TgcMesh> Vegetation { get { return vegetation; } }
         /// <summary>
         /// Obtiene o configura el terreno a editar
         /// </summary>
