@@ -10,6 +10,7 @@ using Examples.TerrainEditor.Vegetation;
 using TgcViewer;
 using TgcViewer.Utils.Modifiers;
 using Microsoft.DirectX;
+using System.Collections.Generic;
 
 namespace Examples.TerrainEditor.Panel
 {
@@ -64,7 +65,7 @@ namespace Examples.TerrainEditor.Panel
             folderBrowserDialog1.SelectedPath = InstancesManager.Location;
 
             //Vegetation
-            fillVegetationList();
+            fillVegetationList(InstancesManager.Location);
         }
 
         private void tabControl_TabIndexChanged(object sender, EventArgs e)
@@ -186,18 +187,26 @@ namespace Examples.TerrainEditor.Panel
         }
 
        
-        private void fillVegetationList()
+        private void fillVegetationList(string path)
         {
-            //Vegetacion
-            lbVegetation.Items.Clear();
-            string[] vegetationPaths = Directory.GetDirectories(InstancesManager.Location);
-            foreach (string path in vegetationPaths)
+            string[] folders = Directory.GetDirectories(path);
+            List<string> names = new List<string>();
+            foreach (string folder in folders)
             {
 
-                string name = path.Substring(path.LastIndexOf("\\") + 1);
-                if (File.Exists(path + "\\" + name + "-TgcScene.xml")) lbVegetation.Items.Add(name);
+                string name = folder.Substring(folder.LastIndexOf("\\") + 1);
+                if (File.Exists(folder + "\\" + name + "-TgcScene.xml")) names.Add(name);
             }
-            lbVegetation.SelectedIndex = 0;
+
+           
+            if (names.Count > 0)
+            {
+                InstancesManager.Location = path;
+                lbVegetation.Items.Clear();
+                lbVegetation.Items.AddRange(names.ToArray());
+                lbVegetation.SelectedIndex = 0;
+
+            }
         }
 
         private void lbVegetation_SelectedIndexChanged(object sender, EventArgs e)
@@ -225,8 +234,8 @@ namespace Examples.TerrainEditor.Panel
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                InstancesManager.Location = folderBrowserDialog1.SelectedPath;
-                fillVegetationList();
+                
+                fillVegetationList(folderBrowserDialog1.SelectedPath);
 
             }
         }
