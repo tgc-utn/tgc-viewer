@@ -11,7 +11,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
     {
         protected TgcBox bBrush;
         private static TgcStaticSound sound;
-        private static int instances = 0;
+
         #region Properties
         public Color Color1 { get; set; }
         public Color Color2 { get; set; }
@@ -63,12 +63,9 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         {
             SoundEnabled = true;
             bBrush = TgcBox.fromSize(new Vector3(10, 100, 10));
-            if (sound == null)
-            {
-                sound = new TgcStaticSound();
-                sound.loadSound(GuiController.Instance.ExamplesMediaDir + "Sound\\tierra.wav"); 
-            }
-            instances++;
+            sound = new TgcStaticSound();
+            sound.loadSound(GuiController.Instance.ExamplesMediaDir + "Sound\\tierra.wav"); 
+          
         }
 
         #region TerrainEditorBrush
@@ -142,12 +139,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         public void dispose()
         {
             bBrush.dispose();
-            instances--;
-            if (instances == 0 && sound!=null)
-            {
-                sound.dispose();
-                sound = null;
-            }
+            sound.dispose();           
         }
 
         #endregion
