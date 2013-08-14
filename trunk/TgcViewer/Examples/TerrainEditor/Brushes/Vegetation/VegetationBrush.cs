@@ -24,8 +24,8 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
 
         public override bool mouseMove(TgcTerrainEditor editor)
         {
-            if (mesh == null) 
-                mesh = InstancesManager.Instance.newMeshInstanceOf(vegetationName);
+            if (Mesh == null) 
+                Mesh = InstancesManager.Instance.newMeshInstanceOf(vegetationName);
             Vector3 pos = Position;
             base.mouseMove(editor);
             if (pos == Position) Enabled = false;
@@ -35,14 +35,14 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
 
         protected override void addVegetation(TgcTerrainEditor editor)
         {
-            Vector3 scale = mesh.Scale;
-            Vector3 rotation = mesh.Rotation;
+            Vector3 scale = Mesh.Scale;
+            Vector3 rotation = Mesh.Rotation;
             base.addVegetation(editor);
 
-            mesh = InstancesManager.Instance.newMeshInstanceOf(vegetationName);
-            mesh.Scale = scale;
-            mesh.Rotation = rotation;
-            mesh.Position = Position;
+            Mesh = InstancesManager.Instance.newMeshInstanceOf(vegetationName);
+            Mesh.Scale = scale;
+            Mesh.Rotation = rotation;
+            Mesh.Position = Position;
 
         } 
        
