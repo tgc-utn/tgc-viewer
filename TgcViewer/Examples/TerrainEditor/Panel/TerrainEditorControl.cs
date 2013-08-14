@@ -74,12 +74,13 @@ namespace Examples.TerrainEditor.Panel
             vegetationBrush.removeFloatingVegetation();
             if (tabControl.SelectedTab == pageEdit)
             {
-
+                terrainEditor.PlanePicking = true;
                 if (rbShovel.Checked) setBrush(shovel);
                 else if (rbSteamroller.Checked) setBrush(steamroller);
             }
             else if (tabControl.SelectedTab == tabVegetation)
             {
+                terrainEditor.PlanePicking = false;
                 setBrush(vegetationBrush);
             }
             else terrainEditor.Brush = null;

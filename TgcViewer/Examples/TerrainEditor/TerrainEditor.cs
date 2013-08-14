@@ -58,9 +58,10 @@ namespace Examples.TerrainEditor
         public bool ShowVegetation { get { return showVegetation; } set { showVegetation = value; if (showVegetation && mustUpdateVegetationPosition) updateVegetationY(); } }
         
         /// <summary>
-        /// Determina el tipo de picking a utilizar. El PlanePicking es menos exacto pero permite hacer picking detras de montanias.
+        /// Determina el tipo de picking a utilizar. Cuando esta en true, se hace picking contra el plano del terreno (no depende de la altura). En false hace picking contra las montanias.
         /// </summary>
-        public bool PlanePicking { get; set; }
+        protected bool planePicking;
+        public bool PlanePicking { get { return planePicking; } set { planePicking = value; Brush.mouseMove(this); } }
 
         /// <summary>
         /// Obtiene la camara del editor.
@@ -84,7 +85,7 @@ namespace Examples.TerrainEditor
                 else if (!value && camera.FpsModeEnable)
                 {
                     camera.RotateMouseButton = cameraRotationButton;
-                    if (camera.MovementSpeed * 2 == previousSpeed) camera.MovementSpeed *= 2;
+                    camera.MovementSpeed = previousSpeed;
                 }
                 camera.FpsModeEnable = value;
 

@@ -56,6 +56,8 @@ namespace Examples.TerrainEditor
             get { if(Terrain==null) return false; else return fpsModeEnable; }
             set
             {
+                if (value && Terrain == null) return;
+
                 if (value && !fpsModeEnable)
                 {
                     previousY = eye.Y;
