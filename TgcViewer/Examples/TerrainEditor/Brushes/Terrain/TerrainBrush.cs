@@ -222,18 +222,33 @@ namespace Examples.TerrainEditor.Brushes.Terrain
                         if (intensity != 0)
                         {
 
-                            if (innerRadius != radius)
+                            if (Hardness!=100)
                             {
                                 //Si esta entre el circulo/cuadrado interno, disminuyo la intensidad.
-                                if (Rounded && d2 > innerRadius2)
+                                if (Rounded)
                                 {
-                                    intensity = intensity * (1 - ((d2 - innerRadius2) / (radius2 - innerRadius2)));
+                                    
+                                    float outterIntensity = intensity * (1- d2/radius2);
+                                   
+                                    if (d2 > innerRadius2)
+                                    {
+                                        intensity = outterIntensity;
 
+                                    }
+                                    else 
+                                    {
+                                        
+                                        float alpha = 1-d2/innerRadius2;
+                                        intensity = outterIntensity + alpha*(intensity-outterIntensity);
+                                      
+                                    }
+                                 
+                                    
                                 }
-                                else if(!Rounded)
+                                else
                                 {
                                     float maxD = FastMath.Max(FastMath.Abs(dx), FastMath.Abs(dz));
-                                    if (maxD>innerRadius)
+                                    if (maxD > innerRadius)
                                     {
                                         intensity = intensity * (1 - (maxD - innerRadius) / (radius - innerRadius));
 
