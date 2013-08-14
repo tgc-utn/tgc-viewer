@@ -179,7 +179,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
             if (Invert) speed *= -1;
 
             float radius = Radius / terrain.ScaleXZ;
-            float innerRadius = radius * Hardness / 100;
+            float innerRadius = radius * (Hardness / 100);
             float radius2 = FastMath.Pow2(radius);
             float innerRadius2 = FastMath.Pow2(innerRadius);
 
@@ -192,16 +192,15 @@ namespace Examples.TerrainEditor.Brushes.Terrain
             if (!terrain.xzToHeightmapCoords(Position.X, Position.Z, out coords)) return false;
 
             //Calculo un cuadrado alrededor del vertice seleccionado
-            int[] min = new int[] { (int)(coords.X - radius), (int)(coords.Y - radius) };
+            int[] min = new int[] {(int)FastMath.Ceiling(coords.X - radius),(int)FastMath.Ceiling(coords.Y - radius) };
 
-            int[] max = new int[] { (int)(coords.X + radius), (int)(coords.Y + radius) };
+            float[] max = new float[] { coords.X + radius, coords.Y + radius };
 
             for (int i = 0; i < 2; i++)
             {
                 if (min[i] < 0) min[i] = 0;
-                if (max[i] > heightmapData.GetLength(i)) max[i] = heightmapData.GetLength(i);
-            }
-
+                if (max[i] > heightmapData.GetLength(i)) max[i] = heightmapData.GetLength(i);              
+            }            
 
             for (int i = min[0]; i < max[0]; i++)
             {
@@ -231,10 +230,14 @@ namespace Examples.TerrainEditor.Brushes.Terrain
                                     intensity = intensity * (1 - ((d2 - innerRadius2) / (radius2 - innerRadius2)));
 
                                 }
-                                else if (!Rounded && (FastMath.Abs(dx) > innerRadius || FastMath.Abs(dz) > innerRadius))
+                                else if(!Rounded)
                                 {
-                                    intensity = intensity * (1 - ((FastMath.Min(radius, FastMath.Max(FastMath.Abs(dx), FastMath.Abs(dz))) - innerRadius) / (radius - innerRadius)));
+                                    float maxD = FastMath.Max(FastMath.Abs(dx), FastMath.Abs(dz));
+                                    if (maxD>innerRadius)
+                                    {
+                                        intensity = intensity * (1 - (maxD - innerRadius) / (radius - innerRadius));
 
+                                    }
                                 }
                             }
                           
