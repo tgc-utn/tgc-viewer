@@ -115,7 +115,8 @@ Camara:
     Para rotar mantener presionado el boton derecho.
 Ocultar vegetacion: V 
 Cambiar modo de picking: P
-Modo primera persona: F (Rotacion con boton izquierdo)";
+Modo primera persona: F (Rotacion con boton izquierdo)
+Mostar AABBs: B";
         }
         public override void init()
         {
@@ -191,6 +192,9 @@ Modo primera persona: F (Rotacion con boton izquierdo)";
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F))
                 FpsModeEnable ^= true;
 
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.B))
+                RenderBoundingBoxes ^= true;
+
             Terrain.Technique = "PositionColoredTextured";
 
             Brush.update(this);
@@ -209,7 +213,11 @@ Modo primera persona: F (Rotacion con boton izquierdo)";
 
         public void renderVegetation()
         {
-            foreach (TgcMesh v in vegetation) v.render();
+            foreach (TgcMesh v in vegetation)
+            {
+                v.render();
+                if (RenderBoundingBoxes) v.BoundingBox.render();
+            }
 
         }
 
@@ -304,6 +312,13 @@ Modo primera persona: F (Rotacion con boton izquierdo)";
         }
 
      
+        public void removeDisposedVegetation()
+        {
+            List<TgcMesh> aux = new List<TgcMesh>();
+            foreach (TgcMesh m in vegetation) if (m.D3dMesh != null) aux.Add(m);
+            vegetation = aux;
+        }
+     
         #endregion
 
         /// <summary>
@@ -392,15 +407,8 @@ Modo primera persona: F (Rotacion con boton izquierdo)";
         }
 
 
-      
 
-     
-    
-
-
-
-
-        
+        public bool RenderBoundingBoxes { get; set; }
     }
 
     public class DummyBrush : ITerrainEditorBrush
