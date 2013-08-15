@@ -261,6 +261,7 @@ namespace Examples.TerrainEditor.Panel
             if (cbSy.Checked) scale += new Vector3(0, 1, 0);
             if (cbSz.Checked) scale += new Vector3(0, 0, 1);
 
+            vegetationPicker.ScaleAxis = scale;
             vegetationBrush.ScaleAxis = scale;
         }
 
@@ -281,9 +282,18 @@ namespace Examples.TerrainEditor.Panel
         }
         private void updateVBRotationAxis(object sender, EventArgs e)
         {
-            if (rbRx.Checked) vegetationBrush.Rotation = VegetationBrush.RotationAxis.X;
-            else if (rbRy.Checked) vegetationBrush.Rotation = VegetationBrush.RotationAxis.Y;
-            else if (rbRz.Checked) vegetationBrush.Rotation = VegetationBrush.RotationAxis.Z;
+            if (rbRx.Checked){
+                vegetationBrush.Rotation = VegetationBrush.RotationAxis.X;
+                vegetationPicker.Rotation = VegetationPicker.RotationAxis.X;
+            }
+            else if (rbRy.Checked){
+                vegetationBrush.Rotation = VegetationBrush.RotationAxis.Y;
+                vegetationPicker.Rotation = VegetationPicker.RotationAxis.Y;
+            }
+            else if (rbRz.Checked){
+                vegetationBrush.Rotation = VegetationBrush.RotationAxis.Z;
+                vegetationPicker.Rotation = VegetationPicker.RotationAxis.Z;
+            }
         }
 
         private void bClearTF_Click(object sender, EventArgs e)

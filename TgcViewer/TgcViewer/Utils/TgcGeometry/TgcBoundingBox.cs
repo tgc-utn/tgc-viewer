@@ -160,6 +160,31 @@ namespace TgcViewer.Utils.TgcGeometry
         }
 
         /// <summary>
+        /// Construye un AABB a partir de un pMin y pMax que ya tienen aplicada una escala y una traslacion.
+        /// </summary>
+        /// <param name="pMin">Punto minimo escalado y/o trasladado</param>
+        /// <param name="pMax">Punto maximo escalado y/o trasladado</param>
+        /// <param name="position">Traslacion</param>
+        /// <param name="scale">Escala</param>
+        public TgcBoundingBox(Vector3 pMin, Vector3 pMax, Vector3 position, Vector3 scale)
+            : this()
+        {
+            //Seteo los extremos
+            this.pMin = pMin;
+            this.pMax = pMax;
+
+            //Almaceno los extremos sin transformar para aplicar las futuras transformaciones sobre los puntos originales.
+            pMinOriginal.X = (pMin.X - position.X) / scale.X;
+            pMinOriginal.Y = (pMin.Y - position.Y) / scale.Y;
+            pMinOriginal.Z = (pMin.Z - position.Z) / scale.Z;
+
+            pMaxOriginal.X = (pMax.X - position.X) / scale.X;
+            pMaxOriginal.Y = (pMax.Y - position.Y) / scale.Y;
+            pMaxOriginal.Z = (pMax.Z - position.Z) / scale.Z;
+
+        }
+
+        /// <summary>
         /// Configurar los valores extremos del BoundingBox
         /// </summary>
         /// <param name="pMin">Punto mínimo</param>
