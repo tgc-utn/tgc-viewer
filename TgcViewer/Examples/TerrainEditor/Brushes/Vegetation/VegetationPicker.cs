@@ -6,32 +6,18 @@ using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils._2D;
 using System.Drawing;
+using System;
 
 namespace Examples.TerrainEditor.Brushes.Vegetation
 {
     public class VegetationPicker:ITerrainEditorBrush
     {
-        private TgcMesh mesh;
-        protected SizeF nameSize;
+      
         protected Font font;
 
-        protected TgcMesh Mesh {
-            get { return mesh; } 
-            set { 
-                mesh = value;
-                if (value != null) { 
-                    
-                    
-                    label.Text = mesh.Name;
-                    using(Graphics g = GuiController.Instance.Panel3d.CreateGraphics())
-                    {
-                        nameSize = g.MeasureString(label.Text, font);
-                    }
+        protected TgcMesh Mesh { get; set; }         
 
-                   label.Size = nameSize.ToSize();
-                }
-            }
-        }
+    
     
         public bool Enabled { get; set; }
         public Vector3 Position { get; set; }
@@ -86,6 +72,15 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
 
         private void setLabelPosition()
         {
+            
+            label.Text = String.Format("\"{0}\"( {1} ; {2} ; {3} )", Mesh.Name, Mesh.Position.X, Mesh.Position.Y, Mesh.Position.Z);
+            SizeF nameSize;
+            using (Graphics g = GuiController.Instance.Panel3d.CreateGraphics())
+            {
+                nameSize = g.MeasureString(label.Text, font);
+            }
+
+            label.Size = nameSize.ToSize();
             label.Position = new Point((int)(GuiController.Instance.D3dInput.Xpos - nameSize.Width / 2), (int)(GuiController.Instance.D3dInput.Ypos + nameSize.Height + 5));
 
         }
@@ -175,9 +170,9 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
                     float t = 0;
                     if (q != ray.Ray.Origin)
                     {
-                        if (ray.Ray.Direction.X != 0) minT = (q.X - ray.Ray.Origin.X) / ray.Ray.Direction.X;
-                        else if (ray.Ray.Direction.Y != 0) minT = (q.Y - ray.Ray.Origin.Y) / ray.Ray.Direction.Y;
-                        else if (ray.Ray.Direction.Z != 0) minT = (q.Z - ray.Ray.Origin.Z) / ray.Ray.Direction.Z;
+                        if (ray.Ray.Direction.X != 0) t = (q.X - ray.Ray.Origin.X) / ray.Ray.Direction.X;
+                        else if (ray.Ray.Direction.Y != 0) t = (q.Y - ray.Ray.Origin.Y) / ray.Ray.Direction.Y;
+                        else if (ray.Ray.Direction.Z != 0) t = (q.Z - ray.Ray.Origin.Z) / ray.Ray.Direction.Z;
                     }
 
                     if (minT == -1 || t < minT)
