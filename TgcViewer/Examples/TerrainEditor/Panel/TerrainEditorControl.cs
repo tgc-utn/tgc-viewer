@@ -175,8 +175,9 @@ namespace Examples.TerrainEditor.Panel
                 if (MessageBox.Show("¿Remover vegetacion actual?", "El terreno ya tiene vegetacion", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     terrainEditor.clearVegetation();
                 else MessageBox.Show("Por ahora no se pueden importar modelos con nombres iguales a los ya cargados, de darse ese caso, las instancias viejas se eliminaran.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-         
+            
             terrainEditor.addVegetation(InstancesManager.Instance.import(openFileVegetation.FileName));
+            terrainEditor.removeDisposedVegetation();
             terrainEditor.updateVegetationY();
         }
 
