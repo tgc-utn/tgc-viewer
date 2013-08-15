@@ -4,6 +4,7 @@ using TgcViewer;
 using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Sound;
+using TgcViewer.Utils._2D;
 
 namespace Examples.TerrainEditor.Brushes.Terrain
 {
@@ -11,7 +12,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
     {
         protected TgcBox bBrush;
         private static TgcStaticSound sound;
-
+        protected TgcText2d text;
         #region Properties
         public Color Color1 { get; set; }
         public Color Color2 { get; set; }
@@ -62,6 +63,10 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         public TerrainBrush()
         {
             SoundEnabled = true;
+            text = new TgcText2d();
+            text.Align = TgcText2d.TextAlign.RIGHT;
+            text.changeFont(new System.Drawing.Font("Arial", 12, FontStyle.Bold));
+
             bBrush = TgcBox.fromSize(new Vector3(10, 100, 10));
             sound = new TgcStaticSound();
             sound.loadSound(GuiController.Instance.ExamplesMediaDir + "Sound\\tierra.wav"); 
@@ -132,14 +137,18 @@ namespace Examples.TerrainEditor.Brushes.Terrain
                 configureTerrainEffect(editor.Terrain);
                 bBrush.render();
             }
+            renderText();
             editor.doRender();
         }
+
+        protected abstract void renderText();
 
 
         public void dispose()
         {
             bBrush.dispose();
-            sound.dispose();           
+            sound.dispose();
+            text.dispose();
         }
 
         #endregion

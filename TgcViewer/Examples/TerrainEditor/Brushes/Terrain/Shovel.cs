@@ -11,6 +11,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         {
             Color1 = Color.Aqua;
             Color2 = Color.Red;
+            text.Color = Color1;
             bBrush.Color = Color1;
             bBrush.updateValues();
         }
@@ -18,6 +19,13 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         protected override float intensityFor(float[,] heightmapData, int i, int j)
         {
             return Intensity;
+        }
+
+        protected override void renderText()
+        {
+            string label = Invert? "Dig" : "Raise";
+            if (text.Text==null || !text.Text.Equals(label)) text.Text = label;
+            text.render();
         }
     }
 }
