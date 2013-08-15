@@ -178,25 +178,21 @@ namespace TgcViewer.Utils.TgcSceneLoader
 
 
 
-                /*
-                 * Lo comento porque el bounding box cree que esos pMin y pMax son del mesh sin transformar. Para
-                 * meshes con Scale (1,1,1) y Translation (0,0,0) anda bien, pero si el mesh esta desplazado o escalado
-                 * TgcBoundingBox::scaleTranslate no produce los resultados deseados.
-                 * 
-                 * Daniela K.
-                 * /
                 //Crear BoundingBox, aprovechar lo que viene del XML o crear uno por nuestra cuenta
-               /* if (meshData.pMin != null && meshData.pMax != null)
+                if (meshData.pMin != null && meshData.pMax != null)
                 {
                     tgcMesh.BoundingBox = new TgcBoundingBox(
                         TgcParserUtils.float3ArrayToVector3(meshData.pMin),
-                        TgcParserUtils.float3ArrayToVector3(meshData.pMax)
+                        TgcParserUtils.float3ArrayToVector3(meshData.pMax),
+                        tgcMesh.Position,
+                        tgcMesh.Scale
                         );
-                }
-                else*/
 
-                tgcMesh.createBoundingBox();
-              
+                }
+                else
+                {
+                    tgcMesh.createBoundingBox();
+                }
 
                 //Cargar layer
                 tgcMesh.Layer = meshData.layerName;
