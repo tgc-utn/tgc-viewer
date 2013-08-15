@@ -15,6 +15,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
 
            Color1 = Color.LightGoldenrodYellow; 
            Color2 = Color.Purple;
+           text.Color = Color1;
            bBrush.Color = Color1;
            bBrush.updateValues();
         }
@@ -55,6 +56,12 @@ namespace Examples.TerrainEditor.Brushes.Terrain
 
         }
 
+        protected override void renderText()
+        {
+            string label = Invert? "Sharpen" : "Flatten";
+            if (text.Text==null || !text.Text.Equals(label)) text.Text = label;
+            text.render();
+        }
        
     }
 }
