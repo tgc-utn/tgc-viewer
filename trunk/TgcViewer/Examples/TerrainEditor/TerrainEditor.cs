@@ -13,6 +13,7 @@ using TgcViewer.Example;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Input;
+using TgcViewer.Utils._2D;
 
 
 namespace Examples.TerrainEditor
@@ -36,6 +37,8 @@ namespace Examples.TerrainEditor
         private MouseEventHandler mouseMove;
         private EventHandler mouseLeave;
         private SmartTerrain terrain;
+        private TgcText2d labelFPS;
+        private TgcText2d labelVegetationHidden;
         #endregion
 
 
@@ -142,8 +145,18 @@ Mostar AABBs: B";
             camera.Enable = true;
             camera.RotateMouseButton = cameraRotationButton;
             camera.setCamera(new Vector3(-722.6171f, 495.0046f, -31.2611f), new Vector3(164.9481f, 35.3185f, -61.5394f));
-          
 
+            labelFPS = new TgcText2d();
+            labelFPS.Text = "Press F to go back to edition mode";
+            labelFPS.changeFont(new System.Drawing.Font("Arial", 12, FontStyle.Bold));
+            labelFPS.Color = Color.Red;
+            labelFPS.Align = TgcText2d.TextAlign.RIGHT;
+
+            labelVegetationHidden = new TgcText2d();
+            labelVegetationHidden.Text = "Press V to show vegetation";
+            labelVegetationHidden.changeFont(new System.Drawing.Font("Arial", 12, FontStyle.Bold));
+            labelVegetationHidden.Color = Color.GreenYellow;
+            labelVegetationHidden.Format = DrawTextFormat.Bottom|DrawTextFormat.Center;
             
         }
 
@@ -195,6 +208,10 @@ Mostar AABBs: B";
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.B))
                 RenderBoundingBoxes ^= true;
 
+            if (FpsModeEnable) labelFPS.render();
+
+            if (!ShowVegetation) labelVegetationHidden.render();
+
             Terrain.Technique = "PositionColoredTextured";
 
             Brush.update(this);
@@ -232,7 +249,7 @@ Mostar AABBs: B";
         {
             if (ShowVegetation)
             {
-                foreach (TgcMesh v in vegetation) terrain.setObjectPosition(v);
+                foreach (TgcMesh v in vegetation) Terrain.setObjectPosition(v);
                 
                 mustUpdateVegetationPosition = false;
             }
@@ -401,7 +418,8 @@ Mostar AABBs: B";
             Terrain.dispose();
             clearVegetation();
             modifierPanel.dispose();
-
+            labelFPS.dispose();
+            labelVegetationHidden.dispose();
             GuiController.Instance.Panel3d.MouseMove -= mouseMove;
             GuiController.Instance.Panel3d.MouseLeave -= mouseLeave;
         }
