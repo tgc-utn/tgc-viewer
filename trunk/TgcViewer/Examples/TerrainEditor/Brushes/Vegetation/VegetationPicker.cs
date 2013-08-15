@@ -193,22 +193,22 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
         private void updateMeshScaleAndRotation()
         {
 
-            if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.LeftArrow))
+            if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.J))
             {
                 rotate(FastMath.ToRad(60 * GuiController.Instance.ElapsedTime));
 
             }
-            else if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.RightArrow))
+            else if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.L))
             {
                 rotate(FastMath.ToRad(-60 * GuiController.Instance.ElapsedTime));
 
             }
-            else if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.UpArrow))
+            else if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.I))
             {
                 Mesh.Scale += ScaleAxis * 1.5f * GuiController.Instance.ElapsedTime;
 
             }
-            else if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.DownArrow))
+            else if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.K))
             {
                 Mesh.Scale -= ScaleAxis * 1.5f * GuiController.Instance.ElapsedTime;
 

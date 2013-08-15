@@ -786,11 +786,11 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(16, 36);
+            this.label14.Location = new System.Drawing.Point(32, 40);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(184, 13);
+            this.label14.Size = new System.Drawing.Size(106, 13);
             this.label14.TabIndex = 3;
-            this.label14.Text = "Use LEFT and RIGHT arrow to rotate";
+            this.label14.Text = "Use J and L to rotate";
             // 
             // groupBox6
             // 
@@ -809,11 +809,11 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(17, 41);
+            this.label13.Location = new System.Drawing.Point(35, 45);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(172, 13);
+            this.label13.Size = new System.Drawing.Size(103, 13);
             this.label13.TabIndex = 3;
-            this.label13.Text = "Use UP and DOWN arrow to scale";
+            this.label13.Text = "Use I and K to scale";
             // 
             // cbSz
             // 
