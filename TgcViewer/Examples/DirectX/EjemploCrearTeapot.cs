@@ -8,10 +8,10 @@ using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 
-namespace Examples.DirectXMesh
+namespace Examples.DirectX
 {
     /// <summary>
-    /// Ejemplo DirectXMeshViewer:
+    /// Ejemplo EjemploCrearTeapot:
     /// Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
     ///     # Unidad 4 - Texturas e Iluminación - Iluminación Dinámica, Material
@@ -37,7 +37,7 @@ namespace Examples.DirectXMesh
 
         public override string getCategory()
         {
-            return "DirectXMesh";
+            return "DirectX";
         }
 
         public override string getName()

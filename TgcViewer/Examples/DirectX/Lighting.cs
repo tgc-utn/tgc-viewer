@@ -8,7 +8,7 @@ using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 
-namespace Examples.GeometryBasics
+namespace Examples.DirectX
 {
     /// <summary>
     /// Ejemplo Lighting:
@@ -41,7 +41,7 @@ namespace Examples.GeometryBasics
 
         public override string getCategory()
         {
-            return "DirectXMesh";
+            return "DirectX";
         }
 
         public override string getName()
