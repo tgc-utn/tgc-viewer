@@ -132,6 +132,7 @@ namespace Examples.DirectX
 
             //Cargar textura de zBuffer al shader
             effect.SetValue("texZBuffer", zBufferTexture);
+            effect.SetValue("screenDimensions", new float[]{d3dDevice.Viewport.Width, d3dDevice.Viewport.Height});
 
             //Render de cada mesh
             foreach (TgcMesh mesh in meshes)
