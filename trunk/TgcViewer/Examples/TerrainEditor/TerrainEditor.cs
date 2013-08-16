@@ -19,7 +19,19 @@ using TgcViewer.Utils._2D;
 namespace Examples.TerrainEditor
 {
 
- 
+
+    /// <summary>
+    /// Ejemplo TgcTerrainEditor:
+    /// Unidades Involucradas:
+    ///     # Unidad 7 - Optimización - Heightmap
+    /// 
+    /// Herramienta para crear terrenos por Heightmaps, ubicar objetos sobre el terreno
+    /// y luego exportarlos para ser usados en otro ejemplo.
+    /// 
+    /// 
+    /// Autor: Daniela Kazarian
+    /// 
+    /// </summary>
     public class TgcTerrainEditor : TgcExample
     {
         #region Fields
