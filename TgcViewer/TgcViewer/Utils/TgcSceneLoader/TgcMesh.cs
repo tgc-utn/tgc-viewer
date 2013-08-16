@@ -592,8 +592,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
         public void moveOrientedY(float movement)
         {
-            float z = (float)Math.Cos((float)rotation.Y) * movement;
-            float x = (float)Math.Sin((float)rotation.Y) * movement;
+            float z = FastMath.Cos(rotation.Y) * movement;
+            float x = FastMath.Sin(rotation.Y) * movement;
 
             move(x, 0, z);
         }

@@ -108,6 +108,8 @@
     <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollisionManager.cs" />
     <Compile Include="Collision\SphereTriangleCollision\TriangleMeshCollider.cs" />
     <Compile Include="Collision\EjemploComputeObb.cs" />
+    <Compile Include="DirectX\EjemploGetZBuffer.cs" />
+    <Compile Include="DirectX\EjemploBoxDirectX.cs" />
     <Compile Include="GeometryBasics\CrearEditableLand.cs" />
     <Compile Include="GeometryBasics\EjemploSphere.cs" />
     <Compile Include="Lights\EjemploHDR.cs">
@@ -124,6 +126,9 @@
     <Compile Include="Lights\EjemploMultiDiffuseLights.cs" />
     <Compile Include="Lights\EjemploPointLight.cs" />
     <Compile Include="Lights\TgcMeshBumpMapping.cs" />
+    <Compile Include="Matematica\EjemploTriangulosYPlanos.cs" />
+    <Compile Include="Matematica\EjemploTransformaciones.cs" />
+    <Compile Include="Matematica\EjemploMatematicaVarios.cs" />
     <Compile Include="MeshCreator\Primitives\SpherePrimitive.cs" />
     <Compile Include="Otros\EjemploDefault.cs" />
     <Compile Include="Fog\EfectoNiebla.cs" />
@@ -266,11 +271,11 @@
     <Compile Include="Collision\EjemploBoundingBox.cs" />
     <Compile Include="EjemploEnBlanco.cs" />
     <Compile Include="Engine2D\GameManager.cs" />
-    <Compile Include="DirectXMesh\Lighting.cs" />
+    <Compile Include="DirectX\Lighting.cs" />
     <Compile Include="Outdoor\EjemploSimpleTerrain.cs" />
     <Compile Include="SceneLoader\EjemploMeshLoader.cs" />
     <Compile Include="SceneLoader\Escenario4toPiso.cs" />
-    <Compile Include="DirectXMesh\EjemploTeapotConCamara.cs" />
+    <Compile Include="DirectX\EjemploTeapotConCamara.cs" />
     <Compile Include="Engine2D\Bitmap.cs" />
     <Compile Include="Engine2D\Drawer.cs" />
     <Compile Include="Engine2D\Ejemplo2D.cs" />
@@ -281,10 +286,10 @@
     <Compile Include="GeometryBasics\TrianguloBasico.cs" />
     <Compile Include="GeometryBasics\TrianguloVertexBuffer.cs" />
     <Compile Include="GeometryBasics\TrianguloEditable.cs" />
-    <Compile Include="DirectXMesh\EjemploCrearTeapot.cs" />
+    <Compile Include="DirectX\EjemploCrearTeapot.cs" />
     <Compile Include="KeyFrameAnimation\EjemploKeyFrameLoader.cs" />
     <Compile Include="Outdoor\CrearHeightmapManual.cs" />
-    <Compile Include="DirectXMesh\DirectXMeshViewer.cs" />
+    <Compile Include="DirectX\DirectXMeshViewer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SceneEditor\TgcSceneEditor.cs" />
     <Compile Include="SceneEditor\SceneEditorControl.cs">
