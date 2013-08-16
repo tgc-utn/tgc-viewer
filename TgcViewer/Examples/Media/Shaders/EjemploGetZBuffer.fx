@@ -105,6 +105,9 @@ technique GenerateZBuffer
 /**************************************************************************************/
 
 
+float2 screenDimensions;
+
+
 //Textura de zBuffer
 texture texZBuffer;
 sampler2D zBuffer = sampler_state
@@ -133,7 +136,7 @@ struct VS_OUTPUT_AlterColorByDepth
 	float4 Position : POSITION0;
 	float4 Color : COLOR;
 	float2 Texcoord : TEXCOORD0;
-	float2 Pos2D : TEXCOORD1;
+	float4 Pos2D : TEXCOORD1;
 };
 
 
@@ -152,7 +155,7 @@ VS_OUTPUT_AlterColorByDepth vs_AlterColorByDepth(VS_INPUT_AlterColorByDepth inpu
 	output.Texcoord = input.Texcoord;
 	
 	//Guardar posicion 2D para usar en el pixel shader
-	output.Pos2D = output.Position.xy;
+	output.Pos2D = output.Position;
 	  
 	return output;
 }
@@ -163,14 +166,18 @@ struct PS_AlterColorByDepth
 {
 	float4 Color : COLOR;
 	float2 Texcoord : TEXCOORD0;
-	float2 Pos2D : TEXCOORD1;
+	float4 Pos2D : TEXCOORD1;
 };
 
 //Pixel Shader
 float4 ps_AlterColorByDepth(PS_AlterColorByDepth input) : COLOR0
 {      
+	float2 normalizedPos2D = input.Pos2D.xyz / input.Pos2D.w;
+	normalizedPos2D /= screenDimensions;
+	float2 zBufferUV = normalizedPos2D /*+ (0.5f / screenDimensions)*/;        
+
 	//Obtener valor del zBuffer
-	float depth = tex2D(zBuffer, input.Pos2D).r;
+	float depth = tex2D(zBuffer, zBufferUV).r;
 	
 	//Color tradicional del mesh
 	float4 meshColor = tex2D(diffuseMap, input.Texcoord);
