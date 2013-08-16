@@ -5,6 +5,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
 using System.Drawing;
+using TgcViewer.Utils.TgcGeometry;
 
 namespace TgcViewer.Utils
 {
@@ -29,7 +30,7 @@ namespace TgcViewer.Utils
         public static readonly int DIRECTX_MULTITEXTURE_COUNT = 8;
 
         //Valores de configuracion de la matriz de Proyeccion
-        public static float fieldOfViewY = Geometry.DegreeToRadian(45.0f);
+        public static float fieldOfViewY = FastMath.ToRad(45.0f);
         public static float aspectRatio = -1f;
         public static float zNearPlaneDistance = 1f;
         public static float zFarPlaneDistance = 10000f;

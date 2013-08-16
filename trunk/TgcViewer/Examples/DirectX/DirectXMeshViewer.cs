@@ -7,7 +7,7 @@ using TgcViewer;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 
-namespace Examples.DirectXMesh
+namespace Examples.DirectX
 {
     /// <summary>
     /// Ejemplo DirectXMeshViewer:
@@ -31,7 +31,7 @@ namespace Examples.DirectXMesh
 
         public override string getCategory()
         {
-            return "DirectXMesh";
+            return "DirectX";
         }
 
         public override string getName()

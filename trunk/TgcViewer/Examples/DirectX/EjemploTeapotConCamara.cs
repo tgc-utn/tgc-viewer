@@ -9,7 +9,7 @@ using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.Input;
 
-namespace Examples.DirectXMesh
+namespace Examples.DirectX
 {
     /// <summary>
     /// Ejemplo EjemploTeapotConCamara:
@@ -34,7 +34,7 @@ namespace Examples.DirectXMesh
 
         public override string getCategory()
         {
-            return "DirectXMesh";
+            return "DirectX";
         }
 
         public override string getName()
