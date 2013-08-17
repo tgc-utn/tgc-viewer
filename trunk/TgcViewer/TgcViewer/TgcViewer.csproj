@@ -239,8 +239,11 @@
     <Compile Include="Utils\Sound\TgcStaticSound.cs" />
     <Compile Include="Utils\Terrain\TgcSkyBox.cs" />
     <Compile Include="Utils\Terrain\TgcSimpleTerrain.cs" />
+    <Compile Include="Utils\TgcGeometry\TgcBoundingCylinder.cs" />
+    <Compile Include="Utils\TgcGeometry\TgcCylinder.cs" />
     <Compile Include="Utils\TgcGeometry\TgcElipsoid.cs" />
     <Compile Include="Utils\TgcGeometry\TgcEditableLand.cs" />
+    <Compile Include="Utils\TgcGeometry\TgcFixedYBoundingCylinder.cs" />
     <Compile Include="Utils\TgcGeometry\TgcObb.cs" />
     <Compile Include="Utils\TgcGeometry\TgcQuad.cs" />
     <Compile Include="Utils\TgcGeometry\TgcConvexPolygon.cs" />

@@ -93,6 +93,8 @@
     <Compile Include="AlphaBlending\AlphaBlendingManual.cs" />
     <Compile Include="AlphaBlending\AlphaBlendingFramework.cs" />
     <Compile Include="AlphaBlending\EjemploModeloAlpha.cs" />
+    <Compile Include="Collision\EjemploBoundingCylinder.cs" />
+    <Compile Include="Collision\EjemploFixedYCylinder.cs" />
     <Compile Include="Collision\EjemploOBB.cs" />
     <Compile Include="Collision\EjemploBoundingBoxTests.cs" />
     <Compile Include="Collision\ElipsoidCollision.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="Collision\EjemploComputeObb.cs" />
     <Compile Include="DirectX\EjemploGetZBuffer.cs" />
     <Compile Include="DirectX\EjemploBoxDirectX.cs" />
+    <Compile Include="GeometryBasics\Cilindro.cs" />
     <Compile Include="GeometryBasics\CrearEditableLand.cs" />
     <Compile Include="GeometryBasics\EjemploSphere.cs" />
     <Compile Include="Lights\EjemploHDR.cs">
