@@ -1803,6 +1803,54 @@ namespace TgcViewer.Utils.TgcGeometry
         #region Cylinder
 
         /// <summary>
+        /// Indica si un Punto colisiona con un Cilindro.
+        /// </summary>
+        /// <param name="p">Punto</param>
+        /// <param name="cylinder">Cilindro</param>
+        /// <returns>True si el Punto esta adentro del Cilindro</returns>
+        public static bool testPointCylinder(Vector3 p, TgcBoundingCylinder cylinder)
+        {
+            Vector3 uvwPoint = Vector3.TransformCoordinate(p, cylinder.AntiRotationMatrix);
+            return TgcCollisionUtils.testPointCylinder(uvwPoint, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
+        }
+
+        /// <summary>
+        /// Determina el punto del cilindro mas cercano al punto p.
+        /// </summary>
+        /// <param name="p">Punto</param>
+        /// <param name="cylinder">Cilindro orientable</param>
+        /// <returns>Punto del cilindro que esta mas cerca de p</returns>
+        public static Vector3 closestPointCylinder(Vector3 p, TgcBoundingCylinder cylinder)
+        {
+            //transformamos el punto a coordenadas uvw del cilindro
+            Matrix transformation = cylinder.AntiRotationMatrix;
+            Vector3 uvwPoint = Vector3.TransformCoordinate(p, transformation);
+            //buscamos el punto mas cercano en uvw
+            Vector3 uvwResult = TgcCollisionUtils.closestPointCylinder(uvwPoint, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
+            //transformamos ese resultado a xyz
+            transformation.Invert();
+            return Vector3.TransformCoordinate(uvwResult, transformation);
+        }
+
+        /// <summary>
+        /// Indica si un Cilindro colisiona con una Esfera.
+        /// Solo indica si hay colision o no. No va mas en detalle.
+        /// </summary>
+        /// <param name="sphere">Esfera</param>
+        /// <param name="cylinder">Cilindro orientable</param>
+        /// <returns>True si hay colision</returns>
+        public static bool testSphereCylinder(TgcBoundingSphere sphere, TgcBoundingCylinder cylinder)
+        {
+            //transformamos la posicion de la esfera a coordenadas uvw
+            Vector3 uvwSphereCenter = Vector3.TransformCoordinate(sphere.Center, cylinder.AntiRotationMatrix);
+            //nos fijamos si hay colision en el espacio uvw
+            return TgcCollisionUtils.testSphereCylinder(
+                uvwSphereCenter, sphere.Radius,
+                cylinder.Center, cylinder.HalfLength, cylinder.Radius);
+        }
+
+
+        /// <summary>
         /// Indica si un cilindro colisiona con un segmento.
         /// El cilindro se especifica con dos puntos centrales "cylinderInit" y "cylinderEnd" que forman una recta y con un radio "radius".
         /// Si hay colision se devuelve el instante de colision "t" y el punto de colision "q"
@@ -1815,8 +1863,14 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <param name="t">Instante de colision</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectSegmentCylinder(Vector3 segmentInit, Vector3 segmentEnd, Vector3 cylinderInit, Vector3 cylinderEnd, float radius, out float t, out Vector3 q)
+        public static bool intersectSegmentCylinder(Vector3 segmentInit, Vector3 segmentEnd, TgcBoundingCylinder cylinder, out float t, out Vector3 q)
+        //(Vector3 segmentInit, Vector3 segmentEnd, Vector3 cylinderInit, Vector3 cylinderEnd, float radius, out float t, out Vector3 q)
         {
+            Vector3 hh = cylinder.HalfHeight;
+            Vector3 cylinderInit = cylinder.Center - hh;
+            Vector3 cylinderEnd = cylinder.Center + hh;
+            float radius = cylinder.Radius;
+
             t = -1;
             q = Vector3.Empty;
 
@@ -1832,7 +1886,8 @@ namespace TgcViewer.Utils.TgcGeometry
             float a = dd * nn - nd * nd;
             float k = Vector3.Dot(m, m) - radius * radius;
             float c = dd * k - md * md;
-            if (FastMath.Abs(a) < float.Epsilon) {
+            if (FastMath.Abs(a) < float.Epsilon)
+            {
                 // Segment runs parallel to cylinder axis
                 if (c > 0.0f) return false; // 'a' and thus the segment lie outside cylinder
                 // Now known that segment intersects cylinder; figure out how it intersects
@@ -1848,13 +1903,16 @@ namespace TgcViewer.Utils.TgcGeometry
             t = (-b - FastMath.Sqrt(discr)) / a;
             if (t < 0.0f || t > 1.0f) return false; // Intersection lies outside segment
 
-            if (md + t * nd < 0.0f) {
+            if (md + t * nd < 0.0f)
+            {
                 // Intersection outside cylinder on 'p' side
                 if (nd <= 0.0f) return false; // Segment pointing away from endcap
                 t = -md / nd;
                 // Keep intersection if Dot(S(t) - p, S(t) - p) <= r^2
                 return k + t * (2.0f * mn + t * nn) <= 0.0f;
-            } else if (md + t * nd > dd) {
+            }
+            else if (md + t * nd > dd)
+            {
                 // Intersection outside cylinder on 'q' side
                 if (nd >= 0.0f) return false; // Segment pointing away from endcap
                 t = (dd - md) / nd;
@@ -1867,6 +1925,181 @@ namespace TgcViewer.Utils.TgcGeometry
             return true;
         }
 
+        #endregion
+
+
+        #region FixedYCylinder
+
+        /// <summary>
+        /// Indica si un Punto colisiona con un Cilindro.
+        /// </summary>
+        /// <param name="p">Punto</param>
+        /// <param name="cylinder">Cilindro alineado</param>
+        /// <returns>True si el Punto esta adentro del Cilindro</returns>
+        private static bool testPointCylinder(Vector3 p, TgcFixedYBoundingCylinder cylinder)
+        {
+            return TgcCollisionUtils.testPointCylinder(p, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
+        }
+
+        /// <summary>
+        /// Determina el punto mas cercano de un cilindro al punto P especificado
+        /// </summary>
+        /// <param name="p">Punto</param>
+        /// <param name="cylinder">Cilindro alineado</param>
+        /// <returns>Punto perteneciente al cilindro mas cercano a P</returns>
+        public static Vector3 closestPointCylinder(Vector3 p, TgcFixedYBoundingCylinder cylinder)
+        {
+            return TgcCollisionUtils.closestPointCylinder(p, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
+        }
+
+        /// <summary>
+        /// Indica si un Cilindro colisiona con una Esfera.
+        /// Solo indica si hay colision o no. No va mas en detalle.
+        /// </summary>
+        /// <param name="sphere">Esfera</param>
+        /// <param name="cylinder">Cilindro alineado</param>
+        /// <returns>True si hay colision</returns>
+        public static bool testSphereCylinder(TgcBoundingSphere sphere, TgcFixedYBoundingCylinder cylinder)
+        {
+            return TgcCollisionUtils.testSphereCylinder(
+                sphere.Center, sphere.Radius,
+                cylinder.Center, cylinder.HalfLength, cylinder.Radius);
+        }
+
+        /// <summary>
+        /// Indica si un Cilindro colisiona con un AABB.
+        /// Solo indica si hay colision o no. No va mas en detalle.
+        /// </summary>
+        /// <param name="box">AABB</param>
+        /// <param name="cylinder">Cilindro alineado</param>
+        /// <returns>True si hay colision</returns>
+        public static bool testAABBCylinder(TgcBoundingBox box, TgcFixedYBoundingCylinder cylinder)
+        {
+            //datos del aabb
+            Vector3 boxCenter = box.calculateBoxCenter();
+            Vector3 boxHalfSize = box.calculateSize() * 0.5f;
+
+            //datos del aabc
+            Vector3 cylCenter = cylinder.Center;
+            float cylHH = cylinder.Length / 2; //cylHalfHeight
+            float cylRadius = cylinder.Radius;
+
+            //vector de distancias
+            Vector3 distances = new Vector3(
+                FastMath.Abs(boxCenter.X - cylCenter.X),
+                FastMath.Abs(boxCenter.Y - cylCenter.Y),
+                FastMath.Abs(boxCenter.Z - cylCenter.Z));
+
+            //si el aabb esta muy arriba o muy abajo no hay colision
+            if (distances.Y > boxHalfSize.Y + cylHH) return false;
+
+            //si el aabb esta muy lejos en x o en z no hay colision
+            if (distances.X > boxHalfSize.X + cylRadius) return false;
+            if (distances.Z > boxHalfSize.Z + cylRadius) return false;
+
+            //si el centro del cilindro esta dentro del aabb hay colision
+            if (distances.X <= boxHalfSize.X) return true;
+            if (distances.Z <= boxHalfSize.Z) return true;
+
+            //si el cilindro toca alguno de los extremos hay colision
+            float cornerDistanceSq =
+                FastMath.Pow2(distances.X - boxHalfSize.X) +
+                FastMath.Pow2(distances.Z - boxHalfSize.Z);
+
+            return (cornerDistanceSq <= FastMath.Pow2(cylRadius));
+        }
+
+        /// <summary>
+        /// Indica si un Cilindro colisiona con otro Cilindro.
+        /// Solo indica si hay colision o no. No va mas en detalle.
+        /// </summary>
+        /// <param name="collider">Cilindro alineado que genera la colision</param>
+        /// <param name="collisionable">Cilindro alineado estatico</param>
+        /// <returns>True si hay colision</returns>
+        public static bool testCylinderCylinder(TgcFixedYBoundingCylinder collider, TgcFixedYBoundingCylinder collisionable)
+        {
+            Vector3 centerToCenter = collider.Center - collisionable.Center;
+            if (FastMath.Pow2(centerToCenter.X) + FastMath.Pow2(centerToCenter.Z) > FastMath.Pow2(collisionable.Radius + collider.Radius)) return false;
+            if (FastMath.Abs(centerToCenter.Y) > collider.HalfLength + collisionable.HalfLength) return false;
+            return true;
+        }
+
+
+
+        /// <summary>
+        /// Indica si un Punto colisiona con un Cilindro.
+        /// </summary>
+        /// <param name="p">Punto</param>
+        /// <param name="cylCenter">Centro o posicion del cilindro</param>
+        /// <param name="cylHalfLength">Media altura del cilindro</param>
+        /// <param name="cylRadius">Radio del cilindro</param>
+        /// <returns>True si el Punto esta adentro del Cilindro</returns>
+        private static bool testPointCylinder(Vector3 p, Vector3 cylCenter, float cylHalfLength, float cylRadius)
+        {
+            if (FastMath.Abs(cylCenter.Y - p.Y) > cylHalfLength) return false;
+            Vector3 centerToPoint = p - cylCenter;
+            centerToPoint.Y = 0;
+            if (centerToPoint.LengthSq() > FastMath.Pow2(cylRadius)) return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Determina el punto mas cercano de un cilindro al punto P especificado
+        /// </summary>
+        /// <param name="p">Punto</param>
+        /// <param name="cylCenter">Centro o posicion del cilindro</param>
+        /// <param name="cylHalfLength">Media altura del cilindro</param>
+        /// <param name="cylRadius">Radio del cilindro</param>
+        /// <returns>Punto perteneciente al cilindro mas cercano a P</returns>
+        private static Vector3 closestPointCylinder(Vector3 p, Vector3 cylCenter, float cylHalfLength, float cylRadius)
+        {
+            Vector3 direction = p - cylCenter;
+            direction.Y = 0;
+            if (direction.LengthSq() > FastMath.Pow2(cylRadius))
+            {
+                direction.Normalize();
+                direction *= cylRadius;
+            }
+
+            float distanceY = p.Y - cylCenter.Y;
+            if (FastMath.Abs(distanceY) > cylHalfLength)
+                return cylCenter + new Vector3(0, cylHalfLength, 0) * Math.Sign(distanceY) + direction;
+            else
+                return cylCenter + new Vector3(0, distanceY, 0) + direction;
+        }
+
+        /// <summary>
+        /// Indica si un Cilindro colisiona con una Esfera.
+        /// Solo indica si hay colision o no. No va mas en detalle.
+        /// </summary>
+        /// <param name="sphere">Esfera</param>
+        /// <param name="cylCenter">Centro o posicion del cilindro</param>
+        /// <param name="cylHalfLength">Media altura del cilindro</param>
+        /// <param name="cylRadius">Radio del cilindro</param>
+        /// <returns>True si hay colision</returns>
+        private static bool testSphereCylinder(Vector3 sphereCenter, float sphereRadius, Vector3 cylCenter, float cylHalfLength, float cylRadius)
+        {
+            //si la esfera esta muy arriba o muy abajo no hay colision
+            if (FastMath.Abs(sphereCenter.Y - cylCenter.Y) > cylHalfLength + sphereRadius) return false;
+
+            Vector2 sphereXZ = new Vector2(sphereCenter.X, sphereCenter.Z);
+            Vector2 cylXZ = new Vector2(cylCenter.X, cylCenter.Z);
+
+            //si estan muy lejos en el plano XZ no hay colision
+            if ((cylXZ - sphereXZ).LengthSq() > FastMath.Pow2(cylRadius + sphereRadius)) return false;
+
+            //si el centro de la esfera esta dentro del cilindro en Y hay colision
+            if (FastMath.Abs(cylCenter.Y - sphereCenter.Y) < cylHalfLength) return true;
+
+            //vemos si el punto mas cercano al centro de la esfera pertenece a esta
+            Vector3 point = sphereCenter - cylCenter;
+            point.Y = 0;
+            point.Normalize();
+            point *= cylRadius;
+            point.Y = cylHalfLength * Math.Sign(sphereCenter.Y - cylCenter.Y);
+            point += cylCenter;
+            return (point - sphereCenter).LengthSq() <= FastMath.Pow2(sphereRadius);
+        }
 
         #endregion
 
