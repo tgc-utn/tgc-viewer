@@ -104,7 +104,7 @@ technique GenerateZBuffer
 /* AlterColorByDepth */
 /**************************************************************************************/
 
-
+//Tamaño de la pantalla
 float2 screenDimensions;
 
 
@@ -136,7 +136,6 @@ struct VS_OUTPUT_AlterColorByDepth
 	float4 Position : POSITION0;
 	float4 Color : COLOR;
 	float2 Texcoord : TEXCOORD0;
-	float4 Pos2D : TEXCOORD1;
 };
 
 
@@ -153,9 +152,6 @@ VS_OUTPUT_AlterColorByDepth vs_AlterColorByDepth(VS_INPUT_AlterColorByDepth inpu
 	
 	//Enviar Texcoord directamente
 	output.Texcoord = input.Texcoord;
-	
-	//Guardar posicion 2D para usar en el pixel shader
-	output.Pos2D = output.Position;
 	  
 	return output;
 }
@@ -166,15 +162,14 @@ struct PS_AlterColorByDepth
 {
 	float4 Color : COLOR;
 	float2 Texcoord : TEXCOORD0;
-	float4 Pos2D : TEXCOORD1;
+	float2 Pos2D: VPOS; //Esta variable te la otorga automaticamente el shader. Es la posicion en pantalla
 };
 
 //Pixel Shader
 float4 ps_AlterColorByDepth(PS_AlterColorByDepth input) : COLOR0
-{      
-	float2 normalizedPos2D = input.Pos2D.xyz / input.Pos2D.w;
-	normalizedPos2D /= screenDimensions;
-	float2 zBufferUV = normalizedPos2D /*+ (0.5f / screenDimensions)*/;        
+{
+	//Obtener las coordenadas UV del ZBuffer. Son entre 0 y 1 entonces hay que dividir por las dimensiones de la pantalla
+	float2 zBufferUV = input.Pos2D / screenDimensions;
 
 	//Obtener valor del zBuffer
 	float depth = tex2D(zBuffer, zBufferUV).r;
@@ -183,7 +178,7 @@ float4 ps_AlterColorByDepth(PS_AlterColorByDepth input) : COLOR0
 	float4 meshColor = tex2D(diffuseMap, input.Texcoord);
 
 	//Variar color segun la distancia
-	float4 adaptedColor = meshColor * depth * 500;
+	float4 adaptedColor = meshColor * depth * 100;
 	adaptedColor.r = min(adaptedColor.r, meshColor.r);
 	adaptedColor.g = min(adaptedColor.g, meshColor.g);
 	adaptedColor.b = min(adaptedColor.b, meshColor.b);
@@ -200,7 +195,7 @@ technique AlterColorByDepth
 {
    pass Pass_0
    {
-	  VertexShader = compile vs_2_0 vs_AlterColorByDepth();
-	  PixelShader = compile ps_2_0 ps_AlterColorByDepth();
+	  VertexShader = compile vs_3_0 vs_AlterColorByDepth();
+	  PixelShader = compile ps_3_0 ps_AlterColorByDepth();
    }
 }
