@@ -62,7 +62,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             {
                 boundingBoxes.Add(new TgcBoundingBox(
                     TgcParserUtils.float3ArrayToVector3(m.MeshData.pMin),
-                    TgcParserUtils.float3ArrayToVector3(m.MeshData.pMin)));
+                    TgcParserUtils.float3ArrayToVector3(m.MeshData.pMax)));
             }
             return TgcBoundingBox.computeFromBoundingBoxes(boundingBoxes);
         }

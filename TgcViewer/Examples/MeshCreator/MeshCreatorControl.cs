@@ -885,7 +885,8 @@ namespace Examples.MeshCreator
         /// </summary>
         private void buttonImportMesh_Click(object sender, EventArgs e)
         {
-            if (meshBrowser.ShowDialog() == DialogResult.OK)
+            DialogResult r = meshBrowser.ShowDialog();
+            if (r == DialogResult.OK)
             {
                 try
                 {

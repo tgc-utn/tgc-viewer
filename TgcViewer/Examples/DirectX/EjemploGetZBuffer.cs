@@ -23,6 +23,7 @@ namespace Examples.DirectX
     /// Muestra como hacer un primer render de un escenario a una textura guardando ahi el valor de Z.
     /// Seria como Z Buffer pero propio de la aplicacion.
     /// Y luego usar ese Z Buffer como una textura de entrada para una siguiente pasada de shader.
+    /// El ejemplo usa el valor de Z para oscurecer los puntos lejos y aclarar los puntos cercanos.
     /// 
     /// 
     /// Autor: Matías Leone, Leandro Barbagallo
