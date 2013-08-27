@@ -15,6 +15,8 @@ namespace TgcViewer.Utils.TgcGeometry
         private Vector3 halfHeight;
         private Vector3 center;
 
+        private Matrix antiTransformation;
+
 
         public TgcFixedYBoundingCylinder(Vector3 _center, float _radius, float _halfLength)
         {
@@ -138,6 +140,14 @@ namespace TgcViewer.Utils.TgcGeometry
         }
 
         /// <summary>
+        /// Matriz que lleva el radio del cilindro a 1, la altura a 2, y el centro al origen de coordenadas
+        /// </summary>
+        public Matrix AntiTransformationMatrix
+        {
+            get { return this.antiTransformation; }
+        }
+
+        /// <summary>
         /// Centro del cilindro
         /// </summary>
         public Vector3 Center
@@ -183,6 +193,16 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             get { return 2 * this.halfHeight.Y; }
             set { this.halfHeight = new Vector3(0, value / 2, 0); }
+        }
+
+        /// <summary>
+        /// Actualiza la matriz de transformacion
+        /// </summary>
+        public void updateValues()
+        {
+            this.antiTransformation =
+                Matrix.Translation(-this.center) *
+                Matrix.Scaling(1 / this.radius, 1 / this.HalfLength, 1 / this.radius);
         }
     }
 }

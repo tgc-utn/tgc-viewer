@@ -1803,6 +1803,21 @@ namespace TgcViewer.Utils.TgcGeometry
         #region Cylinder
 
         /// <summary>
+        /// Indica si un rayo colisiona con un cilindro.
+        /// </summary>
+        /// <param name="ray">Rayo</param>
+        /// <param name="cylinder">Cilindro orientado</param>
+        /// <returns>True si el rayo colisiona con el cilindro</returns>
+        public static bool testRayCylinder(TgcRay ray, TgcBoundingCylinder cylinder)
+        {
+            Matrix transformation = cylinder.AntiTransformationMatrix;
+            Vector3 origin = Vector3.TransformCoordinate(ray.Origin, transformation);
+            Vector3 direction = Vector3.TransformNormal(ray.Direction, transformation);
+
+            return TgcCollisionUtils.testRayCylinder(origin, direction);
+        }
+
+        /// <summary>
         /// Indica si un Punto colisiona con un Cilindro.
         /// </summary>
         /// <param name="p">Punto</param>
@@ -1931,6 +1946,21 @@ namespace TgcViewer.Utils.TgcGeometry
         #region FixedYCylinder
 
         /// <summary>
+        /// Indica si un rayo colisiona con un cilindro.
+        /// </summary>
+        /// <param name="ray">Rayo</param>
+        /// <param name="cylinder">Cilindro alineado</param>
+        /// <returns>True si el rayo colisiona con el cilindro</returns>
+        public static bool testRayCylinder(TgcRay ray, TgcFixedYBoundingCylinder cylinder)
+        {
+            Matrix transformation = cylinder.AntiTransformationMatrix;
+            Vector3 origin = Vector3.TransformCoordinate(ray.Origin, transformation);
+            Vector3 direction = Vector3.TransformNormal(ray.Direction, transformation);
+
+            return TgcCollisionUtils.testRayCylinder(origin, direction);
+        }
+
+        /// <summary>
         /// Indica si un Punto colisiona con un Cilindro.
         /// </summary>
         /// <param name="p">Punto</param>
@@ -1979,9 +2009,9 @@ namespace TgcViewer.Utils.TgcGeometry
             Vector3 boxCenter = box.calculateBoxCenter();
             Vector3 boxHalfSize = box.calculateSize() * 0.5f;
 
-            //datos del aabc
+            //datos del cilindro
             Vector3 cylCenter = cylinder.Center;
-            float cylHH = cylinder.Length / 2; //cylHalfHeight
+            float cylHalfLength = cylinder.HalfLength;
             float cylRadius = cylinder.Radius;
 
             //vector de distancias
@@ -1991,7 +2021,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 FastMath.Abs(boxCenter.Z - cylCenter.Z));
 
             //si el aabb esta muy arriba o muy abajo no hay colision
-            if (distances.Y > boxHalfSize.Y + cylHH) return false;
+            if (distances.Y > boxHalfSize.Y + cylHalfLength) return false;
 
             //si el aabb esta muy lejos en x o en z no hay colision
             if (distances.X > boxHalfSize.X + cylRadius) return false;
@@ -2005,7 +2035,6 @@ namespace TgcViewer.Utils.TgcGeometry
             float cornerDistanceSq =
                 FastMath.Pow2(distances.X - boxHalfSize.X) +
                 FastMath.Pow2(distances.Z - boxHalfSize.Z);
-
             return (cornerDistanceSq <= FastMath.Pow2(cylRadius));
         }
 
@@ -2024,7 +2053,65 @@ namespace TgcViewer.Utils.TgcGeometry
             return true;
         }
 
+        /// <summary>
+        /// Indica si un rayo colisiona con el cilindro de radio 1, altura 2, y centro en el origen de coordenadas.
+        /// </summary>
+        /// <param name="origin">Origen del rayo</param>
+        /// <param name="direction">Vector director del rayo</param>
+        /// <returns>True si el rayo colisiona con el cilindro</returns>
+        private static bool testRayCylinder(Vector3 origin, Vector3 direction)
+        {
+            float x0 = origin.X, xt = direction.X;
+            float y0 = origin.Y, yt = direction.Y;
+            float z0 = origin.Z, zt = direction.Z;
 
+            //nota: esta solucion esta planteada con las siguientes ecuaciones
+            //x^2 + z^2 = 1, -1 <= y <= 1 para el cilindro
+            //(x,y,z) = (x0,y0,z0)+t(xt,yt,zt) para el rayo
+
+            float t1, t2;
+
+            if (yt == 0)
+            {
+                if (y0 > 1) return false;
+                if (y0 < -1) return false;
+                t1 = float.MinValue;
+                t2 = float.MaxValue;
+            }
+            else
+            {
+                t1 = FastMath.Min((-1 - y0) / yt, (1 - y0) / yt);
+                t2 = FastMath.Max((-1 - y0) / yt, (1 - y0) / yt);
+            }
+
+            float a = xt * xt + zt * zt,
+                b = 2 * x0 * xt + 2 * z0 * zt,
+                c = x0 * x0 + z0 * z0 - 1;
+
+            float raiz = b * b - 4 * a * c;
+
+            if (raiz < 0) return false;
+            else if (raiz == 0)
+            {
+                float t = -b / (2 * a);
+                return t >= t1 && t <= t2;
+            }
+            else
+            {
+                float up = -b;
+                float down = 2 * a;
+                float sqrt = FastMath.Sqrt(raiz);
+
+                float t3, t4;
+                t3 = FastMath.Min((up + sqrt) / down, (up - sqrt) / down);
+                t4 = FastMath.Max((up + sqrt) / down, (up - sqrt) / down);
+
+                if (t3 <= t1 && t4 >= t2) return true;
+                if (t3 >= t1 && t3 <= t2) return true;
+                if (t4 >= t1 && t4 <= t2) return true;
+                return false;
+            }
+        }
 
         /// <summary>
         /// Indica si un Punto colisiona con un Cilindro.
