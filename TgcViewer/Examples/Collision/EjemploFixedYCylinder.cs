@@ -23,6 +23,10 @@ namespace Examples.Collision
 
         private Color noCollisionColor = Color.Yellow;
         private Color collisionColor = Color.Red;
+        private Color pickingColor = Color.DarkGreen;
+
+        private float pickingTimeLeft;
+        private const float PICKING_TIME = 0.5f;
 
         public override string getCategory()
         {
@@ -36,7 +40,7 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Muestra distintos testeos de colision: cilindro-esfera, cilindro-cubo, cilindro-cilindro.";
+            return "Muestra distintos testeos de colision: cilindro-esfera, cilindro-cubo, cilindro-cilindro. Hacer click sobre el viewport para testear colision PickingRay-Cylinder.";
         }
 
         public override void init()
@@ -63,6 +67,8 @@ namespace Examples.Collision
             collider.Radius = size.X;
             collider.Length = size.Y;
 
+            collider.updateValues();
+
             if (TgcCollisionUtils.testSphereCylinder(collisionableSphere, collider))
                 collisionableSphere.setRenderColor(collisionColor);
             else
@@ -78,6 +84,19 @@ namespace Examples.Collision
             else
                 collisionableCylinder.setRenderColor(noCollisionColor);
 
+            if (pickingTimeLeft > 0) pickingTimeLeft -= elapsedTime;
+            else collider.setRenderColor(noCollisionColor);
+
+            if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            {
+                TgcPickingRay pickingRay = new TgcPickingRay();
+                pickingRay.updateRay();
+                if (TgcCollisionUtils.testRayCylinder(pickingRay.Ray, collider))
+                {
+                    pickingTimeLeft = PICKING_TIME;
+                    collider.setRenderColor(pickingColor);
+                }
+            }
 
             collider.render();
             collisionableSphere.render();

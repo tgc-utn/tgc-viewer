@@ -18,6 +18,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
         private Matrix transformation;
         private Matrix antiRotationMatrix;
+        private Matrix antiTransformation;
 
 
         public TgcBoundingCylinder(Vector3 _center, float _radius, float _halfLength)
@@ -44,6 +45,10 @@ namespace TgcViewer.Utils.TgcGeometry
                 Matrix.Scaling(this.radius, this.halfLength, this.radius) *
                 rotationMatrix *
                 Matrix.Translation(this.center);
+
+            //la matriz AntiTransformation convierte el cilindro a uno generico de radio 1 y altura 2
+            this.antiTransformation =
+                Matrix.Invert(this.transformation);
 
             //la matriz AntiRotation sirve para alinear el cilindro con los ejes
             this.antiRotationMatrix =
@@ -204,6 +209,14 @@ namespace TgcViewer.Utils.TgcGeometry
         public Matrix AntiRotationMatrix
         {
             get { return this.antiRotationMatrix; }
+        }
+
+        /// <summary>
+        /// Matriz que lleva el radio del cilindro a 1, la altura a 2, y el centro al origen de coordenadas
+        /// </summary>
+        public Matrix AntiTransformationMatrix
+        {
+            get { return this.antiTransformation; }
         }
 
         public Vector3 Rotation
