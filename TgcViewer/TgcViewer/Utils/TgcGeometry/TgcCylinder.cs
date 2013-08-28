@@ -31,10 +31,7 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             this.topRadius = _topRadius;
             this.bottomRadius = _bottomRadius;
-            this.boundingCylinder = new TgcBoundingCylinder(
-                _center,
-                FastMath.Max(_topRadius, _bottomRadius),
-                _halfLength);
+            this.boundingCylinder = new TgcBoundingCylinder(_center, 1, _halfLength);
 
             this.color = Color.Red.ToArgb();
 
@@ -290,7 +287,8 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public void updateValues()
         {
-            this.boundingCylinder.Radius = FastMath.Max(this.topRadius, this.bottomRadius);
+            this.boundingCylinder.Radius = FastMath.Max(
+                FastMath.Abs(this.topRadius), FastMath.Abs(this.bottomRadius));
             this.boundingCylinder.updateValues();
             this.updateDraw();
         }
