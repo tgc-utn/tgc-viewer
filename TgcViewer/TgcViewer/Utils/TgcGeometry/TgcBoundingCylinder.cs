@@ -76,6 +76,15 @@ namespace TgcViewer.Utils.TgcGeometry
             get { return Vector3.TransformNormal(new Vector3(0, 1 / this.halfLength, 0), this.transformation); }
         }
 
+        /// <summary>
+        /// Calcula el radio de la esfera que contiene al cilindro
+        /// Se la puede utilizar para acelerar el testeo de colisiones
+        /// </summary>
+        public float calculateSphereRadius()
+        {
+            return FastMath.Sqrt(FastMath.Pow2(this.radius) + FastMath.Pow2(this.halfLength));
+        }
+
         #region Rendering
 
         private const int END_CAPS_RESOLUTION = 15;
@@ -198,6 +207,8 @@ namespace TgcViewer.Utils.TgcGeometry
 
         #endregion
 
+        #region Transform
+
         public Matrix Transform
         {
             get { return this.transformation; }
@@ -251,6 +262,8 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             this.rotation.Z += angle;
         }
+
+        #endregion
 
         /// <summary>
         /// Media altura del cilindro

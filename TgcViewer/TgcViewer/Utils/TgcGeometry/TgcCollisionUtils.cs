@@ -2067,7 +2067,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
             //nota: esta solucion esta planteada con las siguientes ecuaciones
             //x^2 + z^2 = 1, -1 <= y <= 1 para el cilindro
-            //(x,y,z) = (x0,y0,z0)+t(xt,yt,zt) para el rayo
+            //(x, y, z) = (x0, y0, z0) + t * (xt, yt, zt) para el rayo
 
             float t1, t2;
 
@@ -2080,8 +2080,8 @@ namespace TgcViewer.Utils.TgcGeometry
             }
             else
             {
-                t1 = FastMath.Min((-1 - y0) / yt, (1 - y0) / yt);
-                t2 = FastMath.Max((-1 - y0) / yt, (1 - y0) / yt);
+                t1 = (-1 - y0) / yt;
+                t2 = (1 - y0) / yt;
             }
 
             float a = xt * xt + zt * zt,
@@ -2103,8 +2103,8 @@ namespace TgcViewer.Utils.TgcGeometry
                 float sqrt = FastMath.Sqrt(raiz);
 
                 float t3, t4;
-                t3 = FastMath.Min((up + sqrt) / down, (up - sqrt) / down);
-                t4 = FastMath.Max((up + sqrt) / down, (up - sqrt) / down);
+                t3 = (up - sqrt) / down;
+                t4 = (up + sqrt) / down;
 
                 if (t3 <= t1 && t4 >= t2) return true;
                 if (t3 >= t1 && t3 <= t2) return true;
@@ -2125,9 +2125,7 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             if (FastMath.Abs(cylCenter.Y - p.Y) > cylHalfLength) return false;
             Vector3 centerToPoint = p - cylCenter;
-            centerToPoint.Y = 0;
-            if (centerToPoint.LengthSq() > FastMath.Pow2(cylRadius)) return false;
-            return true;
+            return FastMath.Pow2(centerToPoint.X) + FastMath.Pow2(centerToPoint.Z) <= FastMath.Pow2(cylRadius);
         }
 
         /// <summary>
@@ -2166,26 +2164,26 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>True si hay colision</returns>
         private static bool testSphereCylinder(Vector3 sphereCenter, float sphereRadius, Vector3 cylCenter, float cylHalfLength, float cylRadius)
         {
+            float distanceY = FastMath.Abs(sphereCenter.Y - cylCenter.Y);
+
             //si la esfera esta muy arriba o muy abajo no hay colision
-            if (FastMath.Abs(sphereCenter.Y - cylCenter.Y) > cylHalfLength + sphereRadius) return false;
+            if (distanceY > cylHalfLength + sphereRadius) return false;
 
-            Vector2 sphereXZ = new Vector2(sphereCenter.X, sphereCenter.Z);
-            Vector2 cylXZ = new Vector2(cylCenter.X, cylCenter.Z);
+            Vector3 centerToCenter = sphereCenter - cylCenter;
+            centerToCenter.Y = 0;
 
-            //si estan muy lejos en el plano XZ no hay colision
-            if ((cylXZ - sphereXZ).LengthSq() > FastMath.Pow2(cylRadius + sphereRadius)) return false;
+            //si estan muy lejos en el plano XZ entonces no hay colision
+            if (centerToCenter.LengthSq() > FastMath.Pow2(cylRadius + sphereRadius)) return false;
 
-            //si el centro de la esfera esta dentro del cilindro en Y hay colision
-            if (FastMath.Abs(cylCenter.Y - sphereCenter.Y) < cylHalfLength) return true;
+            //si el centro de la esfera esta dentro del cilindro en Y entonces hay colision
+            if (distanceY < cylHalfLength) return true;
 
             //vemos si el punto mas cercano al centro de la esfera pertenece a esta
-            Vector3 point = sphereCenter - cylCenter;
-            point.Y = 0;
-            point.Normalize();
-            point *= cylRadius;
-            point.Y = cylHalfLength * Math.Sign(sphereCenter.Y - cylCenter.Y);
-            point += cylCenter;
-            return (point - sphereCenter).LengthSq() <= FastMath.Pow2(sphereRadius);
+            centerToCenter.Normalize();
+            centerToCenter *= cylRadius;
+            centerToCenter.Y = cylHalfLength * Math.Sign(sphereCenter.Y - cylCenter.Y);
+            centerToCenter += cylCenter;
+            return (centerToCenter - sphereCenter).LengthSq() <= FastMath.Pow2(sphereRadius);
         }
 
         #endregion
