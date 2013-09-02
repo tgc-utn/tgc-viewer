@@ -24,6 +24,7 @@ namespace Examples.MeshCreator.Primitives
             this.ModifyCaps.ChangeOffsetUV = false;
             this.ModifyCaps.ChangeTilingUV = false;
             this.UserProperties = this.mesh.UserProperties;
+            this.Layer = this.mesh.Layer;
         }
 
         public override void render()
@@ -112,6 +113,7 @@ namespace Examples.MeshCreator.Primitives
         public override TgcMesh createMeshToExport()
         {
             mesh.UserProperties = this.UserProperties;
+            mesh.Layer = this.Layer;
             return mesh;
         }
 
