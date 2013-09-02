@@ -169,6 +169,23 @@ namespace Examples.MeshCreator
             get { return checkBoxShowObjectsBoundingBox.Checked; }
         }
 
+        /// <summary>
+        /// Hacer Snap to Grid
+        /// </summary>
+        public bool SnapToGridEnabled
+        {
+            get { return checkBoxSnapToGrid.Checked; }
+        }
+
+        float snapToGridCellSize;
+        /// <summary>
+        /// Tamaño de celda de Snap to grid
+        /// </summary>
+        public float SnapToGridCellSize
+        {
+            get { return snapToGridCellSize; }
+        }
+
 
         public MeshCreatorControl(TgcMeshCreator creator)
         {
@@ -228,8 +245,11 @@ namespace Examples.MeshCreator
             objectPositionText = new TgcText2d();
             objectPositionText.Align = TgcText2d.TextAlign.LEFT;
             objectPositionText.Color = Color.Yellow;
-            objectPositionText.Size = new Size(300, 12);
-            objectPositionText.Position = new Point(GuiController.Instance.Panel3d.Width - 250, GuiController.Instance.Panel3d.Height - 20);
+            objectPositionText.Size = new Size(400, 12);
+            objectPositionText.Position = new Point(GuiController.Instance.Panel3d.Width - objectPositionText.Size.Width, GuiController.Instance.Panel3d.Height - 20);
+
+            //Snap to grid
+            snapToGridCellSize = (float)numericUpDownCellSize.Value;
         }
 
         /// <summary>
@@ -297,6 +317,11 @@ namespace Examples.MeshCreator
                 if (input.keyPressed(Key.Z))
                 {
                     buttonZoomObject_Click(null, null);
+                }
+                //Hide
+                if (input.keyPressed(Key.H))
+                {
+                    buttonHideSelected_Click(null, null);
                 }
                 //Select
                 else if (input.keyPressed(Key.Q))
@@ -411,7 +436,9 @@ namespace Examples.MeshCreator
             //Object position Text
             if (selectionList.Count > 0)
             {
-                objectPositionText.Text = "Pos: " + TgcParserUtils.printVector3(selectionList[0].Position);
+                string text = selectionList.Count > 1 ? selectionList[0].Name + " + others" : selectionList[0].Name;
+                text += ", Pos: " + TgcParserUtils.printVector3(selectionList[0].Position);
+                objectPositionText.Text = text;
                 objectPositionText.render();
             }
         }
@@ -835,11 +862,51 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Camiar checkbox de "Snap to grid"
+        /// </summary>
+        private void checkBoxSnapToGrid_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownCellSize.Enabled = checkBoxSnapToGrid.Checked;
+        }
+
+        /// <summary>
+        /// Cambiar tamaño de "Cell size"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void numericUpDownCellSize_ValueChanged(object sender, EventArgs e)
+        {
+            snapToGridCellSize = (float)numericUpDownCellSize.Value;
+        }
+
+        /// <summary>
         /// Clic en "Zoom"
         /// </summary>
         private void buttonZoomObject_Click(object sender, EventArgs e)
         {
             selectionRectangle.zoomObject();
+        }
+
+        /// <summary>
+        /// Clic en "Hide selected"
+        /// </summary>
+        private void buttonHideSelected_Click(object sender, EventArgs e)
+        {
+            if (selectionList.Count > 0)
+            {
+                foreach (EditorPrimitive p in selectionList)
+                {
+                    p.Visible = false;
+                }
+
+                //Limpiar lista de seleccion
+                selectionList.Clear();
+                updateModifyPanel();
+                updateMeshesPanel();
+
+                //Pasar a modo seleccion
+                currentState = MeshCreatorControl.State.SelectObject;
+            }
         }
 
         /// <summary>
@@ -1238,6 +1305,14 @@ namespace Examples.MeshCreator
 
 
         #endregion
+
+        
+
+        
+
+        
+
+        
 
       
 

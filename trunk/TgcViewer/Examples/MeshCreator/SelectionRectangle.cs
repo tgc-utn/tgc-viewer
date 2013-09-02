@@ -96,11 +96,15 @@ namespace Examples.MeshCreator
                     clearSelection();
                     foreach (EditorPrimitive p in control.Meshes)
                     {
-                        //Ver si hay colision
-                        Rectangle primRect = MeshCreatorUtils.projectAABB(p.BoundingBox);
-                        if (r.IntersectsWith(primRect))
+                        //Solo los visibles
+                        if (p.Visible)
                         {
-                            selectObject(p);
+                            //Ver si hay colision
+                            Rectangle primRect = MeshCreatorUtils.projectAABB(p.BoundingBox);
+                            if (r.IntersectsWith(primRect))
+                            {
+                                selectObject(p);
+                            }
                         }
                     }
                 }
@@ -205,13 +209,17 @@ namespace Examples.MeshCreator
             Vector3 q;
             foreach (EditorPrimitive p in control.Meshes)
             {
-                if (TgcCollisionUtils.intersectRayAABB(control.PickingRay.Ray, p.BoundingBox, out q))
+                //Solo los visibles
+                if (p.Visible)
                 {
-                    float lengthSq = Vector3.Subtract(control.PickingRay.Ray.Origin, q).LengthSq();
-                    if (lengthSq < minDistSq)
+                    if (TgcCollisionUtils.intersectRayAABB(control.PickingRay.Ray, p.BoundingBox, out q))
                     {
-                        minDistSq = lengthSq;
-                        closestPrimitive = p;
+                        float lengthSq = Vector3.Subtract(control.PickingRay.Ray.Origin, q).LengthSq();
+                        if (lengthSq < minDistSq)
+                        {
+                            minDistSq = lengthSq;
+                            closestPrimitive = p;
+                        }
                     }
                 }
             }
