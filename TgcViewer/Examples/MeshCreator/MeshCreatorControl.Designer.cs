@@ -30,6 +30,8 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.checkBoxSnapToGrid = new System.Windows.Forms.CheckBox();
+            this.buttonHideSelected = new System.Windows.Forms.Button();
             this.checkBoxShowObjectsBoundingBox = new System.Windows.Forms.CheckBox();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.checkBoxAttachExport = new System.Windows.Forms.CheckBox();
@@ -40,6 +42,7 @@
             this.radioButtonSelectObject = new System.Windows.Forms.RadioButton();
             this.tabPageCreate = new System.Windows.Forms.TabPage();
             this.groupBoxPrimitive = new System.Windows.Forms.GroupBox();
+            this.radioButtonPrimitive_Sphere = new System.Windows.Forms.RadioButton();
             this.radioButtonPrimitive_PlaneYZ = new System.Windows.Forms.RadioButton();
             this.radioButtonPrimitive_PlaneXY = new System.Windows.Forms.RadioButton();
             this.buttonImportMesh = new System.Windows.Forms.Button();
@@ -93,7 +96,8 @@
             this.dataGridViewMeshes = new System.Windows.Forms.DataGridView();
             this.meshesColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.meshesColumnVisible = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.radioButtonPrimitive_Sphere = new System.Windows.Forms.RadioButton();
+            this.numericUpDownCellSize = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.tabPageCreate.SuspendLayout();
@@ -121,6 +125,7 @@
             this.groupBoxModifyGeneral.SuspendLayout();
             this.tabPageMeshes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -138,6 +143,10 @@
             // 
             // tabPageGeneral
             // 
+            this.tabPageGeneral.Controls.Add(this.numericUpDownCellSize);
+            this.tabPageGeneral.Controls.Add(this.label13);
+            this.tabPageGeneral.Controls.Add(this.checkBoxSnapToGrid);
+            this.tabPageGeneral.Controls.Add(this.buttonHideSelected);
             this.tabPageGeneral.Controls.Add(this.checkBoxShowObjectsBoundingBox);
             this.tabPageGeneral.Controls.Add(this.buttonHelp);
             this.tabPageGeneral.Controls.Add(this.checkBoxAttachExport);
@@ -153,6 +162,29 @@
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
+            // checkBoxSnapToGrid
+            // 
+            this.checkBoxSnapToGrid.AutoSize = true;
+            this.checkBoxSnapToGrid.Checked = true;
+            this.checkBoxSnapToGrid.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxSnapToGrid.Location = new System.Drawing.Point(9, 65);
+            this.checkBoxSnapToGrid.Name = "checkBoxSnapToGrid";
+            this.checkBoxSnapToGrid.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxSnapToGrid.TabIndex = 10;
+            this.checkBoxSnapToGrid.Text = "Snap to grid";
+            this.checkBoxSnapToGrid.UseVisualStyleBackColor = true;
+            this.checkBoxSnapToGrid.CheckedChanged += new System.EventHandler(this.checkBoxSnapToGrid_CheckedChanged);
+            // 
+            // buttonHideSelected
+            // 
+            this.buttonHideSelected.Location = new System.Drawing.Point(5, 133);
+            this.buttonHideSelected.Name = "buttonHideSelected";
+            this.buttonHideSelected.Size = new System.Drawing.Size(95, 25);
+            this.buttonHideSelected.TabIndex = 9;
+            this.buttonHideSelected.Text = "Hide selected";
+            this.buttonHideSelected.UseVisualStyleBackColor = true;
+            this.buttonHideSelected.Click += new System.EventHandler(this.buttonHideSelected_Click);
+            // 
             // checkBoxShowObjectsBoundingBox
             // 
             this.checkBoxShowObjectsBoundingBox.AutoSize = true;
@@ -165,7 +197,7 @@
             // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(23, 240);
+            this.buttonHelp.Location = new System.Drawing.Point(23, 330);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(55, 25);
             this.buttonHelp.TabIndex = 7;
@@ -176,7 +208,7 @@
             // checkBoxAttachExport
             // 
             this.checkBoxAttachExport.AutoSize = true;
-            this.checkBoxAttachExport.Location = new System.Drawing.Point(9, 190);
+            this.checkBoxAttachExport.Location = new System.Drawing.Point(9, 253);
             this.checkBoxAttachExport.Name = "checkBoxAttachExport";
             this.checkBoxAttachExport.Size = new System.Drawing.Size(89, 17);
             this.checkBoxAttachExport.TabIndex = 6;
@@ -185,7 +217,7 @@
             // 
             // buttonExportScene
             // 
-            this.buttonExportScene.Location = new System.Drawing.Point(5, 159);
+            this.buttonExportScene.Location = new System.Drawing.Point(5, 222);
             this.buttonExportScene.Name = "buttonExportScene";
             this.buttonExportScene.Size = new System.Drawing.Size(95, 25);
             this.buttonExportScene.TabIndex = 5;
@@ -195,7 +227,7 @@
             // 
             // buttonCloneObject
             // 
-            this.buttonCloneObject.Location = new System.Drawing.Point(5, 128);
+            this.buttonCloneObject.Location = new System.Drawing.Point(5, 191);
             this.buttonCloneObject.Name = "buttonCloneObject";
             this.buttonCloneObject.Size = new System.Drawing.Size(95, 25);
             this.buttonCloneObject.TabIndex = 4;
@@ -205,7 +237,7 @@
             // 
             // buttonDeleteObject
             // 
-            this.buttonDeleteObject.Location = new System.Drawing.Point(5, 97);
+            this.buttonDeleteObject.Location = new System.Drawing.Point(5, 160);
             this.buttonDeleteObject.Name = "buttonDeleteObject";
             this.buttonDeleteObject.Size = new System.Drawing.Size(95, 25);
             this.buttonDeleteObject.TabIndex = 3;
@@ -215,7 +247,7 @@
             // 
             // buttonZoomObject
             // 
-            this.buttonZoomObject.Location = new System.Drawing.Point(5, 66);
+            this.buttonZoomObject.Location = new System.Drawing.Point(5, 105);
             this.buttonZoomObject.Name = "buttonZoomObject";
             this.buttonZoomObject.Size = new System.Drawing.Size(95, 25);
             this.buttonZoomObject.TabIndex = 2;
@@ -262,6 +294,19 @@
             this.groupBoxPrimitive.TabIndex = 0;
             this.groupBoxPrimitive.TabStop = false;
             this.groupBoxPrimitive.Text = "Primitive";
+            // 
+            // radioButtonPrimitive_Sphere
+            // 
+            this.radioButtonPrimitive_Sphere.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonPrimitive_Sphere.Location = new System.Drawing.Point(10, 49);
+            this.radioButtonPrimitive_Sphere.Name = "radioButtonPrimitive_Sphere";
+            this.radioButtonPrimitive_Sphere.Size = new System.Drawing.Size(85, 24);
+            this.radioButtonPrimitive_Sphere.TabIndex = 9;
+            this.radioButtonPrimitive_Sphere.TabStop = true;
+            this.radioButtonPrimitive_Sphere.Text = "Sphere";
+            this.radioButtonPrimitive_Sphere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonPrimitive_Sphere.UseVisualStyleBackColor = true;
+            this.radioButtonPrimitive_Sphere.CheckedChanged += new System.EventHandler(this.radioButtonPrimitive_Sphere_CheckedChanged);
             // 
             // radioButtonPrimitive_PlaneYZ
             // 
@@ -960,18 +1005,27 @@
             this.meshesColumnVisible.TrueValue = "true";
             this.meshesColumnVisible.Width = 35;
             // 
-            // radioButtonPrimitive_Sphere
+            // numericUpDownCellSize
             // 
-            this.radioButtonPrimitive_Sphere.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonPrimitive_Sphere.Location = new System.Drawing.Point(10, 49);
-            this.radioButtonPrimitive_Sphere.Name = "radioButtonPrimitive_Sphere";
-            this.radioButtonPrimitive_Sphere.Size = new System.Drawing.Size(85, 24);
-            this.radioButtonPrimitive_Sphere.TabIndex = 9;
-            this.radioButtonPrimitive_Sphere.TabStop = true;
-            this.radioButtonPrimitive_Sphere.Text = "Sphere";
-            this.radioButtonPrimitive_Sphere.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButtonPrimitive_Sphere.UseVisualStyleBackColor = true;
-            this.radioButtonPrimitive_Sphere.CheckedChanged += new System.EventHandler(this.radioButtonPrimitive_Sphere_CheckedChanged);
+            this.numericUpDownCellSize.Location = new System.Drawing.Point(54, 82);
+            this.numericUpDownCellSize.Name = "numericUpDownCellSize";
+            this.numericUpDownCellSize.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownCellSize.TabIndex = 45;
+            this.numericUpDownCellSize.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownCellSize.ValueChanged += new System.EventHandler(this.numericUpDownCellSize_ValueChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(8, 86);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(45, 13);
+            this.label13.TabIndex = 44;
+            this.label13.Text = "Cell size";
             // 
             // MeshCreatorControl
             // 
@@ -1018,6 +1072,7 @@
             this.groupBoxModifyGeneral.PerformLayout();
             this.tabPageMeshes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1090,5 +1145,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn meshesColumnName;
         private System.Windows.Forms.DataGridViewCheckBoxColumn meshesColumnVisible;
         private System.Windows.Forms.RadioButton radioButtonPrimitive_Sphere;
+        private System.Windows.Forms.Button buttonHideSelected;
+        private System.Windows.Forms.CheckBox checkBoxSnapToGrid;
+        private System.Windows.Forms.NumericUpDown numericUpDownCellSize;
+        private System.Windows.Forms.Label label13;
     }
 }
