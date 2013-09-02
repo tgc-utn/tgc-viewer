@@ -204,6 +204,7 @@ namespace Examples.MeshCreator.Primitives
         {
             TgcMesh m = mesh.toMesh(this.Name);
             m.UserProperties = this.UserProperties;
+            m.Layer = this.Layer;
             return m;
         }
 
@@ -214,7 +215,7 @@ namespace Examples.MeshCreator.Primitives
             p.originalRadius = this.originalRadius;
             p.Scale = this.Scale;
             p.UserProperties = this.UserProperties;
-           
+            p.Layer = this.Layer;
             return p;
         }
 
