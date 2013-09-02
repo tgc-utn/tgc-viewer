@@ -975,19 +975,9 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 sceneBoundingBoxNode.SetAttribute("max", TgcParserUtils.printVector3(sceneBoundingBox.PMax));
                 root.AppendChild(sceneBoundingBoxNode);
 
-                //Ver la cantidad de materials de primera fila que hay
-                int totalMaterials = 0;
-                foreach (MeshExport mExp in meshesExport)
-                {
-                    if (mExp.MaterialsData != null)
-                    {
-                        totalMaterials++;
-                    }
-                }
-
+ 
                 //materials
                 XmlElement materialsNode = doc.CreateElement("materials");
-                materialsNode.SetAttribute("count", totalMaterials.ToString());
                 List<MeshExport> unifiedMaterialsData = new List<MeshExport>();
                 foreach (MeshExport mExp in meshesExport)
                 {
@@ -1035,6 +1025,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                         
                     }
                 }
+                materialsNode.SetAttribute("count", unifiedMaterialsData.Count.ToString());
                 root.AppendChild(materialsNode);
 
 
