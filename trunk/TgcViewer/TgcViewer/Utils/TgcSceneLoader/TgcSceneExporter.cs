@@ -1191,7 +1191,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     {
                         for (int i = 0; i < mExp.diffuseMapsAbsolutePath.Length; i++)
                         {
-                            File.Copy(mExp.diffuseMapsAbsolutePath[i], texturesDir + "\\" + mExp.MaterialsData[i].fileName, true);
+                            copyFile(mExp.diffuseMapsAbsolutePath[i], texturesDir + "\\" + mExp.MaterialsData[i].fileName);
                         }
                     }
                 }
@@ -1212,7 +1212,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     {
                         if (mExp.lightmapAbsolutePath != null)
                         {
-                            File.Copy(mExp.lightmapAbsolutePath, lightmapsDir + "\\" + mExp.MeshData.lightmap, true);
+                            copyFile(mExp.lightmapAbsolutePath, lightmapsDir + "\\" + mExp.MeshData.lightmap);
                         }
                     }
                 }
@@ -1225,6 +1225,21 @@ namespace TgcViewer.Utils.TgcSceneLoader
             }
 
             
+        }
+
+        /// <summary>
+        /// Copiar archivo
+        /// </summary>
+        private void copyFile(string oldPath, string newPath)
+        {
+            oldPath = oldPath.Replace("\\\\", "\\");
+            newPath = newPath.Replace("\\\\", "\\");
+
+            //Evitar copiar si el path de origen y destino es igual
+            if (!oldPath.Equals(newPath))
+            {
+                File.Copy(oldPath, newPath, true);
+            }   
         }
 
         /// <summary>
