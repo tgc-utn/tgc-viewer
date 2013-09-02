@@ -36,6 +36,7 @@ namespace Examples.MeshCreator.Gizmos
         Axis selectedAxis;
         Vector2 initMouseP;
         Vector3 gizmoCenter;
+        Vector3 acumMovement;
 
         public TranslateGizmo(MeshCreatorControl control)
             : base(control)
@@ -91,6 +92,8 @@ namespace Examples.MeshCreator.Gizmos
             switch (currentState)
             {
                 case State.Init:
+
+                    acumMovement = Vector3.Empty;
 
                     //Iniciar seleccion de eje
                     if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -168,6 +171,13 @@ namespace Examples.MeshCreator.Gizmos
                             currentMove.Z = movement;
                         }
 
+                        //Ajustar currentMove con Snap to grid
+                        if (Control.SnapToGridEnabled)
+                        {
+                            snapMovementToGrid(ref currentMove.X, ref acumMovement.X, Control.SnapToGridCellSize);
+                            snapMovementToGrid(ref currentMove.Y, ref acumMovement.Y, Control.SnapToGridCellSize);
+                            snapMovementToGrid(ref currentMove.Z, ref acumMovement.Z, Control.SnapToGridCellSize);
+                        }                      
 
                         //Mover objetos
                         foreach (EditorPrimitive p in Control.SelectionList)
@@ -196,6 +206,8 @@ namespace Examples.MeshCreator.Gizmos
             //Ajustar tamaño de ejes
             setAxisPositionAndSize();
         }
+
+        
 
         public override void render()
         {
@@ -247,6 +259,36 @@ namespace Examples.MeshCreator.Gizmos
         public override void move(EditorPrimitive selectedPrimitive, Vector3 movement)
         {
             moveGizmo(movement);
+        }
+
+
+        /// <summary>
+        /// Calcular desplazamiento en unidades de grilla
+        /// </summary>
+        private float snapMovementToGrid(ref float currentMove, ref float acumMove, float cellSize)
+        {
+            //Se movio algo?
+            float totalMove = acumMove + currentMove;
+            const float epsilon = 0.1f;
+            float absMove = FastMath.Abs(totalMove);
+            float snapMove = 0;
+            if (absMove > epsilon)
+            {
+                if (absMove > cellSize)
+                {
+                    //Moverse en unidades de la grilla
+                    currentMove = ((int)(totalMove / cellSize)) * cellSize;
+                    acumMove = 0;
+                }
+                else
+                {
+                    //Acumular movimiento para la proxima
+                    acumMove += currentMove;
+                    currentMove = 0;
+                }
+            }
+
+            return snapMove;
         }
 
     }
