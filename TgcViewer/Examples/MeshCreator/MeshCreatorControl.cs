@@ -65,6 +65,7 @@ namespace Examples.MeshCreator
         SaveFileDialog exportSceneSaveDialog;
         TgcText2d objectPositionText;
         bool doDeleteSelectedObjects;
+        bool popupOpened;
         
 
 
@@ -205,6 +206,7 @@ namespace Examples.MeshCreator
             defaultTexturePath = mediaPath + "Textures\\Madera\\cajaMadera1.jpg";
             checkBoxShowObjectsBoundingBox.Checked = true;
             doDeleteSelectedObjects = false;
+            popupOpened = false;
 
             //meshBrowser
             defaultMeshPath = mediaPath + "Meshes\\Vegetacion\\Arbusto\\Arbusto-TgcScene.xml";
@@ -221,6 +223,7 @@ namespace Examples.MeshCreator
             //Camara
             camera = new MeshCreatorCamera();
             camera.Enable = true;
+            GuiController.Instance.CurrentCamera.Enable = false;
             camera.setCamera(new Vector3(0, 0, 0), 500);
             camera.BaseRotX = -FastMath.PI / 4f;
 
@@ -237,6 +240,9 @@ namespace Examples.MeshCreator
             textureBrowser = new TgcTextureBrowser();
             textureBrowser.ShowFolders = true;
             textureBrowser.setSelectedImage(defaultTexturePath);
+            textureBrowser.AsyncModeEnable = true;
+            textureBrowser.OnSelectImage += new TgcTextureBrowser.SelectImageHandler(textureBrowser_OnSelectImage);
+            textureBrowser.OnClose += new TgcTextureBrowser.CloseHandler(textureBrowser_OnClose);
             pictureBoxModifyTexture.ImageLocation = defaultTexturePath;
             pictureBoxModifyTexture.Image = MeshCreatorUtils.getImage(defaultTexturePath);
             updateModifyPanel();
@@ -252,46 +258,55 @@ namespace Examples.MeshCreator
             snapToGridCellSize = (float)numericUpDownCellSize.Value;
         }
 
+        
+
         /// <summary>
         /// Ciclo loop del editor
         /// </summary>
         public void render()
         {
-            //Procesar shorcuts de teclado
-            processShortcuts();
-
-            //Actualizar camara
-            updateCamera();
-
-            //Maquina de estados
-            switch (currentState)
+            //Hacer update de estado salvo que haya un popup abierto
+            if (!popupOpened)
             {
-                case State.SelectObject:
-                    doSelectObject();
-                    break;
-                case State.SelectingObject:
-                    doSelectingObject();
-                    break;
-                case State.CreatePrimitiveSelected:
-                    doCreatePrimitiveSelected();
-                    break;
-                case State.CreatingPrimitve:
-                    doCreatingPrimitve();
-                    break;
-                case State.GizmoActivated:
-                    doGizmoActivated();
-                    break;
+                //Procesar shorcuts de teclado
+                processShortcuts();
+
+                //Actualizar camara
+                updateCamera();
+
+                //Maquina de estados
+                switch (currentState)
+                {
+                    case State.SelectObject:
+                        doSelectObject();
+                        break;
+                    case State.SelectingObject:
+                        doSelectingObject();
+                        break;
+                    case State.CreatePrimitiveSelected:
+                        doCreatePrimitiveSelected();
+                        break;
+                    case State.CreatingPrimitve:
+                        doCreatingPrimitve();
+                        break;
+                    case State.GizmoActivated:
+                        doGizmoActivated();
+                        break;
+                }
+
+                //Ver si se pidio que eliminar algun objeto
+                if (doDeleteSelectedObjects)
+                {
+                    deleteSelectedObjects();
+                    doDeleteSelectedObjects = false;
+                }
             }
 
-            //Ver si se pidio que eliminar algun objeto
-            if (doDeleteSelectedObjects)
-            {
-                deleteSelectedObjects();
-                doDeleteSelectedObjects = false;
-            }
+            
 
 
-            //Dibujar objetos del escenario
+
+            //Dibujar objetos del escenario (siempre, aunque no haya foco)
             renderObjects();
             
             //Dibujar gizmo (sin Z-Buffer, al final de tod)
@@ -327,6 +342,11 @@ namespace Examples.MeshCreator
                 else if (input.keyPressed(Key.Q))
                 {
                     radioButtonSelectObject.Checked = true;
+                }
+                //Select all
+                else if (input.keyDown(Key.LeftControl) && input.keyPressed(Key.E))
+                {
+                    buttonSelectAll_Click(null, null);
                 }
                 //Delete
                 else if (input.keyPressed(Key.Delete))
@@ -715,6 +735,8 @@ namespace Examples.MeshCreator
             {
                 selectionRectangle.dispose();
             }
+            textureBrowser.Close();
+            GuiController.Instance.CurrentCamera.Enable = true;
         }
 
         /// <summary>
@@ -859,6 +881,14 @@ namespace Examples.MeshCreator
                 creatingPrimitive = null;
                 currentGizmo = null;
             }
+        }
+
+        /// <summary>
+        /// Clic en "Select all"
+        /// </summary>
+        private void buttonSelectAll_Click(object sender, EventArgs e)
+        {
+            selectionRectangle.selectAll();
         }
 
         /// <summary>
@@ -1112,6 +1142,10 @@ namespace Examples.MeshCreator
         /// </summary>
         private void pictureBoxModifyTexture_Click(object sender, EventArgs e)
         {
+            popupOpened = true;
+            textureBrowser.Show(this);
+
+            /*
             if (textureBrowser.ShowDialog() == DialogResult.OK)
             {
                 Image img = MeshCreatorUtils.getImage(textureBrowser.SelectedImage);
@@ -1124,6 +1158,30 @@ namespace Examples.MeshCreator
                 pictureBoxModifyTexture.ImageLocation = defaultTexturePath;
             }
             selectionList[0].Texture = TgcTexture.createTexture(pictureBoxModifyTexture.ImageLocation);
+             */ 
+        }
+
+        /// <summary>
+        /// Cuando se selecciona una imagen en el textureBrowser
+        /// </summary>
+        public void textureBrowser_OnSelectImage(TgcTextureBrowser textureBrowser)
+        {
+            //Cambiar la textura si es distinta a la que tenia el mesh
+            if (textureBrowser.SelectedImage != selectionList[0].Texture.FilePath)
+            {
+                Image img = MeshCreatorUtils.getImage(textureBrowser.SelectedImage);
+                pictureBoxModifyTexture.Image = img;
+                pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
+                selectionList[0].Texture = TgcTexture.createTexture(pictureBoxModifyTexture.ImageLocation);
+            }
+        }
+
+        /// <summary>
+        /// Cuando se cierra el textureBrowser
+        /// </summary>
+        public void textureBrowser_OnClose(TgcTextureBrowser textureBrowser)
+        {
+            popupOpened = false;
         }
 
         /// <summary>
@@ -1308,45 +1366,49 @@ namespace Examples.MeshCreator
 
         
 
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
-
-        
-
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

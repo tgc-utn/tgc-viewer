@@ -161,9 +161,12 @@ namespace TgcViewer
             tgcD3dInput.update();
 
             //Actualizar camaras (solo una va a estar activada a la vez)
-            this.currentCamera.updateCamera();
-            this.currentCamera.updateViewMatrix(d3dDevice);
-
+            if (currentCamera.Enable)
+            {
+                this.currentCamera.updateCamera();
+                this.currentCamera.updateViewMatrix(d3dDevice);
+            }
+            
             //actualizar posicion de pantalla en barra de estado de UI
             setStatusPosition();
 

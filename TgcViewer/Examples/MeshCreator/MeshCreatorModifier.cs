@@ -29,5 +29,10 @@ namespace Examples.MeshCreator
         {
             return null;
         }
+
+        public void dispose()
+        {
+            control.close();
+        }
     }
 }
