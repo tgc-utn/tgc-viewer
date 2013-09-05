@@ -76,6 +76,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
         {
             try
             {
+                filePath = filePath.Replace("\\\\", "\\");
                 Texture d3dTexture2 = GuiController.Instance.TexturesPool.createTexture(d3dDevice, filePath, d3dTexture);
                 return new TgcTexture(fileName, filePath, d3dTexture2, true);
             }
@@ -286,7 +287,6 @@ namespace TgcViewer.Utils.TgcSceneLoader
         public class Pool
         {
             Dictionary<string, PoolItem> texturesPool;
-            private static object syncRoot = new Object();
 
             public Pool()
             {
@@ -308,9 +308,6 @@ namespace TgcViewer.Utils.TgcSceneLoader
             /// </summary>
             public Texture createTexture(Device d3dDevice, string filePath, Texture d3dTexture)
             {
-                /*lock (syncRoot) No hace falta que este sincronizado*/
-
-
                 //Si no existe, crear textura
                 if (!texturesPool.ContainsKey(filePath))
                 {
@@ -337,9 +334,6 @@ namespace TgcViewer.Utils.TgcSceneLoader
             /// <returns>True si se hizo un Dispose físico</returns>
             public bool disposeTexture(string filePath)
             {
-                /*lock (syncRoot) No hace falta que este sincronizado*/
-
-
                 if (texturesPool.ContainsKey(filePath))
                 {
                     PoolItem item = texturesPool[filePath];
@@ -387,6 +381,11 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 public Texture Texture;
                 public string FilePath;
                 public int References;
+
+                public override string ToString()
+                {
+                    return FilePath + ", [" + References + "]";
+                }
             }
 
 

@@ -137,6 +137,33 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Seleccionar todo
+        /// </summary>
+        public void selectAll()
+        {
+            clearSelection();
+            foreach (EditorPrimitive p in control.Meshes)
+            {
+                //Solo los visibles
+                if (p.Visible)
+                {
+                    selectObject(p);
+                }
+            }
+
+            control.CurrentState = MeshCreatorControl.State.SelectObject;
+
+            //Si quedo algo seleccionado activar gizmo
+            if (control.SelectionList.Count > 0)
+            {
+                activateCurrentGizmo();
+            }
+
+            //Actualizar panel de Modify con lo que se haya seleccionado, o lo que no
+            control.updateModifyPanel();
+        }
+
+        /// <summary>
         /// Deseleccionar todo
         /// </summary>
         public void clearSelection()

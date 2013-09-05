@@ -5,6 +5,7 @@ using TgcViewer.Utils.TgcGeometry;
 using Microsoft.DirectX;
 using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
+using Microsoft.DirectX.Direct3D;
 
 namespace Examples.MeshCreator.Primitives
 {
@@ -14,17 +15,36 @@ namespace Examples.MeshCreator.Primitives
     public class MeshPrimitive : EditorPrimitive
     {
         TgcMesh mesh;
+        Vector2 uvOffset;
+        Vector2 uvTile;
+        Vector2[] originalUVCoords;
 
         public MeshPrimitive(MeshCreatorControl control, TgcMesh mesh)
             : base(control)
         {
             this.Name = mesh.Name + "_" + EditorPrimitive.PRIMITIVE_COUNT++;
             this.mesh = mesh;
-            this.ModifyCaps.ChangeTexture = false;
-            this.ModifyCaps.ChangeOffsetUV = false;
-            this.ModifyCaps.ChangeTilingUV = false;
+
+            //Solo habilitar modificacion de texturas si tiene una sola
+            if ((mesh.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP || mesh.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP)
+                && mesh.DiffuseMaps.Length == 1)
+            {
+                this.ModifyCaps.ChangeTexture = true;
+                this.ModifyCaps.ChangeOffsetUV = true;
+                this.ModifyCaps.ChangeTilingUV = true;
+                this.originalUVCoords = mesh.getTextureCoordinates();
+            }
+            else
+            {
+                this.ModifyCaps.ChangeTexture = false;
+                this.ModifyCaps.ChangeOffsetUV = false;
+                this.ModifyCaps.ChangeTilingUV = false;
+            }
+            
             this.UserProperties = this.mesh.UserProperties;
             this.Layer = this.mesh.Layer;
+            this.uvOffset = new Vector2(0, 0);
+            this.uvTile = new Vector2(1, 1);
         }
 
         public override void render()
@@ -35,10 +55,9 @@ namespace Examples.MeshCreator.Primitives
 
         public override void dispose()
         {
-            //Al hacer Dispose por haber eliminado un mesh, se caga el render de los demas Mesh, es totalmente inexplicable
-            //mesh.dispose();
-
+            mesh.dispose();
             mesh = null;
+            originalUVCoords = null;
         }
 
         public override void setSelected(bool selected)
@@ -76,20 +95,27 @@ namespace Examples.MeshCreator.Primitives
 
         public override TgcTexture Texture
         {
-            get { return null; }
-            set { ; }
+            get { return mesh.DiffuseMaps[0]; }
+            set { mesh.changeDiffuseMaps(new TgcTexture[]{value}); }
         }
 
         public override Vector2 TextureOffset
         {
-            get { return Vector2.Empty; }
-            set { ; }
+            get { return this.uvOffset; }
+            set {
+                this.uvOffset = value;
+                updateTextureCoordinates();
+            }
         }
 
         public override Vector2 TextureTiling
         {
-            get { return Vector2.Empty; }
-            set { ; }
+            get { return this.uvTile; }
+            set
+            {
+                this.uvTile = value;
+                updateTextureCoordinates();
+            }
         }
 
         public override Vector3 Position
@@ -124,7 +150,38 @@ namespace Examples.MeshCreator.Primitives
             return new MeshPrimitive(this.Control, cloneMesh);
         }
 
+        /// <summary>
+        /// Actualizar coordenadas de textura del mesh en base al offset y tiling
+        /// </summary>
+        private void updateTextureCoordinates()
+        {
+            switch (mesh.RenderType)
+            {
+                case TgcMesh.MeshRenderType.DIFFUSE_MAP:
+                    TgcSceneLoader.DiffuseMapVertex[] verts = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                    for (int i = 0; i < verts.Length; i++)
+                    {
+                        verts[i].Tu = uvOffset.X + originalUVCoords[i].X * uvTile.X;
+                        verts[i].Tv = uvOffset.Y + originalUVCoords[i].Y * uvTile.Y;
+                    }
+                    mesh.D3dMesh.SetVertexBufferData(verts, LockFlags.None);
+                    mesh.D3dMesh.UnlockVertexBuffer();
+                    break;
 
+                case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
+                    TgcSceneLoader.DiffuseMapAndLightmapVertex[] verts2 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                    for (int i = 0; i < verts2.Length; i++)
+                    {
+                        verts2[i].Tu0 = uvOffset.X + originalUVCoords[i].X * uvTile.X;
+                        verts2[i].Tv0 = uvOffset.Y + originalUVCoords[i].Y * uvTile.Y;
+                    }
+                    mesh.D3dMesh.SetVertexBufferData(verts2, LockFlags.None);
+                    mesh.D3dMesh.UnlockVertexBuffer();
+                    break;
+            }
+        }
 
     }
 }

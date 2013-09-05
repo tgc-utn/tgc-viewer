@@ -683,6 +683,44 @@ namespace TgcViewer.Utils.TgcSceneLoader
         }
 
         /// <summary>
+        /// Devuelve un array con todas las coordenadas de textura de la malla
+        /// Solo puede hacerse para meshes del tipo DIFFUSE_MAP y DIFFUSE_MAP_AND_LIGHTMAP.
+        /// </summary>
+        /// <returns>Array creado</returns>
+        public Vector2[] getTextureCoordinates()
+        {
+            Vector2[] uvCoords = null;
+            switch (renderType)
+            {
+                case MeshRenderType.VERTEX_COLOR:
+                    throw new Exception("No se puede obtener coordenadas de UV en un mesh del tipo VERTEX_COLOR");
+
+                case MeshRenderType.DIFFUSE_MAP:
+                    TgcSceneLoader.DiffuseMapVertex[] verts2 = (TgcSceneLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    uvCoords = new Vector2[verts2.Length];
+                    for (int i = 0; i < uvCoords.Length; i++)
+                    {
+                        uvCoords[i] = new Vector2(verts2[i].Tu, verts2[i].Tv);
+                    }
+                    d3dMesh.UnlockVertexBuffer();
+                    break;
+
+                case MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
+                    TgcSceneLoader.DiffuseMapAndLightmapVertex[] verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])d3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    uvCoords = new Vector2[verts3.Length];
+                    for (int i = 0; i < uvCoords.Length; i++)
+                    {
+                        uvCoords[i] = new Vector2(verts3[i].Tu0, verts3[i].Tv0);
+                    }
+                    d3dMesh.UnlockVertexBuffer();
+                    break;
+            }
+            return uvCoords;
+        }
+
+        /// <summary>
         /// Calcula el BoundingBox de la malla, en base a todos sus vertices.
         /// Llamar a este metodo cuando ha cambiado la estructura interna de la malla.
         /// </summary>
@@ -708,7 +746,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
 
         /// <summary>
         /// Cambia el color de todos los vértices de la malla.
-        /// En modelos complejos puede resultar una operación poco performante.
+        /// Esta operacion tiene que hacer un lock del VertexBuffer y es poco performante.
         /// </summary>
         /// <param name="color">Color nuevo</param>
         public void setColor(Color color)
@@ -750,6 +788,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     break;
             }
         }
+
 
         /// <summary>
         /// Permite cambiar las texturas de DiffuseMap de esta malla

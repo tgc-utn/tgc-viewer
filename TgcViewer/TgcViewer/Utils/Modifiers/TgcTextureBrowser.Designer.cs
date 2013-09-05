@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TgcMeshBrowser));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TgcTextureBrowser));
             this.labelPath = new System.Windows.Forms.Label();
             this.textBoxFolderPath = new System.Windows.Forms.TextBox();
             this.buttonBrowse = new System.Windows.Forms.Button();
@@ -116,6 +116,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Texture Browser";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TgcTextureBrowser_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TgcTextureBrowser_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDirIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxUpDir)).EndInit();
