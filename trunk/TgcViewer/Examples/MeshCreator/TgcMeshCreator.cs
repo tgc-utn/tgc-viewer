@@ -76,6 +76,7 @@ namespace Examples.MeshCreator
         public override void close()
         {
             //Delegar al control
+            modifier.dispose();
             modifier.Control.close();
         }
 

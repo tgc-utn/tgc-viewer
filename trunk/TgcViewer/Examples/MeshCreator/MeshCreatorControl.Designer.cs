@@ -30,6 +30,8 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.numericUpDownCellSize = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
             this.checkBoxSnapToGrid = new System.Windows.Forms.CheckBox();
             this.buttonHideSelected = new System.Windows.Forms.Button();
             this.checkBoxShowObjectsBoundingBox = new System.Windows.Forms.CheckBox();
@@ -96,10 +98,10 @@
             this.dataGridViewMeshes = new System.Windows.Forms.DataGridView();
             this.meshesColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.meshesColumnVisible = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.numericUpDownCellSize = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
+            this.buttonSelectAll = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).BeginInit();
             this.tabPageCreate.SuspendLayout();
             this.groupBoxPrimitive.SuspendLayout();
             this.tabPageModify.SuspendLayout();
@@ -125,7 +127,6 @@
             this.groupBoxModifyGeneral.SuspendLayout();
             this.tabPageMeshes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -143,6 +144,7 @@
             // 
             // tabPageGeneral
             // 
+            this.tabPageGeneral.Controls.Add(this.buttonSelectAll);
             this.tabPageGeneral.Controls.Add(this.numericUpDownCellSize);
             this.tabPageGeneral.Controls.Add(this.label13);
             this.tabPageGeneral.Controls.Add(this.checkBoxSnapToGrid);
@@ -162,12 +164,34 @@
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
+            // numericUpDownCellSize
+            // 
+            this.numericUpDownCellSize.Location = new System.Drawing.Point(54, 112);
+            this.numericUpDownCellSize.Name = "numericUpDownCellSize";
+            this.numericUpDownCellSize.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownCellSize.TabIndex = 45;
+            this.numericUpDownCellSize.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownCellSize.ValueChanged += new System.EventHandler(this.numericUpDownCellSize_ValueChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(8, 116);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(45, 13);
+            this.label13.TabIndex = 44;
+            this.label13.Text = "Cell size";
+            // 
             // checkBoxSnapToGrid
             // 
             this.checkBoxSnapToGrid.AutoSize = true;
             this.checkBoxSnapToGrid.Checked = true;
             this.checkBoxSnapToGrid.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxSnapToGrid.Location = new System.Drawing.Point(9, 65);
+            this.checkBoxSnapToGrid.Location = new System.Drawing.Point(9, 95);
             this.checkBoxSnapToGrid.Name = "checkBoxSnapToGrid";
             this.checkBoxSnapToGrid.Size = new System.Drawing.Size(83, 17);
             this.checkBoxSnapToGrid.TabIndex = 10;
@@ -177,7 +201,7 @@
             // 
             // buttonHideSelected
             // 
-            this.buttonHideSelected.Location = new System.Drawing.Point(5, 133);
+            this.buttonHideSelected.Location = new System.Drawing.Point(5, 163);
             this.buttonHideSelected.Name = "buttonHideSelected";
             this.buttonHideSelected.Size = new System.Drawing.Size(95, 25);
             this.buttonHideSelected.TabIndex = 9;
@@ -188,7 +212,7 @@
             // checkBoxShowObjectsBoundingBox
             // 
             this.checkBoxShowObjectsBoundingBox.AutoSize = true;
-            this.checkBoxShowObjectsBoundingBox.Location = new System.Drawing.Point(9, 43);
+            this.checkBoxShowObjectsBoundingBox.Location = new System.Drawing.Point(9, 73);
             this.checkBoxShowObjectsBoundingBox.Name = "checkBoxShowObjectsBoundingBox";
             this.checkBoxShowObjectsBoundingBox.Size = new System.Drawing.Size(84, 17);
             this.checkBoxShowObjectsBoundingBox.TabIndex = 8;
@@ -197,7 +221,7 @@
             // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(23, 330);
+            this.buttonHelp.Location = new System.Drawing.Point(23, 360);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(55, 25);
             this.buttonHelp.TabIndex = 7;
@@ -208,7 +232,7 @@
             // checkBoxAttachExport
             // 
             this.checkBoxAttachExport.AutoSize = true;
-            this.checkBoxAttachExport.Location = new System.Drawing.Point(9, 253);
+            this.checkBoxAttachExport.Location = new System.Drawing.Point(9, 283);
             this.checkBoxAttachExport.Name = "checkBoxAttachExport";
             this.checkBoxAttachExport.Size = new System.Drawing.Size(89, 17);
             this.checkBoxAttachExport.TabIndex = 6;
@@ -217,7 +241,7 @@
             // 
             // buttonExportScene
             // 
-            this.buttonExportScene.Location = new System.Drawing.Point(5, 222);
+            this.buttonExportScene.Location = new System.Drawing.Point(5, 252);
             this.buttonExportScene.Name = "buttonExportScene";
             this.buttonExportScene.Size = new System.Drawing.Size(95, 25);
             this.buttonExportScene.TabIndex = 5;
@@ -227,7 +251,7 @@
             // 
             // buttonCloneObject
             // 
-            this.buttonCloneObject.Location = new System.Drawing.Point(5, 191);
+            this.buttonCloneObject.Location = new System.Drawing.Point(5, 221);
             this.buttonCloneObject.Name = "buttonCloneObject";
             this.buttonCloneObject.Size = new System.Drawing.Size(95, 25);
             this.buttonCloneObject.TabIndex = 4;
@@ -237,7 +261,7 @@
             // 
             // buttonDeleteObject
             // 
-            this.buttonDeleteObject.Location = new System.Drawing.Point(5, 160);
+            this.buttonDeleteObject.Location = new System.Drawing.Point(5, 190);
             this.buttonDeleteObject.Name = "buttonDeleteObject";
             this.buttonDeleteObject.Size = new System.Drawing.Size(95, 25);
             this.buttonDeleteObject.TabIndex = 3;
@@ -247,7 +271,7 @@
             // 
             // buttonZoomObject
             // 
-            this.buttonZoomObject.Location = new System.Drawing.Point(5, 105);
+            this.buttonZoomObject.Location = new System.Drawing.Point(5, 135);
             this.buttonZoomObject.Name = "buttonZoomObject";
             this.buttonZoomObject.Size = new System.Drawing.Size(95, 25);
             this.buttonZoomObject.TabIndex = 2;
@@ -1005,27 +1029,15 @@
             this.meshesColumnVisible.TrueValue = "true";
             this.meshesColumnVisible.Width = 35;
             // 
-            // numericUpDownCellSize
+            // buttonSelectAll
             // 
-            this.numericUpDownCellSize.Location = new System.Drawing.Point(54, 82);
-            this.numericUpDownCellSize.Name = "numericUpDownCellSize";
-            this.numericUpDownCellSize.Size = new System.Drawing.Size(44, 20);
-            this.numericUpDownCellSize.TabIndex = 45;
-            this.numericUpDownCellSize.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownCellSize.ValueChanged += new System.EventHandler(this.numericUpDownCellSize_ValueChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(8, 86);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(45, 13);
-            this.label13.TabIndex = 44;
-            this.label13.Text = "Cell size";
+            this.buttonSelectAll.Location = new System.Drawing.Point(5, 40);
+            this.buttonSelectAll.Name = "buttonSelectAll";
+            this.buttonSelectAll.Size = new System.Drawing.Size(95, 25);
+            this.buttonSelectAll.TabIndex = 46;
+            this.buttonSelectAll.Text = "Select all";
+            this.buttonSelectAll.UseVisualStyleBackColor = true;
+            this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
             // 
             // MeshCreatorControl
             // 
@@ -1041,6 +1053,7 @@
             this.tabControl.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.tabPageGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).EndInit();
             this.tabPageCreate.ResumeLayout(false);
             this.groupBoxPrimitive.ResumeLayout(false);
             this.tabPageModify.ResumeLayout(false);
@@ -1072,7 +1085,6 @@
             this.groupBoxModifyGeneral.PerformLayout();
             this.tabPageMeshes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1149,5 +1161,6 @@
         private System.Windows.Forms.CheckBox checkBoxSnapToGrid;
         private System.Windows.Forms.NumericUpDown numericUpDownCellSize;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button buttonSelectAll;
     }
 }

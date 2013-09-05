@@ -18,7 +18,6 @@ namespace TgcViewer.Utils.TgcSceneLoader
     public class TgcSceneLoader
     {
         Device device;
-        Dictionary<string, TgcTexture> texturesDict;
 
         IMeshFactory meshFactory;
         /// <summary>
@@ -37,7 +36,6 @@ namespace TgcViewer.Utils.TgcSceneLoader
         public TgcSceneLoader()
         {
             this.device = GuiController.Instance.D3dDevice;
-            texturesDict = new Dictionary<string, TgcTexture>();
             this.meshFactory = new DefaultMeshFactory();
         }
 
@@ -325,7 +323,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             if (matAux.subMaterials == null)
             {
                 meshMaterials = new Material[] { matAux.materialId };
-                meshTextures = new TgcTexture[] { matAux.texture };
+                meshTextures = new TgcTexture[] { TgcTexture.createTexture(device, matAux.textureFileName, matAux.texturePath) };
             }
 
             //Configurar Material y Textura para varios SubSet
@@ -342,7 +340,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 for (int m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
-                    meshTextures[m] = matAux.subMaterials[m].texture;
+                    meshTextures[m] = TgcTexture.createTexture(device, matAux.subMaterials[m].textureFileName, matAux.subMaterials[m].texturePath);
                 }
             }
 
@@ -437,7 +435,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             if (matAux.subMaterials == null)
             {
                 meshMaterials = new Material[] { matAux.materialId };
-                meshTextures = new TgcTexture[] { matAux.texture };
+                meshTextures = new TgcTexture[] { TgcTexture.createTexture(device, matAux.textureFileName, matAux.texturePath) };
             }
 
             //Configurar Material y Textura para varios SubSet
@@ -454,7 +452,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 for (int m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
-                    meshTextures[m] = matAux.subMaterials[m].texture;
+                    meshTextures[m] = TgcTexture.createTexture(device, matAux.subMaterials[m].textureFileName, matAux.subMaterials[m].texturePath);
                 }
             }
 
@@ -619,30 +617,18 @@ namespace TgcViewer.Utils.TgcSceneLoader
 
             //TODO ver que hacer con la opacity
 
-            //crear textura
-            texturesDict.Clear();
+            //guardar datos de textura
             if (materialData.fileName != null)
             {
-                //revisar que esa imagen no se haya cargado previamente
-                TgcTexture texture;
-                if (texturesDict.ContainsKey(materialData.fileName))
-                {
-                    texture = texturesDict[materialData.fileName];
-                }
-                else
-                {
-                    texture = TgcTexture.createTexture(device, materialData.fileName, texturesPath + "\\" + materialData.fileName);
-                    texturesDict[materialData.fileName] = texture;
-                    //TODO usar para algo el OFFSET y el TILING
-                }
-                matAux.texture = texture;
-                
-                
+                matAux.texturePath = texturesPath + materialData.fileName;
+                matAux.textureFileName = materialData.fileName;
             }
             else
             {
-                matAux.texture = null;
+                matAux.texturePath = null;
+                matAux.textureFileName = null;
             }
+            
 
             return matAux;
         }
@@ -771,7 +757,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
         class TgcSceneLoaderMaterialAux
         {
             public Material materialId;
-            public TgcTexture texture;
+            public string texturePath;
+            public string textureFileName;
             public TgcSceneLoaderMaterialAux[] subMaterials;
         }
 

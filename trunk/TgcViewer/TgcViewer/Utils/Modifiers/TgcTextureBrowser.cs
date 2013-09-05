@@ -33,6 +33,39 @@ namespace TgcViewer.Utils.Modifiers
             set { showFolders = value; }
         }
 
+        bool asyncModeEnable;
+        /// <summary>
+        /// En True el popup se prepara para ser usada como no-bloqueante
+        /// y usa el evento OnSelectImage para avisar que se hizo un cambio en la textura.
+        /// Por default es False
+        /// </summary>
+        public bool AsyncModeEnable
+        {
+            get { return asyncModeEnable; }
+            set { asyncModeEnable = value; }
+        }
+
+        /// <summary>
+        /// Delegate para cuando seleccionan una imagen (para AsyncModeEnable = true) 
+        /// </summary>
+        public delegate void SelectImageHandler(TgcTextureBrowser textureBrowser);
+
+        /// <summary>
+        /// Evento para cuando seleccionan una imagen (para AsyncModeEnable = true) 
+        /// </summary>
+        public event SelectImageHandler OnSelectImage;
+
+        /// <summary>
+        /// Delegate para cuando se cierra el popup (para AsyncModeEnable = true) 
+        /// </summary>
+        public delegate void CloseHandler(TgcTextureBrowser textureBrowser);
+
+        /// <summary>
+        /// Evento para cuando se cierra el popup (para AsyncModeEnable = true) 
+        /// </summary>
+        public event CloseHandler OnClose;
+
+
         public TgcTextureBrowser()
         {
             InitializeComponent();
@@ -41,6 +74,9 @@ namespace TgcViewer.Utils.Modifiers
             browseDialog.Description = "Select folder";
             browseDialog.ShowNewFolderButton = false;
             showFolders = false;
+            asyncModeEnable = false;
+            OnSelectImage = null;
+            OnClose = null;
         }
 
         /// <summary>
@@ -86,6 +122,7 @@ namespace TgcViewer.Utils.Modifiers
                 if (imgControl.filePath == imagePath)
                 {
                     imgControl.selectImage();
+                    break;
                 }
             }
         }
@@ -162,7 +199,7 @@ namespace TgcViewer.Utils.Modifiers
             }
         }
 
-        private void TgcTextureBrowser_FormClosed(object sender, FormClosedEventArgs e)
+        private void TgcTextureBrowser_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (this.selectedImage != null && !this.selectedImage.isDirectory)
             {
@@ -172,6 +209,25 @@ namespace TgcViewer.Utils.Modifiers
             {
                 this.DialogResult = DialogResult.Cancel;
             }
+
+            //En Async mode evitar cerrar el form, solo esconderlo
+            if (asyncModeEnable)
+            {
+                e.Cancel = true;
+                this.Parent = null;
+                this.Hide();
+
+                //Avisar al evento de cierre
+                if (OnClose != null)
+                {
+                    OnClose.Invoke(this);
+                }
+            }
+            
+        }
+
+        private void TgcTextureBrowser_FormClosed(object sender, FormClosedEventArgs e)
+        {
             
         }
 
@@ -253,6 +309,12 @@ namespace TgcViewer.Utils.Modifiers
 
                 textureBrowser.selectedImage = this;
                 this.BackColor = Color.Yellow;
+
+                //Invocar evento de seleccion
+                if (textureBrowser.asyncModeEnable && textureBrowser.OnSelectImage != null && !this.isDirectory)
+                {
+                    textureBrowser.OnSelectImage.Invoke(textureBrowser);
+                }
             }
 
             void pictureBox_DoubleClick(object sender, EventArgs e)
@@ -286,6 +348,8 @@ namespace TgcViewer.Utils.Modifiers
                 selectImage();
             }
         }
+
+        
 
         
 

@@ -50,15 +50,7 @@ namespace Examples.MeshCreator
         public bool Enable
         {
             get { return enable; }
-            set{ 
-                enable = value;
-
-                //Si se habilito la camara, cargar como la cámara actual
-                if (value)
-                {
-                    GuiController.Instance.CurrentCamera = this;
-                }
-            }
+            set { enable = value; }
         }
 
         /// <summary>

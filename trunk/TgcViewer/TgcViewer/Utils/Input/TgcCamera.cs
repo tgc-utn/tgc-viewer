@@ -29,5 +29,14 @@ namespace TgcViewer.Utils.Input
         /// Actualizar la matriz View en base a los valores de la cámara
         /// </summary>
         void updateViewMatrix(Microsoft.DirectX.Direct3D.Device d3dDevice);
+
+        /// <summary>
+        /// Activar o desactivar la camara
+        /// </summary>
+        bool Enable
+        {
+            get;
+            set;
+        }
     }
 }

@@ -59,6 +59,13 @@ namespace Examples.Quake3Loader
             LockCam = false;
         }
 
+        //No se usa, solo esta por la herencia
+        public bool Enable
+        {
+            get;
+            set;
+        }
+
 
         public Vector3 ForwardDirection
         {
