@@ -30,6 +30,7 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.buttonUnhideAll = new System.Windows.Forms.Button();
             this.buttonSelectAll = new System.Windows.Forms.Button();
             this.numericUpDownCellSize = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
@@ -53,6 +54,7 @@
             this.radioButtonPrimitive_Box = new System.Windows.Forms.RadioButton();
             this.tabPageModify = new System.Windows.Forms.TabPage();
             this.groupBoxModifyTexture = new System.Windows.Forms.GroupBox();
+            this.numericUpDownModifyTextureNumber = new System.Windows.Forms.NumericUpDown();
             this.checkBoxModifyAlphaBlendEnabled = new System.Windows.Forms.CheckBox();
             this.numericUpDownTextureTilingV = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownTextureOffsetV = new System.Windows.Forms.NumericUpDown();
@@ -99,8 +101,9 @@
             this.dataGridViewMeshes = new System.Windows.Forms.DataGridView();
             this.meshesColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.meshesColumnVisible = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.buttonUnhideAll = new System.Windows.Forms.Button();
-            this.numericUpDownModifyTextureNumber = new System.Windows.Forms.NumericUpDown();
+            this.radioButtonFPSCamera = new System.Windows.Forms.RadioButton();
+            this.numericUpDownFPSCameraSpeed = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).BeginInit();
@@ -108,6 +111,7 @@
             this.groupBoxPrimitive.SuspendLayout();
             this.tabPageModify.SuspendLayout();
             this.groupBoxModifyTexture.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyTextureNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTextureTilingV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTextureOffsetV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTextureTilingU)).BeginInit();
@@ -129,7 +133,7 @@
             this.groupBoxModifyGeneral.SuspendLayout();
             this.tabPageMeshes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyTextureNumber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -147,6 +151,9 @@
             // 
             // tabPageGeneral
             // 
+            this.tabPageGeneral.Controls.Add(this.numericUpDownFPSCameraSpeed);
+            this.tabPageGeneral.Controls.Add(this.label14);
+            this.tabPageGeneral.Controls.Add(this.radioButtonFPSCamera);
             this.tabPageGeneral.Controls.Add(this.buttonUnhideAll);
             this.tabPageGeneral.Controls.Add(this.buttonSelectAll);
             this.tabPageGeneral.Controls.Add(this.numericUpDownCellSize);
@@ -167,6 +174,16 @@
             this.tabPageGeneral.TabIndex = 2;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // buttonUnhideAll
+            // 
+            this.buttonUnhideAll.Location = new System.Drawing.Point(5, 189);
+            this.buttonUnhideAll.Name = "buttonUnhideAll";
+            this.buttonUnhideAll.Size = new System.Drawing.Size(95, 25);
+            this.buttonUnhideAll.TabIndex = 47;
+            this.buttonUnhideAll.Text = "Unhide all";
+            this.buttonUnhideAll.UseVisualStyleBackColor = true;
+            this.buttonUnhideAll.Click += new System.EventHandler(this.buttonUnhideAll_Click);
             // 
             // buttonSelectAll
             // 
@@ -235,7 +252,7 @@
             // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(23, 386);
+            this.buttonHelp.Location = new System.Drawing.Point(23, 427);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(55, 25);
             this.buttonHelp.TabIndex = 7;
@@ -246,7 +263,7 @@
             // checkBoxAttachExport
             // 
             this.checkBoxAttachExport.AutoSize = true;
-            this.checkBoxAttachExport.Location = new System.Drawing.Point(9, 309);
+            this.checkBoxAttachExport.Location = new System.Drawing.Point(9, 366);
             this.checkBoxAttachExport.Name = "checkBoxAttachExport";
             this.checkBoxAttachExport.Size = new System.Drawing.Size(89, 17);
             this.checkBoxAttachExport.TabIndex = 6;
@@ -255,7 +272,7 @@
             // 
             // buttonExportScene
             // 
-            this.buttonExportScene.Location = new System.Drawing.Point(5, 278);
+            this.buttonExportScene.Location = new System.Drawing.Point(5, 338);
             this.buttonExportScene.Name = "buttonExportScene";
             this.buttonExportScene.Size = new System.Drawing.Size(95, 25);
             this.buttonExportScene.TabIndex = 5;
@@ -265,7 +282,7 @@
             // 
             // buttonCloneObject
             // 
-            this.buttonCloneObject.Location = new System.Drawing.Point(5, 247);
+            this.buttonCloneObject.Location = new System.Drawing.Point(5, 242);
             this.buttonCloneObject.Name = "buttonCloneObject";
             this.buttonCloneObject.Size = new System.Drawing.Size(95, 25);
             this.buttonCloneObject.TabIndex = 4;
@@ -301,7 +318,6 @@
             this.radioButtonSelectObject.Name = "radioButtonSelectObject";
             this.radioButtonSelectObject.Size = new System.Drawing.Size(95, 24);
             this.radioButtonSelectObject.TabIndex = 1;
-            this.radioButtonSelectObject.TabStop = true;
             this.radioButtonSelectObject.Text = "Select object";
             this.radioButtonSelectObject.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.radioButtonSelectObject.UseVisualStyleBackColor = true;
@@ -447,6 +463,29 @@
             this.groupBoxModifyTexture.TabIndex = 44;
             this.groupBoxModifyTexture.TabStop = false;
             this.groupBoxModifyTexture.Text = "Texture";
+            // 
+            // numericUpDownModifyTextureNumber
+            // 
+            this.numericUpDownModifyTextureNumber.Location = new System.Drawing.Point(48, 15);
+            this.numericUpDownModifyTextureNumber.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownModifyTextureNumber.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownModifyTextureNumber.Name = "numericUpDownModifyTextureNumber";
+            this.numericUpDownModifyTextureNumber.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownModifyTextureNumber.TabIndex = 50;
+            this.numericUpDownModifyTextureNumber.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownModifyTextureNumber.ValueChanged += new System.EventHandler(this.numericUpDownModifyTextureNumber_ValueChanged);
             // 
             // checkBoxModifyAlphaBlendEnabled
             // 
@@ -1042,38 +1081,44 @@
             this.meshesColumnVisible.TrueValue = "true";
             this.meshesColumnVisible.Width = 35;
             // 
-            // buttonUnhideAll
+            // radioButtonFPSCamera
             // 
-            this.buttonUnhideAll.Location = new System.Drawing.Point(5, 189);
-            this.buttonUnhideAll.Name = "buttonUnhideAll";
-            this.buttonUnhideAll.Size = new System.Drawing.Size(95, 25);
-            this.buttonUnhideAll.TabIndex = 47;
-            this.buttonUnhideAll.Text = "Unhide all";
-            this.buttonUnhideAll.UseVisualStyleBackColor = true;
-            this.buttonUnhideAll.Click += new System.EventHandler(this.buttonUnhideAll_Click);
+            this.radioButtonFPSCamera.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonFPSCamera.Location = new System.Drawing.Point(5, 268);
+            this.radioButtonFPSCamera.Name = "radioButtonFPSCamera";
+            this.radioButtonFPSCamera.Size = new System.Drawing.Size(95, 24);
+            this.radioButtonFPSCamera.TabIndex = 48;
+            this.radioButtonFPSCamera.Text = "FPS camera";
+            this.radioButtonFPSCamera.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonFPSCamera.UseVisualStyleBackColor = true;
+            this.radioButtonFPSCamera.CheckedChanged += new System.EventHandler(this.radioButtonFPSCamera_CheckedChanged);
             // 
-            // numericUpDownModifyTextureNumber
+            // numericUpDownFPSCameraSpeed
             // 
-            this.numericUpDownModifyTextureNumber.Location = new System.Drawing.Point(48, 15);
-            this.numericUpDownModifyTextureNumber.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownModifyTextureNumber.Minimum = new decimal(new int[] {
+            this.numericUpDownFPSCameraSpeed.Location = new System.Drawing.Point(54, 292);
+            this.numericUpDownFPSCameraSpeed.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDownModifyTextureNumber.Name = "numericUpDownModifyTextureNumber";
-            this.numericUpDownModifyTextureNumber.Size = new System.Drawing.Size(44, 20);
-            this.numericUpDownModifyTextureNumber.TabIndex = 50;
-            this.numericUpDownModifyTextureNumber.Value = new decimal(new int[] {
+            this.numericUpDownFPSCameraSpeed.Name = "numericUpDownFPSCameraSpeed";
+            this.numericUpDownFPSCameraSpeed.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownFPSCameraSpeed.TabIndex = 50;
+            this.numericUpDownFPSCameraSpeed.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericUpDownModifyTextureNumber.ValueChanged += new System.EventHandler(this.numericUpDownModifyTextureNumber_ValueChanged);
+            this.numericUpDownFPSCameraSpeed.ValueChanged += new System.EventHandler(this.numericUpDownFPSCameraSpeed_ValueChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 296);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(41, 13);
+            this.label14.TabIndex = 49;
+            this.label14.Text = "Speed:";
             // 
             // MeshCreatorControl
             // 
@@ -1095,6 +1140,7 @@
             this.tabPageModify.ResumeLayout(false);
             this.groupBoxModifyTexture.ResumeLayout(false);
             this.groupBoxModifyTexture.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyTextureNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTextureTilingV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTextureOffsetV)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTextureTilingU)).EndInit();
@@ -1121,7 +1167,7 @@
             this.groupBoxModifyGeneral.PerformLayout();
             this.tabPageMeshes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyTextureNumber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1201,5 +1247,8 @@
         private System.Windows.Forms.Button buttonSelectAll;
         private System.Windows.Forms.Button buttonUnhideAll;
         private System.Windows.Forms.NumericUpDown numericUpDownModifyTextureNumber;
+        private System.Windows.Forms.RadioButton radioButtonFPSCamera;
+        private System.Windows.Forms.NumericUpDown numericUpDownFPSCameraSpeed;
+        private System.Windows.Forms.Label label14;
     }
 }
