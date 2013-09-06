@@ -15,9 +15,9 @@ namespace TgcViewer.Utils.Input
     public class TgcFpsCamera : TgcCamera
     {
         //Constantes de movimiento
-        const float DEFAULT_ROTATION_SPEED = 2f;
-        const float DEFAULT_MOVEMENT_SPEED = 100f;
-        const float DEFAULT_JUMP_SPEED = 100f;
+        public const float DEFAULT_ROTATION_SPEED = 2f;
+        public const float DEFAULT_MOVEMENT_SPEED = 100f;
+        public const float DEFAULT_JUMP_SPEED = 100f;
         readonly Vector3 CAMERA_VELOCITY = new Vector3(DEFAULT_MOVEMENT_SPEED, DEFAULT_JUMP_SPEED, DEFAULT_MOVEMENT_SPEED);
         readonly Vector3 CAMERA_POS = new Vector3(0.0f, 1.0f, 0.0f);
         readonly Vector3 CAMERA_ACCELERATION = new Vector3(400f, 400f, 400f);

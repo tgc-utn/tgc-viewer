@@ -51,7 +51,6 @@ namespace Examples.MeshCreator
             Color.Purple
         };
 
-
         
         TgcMeshCreator creator;
         //int creationColorIdx;
@@ -64,8 +63,8 @@ namespace Examples.MeshCreator
         TgcMeshBrowser meshBrowser;
         SaveFileDialog exportSceneSaveDialog;
         TgcText2d objectPositionText;
-        bool doDeleteSelectedObjects;
         bool popupOpened;
+        bool fpsCameraEnabled;
         
 
 
@@ -205,8 +204,8 @@ namespace Examples.MeshCreator
             mediaPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\";
             defaultTexturePath = mediaPath + "Textures\\Madera\\cajaMadera1.jpg";
             checkBoxShowObjectsBoundingBox.Checked = true;
-            doDeleteSelectedObjects = false;
             popupOpened = false;
+            fpsCameraEnabled = false;
 
             //meshBrowser
             defaultMeshPath = mediaPath + "Meshes\\Vegetacion\\Arbusto\\Arbusto-TgcScene.xml";
@@ -223,9 +222,9 @@ namespace Examples.MeshCreator
             //Camara
             camera = new MeshCreatorCamera();
             camera.Enable = true;
-            GuiController.Instance.CurrentCamera.Enable = false;
             camera.setCamera(new Vector3(0, 0, 0), 500);
             camera.BaseRotX = -FastMath.PI / 4f;
+            GuiController.Instance.CurrentCamera.Enable = false;
 
             //Gizmos
             translateGizmo = new TranslateGizmo(this);
@@ -268,37 +267,39 @@ namespace Examples.MeshCreator
             //Hacer update de estado salvo que haya un popup abierto
             if (!popupOpened)
             {
-                //Procesar shorcuts de teclado
-                processShortcuts();
-
-                //Actualizar camara
-                updateCamera();
-
-                //Maquina de estados
-                switch (currentState)
+                //Modo camara FPS
+                if (fpsCameraEnabled)
                 {
-                    case State.SelectObject:
-                        doSelectObject();
-                        break;
-                    case State.SelectingObject:
-                        doSelectingObject();
-                        break;
-                    case State.CreatePrimitiveSelected:
-                        doCreatePrimitiveSelected();
-                        break;
-                    case State.CreatingPrimitve:
-                        doCreatingPrimitve();
-                        break;
-                    case State.GizmoActivated:
-                        doGizmoActivated();
-                        break;
+                    doFpsCameraMode();
                 }
-
-                //Ver si se pidio que eliminar algun objeto
-                if (doDeleteSelectedObjects)
+                //Modo normal
+                else
                 {
-                    deleteSelectedObjects();
-                    doDeleteSelectedObjects = false;
+                    //Procesar shorcuts de teclado
+                    processShortcuts();
+
+                    //Actualizar camara
+                    updateCamera();
+
+                    //Maquina de estados
+                    switch (currentState)
+                    {
+                        case State.SelectObject:
+                            doSelectObject();
+                            break;
+                        case State.SelectingObject:
+                            doSelectingObject();
+                            break;
+                        case State.CreatePrimitiveSelected:
+                            doCreatePrimitiveSelected();
+                            break;
+                        case State.CreatingPrimitve:
+                            doCreatingPrimitve();
+                            break;
+                        case State.GizmoActivated:
+                            doGizmoActivated();
+                            break;
+                    }
                 }
             }
 
@@ -316,7 +317,7 @@ namespace Examples.MeshCreator
             }
         }
 
-        
+
 
         /// <summary>
         /// Procesar shorcuts de teclado
@@ -392,6 +393,11 @@ namespace Examples.MeshCreator
                 else if (input.keyPressed(Key.F1))
                 {
                     buttonHelp_Click(null, null);
+                }
+                //Camara FPS
+                else if (input.keyPressed(Key.F))
+                {
+                    radioButtonFPSCamera.Checked = true;
                 }
             }
         }
@@ -482,6 +488,22 @@ namespace Examples.MeshCreator
 
             camera.updateCamera();
             camera.updateViewMatrix(GuiController.Instance.D3dDevice);
+        }
+
+
+        /// <summary>
+        /// Modo camara FPS
+        /// </summary>
+        private void doFpsCameraMode()
+        {
+            //No hay actualizar la camara FPS, la actualiza GuiController
+
+            //Detectar si hay que salor de este modo
+            TgcD3dInput input = GuiController.Instance.D3dInput;
+            if (input.keyPressed(Key.F))
+            {
+                radioButtonFPSCamera.Checked = false;
+            }
         }
 
         /// <summary>
@@ -973,7 +995,7 @@ namespace Examples.MeshCreator
         /// </summary>
         private void buttonDeleteObject_Click(object sender, EventArgs e)
         {
-            doDeleteSelectedObjects = true;
+            deleteSelectedObjects();
         }
 
         
@@ -1004,6 +1026,59 @@ namespace Examples.MeshCreator
                 updateModifyPanel();
                 updateMeshesPanel();
             }
+        }
+
+        /// <summary>
+        /// Clic en "FPS camera"
+        /// </summary>
+        private void radioButtonFPSCamera_CheckedChanged(object sender, EventArgs e)
+        {
+            doClicFPSCamera(radioButtonFPSCamera.Checked);
+        }
+
+        /// <summary>
+        /// Accion de clic en "FPS camera"
+        /// </summary>
+        private void doClicFPSCamera(bool enabled)
+        {
+            if (enabled)
+            {
+                //Limpiar lista de seleccion
+                selectionRectangle.clearSelection();
+                updateMeshesPanel();
+
+                //Quitar gizmo actual
+                currentGizmo = null;
+
+                //Pasar a modo seleccion
+                currentState = MeshCreatorControl.State.SelectObject;
+
+                //Activar modo FPS
+                fpsCameraEnabled = true;
+                GuiController.Instance.FpsCamera.Enable = true;
+                GuiController.Instance.FpsCamera.setCamera(camera.getPosition(), camera.getLookAt());
+            }
+            else
+            {
+                //Volver al modo normal
+                fpsCameraEnabled = false;
+                GuiController.Instance.FpsCamera.Enable = false;
+
+                //Acomodar camara de editor para centrar donde quedo la camara FPS
+                camera.CameraCenter = GuiController.Instance.FpsCamera.getPosition();
+                //camera.CameraDistance = 10;
+            }
+        }
+
+        /// <summary>
+        /// Clic en "Speed de FPS Camera"
+        /// </summary>
+        private void numericUpDownFPSCameraSpeed_ValueChanged(object sender, EventArgs e)
+        {
+            //Multiplicar velocidad de camara
+            float speed = (float)numericUpDownFPSCameraSpeed.Value;
+            GuiController.Instance.FpsCamera.MovementSpeed = TgcFpsCamera.DEFAULT_MOVEMENT_SPEED * speed;
+            GuiController.Instance.FpsCamera.JumpSpeed = TgcFpsCamera.DEFAULT_JUMP_SPEED * speed;
         }
 
         /// <summary>
@@ -1099,6 +1174,8 @@ namespace Examples.MeshCreator
         }
 
         #endregion
+
+    
 
 
 
@@ -1395,6 +1472,10 @@ namespace Examples.MeshCreator
 
 
         #endregion
+
+        
+
+        
 
         
 
