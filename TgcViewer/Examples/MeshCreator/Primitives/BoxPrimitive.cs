@@ -178,10 +178,14 @@ namespace Examples.MeshCreator.Primitives
             mesh.move(move);
         }
 
-        public override TgcTexture Texture
+        public override void setTexture(TgcTexture texture, int slot)
         {
-            get { return mesh.Texture; }
-            set { mesh.setTexture(value); }
+            mesh.setTexture(texture);
+        }
+
+        public override TgcTexture getTexture(int slot)
+        {
+            return mesh.Texture;
         }
 
         public override Vector2 TextureOffset
