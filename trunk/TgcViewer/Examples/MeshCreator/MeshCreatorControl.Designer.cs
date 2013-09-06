@@ -988,12 +988,10 @@
             // radioButtonModifySelectAndMove
             // 
             this.radioButtonModifySelectAndMove.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonModifySelectAndMove.Checked = true;
             this.radioButtonModifySelectAndMove.Location = new System.Drawing.Point(3, 6);
             this.radioButtonModifySelectAndMove.Name = "radioButtonModifySelectAndMove";
             this.radioButtonModifySelectAndMove.Size = new System.Drawing.Size(102, 24);
             this.radioButtonModifySelectAndMove.TabIndex = 2;
-            this.radioButtonModifySelectAndMove.TabStop = true;
             this.radioButtonModifySelectAndMove.Text = "Select and Move";
             this.radioButtonModifySelectAndMove.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.radioButtonModifySelectAndMove.UseVisualStyleBackColor = true;

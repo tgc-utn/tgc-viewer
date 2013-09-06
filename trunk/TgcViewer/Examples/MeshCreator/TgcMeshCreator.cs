@@ -77,7 +77,6 @@ namespace Examples.MeshCreator
         {
             //Delegar al control
             modifier.dispose();
-            modifier.Control.close();
         }
 
         
