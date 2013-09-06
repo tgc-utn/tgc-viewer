@@ -613,15 +613,20 @@ namespace Examples.MeshCreator
                 //Cargar textura
                 if (caps.ChangeTexture)
                 {
+                    numericUpDownModifyTextureNumber.Enabled = true;
+                    numericUpDownModifyTextureNumber.Minimum = 1;
+                    numericUpDownModifyTextureNumber.Maximum = caps.TextureNumbers;
+                    numericUpDownModifyTextureNumber.Value = 1;
                     pictureBoxModifyTexture.Enabled = true;
-                    pictureBoxModifyTexture.Image = Image.FromFile(p.Texture.FilePath);
-                    pictureBoxModifyTexture.ImageLocation = p.Texture.FilePath;
-                    textureBrowser.setSelectedImage(p.Texture.FilePath);
+                    pictureBoxModifyTexture.Image = Image.FromFile(p.getTexture(0).FilePath);
+                    pictureBoxModifyTexture.ImageLocation = p.getTexture(0).FilePath;
+                    textureBrowser.setSelectedImage(p.getTexture(0).FilePath);
                     checkBoxModifyAlphaBlendEnabled.Enabled = true;
                     checkBoxModifyAlphaBlendEnabled.Checked = p.AlphaBlendEnable;
                 }
                 else
                 {
+                    numericUpDownModifyTextureNumber.Enabled = true;
                     pictureBoxModifyTexture.Enabled = false;
                     checkBoxModifyAlphaBlendEnabled.Enabled = false;
                 }
@@ -927,6 +932,10 @@ namespace Examples.MeshCreator
                 foreach (EditorPrimitive p in selectionList)
                 {
                     p.Visible = false;
+                    if (p.Selected)
+                    {
+                        p.setSelected(false);
+                    }
                 }
 
                 //Limpiar lista de seleccion
@@ -936,6 +945,17 @@ namespace Examples.MeshCreator
 
                 //Pasar a modo seleccion
                 currentState = MeshCreatorControl.State.SelectObject;
+            }
+        }
+
+        /// <summary>
+        /// Clic en "Unhide all""
+        /// </summary>
+        private void buttonUnhideAll_Click(object sender, EventArgs e)
+        {
+            foreach (EditorPrimitive p in meshes)
+            {
+                p.Visible = true;
             }
         }
 
@@ -1138,6 +1158,21 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Elegir otro numero de textura para editar
+        /// </summary>
+        private void numericUpDownModifyTextureNumber_ValueChanged(object sender, EventArgs e)
+        {
+            int n = (int)numericUpDownModifyTextureNumber.Value - 1;
+
+            //Cambiar imagen del pictureBox
+            Image img = MeshCreatorUtils.getImage(selectionList[0].getTexture(n).FilePath);
+            Image lastImage = pictureBoxModifyTexture.Image;
+            pictureBoxModifyTexture.Image = img;
+            pictureBoxModifyTexture.ImageLocation = selectionList[0].getTexture(n).FilePath;
+            lastImage.Dispose();
+        }
+
+        /// <summary>
         /// Hacer clic en el recuadro de textura para cambiarla
         /// </summary>
         private void pictureBoxModifyTexture_Click(object sender, EventArgs e)
@@ -1167,12 +1202,15 @@ namespace Examples.MeshCreator
         public void textureBrowser_OnSelectImage(TgcTextureBrowser textureBrowser)
         {
             //Cambiar la textura si es distinta a la que tenia el mesh
-            if (textureBrowser.SelectedImage != selectionList[0].Texture.FilePath)
+            int n = (int)numericUpDownModifyTextureNumber.Value - 1;
+            if (textureBrowser.SelectedImage != selectionList[0].getTexture(n).FilePath)
             {
                 Image img = MeshCreatorUtils.getImage(textureBrowser.SelectedImage);
+                Image lastImage = pictureBoxModifyTexture.Image;
                 pictureBoxModifyTexture.Image = img;
                 pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
-                selectionList[0].Texture = TgcTexture.createTexture(pictureBoxModifyTexture.ImageLocation);
+                lastImage.Dispose();
+                selectionList[0].setTexture(TgcTexture.createTexture(pictureBoxModifyTexture.ImageLocation), n);
             }
         }
 
@@ -1363,6 +1401,12 @@ namespace Examples.MeshCreator
 
 
         #endregion
+
+        
+
+        
+
+        
 
         
 

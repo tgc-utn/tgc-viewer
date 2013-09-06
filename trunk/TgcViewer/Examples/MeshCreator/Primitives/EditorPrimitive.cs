@@ -103,6 +103,7 @@ namespace Examples.MeshCreator.Primitives
             public bool ChangePosition = true;
             public bool ChangeRotation = true;
             public bool ChangeScale = true;
+            public int TextureNumbers = 1;
         }
 
         ModifyCapabilities modifyCaps;
@@ -158,13 +159,14 @@ namespace Examples.MeshCreator.Primitives
         public abstract void move(Vector3 move);
 
         /// <summary>
-        /// Textura del objeto
+        /// Cambiar textura del objeto
         /// </summary>
-        public abstract TgcTexture Texture
-        {
-            get;
-            set;
-        }
+        public abstract void setTexture(TgcTexture texture, int slot);
+
+        /// <summary>
+        /// Obtener textura del objeto
+        /// </summary>
+        public abstract TgcTexture getTexture(int slot);
 
         /// <summary>
         /// Offset de la textura del objeto

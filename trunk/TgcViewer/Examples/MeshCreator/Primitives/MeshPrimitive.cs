@@ -25,20 +25,23 @@ namespace Examples.MeshCreator.Primitives
             this.Name = mesh.Name + "_" + EditorPrimitive.PRIMITIVE_COUNT++;
             this.mesh = mesh;
 
-            //Solo habilitar modificacion de texturas si tiene una sola
-            if ((mesh.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP || mesh.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP)
-                && mesh.DiffuseMaps.Length == 1)
+            //Ver si tiene texturas
+            if(mesh.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP || mesh.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP)
             {
+                //Tiene, habilitar la edicion
                 this.ModifyCaps.ChangeTexture = true;
                 this.ModifyCaps.ChangeOffsetUV = true;
                 this.ModifyCaps.ChangeTilingUV = true;
+                this.ModifyCaps.TextureNumbers = mesh.DiffuseMaps.Length;
                 this.originalUVCoords = mesh.getTextureCoordinates();
             }
             else
             {
+                //No tiene textura, deshabilitar todo
                 this.ModifyCaps.ChangeTexture = false;
                 this.ModifyCaps.ChangeOffsetUV = false;
                 this.ModifyCaps.ChangeTilingUV = false;
+                this.ModifyCaps.TextureNumbers = 0;
             }
             
             this.UserProperties = this.mesh.UserProperties;
@@ -93,10 +96,26 @@ namespace Examples.MeshCreator.Primitives
             mesh.move(move);
         }
 
-        public override TgcTexture Texture
+        public override void setTexture(TgcTexture texture, int slot)
         {
-            get { return mesh.DiffuseMaps[0]; }
-            set { mesh.changeDiffuseMaps(new TgcTexture[]{value}); }
+            TgcTexture[] newTextures = new TgcTexture[mesh.DiffuseMaps.Length];
+            for (int i = 0; i < newTextures.Length; i++)
+            {
+                if (i != slot)
+                {
+                    newTextures[i] = mesh.DiffuseMaps[i].clone();
+                }
+                else
+                {
+                    newTextures[i] = texture;
+                }
+            }
+            mesh.changeDiffuseMaps(newTextures);
+        }
+
+        public override TgcTexture getTexture(int slot)
+        {
+            return mesh.DiffuseMaps[slot];
         }
 
         public override Vector2 TextureOffset

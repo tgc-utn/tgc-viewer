@@ -30,6 +30,7 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.buttonSelectAll = new System.Windows.Forms.Button();
             this.numericUpDownCellSize = new System.Windows.Forms.NumericUpDown();
             this.label13 = new System.Windows.Forms.Label();
             this.checkBoxSnapToGrid = new System.Windows.Forms.CheckBox();
@@ -98,7 +99,8 @@
             this.dataGridViewMeshes = new System.Windows.Forms.DataGridView();
             this.meshesColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.meshesColumnVisible = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.buttonSelectAll = new System.Windows.Forms.Button();
+            this.buttonUnhideAll = new System.Windows.Forms.Button();
+            this.numericUpDownModifyTextureNumber = new System.Windows.Forms.NumericUpDown();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).BeginInit();
@@ -127,6 +129,7 @@
             this.groupBoxModifyGeneral.SuspendLayout();
             this.tabPageMeshes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyTextureNumber)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -144,6 +147,7 @@
             // 
             // tabPageGeneral
             // 
+            this.tabPageGeneral.Controls.Add(this.buttonUnhideAll);
             this.tabPageGeneral.Controls.Add(this.buttonSelectAll);
             this.tabPageGeneral.Controls.Add(this.numericUpDownCellSize);
             this.tabPageGeneral.Controls.Add(this.label13);
@@ -163,6 +167,16 @@
             this.tabPageGeneral.TabIndex = 2;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // buttonSelectAll
+            // 
+            this.buttonSelectAll.Location = new System.Drawing.Point(5, 40);
+            this.buttonSelectAll.Name = "buttonSelectAll";
+            this.buttonSelectAll.Size = new System.Drawing.Size(95, 25);
+            this.buttonSelectAll.TabIndex = 46;
+            this.buttonSelectAll.Text = "Select all";
+            this.buttonSelectAll.UseVisualStyleBackColor = true;
+            this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
             // 
             // numericUpDownCellSize
             // 
@@ -221,7 +235,7 @@
             // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(23, 360);
+            this.buttonHelp.Location = new System.Drawing.Point(23, 386);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(55, 25);
             this.buttonHelp.TabIndex = 7;
@@ -232,7 +246,7 @@
             // checkBoxAttachExport
             // 
             this.checkBoxAttachExport.AutoSize = true;
-            this.checkBoxAttachExport.Location = new System.Drawing.Point(9, 283);
+            this.checkBoxAttachExport.Location = new System.Drawing.Point(9, 309);
             this.checkBoxAttachExport.Name = "checkBoxAttachExport";
             this.checkBoxAttachExport.Size = new System.Drawing.Size(89, 17);
             this.checkBoxAttachExport.TabIndex = 6;
@@ -241,7 +255,7 @@
             // 
             // buttonExportScene
             // 
-            this.buttonExportScene.Location = new System.Drawing.Point(5, 252);
+            this.buttonExportScene.Location = new System.Drawing.Point(5, 278);
             this.buttonExportScene.Name = "buttonExportScene";
             this.buttonExportScene.Size = new System.Drawing.Size(95, 25);
             this.buttonExportScene.TabIndex = 5;
@@ -251,7 +265,7 @@
             // 
             // buttonCloneObject
             // 
-            this.buttonCloneObject.Location = new System.Drawing.Point(5, 221);
+            this.buttonCloneObject.Location = new System.Drawing.Point(5, 247);
             this.buttonCloneObject.Name = "buttonCloneObject";
             this.buttonCloneObject.Size = new System.Drawing.Size(95, 25);
             this.buttonCloneObject.TabIndex = 4;
@@ -261,7 +275,7 @@
             // 
             // buttonDeleteObject
             // 
-            this.buttonDeleteObject.Location = new System.Drawing.Point(5, 190);
+            this.buttonDeleteObject.Location = new System.Drawing.Point(5, 216);
             this.buttonDeleteObject.Name = "buttonDeleteObject";
             this.buttonDeleteObject.Size = new System.Drawing.Size(95, 25);
             this.buttonDeleteObject.TabIndex = 3;
@@ -415,6 +429,7 @@
             // 
             // groupBoxModifyTexture
             // 
+            this.groupBoxModifyTexture.Controls.Add(this.numericUpDownModifyTextureNumber);
             this.groupBoxModifyTexture.Controls.Add(this.checkBoxModifyAlphaBlendEnabled);
             this.groupBoxModifyTexture.Controls.Add(this.numericUpDownTextureTilingV);
             this.groupBoxModifyTexture.Controls.Add(this.numericUpDownTextureOffsetV);
@@ -428,7 +443,7 @@
             this.groupBoxModifyTexture.Controls.Add(this.labelModifyTextureImage);
             this.groupBoxModifyTexture.Location = new System.Drawing.Point(1, 171);
             this.groupBoxModifyTexture.Name = "groupBoxModifyTexture";
-            this.groupBoxModifyTexture.Size = new System.Drawing.Size(104, 187);
+            this.groupBoxModifyTexture.Size = new System.Drawing.Size(104, 197);
             this.groupBoxModifyTexture.TabIndex = 44;
             this.groupBoxModifyTexture.TabStop = false;
             this.groupBoxModifyTexture.Text = "Texture";
@@ -436,7 +451,7 @@
             // checkBoxModifyAlphaBlendEnabled
             // 
             this.checkBoxModifyAlphaBlendEnabled.AutoSize = true;
-            this.checkBoxModifyAlphaBlendEnabled.Location = new System.Drawing.Point(12, 110);
+            this.checkBoxModifyAlphaBlendEnabled.Location = new System.Drawing.Point(12, 119);
             this.checkBoxModifyAlphaBlendEnabled.Name = "checkBoxModifyAlphaBlendEnabled";
             this.checkBoxModifyAlphaBlendEnabled.Size = new System.Drawing.Size(83, 17);
             this.checkBoxModifyAlphaBlendEnabled.TabIndex = 49;
@@ -452,7 +467,7 @@
             0,
             0,
             65536});
-            this.numericUpDownTextureTilingV.Location = new System.Drawing.Point(56, 162);
+            this.numericUpDownTextureTilingV.Location = new System.Drawing.Point(56, 171);
             this.numericUpDownTextureTilingV.Name = "numericUpDownTextureTilingV";
             this.numericUpDownTextureTilingV.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownTextureTilingV.TabIndex = 48;
@@ -471,7 +486,7 @@
             0,
             0,
             65536});
-            this.numericUpDownTextureOffsetV.Location = new System.Drawing.Point(11, 162);
+            this.numericUpDownTextureOffsetV.Location = new System.Drawing.Point(11, 171);
             this.numericUpDownTextureOffsetV.Name = "numericUpDownTextureOffsetV";
             this.numericUpDownTextureOffsetV.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownTextureOffsetV.TabIndex = 47;
@@ -485,7 +500,7 @@
             0,
             0,
             65536});
-            this.numericUpDownTextureTilingU.Location = new System.Drawing.Point(56, 141);
+            this.numericUpDownTextureTilingU.Location = new System.Drawing.Point(56, 150);
             this.numericUpDownTextureTilingU.Name = "numericUpDownTextureTilingU";
             this.numericUpDownTextureTilingU.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownTextureTilingU.TabIndex = 46;
@@ -499,7 +514,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(-1, 165);
+            this.label7.Location = new System.Drawing.Point(-1, 174);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(14, 13);
             this.label7.TabIndex = 45;
@@ -508,7 +523,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(55, 128);
+            this.label6.Location = new System.Drawing.Point(54, 137);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(35, 13);
             this.label6.TabIndex = 44;
@@ -522,7 +537,7 @@
             0,
             0,
             65536});
-            this.numericUpDownTextureOffsetU.Location = new System.Drawing.Point(11, 141);
+            this.numericUpDownTextureOffsetU.Location = new System.Drawing.Point(11, 150);
             this.numericUpDownTextureOffsetU.Name = "numericUpDownTextureOffsetU";
             this.numericUpDownTextureOffsetU.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownTextureOffsetU.TabIndex = 43;
@@ -531,7 +546,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(-1, 145);
+            this.label2.Location = new System.Drawing.Point(-1, 154);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(15, 13);
             this.label2.TabIndex = 42;
@@ -540,7 +555,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 128);
+            this.label1.Location = new System.Drawing.Point(10, 137);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(38, 13);
             this.label1.TabIndex = 38;
@@ -549,7 +564,7 @@
             // pictureBoxModifyTexture
             // 
             this.pictureBoxModifyTexture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxModifyTexture.Location = new System.Drawing.Point(12, 26);
+            this.pictureBoxModifyTexture.Location = new System.Drawing.Point(12, 35);
             this.pictureBoxModifyTexture.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBoxModifyTexture.Name = "pictureBoxModifyTexture";
             this.pictureBoxModifyTexture.Size = new System.Drawing.Size(80, 80);
@@ -561,7 +576,7 @@
             // labelModifyTextureImage
             // 
             this.labelModifyTextureImage.AutoSize = true;
-            this.labelModifyTextureImage.Location = new System.Drawing.Point(8, 13);
+            this.labelModifyTextureImage.Location = new System.Drawing.Point(8, 18);
             this.labelModifyTextureImage.Name = "labelModifyTextureImage";
             this.labelModifyTextureImage.Size = new System.Drawing.Size(39, 13);
             this.labelModifyTextureImage.TabIndex = 36;
@@ -570,7 +585,7 @@
             // groupBoxModifyUserProps
             // 
             this.groupBoxModifyUserProps.Controls.Add(this.userInfo);
-            this.groupBoxModifyUserProps.Location = new System.Drawing.Point(2, 609);
+            this.groupBoxModifyUserProps.Location = new System.Drawing.Point(2, 619);
             this.groupBoxModifyUserProps.Name = "groupBoxModifyUserProps";
             this.groupBoxModifyUserProps.Size = new System.Drawing.Size(105, 139);
             this.groupBoxModifyUserProps.TabIndex = 43;
@@ -594,7 +609,7 @@
             this.groupBoxModifyScale.Controls.Add(this.label12);
             this.groupBoxModifyScale.Controls.Add(this.label11);
             this.groupBoxModifyScale.Controls.Add(this.numericUpDownModifyScaleX);
-            this.groupBoxModifyScale.Location = new System.Drawing.Point(1, 528);
+            this.groupBoxModifyScale.Location = new System.Drawing.Point(1, 538);
             this.groupBoxModifyScale.Name = "groupBoxModifyScale";
             this.groupBoxModifyScale.Size = new System.Drawing.Size(105, 79);
             this.groupBoxModifyScale.TabIndex = 42;
@@ -708,7 +723,7 @@
             this.groupBoxModifyRotation.Controls.Add(this.numericUpDownModifyRotX);
             this.groupBoxModifyRotation.Controls.Add(this.label8);
             this.groupBoxModifyRotation.Controls.Add(this.label5);
-            this.groupBoxModifyRotation.Location = new System.Drawing.Point(-1, 448);
+            this.groupBoxModifyRotation.Location = new System.Drawing.Point(-1, 458);
             this.groupBoxModifyRotation.Name = "groupBoxModifyRotation";
             this.groupBoxModifyRotation.Size = new System.Drawing.Size(105, 78);
             this.groupBoxModifyRotation.TabIndex = 41;
@@ -807,7 +822,7 @@
             this.groupBoxModifyPosition.Controls.Add(this.label16);
             this.groupBoxModifyPosition.Controls.Add(this.label4);
             this.groupBoxModifyPosition.Controls.Add(this.label3);
-            this.groupBoxModifyPosition.Location = new System.Drawing.Point(1, 364);
+            this.groupBoxModifyPosition.Location = new System.Drawing.Point(1, 374);
             this.groupBoxModifyPosition.Name = "groupBoxModifyPosition";
             this.groupBoxModifyPosition.Size = new System.Drawing.Size(101, 82);
             this.groupBoxModifyPosition.TabIndex = 40;
@@ -1029,15 +1044,38 @@
             this.meshesColumnVisible.TrueValue = "true";
             this.meshesColumnVisible.Width = 35;
             // 
-            // buttonSelectAll
+            // buttonUnhideAll
             // 
-            this.buttonSelectAll.Location = new System.Drawing.Point(5, 40);
-            this.buttonSelectAll.Name = "buttonSelectAll";
-            this.buttonSelectAll.Size = new System.Drawing.Size(95, 25);
-            this.buttonSelectAll.TabIndex = 46;
-            this.buttonSelectAll.Text = "Select all";
-            this.buttonSelectAll.UseVisualStyleBackColor = true;
-            this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
+            this.buttonUnhideAll.Location = new System.Drawing.Point(5, 189);
+            this.buttonUnhideAll.Name = "buttonUnhideAll";
+            this.buttonUnhideAll.Size = new System.Drawing.Size(95, 25);
+            this.buttonUnhideAll.TabIndex = 47;
+            this.buttonUnhideAll.Text = "Unhide all";
+            this.buttonUnhideAll.UseVisualStyleBackColor = true;
+            this.buttonUnhideAll.Click += new System.EventHandler(this.buttonUnhideAll_Click);
+            // 
+            // numericUpDownModifyTextureNumber
+            // 
+            this.numericUpDownModifyTextureNumber.Location = new System.Drawing.Point(48, 15);
+            this.numericUpDownModifyTextureNumber.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownModifyTextureNumber.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownModifyTextureNumber.Name = "numericUpDownModifyTextureNumber";
+            this.numericUpDownModifyTextureNumber.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownModifyTextureNumber.TabIndex = 50;
+            this.numericUpDownModifyTextureNumber.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownModifyTextureNumber.ValueChanged += new System.EventHandler(this.numericUpDownModifyTextureNumber_ValueChanged);
             // 
             // MeshCreatorControl
             // 
@@ -1085,6 +1123,7 @@
             this.groupBoxModifyGeneral.PerformLayout();
             this.tabPageMeshes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyTextureNumber)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1162,5 +1201,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownCellSize;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button buttonSelectAll;
+        private System.Windows.Forms.Button buttonUnhideAll;
+        private System.Windows.Forms.NumericUpDown numericUpDownModifyTextureNumber;
     }
 }
