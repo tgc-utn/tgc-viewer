@@ -507,6 +507,9 @@ namespace Examples.MeshCreator
         {
             TgcD3dInput input = GuiController.Instance.D3dInput;
 
+            //Quitar gizmo actual
+            currentGizmo = null;
+
             //Si hacen clic con el mouse, iniciar creacion de la primitiva
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
@@ -585,6 +588,9 @@ namespace Examples.MeshCreator
             selectionList.Clear();
             updateModifyPanel();
             updateMeshesPanel();
+
+            //Quitar gizmo actual
+            currentGizmo = null;
 
             //Pasar a modo seleccion
             currentState = MeshCreatorControl.State.SelectObject;
@@ -943,6 +949,9 @@ namespace Examples.MeshCreator
                 updateModifyPanel();
                 updateMeshesPanel();
 
+                //Quitar gizmo actual
+                currentGizmo = null;
+
                 //Pasar a modo seleccion
                 currentState = MeshCreatorControl.State.SelectObject;
             }
@@ -1118,7 +1127,7 @@ namespace Examples.MeshCreator
 
         private void radioButtonModifySelectAndRotate_CheckedChanged(object sender, EventArgs e)
         {
-
+            //TODO: implementar gizmo de rotacion
         }
 
         /// <summary>
@@ -1179,21 +1188,6 @@ namespace Examples.MeshCreator
         {
             popupOpened = true;
             textureBrowser.Show(this);
-
-            /*
-            if (textureBrowser.ShowDialog() == DialogResult.OK)
-            {
-                Image img = MeshCreatorUtils.getImage(textureBrowser.SelectedImage);
-                pictureBoxModifyTexture.Image = img;
-                pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
-            }
-            else
-            {
-                pictureBoxModifyTexture.Image = MeshCreatorUtils.getImage(defaultTexturePath);
-                pictureBoxModifyTexture.ImageLocation = defaultTexturePath;
-            }
-            selectionList[0].Texture = TgcTexture.createTexture(pictureBoxModifyTexture.ImageLocation);
-             */ 
         }
 
         /// <summary>
