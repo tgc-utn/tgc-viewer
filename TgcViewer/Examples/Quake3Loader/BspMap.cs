@@ -50,6 +50,8 @@ namespace Examples.Quake3Loader
         //Variables para visibilidad de clusters
         private int antCluster;
         private List<int> clusterVis;
+        private float time = 0;
+        Matrix mViewProj;
 
         
 
@@ -85,6 +87,9 @@ namespace Examples.Quake3Loader
         public void render(Vector3 camPos)
         {
             Device device = GuiController.Instance.D3dDevice;
+            
+            float elapsedTime = GuiController.Instance.ElapsedTime;
+            time += elapsedTime;
 
             //Obtener leaf actual
             int actualLeaf = FindLeaf(camPos);
@@ -127,7 +132,7 @@ namespace Examples.Quake3Loader
             }
 
             //Renderizar meshes visibles
-            Matrix mViewProj = device.Transform.View * device.Transform.Projection;
+            mViewProj = device.Transform.View * device.Transform.Projection;
             for (int i = 0; i < meshes.Count; i++)
             {
                 //Ignonar si no está habilitada
@@ -142,7 +147,7 @@ namespace Examples.Quake3Loader
                 
                 //Renderizado con shaders
                 //TODO: Mejorar el renderizado de shaders. Por ahora esta deshabilitado
-                if (false /*shader != null && shader.Stages.Count > 0*/)
+                if (shader != null && shader.Stages.Count > 0)
                 {
                     renderShaderMesh(mesh, shader);
                 }
@@ -168,38 +173,54 @@ namespace Examples.Quake3Loader
         /// </summary>
         private void renderShaderMesh(TgcMesh mesh, QShaderData shader)
         {
-            /*
-            device.RenderState.AlphaFunction = Compare.Greater;
-                    device.RenderState.BlendOperation = BlendOperation.Add;
-                    device.RenderState.AlphaBlendEnable = true;
-                    device.RenderState.AlphaTestEnable = true;
-                    device.RenderState.SourceBlend = Blend.SourceAlpha;
-                    device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+           // if ((shader.Stages[0].HasBlendFunc) ^ (pass == 1))
+           // {
+                //tiene es opaco se tiene que renderizar en la primer pasada
+                //tiene alpha blending se tiene que renderizar en la segunda pasada
+            //    return;
+            //}
+
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+
 
             Effect fx = shader.Fx;
-            if (first)
-            {
-                File.WriteAllText("shad" + shader.Name.Replace('/', '-') + ".txt", shader.ShaderSrc);
-            }
             fx.Technique = "tec0";
             fx.SetValue("g_mWorld", Matrix.Identity);
             fx.SetValue("g_mViewProj", mViewProj);
             fx.SetValue("g_time", time);
 
+            TgcTexture originalTexture = null;
+
+            if (mesh.DiffuseMaps != null)
+                originalTexture = mesh.DiffuseMaps[0];
+
             fx.Begin(FX.None);
+
 
             for (int j = 0; j < shader.Stages.Count; j++)
             {
                 fx.BeginPass(j);
+                if (shader.Stages[j].Textures.Count > 0)
+                {
+                    mesh.DiffuseMaps[0] = shader.Stages[j].Textures[0];
+                }
 
-                mesh.executeRender();
+                //mesh.render();
+                d3dDevice.SetTexture(0, mesh.DiffuseMaps[0].D3dTexture);
+                if (mesh.LightMap != null)
+                    d3dDevice.SetTexture(1, mesh.LightMap.D3dTexture);
+                else
+                    d3dDevice.SetTexture(1, null);
+                
+                mesh.D3dMesh.DrawSubset(0);
 
                 fx.EndPass();
             }
 
             fx.End();
-            
-            */
+
+            if (mesh.DiffuseMaps != null)
+                mesh.DiffuseMaps[0] = originalTexture;
         }
 
         /// <summary>
