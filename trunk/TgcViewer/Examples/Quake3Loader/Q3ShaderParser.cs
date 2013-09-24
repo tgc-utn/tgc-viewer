@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using Microsoft.DirectX.Direct3D;
 using TgcViewer;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace Examples.Quake3Loader
 {
@@ -95,7 +96,7 @@ namespace Examples.Quake3Loader
     {
         private string name;
         private string code;
-        private string cull;
+        private string cull = "";
         private bool sky;
         private bool blend;
         private bool opaque;
@@ -104,6 +105,7 @@ namespace Examples.Quake3Loader
         private List<QShaderStage> stages = new List<QShaderStage>();
         private string shaderSrc;
         private Effect fx;
+        private bool builded;
 
         #region Accesors
 		 public string Name
@@ -178,12 +180,22 @@ namespace Examples.Quake3Loader
 
         public void BuildFx()
         {
+             if (builded)
+                //ya fue generado el fx
+                return;
+            
             string errores;
 
-            Fx = Effect.FromString(GuiController.Instance.D3dDevice, shaderSrc, null, null, /*ShaderFlags.NotCloneable*/ShaderFlags.None, null, out errores);
-            
-            if (errores != null && !errores.Equals(""))
-                errores = "";
+            Fx = Effect.FromString(GuiController.Instance.D3dDevice, shaderSrc, null, null, ShaderFlags.NotCloneable, null,
+                              out errores);
+            //if (!errores.Equals(""))
+                //errores = "";
+
+            //grabo el source del shader a un texto
+            string erroresline = "Lista de errores:\n" + errores + "\nFin Errores\n\n";
+            File.WriteAllText("shad" + Name.Replace('/', '-') + ".txt", erroresline + ShaderSrc);
+
+            builded = true;
 
         }
         
@@ -196,6 +208,9 @@ namespace Examples.Quake3Loader
     {
         private string type;
         private float spread;
+        private float bulgeWidth;
+        private float bulgeHeight;
+        private float bulgeSpeed;
         private QWaveForm waveForm;
 
         #region Accesors
@@ -209,6 +224,24 @@ namespace Examples.Quake3Loader
         {
             get { return spread; }
             set { spread = value; }
+        }
+        
+        public float BulgeWidth
+        {
+            get { return bulgeWidth; }
+            set { bulgeWidth = value; }
+        }
+
+        public float BulgeHeight
+        {
+            get { return bulgeHeight; }
+            set { bulgeHeight = value; }
+        }
+
+        public float BulgeSpeed
+        {
+            get { return bulgeSpeed; }
+            set { bulgeSpeed = value; }
         }
 
         public QWaveForm WaveForm
@@ -242,7 +275,7 @@ namespace Examples.Quake3Loader
         private bool depthWrite = true;
         private bool depthWriteOverride;
         //Variables extras para poder testear. Estas deberian estar en otro lado
-        private List<Texture> textures=new List<Texture>();
+        private List<TgcTexture> textures=new List<TgcTexture>();
         private float animTimeAcum;
 
         #region Accesors
@@ -348,7 +381,7 @@ namespace Examples.Quake3Loader
             set { depthWriteOverride = value; }
         }
 
-        public List<Texture> Textures
+        public List<TgcTexture> Textures
         {
             get { return textures; }
             set { textures = value; }
@@ -381,7 +414,8 @@ namespace Examples.Quake3Loader
                 if (!texpath.Equals(""))
                 {
                     //solo hay un mapa de bits
-                    textures.Add(TextureLoader.FromFile(GuiController.Instance.D3dDevice, texpath));
+                    var tex = TextureLoader.FromFile(GuiController.Instance.D3dDevice, texpath);
+                    textures.Add(new TgcTexture(Path.GetFileName(texpath),texpath,tex,false));
                     animFreq = 0;
                 }
                 
@@ -399,7 +433,8 @@ namespace Examples.Quake3Loader
                     if (!texpath.Equals(""))
                     {
                         //solo hay un mapa de bits
-                        textures.Add(TextureLoader.FromFile(GuiController.Instance.D3dDevice, texpath));
+                        var t = TextureLoader.FromFile(GuiController.Instance.D3dDevice, texpath);
+                        textures.Add(new TgcTexture(Path.GetFileName(texpath),texpath,t,false));
                     }
                     
                 }
@@ -527,6 +562,9 @@ namespace Examples.Quake3Loader
     {
         private List<string> _vertexLines = new List<string>();
         private List<string> _pixelLines = new List<string>();
+        private List<string> _statesLines = new List<string>();
+
+        #region Accesors
 
         public List<string> VertexLines
         {
@@ -539,6 +577,13 @@ namespace Examples.Quake3Loader
             get { return _pixelLines; }
             set { _pixelLines = value; }
         }
+        
+        public List<string> StatesLines
+        {
+            get { return _statesLines; }
+            set { _statesLines = value; }
+        }
+        #endregion
     }
 
     /// <summary>
@@ -685,6 +730,12 @@ namespace Examples.Quake3Loader
                 //genero la pasada
                 ShaderText += "\tpass p" + i + "\n";
                 ShaderText += "\t{\n";
+
+                //seteo el estado de la pasada
+                foreach (string s in stage.StatesLines)
+                {
+                    ShaderText += "\t\t" + s + "\n";
+                }
                 ShaderText += "\t\tVertexShader = compile vs_3_0 VertexShader" + i + "();\n";
                 ShaderText += "\t\tPixelShader = compile ps_3_0 PixelShader" + i + "();\n";
                 ShaderText += "\t}\n";
@@ -734,7 +785,7 @@ namespace Examples.Quake3Loader
                     {
                         // Crea un shader de directx En base a los del formato quake
                         shader.ShaderSrc = QShaderBuilderDX.BuildShaderSource(shader);
-                        shader.BuildFx();
+                        //shader.BuildFx();
                         foreach (QShaderStage qStage in shader.Stages)
                         {
                             qStage.LoadTextures(mediaPath);
@@ -817,6 +868,11 @@ namespace Examples.Quake3Loader
 						        deform.Spread = 1.0f / ParserTools.ToFloat(tokenizer.GetNext());
 						        deform.WaveForm = ParseWaveform(tokenizer);
 						        break;
+								 case "bulge":
+                     deform.BulgeWidth = ParserTools.ToFloat(tokenizer.GetNext());
+                     deform.BulgeHeight = ParserTools.ToFloat(tokenizer.GetNext());
+                     deform.BulgeSpeed = ParserTools.ToFloat(tokenizer.GetNext());
+                     break;
 					        default: deform = null; break;
 				        }
         				
@@ -1097,9 +1153,48 @@ namespace Examples.Quake3Loader
                 StageCode stageCode = shaderCode.NewStage();
                 stageCode.VertexLines = BuildVertexShader(shader, qstage);
                 stageCode.PixelLines = BuildPixelShader(shader, qstage);
+                stageCode.StatesLines = BuildEffectState(shader, qstage);
             }
 
             return shaderCode.Build();
+        }
+
+        private static List<string> BuildEffectState(QShaderData shader, QShaderStage qstage)
+        {
+            List<string> StateLines = new List<string>();
+
+            StateLines.Add("AlphaBlendEnable = " + qstage.HasBlendFunc.ToString().ToLower() + ";");
+            StateLines.Add("SrcBlend = " + GLtoDXBlend(qstage.BlendSrc) + ";");
+            StateLines.Add("DestBlend = " + GLtoDXBlend(qstage.BlendDest) + ";");
+            //StateLines.Add("ZWriteEnable = " + (!qstage.HasBlendFunc).ToString().ToLower() + ";");
+            if (!shader.Cull.Equals(""))
+            {
+                if (shader.Cull.ToLower().Equals("disable"))
+                {
+                    shader.Cull = "None";
+                }
+                StateLines.Add("CullMode = " + shader.Cull + ";");
+            }
+
+
+            return StateLines;
+        }
+
+        private static string GLtoDXBlend(string blend)
+        {
+            
+            blend = blend.ToUpper();
+            string[] gl_blend = {"GL_ONE","GL_ZERO","GL_SRC_ALPHA","GL_ONE_MINUS_SRC_ALPHA","GL_DST_COLOR","GL_SRC_COLOR"};
+            string[] dx_blend = {"One","Zero","SrcAlpha","InvSrcAlpha","DestColor","SrcColor"};
+
+            for (int i = 0; i < gl_blend.Length; i++)
+            {
+                if (blend.Equals(gl_blend[i]))
+                    return dx_blend[i];
+            }
+
+            //no se encontro, devuelvo cadena vacia
+            return "";
         }
 
         private static List<string> BuildPixelShader(QShaderData shader, QShaderStage stage)
@@ -1192,20 +1287,45 @@ namespace Examples.Quake3Loader
         		
 		        switch(deform.Type)
 		        {
-		            case "wave":
-		                string name = "deform" + i;
-		                string offName = "deformOff" + i;
+                    case "wave":
+		                {
+		                    string name = "deform" + i;
+		                    string offName = "deformOff" + i;
 
-		                VertexLines.Add(
-		                    "float " + offName + " = (In.Pos.x + In.Pos.y + In.Pos.z) * " +
-		                    ParserTools.ToString(deform.Spread) + ";");
+		                    VertexLines.Add(
+		                        "float " + offName + " = (In.Pos.x + In.Pos.y + In.Pos.z) * " +
+		                        ParserTools.ToString(deform.Spread) + ";");
 
-		                float phase = deform.WaveForm.Phase;
-		                //deform.WaveForm.Phase = phase.toFixed(4) + ' + ' + offName; <-----MIRAR ESTA LINEA
-		                VertexLines.Add(CreateWaveForm(name, deform.WaveForm, "g_time"));
-		                deform.WaveForm.Phase = phase;
+		                    /*float phase = deform.WaveForm.Phase;
+		                    //deform.WaveForm.Phase = phase.toFixed(4) + ' + ' + offName; <-----MIRAR ESTA LINEA
+		                    VertexLines.Add(CreateWaveForm(name, deform.WaveForm, "g_time"));
+		                    deform.WaveForm.Phase = phase;*/
 
-		                VertexLines.Add("defPosition += float4(In.Normal * " + name + ",0);");
+		                    //Parche temporal solo funciona con la funcion seno
+                            VertexLines.Add("float " + name + " = " + ParserTools.ToString(deform.WaveForm.Bas) + " + sin((" +
+		                                    ParserTools.ToString(deform.WaveForm.Phase) + " + " +
+		                                    "g_time" + " * " + ParserTools.ToString(deform.WaveForm.Freq) + " + " + offName +
+		                                    ") * 6.283) * " + ParserTools.ToString(deform.WaveForm.Amp) + ";");
+                            //FIN parche
+
+		                    VertexLines.Add("defPosition += float4(In.Normal * " + name + ",0);");
+		                }
+		                break;
+
+                    case "bulge":
+		                {
+                            //float alpha = In.Tex0.x*bulgeWidth + g_time;
+                            //float deform = sin(alpha)*bulgeHeight;
+                            //defPosition += float4(In.Normal * deform0, 0);
+
+                            string deformi = "deform" + i;
+		                    string alphai = "alpha" + i;
+
+		                    VertexLines.Add("float " + alphai + " = In.Tex0.x*" + deform.BulgeWidth + " + g_time*" +
+		                                    deform.BulgeSpeed + ";");
+		                    VertexLines.Add("float " + deformi + " = sin(" + alphai + ")*" + deform.BulgeHeight + ";");
+                            VertexLines.Add("defPosition += float4(In.Normal * " + deformi + ",0);");
+		                }
 		                break;
 		            default:
 		                break;
