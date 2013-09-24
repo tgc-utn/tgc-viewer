@@ -222,15 +222,18 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 tgcMesh.D3dMesh.NumberVertices);
             tgcMesh.D3dMesh.UnlockVertexBuffer();
 
+            short[] indices = (short[])tgcMesh.D3dMesh.LockIndexBuffer(typeof(short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces * 3);
+            tgcMesh.D3dMesh.IndexBuffer.Unlock();
+
             //Armar buffer de vertices, normales y coordenadas de textura, buscando similitudes de valores
             List<int> coordinatesIndices = new List<int>();
             List<int> colorIndices = new List<int>();
             List<Vector3> verticesCoordinates = new List<Vector3>();
             List<int> verticesColors = new List<int>();
             List<Vector3> verticesNormals = new List<Vector3>();
-            for (int i = 0; i < vbData.Length; i++)
+            for (int i = 0; i < indices.Length; i++)
             {
-                TgcSceneLoader.VertexColorVertex vertexData = vbData[i];
+                TgcSceneLoader.VertexColorVertex vertexData = vbData[indices[i]];
                 Vector3 position = Vector3.TransformCoordinate(vertexData.Position, tgcMesh.Transform);
 
                 int coordIdx = addVertex(coordinatesIndices, verticesCoordinates, position);
@@ -298,6 +301,9 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 tgcMesh.D3dMesh.NumberVertices);
             tgcMesh.D3dMesh.UnlockVertexBuffer();
 
+            short[] indices = (short[])tgcMesh.D3dMesh.LockIndexBuffer(typeof(short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces*3);
+            tgcMesh.D3dMesh.IndexBuffer.Unlock();
+
             //Armar buffer de vertices, normales y coordenadas de textura, buscando similitudes de valores
             List<int> coordinatesIndices = new List<int>();
             List<int> texCoordinatesIndices = new List<int>();
@@ -306,9 +312,11 @@ namespace TgcViewer.Utils.TgcSceneLoader
             List<Vector3> verticesNormals = new List<Vector3>();
             List<int> colorIndices = new List<int>();
             List<int> verticesColors = new List<int>();
-            for (int i = 0; i < vbData.Length; i++)
+            
+
+            for (int i = 0; i < indices.Length; i++)            
             {
-                TgcSceneLoader.DiffuseMapVertex vertexData = vbData[i];
+                TgcSceneLoader.DiffuseMapVertex vertexData = vbData[indices[i]];
                 Vector3 position = Vector3.TransformCoordinate(vertexData.Position, tgcMesh.Transform);
 
                 int coordIdx = addVertex(coordinatesIndices, verticesCoordinates, position);
@@ -376,6 +384,9 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 tgcMesh.D3dMesh.NumberVertices);
             tgcMesh.D3dMesh.UnlockVertexBuffer();
 
+            short[] indices = (short[])tgcMesh.D3dMesh.LockIndexBuffer(typeof(short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces * 3);
+            tgcMesh.D3dMesh.IndexBuffer.Unlock();
+
             //Color general
             Color defaultColor = Color.White;
             ColorValue defaultColorValue = ColorValue.FromColor(defaultColor);
@@ -391,9 +402,11 @@ namespace TgcViewer.Utils.TgcSceneLoader
             List<Vector3> verticesNormals = new List<Vector3>();
             List<int> colorIndices = new List<int>();
             List<int> verticesColors = new List<int>();
-            for (int i = 0; i < vbData.Length; i++)
+            
+
+            for (int i = 0; i < indices.Length; i++)
             {
-                TgcSceneLoader.DiffuseMapAndLightmapVertex vertexData = vbData[i];
+                TgcSceneLoader.DiffuseMapAndLightmapVertex vertexData = vbData[indices[i]];
                 Vector3 position = Vector3.TransformCoordinate(vertexData.Position, tgcMesh.Transform);
 
                 int coordIdx = addVertex(coordinatesIndices, verticesCoordinates, position);

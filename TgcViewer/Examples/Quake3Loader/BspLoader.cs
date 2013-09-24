@@ -22,17 +22,51 @@ namespace Examples.Quake3Loader
     {
 
         private string[] textureFullPath;
-        private Texture[] textures;
-        private Texture[] lightMaps;
+        private TgcTexture[] textures;
+        private TgcTexture[] lightMaps;
         private QShaderData[] shaderXTextura;
         private List<QShaderData> shadersData;
+
+        private static TgcTexture emptyTexture;
+        private static TgcTexture emptyLightMap;
 
         /// <summary>
         /// Crear Loader
         /// </summary>
         public BspLoader()
         {
+            InitEmptyTextures();
             shadersData = new List<QShaderData>();
+        }
+
+        private void InitEmptyTextures()
+        {
+            if (emptyLightMap != null && emptyTexture != null)
+                return;
+
+            //algunos mesh no tienen textura o lightmap. Por compatibilidad con el exporter es conveniente que todas tengan Una textura
+            //para eso creo una textura vacia de 1x1 negro como textura y una de 1x1 blanco para lightmap.
+
+            var texture = new Texture(GuiController.Instance.D3dDevice, 1, 1, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+            GraphicsStream graphicsStream = texture.LockRectangle(0, LockFlags.None);
+            uint color = 0x00000000;
+            graphicsStream.Write(color);
+            texture.UnlockRectangle(0);
+
+            TextureLoader.Save("emptyTexture.jpg", ImageFileFormat.Jpg, texture);
+
+            emptyTexture = new TgcTexture("emptyTexture.jpg","emptyTexture.jpg", texture, false);
+
+
+            texture = new Texture(GuiController.Instance.D3dDevice, 1, 1, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+            graphicsStream = texture.LockRectangle(0, LockFlags.None);
+            color = 0x00000000;
+            graphicsStream.Write(color);
+            texture.UnlockRectangle(0);
+
+            TextureLoader.Save("emptyLightMap.jpg", ImageFileFormat.Jpg, texture);
+
+            emptyLightMap = new TgcTexture("emptyLightMap.jpg", "emptyLightMap.jpg", texture, false);            
         }
 
         /// <summary>
@@ -394,14 +428,17 @@ namespace Examples.Quake3Loader
         {
             QSurface surface = bspMap.Data.drawSurfaces[surfaceId];
 
-            Texture lightmap = surface.lightmapNum >= 0 ? lightMaps[surface.lightmapNum] : null;
+            TgcTexture lightmap = surface.lightmapNum >= 0 ? lightMaps[surface.lightmapNum] : null;
 
-            Texture texture = textures[surface.shaderNum];
+            var texture = textures[surface.shaderNum];
 
             //asigno el shader si es que tiene
             bspMap.Data.shaderXSurface[surfaceId] = shaderXTextura[surface.shaderNum];
+            if (bspMap.Data.shaderXSurface[surfaceId] != null)
+                bspMap.Data.shaderXSurface[surfaceId].BuildFx();
 
             if (texture == null && bspMap.Data.shaderXSurface[surfaceId] != null)
+            {
                 foreach (QShaderStage stage in bspMap.Data.shaderXSurface[surfaceId].Stages)
                 {
                     if (stage.Textures.Count > 0)
@@ -411,37 +448,26 @@ namespace Examples.Quake3Loader
                     }
 
                 }
-
-
-
-            string textPath = textureFullPath[surface.shaderNum];
-            string textName = "";
-            if(textPath != null)
-                textName = textPath.Substring(textPath.LastIndexOf('\\') + 1);;
-            
-            //Cargar lightMap
-            TgcTexture tgcLightMap = null;
-            if (lightmap != null)
-            {
-                tgcLightMap = new TgcTexture(null, null, lightmap, false);
             }
 
-            TgcTexture[] meshTextures = null;
+
+            //Cargar lightMap
+            TgcTexture tgcLightMap = lightmap;
+            if (lightmap == null)
+                tgcLightMap = emptyLightMap;
+
+            TgcTexture[] meshTextures = new TgcTexture[1];
             if (texture != null)
             {
-                meshTextures = new TgcTexture[1];
-                meshTextures[0] = new TgcTexture(textName, textPath, texture, false);
+                meshTextures[0] = texture;
+            }
+            else
+            {
+                meshTextures[0] = emptyTexture;
             }
 
             TgcMesh.MeshRenderType renderType = TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP;
-
-            if (lightmap == null)
-                renderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
-
-            if (texture == null)
-                renderType = TgcMesh.MeshRenderType.VERTEX_COLOR;
-
-
+            
             Material mat = new Material();
             mat.Ambient = Color.White;
 
@@ -481,7 +507,7 @@ namespace Examples.Quake3Loader
         /// </summary>
         private void loadTextures(BspMap bspMap, string mediaPath)
         {
-            textures = new Texture[bspMap.Data.shaders.Length];
+            textures = new TgcTexture[bspMap.Data.shaders.Length];
             shaderXTextura = new QShaderData[bspMap.Data.shaders.Length];
             textureFullPath = new string[bspMap.Data.shaders.Length];
 
@@ -493,12 +519,13 @@ namespace Examples.Quake3Loader
                 // Create a texture from the image
                 if (file.Length > 0)
                 {
-                    textures[i] = TextureLoader.FromFile(GuiController.Instance.D3dDevice, file);
+                    var tex = TextureLoader.FromFile(GuiController.Instance.D3dDevice, file);
                     textureFullPath[i] = file;
+                    textures[i] = new TgcTexture(Path.GetFileName(file), file, tex, false);
                 }
 
                 //Si no tiene textura entonces tiene un shader
-                else
+                //else
                 {
                     string shader_text = bspMap.Data.shaders[i].shader.TrimEnd(new char[] { '\0' });
 
@@ -520,11 +547,23 @@ namespace Examples.Quake3Loader
                         continue;
 
                     string scriptDir = mediaPath + @"scripts\";
-                    string fileScript = shader_text.Split(new char[] {'\\', '/'})[1] + ".shader";
-                    string pathScript = scriptDir + fileScript;
+                    string[] dirs = shader_text.Split(new char[] { '\\', '/' });
+                    //string fileScript = shader_text.Split(new char[] {'\\', '/'})[1] + ".shader";
+                    //string pathScript = scriptDir + fileScript;
+                    string pathScript = "";
+
+                    foreach (string d in dirs)
+                    {
+                        string fileScript = d + ".shader";
+                        pathScript = scriptDir + fileScript;
+
+                        if (File.Exists(pathScript))
+                            break;
+                    }
+
                     if (File.Exists(pathScript))
                     {
-                        shadersData.AddRange(Q3ShaderParser.GetFxFromFile(pathScript, mediaPath));
+                        shadersData.AddRange(Q3ShaderParser.GetFxFromFile(pathScript,mediaPath));
 
                         //asigno el shader a la textura
                         foreach (QShaderData shaderData in shadersData)
@@ -540,7 +579,7 @@ namespace Examples.Quake3Loader
                     else
                     {
                         //logea el shader que no se pudo cargar
-                        GuiController.Instance.Logger.log("Textura o shader no encontrado - ID:" + i + " " + shader_text);
+                        GuiController.Instance.Logger.log("ID:" + i + " " + shader_text);
                     }
                 }
             }
@@ -565,7 +604,7 @@ namespace Examples.Quake3Loader
 
 
             //salva todas las texturas y los shaders
-            textures = new Texture[bspMap.Data.shaders.Length];
+            textures = new TgcTexture[bspMap.Data.shaders.Length];
             shaderXTextura = new QShaderData[bspMap.Data.shaders.Length];
             textureFullPath = new string[bspMap.Data.shaders.Length];
 
@@ -642,7 +681,7 @@ namespace Examples.Quake3Loader
         {
             const int LIGHTMAP_SIZE = 128*128;
             int cant_lmaps = bspMap.Data.lightBytes.Length / (LIGHTMAP_SIZE * 3);
-            lightMaps = new Texture[cant_lmaps];
+            lightMaps = new TgcTexture[cant_lmaps];
             int[] lightInfo = new int[LIGHTMAP_SIZE];
 
             for (int i = 0; i < cant_lmaps; i++)
@@ -663,7 +702,10 @@ namespace Examples.Quake3Loader
                 graphicsStream.Write(lightInfo);
                 tex.UnlockRectangle(0);
 
-                lightMaps[i] = tex;
+                string filename = "qlight" + i + ".jpg";
+                TextureLoader.Save(filename, ImageFileFormat.Jpg, tex);
+                
+                lightMaps[i] = new TgcTexture(filename, filename, tex, false);
             }
         }
 
@@ -675,7 +717,7 @@ namespace Examples.Quake3Loader
         {
 	        int ir, ig, ib, Gamma, imax;
 	        float factor;
-            Gamma = 1/*2*/;
+            Gamma = 2;
 
             ir = r << Gamma;
             ig = g << Gamma;

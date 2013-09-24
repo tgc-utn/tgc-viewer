@@ -112,14 +112,44 @@ namespace Examples.Quake3Loader
             //Cargar nivel inicial
             currentLevelFile = exampleDir + "q3dm1\\maps\\q3dm1.bsp";
             loadLevel(currentLevelFile);
-
-
+            
             //Modifiers
             GuiController.Instance.Modifiers.addFile("Level", currentLevelFile, ".Niveles Quake 3|*.bsp");
             GuiController.Instance.Modifiers.addFloat("Speed",0,500f,350f);
             GuiController.Instance.Modifiers.addFloat("Gravity", 0, 600, 180);
             GuiController.Instance.Modifiers.addFloat("JumpSpeed", 60, 600, 100);
             GuiController.Instance.Modifiers.addBoolean("NoClip","NoClip", false);
+            GuiController.Instance.Modifiers.addButton("exportButton", "Exportar XML", new EventHandler(Export_ButtonClick));
+        }
+
+        /// <summary>
+        /// Evento de clic en Reload
+        /// </summary>
+        void Export_ButtonClick(object sender, EventArgs e)
+        {
+            //saveSceneDialog
+            var saveDialog = new SaveFileDialog();
+            saveDialog.DefaultExt = ".xml";
+            saveDialog.Filter = ".XML |*.xml";
+            saveDialog.AddExtension = true;
+
+            saveDialog.Title = "Export Scene";
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                FileInfo fInfo = new FileInfo(saveDialog.FileName);
+                string sceneName = fInfo.Name.Split('.')[0];
+                string saveDir = fInfo.DirectoryName;
+
+                TgcScene exportScene = new TgcScene(sceneName, saveDir);
+                foreach (TgcMesh m in bspMap.Meshes)
+                {
+                    exportScene.Meshes.Add(m);
+                }
+                TgcSceneExporter exporter = new TgcSceneExporter();
+                exporter.exportSceneToXml(exportScene, saveDir);
+
+                MessageBox.Show("Escena exportada a formato TGC satisfactoriamente.", "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         /// <summary>
