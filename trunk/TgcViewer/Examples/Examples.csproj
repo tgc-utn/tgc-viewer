@@ -132,6 +132,12 @@
     <Compile Include="Matematica\EjemploTriangulosYPlanos.cs" />
     <Compile Include="Matematica\EjemploTransformaciones.cs" />
     <Compile Include="Matematica\EjemploMatematicaVarios.cs" />
+    <Compile Include="MeshCreator\ObjectBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MeshCreator\ObjectBrowser.Designer.cs">
+      <DependentUpon>ObjectBrowser.cs</DependentUpon>
+    </Compile>
     <Compile Include="MeshCreator\Primitives\SpherePrimitive.cs" />
     <Compile Include="Otros\EjemploDefault.cs" />
     <Compile Include="Fog\EfectoNiebla.cs" />
@@ -342,6 +348,9 @@
     <EmbeddedResource Include="MeshCreator\MeshCreatorControl.resx">
       <DependentUpon>MeshCreatorControl.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MeshCreator\ObjectBrowser.resx">
+      <DependentUpon>ObjectBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Otros\EjemploDefaultHelpForm.resx">
       <DependentUpon>EjemploDefaultHelpForm.cs</DependentUpon>

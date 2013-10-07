@@ -130,7 +130,7 @@ namespace Examples.MeshCreator.Gizmos
                             if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                             {
                                 Control.CurrentState = MeshCreatorControl.State.SelectObject;
-                                Control.SelectionRectangle.doDirectSelection();
+                                Control.SelectionRectangle.doDirectSelection(false);
                             }
                         }
                     }

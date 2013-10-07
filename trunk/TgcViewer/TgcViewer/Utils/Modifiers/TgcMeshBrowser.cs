@@ -112,8 +112,8 @@ namespace TgcViewer.Utils.Modifiers
                     //Buscar si hay algun mesh adentro del directorio
                     string[] files = Directory.GetFiles(dirPath, "*-TgcScene.xml", SearchOption.TopDirectoryOnly);
 
-                    //Tiene que haber uno solo
-                    if (files.Length == 1)
+                    //Si hay al menos uno en el directorio
+                    if (files.Length > 0)
                     {
                         //Ver si tiene imagen de preview
                         FileInfo fi = new FileInfo(files[0]);
@@ -123,9 +123,12 @@ namespace TgcViewer.Utils.Modifiers
                             previewImagePath = null;
                         }
 
-                        //Crear item de mesh
-                        MeshItemControl item = new MeshItemControl(files[0], previewImagePath, this, false);
-                        meshes.Add(item);
+                        //Crear un item de mesh para cada uno
+                        foreach (string file in files)
+                        {
+                            MeshItemControl item = new MeshItemControl(file, previewImagePath, this, false);
+                            meshes.Add(item);
+                        }
                     }
                     //No tiene mesh, es un directorio comun
                     else
@@ -274,7 +277,7 @@ namespace TgcViewer.Utils.Modifiers
                 {
                     browser.CurrentDir = filePath;
                 }
-                //Si es imagen, cerrar ventana de texturas
+                //Si es mesh, cerrar ventana de meshes
                 else
                 {
                     browser.Close();

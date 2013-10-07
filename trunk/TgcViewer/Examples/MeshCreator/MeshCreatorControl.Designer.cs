@@ -30,6 +30,9 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.numericUpDownFPSCameraSpeed = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.radioButtonFPSCamera = new System.Windows.Forms.RadioButton();
             this.buttonUnhideAll = new System.Windows.Forms.Button();
             this.buttonSelectAll = new System.Windows.Forms.Button();
             this.numericUpDownCellSize = new System.Windows.Forms.NumericUpDown();
@@ -101,11 +104,10 @@
             this.dataGridViewMeshes = new System.Windows.Forms.DataGridView();
             this.meshesColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.meshesColumnVisible = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.radioButtonFPSCamera = new System.Windows.Forms.RadioButton();
-            this.numericUpDownFPSCameraSpeed = new System.Windows.Forms.NumericUpDown();
-            this.label14 = new System.Windows.Forms.Label();
+            this.buttonObjectBrowser = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).BeginInit();
             this.tabPageCreate.SuspendLayout();
             this.groupBoxPrimitive.SuspendLayout();
@@ -133,7 +135,6 @@
             this.groupBoxModifyGeneral.SuspendLayout();
             this.tabPageMeshes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -151,6 +152,7 @@
             // 
             // tabPageGeneral
             // 
+            this.tabPageGeneral.Controls.Add(this.buttonObjectBrowser);
             this.tabPageGeneral.Controls.Add(this.numericUpDownFPSCameraSpeed);
             this.tabPageGeneral.Controls.Add(this.label14);
             this.tabPageGeneral.Controls.Add(this.radioButtonFPSCamera);
@@ -174,6 +176,45 @@
             this.tabPageGeneral.TabIndex = 2;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownFPSCameraSpeed
+            // 
+            this.numericUpDownFPSCameraSpeed.Location = new System.Drawing.Point(54, 292);
+            this.numericUpDownFPSCameraSpeed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownFPSCameraSpeed.Name = "numericUpDownFPSCameraSpeed";
+            this.numericUpDownFPSCameraSpeed.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownFPSCameraSpeed.TabIndex = 50;
+            this.numericUpDownFPSCameraSpeed.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownFPSCameraSpeed.ValueChanged += new System.EventHandler(this.numericUpDownFPSCameraSpeed_ValueChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(8, 296);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(41, 13);
+            this.label14.TabIndex = 49;
+            this.label14.Text = "Speed:";
+            // 
+            // radioButtonFPSCamera
+            // 
+            this.radioButtonFPSCamera.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonFPSCamera.Location = new System.Drawing.Point(5, 268);
+            this.radioButtonFPSCamera.Name = "radioButtonFPSCamera";
+            this.radioButtonFPSCamera.Size = new System.Drawing.Size(95, 24);
+            this.radioButtonFPSCamera.TabIndex = 48;
+            this.radioButtonFPSCamera.Text = "FPS camera";
+            this.radioButtonFPSCamera.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonFPSCamera.UseVisualStyleBackColor = true;
+            this.radioButtonFPSCamera.CheckedChanged += new System.EventHandler(this.radioButtonFPSCamera_CheckedChanged);
             // 
             // buttonUnhideAll
             // 
@@ -252,7 +293,7 @@
             // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(23, 427);
+            this.buttonHelp.Location = new System.Drawing.Point(21, 465);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(55, 25);
             this.buttonHelp.TabIndex = 7;
@@ -263,7 +304,7 @@
             // checkBoxAttachExport
             // 
             this.checkBoxAttachExport.AutoSize = true;
-            this.checkBoxAttachExport.Location = new System.Drawing.Point(9, 366);
+            this.checkBoxAttachExport.Location = new System.Drawing.Point(7, 404);
             this.checkBoxAttachExport.Name = "checkBoxAttachExport";
             this.checkBoxAttachExport.Size = new System.Drawing.Size(89, 17);
             this.checkBoxAttachExport.TabIndex = 6;
@@ -272,7 +313,7 @@
             // 
             // buttonExportScene
             // 
-            this.buttonExportScene.Location = new System.Drawing.Point(5, 338);
+            this.buttonExportScene.Location = new System.Drawing.Point(3, 376);
             this.buttonExportScene.Name = "buttonExportScene";
             this.buttonExportScene.Size = new System.Drawing.Size(95, 25);
             this.buttonExportScene.TabIndex = 5;
@@ -318,6 +359,7 @@
             this.radioButtonSelectObject.Name = "radioButtonSelectObject";
             this.radioButtonSelectObject.Size = new System.Drawing.Size(95, 24);
             this.radioButtonSelectObject.TabIndex = 1;
+            this.radioButtonSelectObject.TabStop = true;
             this.radioButtonSelectObject.Text = "Select object";
             this.radioButtonSelectObject.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.radioButtonSelectObject.UseVisualStyleBackColor = true;
@@ -1081,44 +1123,15 @@
             this.meshesColumnVisible.TrueValue = "true";
             this.meshesColumnVisible.Width = 35;
             // 
-            // radioButtonFPSCamera
+            // buttonObjectBrowser
             // 
-            this.radioButtonFPSCamera.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonFPSCamera.Location = new System.Drawing.Point(5, 268);
-            this.radioButtonFPSCamera.Name = "radioButtonFPSCamera";
-            this.radioButtonFPSCamera.Size = new System.Drawing.Size(95, 24);
-            this.radioButtonFPSCamera.TabIndex = 48;
-            this.radioButtonFPSCamera.Text = "FPS camera";
-            this.radioButtonFPSCamera.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButtonFPSCamera.UseVisualStyleBackColor = true;
-            this.radioButtonFPSCamera.CheckedChanged += new System.EventHandler(this.radioButtonFPSCamera_CheckedChanged);
-            // 
-            // numericUpDownFPSCameraSpeed
-            // 
-            this.numericUpDownFPSCameraSpeed.Location = new System.Drawing.Point(54, 292);
-            this.numericUpDownFPSCameraSpeed.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownFPSCameraSpeed.Name = "numericUpDownFPSCameraSpeed";
-            this.numericUpDownFPSCameraSpeed.Size = new System.Drawing.Size(44, 20);
-            this.numericUpDownFPSCameraSpeed.TabIndex = 50;
-            this.numericUpDownFPSCameraSpeed.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownFPSCameraSpeed.ValueChanged += new System.EventHandler(this.numericUpDownFPSCameraSpeed_ValueChanged);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(8, 296);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(41, 13);
-            this.label14.TabIndex = 49;
-            this.label14.Text = "Speed:";
+            this.buttonObjectBrowser.Location = new System.Drawing.Point(5, 313);
+            this.buttonObjectBrowser.Name = "buttonObjectBrowser";
+            this.buttonObjectBrowser.Size = new System.Drawing.Size(95, 25);
+            this.buttonObjectBrowser.TabIndex = 51;
+            this.buttonObjectBrowser.Text = "Object browser";
+            this.buttonObjectBrowser.UseVisualStyleBackColor = true;
+            this.buttonObjectBrowser.Click += new System.EventHandler(this.buttonObjectBrowser_Click);
             // 
             // MeshCreatorControl
             // 
@@ -1134,6 +1147,7 @@
             this.tabControl.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.tabPageGeneral.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).EndInit();
             this.tabPageCreate.ResumeLayout(false);
             this.groupBoxPrimitive.ResumeLayout(false);
@@ -1167,7 +1181,6 @@
             this.groupBoxModifyGeneral.PerformLayout();
             this.tabPageMeshes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1250,5 +1263,6 @@
         private System.Windows.Forms.RadioButton radioButtonFPSCamera;
         private System.Windows.Forms.NumericUpDown numericUpDownFPSCameraSpeed;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button buttonObjectBrowser;
     }
 }
