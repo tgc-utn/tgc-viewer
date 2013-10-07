@@ -25,12 +25,14 @@ namespace Examples.MeshCreator
         CustomVertex.TransformedColored[] vertices;
         Vector2 initMousePos;
         List<TgcBoundingBox> auxBoundingBoxList;
+        bool selectiveObjectsAdditive;
 
         public SelectionRectangle(MeshCreatorControl control)
         {
             this.control = control;
             vertices = new CustomVertex.TransformedColored[8];
             auxBoundingBoxList = new List<TgcBoundingBox>();
+            this.selectiveObjectsAdditive = false;
         }
 
         /// <summary>
@@ -48,17 +50,52 @@ namespace Examples.MeshCreator
         {
             TgcD3dInput input = GuiController.Instance.D3dInput;
 
-            //Hace clic y suelta, picking directo de un solo objeto
-            if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
+            if ((input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl))
+                && input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                doDirectSelection();
+                control.CurrentState = MeshCreatorControl.State.SelectingObject;
+                this.initMousePos = new Vector2(input.Xpos, input.Ypos);
+                this.selectiveObjectsAdditive = true;
             }
             //Si mantiene el clic con el mouse, iniciar cuadro de seleccion
             else if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 control.CurrentState = MeshCreatorControl.State.SelectingObject;
                 this.initMousePos = new Vector2(input.Xpos, input.Ypos);
+                this.selectiveObjectsAdditive = false;
             }
+
+            /*
+            //Hace clic y suelta manteniendo control, picking directo de un solo objeto para agregar/quitar a la seleccion actual
+            if ((input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl)) 
+                && input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            {
+                doDirectSelection(true);
+            }
+            //Hace clic y suelta, picking directo de un solo objeto
+            else if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            {
+                doDirectSelection(false);
+            }
+            //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
+            else if ((input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl))
+                && input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            {
+                control.CurrentState = MeshCreatorControl.State.SelectingObject;
+                this.initMousePos = new Vector2(input.Xpos, input.Ypos);
+                this.selectiveObjectsAdditive = true;
+            }
+            //Si mantiene el clic con el mouse, iniciar cuadro de seleccion
+            else if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            {
+                control.CurrentState = MeshCreatorControl.State.SelectingObject;
+                this.initMousePos = new Vector2(input.Xpos, input.Ypos);
+                this.selectiveObjectsAdditive = false;
+            }
+            */
+            
+
         }
 
 
@@ -89,11 +126,16 @@ namespace Examples.MeshCreator
                 Vector2 max = Vector2.Maximize(initMousePos, mousePos);
                 Rectangle r = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
 
-                //Seleccionar solo si el recuadro tiene un tamaño minimo
+                //Usar recuadro de seleccion solo si tiene un tamaño minimo
                 if (r.Width > 1 && r.Height > 1)
                 {
+                    //Limpiar seleccionar anterior si no estamos agregando en forma aditiva
+                    if (!selectiveObjectsAdditive)
+                    {
+                        clearSelection();
+                    }
+
                     //Buscar que objetos del escenario caen dentro de la seleccion y elegirlos
-                    clearSelection();
                     foreach (EditorPrimitive p in control.Meshes)
                     {
                         //Solo los visibles
@@ -103,10 +145,24 @@ namespace Examples.MeshCreator
                             Rectangle primRect = MeshCreatorUtils.projectAABB(p.BoundingBox);
                             if (r.IntersectsWith(primRect))
                             {
-                                selectObject(p);
+                                //Agregar el objeto en forma aditiva
+                                if (selectiveObjectsAdditive)
+                                {
+                                    selectOrRemoveObjectIfPresent(p);
+                                }
+                                //Agregar el objeto en forma simple
+                                else
+                                {
+                                    selectObject(p);
+                                }
                             }
                         }
                     }
+                }
+                //Si el recuadro no tiene tamaño suficiente, hacer seleccion directa
+                else
+                {
+                    doDirectSelection(selectiveObjectsAdditive);
                 }
 
                 control.CurrentState = MeshCreatorControl.State.SelectObject;
@@ -134,6 +190,26 @@ namespace Examples.MeshCreator
         {
             p.setSelected(true);
             control.SelectionList.Add(p);
+        }
+
+        /// <summary>
+        /// Selecciona un solo objeto pero antes se fija si ya no estaba en la lista de seleccion.
+        /// Si ya estaba, entonces lo quita de la lista de seleccion
+        /// </summary>
+        public void selectOrRemoveObjectIfPresent(EditorPrimitive p)
+        {
+            //Ya existe, quitar
+            if (control.SelectionList.Contains(p))
+            {
+                p.setSelected(false);
+                control.SelectionList.Remove(p);
+            }
+            //No existe, agregar
+            else
+            {
+                p.setSelected(true);
+                control.SelectionList.Add(p);
+            }
         }
 
         /// <summary>
@@ -226,7 +302,8 @@ namespace Examples.MeshCreator
         /// <summary>
         /// Hacer picking para seleccionar el objeto mas cercano del ecenario.
         /// </summary>
-        public void doDirectSelection()
+        /// <param name="additive">En True agrega/quita el objeto a la seleccion actual</param>
+        public void doDirectSelection(bool additive)
         {
             control.PickingRay.updateRay();
 
@@ -251,14 +328,27 @@ namespace Examples.MeshCreator
                 }
             }
 
-            //Seleccionar el mas cerca
-            clearSelection();
-            control.CurrentState = MeshCreatorControl.State.SelectObject;
+            //Agregar
             if (closestPrimitive != null)
             {
-                selectObject(closestPrimitive);
+                //Sumar a la lista de seleccion
+                if (additive)
+                {
+                    selectOrRemoveObjectIfPresent(closestPrimitive);
+                }
+                //Seleccionar uno solo
+                else
+                {
+                    clearSelection();
+                    selectObject(closestPrimitive);
+                }
                 activateCurrentGizmo();
             }
+            else
+            {
+                clearSelection();
+            }
+            control.CurrentState = MeshCreatorControl.State.SelectObject;
             control.updateModifyPanel();
         }
 

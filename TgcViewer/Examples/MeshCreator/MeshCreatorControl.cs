@@ -63,7 +63,7 @@ namespace Examples.MeshCreator
         TgcMeshBrowser meshBrowser;
         SaveFileDialog exportSceneSaveDialog;
         TgcText2d objectPositionText;
-        bool popupOpened;
+        ObjectBrowser objectBrowser;
         bool fpsCameraEnabled;
         
 
@@ -186,6 +186,16 @@ namespace Examples.MeshCreator
             get { return snapToGridCellSize; }
         }
 
+        bool popupOpened;
+        /// <summary>
+        /// True si hay un popup abierto y hay que evitar eventos
+        /// </summary>
+        public bool PopupOpened
+        {
+            get { return popupOpened; }
+            set { popupOpened = value; }
+        }
+
 
         public MeshCreatorControl(TgcMeshCreator creator)
         {
@@ -255,6 +265,9 @@ namespace Examples.MeshCreator
 
             //Snap to grid
             snapToGridCellSize = (float)numericUpDownCellSize.Value;
+
+            //ObjectBrowser
+            objectBrowser = new ObjectBrowser(this);
         }
 
         
@@ -398,6 +411,11 @@ namespace Examples.MeshCreator
                 else if (input.keyPressed(Key.F))
                 {
                     radioButtonFPSCamera.Checked = true;
+                }
+                //Object browser
+                else if (input.keyPressed(Key.O))
+                {
+                    buttonObjectBrowser_Click(null, null);
                 }
             }
         }
@@ -616,6 +634,45 @@ namespace Examples.MeshCreator
 
             //Pasar a modo seleccion
             currentState = MeshCreatorControl.State.SelectObject;
+        }
+
+        /// <summary>
+        /// Mostrar u ocultar una lista de objetos.
+        /// Si estaban seleccionados y se ocultan los quita de la lista de seleccion
+        /// </summary>
+        public void showHideObjects(List<EditorPrimitive> objects, bool show)
+        {
+            if (objects.Count > 0)
+            {
+                foreach (EditorPrimitive p in objects)
+                {
+                    //Mostrar
+                    if (show)
+                    {
+                        p.Visible = true;
+                    }
+                    //Ocultar
+                    else
+                    {
+                        p.Visible = false;
+                        //Si estaba seleccionado entonces quitar seleccion
+                        if (p.Selected)
+                        {
+                            p.setSelected(false);
+                            selectionList.Remove(p);
+                        }
+                    }
+                }
+
+                updateModifyPanel();
+                updateMeshesPanel();
+
+                //Quitar gizmo actual
+                currentGizmo = null;
+
+                //Pasar a modo seleccion
+                currentState = MeshCreatorControl.State.SelectObject;
+            }
         }
 
         /// <summary>
@@ -957,25 +1014,8 @@ namespace Examples.MeshCreator
         {
             if (selectionList.Count > 0)
             {
-                foreach (EditorPrimitive p in selectionList)
-                {
-                    p.Visible = false;
-                    if (p.Selected)
-                    {
-                        p.setSelected(false);
-                    }
-                }
-
-                //Limpiar lista de seleccion
-                selectionList.Clear();
-                updateModifyPanel();
-                updateMeshesPanel();
-
-                //Quitar gizmo actual
-                currentGizmo = null;
-
-                //Pasar a modo seleccion
-                currentState = MeshCreatorControl.State.SelectObject;
+                List<EditorPrimitive> objectsToHide = new List<EditorPrimitive>(selectionList);
+                showHideObjects(objectsToHide, false);
             }
         }
 
@@ -1115,6 +1155,16 @@ namespace Examples.MeshCreator
                         "Import Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        /// <summary>
+        /// Clic en "Object browser"
+        /// </summary>
+        private void buttonObjectBrowser_Click(object sender, EventArgs e)
+        {
+            objectBrowser.loadObjects("");
+            popupOpened = true;
+            objectBrowser.Show(this);
         }
 
         /// <summary>
@@ -1472,6 +1522,8 @@ namespace Examples.MeshCreator
 
 
         #endregion
+
+        
 
         
 
