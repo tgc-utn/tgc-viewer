@@ -616,7 +616,7 @@ namespace Examples.MeshCreator
         /// <summary>
         /// Eliminar todos los objetos seleccionados
         /// </summary>
-        private void deleteSelectedObjects()
+        public void deleteSelectedObjects()
         {
             foreach (EditorPrimitive p in selectionList)
             {
