@@ -132,6 +132,12 @@
     <Compile Include="Matematica\EjemploTriangulosYPlanos.cs" />
     <Compile Include="Matematica\EjemploTransformaciones.cs" />
     <Compile Include="Matematica\EjemploMatematicaVarios.cs" />
+    <Compile Include="MeshCreator\InputMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MeshCreator\InputMessageBox.Designer.cs">
+      <DependentUpon>InputMessageBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="MeshCreator\ObjectBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -345,6 +351,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="MeshCreator\InputMessageBox.resx">
+      <DependentUpon>InputMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MeshCreator\MeshCreatorControl.resx">
       <DependentUpon>MeshCreatorControl.cs</DependentUpon>
       <SubType>Designer</SubType>
