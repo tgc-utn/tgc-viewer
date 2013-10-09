@@ -30,6 +30,7 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.buttonTopView = new System.Windows.Forms.Button();
             this.buttonObjectBrowser = new System.Windows.Forms.Button();
             this.numericUpDownFPSCameraSpeed = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
@@ -102,6 +103,8 @@
             this.radioButtonModifySelectAndRotate = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndMove = new System.Windows.Forms.RadioButton();
             this.tabPageModify2 = new System.Windows.Forms.TabPage();
+            this.labelCreateCurrentLayer = new System.Windows.Forms.Label();
+            this.textBoxCreateCurrentLayer = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
@@ -147,6 +150,7 @@
             // 
             // tabPageGeneral
             // 
+            this.tabPageGeneral.Controls.Add(this.buttonTopView);
             this.tabPageGeneral.Controls.Add(this.buttonObjectBrowser);
             this.tabPageGeneral.Controls.Add(this.numericUpDownFPSCameraSpeed);
             this.tabPageGeneral.Controls.Add(this.label14);
@@ -172,13 +176,23 @@
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
+            // buttonTopView
+            // 
+            this.buttonTopView.Location = new System.Drawing.Point(5, 339);
+            this.buttonTopView.Name = "buttonTopView";
+            this.buttonTopView.Size = new System.Drawing.Size(95, 25);
+            this.buttonTopView.TabIndex = 52;
+            this.buttonTopView.Text = "Top view (T)";
+            this.buttonTopView.UseVisualStyleBackColor = true;
+            this.buttonTopView.Click += new System.EventHandler(this.buttonTopView_Click);
+            // 
             // buttonObjectBrowser
             // 
             this.buttonObjectBrowser.Location = new System.Drawing.Point(5, 313);
             this.buttonObjectBrowser.Name = "buttonObjectBrowser";
             this.buttonObjectBrowser.Size = new System.Drawing.Size(95, 25);
             this.buttonObjectBrowser.TabIndex = 51;
-            this.buttonObjectBrowser.Text = "Object browser";
+            this.buttonObjectBrowser.Text = "Object browser (O)";
             this.buttonObjectBrowser.UseVisualStyleBackColor = true;
             this.buttonObjectBrowser.Click += new System.EventHandler(this.buttonObjectBrowser_Click);
             // 
@@ -237,7 +251,7 @@
             this.buttonSelectAll.Name = "buttonSelectAll";
             this.buttonSelectAll.Size = new System.Drawing.Size(95, 25);
             this.buttonSelectAll.TabIndex = 46;
-            this.buttonSelectAll.Text = "Select all";
+            this.buttonSelectAll.Text = "Select all (CTRL + E)";
             this.buttonSelectAll.UseVisualStyleBackColor = true;
             this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
             // 
@@ -282,7 +296,7 @@
             this.buttonHideSelected.Name = "buttonHideSelected";
             this.buttonHideSelected.Size = new System.Drawing.Size(95, 25);
             this.buttonHideSelected.TabIndex = 9;
-            this.buttonHideSelected.Text = "Hide selected";
+            this.buttonHideSelected.Text = "Hide selected (H)";
             this.buttonHideSelected.UseVisualStyleBackColor = true;
             this.buttonHideSelected.Click += new System.EventHandler(this.buttonHideSelected_Click);
             // 
@@ -298,7 +312,7 @@
             // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(21, 465);
+            this.buttonHelp.Location = new System.Drawing.Point(21, 471);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(55, 25);
             this.buttonHelp.TabIndex = 7;
@@ -309,7 +323,7 @@
             // checkBoxAttachExport
             // 
             this.checkBoxAttachExport.AutoSize = true;
-            this.checkBoxAttachExport.Location = new System.Drawing.Point(7, 404);
+            this.checkBoxAttachExport.Location = new System.Drawing.Point(7, 410);
             this.checkBoxAttachExport.Name = "checkBoxAttachExport";
             this.checkBoxAttachExport.Size = new System.Drawing.Size(89, 17);
             this.checkBoxAttachExport.TabIndex = 6;
@@ -318,11 +332,11 @@
             // 
             // buttonExportScene
             // 
-            this.buttonExportScene.Location = new System.Drawing.Point(3, 376);
+            this.buttonExportScene.Location = new System.Drawing.Point(3, 382);
             this.buttonExportScene.Name = "buttonExportScene";
             this.buttonExportScene.Size = new System.Drawing.Size(95, 25);
             this.buttonExportScene.TabIndex = 5;
-            this.buttonExportScene.Text = "Export scene";
+            this.buttonExportScene.Text = "Export scene (CTRL + S)";
             this.buttonExportScene.UseVisualStyleBackColor = true;
             this.buttonExportScene.Click += new System.EventHandler(this.buttonExportScene_Click);
             // 
@@ -332,7 +346,7 @@
             this.buttonCloneObject.Name = "buttonCloneObject";
             this.buttonCloneObject.Size = new System.Drawing.Size(95, 25);
             this.buttonCloneObject.TabIndex = 4;
-            this.buttonCloneObject.Text = "Clone selection";
+            this.buttonCloneObject.Text = "Clone selection (CTRL + V)";
             this.buttonCloneObject.UseVisualStyleBackColor = true;
             this.buttonCloneObject.Click += new System.EventHandler(this.buttonCloneObject_Click);
             // 
@@ -352,7 +366,7 @@
             this.buttonZoomObject.Name = "buttonZoomObject";
             this.buttonZoomObject.Size = new System.Drawing.Size(95, 25);
             this.buttonZoomObject.TabIndex = 2;
-            this.buttonZoomObject.Text = "Zoom object";
+            this.buttonZoomObject.Text = "Zoom object (Z)";
             this.buttonZoomObject.UseVisualStyleBackColor = true;
             this.buttonZoomObject.Click += new System.EventHandler(this.buttonZoomObject_Click);
             // 
@@ -365,13 +379,15 @@
             this.radioButtonSelectObject.Size = new System.Drawing.Size(95, 24);
             this.radioButtonSelectObject.TabIndex = 1;
             this.radioButtonSelectObject.TabStop = true;
-            this.radioButtonSelectObject.Text = "Select object";
+            this.radioButtonSelectObject.Text = "Select object (Q)";
             this.radioButtonSelectObject.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.radioButtonSelectObject.UseVisualStyleBackColor = true;
             this.radioButtonSelectObject.CheckedChanged += new System.EventHandler(this.radioButtonSelectObject_CheckedChanged);
             // 
             // tabPageCreate
             // 
+            this.tabPageCreate.Controls.Add(this.textBoxCreateCurrentLayer);
+            this.tabPageCreate.Controls.Add(this.labelCreateCurrentLayer);
             this.tabPageCreate.Controls.Add(this.groupBoxPrimitive);
             this.tabPageCreate.Location = new System.Drawing.Point(4, 22);
             this.tabPageCreate.Name = "tabPageCreate";
@@ -1093,6 +1109,22 @@
             this.tabPageModify2.Text = "Modify+";
             this.tabPageModify2.UseVisualStyleBackColor = true;
             // 
+            // labelCreateCurrentLayer
+            // 
+            this.labelCreateCurrentLayer.AutoSize = true;
+            this.labelCreateCurrentLayer.Location = new System.Drawing.Point(6, 218);
+            this.labelCreateCurrentLayer.Name = "labelCreateCurrentLayer";
+            this.labelCreateCurrentLayer.Size = new System.Drawing.Size(69, 13);
+            this.labelCreateCurrentLayer.TabIndex = 1;
+            this.labelCreateCurrentLayer.Text = "Current layer:";
+            // 
+            // textBoxCreateCurrentLayer
+            // 
+            this.textBoxCreateCurrentLayer.Location = new System.Drawing.Point(6, 234);
+            this.textBoxCreateCurrentLayer.Name = "textBoxCreateCurrentLayer";
+            this.textBoxCreateCurrentLayer.Size = new System.Drawing.Size(100, 20);
+            this.textBoxCreateCurrentLayer.TabIndex = 2;
+            // 
             // MeshCreatorControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1110,6 +1142,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).EndInit();
             this.tabPageCreate.ResumeLayout(false);
+            this.tabPageCreate.PerformLayout();
             this.groupBoxPrimitive.ResumeLayout(false);
             this.tabPageModify.ResumeLayout(false);
             this.groupBoxModifyTexture.ResumeLayout(false);
@@ -1219,5 +1252,8 @@
         private System.Windows.Forms.NumericUpDown numericUpDownFPSCameraSpeed;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button buttonObjectBrowser;
+        private System.Windows.Forms.Button buttonTopView;
+        private System.Windows.Forms.TextBox textBoxCreateCurrentLayer;
+        private System.Windows.Forms.Label labelCreateCurrentLayer;
     }
 }

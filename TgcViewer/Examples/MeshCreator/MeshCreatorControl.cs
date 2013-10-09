@@ -196,6 +196,14 @@ namespace Examples.MeshCreator
             set { popupOpened = value; }
         }
 
+        /// <summary>
+        /// Layer default actual para crear nuevos objetos
+        /// </summary>
+        public string CurrentLayer
+        {
+            get { return textBoxCreateCurrentLayer.Text; }
+        }
+
 
         public MeshCreatorControl(TgcMeshCreator creator)
         {
@@ -244,6 +252,9 @@ namespace Examples.MeshCreator
             tabControl.SelectedTab = tabControl.TabPages["tabPageCreate"];
             currentState = State.SelectObject;
             radioButtonSelectObject.Checked = true;
+
+            //Tab Create
+            textBoxCreateCurrentLayer.Text = "Default";
 
             //Tab Modify
             textureBrowser = new TgcTextureBrowser();
@@ -420,7 +431,7 @@ namespace Examples.MeshCreator
                 //Top view
                 else if (input.keyPressed(Key.T))
                 {
-                    selectionRectangle.setTopView();
+                    buttonTopView_Click(null, null);
                 }
                 //Left view
                 else if (input.keyPressed(Key.L))
@@ -1176,6 +1187,14 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Clic en "Top view"
+        /// </summary>
+        private void buttonTopView_Click(object sender, EventArgs e)
+        {
+            selectionRectangle.setTopView();
+        }
+
+        /// <summary>
         /// Clic en "Exportar escena"
         /// </summary>
         private void buttonExportScene_Click(object sender, EventArgs e)
@@ -1509,6 +1528,8 @@ namespace Examples.MeshCreator
         
 
         #endregion
+
+        
 
 
 

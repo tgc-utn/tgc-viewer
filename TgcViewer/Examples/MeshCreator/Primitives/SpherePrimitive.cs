@@ -80,6 +80,7 @@ namespace Examples.MeshCreator.Primitives
             mesh.setTexture(sphereTexture);
            // mesh.BoundingSphere.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
             bb.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
+            this.Layer = Control.CurrentLayer;
         }
 
         /// <summary>
