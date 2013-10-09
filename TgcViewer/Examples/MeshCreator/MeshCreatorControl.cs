@@ -417,13 +417,22 @@ namespace Examples.MeshCreator
                 {
                     buttonObjectBrowser_Click(null, null);
                 }
+                //Top view
+                else if (input.keyPressed(Key.T))
+                {
+                    selectionRectangle.setTopView();
+                }
+                //Left view
+                else if (input.keyPressed(Key.L))
+                {
+                    //TODO: no anda
+                    //selectionRectangle.setLeftView();
+                }
             }
         }
-        
 
         
 
-        
 
         /// <summary>
         /// Dibujar todos los objetos
@@ -581,7 +590,6 @@ namespace Examples.MeshCreator
         public void addMesh(EditorPrimitive mesh)
         {
             this.meshes.Add(mesh);
-            updateMeshesPanel();
         }
         
 
@@ -614,6 +622,31 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Eliminar los objetos especificados
+        /// </summary>
+        public void deleteObjects(List<EditorPrimitive> objectsToDelete)
+        {
+            foreach (EditorPrimitive p in objectsToDelete)
+            {
+                if (p.Selected)
+                {
+                    selectionList.Remove(p);
+                }
+                meshes.Remove(p);
+                p.dispose();
+            }
+
+            //Actualizar panel de modifiy
+            updateModifyPanel();
+
+            //Quitar gizmo actual
+            currentGizmo = null;
+
+            //Pasar a modo seleccion
+            currentState = MeshCreatorControl.State.SelectObject;
+        }
+
+        /// <summary>
         /// Eliminar todos los objetos seleccionados
         /// </summary>
         public void deleteSelectedObjects()
@@ -627,7 +660,6 @@ namespace Examples.MeshCreator
             //Limpiar lista de seleccion
             selectionList.Clear();
             updateModifyPanel();
-            updateMeshesPanel();
 
             //Quitar gizmo actual
             currentGizmo = null;
@@ -665,7 +697,6 @@ namespace Examples.MeshCreator
                 }
 
                 updateModifyPanel();
-                updateMeshesPanel();
 
                 //Quitar gizmo actual
                 currentGizmo = null;
@@ -828,27 +859,6 @@ namespace Examples.MeshCreator
             textureBrowser.Close();
             GuiController.Instance.CurrentCamera.Enable = true;
         }
-
-        /// <summary>
-        /// Actualizar panel con grilla de modelos del escenario
-        /// </summary>
-        public void updateMeshesPanel()
-        {
-            //Cargar dataGrid con objetos del escenario
-            dataGridViewMeshes.Rows.Clear();
-            foreach (EditorPrimitive primitive in meshes)
-            {
-                DataGridViewRow row = new DataGridViewRow();
-                row.CreateCells(dataGridViewMeshes, new object[] { 
-                        primitive.Name, 
-                        primitive.Visible });
-
-                row.Tag = primitive;
-                dataGridViewMeshes.Rows.Add(row);
-            }
-        }
-
-
 
 
         #region Eventos generales
@@ -1064,7 +1074,6 @@ namespace Examples.MeshCreator
                 currentState = MeshCreatorControl.State.SelectObject;
                 selectionRectangle.activateCurrentGizmo();
                 updateModifyPanel();
-                updateMeshesPanel();
             }
         }
 
@@ -1085,7 +1094,7 @@ namespace Examples.MeshCreator
             {
                 //Limpiar lista de seleccion
                 selectionRectangle.clearSelection();
-                updateMeshesPanel();
+                updateModifyPanel();
 
                 //Quitar gizmo actual
                 currentGizmo = null;
@@ -1147,7 +1156,6 @@ namespace Examples.MeshCreator
                     currentState = MeshCreatorControl.State.SelectObject;
                     selectionRectangle.activateCurrentGizmo();
                     updateModifyPanel();
-                    updateMeshesPanel();
                 }
                 catch (Exception ex)
                 {
@@ -1504,24 +1512,6 @@ namespace Examples.MeshCreator
 
 
 
-        #region Eventos de Selection
-
-
-        /// <summary>
-        /// Clic en Visible de la tabla de meshes
-        /// </summary>
-        private void dataGridViewMeshes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (dataGridViewMeshes.SelectedCells.Count > 0)
-            {
-                DataGridViewCell cell = dataGridViewMeshes.SelectedCells[0];
-                EditorPrimitive p = (EditorPrimitive)dataGridViewMeshes.Rows[cell.RowIndex].Tag;
-                p.Visible = bool.Parse((string)cell.Value);
-            }
-        }
-
-
-        #endregion
 
         
 
