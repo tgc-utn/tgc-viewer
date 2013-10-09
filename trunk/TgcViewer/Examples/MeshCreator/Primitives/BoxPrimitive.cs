@@ -80,6 +80,7 @@ namespace Examples.MeshCreator.Primitives
             TgcTexture boxTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
             mesh = TgcBox.fromExtremes(initSelectionPoint, initSelectionPoint, boxTexture);
             mesh.BoundingBox.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
+            this.Layer = Control.CurrentLayer;
         }
 
         /// <summary>

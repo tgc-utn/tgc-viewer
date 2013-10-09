@@ -120,7 +120,7 @@ namespace Examples.MeshCreator.Primitives
             this.control = control;
             this.selected = false;
             this.userProperties = new Dictionary<string, string>();
-            this.layer = "Default";
+            this.layer = control.CurrentLayer;
             this.modifyCaps = new ModifyCapabilities();
             this.visible = true;
         }
