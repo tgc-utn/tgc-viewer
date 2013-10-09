@@ -70,6 +70,7 @@ namespace Examples.MeshCreator.Primitives
             mesh.UTile = 1;
             mesh.VTile = 1;
             mesh.BoundingBox.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
+            this.Layer = Control.CurrentLayer;
         }
 
         /// <summary>
