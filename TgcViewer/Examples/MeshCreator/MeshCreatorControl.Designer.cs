@@ -30,6 +30,7 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.buttonObjectBrowser = new System.Windows.Forms.Button();
             this.numericUpDownFPSCameraSpeed = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
             this.radioButtonFPSCamera = new System.Windows.Forms.RadioButton();
@@ -100,11 +101,7 @@
             this.radioButtonModifySelectAndScale = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndRotate = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndMove = new System.Windows.Forms.RadioButton();
-            this.tabPageMeshes = new System.Windows.Forms.TabPage();
-            this.dataGridViewMeshes = new System.Windows.Forms.DataGridView();
-            this.meshesColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.meshesColumnVisible = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.buttonObjectBrowser = new System.Windows.Forms.Button();
+            this.tabPageModify2 = new System.Windows.Forms.TabPage();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
@@ -133,8 +130,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosX)).BeginInit();
             this.groupBoxModifyGeneral.SuspendLayout();
-            this.tabPageMeshes.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl
@@ -142,7 +137,7 @@
             this.tabControl.Controls.Add(this.tabPageGeneral);
             this.tabControl.Controls.Add(this.tabPageCreate);
             this.tabControl.Controls.Add(this.tabPageModify);
-            this.tabControl.Controls.Add(this.tabPageMeshes);
+            this.tabControl.Controls.Add(this.tabPageModify2);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -176,6 +171,16 @@
             this.tabPageGeneral.TabIndex = 2;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // buttonObjectBrowser
+            // 
+            this.buttonObjectBrowser.Location = new System.Drawing.Point(5, 313);
+            this.buttonObjectBrowser.Name = "buttonObjectBrowser";
+            this.buttonObjectBrowser.Size = new System.Drawing.Size(95, 25);
+            this.buttonObjectBrowser.TabIndex = 51;
+            this.buttonObjectBrowser.Text = "Object browser";
+            this.buttonObjectBrowser.UseVisualStyleBackColor = true;
+            this.buttonObjectBrowser.Click += new System.EventHandler(this.buttonObjectBrowser_Click);
             // 
             // numericUpDownFPSCameraSpeed
             // 
@@ -1078,60 +1083,15 @@
             this.radioButtonModifySelectAndMove.UseVisualStyleBackColor = true;
             this.radioButtonModifySelectAndMove.CheckedChanged += new System.EventHandler(this.radioButtonModifySelectAndMove_CheckedChanged);
             // 
-            // tabPageMeshes
+            // tabPageModify2
             // 
-            this.tabPageMeshes.Controls.Add(this.dataGridViewMeshes);
-            this.tabPageMeshes.Location = new System.Drawing.Point(4, 22);
-            this.tabPageMeshes.Name = "tabPageMeshes";
-            this.tabPageMeshes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMeshes.Size = new System.Drawing.Size(192, 974);
-            this.tabPageMeshes.TabIndex = 3;
-            this.tabPageMeshes.Text = "Meshes";
-            this.tabPageMeshes.UseVisualStyleBackColor = true;
-            // 
-            // dataGridViewMeshes
-            // 
-            this.dataGridViewMeshes.AllowUserToAddRows = false;
-            this.dataGridViewMeshes.AllowUserToDeleteRows = false;
-            this.dataGridViewMeshes.AllowUserToResizeRows = false;
-            this.dataGridViewMeshes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewMeshes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.meshesColumnName,
-            this.meshesColumnVisible});
-            this.dataGridViewMeshes.Location = new System.Drawing.Point(1, 6);
-            this.dataGridViewMeshes.MultiSelect = false;
-            this.dataGridViewMeshes.Name = "dataGridViewMeshes";
-            this.dataGridViewMeshes.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.dataGridViewMeshes.RowHeadersVisible = false;
-            this.dataGridViewMeshes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridViewMeshes.Size = new System.Drawing.Size(109, 278);
-            this.dataGridViewMeshes.TabIndex = 0;
-            this.dataGridViewMeshes.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewMeshes_CellValueChanged);
-            // 
-            // meshesColumnName
-            // 
-            this.meshesColumnName.HeaderText = "Name";
-            this.meshesColumnName.Name = "meshesColumnName";
-            this.meshesColumnName.ReadOnly = true;
-            this.meshesColumnName.Width = 60;
-            // 
-            // meshesColumnVisible
-            // 
-            this.meshesColumnVisible.FalseValue = "false";
-            this.meshesColumnVisible.HeaderText = "Visible";
-            this.meshesColumnVisible.Name = "meshesColumnVisible";
-            this.meshesColumnVisible.TrueValue = "true";
-            this.meshesColumnVisible.Width = 35;
-            // 
-            // buttonObjectBrowser
-            // 
-            this.buttonObjectBrowser.Location = new System.Drawing.Point(5, 313);
-            this.buttonObjectBrowser.Name = "buttonObjectBrowser";
-            this.buttonObjectBrowser.Size = new System.Drawing.Size(95, 25);
-            this.buttonObjectBrowser.TabIndex = 51;
-            this.buttonObjectBrowser.Text = "Object browser";
-            this.buttonObjectBrowser.UseVisualStyleBackColor = true;
-            this.buttonObjectBrowser.Click += new System.EventHandler(this.buttonObjectBrowser_Click);
+            this.tabPageModify2.Location = new System.Drawing.Point(4, 22);
+            this.tabPageModify2.Name = "tabPageModify2";
+            this.tabPageModify2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageModify2.Size = new System.Drawing.Size(192, 974);
+            this.tabPageModify2.TabIndex = 3;
+            this.tabPageModify2.Text = "Modify+";
+            this.tabPageModify2.UseVisualStyleBackColor = true;
             // 
             // MeshCreatorControl
             // 
@@ -1179,8 +1139,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosX)).EndInit();
             this.groupBoxModifyGeneral.ResumeLayout(false);
             this.groupBoxModifyGeneral.PerformLayout();
-            this.tabPageMeshes.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeshes)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1248,10 +1206,7 @@
         private System.Windows.Forms.RadioButton radioButtonPrimitive_PlaneXY;
         private System.Windows.Forms.CheckBox checkBoxModifyAlphaBlendEnabled;
         private System.Windows.Forms.CheckBox checkBoxShowObjectsBoundingBox;
-        private System.Windows.Forms.TabPage tabPageMeshes;
-        private System.Windows.Forms.DataGridView dataGridViewMeshes;
-        private System.Windows.Forms.DataGridViewTextBoxColumn meshesColumnName;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn meshesColumnVisible;
+        private System.Windows.Forms.TabPage tabPageModify2;
         private System.Windows.Forms.RadioButton radioButtonPrimitive_Sphere;
         private System.Windows.Forms.Button buttonHideSelected;
         private System.Windows.Forms.CheckBox checkBoxSnapToGrid;

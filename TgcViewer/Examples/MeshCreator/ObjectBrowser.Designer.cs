@@ -29,14 +29,17 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.buttonMove = new System.Windows.Forms.Button();
+            this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonHide = new System.Windows.Forms.Button();
             this.buttonShow = new System.Windows.Forms.Button();
             this.buttonNewLayer = new System.Windows.Forms.Button();
             this.textBoxSearch = new System.Windows.Forms.TextBox();
-            this.buttonSearch = new System.Windows.Forms.Button();
             this.treeViewObjects = new System.Windows.Forms.TreeView();
-            this.buttonDelete = new System.Windows.Forms.Button();
-            this.buttonMove = new System.Windows.Forms.Button();
+            this.buttonRename = new System.Windows.Forms.Button();
+            this.buttonSelectAll = new System.Windows.Forms.Button();
+            this.buttonUnselectAll = new System.Windows.Forms.Button();
+            this.labelSearch = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -53,24 +56,47 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.labelSearch);
+            this.splitContainer1.Panel1.Controls.Add(this.buttonUnselectAll);
+            this.splitContainer1.Panel1.Controls.Add(this.buttonSelectAll);
+            this.splitContainer1.Panel1.Controls.Add(this.buttonRename);
             this.splitContainer1.Panel1.Controls.Add(this.buttonMove);
             this.splitContainer1.Panel1.Controls.Add(this.buttonDelete);
             this.splitContainer1.Panel1.Controls.Add(this.buttonHide);
             this.splitContainer1.Panel1.Controls.Add(this.buttonShow);
             this.splitContainer1.Panel1.Controls.Add(this.buttonNewLayer);
             this.splitContainer1.Panel1.Controls.Add(this.textBoxSearch);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonSearch);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.treeViewObjects);
-            this.splitContainer1.Size = new System.Drawing.Size(407, 565);
-            this.splitContainer1.SplitterDistance = 69;
+            this.splitContainer1.Size = new System.Drawing.Size(407, 553);
+            this.splitContainer1.SplitterDistance = 52;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // buttonMove
+            // 
+            this.buttonMove.Location = new System.Drawing.Point(223, 26);
+            this.buttonMove.Name = "buttonMove";
+            this.buttonMove.Size = new System.Drawing.Size(42, 23);
+            this.buttonMove.TabIndex = 6;
+            this.buttonMove.Text = "Move";
+            this.buttonMove.UseVisualStyleBackColor = true;
+            this.buttonMove.Click += new System.EventHandler(this.buttonMove_Click);
+            // 
+            // buttonDelete
+            // 
+            this.buttonDelete.Location = new System.Drawing.Point(40, 26);
+            this.buttonDelete.Name = "buttonDelete";
+            this.buttonDelete.Size = new System.Drawing.Size(47, 23);
+            this.buttonDelete.TabIndex = 5;
+            this.buttonDelete.Text = "Delete";
+            this.buttonDelete.UseVisualStyleBackColor = true;
+            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // buttonHide
             // 
-            this.buttonHide.Location = new System.Drawing.Point(128, 43);
+            this.buttonHide.Location = new System.Drawing.Point(182, 26);
             this.buttonHide.Name = "buttonHide";
             this.buttonHide.Size = new System.Drawing.Size(42, 23);
             this.buttonHide.TabIndex = 4;
@@ -80,7 +106,7 @@
             // 
             // buttonShow
             // 
-            this.buttonShow.Location = new System.Drawing.Point(86, 43);
+            this.buttonShow.Location = new System.Drawing.Point(140, 26);
             this.buttonShow.Name = "buttonShow";
             this.buttonShow.Size = new System.Drawing.Size(42, 23);
             this.buttonShow.TabIndex = 3;
@@ -90,7 +116,7 @@
             // 
             // buttonNewLayer
             // 
-            this.buttonNewLayer.Location = new System.Drawing.Point(3, 43);
+            this.buttonNewLayer.Location = new System.Drawing.Point(3, 26);
             this.buttonNewLayer.Name = "buttonNewLayer";
             this.buttonNewLayer.Size = new System.Drawing.Size(37, 23);
             this.buttonNewLayer.TabIndex = 2;
@@ -100,21 +126,11 @@
             // 
             // textBoxSearch
             // 
-            this.textBoxSearch.Location = new System.Drawing.Point(3, 6);
+            this.textBoxSearch.Location = new System.Drawing.Point(53, 3);
             this.textBoxSearch.Name = "textBoxSearch";
-            this.textBoxSearch.Size = new System.Drawing.Size(262, 20);
+            this.textBoxSearch.Size = new System.Drawing.Size(338, 20);
             this.textBoxSearch.TabIndex = 1;
             this.textBoxSearch.TextChanged += new System.EventHandler(this.textBoxSearch_TextChanged);
-            // 
-            // buttonSearch
-            // 
-            this.buttonSearch.Location = new System.Drawing.Point(271, 4);
-            this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Size = new System.Drawing.Size(75, 23);
-            this.buttonSearch.TabIndex = 0;
-            this.buttonSearch.Text = "Search";
-            this.buttonSearch.UseVisualStyleBackColor = true;
-            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
             // treeViewObjects
             // 
@@ -122,41 +138,61 @@
             this.treeViewObjects.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeViewObjects.Location = new System.Drawing.Point(0, 0);
             this.treeViewObjects.Name = "treeViewObjects";
-            this.treeViewObjects.Size = new System.Drawing.Size(407, 492);
+            this.treeViewObjects.Size = new System.Drawing.Size(407, 497);
             this.treeViewObjects.TabIndex = 0;
             this.treeViewObjects.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeViewObjects_AfterCheck);
             this.treeViewObjects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewObjects_AfterSelect);
             // 
-            // buttonDelete
+            // buttonRename
             // 
-            this.buttonDelete.Location = new System.Drawing.Point(40, 43);
-            this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(47, 23);
-            this.buttonDelete.TabIndex = 5;
-            this.buttonDelete.Text = "Delete";
-            this.buttonDelete.UseVisualStyleBackColor = true;
-            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
+            this.buttonRename.Location = new System.Drawing.Point(86, 26);
+            this.buttonRename.Name = "buttonRename";
+            this.buttonRename.Size = new System.Drawing.Size(55, 23);
+            this.buttonRename.TabIndex = 7;
+            this.buttonRename.Text = "Rename";
+            this.buttonRename.UseVisualStyleBackColor = true;
+            this.buttonRename.Click += new System.EventHandler(this.buttonRename_Click);
             // 
-            // buttonMove
+            // buttonSelectAll
             // 
-            this.buttonMove.Location = new System.Drawing.Point(169, 43);
-            this.buttonMove.Name = "buttonMove";
-            this.buttonMove.Size = new System.Drawing.Size(47, 23);
-            this.buttonMove.TabIndex = 6;
-            this.buttonMove.Text = "Move";
-            this.buttonMove.UseVisualStyleBackColor = true;
-            this.buttonMove.Click += new System.EventHandler(this.buttonMove_Click);
+            this.buttonSelectAll.Location = new System.Drawing.Point(264, 26);
+            this.buttonSelectAll.Name = "buttonSelectAll";
+            this.buttonSelectAll.Size = new System.Drawing.Size(58, 23);
+            this.buttonSelectAll.TabIndex = 8;
+            this.buttonSelectAll.Text = "Select all";
+            this.buttonSelectAll.UseVisualStyleBackColor = true;
+            this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
+            // 
+            // buttonUnselectAll
+            // 
+            this.buttonUnselectAll.Location = new System.Drawing.Point(321, 26);
+            this.buttonUnselectAll.Name = "buttonUnselectAll";
+            this.buttonUnselectAll.Size = new System.Drawing.Size(70, 23);
+            this.buttonUnselectAll.TabIndex = 9;
+            this.buttonUnselectAll.Text = "Unselect all";
+            this.buttonUnselectAll.UseVisualStyleBackColor = true;
+            this.buttonUnselectAll.Click += new System.EventHandler(this.buttonUnselectAll_Click);
+            // 
+            // labelSearch
+            // 
+            this.labelSearch.AutoSize = true;
+            this.labelSearch.Location = new System.Drawing.Point(3, 6);
+            this.labelSearch.Name = "labelSearch";
+            this.labelSearch.Size = new System.Drawing.Size(44, 13);
+            this.labelSearch.TabIndex = 10;
+            this.labelSearch.Text = "Search:";
             // 
             // ObjectBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(407, 565);
+            this.ClientSize = new System.Drawing.Size(407, 553);
             this.Controls.Add(this.splitContainer1);
             this.MinimizeBox = false;
             this.Name = "ObjectBrowser";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Object browser";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ObjectBrowser_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -172,12 +208,15 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TextBox textBoxSearch;
-        private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.Button buttonNewLayer;
         private System.Windows.Forms.TreeView treeViewObjects;
         private System.Windows.Forms.Button buttonShow;
         private System.Windows.Forms.Button buttonHide;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonMove;
+        private System.Windows.Forms.Button buttonRename;
+        private System.Windows.Forms.Button buttonUnselectAll;
+        private System.Windows.Forms.Button buttonSelectAll;
+        private System.Windows.Forms.Label labelSearch;
     }
 }
