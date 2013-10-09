@@ -64,5 +64,10 @@ namespace Examples.MeshCreator
             
         }
 
+        private void InputMessageBox_Load(object sender, EventArgs e)
+        {
+            
+        }
+
     }
 }

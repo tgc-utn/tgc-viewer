@@ -31,7 +31,7 @@ namespace Examples.MeshCreator
         Matrix viewMatrix;
         float rotationSpeed;
         float panSpeed;
-        float baseRotX;
+        
         
 
 
@@ -97,7 +97,26 @@ namespace Examples.MeshCreator
             get { return panSpeed; }
             set { panSpeed = value; }
         }
-        
+
+        float baseRotX;
+        /// <summary>
+        /// Rotacion inicial que siempre tiene en el eje X
+        /// </summary>
+        public float BaseRotX
+        {
+            get { return baseRotX; }
+            set { baseRotX = value; }
+        }
+
+        float baseRotY;
+        /// <summary>
+        /// Rotacion inicial que siempre tiene en el eje Y
+        /// </summary>
+        public float BaseRotY
+        {
+            get { return baseRotY; }
+            set { baseRotY = value; }
+        }
 
         /// <summary>
         /// Configura el centro de la camara, la distancia y la velocidad de zoom
@@ -119,14 +138,7 @@ namespace Examples.MeshCreator
             this.zoomFactor = DEFAULT_ZOOM_FACTOR;
         }
 
-        /// <summary>
-        /// Rotacion inicial que siempre tiene en el eje X
-        /// </summary>
-        public float BaseRotX
-        {
-            get { return baseRotX; }
-            set { baseRotX = value; }
-        }
+
 
 
         #endregion
@@ -148,6 +160,7 @@ namespace Examples.MeshCreator
             viewMatrix = Matrix.Identity;
             panSpeed = 0.01f;
             baseRotX = 0;
+            baseRotY = 0;
         }
 
         /// <summary>
@@ -184,7 +197,7 @@ namespace Examples.MeshCreator
 
             //Calcular rotacion a aplicar
             float rotX = (-diffY / FastMath.PI) + baseRotX;
-            float rotY = (diffX / FastMath.PI);
+            float rotY = (diffX / FastMath.PI) + baseRotY;
 
             //Truncar valores de rotacion fuera de rango
             if (rotX > FastMath.PI * 2 || rotX < -FastMath.PI * 2)
@@ -272,6 +285,27 @@ namespace Examples.MeshCreator
             d3dDevice.Transform.View = viewMatrix;
         }
 
+        /// <summary>
+        /// Setear la camara con una determinada posicion y lookAt
+        /// </summary>
+        public void lookAt(Vector3 pos, Vector3 lookAt)
+        {
+            //TODO: solo funciona bien para hacer un TopView
+
+            Vector3 v = pos - lookAt;
+            float length = Vector3.Length(v);
+            v.Scale(1 / length);
+
+            cameraDistance = length;
+            upVector = new Vector3(0, 1, 0);
+            diffX = 0;
+            diffY = 0.01f;
+            diffZ = 1;
+            baseRotX = -FastMath.Acos(Vector3.Dot(new Vector3(0, 0, -1), v));
+            //baseRotY = FastMath.Acos(Vector3.Dot(new Vector3(0, 0, -1), v));
+            baseRotY = 0;
+            cameraCenter = lookAt;
+        }
 
         public Vector3 getPosition()
         {

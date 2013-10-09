@@ -15,12 +15,15 @@ namespace Examples.MeshCreator
 
         MeshCreatorControl control;
         InputMessageBox inputBox;
+        ObjectBrowserSelectLayer selectLayerDialog;
+
 
         public ObjectBrowser(MeshCreatorControl control)
         {
             InitializeComponent();
             this.control = control;
             this.inputBox = new InputMessageBox();
+            this.selectLayerDialog = new ObjectBrowserSelectLayer();
         }
 
         /// <summary>
@@ -150,6 +153,7 @@ namespace Examples.MeshCreator
             if (e.Action == TreeViewAction.ByMouse)
             {
                 updateSelection();
+                treeViewObjects.SelectedNode = node;
             }
         }
 
@@ -174,13 +178,12 @@ namespace Examples.MeshCreator
                             control.SelectionRectangle.selectObject(p);
                         }
                     }
-                    childNode.BackColor = getMeshNodeColor(node);
+                    childNode.BackColor = getMeshNodeColor(childNode);
                 }
             }
 
             //Actualizar paneles
             control.updateModifyPanel();
-            control.updateMeshesPanel();
 
             //Quitar gizmo actual
             control.CurrentGizmo = null;
@@ -223,6 +226,7 @@ namespace Examples.MeshCreator
                 }
             }
             control.showHideObjects(objectsToShowHide, show);
+            updateSelection();
         }
 
         /// <summary>
@@ -240,30 +244,23 @@ namespace Examples.MeshCreator
         {
             inputBox.Text = "New layer";
             inputBox.InputLabel = "Layer name: ";
-            inputBox.InputText = "";
+            inputBox.InputText = "layer1";
             if (inputBox.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 //Chequear que ese nombre ya no exista
                 string layerName = inputBox.InputText;
-                bool unique = true;
-                foreach (TreeNode node in treeViewObjects.Nodes)
+                TreeNode repetedLayer = getLayerWithName(layerName);
+                if (repetedLayer != null)
                 {
-                    if (node.Text == layerName)
-                    {
-                        unique = false;
-                        MessageBox.Show(this, "There is already another layer with the name: " + layerName, "Duplicated layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        break;
-                    }
+                    MessageBox.Show(this, "There is already another layer with the name: " + layerName, "Duplicated layer", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
-                //Agregar layer
-                if (unique)
+                else
                 {
+                    //Agregar layer
                     TreeNode layerNode = new TreeNode(inputBox.InputText);
                     layerNode.BackColor = Color.LightBlue;
                     treeViewObjects.Nodes.Add(layerNode);
                 }
-                
             }
         }
 
@@ -272,27 +269,190 @@ namespace Examples.MeshCreator
         /// </summary>
         private void buttonDelete_Click(object sender, EventArgs e)
         {
-            //Confirmacion
-            if (MessageBox.Show(this, "¿Do you want to delete " + control.SelectionList.Count + " objects?", "Delete objects", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK)
+            //Obtener objetos a borrar
+            List<EditorPrimitive> objectsToDelete = new List<EditorPrimitive>();
+            foreach (TreeNode node in treeViewObjects.Nodes)
             {
-                //Borrar meshes seleccionados
-                control.deleteSelectedObjects();
-
-                //Borrar layer seleccionados
-                for (int i = 0; i < treeViewObjects.Nodes.Count; i++)
+                foreach (TreeNode childNode in node.Nodes)
                 {
-                    treeViewObjects.Nodes.RemoveAt(i);
-                    i--;
+                    if (childNode.Checked)
+                    {
+                        EditorPrimitive p = (EditorPrimitive)childNode.Tag;
+                        objectsToDelete.Add(p);
+                    }
+                }
+            }
+
+            //Confirmacion
+            if (objectsToDelete.Count > 0)
+            {
+                if (MessageBox.Show(this, "¿Do you want to delete " + control.SelectionList.Count + " objects?", "Delete objects", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    //Borrar meshes
+                    control.deleteObjects(objectsToDelete);
+
+                    //Borrar layers y objetos seleccionados del tree
+                    for (int i = 0; i < treeViewObjects.Nodes.Count; i++)
+                    {
+                        TreeNode node = treeViewObjects.Nodes[i];
+                        for (int j = 0; j < node.Nodes.Count; j++)
+                        {
+                            TreeNode childNode = node.Nodes[j];
+                            if (childNode.Checked)
+                            {
+                                node.Nodes.RemoveAt(j);
+                                j--;
+                            }
+                        }
+                        if (node.Checked)
+                        {
+                            treeViewObjects.Nodes.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    updateSelection();
                 }
             }
         }
 
+        /// <summary>
+        /// Clic en "Move"
+        /// </summary>
         private void buttonMove_Click(object sender, EventArgs e)
         {
+            //Mostrar popup para elegir layer destino
+            List<string> layerNames = new List<string>();
+            foreach (TreeNode node in treeViewObjects.Nodes)
+            {
+                layerNames.Add(node.Text);
+            }
+            selectLayerDialog.loadLayers(layerNames);
 
+            if (selectLayerDialog.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                //Buscar el nodo layer destino elegido
+                TreeNode dstLayer = getLayerWithName(selectLayerDialog.SelectedLayer);
+                if (dstLayer != null)
+                {
+                    //Recorrer todos los nodos chequeados y moverlos al layer destino
+                    foreach (TreeNode node in treeViewObjects.Nodes)
+                    {
+                        for (int i = 0; i < node.Nodes.Count; i++)
+                        {
+                            //Evitar moverlo al mismo destino
+                            TreeNode childNode = node.Nodes[i];
+                            if (childNode.Checked && node.Text != dstLayer.Text)
+                            {
+                                //Cambiar layer del mesh
+                                EditorPrimitive p = (EditorPrimitive)childNode.Tag;
+                                p.Layer = dstLayer.Text;
+
+                                //Mover de nodo del tree
+                                node.Nodes.RemoveAt(i);
+                                i--;
+
+                                //Agregar al nuevo nodo
+                                dstLayer.Nodes.Add(childNode);
+                            }
+                        }
+                    }
+
+                    updateSelection();
+                }
+
+            }
         }
 
-        
+        /// <summary>
+        /// Buscar nodo de layer por nombre
+        /// </summary>
+        private TreeNode getLayerWithName(string text)
+        {
+            TreeNode layerNode = null;
+            foreach (TreeNode node in treeViewObjects.Nodes)
+            {
+                if (node.Text == text)
+                {
+                    layerNode = node;
+                    break;
+                }
+            }
+            return layerNode;
+        }
+
+        /// <summary>
+        /// Clic en "Rename"
+        /// </summary>
+        private void buttonRename_Click(object sender, EventArgs e)
+        {
+            TreeNode node = treeViewObjects.SelectedNode;
+            if (node != null)
+            {
+                inputBox.Text = "Rename";
+                inputBox.InputLabel = "Object name:";
+                inputBox.InputText = node.Text;
+                if (inputBox.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    //Es un layer
+                    if (node.Tag == null)
+                    {
+                        //Cambiar nombre de layer
+                        node.Text = inputBox.InputText;
+
+                        //Cambiar layer a todos sus hijos
+                        foreach (TreeNode childNode in node.Nodes)
+                        {
+                            EditorPrimitive p = (EditorPrimitive)childNode.Tag;
+                            p.Layer = node.Text;
+                        }
+                    }
+                    //Es un mesh
+                    else
+                    {
+                        EditorPrimitive p = (EditorPrimitive)node.Tag;
+                        p.Name = inputBox.InputText;
+                        node.Text = p.Name;
+                    }
+                    
+                    updateSelection();
+                }
+
+                treeViewObjects.Focus();
+            }
+        }
+
+        /// <summary>
+        /// Clic en "Select All"
+        /// </summary>
+        private void buttonSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (TreeNode node in treeViewObjects.Nodes)
+            {
+                foreach (TreeNode childNode in node.Nodes)
+                {
+                    childNode.Checked = true;
+                }
+                node.Checked = true;
+            }
+            updateSelection();
+        }
+
+        /// <summary>
+        /// Clic en "Unselect All"
+        /// </summary>
+        private void buttonUnselectAll_Click(object sender, EventArgs e)
+        {
+            foreach (TreeNode node in treeViewObjects.Nodes)
+            {
+                foreach (TreeNode childNode in node.Nodes)
+                {
+                    childNode.Checked = false;
+                }
+                node.Checked = false;
+            }
+            updateSelection();
+        }
 
 
 

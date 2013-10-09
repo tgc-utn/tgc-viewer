@@ -375,7 +375,42 @@ namespace Examples.MeshCreator
             }
         }
 
-        
-        
+        /// <summary>
+        /// Poner la camara en un top view respecto de un objeto seleccionado
+        /// </summary>
+        public void setTopView()
+        {
+            TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
+            Vector3 lookAt;
+            if (aabb != null)
+            {
+                lookAt = aabb.calculateBoxCenter();
+            }
+            else
+            {
+                lookAt = new Vector3(0, 0, 0);
+            }
+            Vector3 pos = lookAt + new Vector3(0, control.Camera.CameraDistance, 0);
+            control.Camera.lookAt(pos, lookAt);
+        }
+
+        /// <summary>
+        /// Poner la camara en un left view respecto de un objeto seleccionado
+        /// </summary>
+        public void setLeftView()
+        {
+            TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
+            Vector3 lookAt;
+            if (aabb != null)
+            {
+                lookAt = aabb.calculateBoxCenter();
+            }
+            else
+            {
+                lookAt = new Vector3(0, 0, 0);
+            }
+            Vector3 pos = lookAt + new Vector3(control.Camera.CameraDistance, 0, 0);
+            control.Camera.lookAt(pos, lookAt);
+        }
     }
 }
