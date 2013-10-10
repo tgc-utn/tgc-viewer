@@ -439,6 +439,11 @@ namespace Examples.MeshCreator
                     //TODO: no anda
                     //selectionRectangle.setLeftView();
                 }
+                //Merge selected
+                else if (input.keyPressed(Key.G))
+                {
+                    buttonMergeSelected_Click(null, null);
+                }
             }
         }
 
@@ -1195,6 +1200,45 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Clic en "Merge Selected"
+        /// </summary>
+        private void buttonMergeSelected_Click(object sender, EventArgs e)
+        {
+            //Que haya mas de uno seleccionado
+            if (selectionList.Count > 1)
+            {
+                //Clonar objetos a mergear
+                List<TgcMesh> objectsToMerge = new List<TgcMesh>();
+                foreach (EditorPrimitive p in selectionList)
+                {
+                    TgcMesh m = p.createMeshToExport();
+                    objectsToMerge.Add(m);
+                }
+
+                //Eliminar los originales
+                deleteSelectedObjects();
+
+                //Hacer merge
+                TgcSceneExporter exporter = new TgcSceneExporter();
+                TgcMesh mergedMesh = exporter.mergeMeshes(objectsToMerge);
+
+                //Hacer dispose de los objetos clonados para mergear
+                foreach (TgcMesh m in objectsToMerge)
+                {
+                    m.dispose();
+                }
+
+                //Agregar nuevo mesh al escenario y seleccionarlo
+                EditorPrimitive pMerged = new MeshPrimitive(this, mergedMesh);
+                this.meshes.Add(pMerged);
+                selectionRectangle.selectObject(pMerged);
+                currentState = MeshCreatorControl.State.SelectObject;
+                selectionRectangle.activateCurrentGizmo();
+                updateModifyPanel();
+            }
+        }
+
+        /// <summary>
         /// Clic en "Exportar escena"
         /// </summary>
         private void buttonExportScene_Click(object sender, EventArgs e)
@@ -1227,6 +1271,10 @@ namespace Examples.MeshCreator
                     {
                         exporter.exportSceneToXml(exportScene, saveDir);
                     }
+
+                    //Hacer dispose de los objetos clonados para exportar
+                    exportScene.disposeAll();
+                    exportScene = null;
 
 
                     MessageBox.Show(this, "Scene exported OK.", "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1491,6 +1539,15 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Calcular "AABB"
+        /// </summary>
+        private void buttonModifyRecomputeAABB_Click(object sender, EventArgs e)
+        {
+            EditorPrimitive p = selectionList[0];
+            p.updateBoundingBox();
+        }
+
+        /// <summary>
         /// Cambiar escala en X
         /// </summary>
         private void numericUpDownModifyScaleX_ValueChanged(object sender, EventArgs e)
@@ -1528,6 +1585,10 @@ namespace Examples.MeshCreator
         
 
         #endregion
+
+        
+
+        
 
         
 
