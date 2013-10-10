@@ -223,5 +223,10 @@ namespace Examples.MeshCreator.Primitives
         /// </summary>
         public abstract EditorPrimitive clone();
 
+        /// <summary>
+        /// Actualizar el AABB
+        /// </summary>
+        public abstract void updateBoundingBox();
+
     }
 }

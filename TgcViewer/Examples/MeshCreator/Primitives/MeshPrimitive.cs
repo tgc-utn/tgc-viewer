@@ -159,7 +159,8 @@ namespace Examples.MeshCreator.Primitives
         {
             mesh.UserProperties = this.UserProperties;
             mesh.Layer = this.Layer;
-            return mesh;
+            TgcMesh cloneMesh = mesh.clone(mesh.Name);
+            return cloneMesh;
         }
 
         public override EditorPrimitive clone()
@@ -200,6 +201,16 @@ namespace Examples.MeshCreator.Primitives
                     mesh.D3dMesh.UnlockVertexBuffer();
                     break;
             }
+        }
+
+        public override void updateBoundingBox()
+        {
+            Vector3[] vertices = this.mesh.getVertexPositions();
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i] = TgcVectorUtils.transform(vertices[i], this.mesh.Transform);
+            }
+            this.mesh.BoundingBox = TgcBoundingBox.computeFromPoints(vertices);
         }
 
     }

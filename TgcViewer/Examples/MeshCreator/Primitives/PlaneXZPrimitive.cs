@@ -220,5 +220,12 @@ namespace Examples.MeshCreator.Primitives
             return p;
         }
 
+        public override void updateBoundingBox()
+        {
+            TgcMesh m = mesh.toMesh(this.Name);
+            this.mesh.BoundingBox.setExtremes(m.BoundingBox.PMin, m.BoundingBox.PMax);
+            m.dispose();
+        }
+
     }
 }

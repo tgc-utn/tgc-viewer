@@ -50,6 +50,8 @@
             this.buttonZoomObject = new System.Windows.Forms.Button();
             this.radioButtonSelectObject = new System.Windows.Forms.RadioButton();
             this.tabPageCreate = new System.Windows.Forms.TabPage();
+            this.textBoxCreateCurrentLayer = new System.Windows.Forms.TextBox();
+            this.labelCreateCurrentLayer = new System.Windows.Forms.Label();
             this.groupBoxPrimitive = new System.Windows.Forms.GroupBox();
             this.radioButtonPrimitive_Sphere = new System.Windows.Forms.RadioButton();
             this.radioButtonPrimitive_PlaneYZ = new System.Windows.Forms.RadioButton();
@@ -103,8 +105,8 @@
             this.radioButtonModifySelectAndRotate = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndMove = new System.Windows.Forms.RadioButton();
             this.tabPageModify2 = new System.Windows.Forms.TabPage();
-            this.labelCreateCurrentLayer = new System.Windows.Forms.Label();
-            this.textBoxCreateCurrentLayer = new System.Windows.Forms.TextBox();
+            this.buttonModifyRecomputeAABB = new System.Windows.Forms.Button();
+            this.buttonMergeSelected = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
@@ -150,6 +152,7 @@
             // 
             // tabPageGeneral
             // 
+            this.tabPageGeneral.Controls.Add(this.buttonMergeSelected);
             this.tabPageGeneral.Controls.Add(this.buttonTopView);
             this.tabPageGeneral.Controls.Add(this.buttonObjectBrowser);
             this.tabPageGeneral.Controls.Add(this.numericUpDownFPSCameraSpeed);
@@ -312,7 +315,7 @@
             // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(21, 471);
+            this.buttonHelp.Location = new System.Drawing.Point(21, 494);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(55, 25);
             this.buttonHelp.TabIndex = 7;
@@ -323,7 +326,7 @@
             // checkBoxAttachExport
             // 
             this.checkBoxAttachExport.AutoSize = true;
-            this.checkBoxAttachExport.Location = new System.Drawing.Point(7, 410);
+            this.checkBoxAttachExport.Location = new System.Drawing.Point(7, 433);
             this.checkBoxAttachExport.Name = "checkBoxAttachExport";
             this.checkBoxAttachExport.Size = new System.Drawing.Size(89, 17);
             this.checkBoxAttachExport.TabIndex = 6;
@@ -332,7 +335,7 @@
             // 
             // buttonExportScene
             // 
-            this.buttonExportScene.Location = new System.Drawing.Point(3, 382);
+            this.buttonExportScene.Location = new System.Drawing.Point(3, 405);
             this.buttonExportScene.Name = "buttonExportScene";
             this.buttonExportScene.Size = new System.Drawing.Size(95, 25);
             this.buttonExportScene.TabIndex = 5;
@@ -396,6 +399,22 @@
             this.tabPageCreate.TabIndex = 0;
             this.tabPageCreate.Text = "Create";
             this.tabPageCreate.UseVisualStyleBackColor = true;
+            // 
+            // textBoxCreateCurrentLayer
+            // 
+            this.textBoxCreateCurrentLayer.Location = new System.Drawing.Point(6, 234);
+            this.textBoxCreateCurrentLayer.Name = "textBoxCreateCurrentLayer";
+            this.textBoxCreateCurrentLayer.Size = new System.Drawing.Size(100, 20);
+            this.textBoxCreateCurrentLayer.TabIndex = 2;
+            // 
+            // labelCreateCurrentLayer
+            // 
+            this.labelCreateCurrentLayer.AutoSize = true;
+            this.labelCreateCurrentLayer.Location = new System.Drawing.Point(6, 218);
+            this.labelCreateCurrentLayer.Name = "labelCreateCurrentLayer";
+            this.labelCreateCurrentLayer.Size = new System.Drawing.Size(69, 13);
+            this.labelCreateCurrentLayer.TabIndex = 1;
+            this.labelCreateCurrentLayer.Text = "Current layer:";
             // 
             // groupBoxPrimitive
             // 
@@ -687,7 +706,7 @@
             // groupBoxModifyUserProps
             // 
             this.groupBoxModifyUserProps.Controls.Add(this.userInfo);
-            this.groupBoxModifyUserProps.Location = new System.Drawing.Point(2, 619);
+            this.groupBoxModifyUserProps.Location = new System.Drawing.Point(2, 646);
             this.groupBoxModifyUserProps.Name = "groupBoxModifyUserProps";
             this.groupBoxModifyUserProps.Size = new System.Drawing.Size(105, 139);
             this.groupBoxModifyUserProps.TabIndex = 43;
@@ -711,7 +730,7 @@
             this.groupBoxModifyScale.Controls.Add(this.label12);
             this.groupBoxModifyScale.Controls.Add(this.label11);
             this.groupBoxModifyScale.Controls.Add(this.numericUpDownModifyScaleX);
-            this.groupBoxModifyScale.Location = new System.Drawing.Point(1, 538);
+            this.groupBoxModifyScale.Location = new System.Drawing.Point(1, 565);
             this.groupBoxModifyScale.Name = "groupBoxModifyScale";
             this.groupBoxModifyScale.Size = new System.Drawing.Size(105, 79);
             this.groupBoxModifyScale.TabIndex = 42;
@@ -819,6 +838,7 @@
             // 
             // groupBoxModifyRotation
             // 
+            this.groupBoxModifyRotation.Controls.Add(this.buttonModifyRecomputeAABB);
             this.groupBoxModifyRotation.Controls.Add(this.numericUpDownModifyRotZ);
             this.groupBoxModifyRotation.Controls.Add(this.numericUpDownModifyRotY);
             this.groupBoxModifyRotation.Controls.Add(this.label9);
@@ -827,7 +847,7 @@
             this.groupBoxModifyRotation.Controls.Add(this.label5);
             this.groupBoxModifyRotation.Location = new System.Drawing.Point(-1, 458);
             this.groupBoxModifyRotation.Name = "groupBoxModifyRotation";
-            this.groupBoxModifyRotation.Size = new System.Drawing.Size(105, 78);
+            this.groupBoxModifyRotation.Size = new System.Drawing.Size(105, 105);
             this.groupBoxModifyRotation.TabIndex = 41;
             this.groupBoxModifyRotation.TabStop = false;
             this.groupBoxModifyRotation.Text = "Rotation (deg)";
@@ -1109,21 +1129,25 @@
             this.tabPageModify2.Text = "Modify+";
             this.tabPageModify2.UseVisualStyleBackColor = true;
             // 
-            // labelCreateCurrentLayer
+            // buttonModifyRecomputeAABB
             // 
-            this.labelCreateCurrentLayer.AutoSize = true;
-            this.labelCreateCurrentLayer.Location = new System.Drawing.Point(6, 218);
-            this.labelCreateCurrentLayer.Name = "labelCreateCurrentLayer";
-            this.labelCreateCurrentLayer.Size = new System.Drawing.Size(69, 13);
-            this.labelCreateCurrentLayer.TabIndex = 1;
-            this.labelCreateCurrentLayer.Text = "Current layer:";
+            this.buttonModifyRecomputeAABB.Location = new System.Drawing.Point(8, 77);
+            this.buttonModifyRecomputeAABB.Name = "buttonModifyRecomputeAABB";
+            this.buttonModifyRecomputeAABB.Size = new System.Drawing.Size(89, 22);
+            this.buttonModifyRecomputeAABB.TabIndex = 58;
+            this.buttonModifyRecomputeAABB.Text = "Compute AABB";
+            this.buttonModifyRecomputeAABB.UseVisualStyleBackColor = true;
+            this.buttonModifyRecomputeAABB.Click += new System.EventHandler(this.buttonModifyRecomputeAABB_Click);
             // 
-            // textBoxCreateCurrentLayer
+            // buttonMergeSelected
             // 
-            this.textBoxCreateCurrentLayer.Location = new System.Drawing.Point(6, 234);
-            this.textBoxCreateCurrentLayer.Name = "textBoxCreateCurrentLayer";
-            this.textBoxCreateCurrentLayer.Size = new System.Drawing.Size(100, 20);
-            this.textBoxCreateCurrentLayer.TabIndex = 2;
+            this.buttonMergeSelected.Location = new System.Drawing.Point(5, 365);
+            this.buttonMergeSelected.Name = "buttonMergeSelected";
+            this.buttonMergeSelected.Size = new System.Drawing.Size(95, 25);
+            this.buttonMergeSelected.TabIndex = 53;
+            this.buttonMergeSelected.Text = "Merge selected";
+            this.buttonMergeSelected.UseVisualStyleBackColor = true;
+            this.buttonMergeSelected.Click += new System.EventHandler(this.buttonMergeSelected_Click);
             // 
             // MeshCreatorControl
             // 
@@ -1255,5 +1279,7 @@
         private System.Windows.Forms.Button buttonTopView;
         private System.Windows.Forms.TextBox textBoxCreateCurrentLayer;
         private System.Windows.Forms.Label labelCreateCurrentLayer;
+        private System.Windows.Forms.Button buttonModifyRecomputeAABB;
+        private System.Windows.Forms.Button buttonMergeSelected;
     }
 }

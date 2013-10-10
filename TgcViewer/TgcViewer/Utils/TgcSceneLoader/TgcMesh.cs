@@ -531,11 +531,15 @@ namespace TgcViewer.Utils.TgcSceneLoader
             }
 
             //hacer dispose de instancias
-            foreach (TgcMesh meshInstance in meshInstances)
+            if (meshInstances != null)
             {
-                meshInstance.dispose();
+                foreach (TgcMesh meshInstance in meshInstances)
+                {
+                    meshInstance.dispose();
+                }
+                meshInstances = null;
             }
-            meshInstances = null;
+            
 
             //Dispose de mesh
             this.d3dMesh.Dispose();
@@ -877,6 +881,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             cloneMesh.boundingBox = this.boundingBox.clone();
             cloneMesh.alphaBlendEnable = this.alphaBlendEnable;
             cloneMesh.enabled = true;
+            cloneMesh.autoUpdateBoundingBox = this.autoUpdateBoundingBox;
 
             //Transformaciones
             cloneMesh.translation = this.translation;

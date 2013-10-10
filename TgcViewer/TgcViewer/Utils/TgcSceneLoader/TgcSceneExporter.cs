@@ -926,6 +926,273 @@ namespace TgcViewer.Utils.TgcSceneLoader
         }
 
 
+        /// <summary>
+        /// Unifica todos los meshes en uno solo.
+        /// Crea un nuevo mesh que tiene un merge de todos los demas.
+        /// Toma el nombre, layer, userProperties, etc del primer mesh.
+        /// Todos los meshes tienen que ser del mismo RenderType.
+        /// No se puede hacer merge de meshes con Lightmap.
+        /// No se hace dispose de los meshes originales
+        /// </summary>
+        /// <param name="meshes"></param>
+        /// <returns></returns>
+        public TgcMesh mergeMeshes(List<TgcMesh> meshes)
+        {
+            //Hay uno solo
+            if (meshes.Count == 1)
+            {
+                return meshes[0].clone(meshes[0].Name);
+            }
+
+            //Hacer merge de a dos
+            TgcMesh mesh1 = meshes[0];
+            List<TgcMesh> mergedMeshes = new List<TgcMesh>();
+            for (int i = 0; i < meshes.Count - 1; i++)
+            {
+                TgcMesh mergeMesh = mergeTwoMeshes(mesh1, meshes[i + 1]);
+                mergedMeshes.Add(mergeMesh);
+                mesh1 = mergeMesh;
+            }
+
+            //Hacer dispose de todos los merge intermedios
+            TgcMesh finalMergeMesh = mergedMeshes[mergedMeshes.Count - 1];
+            for (int i = 0; i < mergedMeshes.Count - 1; i++)
+            {
+                mergedMeshes[i].dispose();
+            }
+            mergedMeshes.Clear();
+
+
+            return finalMergeMesh;
+        }
+
+        /// <summary>
+        /// Une dos meshes en uno solo.
+        /// Crea un nuevo mesh con un merge de los dos. Toma el nombre, layer, userProperties, etc del primer mesh.
+        /// No se hace dispose de los dos meshes originales.
+        /// Ambos mesh tienen que ser del mismo RenderType.
+        /// No se puede hacer merge de un mesh con Lightmap
+        /// </summary>
+        /// <param name="mesh1">Primer mesh</param>
+        /// <param name="mesh2">Segundo mesh</param>
+        /// <returns>Nueve mesh con el merge de los dos</returns>
+        public TgcMesh mergeTwoMeshes(TgcMesh mesh1, TgcMesh mesh2)
+        {
+            //Chequear que sea mismo tipo de malla
+            if (mesh1.RenderType != mesh2.RenderType)
+            {
+                throw new Exception("Se intentó juntar dos Mallas de formato distintos: " + mesh1.Name + " y " + mesh2.Name);
+            }
+
+            //Por ahora no se pueden unificar LightMaps
+            if (mesh1.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP)
+            {
+                throw new Exception("Actualmente no esta soportado juntar dos Mallas que tienen LightMaps: " + mesh1.Name + " y " + mesh2.Name);
+            }
+
+
+            //Crear Mesh de D3D
+            int triCount = mesh1.NumberTriangles + mesh2.NumberTriangles;
+            int vertexCount = mesh1.NumberVertices + mesh2.NumberVertices;
+            VertexElement[] vertexElements = mesh1.RenderType == TgcMesh.MeshRenderType.VERTEX_COLOR ? TgcSceneLoader.VertexColorVertexElements : TgcSceneLoader.DiffuseMapVertexElements;
+            Mesh mesh = new Mesh(triCount, vertexCount, MeshFlags.Managed, vertexElements, GuiController.Instance.D3dDevice);
+
+            //VertexColor
+            if (mesh1.RenderType == TgcMesh.MeshRenderType.VERTEX_COLOR)
+            {
+                //Cargar VertexBuffer
+                TgcSceneLoader.VertexColorVertex[] vertsData = new TgcSceneLoader.VertexColorVertex[vertexCount];
+                //Agregar los datos del mesh1
+                TgcSceneLoader.VertexColorVertex[] verts1 = (TgcSceneLoader.VertexColorVertex[])mesh1.D3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh1.D3dMesh.NumberVertices);
+                for (int i = 0; i < verts1.Length; i++)
+                {
+                    verts1[i].Position = TgcVectorUtils.transform(verts1[i].Position, mesh1.Transform);
+                }
+                Array.Copy(verts1, vertsData, verts1.Length);
+                mesh1.D3dMesh.UnlockVertexBuffer();
+                verts1 = null;
+
+                //Agregar los datos del mesh1
+                TgcSceneLoader.VertexColorVertex[] verts2 = (TgcSceneLoader.VertexColorVertex[])mesh2.D3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh2.D3dMesh.NumberVertices);
+                for (int i = 0; i < verts2.Length; i++)
+                {
+                    verts2[i].Position = TgcVectorUtils.transform(verts2[i].Position, mesh2.Transform);
+                }
+                Array.Copy(verts2, 0, vertsData, mesh1.NumberVertices, verts2.Length);
+                mesh2.D3dMesh.UnlockVertexBuffer();
+                verts2 = null;
+
+                mesh.SetVertexBufferData(vertsData, LockFlags.None);
+            }
+            //DiffuseMap
+            else if (mesh1.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP)
+            {
+                //Cargar VertexBuffer
+                TgcSceneLoader.DiffuseMapVertex[] vertsData = new TgcSceneLoader.DiffuseMapVertex[vertexCount];
+
+                //Agregar los datos del mesh1 (aplicarle la transformacion actual)
+                TgcSceneLoader.DiffuseMapVertex[] verts1 = (TgcSceneLoader.DiffuseMapVertex[])mesh1.D3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh1.D3dMesh.NumberVertices);
+                for (int i = 0; i < verts1.Length; i++)
+                {
+                    verts1[i].Position = TgcVectorUtils.transform(verts1[i].Position, mesh1.Transform);
+                }
+                Array.Copy(verts1, vertsData, verts1.Length);
+                mesh1.D3dMesh.UnlockVertexBuffer();
+                verts1 = null;
+
+                //Agregar los datos del mesh1
+                TgcSceneLoader.DiffuseMapVertex[] verts2 = (TgcSceneLoader.DiffuseMapVertex[])mesh2.D3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh2.D3dMesh.NumberVertices);
+                for (int i = 0; i < verts2.Length; i++)
+                {
+                    verts2[i].Position = TgcVectorUtils.transform(verts2[i].Position, mesh2.Transform);
+                }
+                Array.Copy(verts2, 0, vertsData, mesh1.NumberVertices, verts2.Length);
+                mesh2.D3dMesh.UnlockVertexBuffer();
+                verts2 = null;
+
+                mesh.SetVertexBufferData(vertsData, LockFlags.None);
+            }
+
+            //Cargar indexBuffer en forma plana
+            using (IndexBuffer ib = mesh.IndexBuffer)
+            {
+                short[] indices = new short[vertexCount];
+                for (int i = 0; i < indices.Length; i++)
+                {
+                    indices[i] = (short)i;
+                }
+                ib.SetData(indices, 0, LockFlags.None);
+            }
+
+
+            //Cargar texturas y attributeBuffer
+            TgcTexture[] textures = null;
+            Material[] materials = null;
+            if (mesh1.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP)
+            {
+                //Cargar materials
+                materials = new Material[mesh1.DiffuseMaps.Length + mesh2.DiffuseMaps.Length];
+                int mIdx = 0;
+                foreach (Material m in mesh1.Materials)
+                {
+                    materials[mIdx++] = m;
+                }
+                foreach (Material m in mesh2.Materials)
+                {
+                    materials[mIdx++] = m;
+                }
+
+
+                //Texturas del mesh1
+                textures = new TgcTexture[mesh1.DiffuseMaps.Length + mesh2.DiffuseMaps.Length];
+                int tIdx = 0;
+                foreach (TgcTexture t in mesh1.DiffuseMaps)
+                {
+                    textures[tIdx++] = t.clone();
+                }
+                //Texturas del mesh2
+                foreach (TgcTexture t in mesh2.DiffuseMaps)
+                {
+                    textures[tIdx++] = t.clone();
+                }
+
+
+                //Cargar el AttributeBuffer con la suma de ambos mesh
+                int attIdx = 0;
+                int textureId = 0;
+                int[] attributeBuffer = mesh.LockAttributeBufferArray(LockFlags.None);
+
+                //AttributeBuffer del mesh 1
+                if (mesh1.DiffuseMaps.Length > 1)
+                {
+                    //Copiar el AttributeBuffer del mesh1 tal cual al mesh unificado
+                    int[] attributeBuffer1 = mesh1.D3dMesh.LockAttributeBufferArray(LockFlags.ReadOnly);
+                    Array.Copy(attributeBuffer1, attributeBuffer, attributeBuffer1.Length);
+                    mesh1.D3dMesh.UnlockAttributeBuffer(attributeBuffer1);
+                }
+                else
+                {
+                    //Hay una sola textura, llenar el AttributeBuffer para que apunte solo a esa textura
+                    for (int i = 0; i < mesh1.NumberTriangles; i++)
+                    {
+                        attributeBuffer[i] = textureId;
+                    }
+                }
+                attIdx += mesh1.NumberTriangles;
+                textureId += mesh1.DiffuseMaps.Length;
+
+                //AttributeBuffer del mesh 2
+                if (mesh2.DiffuseMaps.Length > 1)
+                {
+                    //Copiar el AttributeBuffer del mesh2 al mesh unificado pero sumando el offset de texturas del primero
+                    int[] attributeBuffer2 = mesh2.D3dMesh.LockAttributeBufferArray(LockFlags.ReadOnly);
+                    int[] attributeBuffer2Offset = new int[attributeBuffer2.Length];
+                    for (int i = 0; i < attributeBuffer2.Length; i++)
+                    {
+                        attributeBuffer2Offset[i] = attributeBuffer2[i] + textureId;
+                    }
+                    mesh2.D3dMesh.UnlockAttributeBuffer(attributeBuffer2);
+                    Array.Copy(attributeBuffer2Offset, 0, attributeBuffer, attIdx, attributeBuffer2Offset.Length);
+                    attributeBuffer2Offset = null;
+                }
+                else
+                {
+                    //Hay una sola textura, llenar el AttributeBuffer para que apunte solo a esa textura
+                    for (int i = 0; i < mesh2.NumberTriangles; i++)
+                    {
+                        attributeBuffer[attIdx++] = textureId;
+                    }
+                    textureId++;
+                }
+
+                mesh.UnlockAttributeBuffer(attributeBuffer);
+            }
+            
+
+            //Crear mesh de TGC
+            TgcMesh tgcMesh = new TgcMesh(mesh, mesh1.Name, mesh1.RenderType);
+            tgcMesh.Layer = mesh1.Layer;
+            tgcMesh.createBoundingBox();
+            tgcMesh.Materials = materials;
+            tgcMesh.DiffuseMaps = textures;
+            tgcMesh.AlphaBlendEnable = mesh1.AlphaBlendEnable;
+            tgcMesh.Enabled = mesh1.Enabled;
+
+            //Transformaciones con la identidad (porque ya transformamos los vertices)
+            tgcMesh.Position = new Vector3(0, 0, 0);
+            tgcMesh.Rotation = new Vector3(0, 0, 0);
+            tgcMesh.Scale = new Vector3(1, 1, 1);
+            tgcMesh.Transform = Matrix.Identity;
+            tgcMesh.AutoTransformEnable = mesh1.AutoTransformEnable;
+
+            //Agregar userProperties de ambos
+            if (mesh1.UserProperties != null || mesh2.UserProperties != null)
+            {
+                tgcMesh.UserProperties = new Dictionary<string, string>();
+                if (mesh1.UserProperties != null)
+                {
+                    foreach (KeyValuePair<string, string> entry in mesh1.UserProperties)
+                    {
+                        tgcMesh.UserProperties.Add(entry.Key, entry.Value);
+                    }
+                }
+                if (mesh2.UserProperties != null)
+                {
+                    foreach (KeyValuePair<string, string> entry in mesh2.UserProperties)
+                    {
+                        tgcMesh.UserProperties.Add(entry.Key, entry.Value);
+                    }
+                }
+            }
+            
+            return tgcMesh;
+        }
+
+
         #endregion
 
 
