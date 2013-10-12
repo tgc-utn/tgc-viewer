@@ -92,6 +92,8 @@ namespace Examples.MeshCreator.Gizmos
             {
                 case State.Init:
 
+                    selectedAxis = Axis.None;
+
                     //Iniciar seleccion de eje
                     if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
@@ -126,10 +128,36 @@ namespace Examples.MeshCreator.Gizmos
                         {
                             if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                             {
+                                bool additive = input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl);
                                 Control.CurrentState = MeshCreatorControl.State.SelectObject;
-                                Control.SelectionRectangle.doDirectSelection(false);
+                                Control.SelectionRectangle.doDirectSelection(additive);
                             }
                         }
+                    }
+                    //Hacer mouse over sobre los ejes
+                    else
+                    {
+                        Control.PickingRay.updateRay();
+                        Vector3 collP;
+
+                        //Buscar colision con eje con Picking
+                        if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxX.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.X;
+                        }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxY.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.Y;
+                        }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxZ.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.Z;
+                        }
+                        else
+                        {
+                            selectedAxis = Axis.None;
+                        }
+
                     }
 
                     break;
@@ -175,9 +203,9 @@ namespace Examples.MeshCreator.Gizmos
                             //Agregar scaling, controlando que no sea menor a cero
                             Vector3 scale = p.Scale;
                             scale += currentScale;
-                            scale.X = scale.X < 0.1f ? 0.1f : scale.X;
-                            scale.Y = scale.Y < 0.1f ? 0.1f : scale.Y;
-                            scale.Z = scale.Z < 0.1f ? 0.1f : scale.Z;
+                            scale.X = scale.X < 0.01f ? 0.01f : scale.X;
+                            scale.Y = scale.Y < 0.01f ? 0.01f : scale.Y;
+                            scale.Z = scale.Z < 0.01f ? 0.01f : scale.Z;
 
                             p.Scale = scale;
 	                    }

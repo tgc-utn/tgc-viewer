@@ -30,6 +30,7 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
+            this.buttonMergeSelected = new System.Windows.Forms.Button();
             this.buttonTopView = new System.Windows.Forms.Button();
             this.buttonObjectBrowser = new System.Windows.Forms.Button();
             this.numericUpDownFPSCameraSpeed = new System.Windows.Forms.NumericUpDown();
@@ -83,6 +84,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.numericUpDownModifyScaleX = new System.Windows.Forms.NumericUpDown();
             this.groupBoxModifyRotation = new System.Windows.Forms.GroupBox();
+            this.buttonModifyRecomputeAABB = new System.Windows.Forms.Button();
             this.numericUpDownModifyRotZ = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownModifyRotY = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
@@ -105,8 +107,6 @@
             this.radioButtonModifySelectAndRotate = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndMove = new System.Windows.Forms.RadioButton();
             this.tabPageModify2 = new System.Windows.Forms.TabPage();
-            this.buttonModifyRecomputeAABB = new System.Windows.Forms.Button();
-            this.buttonMergeSelected = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
@@ -178,6 +178,16 @@
             this.tabPageGeneral.TabIndex = 2;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
+            // 
+            // buttonMergeSelected
+            // 
+            this.buttonMergeSelected.Location = new System.Drawing.Point(5, 365);
+            this.buttonMergeSelected.Name = "buttonMergeSelected";
+            this.buttonMergeSelected.Size = new System.Drawing.Size(95, 25);
+            this.buttonMergeSelected.TabIndex = 53;
+            this.buttonMergeSelected.Text = "Merge selected";
+            this.buttonMergeSelected.UseVisualStyleBackColor = true;
+            this.buttonMergeSelected.Click += new System.EventHandler(this.buttonMergeSelected_Click);
             // 
             // buttonTopView
             // 
@@ -283,8 +293,6 @@
             // checkBoxSnapToGrid
             // 
             this.checkBoxSnapToGrid.AutoSize = true;
-            this.checkBoxSnapToGrid.Checked = true;
-            this.checkBoxSnapToGrid.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxSnapToGrid.Location = new System.Drawing.Point(9, 95);
             this.checkBoxSnapToGrid.Name = "checkBoxSnapToGrid";
             this.checkBoxSnapToGrid.Size = new System.Drawing.Size(83, 17);
@@ -852,6 +860,16 @@
             this.groupBoxModifyRotation.TabStop = false;
             this.groupBoxModifyRotation.Text = "Rotation (deg)";
             // 
+            // buttonModifyRecomputeAABB
+            // 
+            this.buttonModifyRecomputeAABB.Location = new System.Drawing.Point(8, 77);
+            this.buttonModifyRecomputeAABB.Name = "buttonModifyRecomputeAABB";
+            this.buttonModifyRecomputeAABB.Size = new System.Drawing.Size(89, 22);
+            this.buttonModifyRecomputeAABB.TabIndex = 58;
+            this.buttonModifyRecomputeAABB.Text = "Compute AABB";
+            this.buttonModifyRecomputeAABB.UseVisualStyleBackColor = true;
+            this.buttonModifyRecomputeAABB.Click += new System.EventHandler(this.buttonModifyRecomputeAABB_Click);
+            // 
             // numericUpDownModifyRotZ
             // 
             this.numericUpDownModifyRotZ.DecimalPlaces = 2;
@@ -1128,26 +1146,6 @@
             this.tabPageModify2.TabIndex = 3;
             this.tabPageModify2.Text = "Modify+";
             this.tabPageModify2.UseVisualStyleBackColor = true;
-            // 
-            // buttonModifyRecomputeAABB
-            // 
-            this.buttonModifyRecomputeAABB.Location = new System.Drawing.Point(8, 77);
-            this.buttonModifyRecomputeAABB.Name = "buttonModifyRecomputeAABB";
-            this.buttonModifyRecomputeAABB.Size = new System.Drawing.Size(89, 22);
-            this.buttonModifyRecomputeAABB.TabIndex = 58;
-            this.buttonModifyRecomputeAABB.Text = "Compute AABB";
-            this.buttonModifyRecomputeAABB.UseVisualStyleBackColor = true;
-            this.buttonModifyRecomputeAABB.Click += new System.EventHandler(this.buttonModifyRecomputeAABB_Click);
-            // 
-            // buttonMergeSelected
-            // 
-            this.buttonMergeSelected.Location = new System.Drawing.Point(5, 365);
-            this.buttonMergeSelected.Name = "buttonMergeSelected";
-            this.buttonMergeSelected.Size = new System.Drawing.Size(95, 25);
-            this.buttonMergeSelected.TabIndex = 53;
-            this.buttonMergeSelected.Text = "Merge selected";
-            this.buttonMergeSelected.UseVisualStyleBackColor = true;
-            this.buttonMergeSelected.Click += new System.EventHandler(this.buttonMergeSelected_Click);
             // 
             // MeshCreatorControl
             // 

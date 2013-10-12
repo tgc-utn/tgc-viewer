@@ -94,6 +94,7 @@ namespace Examples.MeshCreator.Gizmos
                 case State.Init:
 
                     acumMovement = Vector3.Empty;
+                    selectedAxis = Axis.None;
 
                     //Iniciar seleccion de eje
                     if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -129,10 +130,36 @@ namespace Examples.MeshCreator.Gizmos
                         {
                             if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                             {
+                                bool additive = input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl);
                                 Control.CurrentState = MeshCreatorControl.State.SelectObject;
-                                Control.SelectionRectangle.doDirectSelection(false);
+                                Control.SelectionRectangle.doDirectSelection(additive);
                             }
                         }
+                    }
+                    //Hacer mouse over sobre los ejes
+                    else
+                    {
+                        Control.PickingRay.updateRay();
+                        Vector3 collP;
+
+                        //Buscar colision con eje con Picking
+                        if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxX.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.X;
+                        }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxY.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.Y;
+                        }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxZ.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.Z;
+                        }
+                        else
+                        {
+                            selectedAxis = Axis.None;
+                        }
+
                     }
 
                     break;
