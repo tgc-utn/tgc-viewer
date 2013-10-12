@@ -133,6 +133,12 @@ namespace TgcViewer.Utils.Modifiers
         public void loadImages(string folderPath)
         {
             textBoxFolderPath.Text = browseDialog.SelectedPath;
+
+            //Limpiar controles anteriores
+            foreach (ImageControl c in panelImages.Controls)
+            {
+                c.dispose();
+            }
             panelImages.Controls.Clear();
 
             if (Directory.Exists(folderPath))
@@ -347,6 +353,15 @@ namespace TgcViewer.Utils.Modifiers
             {
                 selectImage();
             }
+
+            public void dispose()
+            {
+                if (pictureBox.Image != null)
+                {
+                    pictureBox.Image.Dispose();
+                }
+            }
+
         }
 
         

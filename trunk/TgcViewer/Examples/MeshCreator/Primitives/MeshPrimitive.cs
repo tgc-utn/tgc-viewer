@@ -45,9 +45,78 @@ namespace Examples.MeshCreator.Primitives
             }
             
             this.UserProperties = this.mesh.UserProperties;
-            this.Layer = this.mesh.Layer;
             this.uvOffset = new Vector2(0, 0);
             this.uvTile = new Vector2(1, 1);
+
+            //Layer
+            if (this.mesh.Layer != null && this.mesh.Layer.Length > 0)
+            {
+                this.Layer = this.mesh.Layer;
+            }
+            else
+            {
+                this.Layer = control.CurrentLayer;
+            }
+
+            /*
+            //Ubicar mesh en el origen de coordenadas respecto del centro de su AABB
+            Vector3 center = this.mesh.BoundingBox.calculateBoxCenter();
+            setMeshToOrigin(center);
+             */ 
+        }
+
+        /// <summary>
+        /// Mover vertices del mesh al centro de coordenadas
+        /// </summary>
+        private void setMeshToOrigin(Vector3 center)
+        {
+            moveMeshVertices(center);
+            this.mesh.Position = -center;
+            this.mesh.Transform = Matrix.Identity;
+            this.mesh.BoundingBox.setExtremes(this.mesh.BoundingBox.PMin + center * 2, this.mesh.BoundingBox.PMax + center * 2);
+            this.mesh.updateBoundingBox();
+        }
+
+        /// <summary>
+        /// Mover fisicamente los vertices del mesh
+        /// </summary>
+        private void moveMeshVertices(Vector3 offset)
+        {
+            switch (mesh.RenderType)
+            {
+                case TgcMesh.MeshRenderType.VERTEX_COLOR:
+                    TgcSceneLoader.VertexColorVertex[] verts1 = (TgcSceneLoader.VertexColorVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                    for (int i = 0; i < verts1.Length; i++)
+                    {
+                        verts1[i].Position = verts1[i].Position + offset;
+                    }
+                    mesh.D3dMesh.SetVertexBufferData(verts1, LockFlags.None);
+                    mesh.D3dMesh.UnlockVertexBuffer();
+                    break;
+
+                case TgcMesh.MeshRenderType.DIFFUSE_MAP:
+                    TgcSceneLoader.DiffuseMapVertex[] verts2 = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                    for (int i = 0; i < verts2.Length; i++)
+                    {
+                        verts2[i].Position = verts2[i].Position + offset;
+                    }
+                    mesh.D3dMesh.SetVertexBufferData(verts2, LockFlags.None);
+                    mesh.D3dMesh.UnlockVertexBuffer();
+                    break;
+
+                case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
+                    TgcSceneLoader.DiffuseMapAndLightmapVertex[] verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                    for (int i = 0; i < verts3.Length; i++)
+                    {
+                        verts3[i].Position = verts3[i].Position + offset;
+                    }
+                    mesh.D3dMesh.SetVertexBufferData(verts3, LockFlags.None);
+                    mesh.D3dMesh.UnlockVertexBuffer();
+                    break;
+            }
         }
 
         public override void render()
@@ -166,6 +235,7 @@ namespace Examples.MeshCreator.Primitives
         public override EditorPrimitive clone()
         {
             mesh.UserProperties = this.UserProperties;
+            mesh.Layer = this.Layer;
             TgcMesh cloneMesh = mesh.clone(mesh.Name);
             return new MeshPrimitive(this.Control, cloneMesh);
         }
@@ -206,11 +276,13 @@ namespace Examples.MeshCreator.Primitives
         public override void updateBoundingBox()
         {
             Vector3[] vertices = this.mesh.getVertexPositions();
+            Matrix rotM = Matrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z);
             for (int i = 0; i < vertices.Length; i++)
             {
-                vertices[i] = TgcVectorUtils.transform(vertices[i], this.mesh.Transform);
+                vertices[i] = TgcVectorUtils.transform(vertices[i], rotM);
             }
             this.mesh.BoundingBox = TgcBoundingBox.computeFromPoints(vertices);
+            //this.mesh.updateBoundingBox();
         }
 
     }

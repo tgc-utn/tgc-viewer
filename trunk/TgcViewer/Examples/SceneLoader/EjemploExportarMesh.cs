@@ -57,9 +57,9 @@ namespace Examples.SceneLoader
             //string fileSaved = exporter.exportSceneToXml(unifiedScene, destFolder);
             //string fileSaved = exporter.exportAndAppendSceneToXml(unifiedScene, destFolder);
 
-            string fileSaved = exporter.exportAndAppendSceneToXml(sceneOriginal, destFolder);
+            TgcSceneExporter.ExportResult r = exporter.exportAndAppendSceneToXml(sceneOriginal, destFolder);
 
-            sceneRecover = loader.loadSceneFromFile(fileSaved);
+            sceneRecover = loader.loadSceneFromFile(r.filePath);
         }
 
 
