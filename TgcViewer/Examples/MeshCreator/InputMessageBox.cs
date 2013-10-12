@@ -66,7 +66,17 @@ namespace Examples.MeshCreator
 
         private void InputMessageBox_Load(object sender, EventArgs e)
         {
-            
+            textBoxText.Focus();
+            textBoxText.SelectAll();
+        }
+
+        private void textBoxText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            //Enter
+            if (e.KeyChar == (char)13)
+            {
+                buttonOk_Click(null, null);
+            }
         }
 
     }

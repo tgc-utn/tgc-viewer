@@ -19,6 +19,35 @@ namespace TgcViewer.Utils.TgcSceneLoader
     {
         private const float EPSILON = 0.0001f;
 
+        /// <summary>
+        /// Resultado de exportacion
+        /// </summary>
+        public class ExportResult
+        {
+            public bool result;
+            public bool secondaryErrors;
+            public string filePath;
+            public List<string> errors;
+
+            public ExportResult()
+            {
+                result = true;
+                secondaryErrors = false;
+                errors = new List<string>();
+            }
+
+            public string listErrors()
+            {
+                StringBuilder sb = new StringBuilder(errors.Count + " errores: ");
+                for (int i = 0; i < errors.Count; i++)
+                {
+                    sb.Append((i+1) + ") " + errors[i]);
+                }
+                return sb.ToString();
+            }
+
+        }
+
         public TgcSceneExporter()
         {
         }
@@ -29,8 +58,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
         /// </summary>
         /// <param name="scene">Escena a exportar</param>
         /// <param name="saveFolderPath">Carpeta en la que se quiera guardar el XML</param>
-        /// <returns>Path del archivo XML creado</returns>
-        public string exportSceneToXml(TgcScene scene, string saveFolderPath)
+        /// <returns>Resultado de exportacion</returns>
+        public ExportResult exportSceneToXml(TgcScene scene, string saveFolderPath)
         {
             MeshExport[] meshesExport = exportSceneData(scene);
             return saveSceneToXml(scene.SceneName, createSceneBoundingBox(meshesExport), meshesExport, saveFolderPath);
@@ -44,8 +73,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
         /// </summary>
         /// <param name="scene">Escena a exportar</param>
         /// <param name="saveFolderPath">Carpeta en la que se quiera guardar el XML</param>
-        /// <returns>Path del archivo XML creado</returns>
-        public string exportAndAppendSceneToXml(TgcScene scene, string saveFolderPath)
+        /// <returns>Resultado de exportacion</returns>
+        public ExportResult exportAndAppendSceneToXml(TgcScene scene, string saveFolderPath)
         {
             MeshExport meshExportFinal = exportAndAppendSceneData(scene);
             MeshExport[] meshesExport = new MeshExport[] { meshExportFinal };
@@ -223,7 +252,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             tgcMesh.D3dMesh.UnlockVertexBuffer();
 
             short[] indices = (short[])tgcMesh.D3dMesh.LockIndexBuffer(typeof(short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces * 3);
-            tgcMesh.D3dMesh.IndexBuffer.Unlock();
+            tgcMesh.D3dMesh.UnlockIndexBuffer();
 
             //Armar buffer de vertices, normales y coordenadas de textura, buscando similitudes de valores
             List<int> coordinatesIndices = new List<int>();
@@ -302,7 +331,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             tgcMesh.D3dMesh.UnlockVertexBuffer();
 
             short[] indices = (short[])tgcMesh.D3dMesh.LockIndexBuffer(typeof(short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces*3);
-            tgcMesh.D3dMesh.IndexBuffer.Unlock();
+            tgcMesh.D3dMesh.UnlockIndexBuffer();
 
             //Armar buffer de vertices, normales y coordenadas de textura, buscando similitudes de valores
             List<int> coordinatesIndices = new List<int>();
@@ -385,7 +414,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             tgcMesh.D3dMesh.UnlockVertexBuffer();
 
             short[] indices = (short[])tgcMesh.D3dMesh.LockIndexBuffer(typeof(short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces * 3);
-            tgcMesh.D3dMesh.IndexBuffer.Unlock();
+            tgcMesh.D3dMesh.UnlockIndexBuffer();
 
             //Color general
             Color defaultColor = Color.White;
@@ -1211,9 +1240,10 @@ namespace TgcViewer.Utils.TgcSceneLoader
         /// <param name="sceneBoundingBox">BoundingBox de toda la escena</param>
         /// <param name="meshesExport">Array de datos de Mallas que se quieren exportar</param>
         /// <param name="saveFolderPath">Carpeta en la que se quiera guardar el XML</param>
-        /// <returns>Path del archivo XML creado</returns>
-        public string saveSceneToXml(string sceneName, TgcBoundingBox sceneBoundingBox, MeshExport[] meshesExport, string saveFolderPath)
+        /// <returns>Resultado de exportacion</returns>
+        public ExportResult saveSceneToXml(string sceneName, TgcBoundingBox sceneBoundingBox, MeshExport[] meshesExport, string saveFolderPath)
         {
+            ExportResult result = new ExportResult();
             try
             {
                 //Ver si la escena tiene Lightmaps
@@ -1440,14 +1470,15 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 doc.AppendChild(root);
                 string sceneFileName = sceneName + "-TgcScene.xml";
                 string sceneFilePath = saveFolderPath + "\\" + sceneFileName;
-                if (File.Exists(sceneFileName))
+                result.filePath = sceneFilePath;
+                if (File.Exists(sceneFilePath))
                 {
-                    File.Delete(sceneFileName);
+                    File.Delete(sceneFilePath);
                 }
                 doc.Save(sceneFilePath);
 
 
-                //Crear directorio de texturas, borrar si ya existe
+                //Crear directorio de texturas
                 string texturesDir = saveFolderPath + "\\" + DEFAULT_TEXTURES_DIR;
                 if (!Directory.Exists(texturesDir))
                 {
@@ -1462,7 +1493,16 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     {
                         for (int i = 0; i < mExp.diffuseMapsAbsolutePath.Length; i++)
                         {
-                            copyFile(mExp.diffuseMapsAbsolutePath[i], texturesDir + "\\" + mExp.MaterialsData[i].fileName);
+                            try
+                            {
+                                copyFile(mExp.diffuseMapsAbsolutePath[i], texturesDir + "\\" + mExp.MaterialsData[i].fileName);
+                            }
+                            catch (Exception tEx)
+                            {
+                                result.secondaryErrors = true;
+                                result.errors.Add("Error al copiar textura: " + mExp.diffuseMapsAbsolutePath[i] + ". " + tEx.Message);
+                            }
+                            
                         }
                     }
                 }
@@ -1481,21 +1521,26 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     //Copiar todos los lightmaps a la carpeta de lightmaps
                     foreach (MeshExport mExp in meshesExport)
                     {
-                        if (mExp.lightmapAbsolutePath != null)
-                        {
-                            copyFile(mExp.lightmapAbsolutePath, lightmapsDir + "\\" + mExp.MeshData.lightmap);
-                        }
+                        try
+                            {
+                                copyFile(mExp.lightmapAbsolutePath, lightmapsDir + "\\" + mExp.MeshData.lightmap);
+                            }
+                            catch (Exception tEx)
+                            {
+                                result.secondaryErrors = true;
+                                result.errors.Add("Error al copiar lightmap: " + mExp.lightmapAbsolutePath + ". " + tEx.Message);
+                            }
                     }
                 }
 
-                return sceneFilePath;
+                return result;
             }
             catch (Exception ex)
             {
-                throw new Exception( "Error al crear XML de escena: " + sceneName, ex); ;
+                result.result = false;
+                result.errors.Add("Hubo un error inesperado al crear XML de escena: " + sceneName + ". " + ex.Message);
+                return result;
             }
-
-            
         }
 
         /// <summary>

@@ -286,7 +286,7 @@ namespace Examples.MeshCreator
             //Confirmacion
             if (objectsToDelete.Count > 0)
             {
-                if (MessageBox.Show(this, "¿Do you want to delete " + control.SelectionList.Count + " objects?", "Delete objects", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                if (MessageBox.Show(this, "¿Do you want to delete " + objectsToDelete.Count + " objects?", "Delete objects", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                 {
                     //Borrar meshes
                     control.deleteObjects(objectsToDelete);

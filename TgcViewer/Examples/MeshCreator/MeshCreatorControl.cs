@@ -65,7 +65,8 @@ namespace Examples.MeshCreator
         TgcText2d objectPositionText;
         ObjectBrowser objectBrowser;
         bool fpsCameraEnabled;
-        
+        bool ignoreChangeEvents;
+
 
 
         List<EditorPrimitive> meshes;
@@ -507,6 +508,7 @@ namespace Examples.MeshCreator
             {
                 string text = selectionList.Count > 1 ? selectionList[0].Name + " + others" : selectionList[0].Name;
                 text += ", Pos: " + TgcParserUtils.printVector3(selectionList[0].Position);
+                text += ", Selected " + selectionList.Count;
                 objectPositionText.Text = text;
                 objectPositionText.render();
             }
@@ -727,7 +729,8 @@ namespace Examples.MeshCreator
         /// </summary>
         public void updateModifyPanel()
         {
-            if (selectionList.Count == 1)
+            ignoreChangeEvents = true;
+            if (selectionList.Count >= 1)
             {
                 groupBoxModifyGeneral.Enabled = true;
                 groupBoxModifyTexture.Enabled = true;
@@ -740,7 +743,9 @@ namespace Examples.MeshCreator
                 EditorPrimitive p = selectionList[0];
                 EditorPrimitive.ModifyCapabilities caps = p.ModifyCaps;
                 textBoxModifyName.Text = p.Name;
+                textBoxModifyName.Enabled = selectionList.Count == 1;
                 textBoxModifyLayer.Text = p.Layer;
+
 
                 //Cargar textura
                 if (caps.ChangeTexture)
@@ -750,9 +755,13 @@ namespace Examples.MeshCreator
                     numericUpDownModifyTextureNumber.Maximum = caps.TextureNumbers;
                     numericUpDownModifyTextureNumber.Value = 1;
                     pictureBoxModifyTexture.Enabled = true;
+                    if (pictureBoxModifyTexture.Image != null)
+                    {
+                        pictureBoxModifyTexture.Image.Dispose();
+                    }
                     pictureBoxModifyTexture.Image = Image.FromFile(p.getTexture(0).FilePath);
                     pictureBoxModifyTexture.ImageLocation = p.getTexture(0).FilePath;
-                    textureBrowser.setSelectedImage(p.getTexture(0).FilePath);
+                    //textureBrowser.setSelectedImage(p.getTexture(0).FilePath);
                     checkBoxModifyAlphaBlendEnabled.Enabled = true;
                     checkBoxModifyAlphaBlendEnabled.Checked = p.AlphaBlendEnable;
                 }
@@ -845,6 +854,7 @@ namespace Examples.MeshCreator
 
                 //Cargar userProps
                 userInfo.Text = MeshCreatorUtils.getUserPropertiesString(p.UserProperties);
+                userInfo.Enabled = selectionList.Count == 1;
             }
             else
             {
@@ -855,6 +865,8 @@ namespace Examples.MeshCreator
                 groupBoxModifyScale.Enabled = false;
                 groupBoxModifyUserProps.Enabled = false;
             }
+
+            ignoreChangeEvents = false;
         }
 
         /// <summary>
@@ -1263,21 +1275,39 @@ namespace Examples.MeshCreator
 
                     //Exportar escena
                     TgcSceneExporter exporter = new TgcSceneExporter();
+                    TgcSceneExporter.ExportResult result;
                     if (checkBoxAttachExport.Checked)
                     {
-                        exporter.exportAndAppendSceneToXml(exportScene, saveDir);
+                        result = exporter.exportAndAppendSceneToXml(exportScene, saveDir);
                     }
                     else
                     {
-                        exporter.exportSceneToXml(exportScene, saveDir);
+                        result = exporter.exportSceneToXml(exportScene, saveDir);
                     }
 
                     //Hacer dispose de los objetos clonados para exportar
                     exportScene.disposeAll();
                     exportScene = null;
 
+                    //Mostrar resultado
+                    if (result.result)
+                    {
+                        if (result.secondaryErrors)
+                        {
+                            MessageBox.Show(this, "La escena se exportó OK pero hubo errores secundarios. " + result.listErrors(), "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, "Scene exported OK.", "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                    else 
+                    {
+                        MessageBox.Show(this, "Ocurrieron errores al intentar exportar la escena. " + result.listErrors(),
+                            "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
 
-                    MessageBox.Show(this, "Scene exported OK.", "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 }
                 catch (Exception ex)
                 {
@@ -1357,6 +1387,7 @@ namespace Examples.MeshCreator
         /// </summary>
         private void textBoxModifyName_Leave(object sender, EventArgs e)
         {
+            if (ignoreChangeEvents) return;
             selectionList[0].Name = textBoxModifyName.Text;
         }
 
@@ -1365,7 +1396,11 @@ namespace Examples.MeshCreator
         /// </summary>
         private void textBoxModifyLayer_Leave(object sender, EventArgs e)
         {
-            selectionList[0].Layer = textBoxModifyLayer.Text;
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.Layer = textBoxModifyLayer.Text;
+            }
+            
         }
 
         /// <summary>
@@ -1373,6 +1408,7 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyTextureNumber_ValueChanged(object sender, EventArgs e)
         {
+            if (ignoreChangeEvents) return;
             int n = (int)numericUpDownModifyTextureNumber.Value - 1;
 
             //Cambiar imagen del pictureBox
@@ -1389,6 +1425,10 @@ namespace Examples.MeshCreator
         private void pictureBoxModifyTexture_Click(object sender, EventArgs e)
         {
             popupOpened = true;
+
+            int n = (int)numericUpDownModifyTextureNumber.Value - 1;
+            textureBrowser.setSelectedImage(selectionList[0].getTexture(n).FilePath);
+
             textureBrowser.Show(this);
         }
 
@@ -1397,6 +1437,8 @@ namespace Examples.MeshCreator
         /// </summary>
         public void textureBrowser_OnSelectImage(TgcTextureBrowser textureBrowser)
         {
+            if (ignoreChangeEvents) return;
+
             //Cambiar la textura si es distinta a la que tenia el mesh
             int n = (int)numericUpDownModifyTextureNumber.Value - 1;
             if (textureBrowser.SelectedImage != selectionList[0].getTexture(n).FilePath)
@@ -1406,7 +1448,11 @@ namespace Examples.MeshCreator
                 pictureBoxModifyTexture.Image = img;
                 pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
                 lastImage.Dispose();
-                selectionList[0].setTexture(TgcTexture.createTexture(pictureBoxModifyTexture.ImageLocation), n);
+                foreach (EditorPrimitive p in selectionList)
+                {
+                    p.setTexture(TgcTexture.createTexture(pictureBoxModifyTexture.ImageLocation), n);
+                }
+                
             }
         }
 
@@ -1423,8 +1469,12 @@ namespace Examples.MeshCreator
         /// </summary>
         private void checkBoxModifyAlphaBlendEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            EditorPrimitive p = selectionList[0];
-            p.AlphaBlendEnable = checkBoxModifyAlphaBlendEnabled.Checked;
+            if (ignoreChangeEvents) return;
+
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.AlphaBlendEnable = checkBoxModifyAlphaBlendEnabled.Checked;
+            }
         }
 
         /// <summary>
@@ -1432,9 +1482,13 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownTextureOffsetU_ValueChanged(object sender, EventArgs e)
         {
-            EditorPrimitive p = selectionList[0];
-            Vector2 offset = new Vector2((float)numericUpDownTextureOffsetU.Value, p.TextureOffset.Y);
-            p.TextureOffset = offset;
+            if (ignoreChangeEvents) return;
+
+            float value = (float)numericUpDownTextureOffsetU.Value;
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.TextureOffset = new Vector2(value, p.TextureOffset.Y);
+            }
         }
 
         /// <summary>
@@ -1442,9 +1496,13 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownTextureOffsetV_ValueChanged(object sender, EventArgs e)
         {
-            EditorPrimitive p = selectionList[0];
-            Vector2 offset = new Vector2(p.TextureOffset.X, (float)numericUpDownTextureOffsetV.Value);
-            p.TextureOffset = offset;
+            if (ignoreChangeEvents) return;
+
+            float value = (float)numericUpDownTextureOffsetV.Value;
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.TextureOffset = new Vector2(p.TextureOffset.X, value);
+            }
         }
 
         /// <summary>
@@ -1452,9 +1510,13 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownTextureTilingU_ValueChanged(object sender, EventArgs e)
         {
-            EditorPrimitive p = selectionList[0];
-            Vector2 tiling = new Vector2((float)numericUpDownTextureTilingU.Value, p.TextureTiling.Y);
-            p.TextureTiling = tiling;
+            if (ignoreChangeEvents) return;
+
+            float value = (float)numericUpDownTextureTilingU.Value;
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.TextureTiling = new Vector2(value, p.TextureTiling.Y);
+            }
         }
 
 
@@ -1463,9 +1525,13 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownTextureTilingV_ValueChanged(object sender, EventArgs e)
         {
-            EditorPrimitive p = selectionList[0];
-            Vector2 tiling = new Vector2(p.TextureTiling.X, (float)numericUpDownTextureTilingV.Value);
-            p.TextureTiling = tiling;
+            if (ignoreChangeEvents) return;
+
+            float value = (float)numericUpDownTextureTilingV.Value;
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.TextureTiling = new Vector2(p.TextureTiling.X, value);
+            }
         }
 
 
@@ -1474,12 +1540,19 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyPosX_ValueChanged(object sender, EventArgs e)
         {
+            if (ignoreChangeEvents) return;
+
             EditorPrimitive p = selectionList[0];
             Vector3 oldPos = p.Position;
             p.Position = new Vector3((float)numericUpDownModifyPosX.Value, oldPos.Y, oldPos.Z);
+            Vector3 movement = p.Position - oldPos;
             if (currentGizmo != null)
             {
-                currentGizmo.move(p, p.Position - oldPos);
+                currentGizmo.move(p, movement);
+            }
+            for (int i = 1; i < selectionList.Count; i++)
+            {
+                selectionList[i].move(movement);
             }
         }
 
@@ -1488,12 +1561,19 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyPosY_ValueChanged(object sender, EventArgs e)
         {
+            if (ignoreChangeEvents) return;
+
             EditorPrimitive p = selectionList[0];
             Vector3 oldPos = p.Position;
             p.Position = new Vector3(oldPos.X, (float)numericUpDownModifyPosY.Value, oldPos.Z);
+            Vector3 movement = p.Position - oldPos;
             if (currentGizmo != null)
             {
-                currentGizmo.move(p, p.Position - oldPos);
+                currentGizmo.move(p, movement);
+            }
+            for (int i = 1; i < selectionList.Count; i++)
+            {
+                selectionList[i].move(movement);
             }
         }
 
@@ -1502,12 +1582,19 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyPosZ_ValueChanged(object sender, EventArgs e)
         {
+            if (ignoreChangeEvents) return;
+
             EditorPrimitive p = selectionList[0];
             Vector3 oldPos = p.Position;
             p.Position = new Vector3(oldPos.X, oldPos.Y, (float)numericUpDownModifyPosZ.Value);
+            Vector3 movement = p.Position - oldPos;
             if (currentGizmo != null)
             {
-                currentGizmo.move(p, p.Position - oldPos);
+                currentGizmo.move(p, movement);
+            }
+            for (int i = 1; i < selectionList.Count; i++)
+            {
+                selectionList[i].move(movement);
             }
         }
 
@@ -1516,8 +1603,13 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyRotX_ValueChanged(object sender, EventArgs e)
         {
-            EditorPrimitive p = selectionList[0];
-            p.Rotation = new Vector3(FastMath.ToRad((float)numericUpDownModifyRotX.Value), p.Rotation.Y, p.Rotation.Z);
+            if (ignoreChangeEvents) return;
+
+            float rot = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.Rotation = new Vector3(rot, p.Rotation.Y, p.Rotation.Z);
+            }
         }
 
         /// <summary>
@@ -1525,8 +1617,13 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyRotY_ValueChanged(object sender, EventArgs e)
         {
-            EditorPrimitive p = selectionList[0];
-            p.Rotation = new Vector3(p.Rotation.X, FastMath.ToRad((float)numericUpDownModifyRotY.Value), p.Rotation.Z);
+            if (ignoreChangeEvents) return;
+
+            float rot = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.Rotation = new Vector3(p.Rotation.X, rot, p.Rotation.Z);
+            }
         }
 
         /// <summary>
@@ -1534,8 +1631,13 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyRotZ_ValueChanged(object sender, EventArgs e)
         {
-            EditorPrimitive p = selectionList[0];
-            p.Rotation = new Vector3(p.Rotation.X, p.Rotation.Y, FastMath.ToRad((float)numericUpDownModifyRotZ.Value));
+            if (ignoreChangeEvents) return;
+
+            float rot = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.Rotation = new Vector3(p.Rotation.X, p.Rotation.Y, rot);
+            }
         }
 
         /// <summary>
@@ -1543,8 +1645,10 @@ namespace Examples.MeshCreator
         /// </summary>
         private void buttonModifyRecomputeAABB_Click(object sender, EventArgs e)
         {
-            EditorPrimitive p = selectionList[0];
-            p.updateBoundingBox();
+            foreach (EditorPrimitive p in selectionList)
+            {
+                p.updateBoundingBox();
+            }
         }
 
         /// <summary>
@@ -1552,8 +1656,16 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyScaleX_ValueChanged(object sender, EventArgs e)
         {
+            if (ignoreChangeEvents) return;
+
             EditorPrimitive p = selectionList[0];
+            Vector3 old = p.Scale;
             p.Scale = new Vector3((float)numericUpDownModifyScaleX.Value / 100f, p.Scale.Y, p.Scale.Z);
+            Vector3 diff = p.Scale - old;
+            for (int i = 1; i < selectionList.Count; i++)
+            {
+                selectionList[i].Scale = selectionList[i].Scale + diff;
+            }
         }
 
         /// <summary>
@@ -1561,8 +1673,16 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyScaleY_ValueChanged(object sender, EventArgs e)
         {
+            if (ignoreChangeEvents) return;
+
             EditorPrimitive p = selectionList[0];
+            Vector3 old = p.Scale;
             p.Scale = new Vector3(p.Scale.X, (float)numericUpDownModifyScaleY.Value / 100f, p.Scale.Z);
+            Vector3 diff = p.Scale - old;
+            for (int i = 1; i < selectionList.Count; i++)
+            {
+                selectionList[i].Scale = selectionList[i].Scale + diff;
+            }
         }
 
         /// <summary>
@@ -1570,8 +1690,16 @@ namespace Examples.MeshCreator
         /// </summary>
         private void numericUpDownModifyScaleZ_ValueChanged(object sender, EventArgs e)
         {
+            if (ignoreChangeEvents) return;
+
             EditorPrimitive p = selectionList[0];
+            Vector3 old = p.Scale;
             p.Scale = new Vector3(p.Scale.X, p.Scale.Y, (float)numericUpDownModifyScaleZ.Value / 100f);
+            Vector3 diff = p.Scale - old;
+            for (int i = 1; i < selectionList.Count; i++)
+            {
+                selectionList[i].Scale = selectionList[i].Scale + diff;
+            }
         }
 
         /// <summary>
@@ -1579,6 +1707,8 @@ namespace Examples.MeshCreator
         /// </summary>
         private void userInfo_Leave(object sender, EventArgs e)
         {
+            if (ignoreChangeEvents) return;
+
             EditorPrimitive p = selectionList[0];
             p.UserProperties = MeshCreatorUtils.getUserPropertiesDictionary(userInfo.Text);
         }

@@ -90,7 +90,8 @@ namespace Examples.MeshCreator
                 return collisionPoint;
             }
 
-            throw new Exception("Sin colision con Grid");
+            return new Vector3(0, 0, 0);
+            //throw new Exception("Sin colision con Grid");
         }
 
     }

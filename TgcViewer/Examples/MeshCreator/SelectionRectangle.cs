@@ -412,5 +412,16 @@ namespace Examples.MeshCreator
             Vector3 pos = lookAt + new Vector3(control.Camera.CameraDistance, 0, 0);
             control.Camera.lookAt(pos, lookAt);
         }
+
+        /// <summary>
+        /// Obtener pivote central para efectuar la rotacion.
+        /// Se busca el centro de todos los AABB
+        /// </summary>
+        public Vector3 getRotationPivot()
+        {
+            TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
+            return aabb.calculateBoxCenter();
+        }
+
     }
 }
