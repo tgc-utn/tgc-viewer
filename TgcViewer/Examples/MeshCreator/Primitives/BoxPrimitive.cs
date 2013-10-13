@@ -216,7 +216,14 @@ namespace Examples.MeshCreator.Primitives
         public override Vector3 Rotation
         {
             get { return mesh.Rotation; }
-            set { mesh.Rotation = value; }
+        }
+
+        public override void setRotationFromPivot(Vector3 rotation, Vector3 pivot)
+        {
+            mesh.Rotation = rotation;
+            Vector3 translation = pivot - mesh.Position;
+            Matrix m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix.Translation(translation);
+            mesh.move(new Vector3(m.M41, m.M42, m.M43));
         }
 
         /// <summary>

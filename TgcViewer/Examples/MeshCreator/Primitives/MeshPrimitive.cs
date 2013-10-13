@@ -58,23 +58,22 @@ namespace Examples.MeshCreator.Primitives
                 this.Layer = control.CurrentLayer;
             }
 
-            /*
             //Ubicar mesh en el origen de coordenadas respecto del centro de su AABB
-            Vector3 center = this.mesh.BoundingBox.calculateBoxCenter();
-            setMeshToOrigin(center);
-             */ 
+            setMeshToOrigin();
         }
 
         /// <summary>
         /// Mover vertices del mesh al centro de coordenadas
         /// </summary>
-        private void setMeshToOrigin(Vector3 center)
+        private void setMeshToOrigin()
         {
-            moveMeshVertices(center);
-            this.mesh.Position = -center;
-            this.mesh.Transform = Matrix.Identity;
-            this.mesh.BoundingBox.setExtremes(this.mesh.BoundingBox.PMin + center * 2, this.mesh.BoundingBox.PMax + center * 2);
-            this.mesh.updateBoundingBox();
+            //Desplazar los vertices del mesh para que tengan el centro del AABB en el origen
+            Vector3 center = this.mesh.BoundingBox.calculateBoxCenter();
+            moveMeshVertices(-center);
+
+            //Ubicar el mesh en donde estaba originalmente
+            this.mesh.BoundingBox.setExtremes(this.mesh.BoundingBox.PMin - center, this.mesh.BoundingBox.PMax - center);
+            this.mesh.Position = center;
         }
 
         /// <summary>
@@ -215,7 +214,14 @@ namespace Examples.MeshCreator.Primitives
         public override Vector3 Rotation
         {
             get { return mesh.Rotation; }
-            set { mesh.Rotation = value; }
+        }
+
+        public override void setRotationFromPivot(Vector3 rotation, Vector3 pivot)
+        {
+            mesh.Rotation = rotation;
+            Vector3 translation = pivot - mesh.Position;
+            Matrix m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix.Translation(translation);
+            mesh.move(new Vector3(m.M41, m.M42, m.M43));
         }
 
         public override Vector3 Scale
@@ -236,7 +242,14 @@ namespace Examples.MeshCreator.Primitives
         {
             mesh.UserProperties = this.UserProperties;
             mesh.Layer = this.Layer;
+
+            //Clonar mesh y aplicar transformacion a los vertices
             TgcMesh cloneMesh = mesh.clone(mesh.Name);
+            applyMeshTransformToVertices(cloneMesh);
+
+            //Calcular nuevo bounding box
+            cloneMesh.createBoundingBox();
+
             return new MeshPrimitive(this.Control, cloneMesh);
         }
 
@@ -275,14 +288,64 @@ namespace Examples.MeshCreator.Primitives
 
         public override void updateBoundingBox()
         {
-            Vector3[] vertices = this.mesh.getVertexPositions();
-            Matrix rotM = Matrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z);
-            for (int i = 0; i < vertices.Length; i++)
+            applyMeshTransformToVertices(this.mesh);
+        }
+
+        /// <summary>
+        /// Transformar fisicamente los vertices del mesh segun su transformacion actual
+        /// </summary>
+        private void applyMeshTransformToVertices(TgcMesh m)
+        {
+            //Transformacion actual
+            Matrix transform = Matrix.Scaling(m.Scale)
+                    * Matrix.RotationYawPitchRoll(m.Rotation.Y, m.Rotation.X, m.Rotation.Z)
+                    * Matrix.Translation(m.Position);
+
+            switch (m.RenderType)
             {
-                vertices[i] = TgcVectorUtils.transform(vertices[i], rotM);
+                case TgcMesh.MeshRenderType.VERTEX_COLOR:
+                    TgcSceneLoader.VertexColorVertex[] verts1 = (TgcSceneLoader.VertexColorVertex[])m.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
+                    for (int i = 0; i < verts1.Length; i++)
+                    {
+                        verts1[i].Position = TgcVectorUtils.transform(verts1[i].Position, transform);
+                    }
+                    m.D3dMesh.SetVertexBufferData(verts1, LockFlags.None);
+                    m.D3dMesh.UnlockVertexBuffer();
+                    break;
+
+                case TgcMesh.MeshRenderType.DIFFUSE_MAP:
+                    TgcSceneLoader.DiffuseMapVertex[] verts2 = (TgcSceneLoader.DiffuseMapVertex[])m.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
+                    for (int i = 0; i < verts2.Length; i++)
+                    {
+                        verts2[i].Position = TgcVectorUtils.transform(verts2[i].Position, transform);
+                    }
+                    m.D3dMesh.SetVertexBufferData(verts2, LockFlags.None);
+                    m.D3dMesh.UnlockVertexBuffer();
+                    break;
+
+                case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
+                    TgcSceneLoader.DiffuseMapAndLightmapVertex[] verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])m.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
+                    for (int i = 0; i < verts3.Length; i++)
+                    {
+                        verts3[i].Position = TgcVectorUtils.transform(verts3[i].Position, transform);
+                    }
+                    m.D3dMesh.SetVertexBufferData(verts3, LockFlags.None);
+                    m.D3dMesh.UnlockVertexBuffer();
+                    break;
             }
-            this.mesh.BoundingBox = TgcBoundingBox.computeFromPoints(vertices);
-            //this.mesh.updateBoundingBox();
+
+            //Quitar movimientos del mesh
+            m.Position = new Vector3(0, 0, 0);
+            m.Scale = new Vector3(1, 1, 1);
+            m.Rotation = new Vector3(0, 0, 0);
+            m.Transform = Matrix.Identity;
+            m.AutoTransformEnable = true;
+
+            //Calcular nuevo bounding box
+            m.createBoundingBox();
         }
 
     }
