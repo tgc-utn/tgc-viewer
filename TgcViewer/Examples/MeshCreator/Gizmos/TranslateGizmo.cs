@@ -212,9 +212,11 @@ namespace Examples.MeshCreator.Gizmos
                     		 p.move(currentMove);
 	                    }
                         
-
                         //Mover ejes
                         moveGizmo(currentMove);
+
+                        //Actualizar datos de modify
+                        Control.updateModifyPanel();
                     }
 
                     //Soltar movimiento

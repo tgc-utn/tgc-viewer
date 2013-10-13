@@ -197,21 +197,31 @@ namespace Examples.MeshCreator.Gizmos
                         }
 
 
-                        //Mover objetos
+                        //Escalar objetos
                         foreach (EditorPrimitive p in Control.SelectionList)
 	                    {
                             //Agregar scaling, controlando que no sea menor a cero
                             Vector3 scale = p.Scale;
+                            Vector3 oldMin = p.BoundingBox.PMin;
+
                             scale += currentScale;
                             scale.X = scale.X < 0.01f ? 0.01f : scale.X;
                             scale.Y = scale.Y < 0.01f ? 0.01f : scale.Y;
                             scale.Z = scale.Z < 0.01f ? 0.01f : scale.Z;
 
                             p.Scale = scale;
+
+                            //Si se escala para una sola direccion hay que desplazar el objeto
+                            if (!Control.ScaleBothDirections)
+                            {
+                                p.move(oldMin - p.BoundingBox.PMin);
+                            }
 	                    }
                         
-
                         //TODO: Hay que ir estirando los ejes a medida que se agranda la escala
+
+                        //Actualizar datos de modify
+                        Control.updateModifyPanel();
                     }
 
                     //Soltar movimiento

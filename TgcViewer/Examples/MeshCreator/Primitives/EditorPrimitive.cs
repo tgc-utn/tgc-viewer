@@ -201,13 +201,12 @@ namespace Examples.MeshCreator.Primitives
         public abstract Vector3 Rotation
         {
             get;
-            set;
         }
 
         /// <summary>
         /// Aplicar rotacion absoluta del objeto respecto de un pivote
         /// </summary>
-        //public abstract void setRotationFromPivot(Vector3 rotation, Vector3 pivot);
+        public abstract void setRotationFromPivot(Vector3 rotation, Vector3 pivot);
 
         /// <summary>
         /// Escala del objeto. Viene de la forma (1, 1, 1)

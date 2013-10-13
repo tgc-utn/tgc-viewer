@@ -65,37 +65,6 @@ namespace Examples.MeshCreator
                 this.initMousePos = new Vector2(input.Xpos, input.Ypos);
                 this.selectiveObjectsAdditive = false;
             }
-
-            /*
-            //Hace clic y suelta manteniendo control, picking directo de un solo objeto para agregar/quitar a la seleccion actual
-            if ((input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl)) 
-                && input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
-            {
-                doDirectSelection(true);
-            }
-            //Hace clic y suelta, picking directo de un solo objeto
-            else if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
-            {
-                doDirectSelection(false);
-            }
-            //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
-            else if ((input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl))
-                && input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
-            {
-                control.CurrentState = MeshCreatorControl.State.SelectingObject;
-                this.initMousePos = new Vector2(input.Xpos, input.Ypos);
-                this.selectiveObjectsAdditive = true;
-            }
-            //Si mantiene el clic con el mouse, iniciar cuadro de seleccion
-            else if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
-            {
-                control.CurrentState = MeshCreatorControl.State.SelectingObject;
-                this.initMousePos = new Vector2(input.Xpos, input.Ypos);
-                this.selectiveObjectsAdditive = false;
-            }
-            */
-            
-
         }
 
 
@@ -344,11 +313,15 @@ namespace Examples.MeshCreator
                 }
                 activateCurrentGizmo();
             }
+            //Nada seleccionado
             else
             {
+                //Limpiar seleccion
                 clearSelection();
             }
-            control.CurrentState = MeshCreatorControl.State.SelectObject;
+
+            //Pasar a modo seleccion
+            control.setSelectObjectState();
             control.updateModifyPanel();
         }
 
