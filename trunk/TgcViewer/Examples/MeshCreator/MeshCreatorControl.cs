@@ -205,6 +205,15 @@ namespace Examples.MeshCreator
             get { return textBoxCreateCurrentLayer.Text; }
         }
 
+        /// <summary>
+        /// Indica si hay que escalar para ambas direcciones o solo una
+        /// </summary>
+        public bool ScaleBothDirections
+        {
+            get { return checkBoxModifyBothDir.Checked; }
+        }
+
+
 
         public MeshCreatorControl(TgcMeshCreator creator)
         {
@@ -272,7 +281,7 @@ namespace Examples.MeshCreator
             objectPositionText = new TgcText2d();
             objectPositionText.Align = TgcText2d.TextAlign.LEFT;
             objectPositionText.Color = Color.Yellow;
-            objectPositionText.Size = new Size(400, 12);
+            objectPositionText.Size = new Size(500, 12);
             objectPositionText.Position = new Point(GuiController.Instance.Panel3d.Width - objectPositionText.Size.Width, GuiController.Instance.Panel3d.Height - 20);
 
             //Snap to grid
@@ -506,9 +515,8 @@ namespace Examples.MeshCreator
             //Object position Text
             if (selectionList.Count > 0)
             {
-                string text = selectionList.Count > 1 ? selectionList[0].Name + " + others" : selectionList[0].Name;
+                string text = selectionList.Count > 1 ? selectionList[0].Name + " + others " + selectionList.Count : selectionList[0].Name;
                 text += ", Pos: " + TgcParserUtils.printVector3(selectionList[0].Position);
-                text += ", Selected " + selectionList.Count;
                 objectPositionText.Text = text;
                 objectPositionText.render();
             }
@@ -1004,11 +1012,19 @@ namespace Examples.MeshCreator
         {
             if (radioButtonSelectObject.Checked)
             {
-                untoggleAllRadioButtons(radioButtonSelectObject);
-                currentState = State.SelectObject;
-                creatingPrimitive = null;
-                currentGizmo = null;
+                setSelectObjectState();
             }
+        }
+
+        /// <summary>
+        /// Setear estado de Seleccion de Objetos
+        /// </summary>
+        public void setSelectObjectState()
+        {
+            untoggleAllRadioButtons(radioButtonSelectObject);
+            currentState = State.SelectObject;
+            creatingPrimitive = null;
+            currentGizmo = null;
         }
 
         /// <summary>
@@ -1605,10 +1621,11 @@ namespace Examples.MeshCreator
         {
             if (ignoreChangeEvents) return;
 
-            float rot = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
+            float value = FastMath.ToRad((float)numericUpDownModifyRotX.Value);
+            Vector3 pivot = selectionRectangle.getRotationPivot();
             foreach (EditorPrimitive p in selectionList)
             {
-                p.Rotation = new Vector3(rot, p.Rotation.Y, p.Rotation.Z);
+                p.setRotationFromPivot(new Vector3(value, p.Rotation.Y, p.Rotation.Z), pivot);
             }
         }
 
@@ -1619,10 +1636,11 @@ namespace Examples.MeshCreator
         {
             if (ignoreChangeEvents) return;
 
-            float rot = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
+            float value = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
+            Vector3 pivot = selectionRectangle.getRotationPivot();
             foreach (EditorPrimitive p in selectionList)
             {
-                p.Rotation = new Vector3(p.Rotation.X, rot, p.Rotation.Z);
+                p.setRotationFromPivot(new Vector3(p.Rotation.X, value, p.Rotation.Z), pivot);
             }
         }
 
@@ -1633,10 +1651,11 @@ namespace Examples.MeshCreator
         {
             if (ignoreChangeEvents) return;
 
-            float rot = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
+            float value = FastMath.ToRad((float)numericUpDownModifyRotZ.Value);
+            Vector3 pivot = selectionRectangle.getRotationPivot();
             foreach (EditorPrimitive p in selectionList)
             {
-                p.Rotation = new Vector3(p.Rotation.X, p.Rotation.Y, rot);
+                p.setRotationFromPivot(new Vector3(p.Rotation.X, p.Rotation.Y, value), pivot);
             }
         }
 
@@ -1649,6 +1668,7 @@ namespace Examples.MeshCreator
             {
                 p.updateBoundingBox();
             }
+            updateModifyPanel();
         }
 
         /// <summary>
@@ -1658,13 +1678,23 @@ namespace Examples.MeshCreator
         {
             if (ignoreChangeEvents) return;
 
-            EditorPrimitive p = selectionList[0];
-            Vector3 old = p.Scale;
-            p.Scale = new Vector3((float)numericUpDownModifyScaleX.Value / 100f, p.Scale.Y, p.Scale.Z);
-            Vector3 diff = p.Scale - old;
-            for (int i = 1; i < selectionList.Count; i++)
+            EditorPrimitive p0 = selectionList[0];
+            Vector3 old = p0.Scale;
+            float value = (float)numericUpDownModifyScaleX.Value / 100f;
+            Vector3 diff = new Vector3(value, p0.Scale.Y, p0.Scale.Z) - old;
+
+            foreach (EditorPrimitive p in selectionList)
             {
-                selectionList[i].Scale = selectionList[i].Scale + diff;
+                if (checkBoxModifyBothDir.Checked)
+                {
+                    p.Scale += diff;
+                }
+                else
+                {
+                    Vector3 oldMin = p.BoundingBox.PMin;
+                    p.Scale += diff;
+                    p.move(oldMin - p.BoundingBox.PMin);
+                }
             }
         }
 
@@ -1675,13 +1705,23 @@ namespace Examples.MeshCreator
         {
             if (ignoreChangeEvents) return;
 
-            EditorPrimitive p = selectionList[0];
-            Vector3 old = p.Scale;
-            p.Scale = new Vector3(p.Scale.X, (float)numericUpDownModifyScaleY.Value / 100f, p.Scale.Z);
-            Vector3 diff = p.Scale - old;
-            for (int i = 1; i < selectionList.Count; i++)
+            EditorPrimitive p0 = selectionList[0];
+            Vector3 old = p0.Scale;
+            float value = (float)numericUpDownModifyScaleY.Value / 100f;
+            Vector3 diff = new Vector3(p0.Scale.X, value, p0.Scale.Z) - old;
+
+            foreach (EditorPrimitive p in selectionList)
             {
-                selectionList[i].Scale = selectionList[i].Scale + diff;
+                if (checkBoxModifyBothDir.Checked)
+                {
+                    p.Scale += diff;
+                }
+                else
+                {
+                    Vector3 oldMin = p.BoundingBox.PMin;
+                    p.Scale += diff;
+                    p.move(oldMin - p.BoundingBox.PMin);
+                }
             }
         }
 
@@ -1692,13 +1732,23 @@ namespace Examples.MeshCreator
         {
             if (ignoreChangeEvents) return;
 
-            EditorPrimitive p = selectionList[0];
-            Vector3 old = p.Scale;
-            p.Scale = new Vector3(p.Scale.X, p.Scale.Y, (float)numericUpDownModifyScaleZ.Value / 100f);
-            Vector3 diff = p.Scale - old;
-            for (int i = 1; i < selectionList.Count; i++)
+            EditorPrimitive p0 = selectionList[0];
+            Vector3 old = p0.Scale;
+            float value = (float)numericUpDownModifyScaleZ.Value / 100f;
+            Vector3 diff = new Vector3(p0.Scale.X, p0.Scale.Y, value) - old;
+
+            foreach (EditorPrimitive p in selectionList)
             {
-                selectionList[i].Scale = selectionList[i].Scale + diff;
+                if (checkBoxModifyBothDir.Checked)
+                {
+                    p.Scale += diff;
+                }
+                else
+                {
+                    Vector3 oldMin = p.BoundingBox.PMin;
+                    p.Scale += diff;
+                    p.move(oldMin - p.BoundingBox.PMin);
+                }
             }
         }
 

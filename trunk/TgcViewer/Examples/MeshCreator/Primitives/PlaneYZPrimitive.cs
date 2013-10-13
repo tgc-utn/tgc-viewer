@@ -189,10 +189,11 @@ namespace Examples.MeshCreator.Primitives
         public override Vector3 Rotation
         {
             get { return Vector3.Empty; }
-            set { 
-                //NO SOPORTADO ACTUALMENTE
-                /*mesh.Rotation = value;*/ 
-            }
+        }
+
+        public override void setRotationFromPivot(Vector3 rotation, Vector3 pivot)
+        {
+            //NO SOPORTADO ACTUALMENTE
         }
 
         public override Vector3 Scale

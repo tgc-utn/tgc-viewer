@@ -107,6 +107,7 @@
             this.radioButtonModifySelectAndRotate = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndMove = new System.Windows.Forms.RadioButton();
             this.tabPageModify2 = new System.Windows.Forms.TabPage();
+            this.checkBoxModifyBothDir = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
@@ -714,7 +715,7 @@
             // groupBoxModifyUserProps
             // 
             this.groupBoxModifyUserProps.Controls.Add(this.userInfo);
-            this.groupBoxModifyUserProps.Location = new System.Drawing.Point(2, 646);
+            this.groupBoxModifyUserProps.Location = new System.Drawing.Point(2, 667);
             this.groupBoxModifyUserProps.Name = "groupBoxModifyUserProps";
             this.groupBoxModifyUserProps.Size = new System.Drawing.Size(105, 139);
             this.groupBoxModifyUserProps.TabIndex = 43;
@@ -732,6 +733,7 @@
             // 
             // groupBoxModifyScale
             // 
+            this.groupBoxModifyScale.Controls.Add(this.checkBoxModifyBothDir);
             this.groupBoxModifyScale.Controls.Add(this.numericUpDownModifyScaleZ);
             this.groupBoxModifyScale.Controls.Add(this.label10);
             this.groupBoxModifyScale.Controls.Add(this.numericUpDownModifyScaleY);
@@ -740,7 +742,7 @@
             this.groupBoxModifyScale.Controls.Add(this.numericUpDownModifyScaleX);
             this.groupBoxModifyScale.Location = new System.Drawing.Point(1, 565);
             this.groupBoxModifyScale.Name = "groupBoxModifyScale";
-            this.groupBoxModifyScale.Size = new System.Drawing.Size(105, 79);
+            this.groupBoxModifyScale.Size = new System.Drawing.Size(105, 101);
             this.groupBoxModifyScale.TabIndex = 42;
             this.groupBoxModifyScale.TabStop = false;
             this.groupBoxModifyScale.Text = "Scale (%)";
@@ -1147,6 +1149,18 @@
             this.tabPageModify2.Text = "Modify+";
             this.tabPageModify2.UseVisualStyleBackColor = true;
             // 
+            // checkBoxModifyBothDir
+            // 
+            this.checkBoxModifyBothDir.AutoSize = true;
+            this.checkBoxModifyBothDir.Checked = true;
+            this.checkBoxModifyBothDir.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxModifyBothDir.Location = new System.Drawing.Point(6, 78);
+            this.checkBoxModifyBothDir.Name = "checkBoxModifyBothDir";
+            this.checkBoxModifyBothDir.Size = new System.Drawing.Size(96, 17);
+            this.checkBoxModifyBothDir.TabIndex = 64;
+            this.checkBoxModifyBothDir.Text = "Both directions";
+            this.checkBoxModifyBothDir.UseVisualStyleBackColor = true;
+            // 
             // MeshCreatorControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1279,5 +1293,6 @@
         private System.Windows.Forms.Label labelCreateCurrentLayer;
         private System.Windows.Forms.Button buttonModifyRecomputeAABB;
         private System.Windows.Forms.Button buttonMergeSelected;
+        private System.Windows.Forms.CheckBox checkBoxModifyBothDir;
     }
 }
