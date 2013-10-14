@@ -22,7 +22,8 @@ namespace Examples.MeshCreator.Primitives
         public MeshPrimitive(MeshCreatorControl control, TgcMesh mesh)
             : base(control)
         {
-            this.Name = mesh.Name + "_" + EditorPrimitive.PRIMITIVE_COUNT++;
+            //this.Name = mesh.Name + "_" + EditorPrimitive.PRIMITIVE_COUNT++;
+            this.Name = mesh.Name;
             this.mesh = mesh;
 
             //Ver si tiene texturas
@@ -232,16 +233,19 @@ namespace Examples.MeshCreator.Primitives
 
         public override TgcMesh createMeshToExport()
         {
-            mesh.UserProperties = this.UserProperties;
+            mesh.Name = this.Name;
             mesh.Layer = this.Layer;
+            mesh.UserProperties = this.UserProperties;
+
             TgcMesh cloneMesh = mesh.clone(mesh.Name);
             return cloneMesh;
         }
 
         public override EditorPrimitive clone()
         {
-            mesh.UserProperties = this.UserProperties;
+            mesh.Name = this.Name;
             mesh.Layer = this.Layer;
+            mesh.UserProperties = this.UserProperties;
 
             //Clonar mesh y aplicar transformacion a los vertices
             TgcMesh cloneMesh = mesh.clone(mesh.Name);

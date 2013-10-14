@@ -1258,7 +1258,7 @@ namespace Examples.MeshCreator
 
                 //Agregar nuevo mesh al escenario y seleccionarlo
                 EditorPrimitive pMerged = new MeshPrimitive(this, mergedMesh);
-                this.meshes.Add(pMerged);
+                addMesh(pMerged);
                 selectionRectangle.selectObject(pMerged);
                 currentState = MeshCreatorControl.State.SelectObject;
                 selectionRectangle.activateCurrentGizmo();
@@ -1762,9 +1762,43 @@ namespace Examples.MeshCreator
             EditorPrimitive p = selectionList[0];
             p.UserProperties = MeshCreatorUtils.getUserPropertiesDictionary(userInfo.Text);
         }
+
+        /// <summary>
+        /// Clic en "Convert to Mesh"
+        /// </summary>
+        private void buttonModifyConvertToMesh_Click(object sender, EventArgs e)
+        {
+            //Clonar objetos seleccionados
+            List<EditorPrimitive> newObjects = new List<EditorPrimitive>();
+            List<EditorPrimitive> objectToDelete = new List<EditorPrimitive>();
+            foreach (EditorPrimitive p in selectionList)
+            {
+                TgcMesh mesh = p.createMeshToExport();
+                EditorPrimitive meshP = new MeshPrimitive(this, mesh);
+                newObjects.Add(meshP);
+
+                objectToDelete.Add(p);
+            }
+            
+            //Eliminar objetos anteriores
+            deleteObjects(objectToDelete);
+
+            //Agregar nuevos objetos al escenario y seleccionarlos
+            foreach (EditorPrimitive p in newObjects)
+            {
+                addMesh(p);
+                selectionRectangle.selectObject(p);
+            }
+            currentState = MeshCreatorControl.State.SelectObject;
+            selectionRectangle.activateCurrentGizmo();
+            updateModifyPanel();
+            
+        }
         
 
         #endregion
+
+        
 
         
 
