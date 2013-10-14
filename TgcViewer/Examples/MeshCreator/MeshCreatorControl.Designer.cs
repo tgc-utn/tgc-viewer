@@ -108,6 +108,7 @@
             this.radioButtonModifySelectAndMove = new System.Windows.Forms.RadioButton();
             this.tabPageModify2 = new System.Windows.Forms.TabPage();
             this.checkBoxModifyBothDir = new System.Windows.Forms.CheckBox();
+            this.buttonModifyConvertToMesh = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
@@ -517,6 +518,7 @@
             // 
             // tabPageModify
             // 
+            this.tabPageModify.Controls.Add(this.buttonModifyConvertToMesh);
             this.tabPageModify.Controls.Add(this.groupBoxModifyTexture);
             this.tabPageModify.Controls.Add(this.groupBoxModifyUserProps);
             this.tabPageModify.Controls.Add(this.groupBoxModifyScale);
@@ -1161,6 +1163,16 @@
             this.checkBoxModifyBothDir.Text = "Both directions";
             this.checkBoxModifyBothDir.UseVisualStyleBackColor = true;
             // 
+            // buttonModifyConvertToMesh
+            // 
+            this.buttonModifyConvertToMesh.Location = new System.Drawing.Point(8, 810);
+            this.buttonModifyConvertToMesh.Name = "buttonModifyConvertToMesh";
+            this.buttonModifyConvertToMesh.Size = new System.Drawing.Size(96, 22);
+            this.buttonModifyConvertToMesh.TabIndex = 59;
+            this.buttonModifyConvertToMesh.Text = "Convert to Mesh";
+            this.buttonModifyConvertToMesh.UseVisualStyleBackColor = true;
+            this.buttonModifyConvertToMesh.Click += new System.EventHandler(this.buttonModifyConvertToMesh_Click);
+            // 
             // MeshCreatorControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1294,5 +1306,6 @@
         private System.Windows.Forms.Button buttonModifyRecomputeAABB;
         private System.Windows.Forms.Button buttonMergeSelected;
         private System.Windows.Forms.CheckBox checkBoxModifyBothDir;
+        private System.Windows.Forms.Button buttonModifyConvertToMesh;
     }
 }
