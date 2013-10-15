@@ -391,7 +391,14 @@ namespace Examples.MeshCreator
                 //Translate
                 else if (input.keyPressed(Key.W))
                 {
-                    radioButtonModifySelectAndMove.Checked = true;
+                    if (radioButtonModifySelectAndMove.Checked)
+                    {
+                        radioButtonModifySelectAndMove_CheckedChanged(null, null);
+                    }
+                    else
+                    {
+                        radioButtonModifySelectAndMove.Checked = true;
+                    }
                 }
                 //Scale
                 else if (input.keyPressed(Key.R))
@@ -515,7 +522,7 @@ namespace Examples.MeshCreator
             //Object position Text
             if (selectionList.Count > 0)
             {
-                string text = selectionList.Count > 1 ? selectionList[0].Name + " + others " + selectionList.Count : selectionList[0].Name;
+                string text = selectionList.Count > 1 ? selectionList[0].Name + " + " + (selectionList.Count - 1) + " others" : selectionList[0].Name;
                 text += ", Pos: " + TgcParserUtils.printVector3(selectionList[0].Position);
                 objectPositionText.Text = text;
                 objectPositionText.render();
