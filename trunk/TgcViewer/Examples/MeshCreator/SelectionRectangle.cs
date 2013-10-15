@@ -110,19 +110,23 @@ namespace Examples.MeshCreator
                         //Solo los visibles
                         if (p.Visible)
                         {
-                            //Ver si hay colision
-                            Rectangle primRect = MeshCreatorUtils.projectAABB(p.BoundingBox);
-                            if (r.IntersectsWith(primRect))
+                            //Ver si hay colision contra la proyeccion del AABB del mesh
+                            //Rectangle primRect = MeshCreatorUtils.projectAABB(p.BoundingBox);
+                            Rectangle primRect;
+                            if (MeshCreatorUtils.projectBoundingBox(p.BoundingBox, out primRect))
                             {
-                                //Agregar el objeto en forma aditiva
-                                if (selectiveObjectsAdditive)
+                                if (r.IntersectsWith(primRect))
                                 {
-                                    selectOrRemoveObjectIfPresent(p);
-                                }
-                                //Agregar el objeto en forma simple
-                                else
-                                {
-                                    selectObject(p);
+                                    //Agregar el objeto en forma aditiva
+                                    if (selectiveObjectsAdditive)
+                                    {
+                                        selectOrRemoveObjectIfPresent(p);
+                                    }
+                                    //Agregar el objeto en forma simple
+                                    else
+                                    {
+                                        selectObject(p);
+                                    }
                                 }
                             }
                         }
