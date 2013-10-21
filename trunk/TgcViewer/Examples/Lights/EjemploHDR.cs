@@ -42,6 +42,7 @@ namespace Examples.Lights
         Texture scaledSceneRT;
         Texture brightPassRT;
         Texture bloomRT;
+        Texture bloomTempRT;
         Texture[] luminanceRTs;
         Surface pOldRT;
         Effect effect;
@@ -88,8 +89,9 @@ namespace Examples.Lights
             //Crear RT para el bright-pass filter, de igual tamaño que scaledSceneRT (formato comun)
             brightPassRT = new Texture(d3dDevice, cropWidth, cropHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
 
-            //Crear RT para el efecto bloom (formato comun)
+            //Crear RT para el efecto bloom (formato comun). Son dos por la doble pasada del filtro gaussiano
             bloomRT = new Texture(d3dDevice, cropWidth, cropHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
+            bloomTempRT = new Texture(d3dDevice, cropWidth, cropHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
 
             //Crear un RT por cada paso de downsampling necesario para obtener el average luminance (un solo canal de 16 bits)
             luminanceRTs = new Texture[NUM_LUMINANCE_TEXTURES];
@@ -110,15 +112,17 @@ namespace Examples.Lights
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
             meshes = scene.Meshes;
 
-            //Aplicar a cada mesh el shader de point light
+            //Aplicar a cada mesh el shader de luz custom
             foreach (TgcMesh mesh in scene.Meshes)
             {
-                mesh.Effect = GuiController.Instance.Shaders.TgcMeshPointLightShader;
-                mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
+                mesh.Effect = effect;
+                mesh.Technique = "LightPass";
             }
 
             //Mesh para la luz
             lightMesh = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
+            lightMesh.Effect = effect;
+            lightMesh.Technique = "DrawLightSource";
 
             //Camara en 1ra persona
             GuiController.Instance.FpsCamera.Enable = true;
@@ -127,11 +131,10 @@ namespace Examples.Lights
             GuiController.Instance.FpsCamera.setCamera(new Vector3(-20, 80, 450), new Vector3(0, 80, 1));
 
             //Modifiers de la luz
-            GuiController.Instance.Modifiers.addFloat("middleGray", 1, 10, 1f);
+            GuiController.Instance.Modifiers.addBoolean("toneMapping", "toneMapping", true);
+            GuiController.Instance.Modifiers.addFloat("lightIntensity", 0, 100, 5);
+            GuiController.Instance.Modifiers.addFloat("middleGray", 0.1f, 1, 0.72f);
             GuiController.Instance.Modifiers.addVertex3f("lightPos", new Vector3(-400, -200, -400), new Vector3(400, 300, 500), new Vector3(60, 35, 250));
-            GuiController.Instance.Modifiers.addColor("lightColor", Color.White);
-            GuiController.Instance.Modifiers.addFloat("lightIntensity", 0, 1000, 500);
-            GuiController.Instance.Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
         }
 
 
@@ -154,14 +157,12 @@ namespace Examples.Lights
             //Hacer bright-pass para quedarse con los pixels mas luminosos
             brightPass(d3dDevice);
 
+            //Hacer blur de bright-pass para generar efecto de bloom
+            bloomPass(d3dDevice);
 
             //Final render
             finalRender(d3dDevice);
         }
-
-        
-
-        
 
         
 
@@ -186,21 +187,22 @@ namespace Examples.Lights
             Vector3 lightPos = (Vector3)GuiController.Instance.Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 
+            //Dibujar mesh de fuente de luz
+            lightMesh.Effect.Technique = "DrawLightSource";
+            lightMesh.render();
+
             //Renderizar meshes
             foreach (TgcMesh mesh in meshes)
             {
+                mesh.Effect.Technique = "LightPass";
+
                 //Cargar variables shader de la luz
-                mesh.Effect.SetValue("lightColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["lightColor"]));
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
                 mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.FpsCamera.getPosition()));
                 mesh.Effect.SetValue("lightIntensity", (float)GuiController.Instance.Modifiers["lightIntensity"]);
-                mesh.Effect.SetValue("lightAttenuation", (float)GuiController.Instance.Modifiers["lightAttenuation"]);
 
-                //Cargar variables de shader de Material.
-                mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
-                mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
-                mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
-                mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
+                //Cargar variables de shader de Material
+                mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.DarkGray));
                 mesh.Effect.SetValue("materialSpecularExp", 9f);
 
                 //Renderizar modelo
@@ -364,15 +366,55 @@ namespace Examples.Lights
         }
 
 
+        /// <summary>
+        /// Hacer blur de bright-pass para generar efecto de bloom
+        /// </summary>
+        /// <param name="d3dDevice"></param>
+        private void bloomPass(Device d3dDevice)
+        {
+            d3dDevice.BeginScene();
+
+            //Gaussian blur horizontal
+            Vector2[] texCoordOffsets;
+            float[] colorWeights;
+            Surface bloomTempS = bloomTempRT.GetSurfaceLevel(0);
+            TgcPostProcessingUtils.computeGaussianBlurSampleOffsets15(bloomTempS.Description.Width, 1, 1, true, out texCoordOffsets, out colorWeights);
+            effect.Technique = "BloomPass";
+            effect.SetValue("texBloomRT", brightPassRT);
+            d3dDevice.SetRenderTarget(0, bloomTempS);
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            screenQuad.render(effect);
+
+            //Gaussian blur vertical
+            TgcPostProcessingUtils.computeGaussianBlurSampleOffsets15(bloomTempS.Description.Height, 1, 1, false, out texCoordOffsets, out colorWeights);
+            effect.Technique = "BloomPass";
+            effect.SetValue("texBloomRT", bloomTempRT);
+            effect.SetValue("gauss_offsets", TgcParserUtils.vector2ArrayToFloat2Array(texCoordOffsets));
+            effect.SetValue("gauss_weights", colorWeights);
+            Surface bloomS = bloomRT.GetSurfaceLevel(0);
+            d3dDevice.SetRenderTarget(0, bloomS);
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            screenQuad.render(effect);
+
+            bloomTempS.Dispose();
+            bloomS.Dispose();
+            d3dDevice.EndScene();
+        }
 
 
-
+        /// <summary>
+        /// Render final donde une todo
+        /// </summary>
         private void finalRender(Device d3dDevice)
         {
             d3dDevice.BeginScene();
 
-            effect.Technique = "DefaultTechnique";
-            effect.SetValue("texSceneRT", brightPassRT);
+            bool toneMapping = (bool)GuiController.Instance.Modifiers["toneMapping"];
+            effect.Technique = toneMapping ? "FinalRender" : "FinalRenderNoToneMapping";
+            effect.SetValue("texSceneRT", sceneRT);
+            effect.SetValue("texLuminanceRT", luminanceRTs[0]);
+            effect.SetValue("texBloomRT", bloomRT);
+            effect.SetValue("middleGray", (float)GuiController.Instance.Modifiers["middleGray"]);
             d3dDevice.SetRenderTarget(0, pOldRT);
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             screenQuad.render(effect);
@@ -397,6 +439,7 @@ namespace Examples.Lights
             scaledSceneRT.Dispose();
             brightPassRT.Dispose();
             bloomRT.Dispose();
+            bloomTempRT.Dispose();
             for (int i = 0; i < luminanceRTs.Length; i++)
             {
                 luminanceRTs[i].Dispose();
