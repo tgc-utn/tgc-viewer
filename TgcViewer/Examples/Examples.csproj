@@ -132,6 +132,7 @@
     <Compile Include="Matematica\EjemploTriangulosYPlanos.cs" />
     <Compile Include="Matematica\EjemploTransformaciones.cs" />
     <Compile Include="Matematica\EjemploMatematicaVarios.cs" />
+    <Compile Include="MeshCreator\EditablePoly.cs" />
     <Compile Include="MeshCreator\InputMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
