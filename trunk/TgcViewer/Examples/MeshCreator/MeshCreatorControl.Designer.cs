@@ -28,28 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
-            this.buttonMergeSelected = new System.Windows.Forms.Button();
-            this.buttonTopView = new System.Windows.Forms.Button();
-            this.buttonObjectBrowser = new System.Windows.Forms.Button();
-            this.numericUpDownFPSCameraSpeed = new System.Windows.Forms.NumericUpDown();
-            this.label14 = new System.Windows.Forms.Label();
-            this.radioButtonFPSCamera = new System.Windows.Forms.RadioButton();
-            this.buttonUnhideAll = new System.Windows.Forms.Button();
-            this.buttonSelectAll = new System.Windows.Forms.Button();
-            this.numericUpDownCellSize = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
-            this.checkBoxSnapToGrid = new System.Windows.Forms.CheckBox();
-            this.buttonHideSelected = new System.Windows.Forms.Button();
-            this.checkBoxShowObjectsBoundingBox = new System.Windows.Forms.CheckBox();
-            this.buttonHelp = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonSaveSceneAs = new System.Windows.Forms.Button();
+            this.buttonSaveScene = new System.Windows.Forms.Button();
             this.checkBoxAttachExport = new System.Windows.Forms.CheckBox();
-            this.buttonExportScene = new System.Windows.Forms.Button();
-            this.buttonCloneObject = new System.Windows.Forms.Button();
-            this.buttonDeleteObject = new System.Windows.Forms.Button();
-            this.buttonZoomObject = new System.Windows.Forms.Button();
+            this.groupBoxGeneralSelection = new System.Windows.Forms.GroupBox();
             this.radioButtonSelectObject = new System.Windows.Forms.RadioButton();
+            this.checkBoxShowObjectsBoundingBox = new System.Windows.Forms.CheckBox();
+            this.buttonMergeSelected = new System.Windows.Forms.Button();
+            this.checkBoxSnapToGrid = new System.Windows.Forms.CheckBox();
+            this.buttonObjectBrowser = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.buttonUnhideAll = new System.Windows.Forms.Button();
+            this.numericUpDownCellSize = new System.Windows.Forms.NumericUpDown();
+            this.buttonHideSelected = new System.Windows.Forms.Button();
+            this.buttonCloneObject = new System.Windows.Forms.Button();
+            this.buttonSelectAll = new System.Windows.Forms.Button();
+            this.buttonDeleteObject = new System.Windows.Forms.Button();
+            this.groupBoxGeneralCamera = new System.Windows.Forms.GroupBox();
+            this.buttonFrontView = new System.Windows.Forms.Button();
+            this.buttonLeftView = new System.Windows.Forms.Button();
+            this.buttonZoomObject = new System.Windows.Forms.Button();
+            this.radioButtonFPSCamera = new System.Windows.Forms.RadioButton();
+            this.label14 = new System.Windows.Forms.Label();
+            this.buttonTopView = new System.Windows.Forms.Button();
+            this.numericUpDownFPSCameraSpeed = new System.Windows.Forms.NumericUpDown();
+            this.buttonHelp = new System.Windows.Forms.Button();
             this.tabPageCreate = new System.Windows.Forms.TabPage();
             this.textBoxCreateCurrentLayer = new System.Windows.Forms.TextBox();
             this.labelCreateCurrentLayer = new System.Windows.Forms.Label();
@@ -108,12 +115,22 @@
             this.radioButtonModifySelectAndScale = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndRotate = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndMove = new System.Windows.Forms.RadioButton();
-            this.tabPageModify2 = new System.Windows.Forms.TabPage();
-            this.buttonConvertToEditablePoly = new System.Windows.Forms.Button();
+            this.tabPageEditablePoly = new System.Windows.Forms.TabPage();
+            this.groupBoxEPolyEditPolygons = new System.Windows.Forms.GroupBox();
+            this.groupBoxEPolyEditEdges = new System.Windows.Forms.GroupBox();
+            this.groupBoxEPolyEditVertices = new System.Windows.Forms.GroupBox();
+            this.groupBoxEPolyPrimitive = new System.Windows.Forms.GroupBox();
+            this.radioButtonEPolyPrimitivePolygon = new System.Windows.Forms.RadioButton();
+            this.radioButtonEPolyPrimitiveEdge = new System.Windows.Forms.RadioButton();
+            this.radioButtonEPolyPrimitiveVertex = new System.Windows.Forms.RadioButton();
+            this.toolTips = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.groupBoxGeneralSelection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).BeginInit();
+            this.groupBoxGeneralCamera.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
             this.tabPageCreate.SuspendLayout();
             this.groupBoxPrimitive.SuspendLayout();
             this.tabPageModify.SuspendLayout();
@@ -138,7 +155,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosX)).BeginInit();
             this.groupBoxModifyGeneral.SuspendLayout();
-            this.tabPageModify2.SuspendLayout();
+            this.tabPageEditablePoly.SuspendLayout();
+            this.groupBoxEPolyPrimitive.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -146,7 +164,7 @@
             this.tabControl.Controls.Add(this.tabPageGeneral);
             this.tabControl.Controls.Add(this.tabPageCreate);
             this.tabControl.Controls.Add(this.tabPageModify);
-            this.tabControl.Controls.Add(this.tabPageModify2);
+            this.tabControl.Controls.Add(this.tabPageEditablePoly);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -156,26 +174,10 @@
             // 
             // tabPageGeneral
             // 
-            this.tabPageGeneral.Controls.Add(this.buttonMergeSelected);
-            this.tabPageGeneral.Controls.Add(this.buttonTopView);
-            this.tabPageGeneral.Controls.Add(this.buttonObjectBrowser);
-            this.tabPageGeneral.Controls.Add(this.numericUpDownFPSCameraSpeed);
-            this.tabPageGeneral.Controls.Add(this.label14);
-            this.tabPageGeneral.Controls.Add(this.radioButtonFPSCamera);
-            this.tabPageGeneral.Controls.Add(this.buttonUnhideAll);
-            this.tabPageGeneral.Controls.Add(this.buttonSelectAll);
-            this.tabPageGeneral.Controls.Add(this.numericUpDownCellSize);
-            this.tabPageGeneral.Controls.Add(this.label13);
-            this.tabPageGeneral.Controls.Add(this.checkBoxSnapToGrid);
-            this.tabPageGeneral.Controls.Add(this.buttonHideSelected);
-            this.tabPageGeneral.Controls.Add(this.checkBoxShowObjectsBoundingBox);
+            this.tabPageGeneral.Controls.Add(this.groupBox1);
+            this.tabPageGeneral.Controls.Add(this.groupBoxGeneralSelection);
+            this.tabPageGeneral.Controls.Add(this.groupBoxGeneralCamera);
             this.tabPageGeneral.Controls.Add(this.buttonHelp);
-            this.tabPageGeneral.Controls.Add(this.checkBoxAttachExport);
-            this.tabPageGeneral.Controls.Add(this.buttonExportScene);
-            this.tabPageGeneral.Controls.Add(this.buttonCloneObject);
-            this.tabPageGeneral.Controls.Add(this.buttonDeleteObject);
-            this.tabPageGeneral.Controls.Add(this.buttonZoomObject);
-            this.tabPageGeneral.Controls.Add(this.radioButtonSelectObject);
             this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Size = new System.Drawing.Size(192, 974);
@@ -183,9 +185,96 @@
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.buttonSaveSceneAs);
+            this.groupBox1.Controls.Add(this.buttonSaveScene);
+            this.groupBox1.Controls.Add(this.checkBoxAttachExport);
+            this.groupBox1.Location = new System.Drawing.Point(7, 463);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(101, 94);
+            this.groupBox1.TabIndex = 56;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Save scene";
+            // 
+            // buttonSaveSceneAs
+            // 
+            this.buttonSaveSceneAs.Location = new System.Drawing.Point(3, 41);
+            this.buttonSaveSceneAs.Name = "buttonSaveSceneAs";
+            this.buttonSaveSceneAs.Size = new System.Drawing.Size(95, 25);
+            this.buttonSaveSceneAs.TabIndex = 7;
+            this.buttonSaveSceneAs.Text = "Save as";
+            this.buttonSaveSceneAs.UseVisualStyleBackColor = true;
+            this.buttonSaveSceneAs.Click += new System.EventHandler(this.buttonSaveSceneAs_Click);
+            // 
+            // buttonSaveScene
+            // 
+            this.buttonSaveScene.Location = new System.Drawing.Point(3, 16);
+            this.buttonSaveScene.Name = "buttonSaveScene";
+            this.buttonSaveScene.Size = new System.Drawing.Size(95, 25);
+            this.buttonSaveScene.TabIndex = 5;
+            this.buttonSaveScene.Text = "Save";
+            this.buttonSaveScene.UseVisualStyleBackColor = true;
+            this.buttonSaveScene.Click += new System.EventHandler(this.buttonSaveScene_Click);
+            // 
+            // checkBoxAttachExport
+            // 
+            this.checkBoxAttachExport.AutoSize = true;
+            this.checkBoxAttachExport.Location = new System.Drawing.Point(6, 69);
+            this.checkBoxAttachExport.Name = "checkBoxAttachExport";
+            this.checkBoxAttachExport.Size = new System.Drawing.Size(89, 17);
+            this.checkBoxAttachExport.TabIndex = 6;
+            this.checkBoxAttachExport.Text = "Attach export";
+            this.checkBoxAttachExport.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxGeneralSelection
+            // 
+            this.groupBoxGeneralSelection.Controls.Add(this.radioButtonSelectObject);
+            this.groupBoxGeneralSelection.Controls.Add(this.checkBoxShowObjectsBoundingBox);
+            this.groupBoxGeneralSelection.Controls.Add(this.buttonMergeSelected);
+            this.groupBoxGeneralSelection.Controls.Add(this.checkBoxSnapToGrid);
+            this.groupBoxGeneralSelection.Controls.Add(this.buttonObjectBrowser);
+            this.groupBoxGeneralSelection.Controls.Add(this.label13);
+            this.groupBoxGeneralSelection.Controls.Add(this.buttonUnhideAll);
+            this.groupBoxGeneralSelection.Controls.Add(this.numericUpDownCellSize);
+            this.groupBoxGeneralSelection.Controls.Add(this.buttonHideSelected);
+            this.groupBoxGeneralSelection.Controls.Add(this.buttonCloneObject);
+            this.groupBoxGeneralSelection.Controls.Add(this.buttonSelectAll);
+            this.groupBoxGeneralSelection.Controls.Add(this.buttonDeleteObject);
+            this.groupBoxGeneralSelection.Location = new System.Drawing.Point(5, 3);
+            this.groupBoxGeneralSelection.Name = "groupBoxGeneralSelection";
+            this.groupBoxGeneralSelection.Size = new System.Drawing.Size(101, 292);
+            this.groupBoxGeneralSelection.TabIndex = 56;
+            this.groupBoxGeneralSelection.TabStop = false;
+            this.groupBoxGeneralSelection.Text = "Selection";
+            // 
+            // radioButtonSelectObject
+            // 
+            this.radioButtonSelectObject.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonSelectObject.Checked = true;
+            this.radioButtonSelectObject.Location = new System.Drawing.Point(3, 19);
+            this.radioButtonSelectObject.Name = "radioButtonSelectObject";
+            this.radioButtonSelectObject.Size = new System.Drawing.Size(95, 24);
+            this.radioButtonSelectObject.TabIndex = 1;
+            this.radioButtonSelectObject.TabStop = true;
+            this.radioButtonSelectObject.Text = "Select object";
+            this.radioButtonSelectObject.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonSelectObject.UseVisualStyleBackColor = true;
+            this.radioButtonSelectObject.CheckedChanged += new System.EventHandler(this.radioButtonSelectObject_CheckedChanged);
+            // 
+            // checkBoxShowObjectsBoundingBox
+            // 
+            this.checkBoxShowObjectsBoundingBox.AutoSize = true;
+            this.checkBoxShowObjectsBoundingBox.Location = new System.Drawing.Point(7, 72);
+            this.checkBoxShowObjectsBoundingBox.Name = "checkBoxShowObjectsBoundingBox";
+            this.checkBoxShowObjectsBoundingBox.Size = new System.Drawing.Size(84, 17);
+            this.checkBoxShowObjectsBoundingBox.TabIndex = 8;
+            this.checkBoxShowObjectsBoundingBox.Text = "Show boxes";
+            this.checkBoxShowObjectsBoundingBox.UseVisualStyleBackColor = true;
+            // 
             // buttonMergeSelected
             // 
-            this.buttonMergeSelected.Location = new System.Drawing.Point(5, 365);
+            this.buttonMergeSelected.Location = new System.Drawing.Point(0, 260);
             this.buttonMergeSelected.Name = "buttonMergeSelected";
             this.buttonMergeSelected.Size = new System.Drawing.Size(95, 25);
             this.buttonMergeSelected.TabIndex = 53;
@@ -193,29 +282,179 @@
             this.buttonMergeSelected.UseVisualStyleBackColor = true;
             this.buttonMergeSelected.Click += new System.EventHandler(this.buttonMergeSelected_Click);
             // 
-            // buttonTopView
+            // checkBoxSnapToGrid
             // 
-            this.buttonTopView.Location = new System.Drawing.Point(5, 339);
-            this.buttonTopView.Name = "buttonTopView";
-            this.buttonTopView.Size = new System.Drawing.Size(95, 25);
-            this.buttonTopView.TabIndex = 52;
-            this.buttonTopView.Text = "Top view (T)";
-            this.buttonTopView.UseVisualStyleBackColor = true;
-            this.buttonTopView.Click += new System.EventHandler(this.buttonTopView_Click);
+            this.checkBoxSnapToGrid.AutoSize = true;
+            this.checkBoxSnapToGrid.Location = new System.Drawing.Point(7, 91);
+            this.checkBoxSnapToGrid.Name = "checkBoxSnapToGrid";
+            this.checkBoxSnapToGrid.Size = new System.Drawing.Size(83, 17);
+            this.checkBoxSnapToGrid.TabIndex = 10;
+            this.checkBoxSnapToGrid.Text = "Snap to grid";
+            this.checkBoxSnapToGrid.UseVisualStyleBackColor = true;
+            this.checkBoxSnapToGrid.CheckedChanged += new System.EventHandler(this.checkBoxSnapToGrid_CheckedChanged);
             // 
             // buttonObjectBrowser
             // 
-            this.buttonObjectBrowser.Location = new System.Drawing.Point(5, 313);
+            this.buttonObjectBrowser.Location = new System.Drawing.Point(1, 234);
             this.buttonObjectBrowser.Name = "buttonObjectBrowser";
             this.buttonObjectBrowser.Size = new System.Drawing.Size(95, 25);
             this.buttonObjectBrowser.TabIndex = 51;
-            this.buttonObjectBrowser.Text = "Object browser (O)";
+            this.buttonObjectBrowser.Text = "Object browser";
             this.buttonObjectBrowser.UseVisualStyleBackColor = true;
             this.buttonObjectBrowser.Click += new System.EventHandler(this.buttonObjectBrowser_Click);
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 112);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(45, 13);
+            this.label13.TabIndex = 44;
+            this.label13.Text = "Cell size";
+            // 
+            // buttonUnhideAll
+            // 
+            this.buttonUnhideAll.Location = new System.Drawing.Point(1, 156);
+            this.buttonUnhideAll.Name = "buttonUnhideAll";
+            this.buttonUnhideAll.Size = new System.Drawing.Size(95, 25);
+            this.buttonUnhideAll.TabIndex = 47;
+            this.buttonUnhideAll.Text = "Unhide all";
+            this.buttonUnhideAll.UseVisualStyleBackColor = true;
+            this.buttonUnhideAll.Click += new System.EventHandler(this.buttonUnhideAll_Click);
+            // 
+            // numericUpDownCellSize
+            // 
+            this.numericUpDownCellSize.Location = new System.Drawing.Point(52, 108);
+            this.numericUpDownCellSize.Name = "numericUpDownCellSize";
+            this.numericUpDownCellSize.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownCellSize.TabIndex = 45;
+            this.numericUpDownCellSize.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownCellSize.ValueChanged += new System.EventHandler(this.numericUpDownCellSize_ValueChanged);
+            // 
+            // buttonHideSelected
+            // 
+            this.buttonHideSelected.Location = new System.Drawing.Point(1, 130);
+            this.buttonHideSelected.Name = "buttonHideSelected";
+            this.buttonHideSelected.Size = new System.Drawing.Size(95, 25);
+            this.buttonHideSelected.TabIndex = 9;
+            this.buttonHideSelected.Text = "Hide selected";
+            this.buttonHideSelected.UseVisualStyleBackColor = true;
+            this.buttonHideSelected.Click += new System.EventHandler(this.buttonHideSelected_Click);
+            // 
+            // buttonCloneObject
+            // 
+            this.buttonCloneObject.Location = new System.Drawing.Point(1, 208);
+            this.buttonCloneObject.Name = "buttonCloneObject";
+            this.buttonCloneObject.Size = new System.Drawing.Size(95, 25);
+            this.buttonCloneObject.TabIndex = 4;
+            this.buttonCloneObject.Text = "Clone selection";
+            this.buttonCloneObject.UseVisualStyleBackColor = true;
+            this.buttonCloneObject.Click += new System.EventHandler(this.buttonCloneObject_Click);
+            // 
+            // buttonSelectAll
+            // 
+            this.buttonSelectAll.Location = new System.Drawing.Point(3, 44);
+            this.buttonSelectAll.Name = "buttonSelectAll";
+            this.buttonSelectAll.Size = new System.Drawing.Size(95, 25);
+            this.buttonSelectAll.TabIndex = 46;
+            this.buttonSelectAll.Text = "Select all";
+            this.buttonSelectAll.UseVisualStyleBackColor = true;
+            this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
+            // 
+            // buttonDeleteObject
+            // 
+            this.buttonDeleteObject.Location = new System.Drawing.Point(1, 182);
+            this.buttonDeleteObject.Name = "buttonDeleteObject";
+            this.buttonDeleteObject.Size = new System.Drawing.Size(95, 25);
+            this.buttonDeleteObject.TabIndex = 3;
+            this.buttonDeleteObject.Text = "Delete object";
+            this.buttonDeleteObject.UseVisualStyleBackColor = true;
+            this.buttonDeleteObject.Click += new System.EventHandler(this.buttonDeleteObject_Click);
+            // 
+            // groupBoxGeneralCamera
+            // 
+            this.groupBoxGeneralCamera.Controls.Add(this.buttonFrontView);
+            this.groupBoxGeneralCamera.Controls.Add(this.buttonLeftView);
+            this.groupBoxGeneralCamera.Controls.Add(this.buttonZoomObject);
+            this.groupBoxGeneralCamera.Controls.Add(this.radioButtonFPSCamera);
+            this.groupBoxGeneralCamera.Controls.Add(this.label14);
+            this.groupBoxGeneralCamera.Controls.Add(this.buttonTopView);
+            this.groupBoxGeneralCamera.Controls.Add(this.numericUpDownFPSCameraSpeed);
+            this.groupBoxGeneralCamera.Location = new System.Drawing.Point(5, 298);
+            this.groupBoxGeneralCamera.Name = "groupBoxGeneralCamera";
+            this.groupBoxGeneralCamera.Size = new System.Drawing.Size(101, 165);
+            this.groupBoxGeneralCamera.TabIndex = 55;
+            this.groupBoxGeneralCamera.TabStop = false;
+            this.groupBoxGeneralCamera.Text = "Camera";
+            // 
+            // buttonFrontView
+            // 
+            this.buttonFrontView.Location = new System.Drawing.Point(3, 109);
+            this.buttonFrontView.Name = "buttonFrontView";
+            this.buttonFrontView.Size = new System.Drawing.Size(95, 25);
+            this.buttonFrontView.TabIndex = 53;
+            this.buttonFrontView.Text = "Front view";
+            this.buttonFrontView.UseVisualStyleBackColor = true;
+            this.buttonFrontView.Click += new System.EventHandler(this.buttonFrontView_Click);
+            // 
+            // buttonLeftView
+            // 
+            this.buttonLeftView.Location = new System.Drawing.Point(2, 134);
+            this.buttonLeftView.Name = "buttonLeftView";
+            this.buttonLeftView.Size = new System.Drawing.Size(96, 25);
+            this.buttonLeftView.TabIndex = 54;
+            this.buttonLeftView.Text = "Left view";
+            this.buttonLeftView.UseVisualStyleBackColor = true;
+            this.buttonLeftView.Click += new System.EventHandler(this.buttonLeftView_Click);
+            // 
+            // buttonZoomObject
+            // 
+            this.buttonZoomObject.Location = new System.Drawing.Point(3, 15);
+            this.buttonZoomObject.Name = "buttonZoomObject";
+            this.buttonZoomObject.Size = new System.Drawing.Size(95, 25);
+            this.buttonZoomObject.TabIndex = 2;
+            this.buttonZoomObject.Text = "Zoom object";
+            this.buttonZoomObject.UseVisualStyleBackColor = true;
+            this.buttonZoomObject.Click += new System.EventHandler(this.buttonZoomObject_Click);
+            // 
+            // radioButtonFPSCamera
+            // 
+            this.radioButtonFPSCamera.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonFPSCamera.Location = new System.Drawing.Point(3, 40);
+            this.radioButtonFPSCamera.Name = "radioButtonFPSCamera";
+            this.radioButtonFPSCamera.Size = new System.Drawing.Size(95, 24);
+            this.radioButtonFPSCamera.TabIndex = 48;
+            this.radioButtonFPSCamera.Text = "FPS camera";
+            this.radioButtonFPSCamera.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonFPSCamera.UseVisualStyleBackColor = true;
+            this.radioButtonFPSCamera.CheckedChanged += new System.EventHandler(this.radioButtonFPSCamera_CheckedChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 68);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(41, 13);
+            this.label14.TabIndex = 49;
+            this.label14.Text = "Speed:";
+            // 
+            // buttonTopView
+            // 
+            this.buttonTopView.Location = new System.Drawing.Point(3, 84);
+            this.buttonTopView.Name = "buttonTopView";
+            this.buttonTopView.Size = new System.Drawing.Size(95, 25);
+            this.buttonTopView.TabIndex = 52;
+            this.buttonTopView.Text = "Top view";
+            this.buttonTopView.UseVisualStyleBackColor = true;
+            this.buttonTopView.Click += new System.EventHandler(this.buttonTopView_Click);
+            // 
             // numericUpDownFPSCameraSpeed
             // 
-            this.numericUpDownFPSCameraSpeed.Location = new System.Drawing.Point(54, 292);
+            this.numericUpDownFPSCameraSpeed.Location = new System.Drawing.Point(52, 64);
             this.numericUpDownFPSCameraSpeed.Minimum = new decimal(new int[] {
             1,
             0,
@@ -231,173 +470,15 @@
             0});
             this.numericUpDownFPSCameraSpeed.ValueChanged += new System.EventHandler(this.numericUpDownFPSCameraSpeed_ValueChanged);
             // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(8, 296);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(41, 13);
-            this.label14.TabIndex = 49;
-            this.label14.Text = "Speed:";
-            // 
-            // radioButtonFPSCamera
-            // 
-            this.radioButtonFPSCamera.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonFPSCamera.Location = new System.Drawing.Point(5, 268);
-            this.radioButtonFPSCamera.Name = "radioButtonFPSCamera";
-            this.radioButtonFPSCamera.Size = new System.Drawing.Size(95, 24);
-            this.radioButtonFPSCamera.TabIndex = 48;
-            this.radioButtonFPSCamera.Text = "FPS camera";
-            this.radioButtonFPSCamera.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButtonFPSCamera.UseVisualStyleBackColor = true;
-            this.radioButtonFPSCamera.CheckedChanged += new System.EventHandler(this.radioButtonFPSCamera_CheckedChanged);
-            // 
-            // buttonUnhideAll
-            // 
-            this.buttonUnhideAll.Location = new System.Drawing.Point(5, 189);
-            this.buttonUnhideAll.Name = "buttonUnhideAll";
-            this.buttonUnhideAll.Size = new System.Drawing.Size(95, 25);
-            this.buttonUnhideAll.TabIndex = 47;
-            this.buttonUnhideAll.Text = "Unhide all";
-            this.buttonUnhideAll.UseVisualStyleBackColor = true;
-            this.buttonUnhideAll.Click += new System.EventHandler(this.buttonUnhideAll_Click);
-            // 
-            // buttonSelectAll
-            // 
-            this.buttonSelectAll.Location = new System.Drawing.Point(5, 40);
-            this.buttonSelectAll.Name = "buttonSelectAll";
-            this.buttonSelectAll.Size = new System.Drawing.Size(95, 25);
-            this.buttonSelectAll.TabIndex = 46;
-            this.buttonSelectAll.Text = "Select all (CTRL + E)";
-            this.buttonSelectAll.UseVisualStyleBackColor = true;
-            this.buttonSelectAll.Click += new System.EventHandler(this.buttonSelectAll_Click);
-            // 
-            // numericUpDownCellSize
-            // 
-            this.numericUpDownCellSize.Location = new System.Drawing.Point(54, 112);
-            this.numericUpDownCellSize.Name = "numericUpDownCellSize";
-            this.numericUpDownCellSize.Size = new System.Drawing.Size(44, 20);
-            this.numericUpDownCellSize.TabIndex = 45;
-            this.numericUpDownCellSize.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownCellSize.ValueChanged += new System.EventHandler(this.numericUpDownCellSize_ValueChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(8, 116);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(45, 13);
-            this.label13.TabIndex = 44;
-            this.label13.Text = "Cell size";
-            // 
-            // checkBoxSnapToGrid
-            // 
-            this.checkBoxSnapToGrid.AutoSize = true;
-            this.checkBoxSnapToGrid.Location = new System.Drawing.Point(9, 95);
-            this.checkBoxSnapToGrid.Name = "checkBoxSnapToGrid";
-            this.checkBoxSnapToGrid.Size = new System.Drawing.Size(83, 17);
-            this.checkBoxSnapToGrid.TabIndex = 10;
-            this.checkBoxSnapToGrid.Text = "Snap to grid";
-            this.checkBoxSnapToGrid.UseVisualStyleBackColor = true;
-            this.checkBoxSnapToGrid.CheckedChanged += new System.EventHandler(this.checkBoxSnapToGrid_CheckedChanged);
-            // 
-            // buttonHideSelected
-            // 
-            this.buttonHideSelected.Location = new System.Drawing.Point(5, 163);
-            this.buttonHideSelected.Name = "buttonHideSelected";
-            this.buttonHideSelected.Size = new System.Drawing.Size(95, 25);
-            this.buttonHideSelected.TabIndex = 9;
-            this.buttonHideSelected.Text = "Hide selected (H)";
-            this.buttonHideSelected.UseVisualStyleBackColor = true;
-            this.buttonHideSelected.Click += new System.EventHandler(this.buttonHideSelected_Click);
-            // 
-            // checkBoxShowObjectsBoundingBox
-            // 
-            this.checkBoxShowObjectsBoundingBox.AutoSize = true;
-            this.checkBoxShowObjectsBoundingBox.Location = new System.Drawing.Point(9, 73);
-            this.checkBoxShowObjectsBoundingBox.Name = "checkBoxShowObjectsBoundingBox";
-            this.checkBoxShowObjectsBoundingBox.Size = new System.Drawing.Size(84, 17);
-            this.checkBoxShowObjectsBoundingBox.TabIndex = 8;
-            this.checkBoxShowObjectsBoundingBox.Text = "Show boxes";
-            this.checkBoxShowObjectsBoundingBox.UseVisualStyleBackColor = true;
-            // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(21, 494);
+            this.buttonHelp.Location = new System.Drawing.Point(25, 596);
             this.buttonHelp.Name = "buttonHelp";
-            this.buttonHelp.Size = new System.Drawing.Size(55, 25);
+            this.buttonHelp.Size = new System.Drawing.Size(61, 25);
             this.buttonHelp.TabIndex = 7;
-            this.buttonHelp.Text = "Help (?)";
+            this.buttonHelp.Text = "Help (F1)";
             this.buttonHelp.UseVisualStyleBackColor = true;
             this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click);
-            // 
-            // checkBoxAttachExport
-            // 
-            this.checkBoxAttachExport.AutoSize = true;
-            this.checkBoxAttachExport.Location = new System.Drawing.Point(7, 433);
-            this.checkBoxAttachExport.Name = "checkBoxAttachExport";
-            this.checkBoxAttachExport.Size = new System.Drawing.Size(89, 17);
-            this.checkBoxAttachExport.TabIndex = 6;
-            this.checkBoxAttachExport.Text = "Attach export";
-            this.checkBoxAttachExport.UseVisualStyleBackColor = true;
-            // 
-            // buttonExportScene
-            // 
-            this.buttonExportScene.Location = new System.Drawing.Point(3, 405);
-            this.buttonExportScene.Name = "buttonExportScene";
-            this.buttonExportScene.Size = new System.Drawing.Size(95, 25);
-            this.buttonExportScene.TabIndex = 5;
-            this.buttonExportScene.Text = "Export scene (CTRL + S)";
-            this.buttonExportScene.UseVisualStyleBackColor = true;
-            this.buttonExportScene.Click += new System.EventHandler(this.buttonExportScene_Click);
-            // 
-            // buttonCloneObject
-            // 
-            this.buttonCloneObject.Location = new System.Drawing.Point(5, 242);
-            this.buttonCloneObject.Name = "buttonCloneObject";
-            this.buttonCloneObject.Size = new System.Drawing.Size(95, 25);
-            this.buttonCloneObject.TabIndex = 4;
-            this.buttonCloneObject.Text = "Clone selection (CTRL + V)";
-            this.buttonCloneObject.UseVisualStyleBackColor = true;
-            this.buttonCloneObject.Click += new System.EventHandler(this.buttonCloneObject_Click);
-            // 
-            // buttonDeleteObject
-            // 
-            this.buttonDeleteObject.Location = new System.Drawing.Point(5, 216);
-            this.buttonDeleteObject.Name = "buttonDeleteObject";
-            this.buttonDeleteObject.Size = new System.Drawing.Size(95, 25);
-            this.buttonDeleteObject.TabIndex = 3;
-            this.buttonDeleteObject.Text = "Delete object";
-            this.buttonDeleteObject.UseVisualStyleBackColor = true;
-            this.buttonDeleteObject.Click += new System.EventHandler(this.buttonDeleteObject_Click);
-            // 
-            // buttonZoomObject
-            // 
-            this.buttonZoomObject.Location = new System.Drawing.Point(5, 135);
-            this.buttonZoomObject.Name = "buttonZoomObject";
-            this.buttonZoomObject.Size = new System.Drawing.Size(95, 25);
-            this.buttonZoomObject.TabIndex = 2;
-            this.buttonZoomObject.Text = "Zoom object (Z)";
-            this.buttonZoomObject.UseVisualStyleBackColor = true;
-            this.buttonZoomObject.Click += new System.EventHandler(this.buttonZoomObject_Click);
-            // 
-            // radioButtonSelectObject
-            // 
-            this.radioButtonSelectObject.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonSelectObject.Checked = true;
-            this.radioButtonSelectObject.Location = new System.Drawing.Point(5, 13);
-            this.radioButtonSelectObject.Name = "radioButtonSelectObject";
-            this.radioButtonSelectObject.Size = new System.Drawing.Size(95, 24);
-            this.radioButtonSelectObject.TabIndex = 1;
-            this.radioButtonSelectObject.TabStop = true;
-            this.radioButtonSelectObject.Text = "Select object (Q)";
-            this.radioButtonSelectObject.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButtonSelectObject.UseVisualStyleBackColor = true;
-            this.radioButtonSelectObject.CheckedChanged += new System.EventHandler(this.radioButtonSelectObject_CheckedChanged);
             // 
             // tabPageCreate
             // 
@@ -1165,26 +1246,94 @@
             this.radioButtonModifySelectAndMove.UseVisualStyleBackColor = true;
             this.radioButtonModifySelectAndMove.CheckedChanged += new System.EventHandler(this.radioButtonModifySelectAndMove_CheckedChanged);
             // 
-            // tabPageModify2
+            // tabPageEditablePoly
             // 
-            this.tabPageModify2.Controls.Add(this.buttonConvertToEditablePoly);
-            this.tabPageModify2.Location = new System.Drawing.Point(4, 22);
-            this.tabPageModify2.Name = "tabPageModify2";
-            this.tabPageModify2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageModify2.Size = new System.Drawing.Size(192, 974);
-            this.tabPageModify2.TabIndex = 3;
-            this.tabPageModify2.Text = "Modify+";
-            this.tabPageModify2.UseVisualStyleBackColor = true;
+            this.tabPageEditablePoly.Controls.Add(this.groupBoxEPolyEditPolygons);
+            this.tabPageEditablePoly.Controls.Add(this.groupBoxEPolyEditEdges);
+            this.tabPageEditablePoly.Controls.Add(this.groupBoxEPolyEditVertices);
+            this.tabPageEditablePoly.Controls.Add(this.groupBoxEPolyPrimitive);
+            this.tabPageEditablePoly.Location = new System.Drawing.Point(4, 22);
+            this.tabPageEditablePoly.Name = "tabPageEditablePoly";
+            this.tabPageEditablePoly.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageEditablePoly.Size = new System.Drawing.Size(192, 974);
+            this.tabPageEditablePoly.TabIndex = 3;
+            this.tabPageEditablePoly.Text = "EditablePoly";
+            this.tabPageEditablePoly.UseVisualStyleBackColor = true;
             // 
-            // buttonConvertToEditablePoly
+            // groupBoxEPolyEditPolygons
             // 
-            this.buttonConvertToEditablePoly.Location = new System.Drawing.Point(30, 17);
-            this.buttonConvertToEditablePoly.Name = "buttonConvertToEditablePoly";
-            this.buttonConvertToEditablePoly.Size = new System.Drawing.Size(125, 23);
-            this.buttonConvertToEditablePoly.TabIndex = 0;
-            this.buttonConvertToEditablePoly.Text = "Convert to EditablePoly";
-            this.buttonConvertToEditablePoly.UseVisualStyleBackColor = true;
-            this.buttonConvertToEditablePoly.Click += new System.EventHandler(this.buttonConvertToEditablePoly_Click);
+            this.groupBoxEPolyEditPolygons.Location = new System.Drawing.Point(4, 279);
+            this.groupBoxEPolyEditPolygons.Name = "groupBoxEPolyEditPolygons";
+            this.groupBoxEPolyEditPolygons.Size = new System.Drawing.Size(101, 118);
+            this.groupBoxEPolyEditPolygons.TabIndex = 9;
+            this.groupBoxEPolyEditPolygons.TabStop = false;
+            this.groupBoxEPolyEditPolygons.Text = "Edit polygons";
+            // 
+            // groupBoxEPolyEditEdges
+            // 
+            this.groupBoxEPolyEditEdges.Location = new System.Drawing.Point(4, 162);
+            this.groupBoxEPolyEditEdges.Name = "groupBoxEPolyEditEdges";
+            this.groupBoxEPolyEditEdges.Size = new System.Drawing.Size(101, 118);
+            this.groupBoxEPolyEditEdges.TabIndex = 8;
+            this.groupBoxEPolyEditEdges.TabStop = false;
+            this.groupBoxEPolyEditEdges.Text = "Edit edges";
+            // 
+            // groupBoxEPolyEditVertices
+            // 
+            this.groupBoxEPolyEditVertices.Location = new System.Drawing.Point(3, 45);
+            this.groupBoxEPolyEditVertices.Name = "groupBoxEPolyEditVertices";
+            this.groupBoxEPolyEditVertices.Size = new System.Drawing.Size(101, 118);
+            this.groupBoxEPolyEditVertices.TabIndex = 7;
+            this.groupBoxEPolyEditVertices.TabStop = false;
+            this.groupBoxEPolyEditVertices.Text = "Edit vertices";
+            // 
+            // groupBoxEPolyPrimitive
+            // 
+            this.groupBoxEPolyPrimitive.Controls.Add(this.radioButtonEPolyPrimitivePolygon);
+            this.groupBoxEPolyPrimitive.Controls.Add(this.radioButtonEPolyPrimitiveEdge);
+            this.groupBoxEPolyPrimitive.Controls.Add(this.radioButtonEPolyPrimitiveVertex);
+            this.groupBoxEPolyPrimitive.Location = new System.Drawing.Point(4, 6);
+            this.groupBoxEPolyPrimitive.Name = "groupBoxEPolyPrimitive";
+            this.groupBoxEPolyPrimitive.Size = new System.Drawing.Size(101, 39);
+            this.groupBoxEPolyPrimitive.TabIndex = 6;
+            this.groupBoxEPolyPrimitive.TabStop = false;
+            this.groupBoxEPolyPrimitive.Text = "Primitive";
+            // 
+            // radioButtonEPolyPrimitivePolygon
+            // 
+            this.radioButtonEPolyPrimitivePolygon.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonEPolyPrimitivePolygon.Location = new System.Drawing.Point(75, 13);
+            this.radioButtonEPolyPrimitivePolygon.Name = "radioButtonEPolyPrimitivePolygon";
+            this.radioButtonEPolyPrimitivePolygon.Size = new System.Drawing.Size(20, 20);
+            this.radioButtonEPolyPrimitivePolygon.TabIndex = 5;
+            this.radioButtonEPolyPrimitivePolygon.Text = "P";
+            this.radioButtonEPolyPrimitivePolygon.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonEPolyPrimitivePolygon.UseVisualStyleBackColor = true;
+            this.radioButtonEPolyPrimitivePolygon.CheckedChanged += new System.EventHandler(this.radioButtonEPolyPrimitivePolygon_CheckedChanged);
+            // 
+            // radioButtonEPolyPrimitiveEdge
+            // 
+            this.radioButtonEPolyPrimitiveEdge.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonEPolyPrimitiveEdge.Location = new System.Drawing.Point(41, 13);
+            this.radioButtonEPolyPrimitiveEdge.Name = "radioButtonEPolyPrimitiveEdge";
+            this.radioButtonEPolyPrimitiveEdge.Size = new System.Drawing.Size(20, 20);
+            this.radioButtonEPolyPrimitiveEdge.TabIndex = 4;
+            this.radioButtonEPolyPrimitiveEdge.Text = "E";
+            this.radioButtonEPolyPrimitiveEdge.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonEPolyPrimitiveEdge.UseVisualStyleBackColor = true;
+            this.radioButtonEPolyPrimitiveEdge.CheckedChanged += new System.EventHandler(this.radioButtonEPolyPrimitiveEdge_CheckedChanged);
+            // 
+            // radioButtonEPolyPrimitiveVertex
+            // 
+            this.radioButtonEPolyPrimitiveVertex.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonEPolyPrimitiveVertex.Location = new System.Drawing.Point(6, 13);
+            this.radioButtonEPolyPrimitiveVertex.Name = "radioButtonEPolyPrimitiveVertex";
+            this.radioButtonEPolyPrimitiveVertex.Size = new System.Drawing.Size(20, 20);
+            this.radioButtonEPolyPrimitiveVertex.TabIndex = 3;
+            this.radioButtonEPolyPrimitiveVertex.Text = "Vert";
+            this.radioButtonEPolyPrimitiveVertex.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonEPolyPrimitiveVertex.UseVisualStyleBackColor = true;
+            this.radioButtonEPolyPrimitiveVertex.CheckedChanged += new System.EventHandler(this.radioButtonEPolyPrimitiveVertex_CheckedChanged);
             // 
             // MeshCreatorControl
             // 
@@ -1199,9 +1348,14 @@
             this.Size = new System.Drawing.Size(200, 1000);
             this.tabControl.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
-            this.tabPageGeneral.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBoxGeneralSelection.ResumeLayout(false);
+            this.groupBoxGeneralSelection.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCellSize)).EndInit();
+            this.groupBoxGeneralCamera.ResumeLayout(false);
+            this.groupBoxGeneralCamera.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).EndInit();
             this.tabPageCreate.ResumeLayout(false);
             this.tabPageCreate.PerformLayout();
             this.groupBoxPrimitive.ResumeLayout(false);
@@ -1233,7 +1387,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosX)).EndInit();
             this.groupBoxModifyGeneral.ResumeLayout(false);
             this.groupBoxModifyGeneral.PerformLayout();
-            this.tabPageModify2.ResumeLayout(false);
+            this.tabPageEditablePoly.ResumeLayout(false);
+            this.groupBoxEPolyPrimitive.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1294,14 +1449,14 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NumericUpDown numericUpDownModifyScaleX;
         private System.Windows.Forms.Button buttonImportMesh;
-        private System.Windows.Forms.Button buttonExportScene;
+        private System.Windows.Forms.Button buttonSaveScene;
         private System.Windows.Forms.CheckBox checkBoxAttachExport;
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.RadioButton radioButtonPrimitive_PlaneYZ;
         private System.Windows.Forms.RadioButton radioButtonPrimitive_PlaneXY;
         private System.Windows.Forms.CheckBox checkBoxModifyAlphaBlendEnabled;
         private System.Windows.Forms.CheckBox checkBoxShowObjectsBoundingBox;
-        private System.Windows.Forms.TabPage tabPageModify2;
+        private System.Windows.Forms.TabPage tabPageEditablePoly;
         private System.Windows.Forms.RadioButton radioButtonPrimitive_Sphere;
         private System.Windows.Forms.Button buttonHideSelected;
         private System.Windows.Forms.CheckBox checkBoxSnapToGrid;
@@ -1321,6 +1476,19 @@
         private System.Windows.Forms.Button buttonMergeSelected;
         private System.Windows.Forms.CheckBox checkBoxModifyBothDir;
         private System.Windows.Forms.Button buttonModifyConvertToMesh;
-        private System.Windows.Forms.Button buttonConvertToEditablePoly;
+        private System.Windows.Forms.GroupBox groupBoxEPolyPrimitive;
+        private System.Windows.Forms.RadioButton radioButtonEPolyPrimitivePolygon;
+        private System.Windows.Forms.RadioButton radioButtonEPolyPrimitiveEdge;
+        private System.Windows.Forms.RadioButton radioButtonEPolyPrimitiveVertex;
+        private System.Windows.Forms.ToolTip toolTips;
+        private System.Windows.Forms.GroupBox groupBoxEPolyEditPolygons;
+        private System.Windows.Forms.GroupBox groupBoxEPolyEditEdges;
+        private System.Windows.Forms.GroupBox groupBoxEPolyEditVertices;
+        private System.Windows.Forms.Button buttonLeftView;
+        private System.Windows.Forms.GroupBox groupBoxGeneralCamera;
+        private System.Windows.Forms.Button buttonFrontView;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxGeneralSelection;
+        private System.Windows.Forms.Button buttonSaveSceneAs;
     }
 }
