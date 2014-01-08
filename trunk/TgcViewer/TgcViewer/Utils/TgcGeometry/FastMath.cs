@@ -333,12 +333,34 @@ namespace TgcViewer.Utils.TgcGeometry
         }
 
         /// <summary>
+        /// Devuelve el valor mínimo entre v1 y v2
+        /// </summary>
+        /// <param name="v1">Valor 1</param>
+        /// <param name="v2">Valor 2</param>
+        /// <returns>Mínimo valor</returns>
+        public static int Min(int v1, int v2)
+        {
+            return v1 < v2 ? v1 : v2;
+        }
+
+        /// <summary>
         /// Devuelve el valor máximo entre v1 y v2
         /// </summary>
         /// <param name="v1">Valor 1</param>
         /// <param name="v2">Valor 2</param>
         /// <returns>Máximo valor</returns>
         public static float Max(float v1, float v2)
+        {
+            return v1 > v2 ? v1 : v2;
+        }
+
+        /// <summary>
+        /// Devuelve el valor máximo entre v1 y v2
+        /// </summary>
+        /// <param name="v1">Valor 1</param>
+        /// <param name="v2">Valor 2</param>
+        /// <returns>Máximo valor</returns>
+        public static int Max(int v1, int v2)
         {
             return v1 > v2 ? v1 : v2;
         }

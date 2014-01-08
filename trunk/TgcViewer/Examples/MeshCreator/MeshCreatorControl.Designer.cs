@@ -61,6 +61,7 @@
             this.radioButtonPrimitive_PlaneXZ = new System.Windows.Forms.RadioButton();
             this.radioButtonPrimitive_Box = new System.Windows.Forms.RadioButton();
             this.tabPageModify = new System.Windows.Forms.TabPage();
+            this.buttonModifyConvertToMesh = new System.Windows.Forms.Button();
             this.groupBoxModifyTexture = new System.Windows.Forms.GroupBox();
             this.numericUpDownModifyTextureNumber = new System.Windows.Forms.NumericUpDown();
             this.checkBoxModifyAlphaBlendEnabled = new System.Windows.Forms.CheckBox();
@@ -77,6 +78,7 @@
             this.groupBoxModifyUserProps = new System.Windows.Forms.GroupBox();
             this.userInfo = new System.Windows.Forms.TextBox();
             this.groupBoxModifyScale = new System.Windows.Forms.GroupBox();
+            this.checkBoxModifyBothDir = new System.Windows.Forms.CheckBox();
             this.numericUpDownModifyScaleZ = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
             this.numericUpDownModifyScaleY = new System.Windows.Forms.NumericUpDown();
@@ -107,8 +109,7 @@
             this.radioButtonModifySelectAndRotate = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndMove = new System.Windows.Forms.RadioButton();
             this.tabPageModify2 = new System.Windows.Forms.TabPage();
-            this.checkBoxModifyBothDir = new System.Windows.Forms.CheckBox();
-            this.buttonModifyConvertToMesh = new System.Windows.Forms.Button();
+            this.buttonConvertToEditablePoly = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFPSCameraSpeed)).BeginInit();
@@ -137,6 +138,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosX)).BeginInit();
             this.groupBoxModifyGeneral.SuspendLayout();
+            this.tabPageModify2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -536,6 +538,16 @@
             this.tabPageModify.Text = "Modify";
             this.tabPageModify.UseVisualStyleBackColor = true;
             // 
+            // buttonModifyConvertToMesh
+            // 
+            this.buttonModifyConvertToMesh.Location = new System.Drawing.Point(8, 810);
+            this.buttonModifyConvertToMesh.Name = "buttonModifyConvertToMesh";
+            this.buttonModifyConvertToMesh.Size = new System.Drawing.Size(96, 22);
+            this.buttonModifyConvertToMesh.TabIndex = 59;
+            this.buttonModifyConvertToMesh.Text = "Convert to Mesh";
+            this.buttonModifyConvertToMesh.UseVisualStyleBackColor = true;
+            this.buttonModifyConvertToMesh.Click += new System.EventHandler(this.buttonModifyConvertToMesh_Click);
+            // 
             // groupBoxModifyTexture
             // 
             this.groupBoxModifyTexture.Controls.Add(this.numericUpDownModifyTextureNumber);
@@ -748,6 +760,18 @@
             this.groupBoxModifyScale.TabIndex = 42;
             this.groupBoxModifyScale.TabStop = false;
             this.groupBoxModifyScale.Text = "Scale (%)";
+            // 
+            // checkBoxModifyBothDir
+            // 
+            this.checkBoxModifyBothDir.AutoSize = true;
+            this.checkBoxModifyBothDir.Checked = true;
+            this.checkBoxModifyBothDir.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxModifyBothDir.Location = new System.Drawing.Point(6, 78);
+            this.checkBoxModifyBothDir.Name = "checkBoxModifyBothDir";
+            this.checkBoxModifyBothDir.Size = new System.Drawing.Size(96, 17);
+            this.checkBoxModifyBothDir.TabIndex = 64;
+            this.checkBoxModifyBothDir.Text = "Both directions";
+            this.checkBoxModifyBothDir.UseVisualStyleBackColor = true;
             // 
             // numericUpDownModifyScaleZ
             // 
@@ -1143,6 +1167,7 @@
             // 
             // tabPageModify2
             // 
+            this.tabPageModify2.Controls.Add(this.buttonConvertToEditablePoly);
             this.tabPageModify2.Location = new System.Drawing.Point(4, 22);
             this.tabPageModify2.Name = "tabPageModify2";
             this.tabPageModify2.Padding = new System.Windows.Forms.Padding(3);
@@ -1151,27 +1176,15 @@
             this.tabPageModify2.Text = "Modify+";
             this.tabPageModify2.UseVisualStyleBackColor = true;
             // 
-            // checkBoxModifyBothDir
+            // buttonConvertToEditablePoly
             // 
-            this.checkBoxModifyBothDir.AutoSize = true;
-            this.checkBoxModifyBothDir.Checked = true;
-            this.checkBoxModifyBothDir.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxModifyBothDir.Location = new System.Drawing.Point(6, 78);
-            this.checkBoxModifyBothDir.Name = "checkBoxModifyBothDir";
-            this.checkBoxModifyBothDir.Size = new System.Drawing.Size(96, 17);
-            this.checkBoxModifyBothDir.TabIndex = 64;
-            this.checkBoxModifyBothDir.Text = "Both directions";
-            this.checkBoxModifyBothDir.UseVisualStyleBackColor = true;
-            // 
-            // buttonModifyConvertToMesh
-            // 
-            this.buttonModifyConvertToMesh.Location = new System.Drawing.Point(8, 810);
-            this.buttonModifyConvertToMesh.Name = "buttonModifyConvertToMesh";
-            this.buttonModifyConvertToMesh.Size = new System.Drawing.Size(96, 22);
-            this.buttonModifyConvertToMesh.TabIndex = 59;
-            this.buttonModifyConvertToMesh.Text = "Convert to Mesh";
-            this.buttonModifyConvertToMesh.UseVisualStyleBackColor = true;
-            this.buttonModifyConvertToMesh.Click += new System.EventHandler(this.buttonModifyConvertToMesh_Click);
+            this.buttonConvertToEditablePoly.Location = new System.Drawing.Point(30, 17);
+            this.buttonConvertToEditablePoly.Name = "buttonConvertToEditablePoly";
+            this.buttonConvertToEditablePoly.Size = new System.Drawing.Size(125, 23);
+            this.buttonConvertToEditablePoly.TabIndex = 0;
+            this.buttonConvertToEditablePoly.Text = "Convert to EditablePoly";
+            this.buttonConvertToEditablePoly.UseVisualStyleBackColor = true;
+            this.buttonConvertToEditablePoly.Click += new System.EventHandler(this.buttonConvertToEditablePoly_Click);
             // 
             // MeshCreatorControl
             // 
@@ -1220,6 +1233,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosX)).EndInit();
             this.groupBoxModifyGeneral.ResumeLayout(false);
             this.groupBoxModifyGeneral.PerformLayout();
+            this.tabPageModify2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1307,5 +1321,6 @@
         private System.Windows.Forms.Button buttonMergeSelected;
         private System.Windows.Forms.CheckBox checkBoxModifyBothDir;
         private System.Windows.Forms.Button buttonModifyConvertToMesh;
+        private System.Windows.Forms.Button buttonConvertToEditablePoly;
     }
 }

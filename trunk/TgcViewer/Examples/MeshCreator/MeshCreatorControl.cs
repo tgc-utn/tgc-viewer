@@ -66,6 +66,7 @@ namespace Examples.MeshCreator
         ObjectBrowser objectBrowser;
         bool fpsCameraEnabled;
         bool ignoreChangeEvents;
+        Vector3 rotationPivot;
 
 
 
@@ -870,6 +871,9 @@ namespace Examples.MeshCreator
                 //Cargar userProps
                 userInfo.Text = MeshCreatorUtils.getUserPropertiesString(p.UserProperties);
                 userInfo.Enabled = selectionList.Count == 1;
+
+                //Rotation pivot (remains the same while the group does not change)
+                rotationPivot = selectionRectangle.getRotationPivot();
             }
             else
             {
@@ -1629,7 +1633,7 @@ namespace Examples.MeshCreator
             if (ignoreChangeEvents) return;
 
             float value = FastMath.ToRad((float)numericUpDownModifyRotX.Value);
-            Vector3 pivot = selectionRectangle.getRotationPivot();
+            Vector3 pivot = rotationPivot/*selectionRectangle.getRotationPivot()*/;
             foreach (EditorPrimitive p in selectionList)
             {
                 p.setRotationFromPivot(new Vector3(value, p.Rotation.Y, p.Rotation.Z), pivot);
@@ -1644,7 +1648,7 @@ namespace Examples.MeshCreator
             if (ignoreChangeEvents) return;
 
             float value = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
-            Vector3 pivot = selectionRectangle.getRotationPivot();
+            Vector3 pivot = rotationPivot/*selectionRectangle.getRotationPivot()*/;
             foreach (EditorPrimitive p in selectionList)
             {
                 p.setRotationFromPivot(new Vector3(p.Rotation.X, value, p.Rotation.Z), pivot);
@@ -1659,7 +1663,7 @@ namespace Examples.MeshCreator
             if (ignoreChangeEvents) return;
 
             float value = FastMath.ToRad((float)numericUpDownModifyRotZ.Value);
-            Vector3 pivot = selectionRectangle.getRotationPivot();
+            Vector3 pivot = rotationPivot/*selectionRectangle.getRotationPivot()*/;
             foreach (EditorPrimitive p in selectionList)
             {
                 p.setRotationFromPivot(new Vector3(p.Rotation.X, p.Rotation.Y, value), pivot);
@@ -1804,6 +1808,19 @@ namespace Examples.MeshCreator
         
 
         #endregion
+
+
+
+        private void buttonConvertToEditablePoly_Click(object sender, EventArgs e)
+        {
+            if (selectionList.Count >= 1)
+            {
+                TgcMesh mesh = selectionList[0].createMeshToExport();
+                EditablePoly editablePoly = new EditablePoly(mesh);
+
+                //TODO: terminar bien el uso de EditablePoly en el editor
+            }
+        }
 
         
 
