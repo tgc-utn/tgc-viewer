@@ -67,6 +67,7 @@ namespace Examples.MeshCreator
         bool fpsCameraEnabled;
         bool ignoreChangeEvents;
         Vector3 rotationPivot;
+        string lastSavePath;
 
 
 
@@ -235,6 +236,7 @@ namespace Examples.MeshCreator
             checkBoxShowObjectsBoundingBox.Checked = true;
             popupOpened = false;
             fpsCameraEnabled = false;
+            lastSavePath = null;
 
             //meshBrowser
             defaultMeshPath = mediaPath + "Meshes\\Vegetacion\\Arbusto\\Arbusto-TgcScene.xml";
@@ -290,6 +292,44 @@ namespace Examples.MeshCreator
 
             //ObjectBrowser
             objectBrowser = new ObjectBrowser(this);
+
+            //Tooltips
+            toolTips.SetToolTip(radioButtonSelectObject, "Select object (Q)");
+            toolTips.SetToolTip(buttonSelectAll, "Select all objects (CTRL + E)");
+            toolTips.SetToolTip(checkBoxShowObjectsBoundingBox, "Show objects BoundingBox");
+            toolTips.SetToolTip(checkBoxSnapToGrid, "Toogle snap to grid");
+            toolTips.SetToolTip(numericUpDownCellSize, "Snap to grid cell size");    
+            toolTips.SetToolTip(buttonZoomObject, "Zoom selected object (Z)");
+            toolTips.SetToolTip(buttonHideSelected, "Hide selected objects (H)");
+            toolTips.SetToolTip(buttonUnhideAll, "Unhide all hidden objects");
+            toolTips.SetToolTip(buttonDeleteObject, "Delete selected objects (DEL)");
+            toolTips.SetToolTip(buttonCloneObject, "Clone selected objects (CTRL + V)");
+            toolTips.SetToolTip(radioButtonFPSCamera, "Toogle First-person camera (C)");
+            toolTips.SetToolTip(numericUpDownFPSCameraSpeed, "First-person camera speed factor");
+            toolTips.SetToolTip(buttonObjectBrowser, "Open Object Browser (O)");
+            toolTips.SetToolTip(buttonTopView, "Set camera in Top-view (T)");
+            toolTips.SetToolTip(buttonLeftView, "Set camera in Left-view (L)");
+            toolTips.SetToolTip(buttonMergeSelected, "Merge selected objects (G)");
+            toolTips.SetToolTip(buttonSaveScene, "Save scene in last used path (CTRL + S)");
+            toolTips.SetToolTip(buttonSaveSceneAs, "Save scene in a new path (CTRL + SHIFT + S)");
+            toolTips.SetToolTip(checkBoxAttachExport, "If selected all the scene is exported as one single mesh");
+            toolTips.SetToolTip(buttonHelp, "Open Help (F1)");
+
+            toolTips.SetToolTip(radioButtonPrimitive_Box, "Create a new Box (B)");
+            toolTips.SetToolTip(radioButtonPrimitive_Sphere, "Create a new Sphere");
+            toolTips.SetToolTip(radioButtonPrimitive_PlaneXZ, "Create a new XZ-plane (P)");
+            toolTips.SetToolTip(radioButtonPrimitive_PlaneXY, "Create a new XY-plane");
+            toolTips.SetToolTip(radioButtonPrimitive_PlaneYZ, "Create a new YZ-plane");
+            toolTips.SetToolTip(buttonImportMesh, "Import an existing mesh (M)");
+            toolTips.SetToolTip(textBoxCreateCurrentLayer, "Default layer for new created objects");
+
+            toolTips.SetToolTip(radioButtonModifySelectAndMove, "Move selected objects (W)");
+            toolTips.SetToolTip(radioButtonModifySelectAndRotate, "Rotate selected objects (E)");
+            toolTips.SetToolTip(radioButtonModifySelectAndScale, "Scale selected objects (R)");
+            
+            toolTips.SetToolTip(radioButtonEPolyPrimitiveVertex, "Vertex primitve");
+            toolTips.SetToolTip(radioButtonEPolyPrimitiveEdge, "Edge primitve");
+            toolTips.SetToolTip(radioButtonEPolyPrimitivePolygon, "Polygon primitve");
         }
 
         
@@ -426,10 +466,15 @@ namespace Examples.MeshCreator
                 {
                     buttonImportMesh_Click(null, null);
                 }
-                //Save (Export Scene)
+                //Save as
+                else if (input.keyDown(Key.LeftControl) && input.keyDown(Key.LeftShift) && input.keyPressed(Key.S))
+                {
+                    buttonSaveSceneAs_Click(null, null);
+                }
+                //Save
                 else if (input.keyDown(Key.LeftControl) && input.keyPressed(Key.S))
                 {
-                    buttonExportScene_Click(null, null);
+                    buttonSaveScene_Click(null, null);
                 }
                 //Help
                 else if (input.keyPressed(Key.F1))
@@ -437,7 +482,7 @@ namespace Examples.MeshCreator
                     buttonHelp_Click(null, null);
                 }
                 //Camara FPS
-                else if (input.keyPressed(Key.F))
+                else if (input.keyPressed(Key.C))
                 {
                     radioButtonFPSCamera.Checked = true;
                 }
@@ -454,8 +499,12 @@ namespace Examples.MeshCreator
                 //Left view
                 else if (input.keyPressed(Key.L))
                 {
-                    //TODO: no anda
-                    //selectionRectangle.setLeftView();
+                    buttonLeftView_Click(null, null);
+                }
+                //Front view
+                else if (input.keyPressed(Key.F))
+                {
+                    buttonFrontView_Click(null, null);
                 }
                 //Merge selected
                 else if (input.keyPressed(Key.G))
@@ -748,18 +797,28 @@ namespace Examples.MeshCreator
             ignoreChangeEvents = true;
             if (selectionList.Count >= 1)
             {
+                bool onlyOneObjectFlag = selectionList.Count == 1;
+                bool isMeshFlag = selectionList[0].GetType().IsAssignableFrom(typeof(MeshPrimitive));
+
+                //Habilitar paneles
                 groupBoxModifyGeneral.Enabled = true;
                 groupBoxModifyTexture.Enabled = true;
                 groupBoxModifyPosition.Enabled = true;
                 groupBoxModifyRotation.Enabled = true;
                 groupBoxModifyScale.Enabled = true;
                 groupBoxModifyUserProps.Enabled = true;
+                buttonModifyConvertToMesh.Enabled = !isMeshFlag;
+                groupBoxEPolyPrimitive.Enabled = onlyOneObjectFlag && isMeshFlag;
+                groupBoxEPolyEditVertices.Enabled = false;
+                groupBoxEPolyEditEdges.Enabled = false;
+                groupBoxEPolyEditPolygons.Enabled = false;
+                
 
                 //Cargar valores generales
                 EditorPrimitive p = selectionList[0];
                 EditorPrimitive.ModifyCapabilities caps = p.ModifyCaps;
                 textBoxModifyName.Text = p.Name;
-                textBoxModifyName.Enabled = selectionList.Count == 1;
+                textBoxModifyName.Enabled = onlyOneObjectFlag;
                 textBoxModifyLayer.Text = p.Layer;
 
 
@@ -870,19 +929,25 @@ namespace Examples.MeshCreator
 
                 //Cargar userProps
                 userInfo.Text = MeshCreatorUtils.getUserPropertiesString(p.UserProperties);
-                userInfo.Enabled = selectionList.Count == 1;
+                userInfo.Enabled = onlyOneObjectFlag;
 
                 //Rotation pivot (remains the same while the group does not change)
                 rotationPivot = selectionRectangle.getRotationPivot();
             }
             else
             {
+                //Deshabilitar paneles
                 groupBoxModifyGeneral.Enabled = false;
                 groupBoxModifyTexture.Enabled = false;
                 groupBoxModifyPosition.Enabled = false;
                 groupBoxModifyRotation.Enabled = false;
                 groupBoxModifyScale.Enabled = false;
                 groupBoxModifyUserProps.Enabled = false;
+                buttonModifyConvertToMesh.Enabled = false;
+                groupBoxEPolyPrimitive.Enabled = false;
+                groupBoxEPolyEditVertices.Enabled = false;
+                groupBoxEPolyEditEdges.Enabled = false;
+                groupBoxEPolyEditPolygons.Enabled = false;
             }
 
             ignoreChangeEvents = false;
@@ -1239,6 +1304,22 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Clic en "Front view"
+        /// </summary>
+        private void buttonFrontView_Click(object sender, EventArgs e)
+        {
+            selectionRectangle.setFrontView();
+        }
+
+        /// <summary>
+        /// Clic en "Left view"
+        /// </summary>
+        private void buttonLeftView_Click(object sender, EventArgs e)
+        {
+            selectionRectangle.setLeftView();
+        }
+
+        /// <summary>
         /// Clic en "Merge Selected"
         /// </summary>
         private void buttonMergeSelected_Click(object sender, EventArgs e)
@@ -1278,71 +1359,107 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Clic en "Exportar escena"
+        /// Clic en "Save"
         /// </summary>
-        private void buttonExportScene_Click(object sender, EventArgs e)
+        private void buttonSaveScene_Click(object sender, EventArgs e)
         {
-            if (exportSceneSaveDialog.ShowDialog() == DialogResult.OK)
+            if (lastSavePath != null)
             {
-                try
+                exportScene(false, lastSavePath);
+            }
+            else
+            {
+                exportScene(true, null);
+            }
+        }
+
+        /// <summary>
+        /// Clic en "Save as"
+        /// </summary>
+        private void buttonSaveSceneAs_Click(object sender, EventArgs e)
+        {
+            exportScene(true, null);
+        }
+
+        /// <summary>
+        /// Guardar la escena
+        /// </summary>
+        private void exportScene(bool askConfirmation, string path)
+        {
+            FileInfo fInfo = null;
+            if (askConfirmation)
+            {
+                if (exportSceneSaveDialog.ShowDialog() == DialogResult.OK)
                 {
-                    //Obtener nombre y directorio
-                    FileInfo fInfo = new FileInfo(exportSceneSaveDialog.FileName);
-                    string sceneName = fInfo.Name.Split('.')[0];
-                    sceneName = sceneName.Replace("-TgcScene", "");
-                    string saveDir = fInfo.DirectoryName;
+                    fInfo = new FileInfo(exportSceneSaveDialog.FileName);
+                    lastSavePath = exportSceneSaveDialog.FileName;
+                }
+            }
+            else
+            {
+                fInfo = new FileInfo(path);
+                exportSceneSaveDialog.FileName = path;
+            }
 
-                    //Convertir todos los objetos del escenario a un TgcMesh y agregarlos a la escena a exportar
-                    TgcScene exportScene = new TgcScene(sceneName, saveDir);
-                    foreach (EditorPrimitive p in meshes)
-                    {
-                        TgcMesh m = p.createMeshToExport();
-                        exportScene.Meshes.Add(m);
-                    }
+            //Obtener directorio y nombre
+            if (fInfo == null)
+                return;
+            string sceneName = fInfo.Name.Split('.')[0];
+            sceneName = sceneName.Replace("-TgcScene", "");
+            string saveDir = fInfo.DirectoryName;
 
-                    //Exportar escena
-                    TgcSceneExporter exporter = new TgcSceneExporter();
-                    TgcSceneExporter.ExportResult result;
-                    if (checkBoxAttachExport.Checked)
+            //Intentar guardar
+            try
+            {
+                //Convertir todos los objetos del escenario a un TgcMesh y agregarlos a la escena a exportar
+                TgcScene exportScene = new TgcScene(sceneName, saveDir);
+                foreach (EditorPrimitive p in meshes)
+                {
+                    TgcMesh m = p.createMeshToExport();
+                    exportScene.Meshes.Add(m);
+                }
+
+                //Exportar escena
+                TgcSceneExporter exporter = new TgcSceneExporter();
+                TgcSceneExporter.ExportResult result;
+                if (checkBoxAttachExport.Checked)
+                {
+                    result = exporter.exportAndAppendSceneToXml(exportScene, saveDir);
+                }
+                else
+                {
+                    result = exporter.exportSceneToXml(exportScene, saveDir);
+                }
+
+                //Hacer dispose de los objetos clonados para exportar
+                exportScene.disposeAll();
+                exportScene = null;
+
+                //Mostrar resultado
+                if (result.result)
+                {
+                    if (result.secondaryErrors)
                     {
-                        result = exporter.exportAndAppendSceneToXml(exportScene, saveDir);
+                        MessageBox.Show(this, "La escena se exportó OK pero hubo errores secundarios. " + result.listErrors(), "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        result = exporter.exportSceneToXml(exportScene, saveDir);
+                        MessageBox.Show(this, "Scene exported OK.", "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-
-                    //Hacer dispose de los objetos clonados para exportar
-                    exportScene.disposeAll();
-                    exportScene = null;
-
-                    //Mostrar resultado
-                    if (result.result)
-                    {
-                        if (result.secondaryErrors)
-                        {
-                            MessageBox.Show(this, "La escena se exportó OK pero hubo errores secundarios. " + result.listErrors(), "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        else
-                        {
-                            MessageBox.Show(this, "Scene exported OK.", "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
-                    else 
-                    {
-                        MessageBox.Show(this, "Ocurrieron errores al intentar exportar la escena. " + result.listErrors(),
-                            "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(this, "Hubo un error al intenar exportar la escena. Puede ocurrir que esté intentando reemplazar el mismo archivo de escena que tiene abierto ahora. Los archivos de Textura por ejemplo no pueden ser reemplazados si se están utilizando dentro del editor. En ese caso debera guardar en uno nuevo. "
-                        + "Error: " + ex.Message + " - " + ex.InnerException.Message,
+                    MessageBox.Show(this, "Ocurrieron errores al intentar exportar la escena. " + result.listErrors(),
                         "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "Hubo un error al intenar exportar la escena. Puede ocurrir que esté intentando reemplazar el mismo archivo de escena que tiene abierto ahora. Los archivos de Textura por ejemplo no pueden ser reemplazados si se están utilizando dentro del editor. En ese caso debera guardar en uno nuevo. "
+                    + "Error: " + ex.Message + " - " + ex.InnerException.Message,
+                    "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1811,16 +1928,63 @@ namespace Examples.MeshCreator
 
 
 
+
+        #region EditablePoly
+
+
         private void buttonConvertToEditablePoly_Click(object sender, EventArgs e)
         {
             if (selectionList.Count >= 1)
             {
                 TgcMesh mesh = selectionList[0].createMeshToExport();
-                EditablePoly editablePoly = new EditablePoly(mesh);
+                //EditablePoly editablePoly = new EditablePoly(mesh);
 
                 //TODO: terminar bien el uso de EditablePoly en el editor
             }
         }
+
+        /// <summary>
+        /// Clic en Vertex primitive
+        /// </summary>
+        private void radioButtonEPolyPrimitiveVertex_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxEPolyEditVertices.Enabled = true;
+            groupBoxEPolyEditEdges.Enabled = false;
+            groupBoxEPolyEditPolygons.Enabled = false;
+        }
+
+        /// <summary>
+        /// Clic en Edge primitive
+        /// </summary>
+        private void radioButtonEPolyPrimitiveEdge_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxEPolyEditVertices.Enabled = false;
+            groupBoxEPolyEditEdges.Enabled = true;
+            groupBoxEPolyEditPolygons.Enabled = false;
+        }
+
+        /// <summary>
+        /// Clic en Polygon primitive
+        /// </summary>
+        private void radioButtonEPolyPrimitivePolygon_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBoxEPolyEditVertices.Enabled = false;
+            groupBoxEPolyEditEdges.Enabled = false;
+            groupBoxEPolyEditPolygons.Enabled = true;
+        }
+
+
+        #endregion
+
+        
+
+        
+
+        
+
+        
+
+        
 
         
 
