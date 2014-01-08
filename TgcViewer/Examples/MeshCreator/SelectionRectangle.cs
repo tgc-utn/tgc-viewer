@@ -353,7 +353,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Poner la camara en un top view respecto de un objeto seleccionado
+        /// Poner la camara en top view respecto de un objeto seleccionado
         /// </summary>
         public void setTopView()
         {
@@ -367,12 +367,11 @@ namespace Examples.MeshCreator
             {
                 lookAt = new Vector3(0, 0, 0);
             }
-            Vector3 pos = lookAt + new Vector3(0, control.Camera.CameraDistance, 0);
-            control.Camera.lookAt(pos, lookAt);
+            control.Camera.setFixedView(lookAt, -FastMath.PI_HALF, 0, control.Camera.CameraDistance);
         }
 
         /// <summary>
-        /// Poner la camara en un left view respecto de un objeto seleccionado
+        /// Poner la camara en left view respecto de un objeto seleccionado
         /// </summary>
         public void setLeftView()
         {
@@ -386,8 +385,25 @@ namespace Examples.MeshCreator
             {
                 lookAt = new Vector3(0, 0, 0);
             }
-            Vector3 pos = lookAt + new Vector3(control.Camera.CameraDistance, 0, 0);
-            control.Camera.lookAt(pos, lookAt);
+            control.Camera.setFixedView(lookAt, 0, FastMath.PI_HALF, control.Camera.CameraDistance);
+        }
+
+        /// <summary>
+        /// Poner la camara en front view respecto de un objeto seleccionado
+        /// </summary>
+        public void setFrontView()
+        {
+            TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(control.SelectionList);
+            Vector3 lookAt;
+            if (aabb != null)
+            {
+                lookAt = aabb.calculateBoxCenter();
+            }
+            else
+            {
+                lookAt = new Vector3(0, 0, 0);
+            }
+            control.Camera.setFixedView(lookAt, 0, 0, control.Camera.CameraDistance);
         }
 
         /// <summary>

@@ -307,6 +307,26 @@ namespace Examples.MeshCreator
             cameraCenter = lookAt;
         }
 
+        /// <summary>
+        /// Setear la camara en una determinada posicion, indicando que punto mira
+        /// y con que angulos se rota en el eje X y el Y.
+        /// </summary>
+        /// <param name="lookAt">Punto que se mira</param>
+        /// <param name="rotX">Cuanto rotar en el eje X</param>
+        /// <param name="rotY">Cuanto rotar en el eje Y</param>
+        /// <param name="distance">Distancia de la camara desde el punto de lookAt</param>
+        public void setFixedView(Vector3 lookAt, float rotX, float rotY, float distance)
+        {
+            cameraDistance = distance;
+            upVector = new Vector3(0, 1, 0);
+            diffX = 0;
+            diffY = 0.01f;
+            diffZ = 1;
+            baseRotX = rotX;
+            baseRotY = rotY;
+            cameraCenter = lookAt;
+        }
+
         public Vector3 getPosition()
         {
             return nextPos;

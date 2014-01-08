@@ -16,11 +16,12 @@ namespace Examples.MeshCreator.Gizmos
     public class TranslateGizmo : EditorGizmo
     {
         const float LARGE_AXIS_SIZE = 200f;
+        const float INTERMEDIATE_AXIS_SIZE = 30f;
         const float SHORT_AXIS_SIZE = 5f;
 
         enum Axis
         {
-            X, Y, Z, None,
+            X, Y, Z, XY, XZ, YZ, None,
         }
 
         enum State
@@ -33,8 +34,12 @@ namespace Examples.MeshCreator.Gizmos
         TgcBox boxX;
         TgcBox boxY;
         TgcBox boxZ;
+        TgcBox boxXZ;
+        TgcBox boxXY;
+        TgcBox boxYZ;
         Axis selectedAxis;
         Vector2 initMouseP;
+        Vector3 initMouseP3d;
         Vector3 gizmoCenter;
         Vector3 acumMovement;
 
@@ -47,6 +52,9 @@ namespace Examples.MeshCreator.Gizmos
             boxX = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
             boxY = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Green);
             boxZ = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.Blue);
+            boxXZ = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
+            boxXY = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Orange);
+            boxYZ = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
         }
 
         public override void setEnabled(bool enabled)
@@ -75,14 +83,23 @@ namespace Examples.MeshCreator.Gizmos
             boxX.Size = Vector3.Multiply(new Vector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
             boxY.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
             boxZ.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), increment);
+            boxXZ.Size = Vector3.Multiply(new Vector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), increment);
+            boxXY.Size = Vector3.Multiply(new Vector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
+            boxYZ.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), increment);
 
             boxX.Position = gizmoCenter + Vector3.Multiply(boxX.Size, 0.5f) + new Vector3(SHORT_AXIS_SIZE, 0, 0);
             boxY.Position = gizmoCenter + Vector3.Multiply(boxY.Size, 0.5f) + new Vector3(0, SHORT_AXIS_SIZE, 0);
             boxZ.Position = gizmoCenter + Vector3.Multiply(boxZ.Size, 0.5f) + new Vector3(0, 0, SHORT_AXIS_SIZE);
+            boxXZ.Position = gizmoCenter + new Vector3(boxXZ.Size.X / 2, 0, boxXZ.Size.Z / 2);
+            boxXY.Position = gizmoCenter + new Vector3(boxXY.Size.X / 2, boxXY.Size.Y / 2, 0);
+            boxYZ.Position = gizmoCenter + new Vector3(0, boxYZ.Size.Y / 2, boxYZ.Size.Z / 2);
 
             boxX.updateValues();
             boxY.updateValues();
             boxZ.updateValues();
+            boxXZ.updateValues();
+            boxXY.updateValues();
+            boxYZ.updateValues();
         }
 
         public override void update()
@@ -106,6 +123,7 @@ namespace Examples.MeshCreator.Gizmos
                         if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxX.BoundingBox, out collP))
                         {
                             selectedAxis = Axis.X;
+                            TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, Control.Grid.BoundingBox, out initMouseP3d);
                         }
                         else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxY.BoundingBox, out collP))
                         {
@@ -114,6 +132,18 @@ namespace Examples.MeshCreator.Gizmos
                         else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxZ.BoundingBox, out collP))
                         {
                             selectedAxis = Axis.Z;
+                        }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxXZ.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.XZ;
+                        }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxXY.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.XY;
+                        }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxYZ.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.YZ;
                         }
                         else
                         {
@@ -155,6 +185,18 @@ namespace Examples.MeshCreator.Gizmos
                         {
                             selectedAxis = Axis.Z;
                         }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxXZ.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.XZ;
+                        }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxXY.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.XY;
+                        }
+                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxYZ.BoundingBox, out collP))
+                        {
+                            selectedAxis = Axis.YZ;
+                        }
                         else
                         {
                             selectedAxis = Axis.None;
@@ -173,29 +215,85 @@ namespace Examples.MeshCreator.Gizmos
                         Vector2 mouseScreenVec = new Vector2(input.XposRelative, input.YposRelative);
                         //mouseScreenVec.Normalize();
 
-                        //Projectar vector 2D del eje elegido
-                        TgcBox currentAxisBox = getAxisBox(selectedAxis);
-                        Vector2 axisScreenVec = MeshCreatorUtils.projectAABBScreenVec(currentAxisBox.BoundingBox);
-                        
-                        //Hacer DOT product entre ambos vectores para obtener la contribucion del mouse en esa direccion
-                        float movement = Vector2.Dot(axisScreenVec, mouseScreenVec);
-                        movement = MeshCreatorUtils.getMouseTranslateIncrementSpeed(Control.Camera, currentAxisBox.BoundingBox, movement);
+                        //Solo se mueve un eje
                         Vector3 currentMove = new Vector3(0, 0, 0);
+                        if (isSingleAxis(selectedAxis))
+                        {
+                            //Projectar vector 2D del eje elegido
+                            TgcBox currentAxisBox = getAxisBox(selectedAxis);
+                            Vector2 axisScreenVec = MeshCreatorUtils.projectAABBScreenVec(currentAxisBox.BoundingBox);
 
-                        //Desplazamiento en eje X
-                        if (selectedAxis == Axis.X)
-                        {
-                            currentMove.X = movement;
+                            //Hacer DOT product entre ambos vectores para obtener la contribucion del mouse en esa direccion
+                            float movement = Vector2.Dot(axisScreenVec, mouseScreenVec);
+                            movement = MeshCreatorUtils.getMouseTranslateIncrementSpeed(Control.Camera, currentAxisBox.BoundingBox, movement);
+
+                            //Desplazamiento en eje X
+                            if (selectedAxis == Axis.X)
+                            {
+                                /*Control.PickingRay.updateRay();
+                                Vector3 endMouseP3d;
+                                TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, Control.Grid.BoundingBox, out endMouseP3d);
+                                float diff = endMouseP3d.X - initMouseP3d.X;
+                                currentMove.X = diff;
+                                initMouseP3d = endMouseP3d;*/
+
+                                currentMove.X = movement;
+                            }
+                            //Desplazamiento en eje Y
+                            else if (selectedAxis == Axis.Y)
+                            {
+                                currentMove.Y = movement;
+                            }
+                            //Desplazamiento en eje Z
+                            else if (selectedAxis == Axis.Z)
+                            {
+                                currentMove.Z = movement;
+                            }
                         }
-                        //Desplazamiento en eje Y
-                        else if (selectedAxis == Axis.Y)
+                        //Desplazamiento en dos ejes
+                        else
                         {
-                            currentMove.Y = movement;
-                        }
-                        //Desplazamiento en eje Z
-                        else if (selectedAxis == Axis.Z)
-                        {
-                            currentMove.Z = movement;
+                            TgcBox currentAxisBox = getAxisBox(selectedAxis);
+
+                            //Plano XZ
+                            if (selectedAxis == Axis.XZ)
+                            {
+                                //Projectar vector 2D de los dos ejes elegidos
+                                Vector2 axisScreenVecX = MeshCreatorUtils.projectAABBScreenVec(boxX.BoundingBox);
+                                Vector2 axisScreenVecZ = MeshCreatorUtils.projectAABBScreenVec(boxZ.BoundingBox);
+
+                                //Hacer DOT product entre ambos vectores para obtener la contribucion del mouse en esa direccion
+                                currentMove.X = Vector2.Dot(axisScreenVecX, mouseScreenVec);
+                                currentMove.X = MeshCreatorUtils.getMouseTranslateIncrementSpeed(Control.Camera, boxX.BoundingBox, currentMove.X);
+                                currentMove.Z = Vector2.Dot(axisScreenVecZ, mouseScreenVec);
+                                currentMove.Z = MeshCreatorUtils.getMouseTranslateIncrementSpeed(Control.Camera, boxZ.BoundingBox, currentMove.Z);
+                            }
+                            //Plano XY
+                            else if (selectedAxis == Axis.XY)
+                            {
+                                //Projectar vector 2D de los dos ejes elegidos
+                                Vector2 axisScreenVecX = MeshCreatorUtils.projectAABBScreenVec(boxX.BoundingBox);
+                                Vector2 axisScreenVecY = MeshCreatorUtils.projectAABBScreenVec(boxY.BoundingBox);
+
+                                //Hacer DOT product entre ambos vectores para obtener la contribucion del mouse en esa direccion
+                                currentMove.X = Vector2.Dot(axisScreenVecX, mouseScreenVec);
+                                currentMove.X = MeshCreatorUtils.getMouseTranslateIncrementSpeed(Control.Camera, boxX.BoundingBox, currentMove.X);
+                                currentMove.Y = Vector2.Dot(axisScreenVecY, mouseScreenVec);
+                                currentMove.Y = MeshCreatorUtils.getMouseTranslateIncrementSpeed(Control.Camera, boxY.BoundingBox, currentMove.Y);
+                            }
+                            //Plano YZ
+                            else if (selectedAxis == Axis.YZ)
+                            {
+                                //Projectar vector 2D de los dos ejes elegidos
+                                Vector2 axisScreenVecY = MeshCreatorUtils.projectAABBScreenVec(boxY.BoundingBox);
+                                Vector2 axisScreenVecZ = MeshCreatorUtils.projectAABBScreenVec(boxZ.BoundingBox);
+
+                                //Hacer DOT product entre ambos vectores para obtener la contribucion del mouse en esa direccion
+                                currentMove.Y = Vector2.Dot(axisScreenVecY, mouseScreenVec);
+                                currentMove.Y = MeshCreatorUtils.getMouseTranslateIncrementSpeed(Control.Camera, boxY.BoundingBox, currentMove.Y);
+                                currentMove.Z = Vector2.Dot(axisScreenVecZ, mouseScreenVec);
+                                currentMove.Z = MeshCreatorUtils.getMouseTranslateIncrementSpeed(Control.Camera, boxZ.BoundingBox, currentMove.Z);
+                            }
                         }
 
                         //Ajustar currentMove con Snap to grid
@@ -244,9 +342,13 @@ namespace Examples.MeshCreator.Gizmos
             GuiController.Instance.D3dDevice.RenderState.ZBufferEnable = false;
 
             //Dibujar
+            boxXZ.render();
+            boxXY.render();
+            boxYZ.render();
             boxX.render();
             boxY.render();
             boxZ.render();
+            
 
             TgcBox selectedBox = getAxisBox(selectedAxis);
             if (selectedBox != null)
@@ -267,8 +369,19 @@ namespace Examples.MeshCreator.Gizmos
                     return boxY;
                 case Axis.Z:
                     return boxZ;
+                case Axis.XZ:
+                    return boxXZ;
+                case Axis.XY:
+                    return boxXY;
+                case Axis.YZ:
+                    return boxYZ;
             }
             return null;
+        }
+
+        private bool isSingleAxis(Axis axis)
+        {
+            return axis == Axis.X || axis == Axis.Y || axis == Axis.Z;
         }
 
         /// <summary>
