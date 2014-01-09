@@ -366,6 +366,34 @@ namespace TgcViewer.Utils.TgcGeometry
         }
 
         /// <summary>
+        /// Clampear x al intervalo [min, max]
+        /// </summary>
+        /// <param name="x">Valor a hacer clamp</param>
+        /// <param name="min">Maximo inclusive</param>
+        /// <param name="max">Minimo inclusive</param>
+        /// <returns>Valor campleado</returns>
+        public static float Clamp(float x, float min, float max)
+        {
+            if (x < min) return min;
+            if (x > max) return max;
+            return x;
+        }
+
+        /// <summary>
+        /// Clampear x al intervalo [min, max]
+        /// </summary>
+        /// <param name="x">Valor a hacer clamp</param>
+        /// <param name="min">Maximo inclusive</param>
+        /// <param name="max">Minimo inclusive</param>
+        /// <returns>Valor campleado</returns>
+        public static int Clamp(int x, int min, int max)
+        {
+            if (x < min) return min;
+            if (x > max) return max;
+            return x;
+        }
+
+        /// <summary>
         /// Devuelve E^n
         /// </summary>
         /// <param name="n">Exponente</param>
