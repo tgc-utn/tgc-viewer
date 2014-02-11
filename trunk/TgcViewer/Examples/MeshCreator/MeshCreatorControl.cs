@@ -16,6 +16,7 @@ using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcSceneLoader;
 using System.IO;
 using TgcViewer.Utils._2D;
+using Examples.MeshCreator.EditablePolyTools;
 
 namespace Examples.MeshCreator
 {
@@ -34,26 +35,11 @@ namespace Examples.MeshCreator
             CreatePrimitiveSelected,
             CreatingPrimitve,
             GizmoActivated,
+            EditablePoly,
         }
 
         
-
-        /// <summary>
-        /// Colores para crear nuevas primitivas
-        /// </summary>
-        static readonly Color[] CREATION_COLORS = new Color[]{
-            Color.Red,
-            Color.Blue,
-            Color.Brown,
-            Color.Coral,
-            Color.DarkCyan,
-            Color.Green,
-            Color.Purple
-        };
-
-        
         TgcMeshCreator creator;
-        //int creationColorIdx;
         int primitiveNameCounter;
         TranslateGizmo translateGizmo;
         ScaleGizmo scaleGizmo;
@@ -228,7 +214,6 @@ namespace Examples.MeshCreator
             this.grid = new Grid(this);
             this.selectionRectangle = new SelectionRectangle(this);
             creatingPrimitive = null;
-            //creationColorIdx = 0;
             primitiveNameCounter = 0;
             currentGizmo = null;
             mediaPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\";
@@ -374,6 +359,9 @@ namespace Examples.MeshCreator
                         case State.GizmoActivated:
                             doGizmoActivated();
                             break;
+                        case State.EditablePoly:
+                            doEditablePoly();
+                            break;
                     }
                 }
             }
@@ -393,78 +381,100 @@ namespace Examples.MeshCreator
         }
 
 
-
         /// <summary>
         /// Procesar shorcuts de teclado
         /// </summary>
         private void processShortcuts()
         {
             //Solo en estados pasivos
-            if (currentState == State.SelectObject || currentState == State.CreatePrimitiveSelected || currentState == State.GizmoActivated)
+            if (currentState == State.SelectObject || currentState == State.CreatePrimitiveSelected 
+                || currentState == State.GizmoActivated || currentState == State.EditablePoly)
             {
                 TgcD3dInput input = GuiController.Instance.D3dInput;
+
+                //Acciones que no se pueden hacer si estamos en modo EditablePoly
+                if (currentState != State.EditablePoly)
+                {
+                    //Hide
+                    if (input.keyPressed(Key.H))
+                    {
+                        buttonHideSelected_Click(null, null);
+                    }
+                    //Select
+                    else if (input.keyPressed(Key.Q))
+                    {
+                        radioButtonSelectObject.Checked = true;
+                    }
+                    //Select all
+                    else if (input.keyDown(Key.LeftControl) && input.keyPressed(Key.E))
+                    {
+                        buttonSelectAll_Click(null, null);
+                    }
+                    //Delete
+                    else if (input.keyPressed(Key.Delete))
+                    {
+                        buttonDeleteObject_Click(null, null);
+                    }
+                    //Translate
+                    else if (input.keyPressed(Key.W))
+                    {
+                        if (radioButtonModifySelectAndMove.Checked)
+                        {
+                            radioButtonModifySelectAndMove_CheckedChanged(null, null);
+                        }
+                        else
+                        {
+                            radioButtonModifySelectAndMove.Checked = true;
+                        }
+                    }
+                    //Scale
+                    else if (input.keyPressed(Key.R))
+                    {
+                        radioButtonModifySelectAndScale.Checked = true;
+                    }
+                    //Clone
+                    else if (input.keyDown(Key.LeftControl) && input.keyPressed(Key.V))
+                    {
+                        buttonCloneObject_Click(null, null);
+                    }
+                    //Create Box
+                    else if (input.keyPressed(Key.B))
+                    {
+                        radioButtonPrimitive_Box.Checked = true;
+                    }
+                    //Create Plane
+                    else if (input.keyPressed(Key.P))
+                    {
+                        radioButtonPrimitive_PlaneXZ.Checked = true;
+                    }
+                    //Import Mesh
+                    else if (input.keyPressed(Key.M))
+                    {
+                        buttonImportMesh_Click(null, null);
+                    }
+                    //Camara FPS
+                    else if (input.keyPressed(Key.C))
+                    {
+                        radioButtonFPSCamera.Checked = true;
+                    }
+                    //Object browser
+                    else if (input.keyPressed(Key.O))
+                    {
+                        buttonObjectBrowser_Click(null, null);
+                    }
+                    //Merge selected
+                    else if (input.keyPressed(Key.G))
+                    {
+                        buttonMergeSelected_Click(null, null);
+                    }
+                }
+
+
 
                 //Zoom
                 if (input.keyPressed(Key.Z))
                 {
                     buttonZoomObject_Click(null, null);
-                }
-                //Hide
-                if (input.keyPressed(Key.H))
-                {
-                    buttonHideSelected_Click(null, null);
-                }
-                //Select
-                else if (input.keyPressed(Key.Q))
-                {
-                    radioButtonSelectObject.Checked = true;
-                }
-                //Select all
-                else if (input.keyDown(Key.LeftControl) && input.keyPressed(Key.E))
-                {
-                    buttonSelectAll_Click(null, null);
-                }
-                //Delete
-                else if (input.keyPressed(Key.Delete))
-                {
-                    buttonDeleteObject_Click(null, null);
-                }
-                //Translate
-                else if (input.keyPressed(Key.W))
-                {
-                    if (radioButtonModifySelectAndMove.Checked)
-                    {
-                        radioButtonModifySelectAndMove_CheckedChanged(null, null);
-                    }
-                    else
-                    {
-                        radioButtonModifySelectAndMove.Checked = true;
-                    }
-                }
-                //Scale
-                else if (input.keyPressed(Key.R))
-                {
-                    radioButtonModifySelectAndScale.Checked = true;
-                }
-                //Clone
-                else if (input.keyDown(Key.LeftControl) && input.keyPressed(Key.V))
-                {
-                    buttonCloneObject_Click(null, null);
-                }
-                //Create Box
-                else if (input.keyPressed(Key.B))
-                {
-                    radioButtonPrimitive_Box.Checked = true;
-                }
-                //Create Plane
-                else if (input.keyPressed(Key.P))
-                {
-                    radioButtonPrimitive_PlaneXZ.Checked = true;
-                }
-                //Import Mesh
-                else if (input.keyPressed(Key.M))
-                {
-                    buttonImportMesh_Click(null, null);
                 }
                 //Save as
                 else if (input.keyDown(Key.LeftControl) && input.keyDown(Key.LeftShift) && input.keyPressed(Key.S))
@@ -481,16 +491,6 @@ namespace Examples.MeshCreator
                 {
                     buttonHelp_Click(null, null);
                 }
-                //Camara FPS
-                else if (input.keyPressed(Key.C))
-                {
-                    radioButtonFPSCamera.Checked = true;
-                }
-                //Object browser
-                else if (input.keyPressed(Key.O))
-                {
-                    buttonObjectBrowser_Click(null, null);
-                }
                 //Top view
                 else if (input.keyPressed(Key.T))
                 {
@@ -505,11 +505,6 @@ namespace Examples.MeshCreator
                 else if (input.keyPressed(Key.F))
                 {
                     buttonFrontView_Click(null, null);
-                }
-                //Merge selected
-                else if (input.keyPressed(Key.G))
-                {
-                    buttonMergeSelected_Click(null, null);
                 }
             }
         }
@@ -668,24 +663,22 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
+        /// Estado: hay un objeto en modo editablePoly
+        /// </summary>
+        private void doEditablePoly()
+        {
+            MeshPrimitive p = (MeshPrimitive)selectionList[0];
+            p.doEditablePolyUpdate();
+        }
+
+        /// <summary>
         /// Agregar mesh creado
         /// </summary>
         public void addMesh(EditorPrimitive mesh)
         {
             this.meshes.Add(mesh);
         }
-        
 
-        /*
-        /// <summary>
-        /// Siguiente color para crear objeto
-        /// </summary>
-        public Color getCreationColor()
-        {
-            creationColorIdx = (creationColorIdx + 1) % CREATION_COLORS.Length;
-            return CREATION_COLORS[creationColorIdx];
-        }
-        */
 
         /// <summary>
         /// Textura para crear un nuevo objeto
@@ -968,6 +961,8 @@ namespace Examples.MeshCreator
             {
                 selectionRectangle.dispose();
             }
+            translateGizmo.dipose();
+            scaleGizmo.dipose();
             textureBrowser.Close();
             GuiController.Instance.CurrentCamera.Enable = true;
         }
@@ -1011,6 +1006,18 @@ namespace Examples.MeshCreator
             if (radioButtonModifySelectAndScale != exceptRadio)
             {
                 radioButtonModifySelectAndScale.Checked = false;
+            }
+        }
+
+        /// <summary>
+        /// Cambiar de tab
+        /// </summary>
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Estabamos en el tab de editablePoly y salimos
+            if (currentState == State.EditablePoly && tabControl.SelectedTab != tabControl.TabPages["tabPageEditablePoly"])
+            {
+                setEditablePolyEnable(false, EditablePoly.PrimitiveType.None);
             }
         }
 
@@ -1931,15 +1938,36 @@ namespace Examples.MeshCreator
 
         #region EditablePoly
 
-
-        private void buttonConvertToEditablePoly_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Setear estado EditablePoly
+        /// </summary>
+        /// <param name="enabled"></param>
+        private void setEditablePolyEnable(bool enabled, EditablePoly.PrimitiveType primitiveType)
         {
-            if (selectionList.Count >= 1)
+            if (enabled)
             {
-                TgcMesh mesh = selectionList[0].createMeshToExport();
-                //EditablePoly editablePoly = new EditablePoly(mesh);
+                currentState = State.EditablePoly;
+                creatingPrimitive = null;
+                currentGizmo = null;
+                MeshPrimitive m = (MeshPrimitive)selectionList[0];
+                m.enableEditablePoly(true, primitiveType);
+            }
+            else
+            {
+                if (currentState == State.EditablePoly)
+                {
+                    MeshPrimitive m = (MeshPrimitive)selectionList[0];
+                    m.enableEditablePoly(false, primitiveType);
+                    
+                    radioButtonEPolyPrimitiveVertex.Checked = false;
+                    radioButtonEPolyPrimitiveEdge.Checked = false;
+                    radioButtonEPolyPrimitivePolygon.Checked = false;
+                    groupBoxEPolyEditVertices.Enabled = false;
+                    groupBoxEPolyEditEdges.Enabled = false;
+                    groupBoxEPolyEditPolygons.Enabled = false;
 
-                //TODO: terminar bien el uso de EditablePoly en el editor
+                    setSelectObjectState();
+                }
             }
         }
 
@@ -1948,9 +1976,18 @@ namespace Examples.MeshCreator
         /// </summary>
         private void radioButtonEPolyPrimitiveVertex_CheckedChanged(object sender, EventArgs e)
         {
-            groupBoxEPolyEditVertices.Enabled = true;
-            groupBoxEPolyEditEdges.Enabled = false;
-            groupBoxEPolyEditPolygons.Enabled = false;
+            if (radioButtonEPolyPrimitiveVertex.Checked)
+            {
+                radioButtonEPolyPrimitiveVertex.BackColor = Color.Red;
+                groupBoxEPolyEditVertices.Enabled = true;
+                groupBoxEPolyEditEdges.Enabled = false;
+                groupBoxEPolyEditPolygons.Enabled = false;
+                setEditablePolyEnable(true, EditablePoly.PrimitiveType.Vertex);
+            }
+            else
+            {
+                radioButtonEPolyPrimitiveVertex.BackColor = Color.Transparent;
+            }
         }
 
         /// <summary>
@@ -1958,9 +1995,19 @@ namespace Examples.MeshCreator
         /// </summary>
         private void radioButtonEPolyPrimitiveEdge_CheckedChanged(object sender, EventArgs e)
         {
-            groupBoxEPolyEditVertices.Enabled = false;
-            groupBoxEPolyEditEdges.Enabled = true;
-            groupBoxEPolyEditPolygons.Enabled = false;
+            if (radioButtonEPolyPrimitiveEdge.Checked)
+            {
+                radioButtonEPolyPrimitiveEdge.BackColor = Color.Red;
+                groupBoxEPolyEditVertices.Enabled = false;
+                groupBoxEPolyEditEdges.Enabled = true;
+                groupBoxEPolyEditPolygons.Enabled = false;
+                setEditablePolyEnable(true, EditablePoly.PrimitiveType.Edge);
+            }
+            else
+            {
+                radioButtonEPolyPrimitiveEdge.BackColor = Color.Transparent;
+            }
+
         }
 
         /// <summary>
@@ -1968,13 +2015,24 @@ namespace Examples.MeshCreator
         /// </summary>
         private void radioButtonEPolyPrimitivePolygon_CheckedChanged(object sender, EventArgs e)
         {
-            groupBoxEPolyEditVertices.Enabled = false;
-            groupBoxEPolyEditEdges.Enabled = false;
-            groupBoxEPolyEditPolygons.Enabled = true;
+            if (radioButtonEPolyPrimitivePolygon.Checked)
+            {
+                radioButtonEPolyPrimitivePolygon.BackColor = Color.Red;
+                groupBoxEPolyEditVertices.Enabled = false;
+                groupBoxEPolyEditEdges.Enabled = false;
+                groupBoxEPolyEditPolygons.Enabled = true;
+                setEditablePolyEnable(true, EditablePoly.PrimitiveType.Polygon);
+            }
+            else
+            {
+                radioButtonEPolyPrimitivePolygon.BackColor = Color.Transparent;
+            }
         }
 
 
         #endregion
+
+        
 
         
 

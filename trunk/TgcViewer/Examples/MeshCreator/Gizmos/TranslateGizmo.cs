@@ -15,15 +15,6 @@ namespace Examples.MeshCreator.Gizmos
     /// </summary>
     public class TranslateGizmo : EditorGizmo
     {
-        const float LARGE_AXIS_SIZE = 200f;
-        const float INTERMEDIATE_AXIS_SIZE = 30f;
-        const float SHORT_AXIS_SIZE = 5f;
-
-        enum Axis
-        {
-            X, Y, Z, XY, XZ, YZ, None,
-        }
-
         enum State
         {
             Init,
@@ -31,30 +22,15 @@ namespace Examples.MeshCreator.Gizmos
         }
 
         State currentState;
-        TgcBox boxX;
-        TgcBox boxY;
-        TgcBox boxZ;
-        TgcBox boxXZ;
-        TgcBox boxXY;
-        TgcBox boxYZ;
-        Axis selectedAxis;
-        //Vector2 initMouseP;
         Vector3 initMouseP3d;
-        Vector3 gizmoCenter;
         Vector3 acumMovement;
+        TranslateGizmoMesh gizmoMesh;
 
         public TranslateGizmo(MeshCreatorControl control)
             : base(control)
         {
-            selectedAxis = Axis.None;
+            gizmoMesh = new TranslateGizmoMesh();
             currentState = State.Init;
-
-            boxX = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Red);
-            boxY = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Green);
-            boxZ = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), Color.Blue);
-            boxXZ = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
-            boxXY = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), Color.Orange);
-            boxYZ = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), Color.Orange);
         }
 
         public override void setEnabled(bool enabled)
@@ -67,39 +43,9 @@ namespace Examples.MeshCreator.Gizmos
 
                 //Posicionar gizmo
                 TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(Control.SelectionList);
-                gizmoCenter = aabb.calculateBoxCenter();
-                setAxisPositionAndSize();
+                gizmoMesh.setCenter(aabb.calculateBoxCenter(), Control.Camera);
             }
 
-        }
-
-        /// <summary>
-        /// Configurar posicion y tamaño de ejes segun la distancia a la camara
-        /// </summary>
-        private void setAxisPositionAndSize()
-        {
-            float increment = MeshCreatorUtils.getTranslateGizmoSizeIncrement(Control.Camera, gizmoCenter);
-
-            boxX.Size = Vector3.Multiply(new Vector3(LARGE_AXIS_SIZE, SHORT_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
-            boxY.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, LARGE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
-            boxZ.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, SHORT_AXIS_SIZE, LARGE_AXIS_SIZE), increment);
-            boxXZ.Size = Vector3.Multiply(new Vector3(INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), increment);
-            boxXY.Size = Vector3.Multiply(new Vector3(INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, SHORT_AXIS_SIZE), increment);
-            boxYZ.Size = Vector3.Multiply(new Vector3(SHORT_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE, INTERMEDIATE_AXIS_SIZE), increment);
-
-            boxX.Position = gizmoCenter + Vector3.Multiply(boxX.Size, 0.5f) + new Vector3(SHORT_AXIS_SIZE, 0, 0);
-            boxY.Position = gizmoCenter + Vector3.Multiply(boxY.Size, 0.5f) + new Vector3(0, SHORT_AXIS_SIZE, 0);
-            boxZ.Position = gizmoCenter + Vector3.Multiply(boxZ.Size, 0.5f) + new Vector3(0, 0, SHORT_AXIS_SIZE);
-            boxXZ.Position = gizmoCenter + new Vector3(boxXZ.Size.X / 2, 0, boxXZ.Size.Z / 2);
-            boxXY.Position = gizmoCenter + new Vector3(boxXY.Size.X / 2, boxXY.Size.Y / 2, 0);
-            boxYZ.Position = gizmoCenter + new Vector3(0, boxYZ.Size.Y / 2, boxYZ.Size.Z / 2);
-
-            boxX.updateValues();
-            boxY.updateValues();
-            boxZ.updateValues();
-            boxXZ.updateValues();
-            boxXY.updateValues();
-            boxYZ.updateValues();
         }
 
         public override void update()
@@ -111,52 +57,41 @@ namespace Examples.MeshCreator.Gizmos
                 case State.Init:
 
                     acumMovement = Vector3.Empty;
-                    selectedAxis = Axis.None;
+                    gizmoMesh.unSelect();
 
                     //Iniciar seleccion de eje
                     if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
+                        //Buscar colision con ejes del gizmo
                         Control.PickingRay.updateRay();
-                        Vector3 collP;
-
-                        //Buscar colision con eje con Picking
-                        if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxX.BoundingBox, out collP))
+                        gizmoMesh.selectAxisByPicking(Control.PickingRay.Ray);
+                        if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.X)
                         {
-                            selectedAxis = Axis.X;
-                            initMouseP3d = Control.Grid.getPickingX(Control.PickingRay.Ray, gizmoCenter);
+                            initMouseP3d = Control.Grid.getPickingX(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                         }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxY.BoundingBox, out collP))
+                        else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.Y)
                         {
-                            selectedAxis = Axis.Y;
-                            initMouseP3d = Control.Grid.getPickingY(Control.PickingRay.Ray, gizmoCenter);
+                            initMouseP3d = Control.Grid.getPickingY(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                         }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxZ.BoundingBox, out collP))
+                        else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.Z)
                         {
-                            selectedAxis = Axis.Z;
-                            initMouseP3d = Control.Grid.getPickingZ(Control.PickingRay.Ray, gizmoCenter);
+                            initMouseP3d = Control.Grid.getPickingZ(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                         }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxXZ.BoundingBox, out collP))
+                        else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.XZ)
                         {
-                            selectedAxis = Axis.XZ;
-                            initMouseP3d = Control.Grid.getPickingXZ(Control.PickingRay.Ray, gizmoCenter);
+                            initMouseP3d = Control.Grid.getPickingXZ(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                         }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxXY.BoundingBox, out collP))
+                        else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.XY)
                         {
-                            selectedAxis = Axis.XY;
-                            initMouseP3d = Control.Grid.getPickingXY(Control.PickingRay.Ray, gizmoCenter);
+                            initMouseP3d = Control.Grid.getPickingXY(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                         }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxYZ.BoundingBox, out collP))
+                        else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.YZ)
                         {
-                            selectedAxis = Axis.YZ;
-                            initMouseP3d = Control.Grid.getPickingYZ(Control.PickingRay.Ray, gizmoCenter);
-                        }
-                        else
-                        {
-                            selectedAxis = Axis.None;
+                            initMouseP3d = Control.Grid.getPickingYZ(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                         }
 
                         //Si eligio un eje, iniciar dragging
-                        if (selectedAxis != Axis.None)
+                        if (gizmoMesh.SelectedAxis != TranslateGizmoMesh.Axis.None)
                         {
                             currentState = State.Dragging;
                         }
@@ -173,38 +108,9 @@ namespace Examples.MeshCreator.Gizmos
                     //Hacer mouse over sobre los ejes
                     else
                     {
-                        Control.PickingRay.updateRay();
-                        Vector3 collP;
-
                         //Buscar colision con eje con Picking
-                        if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxX.BoundingBox, out collP))
-                        {
-                            selectedAxis = Axis.X;
-                        }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxY.BoundingBox, out collP))
-                        {
-                            selectedAxis = Axis.Y;
-                        }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxZ.BoundingBox, out collP))
-                        {
-                            selectedAxis = Axis.Z;
-                        }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxXZ.BoundingBox, out collP))
-                        {
-                            selectedAxis = Axis.XZ;
-                        }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxXY.BoundingBox, out collP))
-                        {
-                            selectedAxis = Axis.XY;
-                        }
-                        else if (TgcCollisionUtils.intersectRayAABB(Control.PickingRay.Ray, boxYZ.BoundingBox, out collP))
-                        {
-                            selectedAxis = Axis.YZ;
-                        }
-                        else
-                        {
-                            selectedAxis = Axis.None;
-                        }
+                        Control.PickingRay.updateRay();
+                        gizmoMesh.selectAxisByPicking(Control.PickingRay.Ray);
 
                     }
 
@@ -220,24 +126,24 @@ namespace Examples.MeshCreator.Gizmos
 
                         //Solo se mueve un eje
                         Vector3 currentMove = new Vector3(0, 0, 0);
-                        if (isSingleAxis(selectedAxis))
+                        if (gizmoMesh.isSingleAxis(gizmoMesh.SelectedAxis))
                         {
                             //Desplazamiento en eje X
-                            if (selectedAxis == Axis.X)
+                            if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.X)
                             {
-                                endMouseP3d = Control.Grid.getPickingX(Control.PickingRay.Ray, gizmoCenter);
+                                endMouseP3d = Control.Grid.getPickingX(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                                 currentMove.X = endMouseP3d.X - initMouseP3d.X;
                             }
                             //Desplazamiento en eje Y
-                            else if (selectedAxis == Axis.Y)
+                            else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.Y)
                             {
-                                endMouseP3d = Control.Grid.getPickingY(Control.PickingRay.Ray, gizmoCenter);
+                                endMouseP3d = Control.Grid.getPickingY(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                                 currentMove.Y = endMouseP3d.Y - initMouseP3d.Y;
                             }
                             //Desplazamiento en eje Z
-                            else if (selectedAxis == Axis.Z)
+                            else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.Z)
                             {
-                                endMouseP3d = Control.Grid.getPickingZ(Control.PickingRay.Ray, gizmoCenter);
+                                endMouseP3d = Control.Grid.getPickingZ(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                                 currentMove.Z = endMouseP3d.Z - initMouseP3d.Z;
                             }
                         }
@@ -245,23 +151,23 @@ namespace Examples.MeshCreator.Gizmos
                         else
                         {
                             //Plano XZ
-                            if (selectedAxis == Axis.XZ)
+                            if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.XZ)
                             {
-                                endMouseP3d = Control.Grid.getPickingXZ(Control.PickingRay.Ray, gizmoCenter);
+                                endMouseP3d = Control.Grid.getPickingXZ(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                                 currentMove.X = endMouseP3d.X - initMouseP3d.X;
                                 currentMove.Z = endMouseP3d.Z - initMouseP3d.Z;
                             }
                             //Plano XY
-                            else if (selectedAxis == Axis.XY)
+                            else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.XY)
                             {
-                                endMouseP3d = Control.Grid.getPickingXY(Control.PickingRay.Ray, gizmoCenter);
+                                endMouseP3d = Control.Grid.getPickingXY(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                                 currentMove.X = endMouseP3d.X - initMouseP3d.X;
                                 currentMove.Y = endMouseP3d.Y - initMouseP3d.Y;
                             }
                             //Plano YZ
-                            else if (selectedAxis == Axis.YZ)
+                            else if (gizmoMesh.SelectedAxis == TranslateGizmoMesh.Axis.YZ)
                             {
-                                endMouseP3d = Control.Grid.getPickingYZ(Control.PickingRay.Ray, gizmoCenter);
+                                endMouseP3d = Control.Grid.getPickingYZ(Control.PickingRay.Ray, gizmoMesh.GizmoCenter);
                                 currentMove.Y = endMouseP3d.Y - initMouseP3d.Y;
                                 currentMove.Z = endMouseP3d.Z - initMouseP3d.Z;
                             }
@@ -285,7 +191,7 @@ namespace Examples.MeshCreator.Gizmos
 	                    }
                         
                         //Mover ejes
-                        moveGizmo(currentMove);
+                        gizmoMesh.moveGizmo(currentMove);
 
                         //Actualizar datos de modify
                         Control.updateModifyPanel();
@@ -295,7 +201,7 @@ namespace Examples.MeshCreator.Gizmos
                     else if(input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
                         currentState = State.Init;
-                        selectedAxis = Axis.None;
+                        gizmoMesh.unSelect();
                     }
 
 
@@ -305,76 +211,23 @@ namespace Examples.MeshCreator.Gizmos
             
 
             //Ajustar tamaño de ejes
-            setAxisPositionAndSize();
+            gizmoMesh.setCenter(gizmoMesh.GizmoCenter, Control.Camera);
         }
 
         
 
         public override void render()
         {
-            //Desactivar Z-Buffer para dibujar arriba de todo el escenario
-            GuiController.Instance.D3dDevice.RenderState.ZBufferEnable = false;
-
-            //Dibujar
-            boxXZ.render();
-            boxXY.render();
-            boxYZ.render();
-            boxX.render();
-            boxY.render();
-            boxZ.render();
-            
-
-            TgcBox selectedBox = getAxisBox(selectedAxis);
-            if (selectedBox != null)
-            {
-                selectedBox.BoundingBox.render();
-            }
-
-            GuiController.Instance.D3dDevice.RenderState.ZBufferEnable = true;
+            gizmoMesh.render();
         }
 
-        private TgcBox getAxisBox(Axis axis)
-        {
-            switch (axis)
-            {
-                case Axis.X:
-                    return boxX;
-                case Axis.Y:
-                    return boxY;
-                case Axis.Z:
-                    return boxZ;
-                case Axis.XZ:
-                    return boxXZ;
-                case Axis.XY:
-                    return boxXY;
-                case Axis.YZ:
-                    return boxYZ;
-            }
-            return null;
-        }
-
-        private bool isSingleAxis(Axis axis)
-        {
-            return axis == Axis.X || axis == Axis.Y || axis == Axis.Z;
-        }
-
-        /// <summary>
-        /// Mover ejes del gizmo
-        /// </summary>
-        private void moveGizmo(Vector3 movement)
-        {
-            gizmoCenter += movement;
-            boxX.move(movement);
-            boxY.move(movement);
-            boxZ.move(movement);
-        }
 
         /// <summary>
         /// Mover gizmo
         /// </summary>
         public override void move(EditorPrimitive selectedPrimitive, Vector3 movement)
         {
-            moveGizmo(movement);
+            gizmoMesh.moveGizmo(movement);
         }
 
 
@@ -407,5 +260,10 @@ namespace Examples.MeshCreator.Gizmos
             return snapMove;
         }
 
+
+        public override void dipose()
+        {
+            gizmoMesh.dispose();
+        }
     }
 }

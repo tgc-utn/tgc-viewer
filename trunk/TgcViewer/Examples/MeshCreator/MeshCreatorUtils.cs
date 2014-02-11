@@ -218,6 +218,165 @@ namespace Examples.MeshCreator
             return vec2D;
         }
 
+        /// <summary>
+        /// Proyectar punto 3D a 2D
+        /// </summary>
+        /// <param name="box3d">Punto 3D</param>
+        /// <param name="box2D">Rectangulo 2D proyectado</param>
+        /// <returns>False si es un caso degenerado de proyeccion y no debe considerarse</returns>
+        public static bool projectPoint(Vector3 p, out Rectangle box2D)
+        {
+            //Datos de viewport
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Viewport viewport = d3dDevice.Viewport;
+            Matrix view = d3dDevice.Transform.View;
+            Matrix proj = d3dDevice.Transform.Projection;
+            int width = viewport.Width;
+            int height = viewport.Height;
+            Matrix m = view * proj;
+
+            //Proyectar
+            box2D = new Rectangle();
+            Vector4 pOut = Vector3.Transform(p, m);
+            if (pOut.W < 0) return false;
+            Vector3 projVertex = MeshCreatorUtils.toScreenSpace(pOut, width, height);
+            Vector2 min = new Vector2(projVertex.X, projVertex.Y);
+            Vector2 max = min + new Vector2(1, 1);
+
+            //Clamp
+            if (min.X < 0f) min.X = 0f;
+            if (min.Y < 0f) min.Y = 0f;
+            if (max.X >= width) max.X = width - 1;
+            if (max.Y >= height) max.Y = height - 1;
+
+            //Control de tamaño minimo
+            if (max.X - min.X < 1f) return false;
+            if (max.Y - min.Y < 1f) return false;
+
+            //Cargar valores de box2D
+            box2D.Location = new Point((int)min.X, (int)min.Y);
+            box2D.Size = new Size((int)(max.X - min.X), (int)(max.Y - min.Y));
+            return true;
+        }
+
+        /// <summary>
+        /// Proyectar un segmento 3D (a, b) a un rectangulo 2D en pantalla
+        /// </summary>
+        /// <param name="a">Inicio del segmento</param>
+        /// <param name="b">Fin del segmento</param>
+        /// <param name="box2D">Rectangulo 2D proyectado</param>
+        /// <returns>False si es un caso degenerado de proyeccion y no debe considerarse</returns>
+        public static bool projectSegmentToScreenRect(Vector3 a, Vector3 b, out Rectangle box2D)
+        {
+            //Datos de viewport
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Viewport viewport = d3dDevice.Viewport;
+            Matrix view = d3dDevice.Transform.View;
+            Matrix proj = d3dDevice.Transform.Projection;
+            int width = viewport.Width;
+            int height = viewport.Height;
+            Matrix m = view * proj;
+
+            //Proyectar
+            box2D = new Rectangle();
+            Vector4 aOut = Vector3.Transform(a, m);
+            if (aOut.W < 0) return false;
+            Vector4 bOut = Vector3.Transform(b, m);
+            if (bOut.W < 0) return false;
+            Vector3 aProjVertex = MeshCreatorUtils.toScreenSpace(aOut, width, height);
+            Vector3 bProjVertex = MeshCreatorUtils.toScreenSpace(bOut, width, height);
+            Vector2 min = new Vector2(FastMath.Min(aProjVertex.X, bProjVertex.X), FastMath.Min(aProjVertex.Y, bProjVertex.Y));
+            Vector2 max = new Vector2(FastMath.Max(aProjVertex.X, bProjVertex.X), FastMath.Max(aProjVertex.Y, bProjVertex.Y));
+
+            //Clamp
+            if (min.X < 0f) min.X = 0f;
+            if (min.Y < 0f) min.Y = 0f;
+            if (max.X >= width) max.X = width - 1;
+            if (max.Y >= height) max.Y = height - 1;
+
+            //Control de tamaño minimo
+            if (max.X - min.X < 1f) return false;
+            if (max.Y - min.Y < 1f) return false;
+
+            //Cargar valores de box2D
+            box2D.Location = new Point((int)min.X, (int)min.Y);
+            box2D.Size = new Size((int)(max.X - min.X), (int)(max.Y - min.Y));
+            return true;
+        }
+
+        /// <summary>
+        /// Proyectar un poligono 3D a 2D en la pantalla
+        /// </summary>
+        /// <param name="vertices">Vertices del poligono</param>
+        /// <param name="box2D">Rectangulo 2D proyectado</param>
+        /// <returns>False si es un caso degenerado de proyeccion y no debe considerarse</returns>
+        public static bool projectPolygon(Vector3[] vertices, out Rectangle box2D)
+        {
+            //Datos de viewport
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Viewport viewport = d3dDevice.Viewport;
+            Matrix view = d3dDevice.Transform.View;
+            Matrix proj = d3dDevice.Transform.Projection;
+            int width = viewport.Width;
+            int height = viewport.Height;
+
+            box2D = new Rectangle();
+
+            //Proyectar todos los puntos, sin dividir aun por W
+            Matrix m = view * proj;
+            Vector3[] projVertices = new Vector3[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                Vector4 pOut = Vector3.Transform(vertices[i], m);
+                if (pOut.W < 0) return false;
+                projVertices[i] = MeshCreatorUtils.toScreenSpace(pOut, width, height);
+            }
+
+            //Buscar los puntos extremos
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(float.MinValue, float.MinValue);
+            float minDepth = float.MaxValue;
+            foreach (Vector3 v in projVertices)
+            {
+                if (v.X < min.X)
+                {
+                    min.X = v.X;
+                }
+                if (v.Y < min.Y)
+                {
+                    min.Y = v.Y;
+                }
+                if (v.X > max.X)
+                {
+                    max.X = v.X;
+                }
+                if (v.Y > max.Y)
+                {
+                    max.Y = v.Y;
+                }
+
+                if (v.Z < minDepth)
+                {
+                    minDepth = v.Z;
+                }
+            }
+
+
+            //Clamp
+            if (min.X < 0f) min.X = 0f;
+            if (min.Y < 0f) min.Y = 0f;
+            if (max.X >= width) max.X = width - 1;
+            if (max.Y >= height) max.Y = height - 1;
+
+            //Control de tamaño minimo
+            if (max.X - min.X < 1f) return false;
+            if (max.Y - min.Y < 1f) return false;
+
+            //Cargar valores de box2D
+            box2D.Location = new Point((int)min.X, (int)min.Y);
+            box2D.Size = new Size((int)(max.X - min.X), (int)(max.Y - min.Y));
+            return true;
+        }
 
         /// <summary>
         /// Calcular BoundingBox de todos los objetos seleccionados.
