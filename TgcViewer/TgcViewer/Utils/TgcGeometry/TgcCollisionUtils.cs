@@ -1879,7 +1879,6 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
         public static bool intersectSegmentCylinder(Vector3 segmentInit, Vector3 segmentEnd, TgcBoundingCylinder cylinder, out float t, out Vector3 q)
-        //(Vector3 segmentInit, Vector3 segmentEnd, Vector3 cylinderInit, Vector3 cylinderEnd, float radius, out float t, out Vector3 q)
         {
             Vector3 hh = cylinder.HalfHeight;
             Vector3 cylinderInit = cylinder.Center - hh;

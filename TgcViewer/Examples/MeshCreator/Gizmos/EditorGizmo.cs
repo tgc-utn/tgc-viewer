@@ -46,5 +46,10 @@ namespace Examples.MeshCreator.Gizmos
         /// </summary>
         public abstract void move(EditorPrimitive selectedPrimitive, Vector3 movement);
 
+        /// <summary>
+        /// Liberar recursos
+        /// </summary>
+        public abstract void dipose();
+
     }
 }

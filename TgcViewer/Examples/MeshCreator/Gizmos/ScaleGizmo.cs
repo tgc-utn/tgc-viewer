@@ -293,5 +293,12 @@ namespace Examples.MeshCreator.Gizmos
             moveGizmo(movement);
         }
 
+        public override void dipose()
+        {
+            boxX.dispose();
+            boxY.dispose();
+            boxZ.dispose();
+        }
+
     }
 }

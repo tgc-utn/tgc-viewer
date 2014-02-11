@@ -18,19 +18,17 @@ namespace Examples.MeshCreator
     /// </summary>
     public class SelectionRectangle
     {
-        static readonly int RECT_COLOR = Color.White.ToArgb();
-
 
         MeshCreatorControl control;
-        CustomVertex.TransformedColored[] vertices;
         Vector2 initMousePos;
         List<TgcBoundingBox> auxBoundingBoxList;
         bool selectiveObjectsAdditive;
+        SelectionRectangleMesh rectMesh;
 
         public SelectionRectangle(MeshCreatorControl control)
         {
             this.control = control;
-            vertices = new CustomVertex.TransformedColored[8];
+            this.rectMesh = new SelectionRectangleMesh();
             auxBoundingBoxList = new List<TgcBoundingBox>();
             this.selectiveObjectsAdditive = false;
         }
@@ -83,7 +81,7 @@ namespace Examples.MeshCreator
                 Vector2 min = Vector2.Minimize(initMousePos, mousePos);
                 Vector2 max = Vector2.Maximize(initMousePos, mousePos);
 
-                updateMesh(min, max);
+                rectMesh.updateMesh(min, max);
 
             }
             //Solo el mouse
@@ -153,7 +151,7 @@ namespace Examples.MeshCreator
 
 
             //Dibujar recuadro
-            renderMesh();
+            rectMesh.render();
         }
 
         /// <summary>
@@ -225,48 +223,10 @@ namespace Examples.MeshCreator
             control.updateModifyPanel();
         }
 
-        /// <summary>
-        /// Actualizar mesh del recuadro de seleccion
-        /// </summary>
-        private void updateMesh(Vector2 min, Vector2 max)
-        {
-            //Horizontal arriba
-            vertices[0] = new CustomVertex.TransformedColored(min.X, min.Y, 0, 1, RECT_COLOR);
-            vertices[1] = new CustomVertex.TransformedColored(max.X, min.Y, 0, 1, RECT_COLOR);
-
-            //Horizontal abajo
-            vertices[2] = new CustomVertex.TransformedColored(min.X, max.Y, 0, 1, RECT_COLOR);
-            vertices[3] = new CustomVertex.TransformedColored(max.X, max.Y, 0, 1, RECT_COLOR);
-
-            //Vertical izquierda
-            vertices[4] = new CustomVertex.TransformedColored(min.X, min.Y, 0, 1, RECT_COLOR);
-            vertices[5] = new CustomVertex.TransformedColored(min.X, max.Y, 0, 1, RECT_COLOR);
-
-            //Vertical derecha
-            vertices[6] = new CustomVertex.TransformedColored(max.X, min.Y, 0, 1, RECT_COLOR);
-            vertices[7] = new CustomVertex.TransformedColored(max.X, max.Y, 0, 1, RECT_COLOR);
-        }
-
-        /// <summary>
-        /// Dibujar recuadro
-        /// </summary>
-        private void renderMesh()
-        {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
-
-            texturesManager.clear(0);
-            texturesManager.clear(1);
-            d3dDevice.Material = TgcD3dDevice.DEFAULT_MATERIAL;
-            d3dDevice.Transform.World = Matrix.Identity;
-
-            d3dDevice.VertexFormat = CustomVertex.TransformedColored.Format;
-            d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, 4, vertices);
-        }
 
         public void dispose()
         {
-            vertices = null;
+            rectMesh.dipose();
             auxBoundingBoxList = null;
         }
 
