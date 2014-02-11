@@ -6,6 +6,7 @@ using Microsoft.DirectX;
 using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
 using Microsoft.DirectX.Direct3D;
+using Examples.MeshCreator.EditablePolyTools;
 
 namespace Examples.MeshCreator.Primitives
 {
@@ -18,6 +19,8 @@ namespace Examples.MeshCreator.Primitives
         Vector2 uvOffset;
         Vector2 uvTile;
         Vector2[] originalUVCoords;
+        EditablePoly editablePoly;
+        bool editablePolyEnabled;
 
         public MeshPrimitive(MeshCreatorControl control, TgcMesh mesh)
             : base(control)
@@ -25,6 +28,7 @@ namespace Examples.MeshCreator.Primitives
             //this.Name = mesh.Name + "_" + EditorPrimitive.PRIMITIVE_COUNT++;
             this.Name = mesh.Name;
             this.mesh = mesh;
+            this.editablePolyEnabled = false;
 
             //Ver si tiene texturas
             if(mesh.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP || mesh.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP)
@@ -119,9 +123,46 @@ namespace Examples.MeshCreator.Primitives
             }
         }
 
+
+        /// <summary>
+        /// Activar/Desactivar modo editablePoly
+        /// </summary>
+        public void enableEditablePoly(bool enabled, EditablePoly.PrimitiveType primitiveType)
+        {
+            if (enabled)
+            {
+                if (editablePoly == null)
+                {
+                    editablePoly = new EditablePoly(mesh);
+                }
+                else
+                {
+                    editablePoly.updateValuesFromMesh(mesh);
+                }
+                editablePoly.setPrimitiveType(primitiveType);
+            }
+            editablePolyEnabled = enabled;
+        }
+
+        /// <summary>
+        /// Actualizacion de estado en render loop del editablePoly
+        /// </summary>
+        public void doEditablePolyUpdate()
+        {
+            editablePoly.update();
+        }
+
+
         public override void render()
         {
-            mesh.render();
+            if (editablePolyEnabled)
+            {
+                editablePoly.render();
+            }
+            else
+            {
+                mesh.render();
+            }
         }
 
 
@@ -130,6 +171,11 @@ namespace Examples.MeshCreator.Primitives
             mesh.dispose();
             mesh = null;
             originalUVCoords = null;
+            if (editablePoly != null)
+            {
+                editablePoly.dispose();
+                editablePoly = null;
+            }
         }
 
         public override void setSelected(bool selected)

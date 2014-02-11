@@ -133,6 +133,7 @@
     <Compile Include="Matematica\EjemploTransformaciones.cs" />
     <Compile Include="Matematica\EjemploMatematicaVarios.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePoly.cs" />
+    <Compile Include="MeshCreator\Gizmos\TranslateGizmoMesh.cs" />
     <Compile Include="MeshCreator\InputMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -152,6 +153,7 @@
       <DependentUpon>ObjectBrowserSelectLayer.cs</DependentUpon>
     </Compile>
     <Compile Include="MeshCreator\Primitives\SpherePrimitive.cs" />
+    <Compile Include="MeshCreator\SelectionRectangleMesh.cs" />
     <Compile Include="Otros\EjemploDefault.cs" />
     <Compile Include="Fog\EfectoNiebla.cs" />
     <Compile Include="GeometryBasics\Caja.cs" />
