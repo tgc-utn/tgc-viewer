@@ -525,7 +525,7 @@ namespace Examples.MeshCreator
                     if (mesh.Visible)
                     {
                         mesh.render();
-                        if (ShowObjectsAABB || mesh.Selected)
+                        if ((ShowObjectsAABB || mesh.Selected) && !(currentState == State.EditablePoly))
                         {
                             mesh.BoundingBox.render();
                         }

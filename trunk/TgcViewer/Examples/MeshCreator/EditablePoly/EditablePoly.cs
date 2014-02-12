@@ -44,18 +44,59 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         TgcMesh mesh;
-        List<Vertex> vertices;
-        List<Edge> edges;
-        List<Polygon> polygons;
         short[] indexBuffer;
         bool dirtyValues;
-        PrimitiveType currentPrimitive;
         State currentState;
         bool selectiveObjectsAdditive;
         SelectionRectangleMesh rectMesh;
         Vector2 initMousePos;
-        List<Primitive> selectionList;
         TgcPickingRay pickingRay;
+        PrimitiveRenderer primitiveRenderer;
+
+        List<Primitive> selectionList;
+        /// <summary>
+        /// Primitivas seleccionadas
+        /// </summary>
+        public List<Primitive> SelectionList
+        {
+            get { return selectionList; }
+        }
+
+        List<Vertex> vertices;
+        /// <summary>
+        /// Vertices
+        /// </summary>
+        public List<Vertex> Vertices
+        {
+            get { return vertices; }
+        }
+
+        List<Edge> edges;
+        /// <summary>
+        /// Aristas
+        /// </summary>
+        public List<Edge> Edges
+        {
+            get { return edges; }
+        }
+
+        List<Polygon> polygons;
+        /// <summary>
+        /// Poligonos
+        /// </summary>
+        public List<Polygon> Polygons
+        {
+            get { return polygons; }
+        }
+
+        PrimitiveType currentPrimitive;
+        /// <summary>
+        /// Primitiva actual que se esta editando
+        /// </summary>
+        public PrimitiveType CurrentPrimitive
+        {
+            get { return currentPrimitive; }
+        }
 
         /// <summary>
         /// Construir un EditablePoly a partir de un mesh
@@ -66,14 +107,17 @@ namespace Examples.MeshCreator.EditablePolyTools
             this.rectMesh = new SelectionRectangleMesh();
             this.selectionList = new List<Primitive>();
             this.pickingRay = new TgcPickingRay();
+            this.primitiveRenderer = new PrimitiveRenderer(this);
             loadMesh(origMesh);
         }
 
+        /// <summary>
+        /// Cargar tipo de primitiva actual a editar
+        /// </summary>
         public void setPrimitiveType(PrimitiveType p)
         {
-            //TODO deseleccionar si habia algo antes
-
             this.currentPrimitive = p;
+            clearSelection();
         }
 
         /// <summary>
@@ -168,7 +212,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                     {
                         //Ver si hay colision contra la proyeccion de la primitiva y el rectangulo 2D
                         Rectangle primRect;
-                        if (p.projectToScreen(out primRect))
+                        if (p.projectToScreen(mesh.Transform, out primRect))
                         {
                             if (r.IntersectsWith(primRect))
                             {
@@ -218,6 +262,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         private void selectPrimitive(Primitive p)
         {
+            p.Selected = true;
             selectionList.Add(p);
         }
 
@@ -230,11 +275,13 @@ namespace Examples.MeshCreator.EditablePolyTools
             //Ya existe, quitar
             if (selectionList.Contains(p))
             {
+                p.Selected = false;
                 selectionList.Remove(p);
             }
             //No existe, agregar
             else
             {
+                p.Selected = true;
                 selectionList.Add(p);
             }
         }
@@ -244,6 +291,10 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         private void clearSelection()
         {
+            foreach (Primitive p in selectionList)
+            {
+                p.Selected = false;
+            }
             selectionList.Clear();
         }
 
@@ -263,7 +314,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             Primitive p = iteratePrimitive(currentPrimitive, i);
             while (p != null)
             {
-                if (p.intersectRay(pickingRay.Ray, out q))
+                if (p.intersectRay(pickingRay.Ray, mesh.Transform, out q))
                 {
                     float lengthSq = Vector3.Subtract(pickingRay.Ray.Origin, q).LengthSq();
                     if (lengthSq < minDistSq)
@@ -307,6 +358,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         #endregion
 
 
+        #region Translate Gizmo
 
         private void activateTranslateGizmo()
         {
@@ -317,6 +369,10 @@ namespace Examples.MeshCreator.EditablePolyTools
         {
             //TODO gizmo translate
         }
+
+        #endregion
+
+
 
         public void render()
         {
@@ -330,15 +386,13 @@ namespace Examples.MeshCreator.EditablePolyTools
             //Render de mesh
             mesh.render();
 
-            //Render de primitivas seleccionadas
-            foreach (Primitive p in selectionList)
-            {
-                p.render(true, mesh.Transform);
-            }
+            //Render de primitivas
+            primitiveRenderer.render(mesh.Transform);
         }
 
         public void dispose()
         {
+            primitiveRenderer.dispose();
         }
 
         
@@ -768,8 +822,23 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Primitiva generica
         /// </summary>
-        private abstract class Primitive
+        public abstract class Primitive
         {
+            protected bool selected;
+            /// <summary>
+            /// Indica si la primitiva esta seleccionada
+            /// </summary>
+            public bool Selected
+            {
+                get { return selected; }
+                set { selected = value; }
+            }
+
+            public Primitive()
+            {
+                selected = false;
+            }
+
             /// <summary>
             /// Tipo de primitiva
             /// </summary>
@@ -778,30 +847,26 @@ namespace Examples.MeshCreator.EditablePolyTools
             /// <summary>
             /// Proyectar primitva a rectangulo 2D en la pantalla
             /// </summary>
+            /// <param name="transform">Mesh transform</param>
             /// <param name="box2D">Rectangulo 2D proyectado</param>
             /// <returns>False si es un caso degenerado de proyeccion y no debe considerarse</returns>
-            public abstract bool projectToScreen(out Rectangle box2D);
+            public abstract bool projectToScreen(Matrix transform, out Rectangle box2D);
 
             /// <summary>
             /// Intersect ray againts primitive
             /// </summary>
-            public abstract bool intersectRay(TgcRay tgcRay, out Vector3 q);
-
-            /// <summary>
-            /// Dibujar primitiva
-            /// </summary>
-            public abstract void render(bool selected, Matrix meshTransform);
+            public abstract bool intersectRay(TgcRay tgcRay, Matrix transform, out Vector3 q);
         }
 
         /// <summary>
         /// Estructura auxiliar de vertice
         /// </summary>
-        private class Vertex : Primitive
+        public class Vertex : Primitive
         {
             /// <summary>
             /// Sphere for ray-collisions
             /// </summary>
-            private static readonly TgcBoundingSphere COMMON_SPHERE = new TgcBoundingSphere(new Vector3(0, 0, 0), 2);
+            private static readonly TgcBoundingSphere COLLISION_SPHERE = new TgcBoundingSphere(new Vector3(0, 0, 0), 2);
 
             public Vector3 position;
             /*public Vector3 normal;
@@ -821,29 +886,24 @@ namespace Examples.MeshCreator.EditablePolyTools
                 get { return PrimitiveType.Vertex; }
             }
 
-            public override bool projectToScreen(out Rectangle box2D)
+            public override bool projectToScreen(Matrix transform, out Rectangle box2D)
             {
-                return MeshCreatorUtils.projectPoint(position, out box2D);
+                return MeshCreatorUtils.projectPoint(Vector3.TransformCoordinate(position, transform), out box2D);
             }
 
-            public override bool intersectRay(TgcRay ray, out Vector3 q)
+            public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
             {
-                COMMON_SPHERE.setCenter(this.position);
+                COLLISION_SPHERE.setCenter(Vector3.TransformCoordinate(position, transform));
                 float t;
-                return TgcCollisionUtils.intersectRaySphere(ray, COMMON_SPHERE, out t, out q);
+                return TgcCollisionUtils.intersectRaySphere(ray, COLLISION_SPHERE, out t, out q);
             }
 
-            public override void render(bool selected, Matrix meshTransform)
-            {
-                COMMON_SPHERE.setCenter(Vector3.TransformCoordinate(this.position, meshTransform));
-                COMMON_SPHERE.render();
-            }
         }
 
         /// <summary>
         /// Estructura auxiliar de arista
         /// </summary>
-        private class Edge : Primitive
+        public class Edge : Primitive
         {
             public Vertex a;
             public Vertex b;
@@ -859,27 +919,26 @@ namespace Examples.MeshCreator.EditablePolyTools
                 get { return PrimitiveType.Edge; }
             }
 
-            public override bool projectToScreen(out Rectangle box2D)
+            public override bool projectToScreen(Matrix transform, out Rectangle box2D)
             {
-                return MeshCreatorUtils.projectSegmentToScreenRect(a.position, b.position, out box2D);
+                return MeshCreatorUtils.projectSegmentToScreenRect(
+                    Vector3.TransformCoordinate(a.position, transform),
+                    Vector3.TransformCoordinate(b.position, transform), out box2D);
             }
 
-            public override bool intersectRay(TgcRay ray, out Vector3 q)
+            public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
             {
                 //TODO: hacer ray-obb (hacer un obb previamente para el edge)
-                throw new NotImplementedException();
+                q = Vector3.Empty;
+                return false;
             }
 
-            public override void render(bool selected, Matrix meshTransform)
-            {
-                //TODO: dibujar linea
-            }
         }
 
         /// <summary>
         /// Estructura auxiliar de poligono
         /// </summary>
-        private class Polygon : Primitive
+        public class Polygon : Primitive
         {
             public List<Vertex> vertices;
             public List<Edge> edges;
@@ -903,26 +962,23 @@ namespace Examples.MeshCreator.EditablePolyTools
                 get { return PrimitiveType.Polygon; }
             }
 
-            public override bool projectToScreen(out Rectangle box2D)
+            public override bool projectToScreen(Matrix transform, out Rectangle box2D)
             {
                 Vector3[] v = new Vector3[vertices.Count];
                 for (int i = 0; i < v.Length; i++)
 			    {
-                    v[i] = vertices[i].position;
+                    v[i] = Vector3.TransformCoordinate(vertices[i].position, transform);
 			    }
                 return MeshCreatorUtils.projectPolygon(v, out box2D);
             }
 
-            public override bool intersectRay(TgcRay ray, out Vector3 q)
+            public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
             {
                 //TODO: implementar colision ray-polygon (primero ray-plane y luego point-polygon)
-                throw new NotImplementedException();
+                q = Vector3.Empty;
+                return false;
             }
 
-            public override void render(bool selected, Matrix meshTransform)
-            {
-                //TODO: dibujar poligono
-            }
         }
 
         /// <summary>
