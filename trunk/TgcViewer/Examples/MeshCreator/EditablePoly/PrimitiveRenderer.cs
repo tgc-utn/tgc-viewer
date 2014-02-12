@@ -5,6 +5,7 @@ using System.Text;
 using TgcViewer.Utils.TgcGeometry;
 using Microsoft.DirectX;
 using System.Drawing;
+using Microsoft.DirectX.Direct3D;
 
 namespace Examples.MeshCreator.EditablePolyTools
 {
@@ -17,31 +18,15 @@ namespace Examples.MeshCreator.EditablePolyTools
         EditablePoly editablePoly;
         TgcBox vertexBox;
         TgcBox selectedVertexBox;
-        TgcBoxLine edgeBoxLine;
-        TgcBoxLine selectedEdgeBoxLine;
-        TgcBoxLine polygonBoxLine;
-        TgcBoxLine selectedPolygonBoxLine;
+        TrianglesBatchRenderer batchRenderer;
 
         public PrimitiveRenderer(EditablePoly editablePoly)
         {
             this.editablePoly = editablePoly;
+            this.batchRenderer = new TrianglesBatchRenderer();
 
             this.vertexBox = TgcBox.fromSize(new Vector3(1, 1, 1), Color.Blue);
             this.selectedVertexBox = TgcBox.fromSize(new Vector3(1, 1, 1), Color.Red);
-
-            this.edgeBoxLine = new TgcBoxLine();
-            this.edgeBoxLine.Color = Color.Blue;
-            this.edgeBoxLine.Thickness = 0.06f;
-            this.selectedEdgeBoxLine = new TgcBoxLine();
-            this.selectedEdgeBoxLine.Color = Color.Red;
-            this.selectedEdgeBoxLine.Thickness = 0.06f;
-
-            this.polygonBoxLine = new TgcBoxLine();
-            this.polygonBoxLine.Color = Color.Blue;
-            this.polygonBoxLine.Thickness = 0.06f;
-            this.selectedPolygonBoxLine = new TgcBoxLine();
-            this.selectedPolygonBoxLine.Color = Color.Red;
-            this.selectedPolygonBoxLine.Thickness = 0.06f;
         }
 
         /// <summary>
@@ -90,20 +75,39 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         private void renderPolygons(Matrix transform)
         {
+            /*
             foreach (EditablePoly.Polygon p in editablePoly.Polygons)
             {
                 Vector3 v0 = Vector3.TransformCoordinate(p.vertices[0].position, transform);
                 for (int i = 1; i < p.vertices.Count; i++)
                 {
                     Vector3 v1 = Vector3.TransformCoordinate(p.vertices[i].position, transform);
-                    TgcBoxLine l = p.Selected ? selectedPolygonBoxLine : polygonBoxLine;
-                    l.PStart = v0;
-                    l.PEnd = v1;
-                    l.updateValues();
-                    l.render();
+                    batchRenderer.addBoxLine(v0, v1, 0.06f, p.Selected ? Color.Red : Color.Blue);
                     v0 = v1;
                 }
             }
+            //Vaciar todo lo que haya
+            batchRenderer.render();
+             */
+
+            foreach (EditablePoly.Polygon p in editablePoly.Polygons)
+            {
+                if(p.Selected)
+                {
+                    Vector3 v0 = Vector3.TransformCoordinate(p.vertices[0].position, transform);
+                    Vector3 v1 = Vector3.TransformCoordinate(p.vertices[1].position, transform);
+                    for (int i = 2; i < p.vertices.Count; i++)
+                    {
+                        batchRenderer.checkAndFlush(3);
+                        Vector3 v2 = Vector3.TransformCoordinate(p.vertices[i].position, transform);
+                        batchRenderer.addTriangle(v0, v1, v2, Color.Red);
+                        v0 = v1;
+                        v1 = v2;
+                    }
+                }
+            }
+            //Vaciar todo lo que haya
+            batchRenderer.render();
         }
 
         /// <summary>
@@ -115,22 +119,17 @@ namespace Examples.MeshCreator.EditablePolyTools
             {
                 Vector3 a = Vector3.TransformCoordinate(e.a.position, transform);
                 Vector3 b = Vector3.TransformCoordinate(e.b.position, transform);
-                TgcBoxLine l = e.Selected ? selectedEdgeBoxLine : edgeBoxLine;
-                l.PStart = a;
-                l.PEnd = b;
-                l.updateValues();
-                l.render();
+                batchRenderer.addBoxLine(a, b, 0.06f, e.Selected ? Color.Red : Color.Blue);
             }
+            //Vaciar todo lo que haya
+            batchRenderer.render();
         }
 
         public void dispose()
         {
             vertexBox.dispose();
             selectedVertexBox.dispose();
-            edgeBoxLine.dispose();
-            selectedEdgeBoxLine.dispose();
-            polygonBoxLine.dispose();
-            selectedPolygonBoxLine.dispose();
+            batchRenderer.dispose();
         }
         
 
