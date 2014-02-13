@@ -14,7 +14,8 @@ namespace Examples.MeshCreator.EditablePolyTools
     /// </summary>
     public class PrimitiveRenderer
     {
-        
+        readonly Color SELECTED_POLYGON_COLOR = Color.FromArgb(120, 255, 0, 0);
+
         EditablePoly editablePoly;
         TgcBox vertexBox;
         TgcBox selectedVertexBox;
@@ -57,16 +58,9 @@ namespace Examples.MeshCreator.EditablePolyTools
             foreach (EditablePoly.Vertex v in editablePoly.Vertices)
             {
                 Vector3 pos = Vector3.TransformCoordinate(v.position, transform);
-                if (v.Selected)
-                {
-                    selectedVertexBox.Position = pos;
-                    selectedVertexBox.render();
-                }
-                else
-                {
-                    vertexBox.Position = pos;
-                    vertexBox.render();
-                }
+                TgcBox box = v.Selected ? selectedVertexBox : vertexBox;
+                box.Position = pos /*+ new Vector3(0.5f, 0.5f, 0.5f)*/;
+                box.render();
             }
         }
 
@@ -75,33 +69,34 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         private void renderPolygons(Matrix transform)
         {
-            /*
+            batchRenderer.reset();
+            
+            //Polygon edges
             foreach (EditablePoly.Polygon p in editablePoly.Polygons)
             {
                 Vector3 v0 = Vector3.TransformCoordinate(p.vertices[0].position, transform);
                 for (int i = 1; i < p.vertices.Count; i++)
                 {
                     Vector3 v1 = Vector3.TransformCoordinate(p.vertices[i].position, transform);
-                    batchRenderer.addBoxLine(v0, v1, 0.06f, p.Selected ? Color.Red : Color.Blue);
+                    batchRenderer.addBoxLine(v0, v1, 0.06f, Color.Blue);
                     v0 = v1;
                 }
             }
-            //Vaciar todo lo que haya
-            batchRenderer.render();
-             */
 
+            //Selected polygons (as polygon meshes)
             foreach (EditablePoly.Polygon p in editablePoly.Polygons)
             {
                 if(p.Selected)
                 {
+                    Vector3 n = new Vector3(p.plane.A, p.plane.B, p.plane.C) * 0.1f;
                     Vector3 v0 = Vector3.TransformCoordinate(p.vertices[0].position, transform);
                     Vector3 v1 = Vector3.TransformCoordinate(p.vertices[1].position, transform);
                     for (int i = 2; i < p.vertices.Count; i++)
                     {
-                        batchRenderer.checkAndFlush(3);
+                        batchRenderer.checkAndFlush(6);
                         Vector3 v2 = Vector3.TransformCoordinate(p.vertices[i].position, transform);
-                        batchRenderer.addTriangle(v0, v1, v2, Color.Red);
-                        v0 = v1;
+                        batchRenderer.addTriangle(v0 + n, v1 + n, v2 + n, SELECTED_POLYGON_COLOR);
+                        batchRenderer.addTriangle(v0 - n, v1 - n, v2 - n, SELECTED_POLYGON_COLOR);
                         v1 = v2;
                     }
                 }
@@ -115,6 +110,8 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         private void renderEdges(Matrix transform)
         {
+            batchRenderer.reset();
+
             foreach (EditablePoly.Edge e in editablePoly.Edges)
             {
                 Vector3 a = Vector3.TransformCoordinate(e.a.position, transform);
