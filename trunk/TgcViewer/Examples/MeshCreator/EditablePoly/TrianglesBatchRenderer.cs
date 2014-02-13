@@ -85,12 +85,20 @@ namespace Examples.MeshCreator.EditablePolyTools
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = TgcShaders.T_POSITION_COLORED;
 
+            //Alpha blend on
+            d3dDevice.RenderState.AlphaTestEnable = true;
+            d3dDevice.RenderState.AlphaBlendEnable = true;
+
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
             d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, idx / 3, vertices);
             effect.EndPass();
             effect.End();
+
+            //Alpha blend off
+            d3dDevice.RenderState.AlphaTestEnable = false;
+            d3dDevice.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>
