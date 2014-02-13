@@ -18,11 +18,6 @@ namespace Examples.MeshCreator.EditablePolyTools
     public class EditablePoly
     {
         /// <summary>
-        /// Epsilon para comparar si dos vertices son iguales
-        /// </summary>
-        private const float EPSILON = 0.0001f;
-
-        /// <summary>
         /// Estado dentro del modo EditablePoly
         /// </summary>
         public enum State
@@ -427,9 +422,9 @@ namespace Examples.MeshCreator.EditablePolyTools
                 Vertex v3 = origVertices[i * 3 + 2];
 
                 //Agregar vertices a la lista, si es que son nuevos
-                int v1Idx = addVertexToListIfUnique(v1);
-                int v2Idx = addVertexToListIfUnique(v2);
-                int v3Idx = addVertexToListIfUnique(v3);
+                int v1Idx = EditablePolyUtils.addVertexToListIfUnique(vertices, v1);
+                int v2Idx = EditablePolyUtils.addVertexToListIfUnique(vertices, v2);
+                int v3Idx = EditablePolyUtils.addVertexToListIfUnique(vertices, v3);
                 v1 = vertices[v1Idx];
                 v2 = vertices[v2Idx];
                 v3 = vertices[v3Idx];
@@ -438,19 +433,20 @@ namespace Examples.MeshCreator.EditablePolyTools
 
                 //Crear edges (vertices ordenados segun indice ascendente)
                 Edge e1 = new Edge();
-                e1.a = vertices[FastMath.Min(v1Idx, v2Idx)];
-                e1.b = vertices[FastMath.Max(v1Idx, v2Idx)];
+                e1.a = v1;
+                e1.b = v2;
                 Edge e2 = new Edge();
-                e2.a = vertices[FastMath.Min(v2Idx, v3Idx)];
-                e2.b = vertices[FastMath.Max(v2Idx, v3Idx)];
+                e2.a = v2;
+                e2.b = v3;
                 Edge e3 = new Edge();
-                e3.a = vertices[FastMath.Min(v3Idx, v1Idx)];
-                e3.b = vertices[FastMath.Max(v3Idx, v1Idx)];
+                e3.a = v3;
+                e3.b = v1;
 
+                /*
                 //Agregar edges a la lista, si es que son nuevos
-                int e1Idx = addEdgeToListIfUnique(e1);
-                int e2Idx = addEdgeToListIfUnique(e2);
-                int e3Idx = addEdgeToListIfUnique(e3);
+                int e1Idx = EditablePolyUtils.addEdgeToListIfUnique(edges, e1);
+                int e2Idx = EditablePolyUtils.addEdgeToListIfUnique(edges, e2);
+                int e3Idx = EditablePolyUtils.addEdgeToListIfUnique(edges, e3);
                 e1 = edges[e1Idx];
                 e2 = edges[e2Idx];
                 e3 = edges[e3Idx];
@@ -462,6 +458,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 v2.edges.Add(e2);
                 v3.edges.Add(e2);
                 v3.edges.Add(e3);
+                */
 
                 //Crear poligono para este triangulo
                 Polygon p = new Polygon();
@@ -490,15 +487,15 @@ namespace Examples.MeshCreator.EditablePolyTools
                 {
                     //Coplanares y con igual material ID
                     Polygon p0 = polygons[j];
-                    if (p0.matId == p.matId && samePlane(p0.plane, p.plane))
+                    if (p0.matId == p.matId && EditablePolyUtils.samePlane(p0.plane, p.plane))
                     {
                         //Buscar si tienen una arista igual
                         int p0SharedEdgeIdx;
                         int pSharedEdgeIdx;
-                        if (findShareEdgeBetweenPolygons(p0, p, out p0SharedEdgeIdx, out pSharedEdgeIdx))
+                        if (EditablePolyUtils.findShareEdgeBetweenPolygons(p0, p, out p0SharedEdgeIdx, out pSharedEdgeIdx))
                         {
                             //Obtener el tercer vertice del triangulo que no es parte de la arista compartida
-                            Edge sharedEdge = p.edges[pSharedEdgeIdx];
+                            Edge sharedEdge = p0.edges[p0SharedEdgeIdx];
                             Vertex thirdVert;
                             if (p.vertices[0] != sharedEdge.a && p.vertices[0] != sharedEdge.b)
                                 thirdVert = p.vertices[0];
@@ -507,39 +504,26 @@ namespace Examples.MeshCreator.EditablePolyTools
                             else
                                 thirdVert = p.vertices[2];
 
-                            //Quitar arista compartida de poligono existente
-                            p0.edges.RemoveAt(p0SharedEdgeIdx);
-
                             //Agregar el tercer vertice a poligno existente
                             p0.vertices.Add(thirdVert);
 
-                            //Eliminar arista compartida de la lista global
-                            for (int k = 0; k < edges.Count; k++)
-                            {
-                                if (sameEdge(edges[k], sharedEdge))
-                                {
-                                    edges.RemoveAt(k);
-                                    break;
-                                }
-                            }
-
                             //Agregar al poligono dos nuevas aristas que conectar los extremos de la arista compartida hacia el tercer vertice
                             Edge newPolEdge1 = new Edge();
-                            newPolEdge1.a = vertices[FastMath.Min(sharedEdge.a.vbIndex, thirdVert.vbIndex)];
-                            newPolEdge1.b = vertices[FastMath.Max(sharedEdge.a.vbIndex, thirdVert.vbIndex)];
-                            newPolEdge1.faces = new List<Polygon>();
-                            newPolEdge1.faces.Add(p0);
-                            sharedEdge.a.edges.Add(newPolEdge1);
-                            sharedEdge.b.edges.Add(newPolEdge1);
+                            newPolEdge1.a = sharedEdge.a;
+                            newPolEdge1.b = thirdVert;
+                            //newPolEdge1.faces = new List<Polygon>();
+                            //newPolEdge1.faces.Add(p0);
+                            //sharedEdge.a.edges.Add(newPolEdge1);
+                            //sharedEdge.b.edges.Add(newPolEdge1);
                             p0.edges.Add(newPolEdge1);
 
                             Edge newPolEdge2 = new Edge();
-                            newPolEdge2.a = vertices[FastMath.Min(sharedEdge.b.vbIndex, thirdVert.vbIndex)];
-                            newPolEdge2.b = vertices[FastMath.Max(sharedEdge.b.vbIndex, thirdVert.vbIndex)];
-                            newPolEdge2.faces = new List<Polygon>();
-                            newPolEdge2.faces.Add(p0);
-                            sharedEdge.a.edges.Add(newPolEdge2);
-                            sharedEdge.b.edges.Add(newPolEdge2);
+                            newPolEdge2.a = thirdVert;
+                            newPolEdge2.b = sharedEdge.b;
+                            //newPolEdge2.faces = new List<Polygon>();
+                            //newPolEdge2.faces.Add(p0);
+                            //sharedEdge.a.edges.Add(newPolEdge2);
+                            //sharedEdge.b.edges.Add(newPolEdge2);
                             p0.edges.Add(newPolEdge2);
 
                             //Agregar indice de triangulo del vertexBuffer que se sumo al poligono
@@ -556,114 +540,46 @@ namespace Examples.MeshCreator.EditablePolyTools
                 }
             }
 
-            dirtyValues = true;
-        }
-
-
-        /// <summary>
-        /// Busca si ambos poligonos tienen una arista igual.
-        /// Si encontro retorna el indice de la arista igual de cada poligono.
-        /// </summary>
-        private bool findShareEdgeBetweenPolygons(Polygon p1, Polygon p2, out int p1Edge, out int p2Edge)
-        {
-            for (int i = 0; i < p1.edges.Count; i++)
+            //Eliminar aristas interiores de los poligonos
+            foreach (Polygon p in polygons)
             {
-                for (int j = 0; j < p2.edges.Count; j++)
+                EditablePolyUtils.computePolygonExternalEdges(p);
+                EditablePolyUtils.sortPolygonVertices(p);
+            }
+
+
+            //Unificar aristas de los poligonos
+            foreach (Polygon p in polygons)
+            {
+                for (int i = 0; i < p.edges.Count; i++)
                 {
-                    if (sameEdge(p1.edges[i], p2.edges[j]))
+                    int eIdx = EditablePolyUtils.addEdgeToListIfUnique(edges, p.edges[i]);
+                    Edge e = edges[eIdx];
+                    
+                    //Nueva arista incorporada a la lista
+                    if(eIdx == edges.Count - 1)
                     {
-                        p1Edge = i;
-                        p2Edge = j;
-                        return true;
+                        e.faces = new List<Polygon>();
+
+                        //Agregar referencia a vertices que usan la arista
+                        e.a.edges.Add(e);
+                        e.b.edges.Add(e);
                     }
+                    //Se usa arista existente de la lista
+                    else
+                    {
+                        //Reemplazar en poligono por la nueva
+                        p.edges[i] = e;
+                    }
+
+                    //Indicar a la arista que pertenece al poligono actual
+                    e.faces.Add(p);
                 }
             }
-            p1Edge = -1;
-            p2Edge = -1;
-            return false;
-        }
-
-        /// <summary>
-        /// Agrega una nueva arista a la lista si es que ya no hay otra igual.
-        /// Devuelve el indice de la nuevo arista o de la que ya estaba.
-        /// </summary>
-        private int addEdgeToListIfUnique(Edge e)
-        {
-            for (int i = 0; i < edges.Count; i++)
-            {
-                if (sameEdge(edges[i], e))
-                {
-                    return i;
-                }
-            }
-            e.faces = new List<Polygon>();
-            edges.Add(e);
-            return edges.Count - 1;
-        }
 
 
-        /// <summary>
-        /// Agrega un nuevo vertice a la lista si es que ya no hay otro igual.
-        /// Devuelve el indice del nuevo vertice o del que ya estaba.
-        /// </summary>
-        private int addVertexToListIfUnique(Vertex v)
-        {
-            for (int i = 0; i < vertices.Count; i++)
-            {
-                if (sameVextex(vertices[i], v))
-                {
-                    return i;
-                }
-            }
-            v.vbIndex = vertices.Count;
-            v.edges = new List<Edge>();
-            vertices.Add(v);
-            return v.vbIndex;
-        }
 
-        /// <summary>
-        /// Indica si dos aristas son iguales
-        /// </summary>
-        private bool sameEdge(Edge e1, Edge e2)
-        {
-            return sameVextex(e1.a, e2.a) && sameVextex(e1.b, e2.b);
-        }
-
-        /// <summary>
-        /// Indica si dos vertices son iguales
-        /// </summary>
-        /// <returns></returns>
-        private bool sameVextex(Vertex a, Vertex b)
-        {
-            return equalsVector3(a.position, b.position);
-        }
-
-        /// <summary>
-        /// Indica si dos Vector3 son iguales
-        /// </summary>
-        private bool equalsVector3(Vector3 a, Vector3 b)
-        {
-            return equalsFloat(a.X, b.X)
-                && equalsFloat(a.Y, b.Y)
-                && equalsFloat(a.Z, b.Z);
-        }
-
-        /// <summary>
-        /// Compara que dos floats sean iguales, o casi
-        /// </summary>
-        private bool equalsFloat(float f1, float f2)
-        {
-            return FastMath.Abs(f1 - f2) <= EPSILON;
-        }
-
-        /// <summary>
-        /// Compara si dos planos son iguales
-        /// </summary>
-        private bool samePlane(Plane p1, Plane p2)
-        {
-            //TODO: comparar en ambos sentidos por las dudas
-            return equalsVector3(new Vector3(p1.A, p1.B, p1.C), new Vector3(p2.A, p2.B, p2.C))
-                && equalsFloat(p1.D, p2.D);
+            dirtyValues = true;
         }
 
         /// <summary>
@@ -977,6 +893,14 @@ namespace Examples.MeshCreator.EditablePolyTools
                 //TODO: implementar colision ray-polygon (primero ray-plane y luego point-polygon)
                 q = Vector3.Empty;
                 return false;
+            }
+
+            /// <summary>
+            /// Normal del plano del poligono
+            /// </summary>
+            public Vector3 getNormal()
+            {
+                return new Vector3(plane.A, plane.B, plane.C);
             }
 
         }

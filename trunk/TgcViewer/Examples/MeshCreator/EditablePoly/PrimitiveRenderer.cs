@@ -74,12 +74,12 @@ namespace Examples.MeshCreator.EditablePolyTools
             //Polygon edges
             foreach (EditablePoly.Polygon p in editablePoly.Polygons)
             {
-                Vector3 v0 = Vector3.TransformCoordinate(p.vertices[0].position, transform);
-                for (int i = 1; i < p.vertices.Count; i++)
+                foreach (EditablePoly.Edge e in p.edges)
                 {
-                    Vector3 v1 = Vector3.TransformCoordinate(p.vertices[i].position, transform);
-                    batchRenderer.addBoxLine(v0, v1, 0.06f, Color.Blue);
-                    v0 = v1;
+                    batchRenderer.addBoxLine(
+                        Vector3.TransformCoordinate(e.a.position, transform), 
+                        Vector3.TransformCoordinate(e.b.position, transform), 
+                        0.06f, Color.Blue);
                 }
             }
 
