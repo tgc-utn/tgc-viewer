@@ -133,6 +133,7 @@
     <Compile Include="Matematica\EjemploTransformaciones.cs" />
     <Compile Include="Matematica\EjemploMatematicaVarios.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePoly.cs" />
+    <Compile Include="MeshCreator\EditablePoly\EditablePolyUtils.cs" />
     <Compile Include="MeshCreator\EditablePoly\PrimitiveRenderer.cs" />
     <Compile Include="MeshCreator\EditablePoly\TrianglesBatchRenderer.cs" />
     <Compile Include="MeshCreator\Gizmos\TranslateGizmoMesh.cs" />
