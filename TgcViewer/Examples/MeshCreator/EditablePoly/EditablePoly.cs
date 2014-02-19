@@ -429,9 +429,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 v2 = vertices[v2Idx];
                 v3 = vertices[v3Idx];
 
-                //TODO: agregar vertices al vertexBuffer
-
-                //Crear edges (vertices ordenados segun indice ascendente)
+                //Crear edges
                 Edge e1 = new Edge();
                 e1.a = v1;
                 e1.b = v2;
@@ -504,8 +502,12 @@ namespace Examples.MeshCreator.EditablePolyTools
                             else
                                 thirdVert = p.vertices[2];
 
-                            //Agregar el tercer vertice a poligno existente
-                            p0.vertices.Add(thirdVert);
+                            //Agregar el tercer vertice al poligno existente
+                            //p0.vertices.Add(thirdVert);
+                            EditablePolyUtils.addVertexToPolygon(p0, sharedEdge, thirdVert);
+
+                            //Quitar arista compartida
+                            p0.edges.Remove(sharedEdge);
 
                             //Agregar al poligono dos nuevas aristas que conectar los extremos de la arista compartida hacia el tercer vertice
                             Edge newPolEdge1 = new Edge();
@@ -540,12 +542,14 @@ namespace Examples.MeshCreator.EditablePolyTools
                 }
             }
 
+            /*
             //Eliminar aristas interiores de los poligonos
             foreach (Polygon p in polygons)
             {
                 EditablePolyUtils.computePolygonExternalEdges(p);
                 EditablePolyUtils.sortPolygonVertices(p);
             }
+            */
 
 
             //Unificar aristas de los poligonos
@@ -890,9 +894,13 @@ namespace Examples.MeshCreator.EditablePolyTools
 
             public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
             {
-                //TODO: implementar colision ray-polygon (primero ray-plane y luego point-polygon)
-                q = Vector3.Empty;
-                return false;
+                Vector3[] v = new Vector3[vertices.Count];
+                for (int i = 0; i < v.Length; i++)
+                {
+                    v[i] = Vector3.TransformCoordinate(vertices[i].position, transform);
+                }
+                float t;
+                return TgcCollisionUtils.intersectRayConvexPolygon(ray, v, plane, out t, out q);
             }
 
             /// <summary>

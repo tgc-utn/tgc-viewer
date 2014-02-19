@@ -72,6 +72,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             batchRenderer.reset();
             
             //Polygon edges
+            /*
             foreach (EditablePoly.Polygon p in editablePoly.Polygons)
             {
                 foreach (EditablePoly.Edge e in p.edges)
@@ -81,6 +82,12 @@ namespace Examples.MeshCreator.EditablePolyTools
                         Vector3.TransformCoordinate(e.b.position, transform), 
                         0.06f, Color.Blue);
                 }
+            } */
+            foreach (EditablePoly.Edge e in editablePoly.Edges)
+            {
+                Vector3 a = Vector3.TransformCoordinate(e.a.position, transform);
+                Vector3 b = Vector3.TransformCoordinate(e.b.position, transform);
+                batchRenderer.addBoxLine(a, b, 0.06f, e.Selected ? Color.Red : Color.Blue);
             }
 
             //Selected polygons (as polygon meshes)
