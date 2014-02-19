@@ -1653,7 +1653,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 Vector3 b = polyVertices[i];
                 Vector3 ab = b - a;
                 Vector3 n = Vector3.Cross(ab, polyNormal);
-                Plane halfPlane = Plane.FromPointNormal(n, a);
+                Plane halfPlane = Plane.FromPointNormal(a, n);
                 PointPlaneResult r = classifyPointPlane(q, halfPlane);
                 if (first)
                 {

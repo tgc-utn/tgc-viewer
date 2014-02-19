@@ -215,6 +215,7 @@
       <DependentUpon>EjemploDefaultHelpForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Otros\EjemploDisposeMesh.cs" />
+    <Compile Include="Otros\TestPointInPolygon.cs" />
     <Compile Include="Otros\EjemploPanView.cs" />
     <Compile Include="Particles\EmisorDeParticulas.cs" />
     <Compile Include="PortalRendering\PortalRenderingFramework.cs" />
