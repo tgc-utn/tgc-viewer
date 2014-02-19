@@ -15,7 +15,7 @@ namespace Examples.Otros
     /// <summary>
     /// Pan view
     /// </summary>
-    public class EjemploEnBlanco : TgcExample
+    public class EjemploPanView : TgcExample
     {
 
         TgcBox box;
