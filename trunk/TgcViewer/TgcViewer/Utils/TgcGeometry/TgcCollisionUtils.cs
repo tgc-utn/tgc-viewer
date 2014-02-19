@@ -1635,6 +1635,60 @@ namespace TgcViewer.Utils.TgcGeometry
             return false;
         }
 
+        /// <summary>
+        /// Indica si un punto en el espacio se encuentra dentro de un poligono convexo.
+        /// El punto debe pertenecer al plano del poligono previamente (este metodo asume que eso ya se testeo antes. Usar classifyPointPlane()).
+        /// </summary>
+        /// <param name="polyVertices">Lista de vertices del poligono</param>
+        /// <param name="polyNormal">Normal del poligono</param>
+        /// <param name="q">Punto a testear</param>
+        /// <returns>True si el punto se encuentra dentro del poligono</returns>
+        public static bool testPointInConvexPolygon(Vector3[] polyVertices, Vector3 polyNormal, Vector3 q)
+        {
+            Vector3 a = polyVertices[polyVertices.Length - 1];
+            PointPlaneResult lastR = PointPlaneResult.COINCIDENT;
+            bool first = true;
+            for (int i = 0; i < polyVertices.Length; i++)
+            {
+                Vector3 b = polyVertices[i];
+                Vector3 ab = b - a;
+                Vector3 n = Vector3.Cross(ab, polyNormal);
+                Plane halfPlane = Plane.FromPointNormal(n, a);
+                PointPlaneResult r = classifyPointPlane(q, halfPlane);
+                if (first)
+                {
+                    lastR = r;
+                    first = false;
+                }
+                else if (r != lastR)
+                {
+                    return false;
+                }
+                a = b;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Detecta colision entre un rayo y un poligono convexo formado por un conjunto de vertices.
+        /// </summary>
+        /// <param name="ray">Rayo</param>
+        /// <param name="polyVertices">Conjunto de vertices del poligono</param>
+        /// <param name="polyPlane">Plano del poligono</param>
+        /// <param name="t">Instante de tiempo de colision</param>
+        /// <param name="q">Punto de colision</param>
+        /// <returns>True si hay colision</returns>
+        public static bool intersectRayConvexPolygon(TgcRay ray, Vector3[] polyVertices, Plane polyPlane, out float t, out Vector3 q)
+        {
+            if (intersectRayPlane(ray, polyPlane, out t, out q))
+            {
+                return testPointInConvexPolygon(polyVertices, getPlaneNormal(polyPlane), q);
+            }
+            t = -1;
+            q = Vector3.Empty;
+            return false;
+        }
+
         #endregion
 
 

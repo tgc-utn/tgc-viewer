@@ -14,6 +14,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         public static readonly float EPSILON = 0.0001f;
 
+        /*
         /// <summary>
         /// Filtrar todas las aristas que tiene un poligono y dejarle solo las que son parte del borde del poligono
         /// (Se quitan todas las aristas interiores)
@@ -90,6 +91,28 @@ namespace Examples.MeshCreator.EditablePolyTools
             }
             sortedVertices.Add(lastEdge.a);
             p.vertices = sortedVertices;
+        }
+        */
+
+
+        /// <summary>
+        /// Agregar un vertice a un poligono existente, ubicandolo en el medio de los dos vertices de la arista que compartian entre si
+        /// </summary>
+        public static void addVertexToPolygon(EditablePoly.Polygon p, EditablePoly.Edge sharedEdge, EditablePoly.Vertex newV)
+        {
+            for (int i = 0; i < p.vertices.Count; i++)
+            {
+                if (p.vertices[i].vbIndex == sharedEdge.a.vbIndex)
+                {
+                    p.vertices.Add(null);
+                    for (int j = p.vertices.Count - 2; j >= i + 1 ; j--)
+                    {
+                        p.vertices[j + 1] = p.vertices[j];
+                    }
+                    p.vertices[i + 1] = newV;
+                    break;
+                }
+            }
         }
 
         /// <summary>
