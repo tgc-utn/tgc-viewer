@@ -374,7 +374,7 @@ namespace Examples.MeshCreator
             renderObjects();
             
             //Dibujar gizmo (sin Z-Buffer, al final de tod)
-            if (currentGizmo != null)
+            if (currentGizmo != null && selectionList.Count > 0)
             {
                 currentGizmo.render();
             }
@@ -659,7 +659,10 @@ namespace Examples.MeshCreator
         /// </summary>
         private void doGizmoActivated()
         {
-            currentGizmo.update();
+            if (selectionList.Count > 0)
+            {
+                currentGizmo.update();
+            }
         }
 
         /// <summary>
