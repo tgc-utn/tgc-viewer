@@ -190,14 +190,36 @@ namespace Examples.MeshCreator.EditablePolyTools
             //Delete
             else if (input.keyPressed(Key.Delete))
             {
-                //TODO: deletePrimitive
+                deleteSelectedPrimitives();
             }
             //Translate
             else if (input.keyPressed(Key.W))
             {
                 activateTranslateGizmo();
             }
+            //Zoom
+            else if (input.keyPressed(Key.Z))
+            {
+                EditablePolyUtils.zoomPrimitives(control.Camera, selectionList);
+            }
+            //Top view
+            else if (input.keyPressed(Key.T))
+            {
+                EditablePolyUtils.setCameraTopView(control.Camera, selectionList);
+            }
+            //Left view
+            else if (input.keyPressed(Key.L))
+            {
+                EditablePolyUtils.setCameraLeftView(control.Camera, selectionList);
+            }
+            //Front view
+            else if (input.keyPressed(Key.F))
+            {
+                EditablePolyUtils.setCameraFrontView(control.Camera, selectionList);
+            }
         }
+
+        
 
         
 
@@ -525,7 +547,20 @@ namespace Examples.MeshCreator.EditablePolyTools
             primitiveRenderer.dispose();
         }
 
-        
+
+        /// <summary>
+        /// Borrar las primitivas seleccionadas
+        /// </summary>
+        private void deleteSelectedPrimitives()
+        {
+            foreach (EditPolyPrimitive p in selectionList)
+            {
+                p.delete();
+            }
+            setDirtyValues();
+        }
+
+
 
 
 
@@ -845,14 +880,11 @@ namespace Examples.MeshCreator.EditablePolyTools
                 }
             }
             mesh.D3dMesh.UnlockAttributeBuffer(attributeBuffer);
-
-            //Re-computar boundingBox
-            //TODO centrar mesh primero
-            mesh.createBoundingBox();
         }
 
         /// <summary>
-        /// Actualizar estructuras internas en base a mesh original
+        /// Actualizar estructuras internas en base a mesh original.
+        /// Cuando se vuelve a entrar al modo EditablePoly luego de la primera vez.
         /// </summary>
         public void updateValuesFromMesh(TgcMesh mesh)
         {
@@ -873,6 +905,8 @@ namespace Examples.MeshCreator.EditablePolyTools
 
 
         #endregion
+
+
 
 
 
