@@ -730,6 +730,11 @@ namespace TgcViewer.Utils.TgcSceneLoader
         /// </summary>
         public TgcBoundingBox createBoundingBox()
         {
+            if (this.boundingBox != null)
+            {
+                this.boundingBox.dispose();
+                this.boundingBox = null;
+            }
             //Obtener vertices en base al tipo de malla
             Vector3[] points = getVertexPositions();
             this.boundingBox = TgcBoundingBox.computeFromPoints(points);

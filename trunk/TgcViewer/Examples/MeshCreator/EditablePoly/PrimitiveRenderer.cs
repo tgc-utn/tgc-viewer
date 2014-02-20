@@ -6,6 +6,7 @@ using TgcViewer.Utils.TgcGeometry;
 using Microsoft.DirectX;
 using System.Drawing;
 using Microsoft.DirectX.Direct3D;
+using Examples.MeshCreator.EditablePolyTools.Primitives;
 
 namespace Examples.MeshCreator.EditablePolyTools
 {
@@ -55,7 +56,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         private void renderVertices(Matrix transform)
         {
-            foreach (EditablePoly.Vertex v in editablePoly.Vertices)
+            foreach (EditPolyVertex v in editablePoly.Vertices)
             {
                 Vector3 pos = Vector3.TransformCoordinate(v.position, transform);
                 TgcBox box = v.Selected ? selectedVertexBox : vertexBox;
@@ -73,9 +74,9 @@ namespace Examples.MeshCreator.EditablePolyTools
             
             //Polygon edges
             /*
-            foreach (EditablePoly.Polygon p in editablePoly.Polygons)
+            foreach (Polygon p in editablePoly.Polygons)
             {
-                foreach (EditablePoly.Edge e in p.edges)
+                foreach (Edge e in p.edges)
                 {
                     batchRenderer.addBoxLine(
                         Vector3.TransformCoordinate(e.a.position, transform), 
@@ -83,7 +84,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                         0.06f, Color.Blue);
                 }
             } */
-            foreach (EditablePoly.Edge e in editablePoly.Edges)
+            foreach (EditPolyEdge e in editablePoly.Edges)
             {
                 Vector3 a = Vector3.TransformCoordinate(e.a.position, transform);
                 Vector3 b = Vector3.TransformCoordinate(e.b.position, transform);
@@ -91,7 +92,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             }
 
             //Selected polygons (as polygon meshes)
-            foreach (EditablePoly.Polygon p in editablePoly.Polygons)
+            foreach (EditPolyPolygon p in editablePoly.Polygons)
             {
                 if(p.Selected)
                 {
@@ -119,7 +120,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         {
             batchRenderer.reset();
 
-            foreach (EditablePoly.Edge e in editablePoly.Edges)
+            foreach (EditPolyEdge e in editablePoly.Edges)
             {
                 Vector3 a = Vector3.TransformCoordinate(e.a.position, transform);
                 Vector3 b = Vector3.TransformCoordinate(e.b.position, transform);

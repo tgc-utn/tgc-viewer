@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer.Utils.TgcGeometry;
+using Examples.MeshCreator.EditablePolyTools.Primitives;
 
 namespace Examples.MeshCreator.EditablePolyTools
 {
@@ -19,14 +20,14 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// Filtrar todas las aristas que tiene un poligono y dejarle solo las que son parte del borde del poligono
         /// (Se quitan todas las aristas interiores)
         /// </summary>
-        public static void computePolygonExternalEdges(EditablePoly.Polygon p)
+        public static void computePolygonExternalEdges(Polygon p)
         {
             if (p.vertices.Count == 3)
                 return;
 
             Vector3 planeNorm = p.getNormal();
-            List<EditablePoly.Edge> externalEdges = new List<EditablePoly.Edge>();
-            foreach (EditablePoly.Edge e in p.edges)
+            List<Edge> externalEdges = new List<Edge>();
+            foreach (Edge e in p.edges)
             {
                 //Half-plane entre la arista y la normal del poligono
                 Vector3 vec = e.b.position - e.a.position;
@@ -37,7 +38,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 bool first = true;
                 TgcCollisionUtils.PointPlaneResult lastR = TgcCollisionUtils.PointPlaneResult.COINCIDENT;
                 bool inside = false;
-                foreach (EditablePoly.Vertex v in p.vertices)
+                foreach (Vertex v in p.vertices)
                 {
                     if(v.vbIndex != e.a.vbIndex && v.vbIndex != e.b.vbIndex )
                     {
@@ -65,18 +66,18 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Ordenar los vertices del poligono en base al recorrido de sus aristas externas
         /// </summary>
-        public static void sortPolygonVertices(EditablePoly.Polygon p)
+        public static void sortPolygonVertices(Polygon p)
         {
             if (p.vertices.Count == 3)
                 return;
 
-            List<EditablePoly.Vertex> sortedVertices = new List<EditablePoly.Vertex>();
-            EditablePoly.Edge lastEdge = p.edges[0];
+            List<Vertex> sortedVertices = new List<Vertex>();
+            Edge lastEdge = p.edges[0];
             for (int i = 1; i < p.edges.Count; i++)
             {
                 sortedVertices.Add(lastEdge.a);
                 bool found = false;
-                foreach (EditablePoly.Edge e in p.edges)
+                foreach (Edge e in p.edges)
                 {
                     if(lastEdge.b.vbIndex == e.a.vbIndex)
                     {
@@ -98,7 +99,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Agregar un vertice a un poligono existente, ubicandolo en el medio de los dos vertices de la arista que compartian entre si
         /// </summary>
-        public static void addVertexToPolygon(EditablePoly.Polygon p, EditablePoly.Edge sharedEdge, EditablePoly.Vertex newV)
+        public static void addVertexToPolygon(EditPolyPolygon p, EditPolyEdge sharedEdge, EditPolyVertex newV)
         {
             for (int i = 0; i < p.vertices.Count; i++)
             {
@@ -118,7 +119,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Indica si dos aristas son iguales
         /// </summary>
-        public static bool sameEdge(EditablePoly.Edge e1, EditablePoly.Edge e2)
+        public static bool sameEdge(EditPolyEdge e1, EditPolyEdge e2)
         {
             return (sameVextex(e1.a, e2.a) && sameVextex(e1.b, e2.b))
                 || (sameVextex(e1.a, e2.b) && sameVextex(e1.b, e2.a));
@@ -128,7 +129,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// Indica si dos vertices son iguales
         /// </summary>
         /// <returns></returns>
-        public static bool sameVextex(EditablePoly.Vertex a, EditablePoly.Vertex b)
+        public static bool sameVextex(EditPolyVertex a, EditPolyVertex b)
         {
             return equalsVector3(a.position, b.position);
         }
@@ -165,7 +166,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// Busca si ambos poligonos tienen una arista igual.
         /// Si encontro retorna el indice de la arista igual de cada poligono.
         /// </summary>
-        public static bool findShareEdgeBetweenPolygons(EditablePoly.Polygon p1, EditablePoly.Polygon p2, out int p1Edge, out int p2Edge)
+        public static bool findShareEdgeBetweenPolygons(EditPolyPolygon p1, EditPolyPolygon p2, out int p1Edge, out int p2Edge)
         {
             for (int i = 0; i < p1.edges.Count; i++)
             {
@@ -188,7 +189,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// Agrega una nueva arista a la lista si es que ya no hay otra igual.
         /// Devuelve el indice de la nuevo arista o de la que ya estaba.
         /// </summary>
-        public static int addEdgeToListIfUnique(List<EditablePoly.Edge> edges, EditablePoly.Edge e)
+        public static int addEdgeToListIfUnique(List<EditPolyEdge> edges, EditPolyEdge e)
         {
             for (int i = 0; i < edges.Count; i++)
             {
@@ -197,7 +198,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                     return i;
                 }
             }
-            e.faces = new List<EditablePoly.Polygon>();
+            e.faces = new List<EditPolyPolygon>();
             edges.Add(e);
             return edges.Count - 1;
         }
@@ -207,7 +208,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// Agrega un nuevo vertice a la lista si es que ya no hay otro igual.
         /// Devuelve el indice del nuevo vertice o del que ya estaba.
         /// </summary>
-        public static int addVertexToListIfUnique(List<EditablePoly.Vertex> vertices, EditablePoly.Vertex v)
+        public static int addVertexToListIfUnique(List<EditPolyVertex> vertices, EditPolyVertex v)
         {
             for (int i = 0; i < vertices.Count; i++)
             {
@@ -217,10 +218,57 @@ namespace Examples.MeshCreator.EditablePolyTools
                 }
             }
             v.vbIndex = vertices.Count;
-            v.edges = new List<EditablePoly.Edge>();
+            v.edges = new List<EditPolyEdge>();
             vertices.Add(v);
             return v.vbIndex;
         }
+
+        /// <summary>
+        /// Crear BoundingBox a partir de un conjunto de primitivas
+        /// </summary>
+        /// <param name="list">primitivas</param>
+        /// <returns>BoundingBox</returns>
+        public static TgcBoundingBox getSelectionBoundingBox(List<EditPolyPrimitive> primitives)
+        {
+            Vector3[] vertices = new Vector3[primitives.Count];
+            for (int i = 0; i < primitives.Count; i++)
+            {
+                vertices[i] = primitives[i].computeCenter();
+            }
+            return TgcBoundingBox.computeFromPoints(vertices);
+        }
+
+        public static void updateObbFromSegment(TgcObb obb, Vector3 a, Vector3 b, float thickness)
+        {
+            Vector3 lineDiff = b - a;
+            float lineLength = lineDiff.Length();
+            Vector3 lineVec = Vector3.Normalize(lineDiff);
+
+            //Obtener angulo y vector de rotacion
+            Vector3 upVec = new Vector3(0, 1, 0);
+            float angle = FastMath.Acos(Vector3.Dot(upVec, lineVec));
+            Vector3 axisRotation = Vector3.Cross(upVec, lineVec);
+            axisRotation.Normalize();
+
+            //Obtener matriz de rotacion para este eje y angulo
+            Matrix rotM = Matrix.RotationAxis(axisRotation, angle);
+
+            //Actualizar orientacion de OBB en base a matriz de rotacion
+            obb.Orientation[0] = new Vector3(rotM.M11, rotM.M12, rotM.M13);
+            obb.Orientation[1] = new Vector3(rotM.M21, rotM.M22, rotM.M23);
+            obb.Orientation[2] = new Vector3(rotM.M31, rotM.M32, rotM.M33);
+
+            //Actualizar extent de OBB segun el thickness del segmento
+            obb.Extents = new Vector3(thickness, lineLength / 2, thickness);
+
+            //Actualizar centro del OBB segun centro del segmento
+            obb.Center = a + Vector3.Scale(lineDiff, 0.5f);
+
+            //Regenerar OBB
+            obb.updateValues();
+        }
+
+
 
     }
 }
