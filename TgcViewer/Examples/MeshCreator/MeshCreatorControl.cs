@@ -467,17 +467,31 @@ namespace Examples.MeshCreator
                     {
                         buttonMergeSelected_Click(null, null);
                     }
+                    //Zoom
+                    else if (input.keyPressed(Key.Z))
+                    {
+                        buttonZoomObject_Click(null, null);
+                    }
+                    //Top view
+                    else if (input.keyPressed(Key.T))
+                    {
+                        buttonTopView_Click(null, null);
+                    }
+                    //Left view
+                    else if (input.keyPressed(Key.L))
+                    {
+                        buttonLeftView_Click(null, null);
+                    }
+                    //Front view
+                    else if (input.keyPressed(Key.F))
+                    {
+                        buttonFrontView_Click(null, null);
+                    }
                 }
 
 
-
-                //Zoom
-                if (input.keyPressed(Key.Z))
-                {
-                    buttonZoomObject_Click(null, null);
-                }
                 //Save as
-                else if (input.keyDown(Key.LeftControl) && input.keyDown(Key.LeftShift) && input.keyPressed(Key.S))
+                if (input.keyDown(Key.LeftControl) && input.keyDown(Key.LeftShift) && input.keyPressed(Key.S))
                 {
                     buttonSaveSceneAs_Click(null, null);
                 }
@@ -491,21 +505,7 @@ namespace Examples.MeshCreator
                 {
                     buttonHelp_Click(null, null);
                 }
-                //Top view
-                else if (input.keyPressed(Key.T))
-                {
-                    buttonTopView_Click(null, null);
-                }
-                //Left view
-                else if (input.keyPressed(Key.L))
-                {
-                    buttonLeftView_Click(null, null);
-                }
-                //Front view
-                else if (input.keyPressed(Key.F))
-                {
-                    buttonFrontView_Click(null, null);
-                }
+                
             }
         }
 

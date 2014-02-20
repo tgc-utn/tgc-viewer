@@ -47,31 +47,13 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
 
         public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
         {
-            /*
             Vector3[] v = new Vector3[vertices.Count];
             for (int i = 0; i < v.Length; i++)
             {
                 v[i] = Vector3.TransformCoordinate(vertices[i].position, transform);
             }
             float t;
-            return TgcCollisionUtils.intersectRayConvexPolygon(ray, v, plane, out t, out q);
-             */
-
-            Vector3 uvw;
-            float t;
-            Vector3 v0 = Vector3.TransformCoordinate(vertices[0].position, transform);
-            Vector3 v1 = Vector3.TransformCoordinate(vertices[1].position, transform);
-            for (int i = 2; i < vertices.Count; i++)
-            {
-                Vector3 v2 = Vector3.TransformCoordinate(vertices[i].position, transform);
-                if(TgcCollisionUtils.intersectRayTriangle(ray, v0, v1, v2, out uvw, out t, out q))
-                {
-                    return true;
-                }
-                v1 = v2;
-            }
-            q = Vector3.Empty;
-            return false;
+            return TgcCollisionUtils.intersectRayConvexPolygon(ray, v, out t, out q);
         }
 
         /// <summary>

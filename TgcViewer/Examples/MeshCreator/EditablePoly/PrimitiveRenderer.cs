@@ -124,7 +124,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             {
                 Vector3 a = Vector3.TransformCoordinate(e.a.position, transform);
                 Vector3 b = Vector3.TransformCoordinate(e.b.position, transform);
-                batchRenderer.addBoxLine(a, b, 0.06f, e.Selected ? Color.Red : Color.Blue);
+                batchRenderer.addBoxLine(a, b, 0.12f, e.Selected ? Color.Red : Color.Blue);
             }
             //Vaciar todo lo que haya
             batchRenderer.render();
