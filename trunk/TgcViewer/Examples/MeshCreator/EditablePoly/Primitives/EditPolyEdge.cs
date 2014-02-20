@@ -42,7 +42,7 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
             EditablePolyUtils.updateObbFromSegment(COLLISION_OBB,
                 Vector3.TransformCoordinate(a.position, transform),
                 Vector3.TransformCoordinate(b.position, transform),
-                0.2f);
+                0.4f);
 
             //ray-obb
             return TgcCollisionUtils.intersectRayObb(ray, COLLISION_OBB, out q);

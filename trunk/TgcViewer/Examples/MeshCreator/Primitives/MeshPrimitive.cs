@@ -141,6 +141,12 @@ namespace Examples.MeshCreator.Primitives
                 }
                 editablePoly.setPrimitiveType(primitiveType);
             }
+            else
+            {
+                //Acomodar mesh luego de haber sido editado internamente
+                applyMeshTransformToVertices(mesh);
+                setMeshToOrigin();
+            }
             editablePolyEnabled = enabled;
         }
 
@@ -298,7 +304,7 @@ namespace Examples.MeshCreator.Primitives
             applyMeshTransformToVertices(cloneMesh);
 
             //Calcular nuevo bounding box
-            cloneMesh.createBoundingBox();
+            //cloneMesh.createBoundingBox();
 
             return new MeshPrimitive(this.Control, cloneMesh);
         }
