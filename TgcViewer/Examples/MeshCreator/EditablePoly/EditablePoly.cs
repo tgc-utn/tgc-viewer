@@ -9,6 +9,8 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Input;
 using TgcViewer;
 using System.Drawing;
+using Microsoft.DirectX.DirectInput;
+using Examples.MeshCreator.EditablePolyTools.Primitives;
 
 namespace Examples.MeshCreator.EditablePolyTools
 {
@@ -38,48 +40,67 @@ namespace Examples.MeshCreator.EditablePolyTools
             None
         }
 
+        
         TgcMesh mesh;
         short[] indexBuffer;
         bool dirtyValues;
-        State currentState;
         bool selectiveObjectsAdditive;
         SelectionRectangleMesh rectMesh;
         Vector2 initMousePos;
-        TgcPickingRay pickingRay;
         PrimitiveRenderer primitiveRenderer;
+        EditablePolyTranslateGizmo translateGizmo;
 
-        List<Primitive> selectionList;
+        MeshCreatorControl control;
+        /// <summary>
+        /// Main Control
+        /// </summary>
+        public MeshCreatorControl Control
+        {
+            get { return control; }
+        }
+
+        State currentState;
+        /// <summary>
+        /// Estado actual
+        /// </summary>
+        public State CurrentState
+        {
+            get { return currentState; }
+            set { currentState = value; }
+        }
+
+        List<EditPolyPrimitive> selectionList;
         /// <summary>
         /// Primitivas seleccionadas
         /// </summary>
-        public List<Primitive> SelectionList
+        public List<EditPolyPrimitive> SelectionList
         {
             get { return selectionList; }
         }
 
-        List<Vertex> vertices;
+        List<EditPolyVertex> vertices;
         /// <summary>
         /// Vertices
         /// </summary>
-        public List<Vertex> Vertices
+        public List<EditPolyVertex> Vertices
         {
             get { return vertices; }
         }
 
-        List<Edge> edges;
+        List<EditPolyEdge> edges;
         /// <summary>
         /// Aristas
         /// </summary>
-        public List<Edge> Edges
+        public List<EditPolyEdge> Edges
         {
             get { return edges; }
         }
 
-        List<Polygon> polygons;
+        List<EditPolyPolygon> polygons;
         /// <summary>
         /// Poligonos
         /// </summary>
-        public List<Polygon> Polygons
+        public List<EditPolyPolygon> Polygons
         {
             get { return polygons; }
         }
@@ -94,15 +115,24 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
+        /// Transform del mesh
+        /// </summary>
+        public Matrix Transform
+        {
+            get { return mesh.Transform; }
+        }
+
+        /// <summary>
         /// Construir un EditablePoly a partir de un mesh
         /// </summary>
-        public EditablePoly(TgcMesh origMesh)
+        public EditablePoly(MeshCreatorControl control, TgcMesh origMesh)
         {
+            this.control = control;
             this.currentPrimitive = PrimitiveType.None;
             this.rectMesh = new SelectionRectangleMesh();
-            this.selectionList = new List<Primitive>();
-            this.pickingRay = new TgcPickingRay();
+            this.selectionList = new List<EditPolyPrimitive>();
             this.primitiveRenderer = new PrimitiveRenderer(this);
+            this.translateGizmo = new EditablePolyTranslateGizmo(this);
             loadMesh(origMesh);
         }
 
@@ -113,6 +143,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         {
             this.currentPrimitive = p;
             clearSelection();
+            currentState = State.SelectObject;
         }
 
         /// <summary>
@@ -120,6 +151,9 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         public void update()
         {
+            //Procesar shorcuts de teclado
+            processShortcuts();
+
             //Maquina de estados
             switch (currentState)
             {
@@ -134,6 +168,38 @@ namespace Examples.MeshCreator.EditablePolyTools
                     break;
             }
         }
+
+        /// <summary>
+        /// Procesar shorcuts de teclado
+        /// </summary>
+        private void processShortcuts()
+        {
+            TgcD3dInput input = GuiController.Instance.D3dInput;
+
+            //Select
+            if (input.keyPressed(Key.Q))
+            {
+                currentState = State.SelectObject;
+            }
+            //Select all
+            else if (input.keyDown(Key.LeftControl) && input.keyPressed(Key.E))
+            {
+                selectAll();
+                currentState = State.SelectObject;
+            }
+            //Delete
+            else if (input.keyPressed(Key.Delete))
+            {
+                //TODO: deletePrimitive
+            }
+            //Translate
+            else if (input.keyPressed(Key.W))
+            {
+                activateTranslateGizmo();
+            }
+        }
+
+        
 
 
 
@@ -202,7 +268,7 @@ namespace Examples.MeshCreator.EditablePolyTools
 
                     //Buscar que primitivas caen dentro de la seleccion y elegirlos
                     int i = 0;
-                    Primitive p = iteratePrimitive(currentPrimitive, i);
+                    EditPolyPrimitive p = iteratePrimitive(currentPrimitive, i);
                     while (p != null)
                     {
                         //Ver si hay colision contra la proyeccion de la primitiva y el rectangulo 2D
@@ -234,11 +300,13 @@ namespace Examples.MeshCreator.EditablePolyTools
 
                 currentState = State.SelectObject;
 
+                /*
                 //Si quedo algo seleccionado activar gizmo
                 if (selectionList.Count > 0)
                 {
                     activateTranslateGizmo();
                 }
+                */
 
                 //Actualizar panel de Modify con lo que se haya seleccionado, o lo que no
                 //control.updateModifyPanel();
@@ -255,7 +323,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Seleccionar una sola primitiva
         /// </summary>
-        private void selectPrimitive(Primitive p)
+        private void selectPrimitive(EditPolyPrimitive p)
         {
             p.Selected = true;
             selectionList.Add(p);
@@ -265,7 +333,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// Selecciona una sola primitiva pero antes se fija si ya no estaba en la lista de seleccion.
         /// Si ya estaba, entonces la quita de la lista de seleccion
         /// </summary>
-        private void selectOrRemovePrimitiveIfPresent(Primitive p)
+        private void selectOrRemovePrimitiveIfPresent(EditPolyPrimitive p)
         {
             //Ya existe, quitar
             if (selectionList.Contains(p))
@@ -286,7 +354,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         private void clearSelection()
         {
-            foreach (Primitive p in selectionList)
+            foreach (EditPolyPrimitive p in selectionList)
             {
                 p.Selected = false;
             }
@@ -294,24 +362,39 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         /// <summary>
+        /// Seleccionar todo
+        /// </summary>
+        private void selectAll()
+        {
+            clearSelection();
+            int i = 0;
+            EditPolyPrimitive p = iteratePrimitive(currentPrimitive, i);
+            while (p != null)
+            {
+                selectPrimitive(p);
+                p = iteratePrimitive(currentPrimitive, ++i);
+            }
+        }
+
+        /// <summary>
         /// Hacer picking para seleccionar la primitiva mas cercano del ecenario.
         /// </summary>
         /// <param name="additive">En True agrega/quita la primitiva a la seleccion actual</param>
-        private void doDirectSelection(bool additive)
+        public void doDirectSelection(bool additive)
         {
-            this.pickingRay.updateRay();
+            control.PickingRay.updateRay();
 
             //Buscar menor colision con primitivas
             float minDistSq = float.MaxValue;
-            Primitive closestPrimitive = null;
+            EditPolyPrimitive closestPrimitive = null;
             Vector3 q;
             int i = 0;
-            Primitive p = iteratePrimitive(currentPrimitive, i);
+            EditPolyPrimitive p = iteratePrimitive(currentPrimitive, i);
             while (p != null)
             {
-                if (p.intersectRay(pickingRay.Ray, mesh.Transform, out q))
+                if (p.intersectRay(control.PickingRay.Ray, mesh.Transform, out q))
                 {
-                    float lengthSq = Vector3.Subtract(pickingRay.Ray.Origin, q).LengthSq();
+                    float lengthSq = Vector3.Subtract(control.PickingRay.Ray.Origin, q).LengthSq();
                     if (lengthSq < minDistSq)
                     {
                         minDistSq = lengthSq;
@@ -335,7 +418,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                     clearSelection();
                     selectPrimitive(closestPrimitive);
                 }
-                activateTranslateGizmo();
+                //activateTranslateGizmo();
             }
             //Nada seleccionado
             else
@@ -355,20 +438,62 @@ namespace Examples.MeshCreator.EditablePolyTools
 
         #region Translate Gizmo
 
+        /// <summary>
+        /// Activar gizmo de translate
+        /// </summary>
         private void activateTranslateGizmo()
         {
-            //TODO gizmo translate
+            translateGizmo.setEnabled(true);
         }
 
+        /// <summary>
+        /// Actualizar eventos de gizmo de translate
+        /// </summary>
         private void doTranslateGizmo()
         {
-            //TODO gizmo translate
+            if (selectionList.Count > 0)
+            {
+                translateGizmo.update();
+            }
         }
 
         #endregion
 
 
+        /// <summary>
+        /// Marcar mesh como dirty para regenerar en el proximo cuadro
+        /// </summary>
+        public void setDirtyValues()
+        {
+            dirtyValues = true;
+        }
 
+        /// <summary>
+        /// Iterar sobre lista de primitivas
+        /// </summary>
+        /// <param name="primitiveType">Primitiva</param>
+        /// <param name="i">indice</param>
+        /// <returns>Elemento o null si no hay mas</returns>
+        private EditPolyPrimitive iteratePrimitive(PrimitiveType primitiveType, int i)
+        {
+            switch (primitiveType)
+            {
+                case PrimitiveType.Vertex:
+                    if (i == vertices.Count) return null;
+                    return vertices[i];
+                case PrimitiveType.Edge:
+                    if (i == edges.Count) return null;
+                    return edges[i];
+                case PrimitiveType.Polygon:
+                    if (i == polygons.Count) return null;
+                    return polygons[i];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Dibujar
+        /// </summary>
         public void render()
         {
             //Actualizar mesh si hubo algun cambio
@@ -383,10 +508,20 @@ namespace Examples.MeshCreator.EditablePolyTools
 
             //Render de primitivas
             primitiveRenderer.render(mesh.Transform);
+
+            //Translate gizmo
+            if (currentState == State.TranslateGizmo)
+            {
+                translateGizmo.render();
+            }
         }
 
+        /// <summary>
+        /// Liberar recursos
+        /// </summary>
         public void dispose()
         {
+            control = null;
             primitiveRenderer.dispose();
         }
 
@@ -405,21 +540,21 @@ namespace Examples.MeshCreator.EditablePolyTools
         {
             //Obtener vertices del mesh
             this.mesh = origMesh;
-            List<Vertex> origVertices = getMeshOriginalVertexData(origMesh);
+            List<EditPolyVertex> origVertices = getMeshOriginalVertexData(origMesh);
             int origTriCount = origVertices.Count / 3;
 
             //Iterar sobre los triangulos y generar data auxiliar unificada
-            vertices = new List<Vertex>();
-            edges = new List<Edge>();
-            polygons = new List<Polygon>();
+            vertices = new List<EditPolyVertex>();
+            edges = new List<EditPolyEdge>();
+            polygons = new List<EditPolyPolygon>();
             indexBuffer = new short[origTriCount * 3];
             int[] attributeBuffer = origMesh.D3dMesh.LockAttributeBufferArray(LockFlags.ReadOnly);
             origMesh.D3dMesh.UnlockAttributeBuffer(attributeBuffer);
             for (int i = 0; i < origTriCount; i++)
             {
-                Vertex v1 = origVertices[i * 3];
-                Vertex v2 = origVertices[i * 3 + 1];
-                Vertex v3 = origVertices[i * 3 + 2];
+                EditPolyVertex v1 = origVertices[i * 3];
+                EditPolyVertex v2 = origVertices[i * 3 + 1];
+                EditPolyVertex v3 = origVertices[i * 3 + 2];
 
                 //Agregar vertices a la lista, si es que son nuevos
                 int v1Idx = EditablePolyUtils.addVertexToListIfUnique(vertices, v1);
@@ -430,13 +565,13 @@ namespace Examples.MeshCreator.EditablePolyTools
                 v3 = vertices[v3Idx];
 
                 //Crear edges
-                Edge e1 = new Edge();
+                EditPolyEdge e1 = new EditPolyEdge();
                 e1.a = v1;
                 e1.b = v2;
-                Edge e2 = new Edge();
+                EditPolyEdge e2 = new EditPolyEdge();
                 e2.a = v2;
                 e2.b = v3;
-                Edge e3 = new Edge();
+                EditPolyEdge e3 = new EditPolyEdge();
                 e3.a = v3;
                 e3.b = v1;
 
@@ -459,12 +594,12 @@ namespace Examples.MeshCreator.EditablePolyTools
                 */
 
                 //Crear poligono para este triangulo
-                Polygon p = new Polygon();
-                p.vertices = new List<Vertex>();
+                EditPolyPolygon p = new EditPolyPolygon();
+                p.vertices = new List<EditPolyVertex>();
                 p.vertices.Add(v1);
                 p.vertices.Add(v2);
                 p.vertices.Add(v3);
-                p.edges = new List<Edge>();
+                p.edges = new List<EditPolyEdge>();
                 p.edges.Add(e1);
                 p.edges.Add(e2);
                 p.edges.Add(e3);
@@ -480,11 +615,11 @@ namespace Examples.MeshCreator.EditablePolyTools
                 indexBuffer[i * 3 + 2] = (short)v3Idx;
 
                 //Buscar si hay un poligono ya existente al cual sumarnos (coplanar y que compartan una arista)
-                Polygon coplanarP = null;
+                EditPolyPolygon coplanarP = null;
                 for (int j = 0; j < polygons.Count; j++)
                 {
                     //Coplanares y con igual material ID
-                    Polygon p0 = polygons[j];
+                    EditPolyPolygon p0 = polygons[j];
                     if (p0.matId == p.matId && EditablePolyUtils.samePlane(p0.plane, p.plane))
                     {
                         //Buscar si tienen una arista igual
@@ -493,8 +628,8 @@ namespace Examples.MeshCreator.EditablePolyTools
                         if (EditablePolyUtils.findShareEdgeBetweenPolygons(p0, p, out p0SharedEdgeIdx, out pSharedEdgeIdx))
                         {
                             //Obtener el tercer vertice del triangulo que no es parte de la arista compartida
-                            Edge sharedEdge = p0.edges[p0SharedEdgeIdx];
-                            Vertex thirdVert;
+                            EditPolyEdge sharedEdge = p0.edges[p0SharedEdgeIdx];
+                            EditPolyVertex thirdVert;
                             if (p.vertices[0] != sharedEdge.a && p.vertices[0] != sharedEdge.b)
                                 thirdVert = p.vertices[0];
                             else if (p.vertices[1] != sharedEdge.a && p.vertices[1] != sharedEdge.b)
@@ -510,7 +645,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                             p0.edges.Remove(sharedEdge);
 
                             //Agregar al poligono dos nuevas aristas que conectar los extremos de la arista compartida hacia el tercer vertice
-                            Edge newPolEdge1 = new Edge();
+                            EditPolyEdge newPolEdge1 = new EditPolyEdge();
                             newPolEdge1.a = sharedEdge.a;
                             newPolEdge1.b = thirdVert;
                             //newPolEdge1.faces = new List<Polygon>();
@@ -519,7 +654,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                             //sharedEdge.b.edges.Add(newPolEdge1);
                             p0.edges.Add(newPolEdge1);
 
-                            Edge newPolEdge2 = new Edge();
+                            EditPolyEdge newPolEdge2 = new EditPolyEdge();
                             newPolEdge2.a = thirdVert;
                             newPolEdge2.b = sharedEdge.b;
                             //newPolEdge2.faces = new List<Polygon>();
@@ -553,17 +688,17 @@ namespace Examples.MeshCreator.EditablePolyTools
 
 
             //Unificar aristas de los poligonos
-            foreach (Polygon p in polygons)
+            foreach (EditPolyPolygon p in polygons)
             {
                 for (int i = 0; i < p.edges.Count; i++)
                 {
                     int eIdx = EditablePolyUtils.addEdgeToListIfUnique(edges, p.edges[i]);
-                    Edge e = edges[eIdx];
+                    EditPolyEdge e = edges[eIdx];
                     
                     //Nueva arista incorporada a la lista
                     if(eIdx == edges.Count - 1)
                     {
-                        e.faces = new List<Polygon>();
+                        e.faces = new List<EditPolyPolygon>();
 
                         //Agregar referencia a vertices que usan la arista
                         e.a.edges.Add(e);
@@ -583,15 +718,15 @@ namespace Examples.MeshCreator.EditablePolyTools
 
 
 
-            dirtyValues = true;
+            setDirtyValues();
         }
 
         /// <summary>
         /// Obtener la lista de vertices originales del mesh
         /// </summary>
-        private List<Vertex> getMeshOriginalVertexData(TgcMesh origMesh)
+        private List<EditPolyVertex> getMeshOriginalVertexData(TgcMesh origMesh)
         {
-            List<Vertex> origVertices = new List<Vertex>();
+            List<EditPolyVertex> origVertices = new List<EditPolyVertex>();
             switch (origMesh.RenderType)
             {
                 case TgcMesh.MeshRenderType.VERTEX_COLOR:
@@ -599,7 +734,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                         typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, origMesh.D3dMesh.NumberVertices);
                     for (int i = 0; i < verts1.Length; i++)
                     {
-                        Vertex v = new Vertex();
+                        EditPolyVertex v = new EditPolyVertex();
                         v.position = verts1[i].Position;
                         /*v.normal = verts1[i].Normal;
                         v.color = verts1[i].Color;*/
@@ -613,7 +748,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                         typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, origMesh.D3dMesh.NumberVertices);
                     for (int i = 0; i < verts2.Length; i++)
                     {
-                        Vertex v = new Vertex();
+                        EditPolyVertex v = new EditPolyVertex();
                         v.position = verts2[i].Position;
                         /*v.normal = verts2[i].Normal;
                         v.texCoords = new Vector2(verts2[i].Tu, verts2[i].Tv);
@@ -628,7 +763,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                         typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, origMesh.D3dMesh.NumberVertices);
                     for (int i = 0; i < verts3.Length; i++)
                     {
-                        Vertex v = new Vertex();
+                        EditPolyVertex v = new EditPolyVertex();
                         v.position = verts3[i].Position;
                         /*v.normal = verts3[i].Normal;
                         v.texCoords = new Vector2(verts3[i].Tu0, verts3[i].Tv0);
@@ -700,7 +835,7 @@ namespace Examples.MeshCreator.EditablePolyTools
 
             //Actualizar attributeBuffer
             int[] attributeBuffer = mesh.D3dMesh.LockAttributeBufferArray(LockFlags.None);
-            foreach (Polygon p in polygons)
+            foreach (EditPolyPolygon p in polygons)
             {
                 //Setear en cada triangulo el material ID del poligono
                 foreach (int idx in p.vbTriangles)
@@ -710,6 +845,10 @@ namespace Examples.MeshCreator.EditablePolyTools
                 }
             }
             mesh.D3dMesh.UnlockAttributeBuffer(attributeBuffer);
+
+            //Re-computar boundingBox
+            //TODO centrar mesh primero
+            mesh.createBoundingBox();
         }
 
         /// <summary>
@@ -718,11 +857,11 @@ namespace Examples.MeshCreator.EditablePolyTools
         public void updateValuesFromMesh(TgcMesh mesh)
         {
             this.mesh = mesh;
-            List<Vertex> origVertices = getMeshOriginalVertexData(mesh);
+            List<EditPolyVertex> origVertices = getMeshOriginalVertexData(mesh);
             for (int i = 0; i < origVertices.Count; i++)
             {
-                Vertex origV = origVertices[i];
-                Vertex v = vertices[indexBuffer[i]];
+                EditPolyVertex origV = origVertices[i];
+                EditPolyVertex v = vertices[indexBuffer[i]];
                 v.position = origV.position;
                 /*v.normal = origV.normal;
                 v.color = origV.color;
@@ -737,208 +876,9 @@ namespace Examples.MeshCreator.EditablePolyTools
 
 
 
-        #region Estructuras auxiliares
 
-        /// <summary>
-        /// Primitiva generica
-        /// </summary>
-        public abstract class Primitive
-        {
-            protected bool selected;
-            /// <summary>
-            /// Indica si la primitiva esta seleccionada
-            /// </summary>
-            public bool Selected
-            {
-                get { return selected; }
-                set { selected = value; }
-            }
 
-            public Primitive()
-            {
-                selected = false;
-            }
 
-            /// <summary>
-            /// Tipo de primitiva
-            /// </summary>
-            public abstract PrimitiveType Type {get;}
-
-            /// <summary>
-            /// Proyectar primitva a rectangulo 2D en la pantalla
-            /// </summary>
-            /// <param name="transform">Mesh transform</param>
-            /// <param name="box2D">Rectangulo 2D proyectado</param>
-            /// <returns>False si es un caso degenerado de proyeccion y no debe considerarse</returns>
-            public abstract bool projectToScreen(Matrix transform, out Rectangle box2D);
-
-            /// <summary>
-            /// Intersect ray againts primitive
-            /// </summary>
-            public abstract bool intersectRay(TgcRay tgcRay, Matrix transform, out Vector3 q);
-        }
-
-        /// <summary>
-        /// Estructura auxiliar de vertice
-        /// </summary>
-        public class Vertex : Primitive
-        {
-            /// <summary>
-            /// Sphere for ray-collisions
-            /// </summary>
-            private static readonly TgcBoundingSphere COLLISION_SPHERE = new TgcBoundingSphere(new Vector3(0, 0, 0), 2);
-
-            public Vector3 position;
-            /*public Vector3 normal;
-            public Vector2 texCoords;
-            public Vector2 texCoords2;
-            public int color;*/
-            public List<Edge> edges;
-            public int vbIndex;
-
-            public override string ToString()
-            {
-                return "Index: " + vbIndex + ", Pos: " + TgcParserUtils.printVector3(position);
-            }
-
-            public override PrimitiveType Type
-            {
-                get { return PrimitiveType.Vertex; }
-            }
-
-            public override bool projectToScreen(Matrix transform, out Rectangle box2D)
-            {
-                return MeshCreatorUtils.projectPoint(Vector3.TransformCoordinate(position, transform), out box2D);
-            }
-
-            public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
-            {
-                COLLISION_SPHERE.setCenter(Vector3.TransformCoordinate(position, transform));
-                float t;
-                return TgcCollisionUtils.intersectRaySphere(ray, COLLISION_SPHERE, out t, out q);
-            }
-
-        }
-
-        /// <summary>
-        /// Estructura auxiliar de arista
-        /// </summary>
-        public class Edge : Primitive
-        {
-            public Vertex a;
-            public Vertex b;
-            public List<Polygon> faces;
-
-            public override string ToString()
-            {
-                return a.vbIndex + " => " + b.vbIndex;
-            }
-
-            public override PrimitiveType Type
-            {
-                get { return PrimitiveType.Edge; }
-            }
-
-            public override bool projectToScreen(Matrix transform, out Rectangle box2D)
-            {
-                return MeshCreatorUtils.projectSegmentToScreenRect(
-                    Vector3.TransformCoordinate(a.position, transform),
-                    Vector3.TransformCoordinate(b.position, transform), out box2D);
-            }
-
-            public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
-            {
-                //TODO: hacer ray-obb (hacer un obb previamente para el edge)
-                q = Vector3.Empty;
-                return false;
-            }
-
-        }
-
-        /// <summary>
-        /// Estructura auxiliar de poligono
-        /// </summary>
-        public class Polygon : Primitive
-        {
-            public List<Vertex> vertices;
-            public List<Edge> edges;
-            public List<int> vbTriangles;
-            public Plane plane;
-            public int matId;
-
-            public override string ToString()
-            {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < vertices.Count; i++)
-                {
-                    sb.Append(vertices[i].vbIndex + ", ");
-                }
-                sb.Remove(sb.Length - 2, 2);
-                return sb.ToString();
-            }
-
-            public override PrimitiveType Type
-            {
-                get { return PrimitiveType.Polygon; }
-            }
-
-            public override bool projectToScreen(Matrix transform, out Rectangle box2D)
-            {
-                Vector3[] v = new Vector3[vertices.Count];
-                for (int i = 0; i < v.Length; i++)
-			    {
-                    v[i] = Vector3.TransformCoordinate(vertices[i].position, transform);
-			    }
-                return MeshCreatorUtils.projectPolygon(v, out box2D);
-            }
-
-            public override bool intersectRay(TgcRay ray, Matrix transform, out Vector3 q)
-            {
-                Vector3[] v = new Vector3[vertices.Count];
-                for (int i = 0; i < v.Length; i++)
-                {
-                    v[i] = Vector3.TransformCoordinate(vertices[i].position, transform);
-                }
-                float t;
-                return TgcCollisionUtils.intersectRayConvexPolygon(ray, v, plane, out t, out q);
-            }
-
-            /// <summary>
-            /// Normal del plano del poligono
-            /// </summary>
-            public Vector3 getNormal()
-            {
-                return new Vector3(plane.A, plane.B, plane.C);
-            }
-
-        }
-
-        /// <summary>
-        /// Iterar sobre lista de primitivas
-        /// </summary>
-        /// <param name="primitiveType">Primitiva</param>
-        /// <param name="i">indice</param>
-        /// <returns>Elemento o null si no hay mas</returns>
-        private Primitive iteratePrimitive(PrimitiveType primitiveType, int i)
-        {
-            switch (primitiveType)
-            {
-                case PrimitiveType.Vertex:
-                    if (i == vertices.Count) return null;
-                    return vertices[i];
-                case PrimitiveType.Edge:
-                    if (i == edges.Count) return null;
-                    return edges[i];
-                case PrimitiveType.Polygon:
-                    if (i == polygons.Count) return null;
-                    return polygons[i];
-            }
-            return null;
-        }
-
-        #endregion
-
-        
 
 
 

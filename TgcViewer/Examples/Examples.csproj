@@ -133,7 +133,12 @@
     <Compile Include="Matematica\EjemploTransformaciones.cs" />
     <Compile Include="Matematica\EjemploMatematicaVarios.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePoly.cs" />
+    <Compile Include="MeshCreator\EditablePoly\EditablePolyTranslateGizmo.cs" />
     <Compile Include="MeshCreator\EditablePoly\EditablePolyUtils.cs" />
+    <Compile Include="MeshCreator\EditablePoly\Primitives\EditPolyEdge.cs" />
+    <Compile Include="MeshCreator\EditablePoly\Primitives\EditPolyPolygon.cs" />
+    <Compile Include="MeshCreator\EditablePoly\Primitives\EditPolyPrimitive.cs" />
+    <Compile Include="MeshCreator\EditablePoly\Primitives\EditPolyVertex.cs" />
     <Compile Include="MeshCreator\EditablePoly\PrimitiveRenderer.cs" />
     <Compile Include="MeshCreator\EditablePoly\TrianglesBatchRenderer.cs" />
     <Compile Include="MeshCreator\Gizmos\TranslateGizmoMesh.cs" />
@@ -215,7 +220,6 @@
       <DependentUpon>EjemploDefaultHelpForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Otros\EjemploDisposeMesh.cs" />
-    <Compile Include="Otros\TestPointInPolygon.cs" />
     <Compile Include="Otros\EjemploPanView.cs" />
     <Compile Include="Particles\EmisorDeParticulas.cs" />
     <Compile Include="PortalRendering\PortalRenderingFramework.cs" />

@@ -133,7 +133,7 @@ namespace Examples.MeshCreator.Primitives
             {
                 if (editablePoly == null)
                 {
-                    editablePoly = new EditablePoly(mesh);
+                    editablePoly = new EditablePoly(this.Control, mesh);
                 }
                 else
                 {
