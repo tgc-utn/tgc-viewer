@@ -82,5 +82,20 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
             }
         }
 
+        /// <summary>
+        /// Quitar arista de la lista
+        /// </summary>
+        public void removeEdge(EditPolyEdge e)
+        {
+            for (int i = 0; i < edges.Count; i++)
+            {
+                if (e == edges[i])
+                {
+                    edges.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
     }
 }

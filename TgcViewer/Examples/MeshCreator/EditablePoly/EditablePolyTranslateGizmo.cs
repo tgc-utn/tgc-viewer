@@ -204,7 +204,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                             gizmoMesh.moveGizmo(currentMove);
 
                             //Actualizar mesh
-                            editablePoly.setDirtyValues();
+                            editablePoly.setDirtyValues(false);
 
                             //Actualizar datos de modify
                             //Control.updateModifyPanel();
