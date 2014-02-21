@@ -925,5 +925,15 @@ namespace TgcViewer.Utils.TgcSceneLoader
             return cloneMesh;
         }
 
+        /// <summary>
+        /// Cambiar el mesh interno de DirectX por uno nuevo.
+        /// Se asume que el nuevo mesh es del mismo RenderType que el anterior.
+        /// </summary>
+        /// <param name="newD3dMesh">Nuevo mesh</param>
+        public void changeD3dMesh(Mesh newD3dMesh)
+        {
+            this.d3dMesh.Dispose();
+            this.d3dMesh = newD3dMesh;
+        }
     }
 }
