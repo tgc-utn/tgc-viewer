@@ -652,6 +652,16 @@ namespace Examples.MeshCreator.EditablePolyTools
                     deleteVertex(e.b);
                 }
             }
+
+            //Quitar de lista de aristas
+            for (int i = 0; i < edges.Count; i++)
+            {
+                if(edges[i] == e)
+                {
+                    edges.RemoveAt(i);
+                    break;
+                }
+            }
         }
 
         /// <summary>
@@ -660,20 +670,38 @@ namespace Examples.MeshCreator.EditablePolyTools
         private void deletePolygon(EditPolyPolygon p)
         {
             //Quitar triangulos de index buffer
-            short[] newIndexBuffer = new short[indexBuffer.Length - p.vbTriangles.Count * 3];
+            int vertexToDelete = p.vbTriangles.Count * 3;
+            short[] newIndexBuffer = new short[indexBuffer.Length - vertexToDelete];
             int w = 0;
             for (int i = 0; i < indexBuffer.Length; i += 3)
             {
                 bool toDelete = false;
                 for (int j = 0; j < p.vbTriangles.Count; j++)
                 {
-                    if (indexBuffer[i] == p.vbTriangles[j])
+                    if (i == p.vbTriangles[j])
                     {
                         toDelete = true;
                         break;
                     }
                 }
-                if (!toDelete)
+                if(toDelete)
+                {
+                    //Ajustar todos los indices de triangulos del resto de los poligonos existentes
+                    foreach (EditPolyPolygon poly in polygons)
+                    {
+                        if(poly != p)
+                        {
+                            for (int j = 0; j < poly.vbTriangles.Count; j++)
+                            {
+                                if(poly.vbTriangles[j] >= i)
+                                {
+                                    poly.vbTriangles[j] -= 3;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
                 {
                     newIndexBuffer[w++] = indexBuffer[i];
                     newIndexBuffer[w++] = indexBuffer[i + 1];
@@ -694,6 +722,16 @@ namespace Examples.MeshCreator.EditablePolyTools
                 if (edge.faces.Count == 0)
                 {
                     deleteEdge(edge);
+                }
+            }
+
+            //Quitar de lista de poligonos
+            for (int i = 0; i < polygons.Count; i++)
+            {
+                if (polygons[i] == p)
+                {
+                    polygons.RemoveAt(i);
+                    break;
                 }
             }
         }
@@ -891,7 +929,6 @@ namespace Examples.MeshCreator.EditablePolyTools
             }
 
 
-
             setDirtyValues(false);
         }
 
@@ -960,7 +997,24 @@ namespace Examples.MeshCreator.EditablePolyTools
             //Cambio la estructura interna del mesh, crear uno nuevo
             if (recreateMesh)
             {
-                //TODO terminar
+                //Crear nuevo mesh con una cantidad distinta de triangulos y vertices
+                Mesh d3dMesh = null;
+                int triCount = indexBuffer.Length / 3;
+                int vertCount = indexBuffer.Length;
+                switch (mesh.RenderType)
+                {
+                    case TgcMesh.MeshRenderType.VERTEX_COLOR:
+                        d3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.VertexColorVertexElements, GuiController.Instance.D3dDevice);
+                        break;
+                    case TgcMesh.MeshRenderType.DIFFUSE_MAP:
+                        d3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.DiffuseMapVertexElements, GuiController.Instance.D3dDevice);
+                        break;
+                    case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
+                        d3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.DiffuseMapAndLightmapVertexElements, GuiController.Instance.D3dDevice);
+                        break;
+                }
+                //Cambiar mesh
+                mesh.changeD3dMesh(d3dMesh);
             }
 
             //Actualizar vertexBuffer
@@ -1025,6 +1079,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 }
             }
             mesh.D3dMesh.UnlockAttributeBuffer(attributeBuffer);
+
         }
 
         /// <summary>
