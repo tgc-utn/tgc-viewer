@@ -44,6 +44,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         TgcMesh mesh;
         short[] indexBuffer;
         bool dirtyValues;
+        bool recreateMesh;
         bool selectiveObjectsAdditive;
         SelectionRectangleMesh rectMesh;
         Vector2 initMousePos;
@@ -485,9 +486,10 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Marcar mesh como dirty para regenerar en el proximo cuadro
         /// </summary>
-        public void setDirtyValues()
+        public void setDirtyValues(bool recreateMesh)
         {
-            dirtyValues = true;
+            this.dirtyValues = true;
+            this.recreateMesh = recreateMesh;
         }
 
         /// <summary>
@@ -523,6 +525,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             {
                 updateMesh();
                 dirtyValues = false;
+                recreateMesh = false;
             }
 
             //Render de mesh
@@ -548,6 +551,8 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
 
+        #region Delete primitive
+
         /// <summary>
         /// Borrar las primitivas seleccionadas
         /// </summary>
@@ -555,14 +560,148 @@ namespace Examples.MeshCreator.EditablePolyTools
         {
             foreach (EditPolyPrimitive p in selectionList)
             {
-                p.delete();
+                switch (p.Type)
+                {
+                    case PrimitiveType.Vertex:
+                        deleteVertex((EditPolyVertex)p);
+                        break;
+                    case PrimitiveType.Edge:
+                        deleteEdge((EditPolyEdge)p);
+                        break;
+                    case PrimitiveType.Polygon:
+                        deletePolygon((EditPolyPolygon)p);
+                        break;
+                }
             }
-            setDirtyValues();
+
+            //TODO: setear para crear nuevo mesh
+            setDirtyValues(true);
+            clearSelection();
         }
 
+        
+
+        /// <summary>
+        /// Eliminar un vertice
+        /// </summary>
+        private void deleteVertex(EditPolyVertex v)
+        {
+            //Quitar referencia de todas las aristas que lo usan
+            foreach (EditPolyEdge edge in v.edges)
+            {
+                edge.a = null;
+                edge.b = null;
+            }
+
+            //Eliminar aristas
+            foreach (EditPolyEdge edge in v.edges)
+            {
+                deleteEdge(edge);
+            }
+
+            //Quitar vertice de lista de vertices
+            vertices.RemoveAt(v.vbIndex);
+
+            //Shift de vertex buffer
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                vertices[i].vbIndex = i;
+            }
+
+            //Ajustar indices en index buffer
+            for (int i = 0; i < indexBuffer.Length; i++)
+            {
+                if (indexBuffer[i] >= v.vbIndex)
+                {
+                    indexBuffer[i]--;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Eliminar una arista
+        /// </summary>
+        private void deleteEdge(EditPolyEdge e)
+        {
+            //Quitar referencia de todos los poligonos
+            foreach (EditPolyPolygon poly in e.faces)
+            {
+                poly.removeEdge(e);
+            }
+
+            //Eliminar poligonos
+            foreach (EditPolyPolygon poly in e.faces)
+            {
+                deletePolygon(poly);
+            }
+
+            //Quitar referencia a vertices y eliminar si quedaron aislados
+            if (e.a != null)
+            {
+                e.a.removeEdge(e);
+                if (e.a.edges.Count == 0)
+                {
+                    deleteVertex(e.a);
+                }
+            }
+            if (e.b != null)
+            {
+                e.b.removeEdge(e);
+                if (e.b.edges.Count == 0)
+                {
+                    deleteVertex(e.b);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Eliminar poligono
+        /// </summary>
+        private void deletePolygon(EditPolyPolygon p)
+        {
+            //Quitar triangulos de index buffer
+            short[] newIndexBuffer = new short[indexBuffer.Length - p.vbTriangles.Count * 3];
+            int w = 0;
+            for (int i = 0; i < indexBuffer.Length; i += 3)
+            {
+                bool toDelete = false;
+                for (int j = 0; j < p.vbTriangles.Count; j++)
+                {
+                    if (indexBuffer[i] == p.vbTriangles[j])
+                    {
+                        toDelete = true;
+                        break;
+                    }
+                }
+                if (!toDelete)
+                {
+                    newIndexBuffer[w++] = indexBuffer[i];
+                    newIndexBuffer[w++] = indexBuffer[i + 1];
+                    newIndexBuffer[w++] = indexBuffer[i + 2];
+                }
+            }
+            indexBuffer = newIndexBuffer;
+
+            //Quitar referencia a aristas
+            foreach (EditPolyEdge edge in p.edges)
+            {
+                edge.removePolygon(p);
+            }
+
+            //Eliminar aristas que quedaron aisladas
+            foreach (EditPolyEdge edge in p.edges)
+            {
+                if (edge.faces.Count == 0)
+                {
+                    deleteEdge(edge);
+                }
+            }
+        }
+
+        
 
 
-
+        #endregion
 
 
 
@@ -753,7 +892,7 @@ namespace Examples.MeshCreator.EditablePolyTools
 
 
 
-            setDirtyValues();
+            setDirtyValues(false);
         }
 
         /// <summary>
@@ -818,6 +957,12 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         private void updateMesh()
         {
+            //Cambio la estructura interna del mesh, crear uno nuevo
+            if (recreateMesh)
+            {
+                //TODO terminar
+            }
+
             //Actualizar vertexBuffer
             using (VertexBuffer vb = mesh.D3dMesh.VertexBuffer)
             {

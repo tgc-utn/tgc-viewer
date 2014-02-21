@@ -58,5 +58,20 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
             a.position += movement;
             b.position += movement;
         }
+
+        /// <summary>
+        /// Quitar poligono de la lista
+        /// </summary>
+        public void removePolygon(EditPolyPolygon p)
+        {
+            for (int i = 0; i < faces.Count; i++)
+            {
+                if (faces[i] == p)
+                {
+                    faces.RemoveAt(i);
+                    break;
+                }
+            }
+        }
     }
 }
