@@ -748,10 +748,19 @@ namespace Examples.MeshCreator.EditablePolyTools
             }
 
             //Registrar triangulos que se eliminaron (apuntando al indice del primer vertice de cada triangulo)
+            //Se registran el valor original al que apuntaba el triangulo antes de haber borrado nada
             for (int i = 0; i < p.vbTriangles.Count; i++)
             {
-                deletedTriangles.Add(p.vbTriangles[i]);
+                int triDelIdx = 0;
+                while (triDelIdx < deletedTriangles.Count)
+                {
+                    if (p.vbTriangles[i] < deletedTriangles[triDelIdx])
+                        break;
+                    triDelIdx++;
+                }
+                deletedTriangles.Add(p.vbTriangles[i] + triDelIdx * 3);
             }
+            deletedTriangles.Sort();
         }
 
         
@@ -1034,7 +1043,6 @@ namespace Examples.MeshCreator.EditablePolyTools
                 int vertCount = indexBuffer.Length;
                 int w = 0;
                 int delTriIdx = 0;
-                deletedTriangles.Sort();
                 switch (mesh.RenderType)
                 {
                     case TgcMesh.MeshRenderType.VERTEX_COLOR:
