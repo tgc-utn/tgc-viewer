@@ -935,5 +935,29 @@ namespace TgcViewer.Utils.TgcSceneLoader
             this.d3dMesh.Dispose();
             this.d3dMesh = newD3dMesh;
         }
+
+        /// <summary>
+        /// Acceder al VertexBuffer del mesh.
+        /// Una vez que se termina de trabajar con el buffer se debe invocar siempre a unlock.
+        /// </summary>
+        /// <param name="lockFlags">Flags de lectura del buffer</param>
+        /// <returns>array de elementos</returns>
+        public Array lockVertexBuffer(LockFlags lockFlags)
+        {
+            switch (renderType)
+            {
+                case MeshRenderType.VERTEX_COLOR:
+                    return (TgcSceneLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.VertexColorVertex), lockFlags, d3dMesh.NumberVertices);
+                case MeshRenderType.DIFFUSE_MAP:
+                    return (TgcSceneLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapVertex), lockFlags, d3dMesh.NumberVertices);
+                case MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
+                    return (TgcSceneLoader.DiffuseMapAndLightmapVertex[])d3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), lockFlags, d3dMesh.NumberVertices);
+            }
+            return null;
+        }
+
     }
 }

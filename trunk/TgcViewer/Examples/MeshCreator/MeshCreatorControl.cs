@@ -1945,7 +1945,7 @@ namespace Examples.MeshCreator
         /// Setear estado EditablePoly
         /// </summary>
         /// <param name="enabled"></param>
-        private void setEditablePolyEnable(bool enabled, EditablePoly.PrimitiveType primitiveType)
+        public void setEditablePolyEnable(bool enabled, EditablePoly.PrimitiveType primitiveType)
         {
             if (enabled)
             {
