@@ -50,6 +50,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         Vector2 initMousePos;
         PrimitiveRenderer primitiveRenderer;
         EditablePolyTranslateGizmo translateGizmo;
+        List<int> deletedTriangles;
 
         MeshCreatorControl control;
         /// <summary>
@@ -134,6 +135,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             this.selectionList = new List<EditPolyPrimitive>();
             this.primitiveRenderer = new PrimitiveRenderer(this);
             this.translateGizmo = new EditablePolyTranslateGizmo(this);
+            this.deletedTriangles = new List<int>();
             loadMesh(origMesh);
         }
 
@@ -574,9 +576,19 @@ namespace Examples.MeshCreator.EditablePolyTools
                 }
             }
 
-            //TODO: setear para crear nuevo mesh
-            setDirtyValues(true);
-            clearSelection();
+            if(vertices.Count > 0)
+            {
+                //setear para crear nuevo mesh
+                setDirtyValues(true);
+                clearSelection();
+            }
+            else
+            {
+                //No quedo nada del mesh. Eliminarlo del editor
+                control.setEditablePolyEnable(false, PrimitiveType.None);
+                control.deleteSelectedObjects();
+            }
+            
         }
 
         
@@ -733,6 +745,12 @@ namespace Examples.MeshCreator.EditablePolyTools
                     polygons.RemoveAt(i);
                     break;
                 }
+            }
+
+            //Registrar triangulos que se eliminaron (apuntando al indice del primer vertice de cada triangulo)
+            for (int i = 0; i < p.vbTriangles.Count; i++)
+            {
+                deletedTriangles.Add(p.vbTriangles[i]);
             }
         }
 
@@ -904,11 +922,12 @@ namespace Examples.MeshCreator.EditablePolyTools
             {
                 for (int i = 0; i < p.edges.Count; i++)
                 {
-                    int eIdx = EditablePolyUtils.addEdgeToListIfUnique(edges, p.edges[i]);
+                    bool newEdgeAdded;
+                    int eIdx = EditablePolyUtils.addEdgeToListIfUnique(edges, p.edges[i], out newEdgeAdded);
                     EditPolyEdge e = edges[eIdx];
                     
                     //Nueva arista incorporada a la lista
-                    if(eIdx == edges.Count - 1)
+                    if (newEdgeAdded)
                     {
                         e.faces = new List<EditPolyPolygon>();
 
@@ -928,6 +947,18 @@ namespace Examples.MeshCreator.EditablePolyTools
                 }
             }
 
+            
+            foreach (EditPolyPolygon p in polygons)
+            {
+                for (int i = 0; i < p.edges.Count; i++)
+                {
+                    if(p.edges[i].faces == null)
+                    {
+                        throw new Exception();
+                    }
+                }
+            }
+            
 
             setDirtyValues(false);
         }
@@ -998,23 +1029,87 @@ namespace Examples.MeshCreator.EditablePolyTools
             if (recreateMesh)
             {
                 //Crear nuevo mesh con una cantidad distinta de triangulos y vertices
-                Mesh d3dMesh = null;
+                Mesh newD3dMesh = null;
                 int triCount = indexBuffer.Length / 3;
                 int vertCount = indexBuffer.Length;
+                int w = 0;
+                int delTriIdx = 0;
+                deletedTriangles.Sort();
                 switch (mesh.RenderType)
                 {
                     case TgcMesh.MeshRenderType.VERTEX_COLOR:
-                        d3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.VertexColorVertexElements, GuiController.Instance.D3dDevice);
+                        newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.VertexColorVertexElements, GuiController.Instance.D3dDevice);
+                        TgcSceneLoader.VertexColorVertex[] origVert1 = (TgcSceneLoader.VertexColorVertex[])mesh.D3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                        TgcSceneLoader.VertexColorVertex[] newVert1 = (TgcSceneLoader.VertexColorVertex[])newD3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.VertexColorVertex), LockFlags.None, newD3dMesh.NumberVertices);
+                        for (int i = 0; i < origVert1.Length; i += 3)
+                        {
+                            if (delTriIdx < deletedTriangles.Count && i == deletedTriangles[delTriIdx])
+                            {
+                                delTriIdx++;
+                            }
+                            else
+                            {
+                                newVert1[w++] = origVert1[i];
+                                newVert1[w++] = origVert1[i + 1];
+                                newVert1[w++] = origVert1[i + 2];
+                            }
+                        }
+                        mesh.D3dMesh.UnlockVertexBuffer();
+                        newD3dMesh.SetVertexBufferData(newVert1, LockFlags.None);
+                        newD3dMesh.UnlockVertexBuffer();
                         break;
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP:
-                        d3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.DiffuseMapVertexElements, GuiController.Instance.D3dDevice);
+                        newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.DiffuseMapVertexElements, GuiController.Instance.D3dDevice);
+                        TgcSceneLoader.DiffuseMapVertex[] origVert2 = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                        TgcSceneLoader.DiffuseMapVertex[] newVert2 = (TgcSceneLoader.DiffuseMapVertex[])newD3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.None, newD3dMesh.NumberVertices);
+                        for (int i = 0; i < origVert2.Length; i += 3)
+                        {
+                            if (delTriIdx < deletedTriangles.Count && i == deletedTriangles[delTriIdx])
+                            {
+                                delTriIdx++;
+                            }
+                            else
+                            {
+                                newVert2[w++] = origVert2[i];
+                                newVert2[w++] = origVert2[i + 1];
+                                newVert2[w++] = origVert2[i + 2];
+                            }
+                        }
+                        mesh.D3dMesh.UnlockVertexBuffer();
+                        newD3dMesh.SetVertexBufferData(newVert2, LockFlags.None);
+                        newD3dMesh.UnlockVertexBuffer();
                         break;
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
-                        d3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.DiffuseMapAndLightmapVertexElements, GuiController.Instance.D3dDevice);
+                        newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.DiffuseMapAndLightmapVertexElements, GuiController.Instance.D3dDevice);
+                        TgcSceneLoader.DiffuseMapAndLightmapVertex[] origVert3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                        TgcSceneLoader.DiffuseMapAndLightmapVertex[] newVert3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])newD3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.None, newD3dMesh.NumberVertices);
+                        for (int i = 0; i < origVert3.Length; i += 3)
+                        {
+                            if (delTriIdx < deletedTriangles.Count && i == deletedTriangles[delTriIdx])
+                            {
+                                delTriIdx++;
+                            }
+                            else
+                            {
+                                newVert3[w++] = origVert3[i];
+                                newVert3[w++] = origVert3[i + 1];
+                                newVert3[w++] = origVert3[i + 2];
+                            }
+                        }
+                        mesh.D3dMesh.UnlockVertexBuffer();
+                        newD3dMesh.SetVertexBufferData(newVert3, LockFlags.None);
+                        newD3dMesh.UnlockVertexBuffer();
                         break;
                 }
                 //Cambiar mesh
-                mesh.changeD3dMesh(d3dMesh);
+                mesh.changeD3dMesh(newD3dMesh);
+                deletedTriangles.Clear();
             }
 
             //Actualizar vertexBuffer
@@ -1024,7 +1119,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 {
                     case TgcMesh.MeshRenderType.VERTEX_COLOR:
                         TgcSceneLoader.VertexColorVertex[] verts1 = (TgcSceneLoader.VertexColorVertex[])mesh.D3dMesh.LockVertexBuffer(
-                        typeof(TgcSceneLoader.VertexColorVertex), LockFlags.None, mesh.D3dMesh.NumberVertices);
+                            typeof(TgcSceneLoader.VertexColorVertex), LockFlags.None, mesh.D3dMesh.NumberVertices);
                         for (int i = 0; i < verts1.Length; i++)
                         {
                             verts1[i].Position = vertices[indexBuffer[i]].position;
@@ -1034,7 +1129,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                         break;
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP:
                         TgcSceneLoader.DiffuseMapVertex[] verts2 = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
-                        typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                            typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         for (int i = 0; i < verts2.Length; i++)
                         {
                             verts2[i].Position = vertices[indexBuffer[i]].position;
@@ -1044,7 +1139,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                         break;
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                         TgcSceneLoader.DiffuseMapAndLightmapVertex[] verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
-                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                            typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         for (int i = 0; i < verts3.Length; i++)
                         {
                             verts3[i].Position = vertices[indexBuffer[i]].position;

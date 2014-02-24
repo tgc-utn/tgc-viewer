@@ -189,15 +189,17 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// Agrega una nueva arista a la lista si es que ya no hay otra igual.
         /// Devuelve el indice de la nuevo arista o de la que ya estaba.
         /// </summary>
-        public static int addEdgeToListIfUnique(List<EditPolyEdge> edges, EditPolyEdge e)
+        public static int addEdgeToListIfUnique(List<EditPolyEdge> edges, EditPolyEdge e, out bool newEdgeAdded)
         {
             for (int i = 0; i < edges.Count; i++)
             {
                 if (EditablePolyUtils.sameEdge(edges[i], e))
                 {
+                    newEdgeAdded = false;
                     return i;
                 }
             }
+            newEdgeAdded = true;
             e.faces = new List<EditPolyPolygon>();
             edges.Add(e);
             return edges.Count - 1;
