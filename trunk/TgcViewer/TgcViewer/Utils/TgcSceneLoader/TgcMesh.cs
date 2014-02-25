@@ -932,6 +932,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
         /// <param name="newD3dMesh">Nuevo mesh</param>
         public void changeD3dMesh(Mesh newD3dMesh)
         {
+            this.vertexDeclaration = new VertexDeclaration(newD3dMesh.Device, newD3dMesh.Declaration);
             this.d3dMesh.Dispose();
             this.d3dMesh = newD3dMesh;
         }
