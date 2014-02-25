@@ -162,6 +162,8 @@
     </Compile>
     <Compile Include="MeshCreator\Primitives\SpherePrimitive.cs" />
     <Compile Include="MeshCreator\SelectionRectangleMesh.cs" />
+    <Compile Include="Otros\EjemploDisposeMesh3.cs" />
+    <Compile Include="Otros\EjemploDisposeMesh2.cs" />
     <Compile Include="Otros\EjemploDefault.cs" />
     <Compile Include="Fog\EfectoNiebla.cs" />
     <Compile Include="GeometryBasics\Caja.cs" />
