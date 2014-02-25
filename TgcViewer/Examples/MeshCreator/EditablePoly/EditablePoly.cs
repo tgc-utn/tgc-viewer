@@ -1075,7 +1075,6 @@ namespace Examples.MeshCreator.EditablePolyTools
                         break;
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.DiffuseMapVertexElements, GuiController.Instance.D3dDevice);
-                        /*
                         TgcSceneLoader.DiffuseMapVertex[] origVert2 = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
                             typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         mesh.D3dMesh.UnlockVertexBuffer();
@@ -1096,7 +1095,6 @@ namespace Examples.MeshCreator.EditablePolyTools
                         }
                         newD3dMesh.SetVertexBufferData(newVert2, LockFlags.None);
                         newD3dMesh.UnlockVertexBuffer();
-                         */
                         break;
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed, TgcSceneLoader.DiffuseMapAndLightmapVertexElements, GuiController.Instance.D3dDevice);
