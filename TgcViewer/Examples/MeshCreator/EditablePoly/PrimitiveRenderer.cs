@@ -72,18 +72,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         {
             batchRenderer.reset();
             
-            //Polygon edges
-            /*
-            foreach (Polygon p in editablePoly.Polygons)
-            {
-                foreach (Edge e in p.edges)
-                {
-                    batchRenderer.addBoxLine(
-                        Vector3.TransformCoordinate(e.a.position, transform), 
-                        Vector3.TransformCoordinate(e.b.position, transform), 
-                        0.06f, Color.Blue);
-                }
-            } */
+            //Edges
             foreach (EditPolyEdge e in editablePoly.Edges)
             {
                 Vector3 a = Vector3.TransformCoordinate(e.a.position, transform);
@@ -96,6 +85,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             {
                 if(p.Selected)
                 {
+                    /*
                     Vector3 n = new Vector3(p.plane.A, p.plane.B, p.plane.C) * 0.1f;
                     Vector3 v0 = Vector3.TransformCoordinate(p.vertices[0].position, transform);
                     Vector3 v1 = Vector3.TransformCoordinate(p.vertices[1].position, transform);
@@ -106,6 +96,19 @@ namespace Examples.MeshCreator.EditablePolyTools
                         batchRenderer.addTriangle(v0 + n, v1 + n, v2 + n, SELECTED_POLYGON_COLOR);
                         batchRenderer.addTriangle(v0 - n, v1 - n, v2 - n, SELECTED_POLYGON_COLOR);
                         v1 = v2;
+                    }
+                     */
+                    Vector3 n = new Vector3(p.plane.A, p.plane.B, p.plane.C) * 0.1f;
+                    for (int i = 0; i < p.vbTriangles.Count; i++)
+                    {
+                        int triIdx = p.vbTriangles[i];
+                        Vector3 v0 = Vector3.TransformCoordinate(editablePoly.Vertices[editablePoly.IndexBuffer[triIdx]].position, transform);
+                        Vector3 v1 = Vector3.TransformCoordinate(editablePoly.Vertices[editablePoly.IndexBuffer[triIdx + 1]].position, transform);
+                        Vector3 v2 = Vector3.TransformCoordinate(editablePoly.Vertices[editablePoly.IndexBuffer[triIdx + 2]].position, transform);
+
+                        batchRenderer.checkAndFlush(6);
+                        batchRenderer.addTriangle(v0 + n, v1 + n, v2 + n, SELECTED_POLYGON_COLOR);
+                        batchRenderer.addTriangle(v0 - n, v1 - n, v2 - n, SELECTED_POLYGON_COLOR);
                     }
                 }
             }

@@ -26,6 +26,12 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
         public int color;*/
         public List<EditPolyEdge> edges;
         public int vbIndex;
+        public Vector3 movement;
+
+        public EditPolyVertex()
+        {
+            movement = new Vector3(0, 0, 0);
+        }
 
         public override string ToString()
         {
@@ -56,7 +62,8 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
 
         public override void move(Vector3 movement)
         {
-            position += movement;
+            //position += movement;
+            this.movement = movement;
         }
 
         /// <summary>

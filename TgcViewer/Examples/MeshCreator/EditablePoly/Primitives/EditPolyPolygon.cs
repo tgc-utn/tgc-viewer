@@ -76,9 +76,15 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
 
         public override void move(Vector3 movement)
         {
+            /*
             for (int i = 0; i < vertices.Count; i++)
             {
                 vertices[i].position += movement;
+            }
+            */
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                vertices[i].movement = movement;
             }
         }
 
