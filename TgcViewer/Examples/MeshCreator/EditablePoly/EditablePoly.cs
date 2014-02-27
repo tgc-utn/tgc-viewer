@@ -41,8 +41,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         
-        TgcMesh mesh;
-        short[] indexBuffer;
+        TgcMesh mesh;       
         bool dirtyValues;
         bool recreateMesh;
         bool selectiveObjectsAdditive;
@@ -105,6 +104,15 @@ namespace Examples.MeshCreator.EditablePolyTools
         public List<EditPolyPolygon> Polygons
         {
             get { return polygons; }
+        }
+
+        short[] indexBuffer;
+        /// <summary>
+        /// Index buffer
+        /// </summary>
+        public short[] IndexBuffer
+        {
+            get { return indexBuffer; }
         }
 
         PrimitiveType currentPrimitive;
@@ -581,6 +589,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 //setear para crear nuevo mesh
                 setDirtyValues(true);
                 clearSelection();
+                currentState = State.SelectObject;
             }
             else
             {
@@ -817,24 +826,6 @@ namespace Examples.MeshCreator.EditablePolyTools
                 e3.a = v3;
                 e3.b = v1;
 
-                /*
-                //Agregar edges a la lista, si es que son nuevos
-                int e1Idx = EditablePolyUtils.addEdgeToListIfUnique(edges, e1);
-                int e2Idx = EditablePolyUtils.addEdgeToListIfUnique(edges, e2);
-                int e3Idx = EditablePolyUtils.addEdgeToListIfUnique(edges, e3);
-                e1 = edges[e1Idx];
-                e2 = edges[e2Idx];
-                e3 = edges[e3Idx];
-
-                //Guardar referencias a aristas en cada vertice
-                v1.edges.Add(e1);
-                v1.edges.Add(e3);
-                v2.edges.Add(e1);
-                v2.edges.Add(e2);
-                v3.edges.Add(e2);
-                v3.edges.Add(e3);
-                */
-
                 //Crear poligono para este triangulo
                 EditPolyPolygon p = new EditPolyPolygon();
                 p.vertices = new List<EditPolyVertex>();
@@ -856,6 +847,11 @@ namespace Examples.MeshCreator.EditablePolyTools
                 indexBuffer[i * 3 + 1] = (short)v2Idx;
                 indexBuffer[i * 3 + 2] = (short)v3Idx;
 
+                //Agregar a lista de poligonos
+                polygons.Add(p);
+
+
+                /*
                 //Buscar si hay un poligono ya existente al cual sumarnos (coplanar y que compartan una arista)
                 EditPolyPolygon coplanarP = null;
                 for (int j = 0; j < polygons.Count; j++)
@@ -880,7 +876,6 @@ namespace Examples.MeshCreator.EditablePolyTools
                                 thirdVert = p.vertices[2];
 
                             //Agregar el tercer vertice al poligno existente
-                            //p0.vertices.Add(thirdVert);
                             EditablePolyUtils.addVertexToPolygon(p0, sharedEdge, thirdVert);
 
                             //Quitar arista compartida
@@ -890,19 +885,11 @@ namespace Examples.MeshCreator.EditablePolyTools
                             EditPolyEdge newPolEdge1 = new EditPolyEdge();
                             newPolEdge1.a = sharedEdge.a;
                             newPolEdge1.b = thirdVert;
-                            //newPolEdge1.faces = new List<Polygon>();
-                            //newPolEdge1.faces.Add(p0);
-                            //sharedEdge.a.edges.Add(newPolEdge1);
-                            //sharedEdge.b.edges.Add(newPolEdge1);
                             p0.edges.Add(newPolEdge1);
 
                             EditPolyEdge newPolEdge2 = new EditPolyEdge();
                             newPolEdge2.a = thirdVert;
                             newPolEdge2.b = sharedEdge.b;
-                            //newPolEdge2.faces = new List<Polygon>();
-                            //newPolEdge2.faces.Add(p0);
-                            //sharedEdge.a.edges.Add(newPolEdge2);
-                            //sharedEdge.b.edges.Add(newPolEdge2);
                             p0.edges.Add(newPolEdge2);
 
                             //Agregar indice de triangulo del vertexBuffer que se sumo al poligono
@@ -917,16 +904,8 @@ namespace Examples.MeshCreator.EditablePolyTools
                 {
                     polygons.Add(p);
                 }
+                 */ 
             }
-
-            /*
-            //Eliminar aristas interiores de los poligonos
-            foreach (Polygon p in polygons)
-            {
-                EditablePolyUtils.computePolygonExternalEdges(p);
-                EditablePolyUtils.sortPolygonVertices(p);
-            }
-            */
 
 
             //Unificar aristas de los poligonos
@@ -956,18 +935,6 @@ namespace Examples.MeshCreator.EditablePolyTools
 
                     //Indicar a la arista que pertenece al poligono actual
                     e.faces.Add(p);
-                }
-            }
-
-            
-            foreach (EditPolyPolygon p in polygons)
-            {
-                for (int i = 0; i < p.edges.Count; i++)
-                {
-                    if(p.edges[i].faces == null)
-                    {
-                        throw new Exception();
-                    }
                 }
             }
             
@@ -1126,6 +1093,12 @@ namespace Examples.MeshCreator.EditablePolyTools
                 deletedTriangles.Clear();
             }
             
+            //Aplicar movimiento de vertices
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                vertices[i].position += vertices[i].movement;
+                vertices[i].movement = new Vector3(0, 0, 0);
+            }
 
             //Actualizar vertexBuffer
             using (VertexBuffer vb = mesh.D3dMesh.VertexBuffer)

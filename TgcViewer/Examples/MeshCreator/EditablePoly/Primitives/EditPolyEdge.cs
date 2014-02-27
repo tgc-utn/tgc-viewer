@@ -55,8 +55,12 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
 
         public override void move(Vector3 movement)
         {
+            /*
             a.position += movement;
             b.position += movement;
+             */
+            a.movement = movement;
+            b.movement = movement;
         }
 
         /// <summary>
