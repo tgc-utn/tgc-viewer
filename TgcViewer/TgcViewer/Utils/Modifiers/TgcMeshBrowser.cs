@@ -19,6 +19,16 @@ namespace TgcViewer.Utils.Modifiers
         MeshItemControl selectedItem;
 
 
+        string homeDirPath;
+        /// <summary>
+        /// Path del directorio Home
+        /// </summary>
+        public string HomeDirPath
+        {
+            get { return homeDirPath; }
+            set { homeDirPath = value; }
+        }
+
         public TgcMeshBrowser()
         {
             InitializeComponent();
@@ -28,6 +38,7 @@ namespace TgcViewer.Utils.Modifiers
             browseDialog.Title = "Select -TgcScene.xml mesh file";
             browseDialog.Filter = "-TgcScene.xml |*-TgcScene.xml";
             browseDialog.Multiselect = false;
+            homeDirPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator";
         }
 
         /// <summary>
@@ -88,6 +99,12 @@ namespace TgcViewer.Utils.Modifiers
         public void loadFolderContent(string folderPath)
         {
             textBoxFolderPath.Text = browseDialog.FileName;
+
+            //Limpiar controles anteriores
+            foreach (MeshItemControl c in panelItems.Controls)
+            {
+                c.dispose();
+            }
             panelItems.Controls.Clear();
 
             if (Directory.Exists(folderPath))
@@ -190,6 +207,11 @@ namespace TgcViewer.Utils.Modifiers
             }
         }
 
+        private void pictureBoxHomeDir_Click(object sender, EventArgs e)
+        {
+            this.CurrentDir = homeDirPath;
+        }
+
 
         /// <summary>
         /// Control para una imagen o directorio
@@ -268,7 +290,7 @@ namespace TgcViewer.Utils.Modifiers
                 this.BackColor = Color.Yellow;
             }
 
-            void pictureBox_DoubleClick(object sender, EventArgs e)
+            public void pictureBox_DoubleClick(object sender, EventArgs e)
             {
                 selectItem();
 
@@ -284,21 +306,34 @@ namespace TgcViewer.Utils.Modifiers
                 }
             }
 
-            void filenameLabel_Click(object sender, EventArgs e)
+            public void filenameLabel_Click(object sender, EventArgs e)
             {
                 selectItem();
             }
 
-            void pictureBox_Click(object sender, EventArgs e)
+            public void pictureBox_Click(object sender, EventArgs e)
             {
                 selectItem();
             }
 
-            void ImageControl_Click(object sender, EventArgs e)
+            public void ImageControl_Click(object sender, EventArgs e)
             {
                 selectItem();
+            }
+
+            public void dispose()
+            {
+                if (!isDirectory && pictureBox.Image != browser.pictureBoxNoImageIcon.Image)
+                {
+                    if (pictureBox.Image != null)
+                    {
+                        pictureBox.Image.Dispose();
+                    }
+                }
             }
         }
+
+        
 
 
         

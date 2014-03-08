@@ -36,9 +36,11 @@
             this.pictureBoxDirIcon = new System.Windows.Forms.PictureBox();
             this.pictureBoxUpDir = new System.Windows.Forms.PictureBox();
             this.pictureBoxNoImageIcon = new System.Windows.Forms.PictureBox();
+            this.pictureBoxHomeDir = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDirIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxUpDir)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNoImageIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHomeDir)).BeginInit();
             this.SuspendLayout();
             // 
             // labelPath
@@ -110,11 +112,24 @@
             this.pictureBoxNoImageIcon.TabStop = false;
             this.pictureBoxNoImageIcon.Visible = false;
             // 
+            // pictureBoxHomeDir
+            // 
+            this.pictureBoxHomeDir.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxHomeDir.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxHomeDir.Image")));
+            this.pictureBoxHomeDir.Location = new System.Drawing.Point(53, 1);
+            this.pictureBoxHomeDir.Name = "pictureBoxHomeDir";
+            this.pictureBoxHomeDir.Size = new System.Drawing.Size(34, 34);
+            this.pictureBoxHomeDir.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBoxHomeDir.TabIndex = 6;
+            this.pictureBoxHomeDir.TabStop = false;
+            this.pictureBoxHomeDir.Click += new System.EventHandler(this.pictureBoxHomeDir_Click);
+            // 
             // TgcMeshBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(922, 566);
+            this.Controls.Add(this.pictureBoxHomeDir);
             this.Controls.Add(this.pictureBoxNoImageIcon);
             this.Controls.Add(this.pictureBoxUpDir);
             this.Controls.Add(this.pictureBoxDirIcon);
@@ -133,6 +148,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDirIcon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxUpDir)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNoImageIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHomeDir)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,5 +163,6 @@
         private System.Windows.Forms.PictureBox pictureBoxDirIcon;
         private System.Windows.Forms.PictureBox pictureBoxUpDir;
         private System.Windows.Forms.PictureBox pictureBoxNoImageIcon;
+        private System.Windows.Forms.PictureBox pictureBoxHomeDir;
     }
 }
