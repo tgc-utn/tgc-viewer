@@ -419,7 +419,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     for (int n = 0; n < numPasses; n++)
                     {
                         //Dibujar cada subset con su DiffuseMap correspondiente
-                        for (int i = 0; i < materials.Length; i++)
+                        for (int i = 0; i < diffuseMaps.Length; i++)
                         {
                             //Setear textura en shader
                             texturesManager.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
@@ -442,7 +442,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                         texturesManager.shaderSet(effect, "texLightMap", lightMap);
 
                         //Dibujar cada subset con su Material y su DiffuseMap correspondiente
-                        for (int i = 0; i < materials.Length; i++)
+                        for (int i = 0; i < diffuseMaps.Length; i++)
                         {
                             //Setear textura en shader
                             texturesManager.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
@@ -825,6 +825,75 @@ namespace TgcViewer.Utils.TgcSceneLoader
         }
 
         /// <summary>
+        /// Agregar una nueva textura a la lista de texturas que tiene el mesh.
+        /// Esta nueva textura no va a ser utilizada por ningún triángulo si no se
+        /// adapta correctamente el attributeBuffer.
+        /// No se controla si esa textura ya esta repetida en el mesh.
+        /// </summary>
+        /// <param name="newDiffuseMap">Nueva textura</param>
+        public void addDiffuseMap(TgcTexture newDiffuseMap)
+        {
+            //Solo aplicar si la malla tiene texturas
+            if (renderType == MeshRenderType.DIFFUSE_MAP || renderType == MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP)
+            {
+                TgcTexture[] newDiffuseMapsArray = new TgcTexture[diffuseMaps.Length + 1];
+                Array.Copy(diffuseMaps, newDiffuseMapsArray, diffuseMaps.Length);
+                newDiffuseMapsArray[newDiffuseMapsArray.Length - 1] = newDiffuseMap;
+                this.diffuseMaps = newDiffuseMapsArray;
+            }
+        }
+
+        /// <summary>
+        /// Eliminar un slot de textura del mesh.
+        /// Se modifica el attributeBuffer para que todos los triangulos que
+        /// apuntaban a esta textura ahora apunten a replacementSlot
+        /// </summary>
+        /// <param name="diffuseMapSlot">Slot de textura a eliminar</param>
+        /// <param name="replacementSlot">Nuevo slot al que apuntan los triangulos que usaban el anterior</param>
+        public void deleteDiffuseMap(int diffuseMapSlot, int replacementSlot)
+        {
+            //Solo aplicar si la malla tiene texturas
+            if (renderType == MeshRenderType.DIFFUSE_MAP || renderType == MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP)
+            {
+                if (diffuseMapSlot < 0 || diffuseMapSlot >= diffuseMaps.Length)
+                {
+                    throw new Exception("Incorrect diffuseMap slot: " + diffuseMapSlot + ". Total: " + diffuseMaps.Length);
+                }
+                if (replacementSlot < 0 || replacementSlot >= diffuseMaps.Length - 1)
+                {
+                    replacementSlot = 0;
+                }
+
+                //Crear nuevo array sin la textura que se quiere eliminar
+                TgcTexture[] newDiffuseMapsArray = new TgcTexture[diffuseMaps.Length - 1];
+                int w = 0;
+                for (int i = 0; i < diffuseMaps.Length; i++)
+                {
+                    if (i != diffuseMapSlot)
+                    {
+                        newDiffuseMapsArray[w++] = diffuseMaps[i];
+                    }
+                }
+                this.diffuseMaps = newDiffuseMapsArray;
+
+                //Modificar attributeBuffer. Hay que reemplazar el id que se elimino y hacer shift de todo lo que estaba a la derecha
+                int[] attributeBuffer = d3dMesh.LockAttributeBufferArray(LockFlags.None);
+                for (int i = 0; i < attributeBuffer.Length; i++)
+                {
+                    if (attributeBuffer[i] == diffuseMapSlot)
+                    {
+                        attributeBuffer[i] = replacementSlot;
+                    }
+                    else if (attributeBuffer[i] > diffuseMapSlot)
+                    {
+                        attributeBuffer[i]--;
+                    }
+                }
+                d3dMesh.UnlockAttributeBuffer(attributeBuffer);
+            }
+        }
+
+        /// <summary>
         /// Crea una nueva malla que es una instancia de esta malla original
         /// Reutiliza toda la geometría de la malla original sin duplicarla.
         /// Solo se puede crear instancias a partir de originales.
@@ -960,5 +1029,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             return null;
         }
 
+
+        
     }
 }

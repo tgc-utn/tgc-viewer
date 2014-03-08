@@ -44,6 +44,7 @@ namespace Examples.MeshCreator
         TranslateGizmo translateGizmo;
         ScaleGizmo scaleGizmo;
         TgcTextureBrowser textureBrowser;
+        TgcTextureBrowser textureBrowserEPoly;
         string defaultTexturePath;
         string defaultMeshPath;
         TgcMeshBrowser meshBrowser;
@@ -51,7 +52,6 @@ namespace Examples.MeshCreator
         TgcText2d objectPositionText;
         ObjectBrowser objectBrowser;
         bool fpsCameraEnabled;
-        bool ignoreChangeEvents;
         Vector3 rotationPivot;
         string lastSavePath;
 
@@ -201,6 +201,16 @@ namespace Examples.MeshCreator
             get { return checkBoxModifyBothDir.Checked; }
         }
 
+        bool ignoreChangeEvents;
+        /// <summary>
+        /// Flag para ignorar eventos de UI
+        /// </summary>
+        public bool IgnoreChangeEvents
+        {
+            get { return ignoreChangeEvents; }
+            set { ignoreChangeEvents = value; }
+        }
+
 
 
         public MeshCreatorControl(TgcMeshCreator creator)
@@ -224,7 +234,8 @@ namespace Examples.MeshCreator
             lastSavePath = null;
 
             //meshBrowser
-            defaultMeshPath = mediaPath + "Meshes\\Vegetacion\\Arbusto\\Arbusto-TgcScene.xml";
+            //defaultMeshPath = mediaPath + "Meshes\\Vegetacion\\Arbusto\\Arbusto-TgcScene.xml";
+            defaultMeshPath = mediaPath + "\\Meshes\\Vegetacion";
             meshBrowser = new TgcMeshBrowser();
             meshBrowser.setSelectedMesh(defaultMeshPath);
 
@@ -278,6 +289,14 @@ namespace Examples.MeshCreator
             //ObjectBrowser
             objectBrowser = new ObjectBrowser(this);
 
+            //TextureBrowser para EditablePoly
+            textureBrowserEPoly = new TgcTextureBrowser();
+            textureBrowserEPoly.ShowFolders = true;
+            textureBrowserEPoly.setSelectedImage(defaultTexturePath);
+            textureBrowserEPoly.AsyncModeEnable = true;
+            textureBrowserEPoly.OnSelectImage += new TgcTextureBrowser.SelectImageHandler(textureBrowserEPoly_OnSelectImage);
+            textureBrowserEPoly.OnClose += new TgcTextureBrowser.CloseHandler(textureBrowserEPoly_OnClose);
+
             //Tooltips
             toolTips.SetToolTip(radioButtonSelectObject, "Select object (Q)");
             toolTips.SetToolTip(buttonSelectAll, "Select all objects (CTRL + E)");
@@ -316,6 +335,8 @@ namespace Examples.MeshCreator
             toolTips.SetToolTip(radioButtonEPolyPrimitiveEdge, "Edge primitve");
             toolTips.SetToolTip(radioButtonEPolyPrimitivePolygon, "Polygon primitve");
         }
+
+        
 
         
 
@@ -805,6 +826,7 @@ namespace Examples.MeshCreator
                 groupBoxModifyUserProps.Enabled = true;
                 buttonModifyConvertToMesh.Enabled = !isMeshFlag;
                 groupBoxEPolyPrimitive.Enabled = onlyOneObjectFlag && isMeshFlag;
+                groupBoxEPolyCommon.Enabled = false;
                 groupBoxEPolyEditVertices.Enabled = false;
                 groupBoxEPolyEditEdges.Enabled = false;
                 groupBoxEPolyEditPolygons.Enabled = false;
@@ -941,6 +963,7 @@ namespace Examples.MeshCreator
                 groupBoxModifyUserProps.Enabled = false;
                 buttonModifyConvertToMesh.Enabled = false;
                 groupBoxEPolyPrimitive.Enabled = false;
+                groupBoxEPolyCommon.Enabled = false;
                 groupBoxEPolyEditVertices.Enabled = false;
                 groupBoxEPolyEditEdges.Enabled = false;
                 groupBoxEPolyEditPolygons.Enabled = false;
@@ -967,6 +990,7 @@ namespace Examples.MeshCreator
             translateGizmo.dipose();
             scaleGizmo.dipose();
             textureBrowser.Close();
+            textureBrowserEPoly.Close();
             GuiController.Instance.CurrentCamera.Enable = true;
         }
 
@@ -1950,6 +1974,7 @@ namespace Examples.MeshCreator
             if (enabled)
             {
                 currentState = State.EditablePoly;
+                groupBoxEPolyCommon.Enabled = true;
                 creatingPrimitive = null;
                 currentGizmo = null;
                 MeshPrimitive m = (MeshPrimitive)selectionList[0];
@@ -1965,6 +1990,7 @@ namespace Examples.MeshCreator
                     radioButtonEPolyPrimitiveVertex.Checked = false;
                     radioButtonEPolyPrimitiveEdge.Checked = false;
                     radioButtonEPolyPrimitivePolygon.Checked = false;
+                    groupBoxEPolyCommon.Enabled = false;
                     groupBoxEPolyEditVertices.Enabled = false;
                     groupBoxEPolyEditEdges.Enabled = false;
                     groupBoxEPolyEditPolygons.Enabled = false;
@@ -2032,8 +2058,156 @@ namespace Examples.MeshCreator
             }
         }
 
+        /// <summary>
+        /// Clic en Select de EditablePoly
+        /// </summary>
+        private void radioButtonEPolySelect_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonEPolySelect.Checked)
+            {
+                EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
+                editablePoly.setSelectState();
+            }
+        }
+
+        /// <summary>
+        /// Clic en Select All de EditablePoly
+        /// </summary>
+        private void buttonEPolySelectAll_Click(object sender, EventArgs e)
+        {
+            EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
+            editablePoly.selectAll();
+        }
+
+        /// <summary>
+        /// Clic en Translate de EditablePoly
+        /// </summary>
+        private void radioButtonEPolyTranslate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonEPolyTranslate.Checked)
+            {
+                EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
+                editablePoly.activateTranslateGizmo();
+            }
+        }
+
+        /// <summary>
+        /// Clic en Delete de EditablePoly
+        /// </summary>
+        private void buttonEPolyDelete_Click(object sender, EventArgs e)
+        {
+            EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
+            editablePoly.deleteSelectedPrimitives();
+        }
+
+        /// <summary>
+        /// Clic en pasar numero de textura de EditablePoly
+        /// </summary>
+        private void numericUpDownEPolyTextureNumber_ValueChanged(object sender, EventArgs e)
+        {
+            if (ignoreChangeEvents) return;
+            EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
+            int n = (int)numericUpDownEPolyTextureNumber.Value - 1;
+
+            //Cambiar imagen del pictureBox
+            Image img = MeshCreatorUtils.getImage(selectionList[0].getTexture(n).FilePath);
+            Image lastImage = pictureBoxEPolyTexture.Image;
+            pictureBoxEPolyTexture.Image = img;
+            pictureBoxEPolyTexture.ImageLocation = selectionList[0].getTexture(n).FilePath;
+            lastImage.Dispose();
+
+            //Aplicar cambiod de textura en EditablePoly
+            editablePoly.changeTextureId(n);
+        }
+
+        /// <summary>
+        /// Agregar una nueva textura a EditablePoly
+        /// </summary>
+        private void buttonEPolyAddTexture_Click(object sender, EventArgs e)
+        {
+            //Clonar la primer textura y agregarsela al mesh (al final)
+            MeshPrimitive p = (MeshPrimitive)selectionList[0];
+            TgcTexture newTexutre = p.getTexture(0).clone();
+            p.addNexTexture(newTexutre);
+
+            //Agregar nuevo slot de textura en UI
+            //ignoreChangeEvents = true;
+            numericUpDownEPolyTextureNumber.Maximum++;
+            numericUpDownEPolyTextureNumber.Value = numericUpDownEPolyTextureNumber.Maximum;
+            //ignoreChangeEvents = false;
+
+            //Abrir el popup de seleccion de textura
+            pictureBoxEPolyTexture_Click(null, null);
+        }
+
+        /// <summary>
+        /// Clic en Delete Texture de EditablePoly
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonEPolyDeleteTexture_Click(object sender, EventArgs e)
+        {
+            MeshPrimitive p = (MeshPrimitive)selectionList[0];
+            if (p.ModifyCaps.TextureNumbers > 1)
+            {
+                int n = (int)numericUpDownEPolyTextureNumber.Value - 1;
+                p.deleteTexture(n);
+                p.EditablePoly.deleteTextureId(n, 0);
+                numericUpDownEPolyTextureNumber.Maximum--;
+                numericUpDownEPolyTextureNumber.Value = 1;
+            }
+        }
+
+        /// <summary>
+        /// Clic en icono de Textura de EditablePoly para cambiarla
+        /// </summary>
+        private void pictureBoxEPolyTexture_Click(object sender, EventArgs e)
+        {
+            popupOpened = true;
+
+            int n = (int)numericUpDownEPolyTextureNumber.Value - 1;
+            textureBrowserEPoly.setSelectedImage(selectionList[0].getTexture(n).FilePath);
+
+            textureBrowserEPoly.Show(this);
+        }
+
+        /// <summary>
+        /// Cuando se selecciona una imagen en el textureBrowser de EditablePoly
+        /// </summary>
+        public void textureBrowserEPoly_OnSelectImage(TgcTextureBrowser textureBrowser)
+        {
+            if (ignoreChangeEvents) return;
+            EditorPrimitive p = selectionList[0];
+
+            //Cambiar la textura si es distinta a la que tenia el mesh
+            int n = (int)numericUpDownEPolyTextureNumber.Value - 1;
+            if (textureBrowserEPoly.SelectedImage != p.getTexture(n).FilePath)
+            {
+                Image img = MeshCreatorUtils.getImage(textureBrowserEPoly.SelectedImage);
+                Image lastImage = pictureBoxEPolyTexture.Image;
+                pictureBoxEPolyTexture.Image = img;
+                pictureBoxEPolyTexture.ImageLocation = textureBrowserEPoly.SelectedImage;
+                lastImage.Dispose();
+
+                p.setTexture(TgcTexture.createTexture(pictureBoxEPolyTexture.ImageLocation), n);
+            }
+        }
+
+        /// <summary>
+        /// Cuando se cierra el textureBrowser de EditablePoly
+        /// </summary>
+        public void textureBrowserEPoly_OnClose(TgcTextureBrowser textureBrowser)
+        {
+            popupOpened = false;
+        }
+
+        
 
         #endregion
+
+        
+
+        
 
         
 

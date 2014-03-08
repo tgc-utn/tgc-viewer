@@ -343,6 +343,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="IconoTgc.ico" />
+    <None Include="Resources\homeDirIcon.png" />
     <None Include="Resources\dir_icon.jpg" />
   </ItemGroup>
   <ItemGroup>
