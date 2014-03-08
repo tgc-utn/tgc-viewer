@@ -218,22 +218,22 @@ namespace Examples.MeshCreator.EditablePolyTools
             //Zoom
             else if (input.keyPressed(Key.Z))
             {
-                EditablePolyUtils.zoomPrimitives(control.Camera, selectionList);
+                EditablePolyUtils.zoomPrimitives(control.Camera, selectionList, Transform);
             }
             //Top view
             else if (input.keyPressed(Key.T))
             {
-                EditablePolyUtils.setCameraTopView(control.Camera, selectionList);
+                EditablePolyUtils.setCameraTopView(control.Camera, selectionList, Transform);
             }
             //Left view
             else if (input.keyPressed(Key.L))
             {
-                EditablePolyUtils.setCameraLeftView(control.Camera, selectionList);
+                EditablePolyUtils.setCameraLeftView(control.Camera, selectionList, Transform);
             }
             //Front view
             else if (input.keyPressed(Key.F))
             {
-                EditablePolyUtils.setCameraFrontView(control.Camera, selectionList);
+                EditablePolyUtils.setCameraFrontView(control.Camera, selectionList, Transform);
             }
         }
 
