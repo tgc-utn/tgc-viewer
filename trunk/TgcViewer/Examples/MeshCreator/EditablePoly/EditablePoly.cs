@@ -153,6 +153,14 @@ namespace Examples.MeshCreator.EditablePolyTools
         public void setPrimitiveType(PrimitiveType p)
         {
             this.currentPrimitive = p;
+            setSelectState();
+        }
+
+        /// <summary>
+        /// Pasar a estado de seleccion de objetos
+        /// </summary>
+        public void setSelectState()
+        {
             clearSelection();
             currentState = State.SelectObject;
         }
@@ -190,13 +198,12 @@ namespace Examples.MeshCreator.EditablePolyTools
             //Select
             if (input.keyPressed(Key.Q))
             {
-                currentState = State.SelectObject;
+                setSelectState();
             }
             //Select all
             else if (input.keyDown(Key.LeftControl) && input.keyPressed(Key.E))
             {
                 selectAll();
-                currentState = State.SelectObject;
             }
             //Delete
             else if (input.keyPressed(Key.Delete))
@@ -342,13 +349,51 @@ namespace Examples.MeshCreator.EditablePolyTools
                 */
 
                 //Actualizar panel de Modify con lo que se haya seleccionado, o lo que no
-                //control.updateModifyPanel();
+                updateUiPanel();
             }
 
 
 
             //Dibujar recuadro
             rectMesh.render();
+        }
+
+        /// <summary>
+        /// Actualizar datos de UI de EditablePoly
+        /// </summary>
+        public void updateUiPanel()
+        {
+            control.IgnoreChangeEvents = true;
+
+            //Modificacion de textura en poligonos
+            if (selectionList.Count > 0 && mesh.DiffuseMaps.Length > 0 && currentPrimitive == PrimitiveType.Polygon)
+            {
+                EditPolyPolygon firstPolygon = (EditPolyPolygon)selectionList[0];
+                control.numericUpDownEPolyTextureNumber.Enabled = true;
+                control.numericUpDownEPolyTextureNumber.Minimum = 1;
+                control.numericUpDownEPolyTextureNumber.Maximum = mesh.DiffuseMaps.Length;
+                control.numericUpDownEPolyTextureNumber.Value = firstPolygon.matId + 1;
+                control.pictureBoxEPolyTexture.Enabled = true;
+                if (control.pictureBoxEPolyTexture.Image != null)
+                {
+                    control.pictureBoxEPolyTexture.Image.Dispose();
+                }
+                string imagePath = mesh.DiffuseMaps[firstPolygon.matId].FilePath;
+                control.pictureBoxEPolyTexture.Image = Image.FromFile(imagePath);
+                control.pictureBoxEPolyTexture.ImageLocation = imagePath;
+
+                control.buttonEPolyAddTexture.Enabled = true;
+                control.buttonEPolyDeleteTexture.Enabled = mesh.DiffuseMaps.Length > 1 ? true : false;
+            }
+            else
+            {
+                control.numericUpDownEPolyTextureNumber.Enabled = false;
+                control.pictureBoxEPolyTexture.Enabled = false;
+                control.buttonEPolyAddTexture.Enabled = false;
+                control.buttonEPolyDeleteTexture.Enabled = false;
+            }
+
+            control.IgnoreChangeEvents = false;
         }
 
         
@@ -392,12 +437,13 @@ namespace Examples.MeshCreator.EditablePolyTools
                 p.Selected = false;
             }
             selectionList.Clear();
+            updateUiPanel();
         }
 
         /// <summary>
         /// Seleccionar todo
         /// </summary>
-        private void selectAll()
+        public void selectAll()
         {
             clearSelection();
             int i = 0;
@@ -407,6 +453,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 selectPrimitive(p);
                 p = iteratePrimitive(currentPrimitive, ++i);
             }
+            updateUiPanel();
         }
 
         /// <summary>
@@ -462,7 +509,7 @@ namespace Examples.MeshCreator.EditablePolyTools
 
             //Pasar a modo seleccion
             currentState = State.SelectObject;
-            //control.updateModifyPanel();
+            updateUiPanel();
         }
 
 
@@ -474,7 +521,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Activar gizmo de translate
         /// </summary>
-        private void activateTranslateGizmo()
+        public void activateTranslateGizmo()
         {
             translateGizmo.setEnabled(true);
         }
@@ -560,13 +607,44 @@ namespace Examples.MeshCreator.EditablePolyTools
             primitiveRenderer.dispose();
         }
 
+        /// <summary>
+        /// Cambiar ID de textura de los poligonos seleccionados
+        /// </summary>
+        public void changeTextureId(int n)
+        {
+            foreach (EditPolyPolygon p in selectionList)
+            {
+                p.matId = n;
+            }
+            setDirtyValues(false);
+        }
+
+        /// <summary>
+        /// Se elimina un ID de textura y se reemplaza por otro id.
+        /// Ajusta todos los matId de los poligonos
+        /// </summary>
+        public void deleteTextureId(int id, int replacementId)
+        {
+            foreach (EditPolyPolygon p in polygons)
+            {
+                if (p.matId == id)
+                {
+                    p.matId = replacementId;
+                }
+                else if (p.matId > id)
+                {
+                    p.matId--;
+                }
+            }
+        }
+
 
         #region Delete primitive
 
         /// <summary>
         /// Borrar las primitivas seleccionadas
         /// </summary>
-        private void deleteSelectedPrimitives()
+        public void deleteSelectedPrimitives()
         {
             foreach (EditPolyPrimitive p in selectionList)
             {
@@ -1188,6 +1266,10 @@ namespace Examples.MeshCreator.EditablePolyTools
 
 
         #endregion
+
+
+
+
 
 
 

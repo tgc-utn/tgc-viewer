@@ -680,6 +680,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 tgcMesh.Materials = new Material[] { TgcD3dDevice.DEFAULT_MATERIAL };
                 tgcMesh.createBoundingBox();
                 tgcMesh.Enabled = true;
+                tgcMesh.AlphaBlendEnable = this.alphaBlendEnable;
                 return tgcMesh;
             }
 

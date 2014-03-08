@@ -33,6 +33,16 @@ namespace TgcViewer.Utils.Modifiers
             set { showFolders = value; }
         }
 
+        string homeDirPath;
+        /// <summary>
+        /// Path del directorio Home
+        /// </summary>
+        public string HomeDirPath
+        {
+            get { return homeDirPath; }
+            set { homeDirPath = value; }
+        }
+
         bool asyncModeEnable;
         /// <summary>
         /// En True el popup se prepara para ser usada como no-bloqueante
@@ -73,7 +83,8 @@ namespace TgcViewer.Utils.Modifiers
             browseDialog = new FolderBrowserDialog();
             browseDialog.Description = "Select folder";
             browseDialog.ShowNewFolderButton = false;
-            showFolders = false;
+            showFolders = true;
+            homeDirPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Textures";
             asyncModeEnable = false;
             OnSelectImage = null;
             OnClose = null;
@@ -246,6 +257,11 @@ namespace TgcViewer.Utils.Modifiers
             }
         }
 
+        private void pictureBoxHomeDir_Click(object sender, EventArgs e)
+        {
+            this.CurrentDir = homeDirPath;
+        }
+
 
         /// <summary>
         /// Control para una imagen o directorio
@@ -356,13 +372,18 @@ namespace TgcViewer.Utils.Modifiers
 
             public void dispose()
             {
-                if (pictureBox.Image != null)
+                if (!isDirectory)
                 {
-                    pictureBox.Image.Dispose();
+                    if (pictureBox.Image != null)
+                    {
+                        pictureBox.Image.Dispose();
+                    }
                 }
             }
 
         }
+
+        
 
         
 

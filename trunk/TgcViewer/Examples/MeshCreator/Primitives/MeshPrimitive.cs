@@ -19,8 +19,8 @@ namespace Examples.MeshCreator.Primitives
         Vector2 uvOffset;
         Vector2 uvTile;
         Vector2[] originalUVCoords;
-        EditablePoly editablePoly;
         bool editablePolyEnabled;
+        
 
         public MeshPrimitive(MeshCreatorControl control, TgcMesh mesh)
             : base(control)
@@ -66,6 +66,16 @@ namespace Examples.MeshCreator.Primitives
             //Ubicar mesh en el origen de coordenadas respecto del centro de su AABB
             setMeshToOrigin();
         }
+
+        EditablePoly editablePoly;
+        /// <summary>
+        /// EditablePoly del mesh
+        /// </summary>
+        public EditablePoly EditablePoly
+        {
+            get { return editablePoly; }
+        }
+        
 
         /// <summary>
         /// Mover vertices del mesh al centro de coordenadas
@@ -239,6 +249,25 @@ namespace Examples.MeshCreator.Primitives
             return mesh.DiffuseMaps[slot];
         }
 
+        /// <summary>
+        /// Agregar una nueva textura al mesh
+        /// </summary>
+        public void addNexTexture(TgcTexture t)
+        {
+            mesh.addDiffuseMap(t);
+            this.ModifyCaps.TextureNumbers = mesh.DiffuseMaps.Length;
+        }
+
+        /// <summary>
+        /// Eliminar textura existente
+        /// </summary>
+        /// <param name="n"></param>
+        public void deleteTexture(int n)
+        {
+            mesh.deleteDiffuseMap(n, 0);
+            this.ModifyCaps.TextureNumbers = mesh.DiffuseMaps.Length;
+        }
+
         public override Vector2 TextureOffset
         {
             get { return this.uvOffset; }
@@ -404,5 +433,9 @@ namespace Examples.MeshCreator.Primitives
             m.createBoundingBox();
         }
 
+
+
+
+        
     }
 }
