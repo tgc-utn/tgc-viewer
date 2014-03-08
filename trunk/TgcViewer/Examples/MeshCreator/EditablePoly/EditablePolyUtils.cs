@@ -278,25 +278,25 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Hacer zoom a un grupo de primitivas
         /// </summary>
-        public static void zoomPrimitives(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives)
+        public static void zoomPrimitives(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, Matrix transform)
         {
             TgcBoundingBox aabb = getSelectionBoundingBox(primitives);
             if(aabb != null)
             {
-                camera.CameraCenter = aabb.calculateBoxCenter();
+                camera.CameraCenter = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
             }
         }
 
         /// <summary>
         /// Poner la camara en top view respecto de un conjunto de primitivas
         /// </summary>
-        public static void setCameraTopView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives)
+        public static void setCameraTopView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, Matrix transform)
         {
             TgcBoundingBox aabb = getSelectionBoundingBox(primitives);
             Vector3 lookAt;
             if (aabb != null)
             {
-                lookAt = aabb.calculateBoxCenter();
+                lookAt = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
             }
             else
             {
@@ -308,13 +308,13 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Poner la camara en left view respecto de un conjunto de primitivas
         /// </summary>
-        public static void setCameraLeftView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives)
+        public static void setCameraLeftView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, Matrix transform)
         {
             TgcBoundingBox aabb = getSelectionBoundingBox(primitives);
             Vector3 lookAt;
             if (aabb != null)
             {
-                lookAt = aabb.calculateBoxCenter();
+                lookAt = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
             }
             else
             {
@@ -326,13 +326,13 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// <summary>
         /// Poner la camara en front view respecto de un conjunto de primitivas
         /// </summary>
-        public static void setCameraFrontView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives)
+        public static void setCameraFrontView(MeshCreatorCamera camera, List<EditPolyPrimitive> primitives, Matrix transform)
         {
             TgcBoundingBox aabb = getSelectionBoundingBox(primitives);
             Vector3 lookAt;
             if (aabb != null)
             {
-                lookAt = aabb.calculateBoxCenter();
+                lookAt = Vector3.TransformCoordinate(aabb.calculateBoxCenter(), transform);
             }
             else
             {
