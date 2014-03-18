@@ -327,13 +327,24 @@ namespace Examples.MeshCreator
             toolTips.SetToolTip(buttonImportMesh, "Import an existing mesh (M)");
             toolTips.SetToolTip(textBoxCreateCurrentLayer, "Default layer for new created objects");
 
+            toolTips.SetToolTip(buttonModifyConvertToMesh, "Conver to Mesh primitive");
             toolTips.SetToolTip(radioButtonModifySelectAndMove, "Move selected objects (W)");
             toolTips.SetToolTip(radioButtonModifySelectAndRotate, "Rotate selected objects (E)");
             toolTips.SetToolTip(radioButtonModifySelectAndScale, "Scale selected objects (R)");
+            toolTips.SetToolTip(pictureBoxModifyTexture, "Change primitive texture");
+            toolTips.SetToolTip(buttonModifyRecomputeAABB, "Compute a new BoundingBox for the primitive");
             
             toolTips.SetToolTip(radioButtonEPolyPrimitiveVertex, "Vertex primitve");
             toolTips.SetToolTip(radioButtonEPolyPrimitiveEdge, "Edge primitve");
             toolTips.SetToolTip(radioButtonEPolyPrimitivePolygon, "Polygon primitve");
+            toolTips.SetToolTip(radioButtonEPolySelect, "Select primitive (Q)");
+            toolTips.SetToolTip(buttonEPolySelectAll, "Select all primitives (CTRL + E)");
+            toolTips.SetToolTip(radioButtonEPolyTranslate, "Move selected primitives (W)");
+            toolTips.SetToolTip(buttonEPolyDelete, "Delete selected primitives (DEL)");
+            toolTips.SetToolTip(buttonEPolyAddTexture, "Add new texture to mesh");
+            toolTips.SetToolTip(buttonEPolyDeleteTexture, "Remove current texture");
+            toolTips.SetToolTip(pictureBoxEPolyTexture, "Change current texture");
+            
         }
 
         

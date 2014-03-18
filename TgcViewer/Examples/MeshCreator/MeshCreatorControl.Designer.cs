@@ -116,7 +116,17 @@
             this.radioButtonModifySelectAndRotate = new System.Windows.Forms.RadioButton();
             this.radioButtonModifySelectAndMove = new System.Windows.Forms.RadioButton();
             this.tabPageEditablePoly = new System.Windows.Forms.TabPage();
+            this.groupBoxEPolyCommon = new System.Windows.Forms.GroupBox();
+            this.radioButtonEPolyTranslate = new System.Windows.Forms.RadioButton();
+            this.radioButtonEPolySelect = new System.Windows.Forms.RadioButton();
+            this.buttonEPolySelectAll = new System.Windows.Forms.Button();
+            this.buttonEPolyDelete = new System.Windows.Forms.Button();
             this.groupBoxEPolyEditPolygons = new System.Windows.Forms.GroupBox();
+            this.buttonEPolyDeleteTexture = new System.Windows.Forms.Button();
+            this.buttonEPolyAddTexture = new System.Windows.Forms.Button();
+            this.numericUpDownEPolyTextureNumber = new System.Windows.Forms.NumericUpDown();
+            this.pictureBoxEPolyTexture = new System.Windows.Forms.PictureBox();
+            this.labelEPolyImage = new System.Windows.Forms.Label();
             this.groupBoxEPolyEditEdges = new System.Windows.Forms.GroupBox();
             this.groupBoxEPolyEditVertices = new System.Windows.Forms.GroupBox();
             this.groupBoxEPolyPrimitive = new System.Windows.Forms.GroupBox();
@@ -124,16 +134,6 @@
             this.radioButtonEPolyPrimitiveEdge = new System.Windows.Forms.RadioButton();
             this.radioButtonEPolyPrimitiveVertex = new System.Windows.Forms.RadioButton();
             this.toolTips = new System.Windows.Forms.ToolTip(this.components);
-            this.groupBoxEPolyCommon = new System.Windows.Forms.GroupBox();
-            this.radioButtonEPolySelect = new System.Windows.Forms.RadioButton();
-            this.buttonEPolySelectAll = new System.Windows.Forms.Button();
-            this.buttonEPolyDelete = new System.Windows.Forms.Button();
-            this.radioButtonEPolyTranslate = new System.Windows.Forms.RadioButton();
-            this.numericUpDownEPolyTextureNumber = new System.Windows.Forms.NumericUpDown();
-            this.pictureBoxEPolyTexture = new System.Windows.Forms.PictureBox();
-            this.labelEPolyImage = new System.Windows.Forms.Label();
-            this.buttonEPolyAddTexture = new System.Windows.Forms.Button();
-            this.buttonEPolyDeleteTexture = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -166,11 +166,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownModifyPosX)).BeginInit();
             this.groupBoxModifyGeneral.SuspendLayout();
             this.tabPageEditablePoly.SuspendLayout();
-            this.groupBoxEPolyEditPolygons.SuspendLayout();
-            this.groupBoxEPolyPrimitive.SuspendLayout();
             this.groupBoxEPolyCommon.SuspendLayout();
+            this.groupBoxEPolyEditPolygons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEPolyTextureNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEPolyTexture)).BeginInit();
+            this.groupBoxEPolyPrimitive.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -1276,6 +1276,65 @@
             this.tabPageEditablePoly.Text = "EditablePoly";
             this.tabPageEditablePoly.UseVisualStyleBackColor = true;
             // 
+            // groupBoxEPolyCommon
+            // 
+            this.groupBoxEPolyCommon.Controls.Add(this.radioButtonEPolyTranslate);
+            this.groupBoxEPolyCommon.Controls.Add(this.radioButtonEPolySelect);
+            this.groupBoxEPolyCommon.Controls.Add(this.buttonEPolySelectAll);
+            this.groupBoxEPolyCommon.Controls.Add(this.buttonEPolyDelete);
+            this.groupBoxEPolyCommon.Location = new System.Drawing.Point(4, 51);
+            this.groupBoxEPolyCommon.Name = "groupBoxEPolyCommon";
+            this.groupBoxEPolyCommon.Size = new System.Drawing.Size(101, 122);
+            this.groupBoxEPolyCommon.TabIndex = 8;
+            this.groupBoxEPolyCommon.TabStop = false;
+            this.groupBoxEPolyCommon.Text = "Common";
+            // 
+            // radioButtonEPolyTranslate
+            // 
+            this.radioButtonEPolyTranslate.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonEPolyTranslate.Location = new System.Drawing.Point(2, 64);
+            this.radioButtonEPolyTranslate.Name = "radioButtonEPolyTranslate";
+            this.radioButtonEPolyTranslate.Size = new System.Drawing.Size(95, 24);
+            this.radioButtonEPolyTranslate.TabIndex = 50;
+            this.radioButtonEPolyTranslate.Text = "Translate";
+            this.radioButtonEPolyTranslate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonEPolyTranslate.UseVisualStyleBackColor = true;
+            this.radioButtonEPolyTranslate.CheckedChanged += new System.EventHandler(this.radioButtonEPolyTranslate_CheckedChanged);
+            // 
+            // radioButtonEPolySelect
+            // 
+            this.radioButtonEPolySelect.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radioButtonEPolySelect.Checked = true;
+            this.radioButtonEPolySelect.Location = new System.Drawing.Point(2, 15);
+            this.radioButtonEPolySelect.Name = "radioButtonEPolySelect";
+            this.radioButtonEPolySelect.Size = new System.Drawing.Size(95, 24);
+            this.radioButtonEPolySelect.TabIndex = 47;
+            this.radioButtonEPolySelect.TabStop = true;
+            this.radioButtonEPolySelect.Text = "Select object";
+            this.radioButtonEPolySelect.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radioButtonEPolySelect.UseVisualStyleBackColor = true;
+            this.radioButtonEPolySelect.CheckedChanged += new System.EventHandler(this.radioButtonEPolySelect_CheckedChanged);
+            // 
+            // buttonEPolySelectAll
+            // 
+            this.buttonEPolySelectAll.Location = new System.Drawing.Point(2, 40);
+            this.buttonEPolySelectAll.Name = "buttonEPolySelectAll";
+            this.buttonEPolySelectAll.Size = new System.Drawing.Size(95, 25);
+            this.buttonEPolySelectAll.TabIndex = 49;
+            this.buttonEPolySelectAll.Text = "Select all";
+            this.buttonEPolySelectAll.UseVisualStyleBackColor = true;
+            this.buttonEPolySelectAll.Click += new System.EventHandler(this.buttonEPolySelectAll_Click);
+            // 
+            // buttonEPolyDelete
+            // 
+            this.buttonEPolyDelete.Location = new System.Drawing.Point(2, 88);
+            this.buttonEPolyDelete.Name = "buttonEPolyDelete";
+            this.buttonEPolyDelete.Size = new System.Drawing.Size(95, 25);
+            this.buttonEPolyDelete.TabIndex = 48;
+            this.buttonEPolyDelete.Text = "Delete";
+            this.buttonEPolyDelete.UseVisualStyleBackColor = true;
+            this.buttonEPolyDelete.Click += new System.EventHandler(this.buttonEPolyDelete_Click);
+            // 
             // groupBoxEPolyEditPolygons
             // 
             this.groupBoxEPolyEditPolygons.Controls.Add(this.buttonEPolyDeleteTexture);
@@ -1289,6 +1348,70 @@
             this.groupBoxEPolyEditPolygons.TabIndex = 9;
             this.groupBoxEPolyEditPolygons.TabStop = false;
             this.groupBoxEPolyEditPolygons.Text = "Edit polygons";
+            // 
+            // buttonEPolyDeleteTexture
+            // 
+            this.buttonEPolyDeleteTexture.Location = new System.Drawing.Point(44, 35);
+            this.buttonEPolyDeleteTexture.Name = "buttonEPolyDeleteTexture";
+            this.buttonEPolyDeleteTexture.Size = new System.Drawing.Size(47, 22);
+            this.buttonEPolyDeleteTexture.TabIndex = 60;
+            this.buttonEPolyDeleteTexture.Text = "Delete";
+            this.buttonEPolyDeleteTexture.UseVisualStyleBackColor = true;
+            this.buttonEPolyDeleteTexture.Click += new System.EventHandler(this.buttonEPolyDeleteTexture_Click);
+            // 
+            // buttonEPolyAddTexture
+            // 
+            this.buttonEPolyAddTexture.Location = new System.Drawing.Point(10, 35);
+            this.buttonEPolyAddTexture.Name = "buttonEPolyAddTexture";
+            this.buttonEPolyAddTexture.Size = new System.Drawing.Size(35, 22);
+            this.buttonEPolyAddTexture.TabIndex = 59;
+            this.buttonEPolyAddTexture.Text = "Add";
+            this.buttonEPolyAddTexture.UseVisualStyleBackColor = true;
+            this.buttonEPolyAddTexture.Click += new System.EventHandler(this.buttonEPolyAddTexture_Click);
+            // 
+            // numericUpDownEPolyTextureNumber
+            // 
+            this.numericUpDownEPolyTextureNumber.Location = new System.Drawing.Point(47, 15);
+            this.numericUpDownEPolyTextureNumber.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownEPolyTextureNumber.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownEPolyTextureNumber.Name = "numericUpDownEPolyTextureNumber";
+            this.numericUpDownEPolyTextureNumber.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownEPolyTextureNumber.TabIndex = 53;
+            this.numericUpDownEPolyTextureNumber.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownEPolyTextureNumber.ValueChanged += new System.EventHandler(this.numericUpDownEPolyTextureNumber_ValueChanged);
+            // 
+            // pictureBoxEPolyTexture
+            // 
+            this.pictureBoxEPolyTexture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxEPolyTexture.Location = new System.Drawing.Point(11, 57);
+            this.pictureBoxEPolyTexture.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBoxEPolyTexture.Name = "pictureBoxEPolyTexture";
+            this.pictureBoxEPolyTexture.Size = new System.Drawing.Size(80, 80);
+            this.pictureBoxEPolyTexture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxEPolyTexture.TabIndex = 52;
+            this.pictureBoxEPolyTexture.TabStop = false;
+            this.pictureBoxEPolyTexture.Click += new System.EventHandler(this.pictureBoxEPolyTexture_Click);
+            // 
+            // labelEPolyImage
+            // 
+            this.labelEPolyImage.AutoSize = true;
+            this.labelEPolyImage.Location = new System.Drawing.Point(7, 18);
+            this.labelEPolyImage.Name = "labelEPolyImage";
+            this.labelEPolyImage.Size = new System.Drawing.Size(39, 13);
+            this.labelEPolyImage.TabIndex = 51;
+            this.labelEPolyImage.Text = "Image:";
             // 
             // groupBoxEPolyEditEdges
             // 
@@ -1356,129 +1479,6 @@
             this.radioButtonEPolyPrimitiveVertex.UseVisualStyleBackColor = true;
             this.radioButtonEPolyPrimitiveVertex.CheckedChanged += new System.EventHandler(this.radioButtonEPolyPrimitiveVertex_CheckedChanged);
             // 
-            // groupBoxEPolyCommon
-            // 
-            this.groupBoxEPolyCommon.Controls.Add(this.radioButtonEPolyTranslate);
-            this.groupBoxEPolyCommon.Controls.Add(this.radioButtonEPolySelect);
-            this.groupBoxEPolyCommon.Controls.Add(this.buttonEPolySelectAll);
-            this.groupBoxEPolyCommon.Controls.Add(this.buttonEPolyDelete);
-            this.groupBoxEPolyCommon.Location = new System.Drawing.Point(4, 51);
-            this.groupBoxEPolyCommon.Name = "groupBoxEPolyCommon";
-            this.groupBoxEPolyCommon.Size = new System.Drawing.Size(101, 122);
-            this.groupBoxEPolyCommon.TabIndex = 8;
-            this.groupBoxEPolyCommon.TabStop = false;
-            this.groupBoxEPolyCommon.Text = "Common";
-            // 
-            // radioButtonEPolySelect
-            // 
-            this.radioButtonEPolySelect.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonEPolySelect.Checked = true;
-            this.radioButtonEPolySelect.Location = new System.Drawing.Point(2, 15);
-            this.radioButtonEPolySelect.Name = "radioButtonEPolySelect";
-            this.radioButtonEPolySelect.Size = new System.Drawing.Size(95, 24);
-            this.radioButtonEPolySelect.TabIndex = 47;
-            this.radioButtonEPolySelect.TabStop = true;
-            this.radioButtonEPolySelect.Text = "Select object";
-            this.radioButtonEPolySelect.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButtonEPolySelect.UseVisualStyleBackColor = true;
-            this.radioButtonEPolySelect.CheckedChanged += new System.EventHandler(this.radioButtonEPolySelect_CheckedChanged);
-            // 
-            // buttonEPolySelectAll
-            // 
-            this.buttonEPolySelectAll.Location = new System.Drawing.Point(2, 40);
-            this.buttonEPolySelectAll.Name = "buttonEPolySelectAll";
-            this.buttonEPolySelectAll.Size = new System.Drawing.Size(95, 25);
-            this.buttonEPolySelectAll.TabIndex = 49;
-            this.buttonEPolySelectAll.Text = "Select all";
-            this.buttonEPolySelectAll.UseVisualStyleBackColor = true;
-            this.buttonEPolySelectAll.Click += new System.EventHandler(this.buttonEPolySelectAll_Click);
-            // 
-            // buttonEPolyDelete
-            // 
-            this.buttonEPolyDelete.Location = new System.Drawing.Point(2, 88);
-            this.buttonEPolyDelete.Name = "buttonEPolyDelete";
-            this.buttonEPolyDelete.Size = new System.Drawing.Size(95, 25);
-            this.buttonEPolyDelete.TabIndex = 48;
-            this.buttonEPolyDelete.Text = "Delete object";
-            this.buttonEPolyDelete.UseVisualStyleBackColor = true;
-            this.buttonEPolyDelete.Click += new System.EventHandler(this.buttonEPolyDelete_Click);
-            // 
-            // radioButtonEPolyTranslate
-            // 
-            this.radioButtonEPolyTranslate.Appearance = System.Windows.Forms.Appearance.Button;
-            this.radioButtonEPolyTranslate.Location = new System.Drawing.Point(2, 64);
-            this.radioButtonEPolyTranslate.Name = "radioButtonEPolyTranslate";
-            this.radioButtonEPolyTranslate.Size = new System.Drawing.Size(95, 24);
-            this.radioButtonEPolyTranslate.TabIndex = 50;
-            this.radioButtonEPolyTranslate.Text = "Translate";
-            this.radioButtonEPolyTranslate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.radioButtonEPolyTranslate.UseVisualStyleBackColor = true;
-            this.radioButtonEPolyTranslate.CheckedChanged += new System.EventHandler(this.radioButtonEPolyTranslate_CheckedChanged);
-            // 
-            // numericUpDownEPolyTextureNumber
-            // 
-            this.numericUpDownEPolyTextureNumber.Location = new System.Drawing.Point(47, 15);
-            this.numericUpDownEPolyTextureNumber.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownEPolyTextureNumber.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownEPolyTextureNumber.Name = "numericUpDownEPolyTextureNumber";
-            this.numericUpDownEPolyTextureNumber.Size = new System.Drawing.Size(44, 20);
-            this.numericUpDownEPolyTextureNumber.TabIndex = 53;
-            this.numericUpDownEPolyTextureNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownEPolyTextureNumber.ValueChanged += new System.EventHandler(this.numericUpDownEPolyTextureNumber_ValueChanged);
-            // 
-            // pictureBoxEPolyTexture
-            // 
-            this.pictureBoxEPolyTexture.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBoxEPolyTexture.Location = new System.Drawing.Point(11, 57);
-            this.pictureBoxEPolyTexture.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBoxEPolyTexture.Name = "pictureBoxEPolyTexture";
-            this.pictureBoxEPolyTexture.Size = new System.Drawing.Size(80, 80);
-            this.pictureBoxEPolyTexture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBoxEPolyTexture.TabIndex = 52;
-            this.pictureBoxEPolyTexture.TabStop = false;
-            this.pictureBoxEPolyTexture.Click += new System.EventHandler(this.pictureBoxEPolyTexture_Click);
-            // 
-            // labelEPolyImage
-            // 
-            this.labelEPolyImage.AutoSize = true;
-            this.labelEPolyImage.Location = new System.Drawing.Point(7, 18);
-            this.labelEPolyImage.Name = "labelEPolyImage";
-            this.labelEPolyImage.Size = new System.Drawing.Size(39, 13);
-            this.labelEPolyImage.TabIndex = 51;
-            this.labelEPolyImage.Text = "Image:";
-            // 
-            // buttonEPolyAddTexture
-            // 
-            this.buttonEPolyAddTexture.Location = new System.Drawing.Point(10, 35);
-            this.buttonEPolyAddTexture.Name = "buttonEPolyAddTexture";
-            this.buttonEPolyAddTexture.Size = new System.Drawing.Size(35, 22);
-            this.buttonEPolyAddTexture.TabIndex = 59;
-            this.buttonEPolyAddTexture.Text = "Add";
-            this.buttonEPolyAddTexture.UseVisualStyleBackColor = true;
-            this.buttonEPolyAddTexture.Click += new System.EventHandler(this.buttonEPolyAddTexture_Click);
-            // 
-            // buttonEPolyDeleteTexture
-            // 
-            this.buttonEPolyDeleteTexture.Location = new System.Drawing.Point(44, 35);
-            this.buttonEPolyDeleteTexture.Name = "buttonEPolyDeleteTexture";
-            this.buttonEPolyDeleteTexture.Size = new System.Drawing.Size(47, 22);
-            this.buttonEPolyDeleteTexture.TabIndex = 60;
-            this.buttonEPolyDeleteTexture.Text = "Delete";
-            this.buttonEPolyDeleteTexture.UseVisualStyleBackColor = true;
-            this.buttonEPolyDeleteTexture.Click += new System.EventHandler(this.buttonEPolyDeleteTexture_Click);
-            // 
             // MeshCreatorControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1532,12 +1532,12 @@
             this.groupBoxModifyGeneral.ResumeLayout(false);
             this.groupBoxModifyGeneral.PerformLayout();
             this.tabPageEditablePoly.ResumeLayout(false);
+            this.groupBoxEPolyCommon.ResumeLayout(false);
             this.groupBoxEPolyEditPolygons.ResumeLayout(false);
             this.groupBoxEPolyEditPolygons.PerformLayout();
-            this.groupBoxEPolyPrimitive.ResumeLayout(false);
-            this.groupBoxEPolyCommon.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownEPolyTextureNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxEPolyTexture)).EndInit();
+            this.groupBoxEPolyPrimitive.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
