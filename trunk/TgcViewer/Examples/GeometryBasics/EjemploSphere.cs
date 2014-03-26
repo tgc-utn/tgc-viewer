@@ -8,6 +8,17 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace Examples.GeometryBasics
 {
+/// <summary>
+    /// Ejemplo Caja
+    /// Unidades Involucradas:
+    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
+    /// 
+    /// Muestra como crear una esfera 3D con la herramienta TgcSphere, cuyos parámetros
+    /// pueden ser modificados.
+    /// 
+    /// Autor: Daniela Kazarian
+    /// 
+    /// </summary>
     public class Esfera : TgcExample
     {
         TgcSphere sphere;
