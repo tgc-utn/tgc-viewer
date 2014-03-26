@@ -15,7 +15,7 @@ using Microsoft.DirectX.DirectInput;
 namespace Examples.Tutorial
 {
     /// <summary>
-    /// Tutorial 3:
+    /// Tutorial 4:
     /// Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - Transformaciones
     /// 
