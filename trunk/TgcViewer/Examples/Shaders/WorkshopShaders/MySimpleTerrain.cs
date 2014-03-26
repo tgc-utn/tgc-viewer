@@ -13,9 +13,6 @@ namespace Examples.Shaders.WorkshopShaders
 {
     /// <summary>
     /// Customizacion de SimpleTerrain para renderizado de terrenos
-    /// 
-    /// Autor: Mariano Banquiero
-    /// 
     /// </summary>
     public class MySimpleTerrain 
     {
@@ -325,4 +322,6 @@ namespace Examples.Shaders.WorkshopShaders
             }
         }
     }
+
+    
 }
