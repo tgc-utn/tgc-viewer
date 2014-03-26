@@ -24,9 +24,8 @@ namespace Examples.Lights
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     /// 
     /// Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploIntegrador"
-    /// 
-    /// xxxxxxxxxxxxxxxxx
-    /// 
+    /// Similar al Ejemplo Integrador 1 pero se usan 3 luces para cada mesh.
+    /// Se pre-calcula que luz le corresponde a cada mesh según su cercania.
     /// 
     /// 
     /// Autor: Matías Leone, Leandro Barbagallo
