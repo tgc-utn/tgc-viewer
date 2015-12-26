@@ -1,5 +1,4 @@
 # tgc-viewer
----
 
 Es un motor de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA).
 
@@ -10,7 +9,7 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
 * [Managed DirectX 9](https://en.wikipedia.org/wiki/Managed_DirectX)
 * [Detección de Colisiones](https://en.wikipedia.org/wiki/Collision_detection)
 * [Skeletal animation](https://en.wikipedia.org/wiki/Skeletal_animation)
-* [HLSL shaders](https://msdn.microsoft.com/en-us/library/windows/desktop/bb509561%28v=vs.85%29.asp)x
+* [HLSL shaders](https://msdn.microsoft.com/en-us/library/windows/desktop/bb509561%28v=vs.85%29.asp)
 * Level editor
 * ~~Plugins para exportación de modelos desde 3Ds MAX~~
 
