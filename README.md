@@ -19,7 +19,7 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
 
 ### Colaboradores
 * [Leandro Barbagallo](https://github.com/lebarba)
-* Lucio Moya
+* [Lucio Moya](https://github.com/DNAngeluS)
 * Mariano Banquiero
 * [Martín Giachetti](https://github.com/mgiachetti)
 * [Matías Leone](https://github.com/leonematias)
