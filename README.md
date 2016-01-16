@@ -7,20 +7,21 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
 ## Características
 * [Lenguaje C#](https://msdn.microsoft.com/es-ar/library/kx37x362.aspx)
 * [Managed DirectX 9](https://en.wikipedia.org/wiki/Managed_DirectX)
-* [Detección de Colisiones](https://en.wikipedia.org/wiki/Collision_detection)
+* [Detección de colisiones](https://en.wikipedia.org/wiki/Collision_detection)
 * [Skeletal animation](https://en.wikipedia.org/wiki/Skeletal_animation)
 * [HLSL shaders](https://msdn.microsoft.com/en-us/library/windows/desktop/bb509561%28v=vs.85%29.asp)
+* [Mesh creator](https://github.com/leonematias/MeshCreator)
 * Level editor
 * ~~Plugins para exportación de modelos desde 3Ds MAX~~
 
 ## Requisitos
 * [DirectX 9 SDK](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=6812)
-* [Visual Studio 2015 Community Edition](https://www.visualstudio.com/es-ar/products/visual-studio-community-vs)
+* [Visual Studio Community Edition](https://www.visualstudio.com/es-ar/products/visual-studio-community-vs)
 
 ### Colaboradores
 * [Leandro Barbagallo](https://github.com/lebarba)
 * [Lucio Moya](https://github.com/DNAngeluS)
-* Mariano Banquiero
+* [Mariano Banquiero](https://github.com/mbanquiero)
 * [Martín Giachetti](https://github.com/mgiachetti)
 * [Matías Leone](https://github.com/leonematias)
 * [Pablo Biancotto](https://github.com/akhanubis)
