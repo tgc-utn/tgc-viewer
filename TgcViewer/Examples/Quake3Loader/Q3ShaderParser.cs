@@ -193,7 +193,7 @@ namespace Examples.Quake3Loader
 
             //grabo el source del shader a un texto
             string erroresline = "Lista de errores:\n" + errores + "\nFin Errores\n\n";
-            File.WriteAllText("shad" + Name.Replace('/', '-') + ".txt", erroresline + ShaderSrc);
+            //File.WriteAllText("shad" + Name.Replace('/', '-') + ".txt", erroresline + ShaderSrc);
 
             builded = true;
 

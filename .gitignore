@@ -194,3 +194,12 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+#Extras
+AlumnoEjemplos.dll
+TgcViewer.exe*
+TgcViewer.vshost.*
+Microsoft.DirectX.*
+Ionic.Zip.dll
+Examples.dll
+
