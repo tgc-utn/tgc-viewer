@@ -7,6 +7,7 @@ using TgcViewer;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Examples.MeshCreator.Primitives;
+using TGC.Core.Utils;
 
 namespace Examples.MeshCreator
 {

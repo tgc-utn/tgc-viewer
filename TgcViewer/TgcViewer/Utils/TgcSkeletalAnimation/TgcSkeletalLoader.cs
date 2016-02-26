@@ -6,6 +6,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcSkeletalAnimation
 {

@@ -12,6 +12,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Input;
 using Microsoft.DirectX.DirectInput;
 using TgcViewer.Utils.TgcSkeletalAnimation;
+using TGC.Core.Utils;
 
 namespace Examples.Collision
 {

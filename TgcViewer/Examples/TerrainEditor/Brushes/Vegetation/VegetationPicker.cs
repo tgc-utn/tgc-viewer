@@ -7,6 +7,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils._2D;
 using System.Drawing;
 using System;
+using TGC.Core.Utils;
 
 namespace Examples.TerrainEditor.Brushes.Vegetation
 {

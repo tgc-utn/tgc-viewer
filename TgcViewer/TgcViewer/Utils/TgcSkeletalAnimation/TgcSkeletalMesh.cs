@@ -1,10 +1,11 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
 using System.Drawing;
+using TGC.Core.Scene;
+using TGC.Core.Utils;
+using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace TgcViewer.Utils.TgcSkeletalAnimation

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.DirectX;
 using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.Shaders
 {

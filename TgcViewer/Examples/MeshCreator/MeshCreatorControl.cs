@@ -17,6 +17,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using System.IO;
 using TgcViewer.Utils._2D;
 using Examples.MeshCreator.EditablePolyTools;
+using TGC.Core.Utils;
 
 namespace Examples.MeshCreator
 {

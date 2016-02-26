@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX.DirectSound;
-using TgcViewer.Utils.TgcSceneLoader;
 using Microsoft.DirectX;
+using Microsoft.DirectX.DirectSound;
+using TGC.Core.Scene;
 
 namespace TgcViewer.Utils.Sound
 {

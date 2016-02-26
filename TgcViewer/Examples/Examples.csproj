@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -16,7 +16,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -44,6 +44,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -53,6 +54,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
@@ -365,9 +367,13 @@
     <Compile Include="UserInterface\EjemploTexto2d.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TgcViewer\TgcViewer.csproj">
-      <Project>{990E714F-7FF2-4A87-86B1-E5FC8D4C2F4C}</Project>
-      <Name>TgcViewer</Name>
+    <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">
+      <Project>{2b8c77a8-2427-4da0-a33e-93f877b2d7d9}</Project>
+      <Name>TGC.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TgcViewer\TGC.Viewer.csproj">
+      <Project>{990e714f-7ff2-4a87-86b1-e5fc8d4c2f4c}</Project>
+      <Name>TGC.Viewer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

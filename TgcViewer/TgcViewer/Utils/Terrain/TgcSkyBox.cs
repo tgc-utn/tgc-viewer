@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils;
-using TgcViewer.Utils.TgcSceneLoader;
+using System;
 using System.Drawing;
+using TGC.Core.Scene;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace TgcViewer.Utils.Terrain
 {

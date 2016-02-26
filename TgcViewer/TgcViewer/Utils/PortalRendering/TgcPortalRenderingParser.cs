@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using TGC.Core.Utils;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace TgcViewer.Utils.PortalRendering

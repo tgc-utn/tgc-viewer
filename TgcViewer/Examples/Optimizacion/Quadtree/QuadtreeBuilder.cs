@@ -5,6 +5,7 @@ using Microsoft.DirectX;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using System.Drawing;
+using TGC.Core.Utils;
 
 namespace Examples.Optimizacion.Quadtree
 {

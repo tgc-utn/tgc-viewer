@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // La información general sobre un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos atributos para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("TgcViewer")]
+[assembly: AssemblyTitle("TGC.Viewer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Leone Pictures")]
-[assembly: AssemblyProduct("TgcViewer")]
-[assembly: AssemblyCopyright("© Leone Pictures 2009")]
+[assembly: AssemblyCompany("TGC - UTN")]
+[assembly: AssemblyProduct("TGC.Viewer")]
+[assembly: AssemblyCopyright("TGC 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

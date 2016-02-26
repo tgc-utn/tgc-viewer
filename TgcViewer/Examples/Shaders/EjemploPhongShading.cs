@@ -8,6 +8,7 @@ using Microsoft.DirectX;
 using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
 using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Utils;
 
 namespace Examples.Shaders
 {

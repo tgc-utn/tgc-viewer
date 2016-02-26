@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Microsoft.DirectX;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.TgcSceneLoader;
-using Microsoft.DirectX;
 using System.Drawing;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace TgcViewer.Utils.TgcGeometry
 {

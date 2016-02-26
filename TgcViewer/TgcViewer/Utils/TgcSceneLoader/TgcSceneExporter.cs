@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Xml;
 using System.IO;
 using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcSceneLoader
 {

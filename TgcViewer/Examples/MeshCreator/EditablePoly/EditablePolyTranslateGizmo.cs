@@ -8,6 +8,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer;
 using TgcViewer.Utils.Input;
 using Examples.MeshCreator.EditablePolyTools.Primitives;
+using TGC.Core.Utils;
 
 namespace Examples.MeshCreator.EditablePolyTools
 {

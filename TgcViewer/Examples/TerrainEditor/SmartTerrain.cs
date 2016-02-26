@@ -7,6 +7,8 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer;
 using System;
 using System.Collections.Generic;
+using TGC.Core.Scene;
+using TGC.Core.Utils;
 
 namespace Examples.TerrainEditor
 {

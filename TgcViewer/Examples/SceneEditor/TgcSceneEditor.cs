@@ -14,6 +14,7 @@ using System.Xml;
 using System.Globalization;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Input;
+using TGC.Core.Utils;
 
 namespace Examples.SceneEditor
 {
