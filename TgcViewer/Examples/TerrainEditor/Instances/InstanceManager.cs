@@ -8,6 +8,7 @@ using System.IO;
 using TgcViewer;
 using Microsoft.DirectX;
 using System.Drawing;
+using TGC.Core.Utils;
 
 namespace Examples.TerrainEditor.Vegetation
 {

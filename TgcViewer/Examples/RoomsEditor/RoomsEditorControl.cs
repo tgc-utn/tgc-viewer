@@ -11,6 +11,7 @@ using System.IO;
 using TgcViewer;
 using System.Xml;
 using Microsoft.DirectX;
+using TGC.Core.Utils;
 
 namespace Examples.RoomsEditor
 {

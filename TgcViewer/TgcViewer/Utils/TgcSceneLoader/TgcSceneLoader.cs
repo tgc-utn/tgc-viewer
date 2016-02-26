@@ -9,6 +9,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using Ionic.Zip;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.PortalRendering;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcSceneLoader
 {

@@ -13,6 +13,7 @@ using TgcViewer.Utils.Interpolation;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils._2D;
 using System.IO;
+using TGC.Core.Utils;
 
 namespace Examples.Otros
 {

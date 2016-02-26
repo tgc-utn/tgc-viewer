@@ -12,6 +12,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Input;
 using TgcViewer.Utils.Shaders;
+using TGC.Core.Utils;
 
 namespace Examples.Shaders.WorkshopShaders
 {

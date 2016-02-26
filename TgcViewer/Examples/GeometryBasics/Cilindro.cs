@@ -10,6 +10,7 @@ using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Shaders;
+using TGC.Core.Utils;
 
 namespace Examples.GeometryBasics
 {

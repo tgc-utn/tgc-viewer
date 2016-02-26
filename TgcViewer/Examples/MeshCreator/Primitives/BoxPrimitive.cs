@@ -7,6 +7,7 @@ using TgcViewer.Utils.Input;
 using TgcViewer;
 using System.Drawing;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Utils;
 
 namespace Examples.MeshCreator.Primitives
 {

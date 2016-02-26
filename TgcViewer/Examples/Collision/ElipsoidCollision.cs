@@ -14,6 +14,7 @@ using Microsoft.DirectX.DirectInput;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Collision.ElipsoidCollision;
+using TGC.Core.Utils;
 
 namespace Examples.Collision
 {

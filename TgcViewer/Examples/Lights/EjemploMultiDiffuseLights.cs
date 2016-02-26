@@ -11,6 +11,7 @@ using TgcViewer.Utils.TgcGeometry;
 using Examples.Shaders;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.Interpolation;
+using TGC.Core.Utils;
 
 namespace Examples.Lights
 {

@@ -5,6 +5,7 @@ using System.Xml;
 using System.Drawing;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.PortalRendering;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcSceneLoader
 {

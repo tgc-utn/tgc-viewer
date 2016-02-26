@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using TGC.Core.Utils;
 using TgcViewer;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.TgcGeometry;

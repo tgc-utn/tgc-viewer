@@ -7,6 +7,7 @@ using Microsoft.DirectX;
 using TgcViewer;
 using TgcViewer.Utils;
 using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Utils;
 
 namespace Examples.Lights
 {

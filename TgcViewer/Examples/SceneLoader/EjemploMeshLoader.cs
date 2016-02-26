@@ -8,6 +8,7 @@ using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Utils;
 
 namespace Examples.SceneLoader
 {

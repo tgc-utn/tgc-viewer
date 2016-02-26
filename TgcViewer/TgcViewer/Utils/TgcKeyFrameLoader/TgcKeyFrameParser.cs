@@ -4,6 +4,7 @@ using System.Text;
 using System.Xml;
 using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcKeyFrameLoader
 {

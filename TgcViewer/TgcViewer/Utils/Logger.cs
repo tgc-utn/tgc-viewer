@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using TgcViewer.Utils.TgcSceneLoader;
 using Microsoft.DirectX;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils
 {

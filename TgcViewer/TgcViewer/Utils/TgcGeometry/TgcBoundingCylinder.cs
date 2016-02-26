@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using TGC.Core.Scene;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcGeometry
 {
@@ -19,7 +16,6 @@ namespace TgcViewer.Utils.TgcGeometry
         private Matrix transformation;
         private Matrix antiRotationMatrix;
         private Matrix antiTransformation;
-
 
         public TgcBoundingCylinder(Vector3 _center, float _radius, float _halfLength)
         {
@@ -193,7 +189,7 @@ namespace TgcViewer.Utils.TgcGeometry
             this.updateDraw();
             //actualizamos los vertices de las lineas laterales
             this.updateBordersDraw();
-            
+
             //dibujamos
             d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, this.vertices.Length / 2, this.vertices);
         }
@@ -247,7 +243,7 @@ namespace TgcViewer.Utils.TgcGeometry
             this.center.Y += y;
             this.center.Z += z;
         }
-        
+
         public void rotateX(float angle)
         {
             this.rotation.X += angle;

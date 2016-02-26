@@ -1,11 +1,11 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcGeometry;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
+using TGC.Core.Scene;
+using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace TgcViewer.Utils.TgcKeyFrameLoader
 {

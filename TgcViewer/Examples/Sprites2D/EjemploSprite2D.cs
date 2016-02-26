@@ -10,6 +10,7 @@ using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils._2D;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Utils;
 
 namespace Examples.Sprites2D
 {

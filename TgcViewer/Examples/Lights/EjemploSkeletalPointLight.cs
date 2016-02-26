@@ -12,6 +12,7 @@ using Examples.Shaders;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.Interpolation;
 using TgcViewer.Utils.TgcSkeletalAnimation;
+using TGC.Core.Utils;
 
 namespace Examples.Lights
 {

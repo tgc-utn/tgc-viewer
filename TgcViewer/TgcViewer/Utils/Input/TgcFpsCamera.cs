@@ -5,6 +5,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.Input
 {

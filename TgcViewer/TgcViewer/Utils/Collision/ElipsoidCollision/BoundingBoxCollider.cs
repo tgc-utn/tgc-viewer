@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TgcViewer.Utils.TgcGeometry;
 using Microsoft.DirectX;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.Collision.ElipsoidCollision
 {

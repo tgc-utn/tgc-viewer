@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using TgcViewer.Utils.TgcGeometry;
 using Examples.MeshCreator.EditablePolyTools.Primitives;
+using TGC.Core.Utils;
 
 namespace Examples.MeshCreator.EditablePolyTools
 {

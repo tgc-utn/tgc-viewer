@@ -5,6 +5,7 @@ using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Sound;
 using TgcViewer.Utils._2D;
+using TGC.Core.Utils;
 
 namespace Examples.TerrainEditor.Brushes.Terrain
 {

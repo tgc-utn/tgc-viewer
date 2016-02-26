@@ -8,6 +8,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Input;
 using TgcViewer;
+using TGC.Core.Utils;
 
 namespace Examples.MeshCreator
 {

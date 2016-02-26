@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Geometries;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace TgcViewer.Utils.PortalRendering

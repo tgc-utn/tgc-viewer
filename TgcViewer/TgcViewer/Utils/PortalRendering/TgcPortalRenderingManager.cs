@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.DirectX;
+using System.Collections.Generic;
+using System.Drawing;
+using TGC.Core.Geometries;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
 
 namespace TgcViewer.Utils.PortalRendering
 {

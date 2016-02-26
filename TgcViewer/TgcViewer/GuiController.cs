@@ -18,6 +18,7 @@ using TgcViewer.Utils.Ui;
 using TgcViewer.Utils.Fog;
 using TgcViewer.Utils._2D;
 using TgcViewer.Utils.Shaders;
+using TGC.Core.Utils;
 
 namespace TgcViewer
 {

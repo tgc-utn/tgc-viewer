@@ -1,7 +1,8 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX;
+using TGC.Core.Geometries;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcGeometry
 {

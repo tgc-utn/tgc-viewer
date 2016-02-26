@@ -14,6 +14,7 @@ using TgcViewer.Utils.Interpolation;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
+using TGC.Core.Utils;
 
 namespace Examples.Lights
 {

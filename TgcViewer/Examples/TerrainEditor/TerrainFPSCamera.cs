@@ -8,6 +8,7 @@ using Microsoft.DirectX.DirectInput;
 using Microsoft.DirectX.Direct3D;
 using TgcViewer;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Utils;
 
 namespace Examples.TerrainEditor
 {

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+using TGC.Core.Scene;
+using TGC.Core.Utils;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.TgcSceneLoader;
 

@@ -9,6 +9,7 @@ using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Utils;
 
 namespace Examples.Tutorial
 {
