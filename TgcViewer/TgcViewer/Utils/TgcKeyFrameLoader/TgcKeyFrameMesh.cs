@@ -1,62 +1,137 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Scene;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.SceneLoader;
 
 namespace TgcViewer.Utils.TgcKeyFrameLoader
 {
     /// <summary>
-    /// Malla que representa un modelo 3D con varias animaciones, animadas por KeyFrame Animation
+    ///     Malla que representa un modelo 3D con varias animaciones, animadas por KeyFrame Animation
     /// </summary>
     public class TgcKeyFrameMesh : IRenderObject, ITransformObject
     {
         /// <summary>
-        /// Mesh de DirectX
+        ///     Tipos de de renderizado de mallas
+        /// </summary>
+        public enum MeshRenderType
+        {
+            /// <summary>
+            ///     Solo colores por vertice
+            /// </summary>
+            VERTEX_COLOR,
+
+            /// <summary>
+            ///     Solo un canal de textura en DiffuseMap
+            /// </summary>
+            DIFFUSE_MAP
+        }
+
+        private float animationTimeLenght;
+
+        private TgcBoundingBox boundingBox;
+
+        //Variables de animacion
+        private float currentTime;
+
+        /// <summary>
+        ///     Mesh de DirectX
         /// </summary>
         private Mesh d3dMesh;
+
+        protected Effect effect;
+
         /// <summary>
-        /// Mesh interna de DirectX
+        ///     Informacion del MeshData original que hay que guardar para poder alterar el VertexBuffer con la animacion
+        /// </summary>
+        private OriginalData originalData;
+
+        private Vector3 rotation;
+
+        private Vector3 scale;
+
+        /// <summary>
+        ///     BoundingBox de la malla sin ninguna animación.
+        /// </summary>
+        private TgcBoundingBox staticMeshBoundingBox;
+
+        protected string technique;
+
+        private Vector3 translation;
+
+        /// <summary>
+        ///     Crea una nueva malla.
+        /// </summary>
+        /// <param name="mesh">Mesh de DirectX</param>
+        /// <param name="renderType">Formato de renderizado de la malla</param>
+        /// <param name="coordinatesIndices">Datos parseados de la malla</param>
+        public TgcKeyFrameMesh(Mesh mesh, string name, MeshRenderType renderType, OriginalData originalData)
+        {
+            initData(mesh, name, renderType, originalData);
+        }
+
+        /// <summary>
+        ///     Crea una nueva malla que es una instancia de otra malla original.
+        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Debe crearse luego de haber cargado todas las animaciones en la malla original
+        /// </summary>
+        /// <param name="name">Nombre de la malla</param>
+        /// <param name="parentInstance">Malla original desde la cual basarse</param>
+        /// <param name="translation">Traslación respecto de la malla original</param>
+        /// <param name="rotation">Rotación respecto de la malla original</param>
+        /// <param name="scale">Escala respecto de la malla original</param>
+        public TgcKeyFrameMesh(string name, TgcKeyFrameMesh parentInstance, Vector3 translation, Vector3 rotation,
+            Vector3 scale)
+        {
+            //Cargar iniciales datos en base al original
+            initData(parentInstance.d3dMesh, name, parentInstance.RenderType, parentInstance.originalData);
+            DiffuseMaps = parentInstance.DiffuseMaps;
+            Materials = parentInstance.Materials;
+
+            //Almacenar transformación inicial
+            this.translation = translation;
+            this.rotation = rotation;
+            this.scale = scale;
+
+            //Agregar animaciones del original
+            foreach (var entry in parentInstance.Animations)
+            {
+                Animations.Add(entry.Key, entry.Value);
+            }
+
+            //almacenar instancia en el padre
+            ParentInstance = parentInstance;
+            parentInstance.MeshInstances.Add(this);
+        }
+
+        /// <summary>
+        ///     Mesh interna de DirectX
         /// </summary>
         public Mesh D3dMesh
         {
             get { return d3dMesh; }
         }
 
-        private Dictionary<string, TgcKeyFrameAnimation> animations;
         /// <summary>
-        /// Mapa de animaciones de la malla
+        ///     Mapa de animaciones de la malla
         /// </summary>
-        public Dictionary<string, TgcKeyFrameAnimation> Animations
-        {
-            get { return animations; }
-        }
+        public Dictionary<string, TgcKeyFrameAnimation> Animations { get; private set; }
 
-        private string name;
         /// <summary>
-        /// Nombre de la malla
+        ///     Nombre de la malla
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name { get; private set; }
 
-        private Material[] materials;
         /// <summary>
-        /// Array de Materials
+        ///     Array de Materials
         /// </summary>
-        public Material[] Materials
-        {
-            get { return materials; }
-            set { materials = value; }
-        }
+        public Material[] Materials { get; set; }
 
-        protected Effect effect;
         /// <summary>
-        /// Shader del mesh
+        ///     Shader del mesh
         /// </summary>
         public Effect Effect
         {
@@ -64,10 +139,9 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             set { effect = value; }
         }
 
-        protected string technique;
         /// <summary>
-        /// Technique que se va a utilizar en el effect.
-        /// Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        ///     Technique que se va a utilizar en el effect.
+        ///     Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
         public string Technique
         {
@@ -75,113 +149,19 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             set { technique = value; }
         }
 
-        private TgcTexture[] diffuseMaps;
         /// <summary>
-        /// Array de texturas para DiffuseMap
+        ///     Array de texturas para DiffuseMap
         /// </summary>
-        public TgcTexture[] DiffuseMaps
-        {
-            get { return diffuseMaps; }
-            set { diffuseMaps = value; }
-        }
+        public TgcTexture[] DiffuseMaps { get; set; }
 
-        private bool enabled;
         /// <summary>
-        /// Indica si la malla esta habilitada para ser renderizada
+        ///     Indica si la malla esta habilitada para ser renderizada
         /// </summary>
-        public bool Enabled
-        {
-            get { return enabled; }
-            set { enabled = value; }
-        }
-
-        Matrix transform;
-        /// <summary>
-        /// Matriz final que se utiliza para aplicar transformaciones a la malla.
-        /// Si la propiedad AutoTransformEnable esta en True, la matriz se reconstruye en cada cuadro
-        /// en base a los valores de: Position, Rotation, Scale.
-        /// Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
-        /// </summary>
-        public Matrix Transform
-        {
-            get { return transform; }
-            set { transform = value; }
-        }
-
-        bool autoTransformEnable;
-        /// <summary>
-        /// En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
-        /// cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
-        /// En False se respeta lo que el usuario haya cargado a mano en la matriz.
-        /// Por default está en True.
-        /// </summary>
-        public bool AutoTransformEnable
-        {
-            get { return autoTransformEnable; }
-            set { autoTransformEnable = value; }
-        }
-
-
-        private Vector3 translation;
-        /// <summary>
-        /// Posicion absoluta de la Malla
-        /// </summary>
-        public Vector3 Position
-        {
-            get { return translation; }
-            set { 
-                translation = value;
-                updateBoundingBox();
-            }
-        }
-
-        private Vector3 rotation;
-        /// <summary>
-        /// Rotación absoluta de la malla
-        /// </summary>
-        public Vector3 Rotation
-        {
-            get { return rotation; }
-            set { rotation = value; }
-        }
-
-        private Vector3 scale;
-        /// <summary>
-        /// Escalado absoluto de la malla;
-        /// </summary>
-        public Vector3 Scale
-        {
-            get { return scale; }
-            set { 
-                scale = value;
-                updateBoundingBox();
-            }
-        }
+        public bool Enabled { get; set; }
 
         /// <summary>
-        /// Tipos de de renderizado de mallas
-        /// </summary>
-        public enum MeshRenderType
-        {
-            /// <summary>
-            /// Solo colores por vertice
-            /// </summary>
-            VERTEX_COLOR,
-            /// <summary>
-            /// Solo un canal de textura en DiffuseMap
-            /// </summary>
-            DIFFUSE_MAP,
-        };
-
-        /// <summary>
-        /// BoundingBox de la malla sin ninguna animación.
-        /// </summary>
-        private TgcBoundingBox staticMeshBoundingBox;
-
-        private TgcBoundingBox boundingBox;
-        /// <summary>
-        /// BoundingBox del Mesh.
-        /// Puede variar según la animación que tiene configurada en el momento.
+        ///     BoundingBox del Mesh.
+        ///     Puede variar según la animación que tiene configurada en el momento.
         /// </summary>
         public TgcBoundingBox BoundingBox
         {
@@ -193,131 +173,58 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             }
         }
 
-        private MeshRenderType renderType;
         /// <summary>
-        /// Tipo de formato de Render de esta malla
+        ///     Tipo de formato de Render de esta malla
         /// </summary>
-        public MeshRenderType RenderType
-        {
-            get { return renderType; }
-            set { renderType = value; }
-        }
-
-        VertexDeclaration vertexDeclaration;
-        /// <summary>
-        /// VertexDeclaration del Flexible Vertex Format (FVF) usado por la malla
-        /// </summary>
-        public VertexDeclaration VertexDeclaration
-        {
-            get { return vertexDeclaration; }
-        }
-
-        private bool autoUpdateBoundingBox;
-        /// <summary>
-        /// Indica si se actualiza automaticamente el BoundingBox con cada movimiento de la malla
-        /// </summary>
-        public bool AutoUpdateBoundingBox
-        {
-            get { return autoUpdateBoundingBox; }
-            set { autoUpdateBoundingBox = value; }
-        }
-
-        TgcKeyFrameAnimation currentAnimation;
-        /// <summary>
-        /// Animación actual de la malla
-        /// </summary>
-        public TgcKeyFrameAnimation CurrentAnimation
-        {
-            get { return currentAnimation; }
-        }
-
-        private float frameRate;
-        /// <summary>
-        /// Velocidad de la animacion medida en cuadros por segundo.
-        /// </summary>
-        public float FrameRate
-        {
-            get { return frameRate; }
-        }
-
-        private int currentFrame;
-        /// <summary>
-        /// Cuadro actual de animacion
-        /// </summary>
-        public int CurrentFrame
-        {
-            get { return currentFrame; }
-        }
-
-        bool isAnimating;
-        /// <summary>
-        /// Indica si actualmente hay una animación en curso.
-        /// </summary>
-        public bool IsAnimating
-        {
-            get { return isAnimating; }
-        }
-
-        bool playLoop;
-        /// <summary>
-        /// Indica si la animación actual se ejecuta con un Loop
-        /// </summary>
-        public bool PlayLoop
-        {
-            get { return playLoop; }
-        }
-
-        private TgcKeyFrameMesh parentInstance;
-        /// <summary>
-        /// Original desde el cual esta malla fue clonada.
-        /// </summary>
-        public TgcKeyFrameMesh ParentInstance
-        {
-            get { return parentInstance; }
-        }
-
-        private List<TgcKeyFrameMesh> meshInstances;
-        /// <summary>
-        /// Lista de mallas que fueron clonadas a partir de este original
-        /// </summary>
-        public List<TgcKeyFrameMesh> MeshInstances
-        {
-            get { return meshInstances; }
-        }
-
-        private bool alphaBlendEnable;
-        /// <summary>
-        /// Habilita el renderizado con AlphaBlending para los modelos
-        /// con textura o colores por vértice de canal Alpha.
-        /// Por default está deshabilitado.
-        /// </summary>
-        public bool AlphaBlendEnable
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
-
-
-        #region Eventos
+        public MeshRenderType RenderType { get; set; }
 
         /// <summary>
-        /// Indica que la animación actual ha finalizado.
-        /// Se llama cuando se acabaron los frames de la animación.
-        /// Si se anima en Loop, se llama cada vez que termina.
+        ///     VertexDeclaration del Flexible Vertex Format (FVF) usado por la malla
         /// </summary>
-        /// <param name="mesh">Malla animada</param>
-        public delegate void AnimationEndsHandler(TgcKeyFrameMesh mesh);
+        public VertexDeclaration VertexDeclaration { get; private set; }
+
         /// <summary>
-        /// Evento que se llama cada vez que la animación actual finaliza.
-        /// Se llama cuando se acabaron los frames de la animación.
-        /// Si se anima en Loop, se llama cada vez que termina.
+        ///     Indica si se actualiza automaticamente el BoundingBox con cada movimiento de la malla
         /// </summary>
-        public event AnimationEndsHandler AnimationEnds;
+        public bool AutoUpdateBoundingBox { get; set; }
 
-        #endregion
+        /// <summary>
+        ///     Animación actual de la malla
+        /// </summary>
+        public TgcKeyFrameAnimation CurrentAnimation { get; private set; }
 
-		/// <summary>
-        /// Cantidad de triángulos de la malla
+        /// <summary>
+        ///     Velocidad de la animacion medida en cuadros por segundo.
+        /// </summary>
+        public float FrameRate { get; private set; }
+
+        /// <summary>
+        ///     Cuadro actual de animacion
+        /// </summary>
+        public int CurrentFrame { get; private set; }
+
+        /// <summary>
+        ///     Indica si actualmente hay una animación en curso.
+        /// </summary>
+        public bool IsAnimating { get; private set; }
+
+        /// <summary>
+        ///     Indica si la animación actual se ejecuta con un Loop
+        /// </summary>
+        public bool PlayLoop { get; private set; }
+
+        /// <summary>
+        ///     Original desde el cual esta malla fue clonada.
+        /// </summary>
+        public TgcKeyFrameMesh ParentInstance { get; private set; }
+
+        /// <summary>
+        ///     Lista de mallas que fueron clonadas a partir de este original
+        /// </summary>
+        public List<TgcKeyFrameMesh> MeshInstances { get; private set; }
+
+        /// <summary>
+        ///     Cantidad de triángulos de la malla
         /// </summary>
         public int NumberTriangles
         {
@@ -325,7 +232,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Cantidad de vértices de la malla
+        ///     Cantidad de vértices de la malla
         /// </summary>
         public int NumberVertices
         {
@@ -333,100 +240,300 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Informacion del MeshData original que hay que guardar para poder alterar el VertexBuffer con la animacion
+        ///     Habilita el renderizado con AlphaBlending para los modelos
+        ///     con textura o colores por vértice de canal Alpha.
+        ///     Por default está deshabilitado.
         /// </summary>
-        private OriginalData originalData;
-
-        //Variables de animacion
-        float currentTime;
-        float animationTimeLenght;
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
-        /// Crea una nueva malla.
+        ///     Renderiza la malla, si esta habilitada.
+        ///     Para que haya animacion se tiene que haber seteado una y haber
+        ///     llamado previamente al metodo updateAnimation()
+        ///     Sino se renderiza la pose fija de la malla
         /// </summary>
-        /// <param name="mesh">Mesh de DirectX</param>
-        /// <param name="renderType">Formato de renderizado de la malla</param>
-        /// <param name="coordinatesIndices">Datos parseados de la malla</param>
-        public TgcKeyFrameMesh(Mesh mesh, string name, MeshRenderType renderType, OriginalData originalData)
+        public void render()
         {
-            this.initData(mesh, name, renderType, originalData);
-        }
+            if (!Enabled)
+                return;
 
-        /// <summary>
-        /// Crea una nueva malla que es una instancia de otra malla original.
-        /// Reutiliza toda la geometría de la malla original sin duplicarla.
-        /// Debe crearse luego de haber cargado todas las animaciones en la malla original
-        /// </summary>
-        /// <param name="name">Nombre de la malla</param>
-        /// <param name="parentInstance">Malla original desde la cual basarse</param>
-        /// <param name="translation">Traslación respecto de la malla original</param>
-        /// <param name="rotation">Rotación respecto de la malla original</param>
-        /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcKeyFrameMesh(string name, TgcKeyFrameMesh parentInstance, Vector3 translation, Vector3 rotation, Vector3 scale)
-        {
-            //Cargar iniciales datos en base al original
-            this.initData(parentInstance.d3dMesh, name, parentInstance.renderType, parentInstance.originalData);
-            this.diffuseMaps = parentInstance.diffuseMaps;
-            this.materials = parentInstance.materials;
+            var device = GuiController.Instance.D3dDevice;
+            var texturesManager = GuiController.Instance.TexturesManager;
 
-            //Almacenar transformación inicial
-            this.translation = translation;
-            this.rotation = rotation;
-            this.scale = scale;
+            //Aplicar transformaciones
+            updateMeshTransform();
 
-            //Agregar animaciones del original
-            foreach (KeyValuePair<string, TgcKeyFrameAnimation> entry in parentInstance.animations)
+            //Cargar VertexDeclaration
+            device.VertexDeclaration = VertexDeclaration;
+
+            //Activar AlphaBlending si corresponde
+            activateAlphaBlend();
+
+            //Cargar matrices para el shader
+            setShaderMatrix();
+
+            //Renderizar segun el tipo de render de la malla
+            effect.Technique = technique;
+            var numPasses = effect.Begin(0);
+            switch (RenderType)
             {
-                this.animations.Add(entry.Key, entry.Value);
+                case MeshRenderType.VERTEX_COLOR:
+
+                    //Hacer reset de texturas
+                    texturesManager.clear(0);
+                    texturesManager.clear(1);
+
+                    //Iniciar Shader e iterar sobre sus Render Passes
+                    for (var n = 0; n < numPasses; n++)
+                    {
+                        //Iniciar pasada de shader
+                        effect.BeginPass(n);
+                        d3dMesh.DrawSubset(0);
+                        effect.EndPass();
+                    }
+                    break;
+
+                case MeshRenderType.DIFFUSE_MAP:
+
+                    //Hacer reset de Lightmap
+                    texturesManager.clear(1);
+
+                    //Iniciar Shader e iterar sobre sus Render Passes
+                    for (var n = 0; n < numPasses; n++)
+                    {
+                        //Dibujar cada subset con su DiffuseMap correspondiente
+                        for (var i = 0; i < Materials.Length; i++)
+                        {
+                            //Setear textura en shader
+                            texturesManager.shaderSet(effect, "texDiffuseMap", DiffuseMaps[i]);
+
+                            //Iniciar pasada de shader
+                            effect.BeginPass(n);
+                            d3dMesh.DrawSubset(i);
+                            effect.EndPass();
+                        }
+                    }
+                    break;
             }
 
-            //almacenar instancia en el padre
-            this.parentInstance = parentInstance;
-            parentInstance.meshInstances.Add(this);
+            //Finalizar shader
+            effect.End();
+
+            //Desactivar alphaBlend
+            resetAlphaBlend();
         }
 
         /// <summary>
-        /// Cargar datos iniciales
+        ///     Libera los recursos de la malla
+        /// </summary>
+        public void dispose()
+        {
+            Enabled = false;
+            if (boundingBox != null)
+            {
+                boundingBox.dispose();
+            }
+
+            //dejar de utilizar originalData
+            originalData = null;
+
+            //Si es una instancia no liberar nada, lo hace el original.
+            if (ParentInstance != null)
+            {
+                ParentInstance = null;
+                return;
+            }
+
+            //hacer dispose de instancias
+            foreach (var meshInstance in MeshInstances)
+            {
+                meshInstance.dispose();
+            }
+            MeshInstances = null;
+
+            //Dispose de mesh
+            d3dMesh.Dispose();
+            d3dMesh = null;
+
+            //Dispose de texturas
+            if (DiffuseMaps != null)
+            {
+                for (var i = 0; i < DiffuseMaps.Length; i++)
+                {
+                    DiffuseMaps[i].dispose();
+                }
+                DiffuseMaps = null;
+            }
+
+            //VertexDeclaration
+            VertexDeclaration.Dispose();
+            VertexDeclaration = null;
+        }
+
+        /// <summary>
+        ///     Matriz final que se utiliza para aplicar transformaciones a la malla.
+        ///     Si la propiedad AutoTransformEnable esta en True, la matriz se reconstruye en cada cuadro
+        ///     en base a los valores de: Position, Rotation, Scale.
+        ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
+        /// </summary>
+        public Matrix Transform { get; set; }
+
+        /// <summary>
+        ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
+        ///     cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
+        ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
+        ///     Por default está en True.
+        /// </summary>
+        public bool AutoTransformEnable { get; set; }
+
+        /// <summary>
+        ///     Posicion absoluta de la Malla
+        /// </summary>
+        public Vector3 Position
+        {
+            get { return translation; }
+            set
+            {
+                translation = value;
+                updateBoundingBox();
+            }
+        }
+
+        /// <summary>
+        ///     Rotación absoluta de la malla
+        /// </summary>
+        public Vector3 Rotation
+        {
+            get { return rotation; }
+            set { rotation = value; }
+        }
+
+        /// <summary>
+        ///     Escalado absoluto de la malla;
+        /// </summary>
+        public Vector3 Scale
+        {
+            get { return scale; }
+            set
+            {
+                scale = value;
+                updateBoundingBox();
+            }
+        }
+
+        /// <summary>
+        ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
+        /// </summary>
+        public void move(Vector3 v)
+        {
+            move(v.X, v.Y, v.Z);
+        }
+
+        /// <summary>
+        ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
+        /// </summary>
+        public void move(float x, float y, float z)
+        {
+            translation.X += x;
+            translation.Y += y;
+            translation.Z += z;
+
+            updateBoundingBox();
+        }
+
+        /// <summary>
+        ///     Mueve la malla en base a la orientacion actual de rotacion.
+        ///     Es necesario rotar la malla primero
+        /// </summary>
+        /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
+        public void moveOrientedY(float movement)
+        {
+            var z = (float) Math.Cos(rotation.Y)*movement;
+            var x = (float) Math.Sin(rotation.Y)*movement;
+
+            move(x, 0, z);
+        }
+
+        /// <summary>
+        ///     Obtiene la posicion absoluta de la malla, recibiendo un vector ya creado para
+        ///     almacenar el resultado
+        /// </summary>
+        /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
+        public void getPosition(Vector3 pos)
+        {
+            pos.X = translation.X;
+            pos.Y = translation.Y;
+            pos.Z = translation.Z;
+        }
+
+        /// <summary>
+        ///     Rota la malla respecto del eje X
+        /// </summary>
+        /// <param name="angle">Ángulo de rotación en radianes</param>
+        public void rotateX(float angle)
+        {
+            rotation.X += angle;
+        }
+
+        /// <summary>
+        ///     Rota la malla respecto del eje Y
+        /// </summary>
+        /// <param name="angle">Ángulo de rotación en radianes</param>
+        public void rotateY(float angle)
+        {
+            rotation.Y += angle;
+        }
+
+        /// <summary>
+        ///     Rota la malla respecto del eje Z
+        /// </summary>
+        /// <param name="angle">Ángulo de rotación en radianes</param>
+        public void rotateZ(float angle)
+        {
+            rotation.Z += angle;
+        }
+
+        /// <summary>
+        ///     Cargar datos iniciales
         /// </summary>
         private void initData(Mesh mesh, string name, MeshRenderType renderType, OriginalData originalData)
         {
-            this.d3dMesh = mesh;
-            this.name = name;
-            this.renderType = renderType;
+            d3dMesh = mesh;
+            Name = name;
+            RenderType = renderType;
             this.originalData = originalData;
-            this.enabled = false;
-            this.autoUpdateBoundingBox = true;
-            this.meshInstances = new List<TgcKeyFrameMesh>();
-            this.alphaBlendEnable = false;
+            Enabled = false;
+            AutoUpdateBoundingBox = true;
+            MeshInstances = new List<TgcKeyFrameMesh>();
+            AlphaBlendEnable = false;
 
-            vertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
+            VertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
 
             //variables de movimiento
-            this.autoTransformEnable = true;
-            this.translation = new Vector3(0f, 0f, 0f);
-            this.rotation = new Vector3(0f, 0f, 0f);
-            this.scale = new Vector3(1f, 1f, 1f);
-            this.transform = Matrix.Identity;
+            AutoTransformEnable = true;
+            translation = new Vector3(0f, 0f, 0f);
+            rotation = new Vector3(0f, 0f, 0f);
+            scale = new Vector3(1f, 1f, 1f);
+            Transform = Matrix.Identity;
 
             //variables de animacion
-            this.isAnimating = false;
-            this.currentAnimation = null;
-            this.playLoop = false;
-            this.currentTime = 0f;
-            this.currentFrame = 0;
-            this.animationTimeLenght = 0f;
-            this.animations = new Dictionary<string, TgcKeyFrameAnimation>();
+            IsAnimating = false;
+            CurrentAnimation = null;
+            PlayLoop = false;
+            currentTime = 0f;
+            CurrentFrame = 0;
+            animationTimeLenght = 0f;
+            Animations = new Dictionary<string, TgcKeyFrameAnimation>();
 
             //Shader
-            this.effect = GuiController.Instance.Shaders.TgcKeyFrameMeshShader;
-            this.technique = GuiController.Instance.Shaders.getTgcKeyFrameMeshTechnique(this.renderType);
+            effect = GuiController.Instance.Shaders.TgcKeyFrameMeshShader;
+            technique = GuiController.Instance.Shaders.getTgcKeyFrameMeshTechnique(RenderType);
         }
 
-
         /// <summary>
-        /// Establece cual es la animacion activa de la malla.
-        /// Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
-        /// Para forzar que se reinicie es necesario hacer stopAnimation()
+        ///     Establece cual es la animacion activa de la malla.
+        ///     Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
+        ///     Para forzar que se reinicie es necesario hacer stopAnimation()
         /// </summary>
         /// <param name="animationName">Nombre de la animacion a activar</param>
         /// <param name="playLoop">Indica si la animacion vuelve a comenzar al terminar</param>
@@ -434,13 +541,13 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         public void playAnimation(string animationName, bool playLoop, float userFrameRate)
         {
             //ya se esta animando algo
-            if (isAnimating)
+            if (IsAnimating)
             {
                 //Si la animacion pedida es la misma que la actual no la quitamos
-                if(currentAnimation.Data.name.Equals(animationName))
+                if (CurrentAnimation.Data.name.Equals(animationName))
                 {
                     //solo actualizamos el playLoop
-                    this.playLoop = playLoop;
+                    PlayLoop = playLoop;
                 }
                 //es una nueva animacion
                 else
@@ -461,10 +568,10 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Establece cual es la animacion activa de la malla.
-        /// Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
-        /// Para forzar que se reinicie es necesario hacer stopAnimation().
-        /// Utiliza el FrameRate default de cada animación
+        ///     Establece cual es la animacion activa de la malla.
+        ///     Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
+        ///     Para forzar que se reinicie es necesario hacer stopAnimation().
+        ///     Utiliza el FrameRate default de cada animación
         /// </summary>
         /// <param name="animationName">Nombre de la animacion a activar</param>
         /// <param name="playLoop">Indica si la animacion vuelve a comenzar al terminar</param>
@@ -474,11 +581,11 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Establece cual es la animacion activa de la malla.
-        /// Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
-        /// Para forzar que se reinicie es necesario hacer stopAnimation().
-        /// Se reproduce con loop.
-        /// Utiliza el FrameRate default de cada animación
+        ///     Establece cual es la animacion activa de la malla.
+        ///     Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
+        ///     Para forzar que se reinicie es necesario hacer stopAnimation().
+        ///     Se reproduce con loop.
+        ///     Utiliza el FrameRate default de cada animación
         /// </summary>
         /// <param name="animationName">Nombre de la animacion a activar</param>
         public void playAnimation(string animationName)
@@ -486,46 +593,41 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             playAnimation(animationName, true);
         }
 
-
-
-
-
         /// <summary>
-        /// Prepara una nueva animacion para ser ejecutada
+        ///     Prepara una nueva animacion para ser ejecutada
         /// </summary>
         private void initAnimationSettings(string animationName, bool playLoop, float userFrameRate)
         {
-            isAnimating = true;
-            currentAnimation = animations[animationName];
-            this.playLoop = playLoop;
+            IsAnimating = true;
+            CurrentAnimation = Animations[animationName];
+            PlayLoop = playLoop;
             currentTime = 0;
-            currentFrame = 0;
+            CurrentFrame = 0;
 
             //Cambiar BoundingBox
-            boundingBox = currentAnimation.BoundingBox;
+            boundingBox = CurrentAnimation.BoundingBox;
             updateBoundingBox();
 
             //Si el usuario no especifico un FrameRate, tomar el default de la animacion
             if (userFrameRate == -1f)
             {
-                frameRate = (float)currentAnimation.Data.frameRate;
+                FrameRate = CurrentAnimation.Data.frameRate;
             }
             else
             {
-                frameRate = userFrameRate;
+                FrameRate = userFrameRate;
             }
 
             //La duracion de la animacion.
-            animationTimeLenght = (float)currentAnimation.Data.framesCount / frameRate;
+            animationTimeLenght = CurrentAnimation.Data.framesCount/FrameRate;
         }
 
-
         /// <summary>
-        /// Desactiva la animacion actual
+        ///     Desactiva la animacion actual
         /// </summary>
         public void stopAnimation()
         {
-            isAnimating = false;
+            IsAnimating = false;
             boundingBox = staticMeshBoundingBox;
 
             //Invocar evento de finalización
@@ -535,15 +637,14 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             }
         }
 
-
         /// <summary>
-        /// Actualiza el cuadro actual de la animacion.
-        /// Debe ser llamado en cada cuadro antes de render()
+        ///     Actualiza el cuadro actual de la animacion.
+        ///     Debe ser llamado en cada cuadro antes de render()
         /// </summary>
         public void updateAnimation()
         {
-            Device device = GuiController.Instance.D3dDevice;
-            float elapsedTime = GuiController.Instance.ElapsedTime;
+            var device = GuiController.Instance.D3dDevice;
+            var elapsedTime = GuiController.Instance.ElapsedTime;
 
             //Ver que haya transcurrido cierta cantidad de tiempo
             if (elapsedTime < 0.0f)
@@ -558,7 +659,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             if (currentTime > animationTimeLenght)
             {
                 //Ver si hacer loop
-                if (playLoop)
+                if (PlayLoop)
                 {
                     currentTime = 0;
                 }
@@ -573,29 +674,30 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             {
                 //TODO: controlar caso especial cuando hay solo un KeyFrame
 
-
                 //Tomar el frame actual.
-                int frameNumber = getCurrentFrame();
-                this.currentFrame = frameNumber;
+                var frameNumber = getCurrentFrame();
+                CurrentFrame = frameNumber;
 
                 //KeyFrames a interpolar
-                TgcKeyFrameFrameData keyFrame1 = currentAnimation.Data.keyFrames[frameNumber];
-                TgcKeyFrameFrameData keyFrame2 = currentAnimation.Data.keyFrames[frameNumber + 1];
+                var keyFrame1 = CurrentAnimation.Data.keyFrames[frameNumber];
+                var keyFrame2 = CurrentAnimation.Data.keyFrames[frameNumber + 1];
 
-                float[] verticesFrame1 = keyFrame1.verticesCoordinates;
-                float[] verticesFrame2 = keyFrame2.verticesCoordinates;
+                var verticesFrame1 = keyFrame1.verticesCoordinates;
+                var verticesFrame2 = keyFrame2.verticesCoordinates;
 
                 //La diferencia de tiempo entre el frame actual y el siguiente.
-                float timeDifferenceBetweenFrames = keyFrame2.relativeTime - keyFrame1.relativeTime;
+                var timeDifferenceBetweenFrames = keyFrame2.relativeTime - keyFrame1.relativeTime;
 
                 //En que posicion relativa de los dos frames actuales estamos.
-                float interpolationValue = ((currentTime / animationTimeLenght) - keyFrame1.relativeTime) / timeDifferenceBetweenFrames;
+                var interpolationValue = (currentTime/animationTimeLenght - keyFrame1.relativeTime)/
+                                         timeDifferenceBetweenFrames;
 
                 //Cargar array de vertices interpolados
-                float[] verticesFrameFinal = new float[verticesFrame1.Length];
-                for (int i = 0; i < verticesFrameFinal.Length; i++)
+                var verticesFrameFinal = new float[verticesFrame1.Length];
+                for (var i = 0; i < verticesFrameFinal.Length; i++)
                 {
-                    verticesFrameFinal[i] = (verticesFrame2[i] - verticesFrame1[i]) * interpolationValue + verticesFrame1[i];
+                    verticesFrameFinal[i] = (verticesFrame2[i] - verticesFrame1[i])*interpolationValue +
+                                            verticesFrame1[i];
                 }
 
                 //expandir array para el vertex buffer
@@ -604,21 +706,21 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Llena la informacion del VertexBuffer con los vertices especificados
+        ///     Llena la informacion del VertexBuffer con los vertices especificados
         /// </summary>
         /// <param name="verticesCoordinates"></param>
         private void fillVertexBufferData(float[] verticesCoordinates)
         {
-            switch (renderType)
+            switch (RenderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
-                    TgcKeyFrameLoader.VertexColorVertex[] data1 = new TgcKeyFrameLoader.VertexColorVertex[originalData.coordinatesIndices.Length];
-                    for (int i = 0; i < originalData.coordinatesIndices.Length; i++)
+                    var data1 = new TgcKeyFrameLoader.VertexColorVertex[originalData.coordinatesIndices.Length];
+                    for (var i = 0; i < originalData.coordinatesIndices.Length; i++)
                     {
-                        TgcKeyFrameLoader.VertexColorVertex v = new TgcKeyFrameLoader.VertexColorVertex();
+                        var v = new TgcKeyFrameLoader.VertexColorVertex();
 
                         //vertices
-                        int coordIdx = originalData.coordinatesIndices[i] * 3;
+                        var coordIdx = originalData.coordinatesIndices[i]*3;
                         v.Position = new Vector3(
                             verticesCoordinates[coordIdx],
                             verticesCoordinates[coordIdx + 1],
@@ -626,7 +728,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                             );
 
                         //color
-                        int colorIdx = originalData.colorIndices[i];
+                        var colorIdx = originalData.colorIndices[i];
                         v.Color = originalData.verticesColors[colorIdx];
 
                         data1[i] = v;
@@ -635,13 +737,13 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                     break;
 
                 case MeshRenderType.DIFFUSE_MAP:
-                    TgcKeyFrameLoader.DiffuseMapVertex[] data2 = new TgcKeyFrameLoader.DiffuseMapVertex[originalData.coordinatesIndices.Length];
-                    for (int i = 0; i < originalData.coordinatesIndices.Length; i++)
+                    var data2 = new TgcKeyFrameLoader.DiffuseMapVertex[originalData.coordinatesIndices.Length];
+                    for (var i = 0; i < originalData.coordinatesIndices.Length; i++)
                     {
-                        TgcKeyFrameLoader.DiffuseMapVertex v = new TgcKeyFrameLoader.DiffuseMapVertex();
+                        var v = new TgcKeyFrameLoader.DiffuseMapVertex();
 
                         //vertices
-                        int coordIdx = originalData.coordinatesIndices[i] * 3;
+                        var coordIdx = originalData.coordinatesIndices[i]*3;
                         v.Position = new Vector3(
                             verticesCoordinates[coordIdx],
                             verticesCoordinates[coordIdx + 1],
@@ -649,12 +751,12 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                             );
 
                         //texture coordinates diffuseMap
-                        int texCoordIdx = originalData.texCoordinatesIndices[i] * 2;
+                        var texCoordIdx = originalData.texCoordinatesIndices[i]*2;
                         v.Tu = originalData.textureCoordinates[texCoordIdx];
                         v.Tv = originalData.textureCoordinates[texCoordIdx + 1];
 
                         //color
-                        int colorIdx = originalData.colorIndices[i];
+                        var colorIdx = originalData.colorIndices[i];
                         v.Color = originalData.verticesColors[colorIdx];
 
                         data2[i] = v;
@@ -665,15 +767,15 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Devuelve el cuadro actual de animacion
+        ///     Devuelve el cuadro actual de animacion
         /// </summary>
         /// <returns></returns>
         private int getCurrentFrame()
         {
-            float position = currentTime / animationTimeLenght;
-            TgcKeyFrameAnimationData data = currentAnimation.Data;
+            var position = currentTime/animationTimeLenght;
+            var data = CurrentAnimation.Data;
 
-            for (int i = 0; i < data.keyFrames.Length; i++)
+            for (var i = 0; i < data.keyFrames.Length; i++)
             {
                 if (position < data.keyFrames[i].relativeTime)
                 {
@@ -684,115 +786,36 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             return data.keyFrames.Length - 2;
         }
 
-
         /// <summary>
-        /// Renderiza la malla, si esta habilitada.
-        /// Para que haya animacion se tiene que haber seteado una y haber
-        /// llamado previamente al metodo updateAnimation()
-        /// Sino se renderiza la pose fija de la malla
-        /// </summary>
-        public void render()
-        {
-            if (!enabled)
-                return;
-
-            Device device = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
-
-            //Aplicar transformaciones
-            updateMeshTransform();
-
-            //Cargar VertexDeclaration
-            device.VertexDeclaration = vertexDeclaration;
-
-            //Activar AlphaBlending si corresponde
-            activateAlphaBlend();
-
-            //Cargar matrices para el shader
-            setShaderMatrix();
-
-            //Renderizar segun el tipo de render de la malla
-            effect.Technique = this.technique;
-            int numPasses = effect.Begin(0);
-            switch (renderType)
-            {
-                case MeshRenderType.VERTEX_COLOR:
-
-                    //Hacer reset de texturas
-                    texturesManager.clear(0);
-                    texturesManager.clear(1);
-
-                    //Iniciar Shader e iterar sobre sus Render Passes
-                    for (int n = 0; n < numPasses; n++)
-                    {
-                        //Iniciar pasada de shader
-                        effect.BeginPass(n);
-                        d3dMesh.DrawSubset(0);
-                        effect.EndPass();
-                    }
-                    break;
-
-                case MeshRenderType.DIFFUSE_MAP:
-
-                    //Hacer reset de Lightmap
-                    texturesManager.clear(1);
-
-                    //Iniciar Shader e iterar sobre sus Render Passes
-                    for (int n = 0; n < numPasses; n++)
-                    {
-                        //Dibujar cada subset con su DiffuseMap correspondiente
-                        for (int i = 0; i < materials.Length; i++)
-                        {
-                            //Setear textura en shader
-                            texturesManager.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
-
-                            //Iniciar pasada de shader
-                            effect.BeginPass(n);
-                            d3dMesh.DrawSubset(i);
-                            effect.EndPass();
-                        }
-                    }
-                    break;
-            }
-
-            //Finalizar shader
-            effect.End();
-
-            //Desactivar alphaBlend
-            resetAlphaBlend();
-
-        }
-
-        /// <summary>
-        /// Cargar todas la matrices que necesita el shader
+        ///     Cargar todas la matrices que necesita el shader
         /// </summary>
         protected void setShaderMatrix()
         {
-            GuiController.Instance.Shaders.setShaderMatrix(this.effect, this.transform);
+            GuiController.Instance.Shaders.setShaderMatrix(effect, Transform);
         }
 
         /// <summary>
-        /// Aplicar transformaciones del mesh
+        ///     Aplicar transformaciones del mesh
         /// </summary>
         protected void updateMeshTransform()
         {
             //Aplicar transformacion de malla
-            if (autoTransformEnable)
+            if (AutoTransformEnable)
             {
-                this.transform = Matrix.Identity
-                    * Matrix.Scaling(scale)
-                    * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                    * Matrix.Translation(translation);
+                Transform = Matrix.Identity
+                            *Matrix.Scaling(scale)
+                            *Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
+                            *Matrix.Translation(translation);
             }
         }
 
         /// <summary>
-        /// Activar AlphaBlending, si corresponde
+        ///     Activar AlphaBlending, si corresponde
         /// </summary>
         protected void activateAlphaBlend()
         {
-            Device device = GuiController.Instance.D3dDevice;
-            if (alphaBlendEnable)
+            var device = GuiController.Instance.D3dDevice;
+            if (AlphaBlendEnable)
             {
                 device.RenderState.AlphaTestEnable = true;
                 device.RenderState.AlphaBlendEnable = true;
@@ -800,164 +823,42 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Desactivar AlphaBlending
+        ///     Desactivar AlphaBlending
         /// </summary>
         protected void resetAlphaBlend()
         {
-            Device device = GuiController.Instance.D3dDevice;
+            var device = GuiController.Instance.D3dDevice;
             device.RenderState.AlphaTestEnable = false;
             device.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>
-        /// Actualiza el cuadro actual de animacion y renderiza la malla.
-        /// Es equivalente a llamar a updateAnimation() y luego a render()
+        ///     Actualiza el cuadro actual de animacion y renderiza la malla.
+        ///     Es equivalente a llamar a updateAnimation() y luego a render()
         /// </summary>
         public void animateAndRender()
         {
-            if (!enabled)
+            if (!Enabled)
                 return;
 
             updateAnimation();
             render();
         }
 
-
         /// <summary>
-        /// Libera los recursos de la malla
-        /// </summary>
-        public void dispose()
-        {
-            this.enabled = false;
-            if (boundingBox != null)
-            {
-                boundingBox.dispose();
-            }
-
-            //dejar de utilizar originalData
-            originalData = null;
-
-            //Si es una instancia no liberar nada, lo hace el original.
-            if (parentInstance != null)
-            {
-                parentInstance = null;
-                return;
-            }
-
-            //hacer dispose de instancias
-            foreach (TgcKeyFrameMesh meshInstance in meshInstances)
-            {
-                meshInstance.dispose();
-            }
-            meshInstances = null;
-
-            //Dispose de mesh
-            this.d3dMesh.Dispose();
-            this.d3dMesh = null;
-
-            //Dispose de texturas
-            if (diffuseMaps != null)
-            {
-                for (int i = 0; i < diffuseMaps.Length; i++)
-                {
-                    diffuseMaps[i].dispose();
-                }
-                diffuseMaps = null;
-            }
-
-            //VertexDeclaration
-            vertexDeclaration.Dispose();
-            vertexDeclaration = null;
-        }
-
-
-        /// <summary>
-        /// Desplaza la malla la distancia especificada, respecto de su posicion actual
-        /// </summary>
-        public void move(Vector3 v)
-        {
-            this.move(v.X, v.Y, v.Z);
-        }
-
-        /// <summary>
-        /// Desplaza la malla la distancia especificada, respecto de su posicion actual
-        /// </summary>
-        public void move(float x, float y, float z)
-        {
-            this.translation.X += x;
-            this.translation.Y += y;
-            this.translation.Z += z;
-
-            updateBoundingBox();
-        }
-
-        /// <summary>
-        /// Mueve la malla en base a la orientacion actual de rotacion.
-        /// Es necesario rotar la malla primero
-        /// </summary>
-        /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
-        public void moveOrientedY(float movement)
-        {
-            float z = (float)Math.Cos((float)rotation.Y) * movement;
-            float x = (float)Math.Sin((float)rotation.Y) * movement;
-
-            move(x, 0, z);
-        }
-
-        /// <summary>
-        /// Obtiene la posicion absoluta de la malla, recibiendo un vector ya creado para
-        /// almacenar el resultado
-        /// </summary>
-        /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
-        {
-            pos.X = translation.X;
-            pos.Y = translation.Y;
-            pos.Z = translation.Z;
-        }
-
-        /// <summary>
-        /// Rota la malla respecto del eje X
-        /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateX(float angle)
-        {
-            this.rotation.X += angle;
-        }
-
-        /// <summary>
-        /// Rota la malla respecto del eje Y
-        /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateY(float angle)
-        {
-            this.rotation.Y += angle;
-        }
-
-        /// <summary>
-        /// Rota la malla respecto del eje Z
-        /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateZ(float angle)
-        {
-            this.rotation.Z += angle;
-        }
-
-
-        /// <summary>
-        /// Devuelve un array con todas las posiciones de los vértices de la malla, en el estado actual
+        ///     Devuelve un array con todas las posiciones de los vértices de la malla, en el estado actual
         /// </summary>
         /// <returns>Array creado</returns>
         public Vector3[] getVertexPositions()
         {
             Vector3[] points = null;
-            switch (renderType)
+            switch (RenderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
-                    TgcKeyFrameLoader.VertexColorVertex[] verts1 = (TgcKeyFrameLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
-                        typeof(TgcKeyFrameLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts1 = (TgcKeyFrameLoader.VertexColorVertex[]) d3dMesh.LockVertexBuffer(
+                        typeof (TgcKeyFrameLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     points = new Vector3[verts1.Length];
-                    for (int i = 0; i < points.Length; i++)
+                    for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts1[i].Position;
                     }
@@ -965,10 +866,10 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                     break;
 
                 case MeshRenderType.DIFFUSE_MAP:
-                    TgcKeyFrameLoader.DiffuseMapVertex[] verts2 = (TgcKeyFrameLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
-                        typeof(TgcKeyFrameLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts2 = (TgcKeyFrameLoader.DiffuseMapVertex[]) d3dMesh.LockVertexBuffer(
+                        typeof (TgcKeyFrameLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     points = new Vector3[verts2.Length];
-                    for (int i = 0; i < points.Length; i++)
+                    for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts2[i].Position;
                     }
@@ -979,77 +880,76 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         }
 
         /// <summary>
-        /// Calcula el BoundingBox de la malla, en base a todos sus vertices.
-        /// Llamar a este metodo cuando ha cambiado la estructura interna de la malla.
+        ///     Calcula el BoundingBox de la malla, en base a todos sus vertices.
+        ///     Llamar a este metodo cuando ha cambiado la estructura interna de la malla.
         /// </summary>
         public TgcBoundingBox createBoundingBox()
         {
             //Obtener vertices en base al tipo de malla
-            Vector3[] points = getVertexPositions();
-            this.boundingBox = TgcBoundingBox.computeFromPoints(points);
-            return this.boundingBox;
+            var points = getVertexPositions();
+            boundingBox = TgcBoundingBox.computeFromPoints(points);
+            return boundingBox;
         }
 
         /// <summary>
-        /// Actualiza el BoundingBox de la malla, en base a su posicion actual.
-        /// Solo contempla traslacion y escalado
+        ///     Actualiza el BoundingBox de la malla, en base a su posicion actual.
+        ///     Solo contempla traslacion y escalado
         /// </summary>
         public void updateBoundingBox()
         {
-            if (autoUpdateBoundingBox)
+            if (AutoUpdateBoundingBox)
             {
-                this.boundingBox.scaleTranslate(this.translation, this.scale);
+                boundingBox.scaleTranslate(translation, scale);
             }
         }
 
         /// <summary>
-        /// Cambia el color de todos los vértices de la malla.
-        /// En modelos complejos puede resultar una operación poco performante.
-        /// La actualización será visible la próxima vez que se haga updateAnimation()
-        /// Si hay instnacias de este modelo, sea el original o una copia, todos los demás se verán
-        /// afectados
+        ///     Cambia el color de todos los vértices de la malla.
+        ///     En modelos complejos puede resultar una operación poco performante.
+        ///     La actualización será visible la próxima vez que se haga updateAnimation()
+        ///     Si hay instnacias de este modelo, sea el original o una copia, todos los demás se verán
+        ///     afectados
         /// </summary>
         /// <param name="color">Color nuevo</param>
         public void setColor(Color color)
         {
-            int c = color.ToArgb();
-            for (int i = 0; i < originalData.verticesColors.Length; i++)
+            var c = color.ToArgb();
+            for (var i = 0; i < originalData.verticesColors.Length; i++)
             {
                 originalData.verticesColors[i] = c;
             }
         }
-            
 
         /// <summary>
-        /// Permite cambiar las texturas de DiffuseMap de esta malla
+        ///     Permite cambiar las texturas de DiffuseMap de esta malla
         /// </summary>
         /// <param name="newDiffuseMaps">Array de nuevas texturas. Tiene que tener la misma cantidad que el original</param>
         public void changeDiffuseMaps(TgcTexture[] newDiffuseMaps)
         {
             //Solo aplicar si la malla tiene texturas
-            if (renderType == MeshRenderType.DIFFUSE_MAP)
+            if (RenderType == MeshRenderType.DIFFUSE_MAP)
             {
-                if (diffuseMaps.Length != newDiffuseMaps.Length)
+                if (DiffuseMaps.Length != newDiffuseMaps.Length)
                 {
                     throw new Exception("The new DiffuseMap array does not have the same length than the original.");
                 }
 
                 //Liberar texturas anteriores
-                foreach (TgcTexture t in diffuseMaps)
+                foreach (var t in DiffuseMaps)
                 {
                     t.dispose();
                 }
 
                 //Asignar nuevas texturas
-                this.diffuseMaps = newDiffuseMaps;
+                DiffuseMaps = newDiffuseMaps;
             }
         }
 
         /// <summary>
-        /// Crea una nueva malla que es una instancia de esta malla original
-        /// Reutiliza toda la geometría de la malla original sin duplicarla.
-        /// Solo se puede crear instancias a partir de originales.
-        /// Se debe crear después de haber agregado todas las animaciones al original.
+        ///     Crea una nueva malla que es una instancia de esta malla original
+        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Solo se puede crear instancias a partir de originales.
+        ///     Se debe crear después de haber agregado todas las animaciones al original.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
         /// <param name="translation">Traslación respecto de la malla original</param>
@@ -1057,27 +957,28 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         /// <param name="scale">Escala respecto de la malla original</param>
         public TgcKeyFrameMesh createMeshInstance(string name, Vector3 translation, Vector3 rotation, Vector3 scale)
         {
-            if (this.parentInstance != null)
+            if (ParentInstance != null)
             {
-                throw new Exception("No se puede crear una instancia de otra malla instancia. Hay que partir del original.");
+                throw new Exception(
+                    "No se puede crear una instancia de otra malla instancia. Hay que partir del original.");
             }
 
             //Crear instancia
-            TgcKeyFrameMesh instance = new TgcKeyFrameMesh(name, this, translation, rotation, scale);
+            var instance = new TgcKeyFrameMesh(name, this, translation, rotation, scale);
 
             //BoundingBox
-            instance.boundingBox = new TgcBoundingBox(this.boundingBox.PMin, this.boundingBox.PMax);
+            instance.boundingBox = new TgcBoundingBox(boundingBox.PMin, boundingBox.PMax);
             instance.updateBoundingBox();
 
-            instance.enabled = true;
+            instance.Enabled = true;
             return instance;
         }
 
         /// <summary>
-        /// Crea una nueva malla que es una instancia de esta malla original
-        /// Reutiliza toda la geometría de la malla original sin duplicarla.
-        /// Solo se puede crear instancias a partir de originales.
-        /// Se debe crear después de haber agregado todas las animaciones al original.
+        ///     Crea una nueva malla que es una instancia de esta malla original
+        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Solo se puede crear instancias a partir de originales.
+        ///     Se debe crear después de haber agregado todas las animaciones al original.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
         public TgcKeyFrameMesh createMeshInstance(string name)
@@ -1085,22 +986,40 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             return createMeshInstance(name, Vector3.Empty, Vector3.Empty, new Vector3(1, 1, 1));
         }
 
+        public override string ToString()
+        {
+            return "Mesh: " + Name;
+        }
 
         /// <summary>
-        /// Informacion del MeshData original que hay que guardar para poder alterar el VertexBuffer con la animacion
+        ///     Informacion del MeshData original que hay que guardar para poder alterar el VertexBuffer con la animacion
         /// </summary>
         public class OriginalData
         {
+            public int[] colorIndices;
             public int[] coordinatesIndices;
             public int[] texCoordinatesIndices;
-            public int[] colorIndices;
             public float[] textureCoordinates;
             public int[] verticesColors;
         }
 
-        public override string ToString()
-        {
-            return "Mesh: " + name;
-        }
+        #region Eventos
+
+        /// <summary>
+        ///     Indica que la animación actual ha finalizado.
+        ///     Se llama cuando se acabaron los frames de la animación.
+        ///     Si se anima en Loop, se llama cada vez que termina.
+        /// </summary>
+        /// <param name="mesh">Malla animada</param>
+        public delegate void AnimationEndsHandler(TgcKeyFrameMesh mesh);
+
+        /// <summary>
+        ///     Evento que se llama cada vez que la animación actual finaliza.
+        ///     Se llama cuando se acabaron los frames de la animación.
+        ///     Si se anima en Loop, se llama cada vez que termina.
+        /// </summary>
+        public event AnimationEndsHandler AnimationEnds;
+
+        #endregion Eventos
     }
 }

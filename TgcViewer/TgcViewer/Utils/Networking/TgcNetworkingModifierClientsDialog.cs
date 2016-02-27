@@ -1,20 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using Microsoft.DirectX.DirectPlay;
 
 namespace TgcViewer.Utils.Networking
 {
     /// <summary>
-    /// Ventana para ver los clientes conectados al server
+    ///     Ventana para ver los clientes conectados al server
     /// </summary>
     public partial class TgcNetworkingModifierClientsDialog : Form
     {
-        TgcNetworkingModifierControl networkingControl;
+        private readonly TgcNetworkingModifierControl networkingControl;
 
         public TgcNetworkingModifierClientsDialog(TgcNetworkingModifierControl networkingControl)
         {
@@ -24,7 +18,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Se creo un nuevo server, limpiar todo lo anterior
+        ///     Se creo un nuevo server, limpiar todo lo anterior
         /// </summary>
         internal void onServerCreated()
         {
@@ -34,13 +28,13 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Se elige un cliente de la tabla
+        ///     Se elige un cliente de la tabla
         /// </summary>
         private void dataGridViewConnectedClients_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridViewConnectedClients.SelectedRows.Count > 0)
             {
-                networkingControl.selectedPlayerId = (int)dataGridViewConnectedClients.SelectedRows[0].Cells[1].Value;
+                networkingControl.selectedPlayerId = (int) dataGridViewConnectedClients.SelectedRows[0].Cells[1].Value;
                 buttonDeleteClient.Enabled = true;
             }
             else
@@ -56,12 +50,12 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Agregar un cliente a la lista de conectados
+        ///     Agregar un cliente a la lista de conectados
         /// </summary>
         internal void addClient(TgcSocketClientInfo clientInfo)
         {
-            dataGridViewConnectedClients.Rows.Add(dataGridViewConnectedClients.Rows.Count, 
-                clientInfo.PlayerId, 
+            dataGridViewConnectedClients.Rows.Add(dataGridViewConnectedClients.Rows.Count,
+                clientInfo.PlayerId,
                 clientInfo.Name,
                 clientInfo.Address.ToString());
 
@@ -71,13 +65,13 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Eliminar un cliente conectado de la lista que se acaba de desconectar
+        ///     Eliminar un cliente conectado de la lista que se acaba de desconectar
         /// </summary>
         internal void onClientDisconnected(TgcSocketClientInfo clientInfo)
         {
-            for (int i = 0; i < dataGridViewConnectedClients.Rows.Count; i++)
+            for (var i = 0; i < dataGridViewConnectedClients.Rows.Count; i++)
             {
-                int rowPlayerId = (int)dataGridViewConnectedClients.Rows[i].Cells[1].Value;
+                var rowPlayerId = (int) dataGridViewConnectedClients.Rows[i].Cells[1].Value;
                 if (rowPlayerId == clientInfo.PlayerId)
                 {
                     dataGridViewConnectedClients.Rows.RemoveAt(i);
@@ -96,8 +90,5 @@ namespace TgcViewer.Utils.Networking
                 buttonDeleteClient.Enabled = false;
             }
         }
-
-
-        
     }
 }

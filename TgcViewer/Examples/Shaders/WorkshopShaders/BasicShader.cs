@@ -1,38 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.Input;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using TgcViewer;
 using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
 
 namespace Examples.Shaders.WorkshopShaders
 {
-
     /// <summary>
-    /// Ejemplo EnvMap:
-    /// Unidades Involucradas:
+    ///     Ejemplo EnvMap:
+    ///     Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
-    /// 
-    /// Es el hola mundo de los shaders
-    /// 
-    /// Autor: Mariano Banquiero
-    /// 
+    ///     Es el hola mundo de los shaders
+    ///     Autor: Mariano Banquiero
     /// </summary>
-    public class BasicShader: TgcExample
+    public class BasicShader : TgcExample
     {
-        Effect effect;
-        TgcScene scene;
-        TgcMesh mesh;
-        float time;
-
+        private Effect effect;
+        private TgcMesh mesh;
+        private TgcScene scene;
+        private float time;
 
         public override string getCategory()
         {
@@ -51,24 +39,27 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
             //Crear loader
-            TgcSceneLoader loader = new TgcSceneLoader();
+            var loader = new TgcSceneLoader();
 
             //Cargar los mesh:
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir
-                            + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml");
+                                             +
+                                             "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml");
             mesh = scene.Meshes[0];
             mesh.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             mesh.Position = new Vector3(0f, 0f, 0f);
 
             //Cargar Shader personalizado
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\BasicShader.fx");
+            effect =
+                TgcShaders.loadEffect(GuiController.Instance.ExamplesDir +
+                                      "Shaders\\WorkshopShaders\\Shaders\\BasicShader.fx");
 
-            // le asigno el efecto a la malla 
+            // le asigno el efecto a la malla
             mesh.Effect = effect;
 
-            // indico que tecnica voy a usar 
+            // indico que tecnica voy a usar
             // Hay effectos que estan organizados con mas de una tecnica.
             mesh.Technique = "RenderScene";
 
@@ -78,10 +69,9 @@ namespace Examples.Shaders.WorkshopShaders
             time = 0;
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
+            var device = GuiController.Instance.D3dDevice;
             time += elapsedTime;
 
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
@@ -90,7 +80,7 @@ namespace Examples.Shaders.WorkshopShaders
 
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);
-            
+
             // dibujo la malla pp dicha
             mesh.render();
         }
@@ -101,5 +91,4 @@ namespace Examples.Shaders.WorkshopShaders
             scene.disposeAll();
         }
     }
-
 }

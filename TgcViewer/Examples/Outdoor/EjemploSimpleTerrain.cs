@@ -1,39 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using TgcViewer;
 using TgcViewer.Utils.Terrain;
+using TGC.Core.Example;
 
 namespace Examples.Outdoor
 {
-
     /// <summary>
-    /// Ejemplo EjemploSimpleTerrain:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploSimpleTerrain:
+    ///     Unidades Involucradas:
     ///     # Unidad 7 - Técnicas de Optimización - Heightmap
-	///
-    /// Muestra como crear un terreno en base a una textura de Heightmap y
-    /// le aplica arriba una textura de color (DiffuseMap).
-    /// Se utiliza la herramienta TgcSimpleTerrain
-    /// Posee modifiers para variar la textura de Heightmap, el DiffuseMap y el vector de escala del terreno.
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Muestra como crear un terreno en base a una textura de Heightmap y
+    ///     le aplica arriba una textura de color (DiffuseMap).
+    ///     Se utiliza la herramienta TgcSimpleTerrain
+    ///     Posee modifiers para variar la textura de Heightmap, el DiffuseMap y el vector de escala del terreno.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploSimpleTerrain : TgcExample
     {
-
-        TgcSimpleTerrain terrain;
-        string currentHeightmap;
-        string currentTexture;
-        float currentScaleXZ;
-        float currentScaleY;
-
+        private string currentHeightmap;
+        private float currentScaleXZ;
+        private float currentScaleY;
+        private string currentTexture;
+        private TgcSimpleTerrain terrain;
 
         public override string getCategory()
         {
@@ -47,17 +35,18 @@ namespace Examples.Outdoor
 
         public override string getDescription()
         {
-            return "Muestra como crear un terreno en base a una textura de HeightMap utilizando la herramietna del Framework TgcSimpleTerrain";
+            return
+                "Muestra como crear un terreno en base a una textura de HeightMap utilizando la herramietna del Framework TgcSimpleTerrain";
         }
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Path de Heightmap default del terreno y Modifier para cambiarla
             currentHeightmap = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap2.jpg";
             GuiController.Instance.Modifiers.addTexture("heightmap", currentHeightmap);
-            
+
             //Modifiers para variar escala del mapa
             currentScaleXZ = 20f;
             GuiController.Instance.Modifiers.addFloat("scaleXZ", 0.1f, 100f, currentScaleXZ);
@@ -68,27 +57,25 @@ namespace Examples.Outdoor
             currentTexture = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture2.jpg";
             GuiController.Instance.Modifiers.addTexture("texture", currentTexture);
 
-
             //Cargar terreno: cargar heightmap y textura de color
             terrain = new TgcSimpleTerrain();
-            terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0,0,0));
+            terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, 0, 0));
             terrain.loadTexture(currentTexture);
-
 
             //Configurar FPS Camara
             GuiController.Instance.FpsCamera.Enable = true;
             GuiController.Instance.FpsCamera.MovementSpeed = 100f;
             GuiController.Instance.FpsCamera.JumpSpeed = 100f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(-722.6171f, 495.0046f, -31.2611f), new Vector3(164.9481f, 35.3185f, -61.5394f));
+            GuiController.Instance.FpsCamera.setCamera(new Vector3(-722.6171f, 495.0046f, -31.2611f),
+                new Vector3(164.9481f, 35.3185f, -61.5394f));
         }
-
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Ver si cambio el heightmap
-            string selectedHeightmap = (string)GuiController.Instance.Modifiers["heightmap"];
+            var selectedHeightmap = (string) GuiController.Instance.Modifiers["heightmap"];
             if (currentHeightmap != selectedHeightmap)
             {
                 //Volver a cargar el Heightmap
@@ -97,8 +84,8 @@ namespace Examples.Outdoor
             }
 
             //Ver si cambio alguno de los valores de escala
-            float selectedScaleXZ = (float)GuiController.Instance.Modifiers["scaleXZ"];
-            float selectedScaleY = (float)GuiController.Instance.Modifiers["scaleY"];
+            var selectedScaleXZ = (float) GuiController.Instance.Modifiers["scaleXZ"];
+            var selectedScaleY = (float) GuiController.Instance.Modifiers["scaleY"];
             if (currentScaleXZ != selectedScaleXZ || currentScaleY != selectedScaleY)
             {
                 //Volver a cargar el Heightmap
@@ -108,14 +95,13 @@ namespace Examples.Outdoor
             }
 
             //Ver si cambio la textura del terreno
-            string selectedTexture = (string)GuiController.Instance.Modifiers["texture"];
+            var selectedTexture = (string) GuiController.Instance.Modifiers["texture"];
             if (currentTexture != selectedTexture)
             {
                 //Volver a cargar el DiffuseMap
                 currentTexture = selectedTexture;
                 terrain.loadTexture(currentTexture);
             }
-
 
             //Renderizar terreno
             terrain.render();
@@ -125,6 +111,5 @@ namespace Examples.Outdoor
         {
             terrain.dispose();
         }
-
     }
 }

@@ -1,36 +1,26 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using TgcViewer;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
 
 namespace Examples.Optimizacion.GrillaRegular
 {
     /// <summary>
-    /// Ejemplo EjemploGrillaRegular
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploGrillaRegular
+    ///     Unidades Involucradas:
     ///     # Unidad 7 - Optimización - Grilla Regular
-    /// 
-    /// Muestra como crear y utilizar una Grilla Regular para optimizar el renderizado de un escenario por Frustum Culling.
-    /// El escenario es una isla con palmeras, rocas y el suelo. Solo las palmeras y rocas se optimizan con esta técnica.
-    /// 
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Muestra como crear y utilizar una Grilla Regular para optimizar el renderizado de un escenario por Frustum Culling.
+    ///     El escenario es una isla con palmeras, rocas y el suelo. Solo las palmeras y rocas se optimizan con esta técnica.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploGrillaRegular : TgcExample
     {
-
-        TgcSkyBox skyBox;
-        List<TgcMesh> objetosIsla;
-        TgcMesh terreno;
-        GrillaRegular grilla;
+        private GrillaRegular grilla;
+        private List<TgcMesh> objetosIsla;
+        private TgcSkyBox skyBox;
+        private TgcMesh terreno;
 
         public override string getCategory()
         {
@@ -44,18 +34,19 @@ namespace Examples.Optimizacion.GrillaRegular
 
         public override string getDescription()
         {
-            return "Muestra como crear y utilizar una Grilla Regular para optimizar el renderizado de un escenario por Frustum Culling.";
+            return
+                "Muestra como crear y utilizar una Grilla Regular para optimizar el renderizado de un escenario por Frustum Culling.";
         }
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 500, 0);
             skyBox.Size = new Vector3(10000, 10000, 10000);
-            string texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
+            var texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "lostatseaday_lf.jpg");
@@ -64,21 +55,20 @@ namespace Examples.Optimizacion.GrillaRegular
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
             skyBox.updateValues();
 
-
             //Cargar escenario de Isla
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesDir + "Optimizacion\\Isla\\Isla-TgcScene.xml");
+            var loader = new TgcSceneLoader();
+            var scene =
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesDir + "Optimizacion\\Isla\\Isla-TgcScene.xml");
 
             //Separar el Terreno del resto de los objetos
-            List<TgcMesh> list1 = new List<TgcMesh>();
-            scene.separeteMeshList(new string[] { "Terreno" }, out list1, out objetosIsla);
+            var list1 = new List<TgcMesh>();
+            scene.separeteMeshList(new[] {"Terreno"}, out list1, out objetosIsla);
             terreno = list1[0];
 
             //Crear grilla
             grilla = new GrillaRegular();
             grilla.create(objetosIsla, scene.BoundingBox);
             grilla.createDebugMeshes();
-
 
             //Camara en 1ra persona
             GuiController.Instance.FpsCamera.Enable = true;
@@ -90,13 +80,12 @@ namespace Examples.Optimizacion.GrillaRegular
             GuiController.Instance.Modifiers.addBoolean("showTerrain", "Show Terrain", true);
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
-            bool showGrid = (bool)GuiController.Instance.Modifiers["showGrid"];
-            bool showTerrain = (bool)GuiController.Instance.Modifiers["showTerrain"];
+            var showGrid = (bool) GuiController.Instance.Modifiers["showGrid"];
+            var showTerrain = (bool) GuiController.Instance.Modifiers["showTerrain"];
 
             skyBox.render();
             if (showTerrain)
@@ -110,11 +99,10 @@ namespace Examples.Optimizacion.GrillaRegular
         {
             skyBox.dispose();
             terreno.dispose();
-            foreach (TgcMesh mesh in objetosIsla)
+            foreach (var mesh in objetosIsla)
             {
                 mesh.dispose();
             }
         }
-
     }
 }

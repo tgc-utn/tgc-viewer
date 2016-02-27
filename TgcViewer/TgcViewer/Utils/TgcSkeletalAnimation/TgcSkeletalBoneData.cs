@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace TgcViewer.Utils.TgcSkeletalAnimation
 {
     public class TgcSkeletalBoneData
@@ -11,7 +7,5 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         public int parentId;
         public float[] startPosition;
         public float[] startRotation;
-
     }
 }
-

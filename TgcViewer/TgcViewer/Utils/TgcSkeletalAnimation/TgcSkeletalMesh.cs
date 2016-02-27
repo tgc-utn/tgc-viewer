@@ -1,52 +1,202 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Scene;
-using TGC.Core.Utils;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.SceneLoader;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
-    /// Malla que representa un modelo 3D con varias animaciones, animadas por Skeletal Animation
+    ///     Malla que representa un modelo 3D con varias animaciones, animadas por Skeletal Animation
     /// </summary>
     public class TgcSkeletalMesh : IRenderObject, ITransformObject
     {
         /// <summary>
-        /// Maxima cantidad de huesos soportados por TgcSkeletalMesh
-        /// Coincide con el tamaño del array de matrices que se envia
-        /// al VertexShader para hacer skinning.
+        ///     Tipos de de renderizado de mallas
+        /// </summary>
+        public enum MeshRenderType
+        {
+            /// <summary>
+            ///     Solo colores por vertice
+            /// </summary>
+            VERTEX_COLOR,
+
+            /// <summary>
+            ///     Solo un canal de textura en DiffuseMap
+            /// </summary>
+            DIFFUSE_MAP
+        }
+
+        /// <summary>
+        ///     Maxima cantidad de huesos soportados por TgcSkeletalMesh
+        ///     Coincide con el tamaño del array de matrices que se envia
+        ///     al VertexShader para hacer skinning.
         /// </summary>
         public const int MAX_BONE_COUNT = 26;
 
+        protected bool alphaBlendEnable;
+
+        protected Dictionary<string, TgcSkeletalAnimation> animations;
+
+        //Variables de animacion
+        protected float animationTimeLenght;
+
+        protected List<TgcSkeletalBoneAttach> attachments;
+
+        protected bool autoTransformEnable;
+
+        protected bool autoUpdateBoundingBox;
+
+        protected TgcSkeletalBone[] bones;
+
+        //Matrices final de transformacion de cada ueso
+        private Matrix[] boneSpaceFinalTransforms;
+
+        protected TgcBoundingBox boundingBox;
+
+        protected TgcSkeletalAnimation currentAnimation;
+
+        protected int currentFrame;
+
+        protected float currentTime;
 
         /// <summary>
-        /// Mesh de DirectX
+        ///     Mesh de DirectX
         /// </summary>
         protected Mesh d3dMesh;
+
+        protected TgcTexture[] diffuseMaps;
+
+        protected Effect effect;
+
+        protected bool enabled;
+
+        protected float frameRate;
+
+        protected bool isAnimating;
+
+        protected Material[] materials;
+
+        protected List<TgcSkeletalMesh> meshInstances;
+
+        protected string name;
+
+        protected TgcSkeletalMesh parentInstance;
+
+        protected bool playLoop;
+
+        protected bool renderSkeleton;
+
+        protected MeshRenderType renderType;
+
+        protected Vector3 rotation;
+
+        protected Vector3 scale;
+
+        protected TgcLine[] skeletonRenderBones;
+
+        //Elementos para renderizar el esqueleto
+        protected TgcBox[] skeletonRenderJoints;
+
         /// <summary>
-        /// Mesh interna de DirectX
+        ///     BoundingBox de la malla sin ninguna animación.
+        /// </summary>
+        protected TgcBoundingBox staticMeshBoundingBox;
+
+        protected string technique;
+
+        protected Matrix transform;
+
+        protected Vector3 translation;
+
+        protected VertexDeclaration vertexDeclaration;
+
+        /// <summary>
+        ///     Constructor vacio, para facilitar la herencia de esta clase.
+        /// </summary>
+        protected TgcSkeletalMesh()
+        {
+        }
+
+        /// <summary>
+        ///     Crea una nueva malla.
+        /// </summary>
+        /// <param name="mesh">Mesh de DirectX</param>
+        /// <param name="renderType">Formato de renderizado de la malla</param>
+        /// <param name="bones">Datos de los huesos</param>
+        public TgcSkeletalMesh(Mesh mesh, string name, MeshRenderType renderType, TgcSkeletalBone[] bones)
+        {
+            initData(mesh, name, renderType, bones);
+        }
+
+        /// <summary>
+        ///     Crea una nueva malla que es una instancia de otra malla original.
+        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Debe crearse luego de haber cargado todas las animaciones en la malla original
+        /// </summary>
+        /// <param name="name">Nombre de la malla</param>
+        /// <param name="parentInstance">Malla original desde la cual basarse</param>
+        /// <param name="translation">Traslación respecto de la malla original</param>
+        /// <param name="rotation">Rotación respecto de la malla original</param>
+        /// <param name="scale">Escala respecto de la malla original</param>
+        public TgcSkeletalMesh(string name, TgcSkeletalMesh parentInstance, Vector3 translation, Vector3 rotation,
+            Vector3 scale)
+        {
+            //Cargar iniciales datos en base al original
+            initData(parentInstance.d3dMesh, name, parentInstance.renderType, parentInstance.bones);
+            diffuseMaps = parentInstance.diffuseMaps;
+            materials = parentInstance.materials;
+
+            //Almacenar transformación inicial
+            this.translation = translation;
+            this.rotation = rotation;
+            this.scale = scale;
+
+            //Agregar animaciones del original
+            foreach (var entry in parentInstance.animations)
+            {
+                animations.Add(entry.Key, entry.Value);
+            }
+
+            //Agregar attachments del original, creando una instancia por cada attach
+            foreach (var parentAttach in parentInstance.attachments)
+            {
+                var attach = new TgcSkeletalBoneAttach();
+                attach.Bone = parentAttach.Bone;
+                attach.Offset = parentAttach.Offset;
+                //Crear instancia del mesh del attach del padre
+                attach.Mesh = parentAttach.Mesh.createMeshInstance(name + "-" + parentAttach.Mesh.Name);
+                attach.updateValues();
+                attachments.Add(attach);
+            }
+
+            //almacenar instancia en el padre
+            this.parentInstance = parentInstance;
+            parentInstance.meshInstances.Add(this);
+        }
+
+        /// <summary>
+        ///     Mesh interna de DirectX
         /// </summary>
         public Mesh D3dMesh
         {
             get { return d3dMesh; }
         }
 
-        protected string name;
         /// <summary>
-        /// Nombre de la malla
+        ///     Nombre de la malla
         /// </summary>
         public string Name
         {
             get { return name; }
         }
 
-        protected Material[] materials;
         /// <summary>
-        /// Array de Materials
+        ///     Array de Materials
         /// </summary>
         public Material[] Materials
         {
@@ -54,9 +204,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             set { materials = value; }
         }
 
-        protected TgcTexture[] diffuseMaps;
         /// <summary>
-        /// Array de texturas para DiffuseMap
+        ///     Array de texturas para DiffuseMap
         /// </summary>
         public TgcTexture[] DiffuseMaps
         {
@@ -64,9 +213,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             set { diffuseMaps = value; }
         }
 
-        protected Effect effect;
         /// <summary>
-        /// Shader del mesh
+        ///     Shader del mesh
         /// </summary>
         public Effect Effect
         {
@@ -74,10 +222,9 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             set { effect = value; }
         }
 
-        protected string technique;
         /// <summary>
-        /// Technique que se va a utilizar en el effect.
-        /// Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        ///     Technique que se va a utilizar en el effect.
+        ///     Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
         public string Technique
         {
@@ -85,9 +232,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             set { technique = value; }
         }
 
-        protected bool enabled;
         /// <summary>
-        /// Indica si la malla esta habilitada para ser renderizada
+        ///     Indica si la malla esta habilitada para ser renderizada
         /// </summary>
         public bool Enabled
         {
@@ -95,12 +241,337 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             set { enabled = value; }
         }
 
-        protected Matrix transform;
         /// <summary>
-        /// Matriz final que se utiliza para aplicar transformaciones a la malla.
-        /// Si la propiedad AutoTransformEnable esta en True, la matriz se reconstruye en cada cuadro
-        /// en base a los valores de: Position, Rotation, Scale.
-        /// Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
+        ///     BoundingBox del Mesh.
+        ///     Puede variar según la animación que tiene configurada en el momento.
+        /// </summary>
+        public TgcBoundingBox BoundingBox
+        {
+            get { return boundingBox; }
+            set
+            {
+                staticMeshBoundingBox = value;
+                boundingBox = value;
+            }
+        }
+
+        /// <summary>
+        ///     Tipo de formato de Render de esta malla
+        /// </summary>
+        public MeshRenderType RenderType
+        {
+            get { return renderType; }
+            set { renderType = value; }
+        }
+
+        /// <summary>
+        ///     VertexDeclaration del Flexible Vertex Format (FVF) usado por la malla
+        /// </summary>
+        public VertexDeclaration VertexDeclaration
+        {
+            get { return vertexDeclaration; }
+        }
+
+        /// <summary>
+        ///     Indica si se actualiza automaticamente el BoundingBox con cada movimiento de la malla
+        /// </summary>
+        public bool AutoUpdateBoundingBox
+        {
+            get { return autoUpdateBoundingBox; }
+            set { autoUpdateBoundingBox = value; }
+        }
+
+        /// <summary>
+        ///     Huesos del esqueleto de la malla. Ordenados en forma jerárquica
+        /// </summary>
+        public TgcSkeletalBone[] Bones
+        {
+            get { return bones; }
+        }
+
+        /// <summary>
+        ///     Mapa de animaciones de la malla
+        /// </summary>
+        public Dictionary<string, TgcSkeletalAnimation> Animations
+        {
+            get { return animations; }
+        }
+
+        /// <summary>
+        ///     Animación actual de la malla
+        /// </summary>
+        public TgcSkeletalAnimation CurrentAnimation
+        {
+            get { return currentAnimation; }
+        }
+
+        /// <summary>
+        ///     Velocidad de la animacion medida en cuadros por segundo.
+        /// </summary>
+        public float FrameRate
+        {
+            get { return frameRate; }
+        }
+
+        /// <summary>
+        ///     Cuadro actual de animacion
+        /// </summary>
+        public int CurrentFrame
+        {
+            get { return currentFrame; }
+        }
+
+        /// <summary>
+        ///     Indica si actualmente hay una animación en curso.
+        /// </summary>
+        public bool IsAnimating
+        {
+            get { return isAnimating; }
+        }
+
+        /// <summary>
+        ///     Indica si la animación actual se ejecuta con un Loop
+        /// </summary>
+        public bool PlayLoop
+        {
+            get { return playLoop; }
+        }
+
+        /// <summary>
+        ///     Modelos adjuntados para seguir la trayectoria de algún hueso
+        /// </summary>
+        public List<TgcSkeletalBoneAttach> Attachments
+        {
+            get { return attachments; }
+        }
+
+        /// <summary>
+        ///     Original desde el cual esta malla fue clonada.
+        /// </summary>
+        public TgcSkeletalMesh ParentInstance
+        {
+            get { return parentInstance; }
+        }
+
+        /// <summary>
+        ///     Lista de mallas que fueron clonadas a partir de este original
+        /// </summary>
+        public List<TgcSkeletalMesh> MeshInstances
+        {
+            get { return meshInstances; }
+        }
+
+        /// <summary>
+        ///     Cantidad de triángulos de la malla
+        /// </summary>
+        public int NumberTriangles
+        {
+            get { return d3dMesh.NumberFaces; }
+        }
+
+        /// <summary>
+        ///     Cantidad de vértices de la malla
+        /// </summary>
+        public int NumberVertices
+        {
+            get { return d3dMesh.NumberVertices; }
+        }
+
+        /// <summary>
+        ///     En true renderiza solo el esqueleto del modelo, en lugar de la malla.
+        /// </summary>
+        public bool RenderSkeleton
+        {
+            get { return renderSkeleton; }
+            set { renderSkeleton = value; }
+        }
+
+        /// <summary>
+        ///     Habilita el renderizado con AlphaBlending para los modelos
+        ///     con textura o colores por vértice de canal Alpha.
+        ///     Por default está deshabilitado.
+        /// </summary>
+        public bool AlphaBlendEnable
+        {
+            get { return alphaBlendEnable; }
+            set { alphaBlendEnable = value; }
+        }
+
+        /// <summary>
+        ///     Renderiza la malla, si esta habilitada.
+        ///     Para que haya animacion se tiene que haber seteado una y haber
+        ///     llamado previamente al metodo updateAnimation()
+        ///     Sino se renderiza la pose fija de la malla
+        /// </summary>
+        public void render()
+        {
+            if (!enabled)
+                return;
+
+            var device = GuiController.Instance.D3dDevice;
+            var texturesManager = GuiController.Instance.TexturesManager;
+
+            //Actualizar transformacion de malla
+            updateMeshTransform();
+
+            //Cargar VertexDeclaration
+            device.VertexDeclaration = vertexDeclaration;
+
+            //Activar AlphaBlending si corresponde
+            activateAlphaBlend();
+
+            //Cargar matrices para el shader
+            setShaderMatrix();
+
+            //Enviar al shader el array de matrices de huesos para poder hacer skinning en el Vertex Shader
+            effect.SetValue("bonesMatWorldArray", boneSpaceFinalTransforms);
+
+            //Renderizar malla
+            if (!renderSkeleton)
+            {
+                //Renderizar segun el tipo de render de la malla
+                effect.Technique = technique;
+                var numPasses = effect.Begin(0);
+                switch (renderType)
+                {
+                    case MeshRenderType.VERTEX_COLOR:
+
+                        //Hacer reset de texturas
+                        texturesManager.clear(0);
+                        texturesManager.clear(1);
+
+                        //Iniciar Shader e iterar sobre sus Render Passes
+                        for (var n = 0; n < numPasses; n++)
+                        {
+                            //Iniciar pasada de shader
+                            effect.BeginPass(n);
+                            d3dMesh.DrawSubset(0);
+                            effect.EndPass();
+                        }
+                        break;
+
+                    case MeshRenderType.DIFFUSE_MAP:
+
+                        //Hacer reset de Lightmap
+                        texturesManager.clear(1);
+
+                        //Iniciar Shader e iterar sobre sus Render Passes
+                        for (var n = 0; n < numPasses; n++)
+                        {
+                            //Dibujar cada subset con su DiffuseMap correspondiente
+                            for (var i = 0; i < materials.Length; i++)
+                            {
+                                //Setear textura en shader
+                                texturesManager.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
+
+                                //Iniciar pasada de shader
+                                effect.BeginPass(n);
+                                d3dMesh.DrawSubset(i);
+                                effect.EndPass();
+                            }
+                        }
+                        break;
+                }
+
+                //Finalizar shader
+                effect.End();
+            }
+            //Renderizar esqueleto
+            else
+            {
+                renderSkeletonMesh();
+            }
+
+            //Desactivar alphaBlend
+            resetAlphaBlend();
+
+            //Renderizar attachments
+            foreach (var attach in attachments)
+            {
+                attach.updateMeshTransform(transform);
+                attach.Mesh.render();
+            }
+        }
+
+        /// <summary>
+        ///     Libera los recursos de la malla
+        /// </summary>
+        public void dispose()
+        {
+            enabled = false;
+            if (boundingBox != null)
+            {
+                boundingBox.dispose();
+            }
+
+            //Si es una instancia no liberar nada, lo hace el original.
+            if (parentInstance != null)
+            {
+                parentInstance = null;
+                return;
+            }
+
+            //hacer dispose de instancias
+            foreach (var meshInstance in meshInstances)
+            {
+                meshInstance.dispose();
+            }
+            meshInstances = null;
+
+            //Dispose de mesh
+            d3dMesh.Dispose();
+            d3dMesh = null;
+
+            //Dispose de texturas
+            if (diffuseMaps != null)
+            {
+                for (var i = 0; i < diffuseMaps.Length; i++)
+                {
+                    diffuseMaps[i].dispose();
+                }
+                diffuseMaps = null;
+            }
+
+            //Dispose de Box de joints
+            if (skeletonRenderJoints != null)
+            {
+                foreach (var jointBox in skeletonRenderJoints)
+                {
+                    jointBox.dispose();
+                }
+                skeletonRenderJoints = null;
+            }
+
+            //Dispose de lineas de Bones
+            if (skeletonRenderBones != null)
+            {
+                foreach (var boneLine in skeletonRenderBones)
+                {
+                    if (boneLine != null)
+                    {
+                        boneLine.dispose();
+                    }
+                }
+                skeletonRenderBones = null;
+            }
+
+            //Liberar attachments
+            foreach (var attach in attachments)
+            {
+                attach.Mesh.dispose();
+            }
+            attachments = null;
+
+            //VertexDeclaration
+            vertexDeclaration.Dispose();
+            vertexDeclaration = null;
+        }
+
+        /// <summary>
+        ///     Matriz final que se utiliza para aplicar transformaciones a la malla.
+        ///     Si la propiedad AutoTransformEnable esta en True, la matriz se reconstruye en cada cuadro
+        ///     en base a los valores de: Position, Rotation, Scale.
+        ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
         public Matrix Transform
         {
@@ -108,12 +579,11 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             set { transform = value; }
         }
 
-        protected bool autoTransformEnable;
         /// <summary>
-        /// En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
-        /// cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
-        /// En False se respeta lo que el usuario haya cargado a mano en la matriz.
-        /// Por default está en True.
+        ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
+        ///     cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
+        ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
+        ///     Por default está en True.
         /// </summary>
         public bool AutoTransformEnable
         {
@@ -121,10 +591,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             set { autoTransformEnable = value; }
         }
 
-
-        protected Vector3 translation;
         /// <summary>
-        /// Posicion absoluta de la Malla
+        ///     Posicion absoluta de la Malla
         /// </summary>
         public Vector3 Position
         {
@@ -136,9 +604,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             }
         }
 
-        protected Vector3 rotation;
         /// <summary>
-        /// Rotación absoluta de la malla
+        ///     Rotación absoluta de la malla
         /// </summary>
         public Vector3 Rotation
         {
@@ -146,9 +613,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             set { rotation = value; }
         }
 
-        protected Vector3 scale;
         /// <summary>
-        /// Escalado absoluto de la malla;
+        ///     Escalado absoluto de la malla;
         /// </summary>
         public Vector3 Scale
         {
@@ -161,350 +627,131 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
-        /// Tipos de de renderizado de mallas
+        ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public enum MeshRenderType
+        public void move(Vector3 v)
         {
-            /// <summary>
-            /// Solo colores por vertice
-            /// </summary>
-            VERTEX_COLOR,
-            /// <summary>
-            /// Solo un canal de textura en DiffuseMap
-            /// </summary>
-            DIFFUSE_MAP,
-        };
-
-        /// <summary>
-        /// BoundingBox de la malla sin ninguna animación.
-        /// </summary>
-        protected TgcBoundingBox staticMeshBoundingBox;
-
-        protected TgcBoundingBox boundingBox;
-        /// <summary>
-        /// BoundingBox del Mesh.
-        /// Puede variar según la animación que tiene configurada en el momento.
-        /// </summary>
-        public TgcBoundingBox BoundingBox
-        {
-            get { return boundingBox; }
-            set {
-                staticMeshBoundingBox = value;
-                boundingBox = value; 
-            }
-        }
-
-        protected MeshRenderType renderType;
-        /// <summary>
-        /// Tipo de formato de Render de esta malla
-        /// </summary>
-        public MeshRenderType RenderType
-        {
-            get { return renderType; }
-            set { renderType = value; }
-        }
-
-        protected VertexDeclaration vertexDeclaration;
-        /// <summary>
-        /// VertexDeclaration del Flexible Vertex Format (FVF) usado por la malla
-        /// </summary>
-        public VertexDeclaration VertexDeclaration
-        {
-            get { return vertexDeclaration; }
-        }
-
-        protected bool autoUpdateBoundingBox;
-        /// <summary>
-        /// Indica si se actualiza automaticamente el BoundingBox con cada movimiento de la malla
-        /// </summary>
-        public bool AutoUpdateBoundingBox
-        {
-            get { return autoUpdateBoundingBox; }
-            set { autoUpdateBoundingBox = value; }
-        }
-
-
-        protected TgcSkeletalBone[] bones;
-        /// <summary>
-        /// Huesos del esqueleto de la malla. Ordenados en forma jerárquica
-        /// </summary>
-        public TgcSkeletalBone[] Bones
-        {
-            get { return bones; }
-        }
-
-        protected Dictionary<string, TgcSkeletalAnimation> animations;
-        /// <summary>
-        /// Mapa de animaciones de la malla
-        /// </summary>
-        public Dictionary<string, TgcSkeletalAnimation> Animations
-        {
-            get { return animations; }
-        }
-
-        protected TgcSkeletalAnimation currentAnimation;
-        /// <summary>
-        /// Animación actual de la malla
-        /// </summary>
-        public TgcSkeletalAnimation CurrentAnimation
-        {
-            get { return currentAnimation; }
-        }
-
-        protected float frameRate;
-        /// <summary>
-        /// Velocidad de la animacion medida en cuadros por segundo.
-        /// </summary>
-        public float FrameRate
-        {
-            get { return frameRate; }
-        }
-
-        protected int currentFrame;
-        /// <summary>
-        /// Cuadro actual de animacion
-        /// </summary>
-        public int CurrentFrame
-        {
-            get { return currentFrame; }
-        }
-
-        protected bool isAnimating;
-        /// <summary>
-        /// Indica si actualmente hay una animación en curso.
-        /// </summary>
-        public bool IsAnimating
-        {
-            get { return isAnimating; }
-        }
-
-        protected bool playLoop;
-        /// <summary>
-        /// Indica si la animación actual se ejecuta con un Loop
-        /// </summary>
-        public bool PlayLoop
-        {
-            get { return playLoop; }
-        }
-
-        protected List<TgcSkeletalBoneAttach> attachments;
-        /// <summary>
-        /// Modelos adjuntados para seguir la trayectoria de algún hueso
-        /// </summary>
-        public List<TgcSkeletalBoneAttach> Attachments
-        {
-            get { return attachments; }
-        }
-
-
-        #region Eventos
-
-        /// <summary>
-        /// Indica que la animación actual ha finalizado.
-        /// Se llama cuando se acabaron los frames de la animación.
-        /// Si se anima en Loop, se llama cada vez que termina.
-        /// </summary>
-        /// <param name="mesh">Malla animada</param>
-        public delegate void AnimationEndsHandler(TgcSkeletalMesh mesh);
-        /// <summary>
-        /// Evento que se llama cada vez que la animación actual finaliza.
-        /// Se llama cuando se acabaron los frames de la animación.
-        /// Si se anima en Loop, se llama cada vez que termina.
-        /// </summary>
-        public event AnimationEndsHandler AnimationEnds;
-
-        #endregion
-
-
-        protected TgcSkeletalMesh parentInstance;
-        /// <summary>
-        /// Original desde el cual esta malla fue clonada.
-        /// </summary>
-        public TgcSkeletalMesh ParentInstance
-        {
-            get { return parentInstance; }
-        }
-
-        protected List<TgcSkeletalMesh> meshInstances;
-        /// <summary>
-        /// Lista de mallas que fueron clonadas a partir de este original
-        /// </summary>
-        public List<TgcSkeletalMesh> MeshInstances
-        {
-            get { return meshInstances; }
-        }
-		
-		/// <summary>
-        /// Cantidad de triángulos de la malla
-        /// </summary>
-        public int NumberTriangles
-        {
-            get { return d3dMesh.NumberFaces; }
+            move(v.X, v.Y, v.Z);
         }
 
         /// <summary>
-        /// Cantidad de vértices de la malla
+        ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public int NumberVertices
+        public void move(float x, float y, float z)
         {
-            get { return d3dMesh.NumberVertices; }
-        }
+            translation.X += x;
+            translation.Y += y;
+            translation.Z += z;
 
-        protected bool renderSkeleton;
-        /// <summary>
-        /// En true renderiza solo el esqueleto del modelo, en lugar de la malla.
-        /// </summary>
-        public bool RenderSkeleton
-        {
-            get { return renderSkeleton; }
-            set { renderSkeleton = value; }
-        }
-
-        protected bool alphaBlendEnable;
-        /// <summary>
-        /// Habilita el renderizado con AlphaBlending para los modelos
-        /// con textura o colores por vértice de canal Alpha.
-        /// Por default está deshabilitado.
-        /// </summary>
-        public bool AlphaBlendEnable
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
-
-
-        //Elementos para renderizar el esqueleto
-        protected TgcBox[] skeletonRenderJoints;
-        protected TgcLine[] skeletonRenderBones;
-
-        //Variables de animacion
-        protected float animationTimeLenght;
-        protected float currentTime;
-
-        //Matrices final de transformacion de cada ueso
-        Matrix[] boneSpaceFinalTransforms;
-
-        
-        
-        /// <summary>
-        /// Constructor vacio, para facilitar la herencia de esta clase.
-        /// </summary>
-        protected TgcSkeletalMesh()
-        {
+            updateBoundingBox();
         }
 
         /// <summary>
-        /// Crea una nueva malla.
+        ///     Mueve la malla en base a la orientacion actual de rotacion.
+        ///     Es necesario rotar la malla primero
         /// </summary>
-        /// <param name="mesh">Mesh de DirectX</param>
-        /// <param name="renderType">Formato de renderizado de la malla</param>
-        /// <param name="bones">Datos de los huesos</param>
-        public TgcSkeletalMesh(Mesh mesh, string name, MeshRenderType renderType, TgcSkeletalBone[] bones)
+        /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
+        public void moveOrientedY(float movement)
         {
-            this.initData(mesh, name, renderType, bones);
+            var z = (float) Math.Cos(rotation.Y)*movement;
+            var x = (float) Math.Sin(rotation.Y)*movement;
+
+            move(x, 0, z);
         }
 
         /// <summary>
-        /// Crea una nueva malla que es una instancia de otra malla original.
-        /// Reutiliza toda la geometría de la malla original sin duplicarla.
-        /// Debe crearse luego de haber cargado todas las animaciones en la malla original
+        ///     Obtiene la posicion absoluta de la malla, recibiendo un vector ya creado para
+        ///     almacenar el resultado
         /// </summary>
-        /// <param name="name">Nombre de la malla</param>
-        /// <param name="parentInstance">Malla original desde la cual basarse</param>
-        /// <param name="translation">Traslación respecto de la malla original</param>
-        /// <param name="rotation">Rotación respecto de la malla original</param>
-        /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcSkeletalMesh(string name, TgcSkeletalMesh parentInstance, Vector3 translation, Vector3 rotation, Vector3 scale)
+        /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
+        public void getPosition(Vector3 pos)
         {
-            //Cargar iniciales datos en base al original
-            this.initData(parentInstance.d3dMesh, name, parentInstance.renderType, parentInstance.bones);
-            this.diffuseMaps = parentInstance.diffuseMaps;
-            this.materials = parentInstance.materials;
-
-            //Almacenar transformación inicial
-            this.translation = translation;
-            this.rotation = rotation;
-            this.scale = scale;
-
-            //Agregar animaciones del original
-            foreach (KeyValuePair<string, TgcSkeletalAnimation> entry in parentInstance.animations)
-            {
-                this.animations.Add(entry.Key, entry.Value);
-            }
-
-            //Agregar attachments del original, creando una instancia por cada attach
-            foreach (TgcSkeletalBoneAttach parentAttach in parentInstance.attachments)
-            {
-                TgcSkeletalBoneAttach attach = new TgcSkeletalBoneAttach();
-                attach.Bone = parentAttach.Bone;
-                attach.Offset = parentAttach.Offset;
-                //Crear instancia del mesh del attach del padre
-                attach.Mesh = parentAttach.Mesh.createMeshInstance(name + "-" + parentAttach.Mesh.Name);
-                attach.updateValues();
-                this.attachments.Add(attach);
-            }
-
-            //almacenar instancia en el padre
-            this.parentInstance = parentInstance;
-            parentInstance.meshInstances.Add(this);
+            pos.X = translation.X;
+            pos.Y = translation.Y;
+            pos.Z = translation.Z;
         }
 
         /// <summary>
-        /// Cargar datos iniciales
+        ///     Rota la malla respecto del eje X
+        /// </summary>
+        /// <param name="angle">Ángulo de rotación en radianes</param>
+        public void rotateX(float angle)
+        {
+            rotation.X += angle;
+        }
+
+        /// <summary>
+        ///     Rota la malla respecto del eje Y
+        /// </summary>
+        /// <param name="angle">Ángulo de rotación en radianes</param>
+        public void rotateY(float angle)
+        {
+            rotation.Y += angle;
+        }
+
+        /// <summary>
+        ///     Rota la malla respecto del eje Z
+        /// </summary>
+        /// <param name="angle">Ángulo de rotación en radianes</param>
+        public void rotateZ(float angle)
+        {
+            rotation.Z += angle;
+        }
+
+        /// <summary>
+        ///     Cargar datos iniciales
         /// </summary>
         protected void initData(Mesh mesh, string name, MeshRenderType renderType, TgcSkeletalBone[] bones)
         {
-            this.d3dMesh = mesh;
+            d3dMesh = mesh;
             this.name = name;
             this.renderType = renderType;
-            this.enabled = false;
-            this.autoUpdateBoundingBox = true;
+            enabled = false;
+            autoUpdateBoundingBox = true;
             this.bones = bones;
-            this.attachments = new List<TgcSkeletalBoneAttach>();
-            this.meshInstances = new List<TgcSkeletalMesh>();
-            this.renderSkeleton = false;
-            this.alphaBlendEnable = false;
+            attachments = new List<TgcSkeletalBoneAttach>();
+            meshInstances = new List<TgcSkeletalMesh>();
+            renderSkeleton = false;
+            alphaBlendEnable = false;
 
             //variables de movimiento
-            this.autoTransformEnable = true;
-            this.translation = new Vector3(0f, 0f, 0f);
-            this.rotation = new Vector3(0f, 0f, 0f);
-            this.scale = new Vector3(1f, 1f, 1f);
-            this.transform = Matrix.Identity;
+            autoTransformEnable = true;
+            translation = new Vector3(0f, 0f, 0f);
+            rotation = new Vector3(0f, 0f, 0f);
+            scale = new Vector3(1f, 1f, 1f);
+            transform = Matrix.Identity;
 
             //variables de animacion
-            this.isAnimating = false;
-            this.currentAnimation = null;
-            this.playLoop = false;
-            this.frameRate = 0f;
-            this.currentTime = 0f;
-            this.animationTimeLenght = 0f;
-            this.currentFrame = 0;
-            this.animations = new Dictionary<string, TgcSkeletalAnimation>();
+            isAnimating = false;
+            currentAnimation = null;
+            playLoop = false;
+            frameRate = 0f;
+            currentTime = 0f;
+            animationTimeLenght = 0f;
+            currentFrame = 0;
+            animations = new Dictionary<string, TgcSkeletalAnimation>();
 
             //Matrices de huesos
-            this.boneSpaceFinalTransforms = new Matrix[MAX_BONE_COUNT];
+            boneSpaceFinalTransforms = new Matrix[MAX_BONE_COUNT];
 
             //Shader
             vertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
-            this.effect = GuiController.Instance.Shaders.TgcSkeletalMeshShader;
-            this.technique = GuiController.Instance.Shaders.getTgcSkeletalMeshTechnique(this.renderType);
+            effect = GuiController.Instance.Shaders.TgcSkeletalMeshShader;
+            technique = GuiController.Instance.Shaders.getTgcSkeletalMeshTechnique(this.renderType);
 
             //acomodar huesos
             setupSkeleton();
         }
 
-        
-
         /// <summary>
-        /// Configuracion inicial del esquleto
+        ///     Configuracion inicial del esquleto
         /// </summary>
         protected void setupSkeleton()
         {
             //Actualizar jerarquia
-            for (int i = 0; i < bones.Length; i++)
+            for (var i = 0; i < bones.Length; i++)
             {
-                TgcSkeletalBone bone = bones[i];
+                var bone = bones[i];
 
                 //Es hijo o padre
                 if (bone.ParentBone == null)
@@ -514,7 +761,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 else
                 {
                     //Multiplicar por la matriz del padre
-                    bone.MatFinal = bone.MatLocal * bone.ParentBone.MatFinal;                    
+                    bone.MatFinal = bone.MatLocal*bone.ParentBone.MatFinal;
                 }
 
                 //Almacenar la inversa de la posicion original del hueso, para la referencia inicial de los vertices
@@ -523,23 +770,23 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
-        /// Crea mallas a modo Debug para visualizar la configuración del esqueleto
+        ///     Crea mallas a modo Debug para visualizar la configuración del esqueleto
         /// </summary>
         public void buildSkletonMesh()
         {
             //Crear array para dibujar los huesos y joints
-            Color jointsColor = Color.Violet;
-            Color bonesColor = Color.Yellow;
-            Vector3 jointsSize = new Vector3(2, 2, 2);
-            Vector3 ceroVec = new Vector3(0, 0, 0);
+            var jointsColor = Color.Violet;
+            var bonesColor = Color.Yellow;
+            var jointsSize = new Vector3(2, 2, 2);
+            var ceroVec = new Vector3(0, 0, 0);
             skeletonRenderJoints = new TgcBox[bones.Length];
             skeletonRenderBones = new TgcLine[bones.Length];
-            int boneColor = Color.Yellow.ToArgb();
+            var boneColor = Color.Yellow.ToArgb();
 
             //Actualizar jerarquia
-            for (int i = 0; i < bones.Length; i++)
+            for (var i = 0; i < bones.Length; i++)
             {
-                TgcSkeletalBone bone = bones[i];
+                var bone = bones[i];
 
                 //Es hijo o padre
                 if (bone.ParentBone == null)
@@ -549,24 +796,23 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 else
                 {
                     //Crear linea de hueso para renderziar esqueleto
-                    TgcLine boneLine = new TgcLine();
+                    var boneLine = new TgcLine();
                     boneLine.PStart = TgcVectorUtils.transform(ceroVec, bone.MatFinal);
                     boneLine.PEnd = TgcVectorUtils.transform(ceroVec, bone.ParentBone.MatFinal);
                     boneLine.Color = bonesColor;
                     skeletonRenderBones[i] = boneLine;
                 }
                 //Crear malla de Joint para renderizar el esqueleto
-                TgcBox jointBox = TgcBox.fromSize(jointsSize, jointsColor);
+                var jointBox = TgcBox.fromSize(jointsSize, jointsColor);
                 jointBox.AutoTransformEnable = false;
                 skeletonRenderJoints[i] = jointBox;
             }
         }
 
-
         /// <summary>
-        /// Establece cual es la animacion activa de la malla.
-        /// Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
-        /// Para forzar que se reinicie es necesario hacer stopAnimation()
+        ///     Establece cual es la animacion activa de la malla.
+        ///     Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
+        ///     Para forzar que se reinicie es necesario hacer stopAnimation()
         /// </summary>
         /// <param name="animationName">Nombre de la animacion a activar</param>
         /// <param name="playLoop">Indica si la animacion vuelve a comenzar al terminar</param>
@@ -601,10 +847,10 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
-        /// Establece cual es la animacion activa de la malla.
-        /// Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
-        /// Para forzar que se reinicie es necesario hacer stopAnimation().
-        /// Utiliza el FrameRate default de cada animación
+        ///     Establece cual es la animacion activa de la malla.
+        ///     Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
+        ///     Para forzar que se reinicie es necesario hacer stopAnimation().
+        ///     Utiliza el FrameRate default de cada animación
         /// </summary>
         /// <param name="animationName">Nombre de la animacion a activar</param>
         /// <param name="playLoop">Indica si la animacion vuelve a comenzar al terminar</param>
@@ -614,11 +860,11 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
-        /// Establece cual es la animacion activa de la malla.
-        /// Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
-        /// Para forzar que se reinicie es necesario hacer stopAnimation().
-        /// Se reproduce con loop.
-        /// Utiliza el FrameRate default de cada animación
+        ///     Establece cual es la animacion activa de la malla.
+        ///     Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
+        ///     Para forzar que se reinicie es necesario hacer stopAnimation().
+        ///     Se reproduce con loop.
+        ///     Utiliza el FrameRate default de cada animación
         /// </summary>
         /// <param name="animationName">Nombre de la animacion a activar</param>
         public void playAnimation(string animationName)
@@ -626,9 +872,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             playAnimation(animationName, true);
         }
 
-
         /// <summary>
-        /// Prepara una nueva animacion para ser ejecutada
+        ///     Prepara una nueva animacion para ser ejecutada
         /// </summary>
         protected void initAnimationSettings(string animationName, bool playLoop, float userFrameRate)
         {
@@ -645,7 +890,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             //Si el usuario no especifico un FrameRate, tomar el default de la animacion
             if (userFrameRate == -1f)
             {
-                frameRate = (float)currentAnimation.FrameRate;
+                frameRate = currentAnimation.FrameRate;
             }
             else
             {
@@ -653,13 +898,12 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             }
 
             //La duracion de la animacion.
-            animationTimeLenght = ((float)currentAnimation.FramesCount - 1) / frameRate;
+            animationTimeLenght = ((float) currentAnimation.FramesCount - 1)/frameRate;
 
-            
             //Configurar postura inicial de los huesos
-            for (int i = 0; i < bones.Length; i++)
+            for (var i = 0; i < bones.Length; i++)
             {
-                TgcSkeletalBone bone = bones[i];
+                var bone = bones[i];
 
                 if (!currentAnimation.hasFrames(i))
                 {
@@ -667,28 +911,26 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 }
 
                 //Determinar matriz local inicial
-                TgcSkeletalAnimationFrame firstFrame = currentAnimation.BoneFrames[i][0];
-                bone.MatLocal = Matrix.RotationQuaternion(firstFrame.Rotation) * Matrix.Translation(firstFrame.Position);
+                var firstFrame = currentAnimation.BoneFrames[i][0];
+                bone.MatLocal = Matrix.RotationQuaternion(firstFrame.Rotation)*Matrix.Translation(firstFrame.Position);
 
                 //Multiplicar por matriz del padre, si tiene
                 if (bone.ParentBone != null)
                 {
-                    bone.MatFinal = bone.MatLocal * bone.ParentBone.MatFinal;
+                    bone.MatFinal = bone.MatLocal*bone.ParentBone.MatFinal;
                 }
                 else
                 {
                     bone.MatFinal = bone.MatLocal;
                 }
             }
-            
 
             //Ajustar vertices a posicion inicial del esqueleto
             updateMeshVertices();
         }
 
-
         /// <summary>
-        /// Desactiva la animacion actual
+        ///     Desactiva la animacion actual
         /// </summary>
         public void stopAnimation()
         {
@@ -702,15 +944,14 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             }
         }
 
-
         /// <summary>
-        /// Actualiza el cuadro actual de la animacion.
-        /// Debe ser llamado en cada cuadro antes de render()
+        ///     Actualiza el cuadro actual de la animacion.
+        ///     Debe ser llamado en cada cuadro antes de render()
         /// </summary>
         public void updateAnimation()
         {
-            Device device = GuiController.Instance.D3dDevice;
-            float elapsedTime = GuiController.Instance.ElapsedTime;
+            var device = GuiController.Instance.D3dDevice;
+            var elapsedTime = GuiController.Instance.ElapsedTime;
 
             //Ver que haya transcurrido cierta cantidad de tiempo
             if (elapsedTime < 0.0f)
@@ -728,13 +969,12 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 if (playLoop)
                 {
                     //Dejar el remanente de tiempo transcurrido para el proximo loop
-                    currentTime = currentTime % animationTimeLenght;
+                    currentTime = currentTime%animationTimeLenght;
                     //setSkleletonLastPose();
                     //updateMeshVertices();
                 }
                 else
                 {
-
                     //TODO: Puede ser que haya que quitar este stopAnimation() y solo llamar al Listener (sin cargar isAnimating = false)
 
                     stopAnimation();
@@ -750,18 +990,17 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             }
         }
 
-
         /// <summary>
-        /// Actualiza la posicion de cada hueso del esqueleto segun sus KeyFrames de la animacion
+        ///     Actualiza la posicion de cada hueso del esqueleto segun sus KeyFrames de la animacion
         /// </summary>
         protected void updateSkeleton()
         {
-            for (int i = 0; i < bones.Length; i++)
+            for (var i = 0; i < bones.Length; i++)
             {
-                TgcSkeletalBone bone = bones[i];
+                var bone = bones[i];
 
                 //Tomar el frame actual para este hueso
-                List<TgcSkeletalAnimationFrame> boneFrames = currentAnimation.BoneFrames[i];
+                var boneFrames = currentAnimation.BoneFrames[i];
 
                 //Solo hay un frame, no hacer nada, ya se hizo en el init de la animacion
                 if (boneFrames.Count == 1)
@@ -770,32 +1009,32 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 }
 
                 //Obtener cuadro actual segun el tiempo transcurrido
-                float currentFrameF = currentTime * frameRate;
+                var currentFrameF = currentTime*frameRate;
                 //Ve a que KeyFrame le corresponde
-                int keyFrameIdx = getCurrentFrameBone(boneFrames, currentFrameF);
-                this.currentFrame = keyFrameIdx;
+                var keyFrameIdx = getCurrentFrameBone(boneFrames, currentFrameF);
+                currentFrame = keyFrameIdx;
 
                 //Armar un intervalo entre el proximo KeyFrame y el anterior
-                TgcSkeletalAnimationFrame frame1 = boneFrames[keyFrameIdx - 1];
-                TgcSkeletalAnimationFrame frame2 = boneFrames[keyFrameIdx];
+                var frame1 = boneFrames[keyFrameIdx - 1];
+                var frame2 = boneFrames[keyFrameIdx];
 
                 //Calcular la cantidad que hay interpolar en base al la diferencia entre cuadros
                 float framesDiff = frame2.Frame - frame1.Frame;
-                float interpolationValue = (currentFrameF - frame1.Frame) / framesDiff;
+                var interpolationValue = (currentFrameF - frame1.Frame)/framesDiff;
 
                 //Interpolar traslacion
-                Vector3 frameTranslation = (frame2.Position - frame1.Position) * interpolationValue + frame1.Position;
+                var frameTranslation = (frame2.Position - frame1.Position)*interpolationValue + frame1.Position;
 
                 //Interpolar rotacion con SLERP
-                Quaternion quatFrameRotation = Quaternion.Slerp(frame1.Rotation, frame2.Rotation, interpolationValue);
+                var quatFrameRotation = Quaternion.Slerp(frame1.Rotation, frame2.Rotation, interpolationValue);
 
                 //Unir ambas transformaciones de este frame
-                Matrix frameMatrix = Matrix.RotationQuaternion(quatFrameRotation) * Matrix.Translation(frameTranslation);
+                var frameMatrix = Matrix.RotationQuaternion(quatFrameRotation)*Matrix.Translation(frameTranslation);
 
                 //Multiplicar por la matriz del padre, si tiene
                 if (bone.ParentBone != null)
                 {
-                    bone.MatFinal = frameMatrix * bone.ParentBone.MatFinal;
+                    bone.MatFinal = frameMatrix*bone.ParentBone.MatFinal;
                 }
                 else
                 {
@@ -804,15 +1043,14 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             }
         }
 
-
         /// <summary>
-        /// Obtener el KeyFrame correspondiente a cada hueso segun el tiempo transcurrido
+        ///     Obtener el KeyFrame correspondiente a cada hueso segun el tiempo transcurrido
         /// </summary>
         protected int getCurrentFrameBone(List<TgcSkeletalAnimationFrame> boneFrames, float currentFrame)
         {
-            for (int i = 0; i < boneFrames.Count; i++)
+            for (var i = 0; i < boneFrames.Count; i++)
             {
-                  if (currentFrame < boneFrames[i].Frame)
+                if (currentFrame < boneFrames[i].Frame)
                 {
                     return i;
                 }
@@ -821,146 +1059,47 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             return boneFrames.Count - 1;
         }
 
-
         /// <summary>
-        /// Actualizar los vertices de la malla segun las posiciones del los huesos del esqueleto
+        ///     Actualizar los vertices de la malla segun las posiciones del los huesos del esqueleto
         /// </summary>
         protected void updateMeshVertices()
         {
             //Precalcular la multiplicación para llevar a un vertice a Bone-Space y luego transformarlo segun el hueso
             //Estas matrices se envian luego al Vertex Shader para hacer skinning en GPU
-            for (int i = 0; i < bones.Length; i++)
+            for (var i = 0; i < bones.Length; i++)
             {
-                TgcSkeletalBone bone = bones[i];
-                boneSpaceFinalTransforms[i] = bone.MatInversePose * bone.MatFinal;
-            }
-        }
-
-
-        /// <summary>
-        /// Renderiza la malla, si esta habilitada.
-        /// Para que haya animacion se tiene que haber seteado una y haber
-        /// llamado previamente al metodo updateAnimation()
-        /// Sino se renderiza la pose fija de la malla
-        /// </summary>
-        public void render()
-        {
-            if (!enabled)
-                return;
-
-            Device device = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
-
-            //Actualizar transformacion de malla
-            updateMeshTransform();
-
-            //Cargar VertexDeclaration
-            device.VertexDeclaration = vertexDeclaration;
-
-            //Activar AlphaBlending si corresponde
-            activateAlphaBlend();
-
-            //Cargar matrices para el shader
-            setShaderMatrix();
-
-            //Enviar al shader el array de matrices de huesos para poder hacer skinning en el Vertex Shader
-            effect.SetValue("bonesMatWorldArray", this.boneSpaceFinalTransforms);
-
-            //Renderizar malla
-            if (!renderSkeleton)
-            {
-                //Renderizar segun el tipo de render de la malla
-                effect.Technique = this.technique;
-                int numPasses = effect.Begin(0);
-                switch (renderType)
-                {
-                    case MeshRenderType.VERTEX_COLOR:
-
-                        //Hacer reset de texturas
-                        texturesManager.clear(0);
-                        texturesManager.clear(1);
-
-                        //Iniciar Shader e iterar sobre sus Render Passes
-                        for (int n = 0; n < numPasses; n++)
-                        {
-                            //Iniciar pasada de shader
-                            effect.BeginPass(n);
-                            d3dMesh.DrawSubset(0);
-                            effect.EndPass();
-                        }
-                        break;
-
-                    case MeshRenderType.DIFFUSE_MAP:
-
-                        //Hacer reset de Lightmap
-                        texturesManager.clear(1);
-
-                        //Iniciar Shader e iterar sobre sus Render Passes
-                        for (int n = 0; n < numPasses; n++)
-                        {
-                            //Dibujar cada subset con su DiffuseMap correspondiente
-                            for (int i = 0; i < materials.Length; i++)
-                            {
-                                //Setear textura en shader
-                                texturesManager.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
-
-                                //Iniciar pasada de shader
-                                effect.BeginPass(n);
-                                d3dMesh.DrawSubset(i);
-                                effect.EndPass();
-                            }
-                        }
-                        break;
-                }
-
-                //Finalizar shader
-                effect.End();
-            }
-            //Renderizar esqueleto
-            else
-            {
-                this.renderSkeletonMesh();
-            }
-
-            //Desactivar alphaBlend
-            resetAlphaBlend();
-
-
-            //Renderizar attachments
-            foreach (TgcSkeletalBoneAttach attach in attachments)
-            {
-                attach.updateMeshTransform(this.transform);
-                attach.Mesh.render();
+                var bone = bones[i];
+                boneSpaceFinalTransforms[i] = bone.MatInversePose*bone.MatFinal;
             }
         }
 
         /// <summary>
-        /// Cargar todas la matrices que necesita el shader
+        ///     Cargar todas la matrices que necesita el shader
         /// </summary>
         protected void setShaderMatrix()
         {
-            GuiController.Instance.Shaders.setShaderMatrix(this.effect, this.transform);
+            GuiController.Instance.Shaders.setShaderMatrix(effect, transform);
         }
 
         /// <summary>
-        /// Actualizar transformacion actual de la malla
+        ///     Actualizar transformacion actual de la malla
         /// </summary>
         protected void updateMeshTransform()
         {
             if (autoTransformEnable)
             {
-                this.transform = Matrix.Scaling(scale)
-                    * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                    * Matrix.Translation(translation);
+                transform = Matrix.Scaling(scale)
+                            *Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
+                            *Matrix.Translation(translation);
             }
         }
 
         /// <summary>
-        /// Activar AlphaBlending, si corresponde
+        ///     Activar AlphaBlending, si corresponde
         /// </summary>
         protected void activateAlphaBlend()
         {
-            Device device = GuiController.Instance.D3dDevice;
+            var device = GuiController.Instance.D3dDevice;
             if (alphaBlendEnable)
             {
                 device.RenderState.AlphaTestEnable = true;
@@ -969,46 +1108,46 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
-        /// Desactivar AlphaBlending
+        ///     Desactivar AlphaBlending
         /// </summary>
         protected void resetAlphaBlend()
         {
-            Device device = GuiController.Instance.D3dDevice;
+            var device = GuiController.Instance.D3dDevice;
             device.RenderState.AlphaTestEnable = false;
             device.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>
-        /// Dibujar el esqueleto de la malla
+        ///     Dibujar el esqueleto de la malla
         /// </summary>
         protected void renderSkeletonMesh()
         {
-            Device device = GuiController.Instance.D3dDevice;
-            Vector3 ceroVec = new Vector3(0, 0, 0);
+            var device = GuiController.Instance.D3dDevice;
+            var ceroVec = new Vector3(0, 0, 0);
 
             //Dibujar huesos y joints
-            for (int i = 0; i < bones.Length; i++)
+            for (var i = 0; i < bones.Length; i++)
             {
-                TgcSkeletalBone bone = bones[i];
+                var bone = bones[i];
 
                 //Renderizar Joint
-                TgcBox jointBox = skeletonRenderJoints[i];
-                jointBox.Transform = bone.MatFinal * this.transform;
+                var jointBox = skeletonRenderJoints[i];
+                jointBox.Transform = bone.MatFinal*transform;
                 jointBox.render();
 
                 //Modificar línea del bone
                 if (bone.ParentBone != null)
                 {
-                    TgcLine boneLine = skeletonRenderBones[i];
+                    var boneLine = skeletonRenderBones[i];
 
-                    boneLine.PStart = TgcVectorUtils.transform(ceroVec, bone.MatFinal * this.transform);
-                    boneLine.PEnd = TgcVectorUtils.transform(ceroVec, bone.ParentBone.MatFinal * this.transform);
+                    boneLine.PStart = TgcVectorUtils.transform(ceroVec, bone.MatFinal*transform);
+                    boneLine.PEnd = TgcVectorUtils.transform(ceroVec, bone.ParentBone.MatFinal*transform);
                     boneLine.updateValues();
                 }
             }
 
             //Dibujar bones
-            foreach (TgcLine boneLine in skeletonRenderBones)
+            foreach (var boneLine in skeletonRenderBones)
             {
                 if (boneLine != null)
                 {
@@ -1017,11 +1156,9 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             }
         }
 
-
-
         /// <summary>
-        /// Actualiza el cuadro actual de animacion y renderiza la malla.
-        /// Es equivalente a llamar a updateAnimation() y luego a render()
+        ///     Actualiza el cuadro actual de animacion y renderiza la malla.
+        ///     Es equivalente a llamar a updateAnimation() y luego a render()
         /// </summary>
         public void animateAndRender()
         {
@@ -1032,157 +1169,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             render();
         }
 
-
         /// <summary>
-        /// Libera los recursos de la malla
-        /// </summary>
-        public void dispose()
-        {
-            this.enabled = false;
-            if (boundingBox != null)
-            {
-                boundingBox.dispose();
-            }
-
-            //Si es una instancia no liberar nada, lo hace el original.
-            if (parentInstance != null)
-            {
-                parentInstance = null;
-                return;
-            }
-
-            //hacer dispose de instancias
-            foreach (TgcSkeletalMesh meshInstance in meshInstances)
-            {
-                meshInstance.dispose();
-            }
-            meshInstances = null;
-
-            //Dispose de mesh
-            this.d3dMesh.Dispose();
-            this.d3dMesh = null;
-
-            //Dispose de texturas
-            if (diffuseMaps != null)
-            {
-                for (int i = 0; i < diffuseMaps.Length; i++)
-                {
-                    diffuseMaps[i].dispose();
-                }
-                diffuseMaps = null;
-            }
-            
-
-            //Dispose de Box de joints
-            if (skeletonRenderJoints != null)
-            {
-                foreach (TgcBox jointBox in skeletonRenderJoints)
-                {
-                    jointBox.dispose();
-                }
-                skeletonRenderJoints = null;
-            }
-            
-            //Dispose de lineas de Bones
-            if (skeletonRenderBones != null)
-            {
-                foreach (TgcLine boneLine in skeletonRenderBones)
-                {
-                    if (boneLine != null)
-                    {
-                        boneLine.dispose();
-                    }
-                }
-                skeletonRenderBones = null;
-            }
-
-            //Liberar attachments
-            foreach (TgcSkeletalBoneAttach attach in attachments)
-            {
-                attach.Mesh.dispose();
-            }
-            attachments = null;
-
-            //VertexDeclaration
-            vertexDeclaration.Dispose();
-            vertexDeclaration = null;
-        }
-
-
-        /// <summary>
-        /// Desplaza la malla la distancia especificada, respecto de su posicion actual
-        /// </summary>
-        public void move(Vector3 v)
-        {
-            this.move(v.X, v.Y, v.Z);
-        }
-
-        /// <summary>
-        /// Desplaza la malla la distancia especificada, respecto de su posicion actual
-        /// </summary>
-        public void move(float x, float y, float z)
-        {
-            this.translation.X += x;
-            this.translation.Y += y;
-            this.translation.Z += z;
-
-            updateBoundingBox();
-        }
-
-        /// <summary>
-        /// Mueve la malla en base a la orientacion actual de rotacion.
-        /// Es necesario rotar la malla primero
-        /// </summary>
-        /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
-        public void moveOrientedY(float movement)
-        {
-            float z = (float)Math.Cos((float)rotation.Y) * movement;
-            float x = (float)Math.Sin((float)rotation.Y) * movement;
-
-            move(x, 0, z);
-        }
-
-        /// <summary>
-        /// Obtiene la posicion absoluta de la malla, recibiendo un vector ya creado para
-        /// almacenar el resultado
-        /// </summary>
-        /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
-        {
-            pos.X = translation.X;
-            pos.Y = translation.Y;
-            pos.Z = translation.Z;
-        }
-
-        /// <summary>
-        /// Rota la malla respecto del eje X
-        /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateX(float angle)
-        {
-            this.rotation.X += angle;
-        }
-
-        /// <summary>
-        /// Rota la malla respecto del eje Y
-        /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateY(float angle)
-        {
-            this.rotation.Y += angle;
-        }
-
-        /// <summary>
-        /// Rota la malla respecto del eje Z
-        /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateZ(float angle)
-        {
-            this.rotation.Z += angle;
-        }
-
-        /// <summary>
-        /// Devuelve un array con todas las posiciones de los vértices de la malla, en el estado actual
+        ///     Devuelve un array con todas las posiciones de los vértices de la malla, en el estado actual
         /// </summary>
         /// <returns>Array creado</returns>
         public Vector3[] getVertexPositions()
@@ -1191,10 +1179,10 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
-                    TgcSkeletalLoader.VertexColorVertex[] verts1 = (TgcSkeletalLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
-                        typeof(TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts1 = (TgcSkeletalLoader.VertexColorVertex[]) d3dMesh.LockVertexBuffer(
+                        typeof (TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     points = new Vector3[verts1.Length];
-                    for (int i = 0; i < points.Length; i++)
+                    for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts1[i].Position;
                     }
@@ -1202,10 +1190,10 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                     break;
 
                 case MeshRenderType.DIFFUSE_MAP:
-                    TgcSkeletalLoader.DiffuseMapVertex[] verts2 = (TgcSkeletalLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
-                        typeof(TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts2 = (TgcSkeletalLoader.DiffuseMapVertex[]) d3dMesh.LockVertexBuffer(
+                        typeof (TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     points = new Vector3[verts2.Length];
-                    for (int i = 0; i < points.Length; i++)
+                    for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts2[i].Position;
                     }
@@ -1216,7 +1204,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
-        /// Recalcula todas las normales del mesh
+        ///     Recalcula todas las normales del mesh
         /// </summary>
         public void computeNormals()
         {
@@ -1229,22 +1217,22 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 case MeshRenderType.DIFFUSE_MAP:
 
                     //Calcular normales usando DirectX
-                    int[] adj = new int[this.d3dMesh.NumberFaces * 3];
-                    this.d3dMesh.GenerateAdjacency(0, adj);
-                    this.d3dMesh.ComputeNormals(adj);
+                    var adj = new int[d3dMesh.NumberFaces*3];
+                    d3dMesh.GenerateAdjacency(0, adj);
+                    d3dMesh.ComputeNormals(adj);
 
                     //Obtener vertexBuffer original
-                    TgcSkeletalLoader.DiffuseMapVertex[] origVertexBuffer = (TgcSkeletalLoader.DiffuseMapVertex[])this.d3dMesh.LockVertexBuffer(
-                                typeof(TgcSkeletalLoader.DiffuseMapVertex), LockFlags.Discard, this.d3dMesh.NumberVertices);
-                    
+                    var origVertexBuffer = (TgcSkeletalLoader.DiffuseMapVertex[]) d3dMesh.LockVertexBuffer(
+                        typeof (TgcSkeletalLoader.DiffuseMapVertex), LockFlags.Discard, d3dMesh.NumberVertices);
+
                     //Calcular normales recorriendo los triangulos
-                    int triCount = origVertexBuffer.Length / 3;
-                    Vector3[] normals = new Vector3[origVertexBuffer.Length];
-                    for (int i = 0; i < normals.Length; i++)
+                    var triCount = origVertexBuffer.Length/3;
+                    var normals = new Vector3[origVertexBuffer.Length];
+                    for (var i = 0; i < normals.Length; i++)
                     {
                         normals[i] = new Vector3(0, 0, 0);
                     }
-                    for (int i = 0; i < triCount; i++)
+                    for (var i = 0; i < triCount; i++)
                     {
                         //Los 3 vertices del triangulo
                         /*
@@ -1267,63 +1255,60 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                          */
 
                         //Invetir normal
-                        origVertexBuffer[i * 3].Normal = -origVertexBuffer[i * 3].Normal;
-                        origVertexBuffer[i * 3 + 1].Normal = -origVertexBuffer[i * 3 + 1].Normal;
-                        origVertexBuffer[i * 3 + 2].Normal = -origVertexBuffer[i * 3 + 2].Normal;
+                        origVertexBuffer[i*3].Normal = -origVertexBuffer[i*3].Normal;
+                        origVertexBuffer[i*3 + 1].Normal = -origVertexBuffer[i*3 + 1].Normal;
+                        origVertexBuffer[i*3 + 2].Normal = -origVertexBuffer[i*3 + 2].Normal;
                     }
 
-                    
                     //Aplicar cambios
-                    this.d3dMesh.SetVertexBufferData(origVertexBuffer, LockFlags.Discard);
-                    this.d3dMesh.UnlockVertexBuffer();
-
+                    d3dMesh.SetVertexBufferData(origVertexBuffer, LockFlags.Discard);
+                    d3dMesh.UnlockVertexBuffer();
 
                     break;
             }
-            
         }
 
         /// <summary>
-        /// Calcula el BoundingBox de la malla, en base a todos sus vertices.
-        /// Llamar a este metodo cuando ha cambiado la estructura interna de la malla.
+        ///     Calcula el BoundingBox de la malla, en base a todos sus vertices.
+        ///     Llamar a este metodo cuando ha cambiado la estructura interna de la malla.
         /// </summary>
         public TgcBoundingBox createBoundingBox()
         {
             //Obtener vertices en base al tipo de malla
-            Vector3[] points = getVertexPositions();
-            this.boundingBox = TgcBoundingBox.computeFromPoints(points);
-            return this.boundingBox;
+            var points = getVertexPositions();
+            boundingBox = TgcBoundingBox.computeFromPoints(points);
+            return boundingBox;
         }
 
         /// <summary>
-        /// Actualiza el BoundingBox de la malla, en base a su posicion actual.
-        /// Solo contempla traslacion y escalado
+        ///     Actualiza el BoundingBox de la malla, en base a su posicion actual.
+        ///     Solo contempla traslacion y escalado
         /// </summary>
         public void updateBoundingBox()
         {
             if (autoUpdateBoundingBox)
             {
-                this.boundingBox.scaleTranslate(this.translation, this.scale);
+                boundingBox.scaleTranslate(translation, scale);
             }
         }
 
         /// <summary>
-        /// Cambia el color de todos los vértices de la malla, actualizando el VertexBuffer
-        /// En modelos complejos puede resultar una operación poco performante.
-        /// La actualización será visible la próxima vez que se haga updateAnimation().
-        /// Si hay instnacias de este modelo, sea el original o una copia, todos los demás se verán
-        /// afectados
+        ///     Cambia el color de todos los vértices de la malla, actualizando el VertexBuffer
+        ///     En modelos complejos puede resultar una operación poco performante.
+        ///     La actualización será visible la próxima vez que se haga updateAnimation().
+        ///     Si hay instnacias de este modelo, sea el original o una copia, todos los demás se verán
+        ///     afectados
         /// </summary>
         /// <param name="color">Color nuevo</param>
         public void setColor(Color color)
         {
-            int c = color.ToArgb();
+            var c = color.ToArgb();
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
-                    TgcSkeletalLoader.VertexColorVertex[] verts1 = (TgcSkeletalLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
-                        typeof(TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    for (int i = 0; i < verts1.Length; i++)
+                    var verts1 = (TgcSkeletalLoader.VertexColorVertex[]) d3dMesh.LockVertexBuffer(
+                        typeof (TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    for (var i = 0; i < verts1.Length; i++)
                     {
                         verts1[i].Color = c;
                     }
@@ -1332,9 +1317,9 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                     break;
 
                 case MeshRenderType.DIFFUSE_MAP:
-                    TgcSkeletalLoader.DiffuseMapVertex[] verts2 = (TgcSkeletalLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
-                        typeof(TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    for (int i = 0; i < verts2.Length; i++)
+                    var verts2 = (TgcSkeletalLoader.DiffuseMapVertex[]) d3dMesh.LockVertexBuffer(
+                        typeof (TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    for (var i = 0; i < verts2.Length; i++)
                     {
                         verts2[i].Color = c;
                     }
@@ -1345,7 +1330,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
-        /// Permite cambiar las texturas de DiffuseMap de esta malla
+        ///     Permite cambiar las texturas de DiffuseMap de esta malla
         /// </summary>
         /// <param name="newDiffuseMaps">Array de nuevas texturas. Tiene que tener la misma cantidad que el original</param>
         public void changeDiffuseMaps(TgcTexture[] newDiffuseMaps)
@@ -1359,24 +1344,24 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 }
 
                 //Liberar texturas anteriores
-                foreach (TgcTexture t in diffuseMaps)
+                foreach (var t in diffuseMaps)
                 {
                     t.dispose();
                 }
 
                 //Asignar nuevas texturas
-                this.diffuseMaps = newDiffuseMaps;
+                diffuseMaps = newDiffuseMaps;
             }
         }
 
         /// <summary>
-        /// Busca el hueso con el nombre especificado.
+        ///     Busca el hueso con el nombre especificado.
         /// </summary>
         /// <param name="boneName">Nombre del hueso buscado</param>
         /// <returns>Hueso encontrado o null si no lo encontró</returns>
         public TgcSkeletalBone getBoneByName(string boneName)
         {
-            foreach (TgcSkeletalBone bone in bones)
+            foreach (var bone in bones)
             {
                 if (bone.Name.Equals(boneName))
                 {
@@ -1387,11 +1372,11 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
-        /// Crea una nueva malla que es una instancia de esta malla original
-        /// Reutiliza toda la geometría de la malla original sin duplicarla.
-        /// Solo se puede crear instancias a partir de originales.
-        /// Se debe crear después de haber agregado todas las animaciones al original.
-        /// Los attachments de la malla original se duplican.
+        ///     Crea una nueva malla que es una instancia de esta malla original
+        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Solo se puede crear instancias a partir de originales.
+        ///     Se debe crear después de haber agregado todas las animaciones al original.
+        ///     Los attachments de la malla original se duplican.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
         /// <param name="translation">Traslación respecto de la malla original</param>
@@ -1399,16 +1384,17 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         /// <param name="scale">Escala respecto de la malla original</param>
         public TgcSkeletalMesh createMeshInstance(string name, Vector3 translation, Vector3 rotation, Vector3 scale)
         {
-            if (this.parentInstance != null)
+            if (parentInstance != null)
             {
-                throw new Exception("No se puede crear una instancia de otra malla instancia. Hay que partir del original.");
+                throw new Exception(
+                    "No se puede crear una instancia de otra malla instancia. Hay que partir del original.");
             }
 
             //Crear instancia
-            TgcSkeletalMesh instance = new TgcSkeletalMesh(name, this, translation, rotation, scale);
+            var instance = new TgcSkeletalMesh(name, this, translation, rotation, scale);
 
             //BoundingBox
-            instance.boundingBox = new TgcBoundingBox(this.boundingBox.PMin, this.boundingBox.PMax);
+            instance.boundingBox = new TgcBoundingBox(boundingBox.PMin, boundingBox.PMax);
             instance.updateBoundingBox();
 
             instance.enabled = true;
@@ -1416,11 +1402,11 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         }
 
         /// <summary>
-        /// Crea una nueva malla que es una instancia de esta malla original
-        /// Reutiliza toda la geometría de la malla original sin duplicarla.
-        /// Solo se puede crear instancias a partir de originales.
-        /// Se debe crear después de haber agregado todas las animaciones al original.
-        /// Los attachments de la malla original se duplican.
+        ///     Crea una nueva malla que es una instancia de esta malla original
+        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Solo se puede crear instancias a partir de originales.
+        ///     Se debe crear después de haber agregado todas las animaciones al original.
+        ///     Los attachments de la malla original se duplican.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
         public TgcSkeletalMesh createMeshInstance(string name)
@@ -1428,12 +1414,28 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             return createMeshInstance(name, Vector3.Empty, Vector3.Empty, new Vector3(1, 1, 1));
         }
 
-
         public override string ToString()
         {
             return "Mesh: " + name;
         }
 
+        #region Eventos
 
+        /// <summary>
+        ///     Indica que la animación actual ha finalizado.
+        ///     Se llama cuando se acabaron los frames de la animación.
+        ///     Si se anima en Loop, se llama cada vez que termina.
+        /// </summary>
+        /// <param name="mesh">Malla animada</param>
+        public delegate void AnimationEndsHandler(TgcSkeletalMesh mesh);
+
+        /// <summary>
+        ///     Evento que se llama cada vez que la animación actual finaliza.
+        ///     Se llama cuando se acabaron los frames de la animación.
+        ///     Si se anima en Loop, se llama cada vez que termina.
+        /// </summary>
+        public event AnimationEndsHandler AnimationEnds;
+
+        #endregion Eventos
     }
 }

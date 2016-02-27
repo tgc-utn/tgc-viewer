@@ -1,32 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using TGC.Core.Example;
+using TgcViewer;
 using TgcViewer.Utils._2D;
 
 namespace Examples
 {
     /// <summary>
-    /// Ejemplo EjemploTextureFiltering:
-    /// Unidades PlayStaticSound:
+    ///     Ejemplo EjemploTextureFiltering:
+    ///     Unidades PlayStaticSound:
     ///     # Unidad 2 - Conceptos Básicos de 2D - Primitivas
-    /// 
-    /// Muestra como crear texto 2D con DirectX.
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Muestra como crear texto 2D con DirectX.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploTexto2d : TgcExample
     {
-
-        TgcText2d text1;
-        TgcText2d text2;
-        TgcText2d text3;
+        private TgcText2d text1;
+        private TgcText2d text2;
+        private TgcText2d text3;
 
         public override string getCategory()
         {
@@ -45,7 +35,7 @@ namespace Examples
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Crear texto 1, básico
             text1 = new TgcText2d();
@@ -58,7 +48,7 @@ namespace Examples
             text2.Align = TgcText2d.TextAlign.LEFT;
             text2.Position = new Point(300, 100);
             text2.Size = new Size(300, 100);
-            text2.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold | FontStyle.Italic));
+            text2.changeFont(new Font("TimesNewRoman", 25, FontStyle.Bold | FontStyle.Italic));
 
             //Crear texto 3, especificando color, alineación, posición y tamaño.
             text3 = new TgcText2d();
@@ -69,10 +59,9 @@ namespace Examples
             text3.Color = Color.Gold;
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Renderizar los tres textoss
             text1.render();
@@ -86,6 +75,5 @@ namespace Examples
             text2.dispose();
             text3.dispose();
         }
-
     }
 }

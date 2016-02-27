@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Net.Sockets;
 using System.IO;
+using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Collections;
 
 namespace TgcViewer.Utils.Networking
 {
@@ -16,7 +13,7 @@ namespace TgcViewer.Utils.Networking
         private static readonly BinaryFormatter binaryFormatter = new BinaryFormatter();
 
         /// <summary>
-        /// Enviar un mensaje de TGC por un socket
+        ///     Enviar un mensaje de TGC por un socket
         /// </summary>
         /// <param name="socket">Socket por el cual enviar</param>
         /// <param name="msg">Mensaje a enviar</param>
@@ -27,8 +24,8 @@ namespace TgcViewer.Utils.Networking
             try
             {
                 //Enviar Header
-                byte[] msgBytes = msg.getBytes();
-                byte[] data = BitConverter.GetBytes(msgBytes.Length);
+                var msgBytes = msg.getBytes();
+                var data = BitConverter.GetBytes(msgBytes.Length);
                 socket.Send(data);
 
                 //Enviar msg
@@ -38,12 +35,12 @@ namespace TgcViewer.Utils.Networking
             {
                 return false;
             }
-            
+
             return true;
         }
 
         /// <summary>
-        /// Recibe un mensaje de TGC por un socket
+        ///     Recibe un mensaje de TGC por un socket
         /// </summary>
         /// <param name="socket">Socket del cual recibir</param>
         /// <param name="msgType">Tipo de mensaje esperado</param>
@@ -53,18 +50,18 @@ namespace TgcViewer.Utils.Networking
             try
             {
                 //Recibir header
-                byte[] headerData = new byte[TgcSocketMessageHeader.HEADER_SIZE];
-                int recv = socket.Receive(headerData, headerData.Length, SocketFlags.None);
+                var headerData = new byte[TgcSocketMessageHeader.HEADER_SIZE];
+                var recv = socket.Receive(headerData, headerData.Length, SocketFlags.None);
                 if (recv == TgcSocketMessageHeader.HEADER_SIZE)
                 {
-                    int msgLength = BitConverter.ToInt32(headerData, 0);
+                    var msgLength = BitConverter.ToInt32(headerData, 0);
 
                     //Recibir cuerpo del mensaje
-                    byte[] msgData = new byte[msgLength];
+                    var msgData = new byte[msgLength];
                     recv = socket.Receive(msgData, msgData.Length, SocketFlags.None);
                     if (recv == msgLength)
                     {
-                        TgcSocketRecvMsg recvMsg = new TgcSocketRecvMsg(msgData);
+                        var recvMsg = new TgcSocketRecvMsg(msgData);
                         return recvMsg;
                     }
                 }
@@ -75,11 +72,10 @@ namespace TgcViewer.Utils.Networking
             }
             return null;
         }
-
     }
 
     /// <summary>
-    /// Tipos de header de los mensajes enviados
+    ///     Tipos de header de los mensajes enviados
     /// </summary>
     [Serializable]
     public struct TgcSocketMessageHeader
@@ -87,7 +83,7 @@ namespace TgcViewer.Utils.Networking
         public enum MsgType
         {
             InitialMessage = 0,
-            RegularMessage = 1,
+            RegularMessage = 1
         }
 
         public int length;
@@ -96,7 +92,7 @@ namespace TgcViewer.Utils.Networking
     }
 
     /// <summary>
-    /// Información inicial enviada por el Cliente al Servidor
+    ///     Información inicial enviada por el Cliente al Servidor
     /// </summary>
     [Serializable]
     public struct TgcSocketInitialInfoClient
@@ -112,12 +108,12 @@ namespace TgcViewer.Utils.Networking
     }
 
     /// <summary>
-    /// Mensaje para enviar información
+    ///     Mensaje para enviar información
     /// </summary>
     public class TgcSocketSendMsg
     {
-        BinaryFormatter binaryFormatter;
-        List<byte[]> data;
+        private readonly BinaryFormatter binaryFormatter;
+        private readonly List<byte[]> data;
 
         public TgcSocketSendMsg()
         {
@@ -132,7 +128,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Agregar un nuevo objeto/valor al mensaje
+        ///     Agregar un nuevo objeto/valor al mensaje
         /// </summary>
         /// <param name="value">objeto a agregar</param>
         public void write(object value)
@@ -143,7 +139,7 @@ namespace TgcViewer.Utils.Networking
             }
             try
             {
-                MemoryStream objStream = new MemoryStream();
+                var objStream = new MemoryStream();
                 binaryFormatter.Serialize(objStream, value);
                 data.Add(objStream.GetBuffer());
             }
@@ -155,40 +151,40 @@ namespace TgcViewer.Utils.Networking
 
         internal byte[] getBytes()
         {
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
             binaryFormatter.Serialize(stream, data);
             return stream.GetBuffer();
         }
     }
 
     /// <summary>
-    /// Mensaje para recibir información
+    ///     Mensaje para recibir información
     /// </summary>
     public class TgcSocketRecvMsg
     {
-        BinaryFormatter binaryFormatter;
-        List<byte[]> data;
-        int dataIndex;
+        private readonly BinaryFormatter binaryFormatter;
+        private readonly List<byte[]> data;
+        private int dataIndex;
 
         public TgcSocketRecvMsg(byte[] bytesData)
         {
-            MemoryStream stream = new MemoryStream(bytesData, false);
+            var stream = new MemoryStream(bytesData, false);
             binaryFormatter = new BinaryFormatter();
-            data = (List<byte[]>)binaryFormatter.Deserialize(stream);
+            data = (List<byte[]>) binaryFormatter.Deserialize(stream);
             dataIndex = 0;
         }
 
         /// <summary>
-        /// Leer un objeto del mensaje y avanza a la siguiente posición
+        ///     Leer un objeto del mensaje y avanza a la siguiente posición
         /// </summary>
         /// <returns>Objeto leido</returns>
         public object readNext()
         {
             try
             {
-                byte[] bytes = data[dataIndex];
+                var bytes = data[dataIndex];
                 dataIndex++;
-                MemoryStream objStream = new MemoryStream(bytes, false);
+                var objStream = new MemoryStream(bytes, false);
                 return binaryFormatter.Deserialize(objStream);
             }
             catch (Exception ex)
@@ -199,32 +195,24 @@ namespace TgcViewer.Utils.Networking
     }
 
     /// <summary>
-    /// Mensajes enviados por un cliente y recibidos por el server
+    ///     Mensajes enviados por un cliente y recibidos por el server
     /// </summary>
     public class TgcSocketClientRecvMesg
     {
-        private TgcSocketRecvMsg msg;
-        /// <summary>
-        /// Mensaje recibido
-        /// </summary>
-        public TgcSocketRecvMsg Msg
-        {
-            get { return msg; }
-        }
-
-        private int playerId;
-        /// <summary>
-        /// ID del cliente que lo envio
-        /// </summary>
-        public int PlayerId
-        {
-            get { return playerId; }
-        }
-
         public TgcSocketClientRecvMesg(TgcSocketRecvMsg msg, int playerId)
         {
-            this.msg = msg;
-            this.playerId = playerId;
+            Msg = msg;
+            PlayerId = playerId;
         }
+
+        /// <summary>
+        ///     Mensaje recibido
+        /// </summary>
+        public TgcSocketRecvMsg Msg { get; }
+
+        /// <summary>
+        ///     ID del cliente que lo envio
+        /// </summary>
+        public int PlayerId { get; }
     }
 }

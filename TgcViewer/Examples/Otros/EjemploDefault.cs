@@ -1,31 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.TgcSceneLoader;
-using Examples.Shaders;
-using TgcViewer.Utils.Interpolation;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils._2D;
 using System.IO;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
+using TgcViewer;
+using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils._2D;
+using TGC.Core.Example;
 using TGC.Core.Utils;
+using Font = System.Drawing.Font;
 
 namespace Examples.Otros
 {
     /// <summary>
-    /// Ejemplo default con logo de TGC
+    ///     Ejemplo default con logo de TGC
     /// </summary>
     public class EjemploDefault : TgcExample
     {
-        TgcMesh mesh;
-        float[] lightPos = new float[]{0, 50, 300};
-        TgcText2d textHelp;
-        EjemploDefaultHelpForm helpForm;
+        private EjemploDefaultHelpForm helpForm;
+        private readonly float[] lightPos = {0, 50, 300};
+        private TgcMesh mesh;
+        private TgcText2d textHelp;
 
         public override string getCategory()
         {
@@ -44,30 +39,30 @@ namespace Examples.Otros
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Cargar mesh
-            TgcSceneLoader loader = new TgcSceneLoader();
-            mesh = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
+            var loader = new TgcSceneLoader();
+            mesh =
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
+                                         "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
 
             //Cargar Shader de PhongShading
             mesh.Effect = GuiController.Instance.Shaders.TgcMeshPhongShader;
             mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
-            
+
             //Texto help
             textHelp = new TgcText2d();
             textHelp.Position = new Point(15, 260);
             textHelp.Size = new Size(500, 100);
-            textHelp.changeFont(new System.Drawing.Font("TimesNewRoman", 16, FontStyle.Regular));
+            textHelp.changeFont(new Font("TimesNewRoman", 16, FontStyle.Regular));
             textHelp.Color = Color.Yellow;
             textHelp.Align = TgcText2d.TextAlign.LEFT;
             textHelp.Text = "¿Por dónde empezar? Presionar \"H\"";
 
             //Help form
-            string helpRtf = File.ReadAllText(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\LogoTGC\\help.rtf");
+            var helpRtf = File.ReadAllText(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\LogoTGC\\help.rtf");
             helpForm = new EjemploDefaultHelpForm(helpRtf);
-
-
 
             //Camara
             GuiController.Instance.RotCamera.Enable = true;
@@ -75,13 +70,11 @@ namespace Examples.Otros
             GuiController.Instance.RotCamera.CameraDistance = 150;
 
             GuiController.Instance.BackgroundColor = Color.Black;
-
         }
-
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Cargar variables shader
             mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(Color.Gray));
@@ -89,8 +82,8 @@ namespace Examples.Otros
             mesh.Effect.SetValue("specularColor", ColorValue.FromColor(Color.White));
             mesh.Effect.SetValue("specularExp", 10f);
             mesh.Effect.SetValue("lightPosition", lightPos);
-            mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.RotCamera.getPosition()));
-
+            mesh.Effect.SetValue("eyePosition",
+                TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.RotCamera.getPosition()));
 
             mesh.rotateY(-elapsedTime/2);
             mesh.render();
@@ -98,11 +91,10 @@ namespace Examples.Otros
             textHelp.render();
 
             //Help
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.H))
+            if (GuiController.Instance.D3dInput.keyPressed(Key.H))
             {
                 helpForm.ShowDialog(GuiController.Instance.MainForm);
             }
-
         }
 
         public override void close()
@@ -111,6 +103,5 @@ namespace Examples.Otros
             textHelp.dispose();
             helpForm.Dispose();
         }
-
     }
 }

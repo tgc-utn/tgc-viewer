@@ -1,80 +1,48 @@
+using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using TGC.Core.Scene;
 using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.SceneLoader;
 
 namespace TgcViewer.Utils.TgcGeometry
 {
     /// <summary>
-    /// Herramienta para crear una línea 3D y renderizarla con color.
+    ///     Herramienta para crear una línea 3D y renderizarla con color.
     /// </summary>
     public class TgcLine : IRenderObject
     {
+        private Color color;
 
-        #region Creacion
+        protected Effect effect;
 
-        /// <summary>
-        /// Crea una línea en base a sus puntos extremos
-        /// </summary>
-        /// <param name="start">Punto de inicio</param>
-        /// <param name="end">Punto de fin</param>
-        /// <returns>Línea creada</returns>
-        public static TgcLine fromExtremes(Vector3 start, Vector3 end)
+        protected string technique;
+
+        private readonly CustomVertex.PositionColored[] vertices;
+
+        public TgcLine()
         {
-            TgcLine line = new TgcLine();
-            line.pStart = start;
-            line.pEnd = end;
-            line.updateValues();
-            return line;
+            vertices = new CustomVertex.PositionColored[2];
+            color = Color.White;
+            Enabled = true;
+            AlphaBlendEnable = false;
+
+            //Shader
+            effect = GuiController.Instance.Shaders.VariosShader;
+            technique = TgcShaders.T_POSITION_COLORED;
         }
 
         /// <summary>
-        /// Crea una línea en base a sus puntos extremos, con el color especificado
+        ///     Punto de inicio de la linea
         /// </summary>
-        /// <param name="start">Punto de inicio</param>
-        /// <param name="end">Punto de fin</param>
-        /// <param name="color">Color de la línea</param>
-        /// <returns>Línea creada</returns>
-        public static TgcLine fromExtremes(Vector3 start, Vector3 end, Color color)
-        {
-            TgcLine line = new TgcLine();
-            line.pStart = start;
-            line.pEnd = end;
-            line.color = color;
-            line.updateValues();
-            return line;
-        }
+        public Vector3 PStart { get; set; }
 
-        #endregion
-
-
-        CustomVertex.PositionColored[] vertices;
-
-        Vector3 pStart;
         /// <summary>
-        /// Punto de inicio de la linea
+        ///     Punto final de la linea
         /// </summary>
-        public Vector3 PStart
-        {
-            get { return pStart; }
-            set { pStart = value; }
-        }
+        public Vector3 PEnd { get; set; }
 
-        Vector3 pEnd;
         /// <summary>
-        /// Punto final de la linea
-        /// </summary>
-        public Vector3 PEnd
-        {
-            get { return pEnd; }
-            set { pEnd = value; }
-        }
-
-        Color color;
-        /// <summary>
-        /// Color de la linea
+        ///     Color de la linea
         /// </summary>
         public Color Color
         {
@@ -82,37 +50,19 @@ namespace TgcViewer.Utils.TgcGeometry
             set { color = value; }
         }
 
-        private bool enabled;
         /// <summary>
-        /// Indica si la linea esta habilitada para ser renderizada
+        ///     Indica si la linea esta habilitada para ser renderizada
         /// </summary>
-        public bool Enabled
-        {
-            get { return enabled; }
-            set { enabled = value; }
-        }
+        public bool Enabled { get; set; }
 
         public Vector3 Position
         {
             //Lo correcto sería calcular el centro, pero con un extremo es suficiente.
-            get { return pStart; }
+            get { return PStart; }
         }
 
-        private bool alphaBlendEnable;
         /// <summary>
-        /// Habilita el renderizado con AlphaBlending para los modelos
-        /// con textura o colores por vértice de canal Alpha.
-        /// Por default está deshabilitado.
-        /// </summary>
-        public bool AlphaBlendEnable
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
-
-        protected Effect effect;
-        /// <summary>
-        /// Shader del mesh
+        ///     Shader del mesh
         /// </summary>
         public Effect Effect
         {
@@ -120,10 +70,9 @@ namespace TgcViewer.Utils.TgcGeometry
             set { effect = value; }
         }
 
-        protected string technique;
         /// <summary>
-        /// Technique que se va a utilizar en el effect.
-        /// Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        ///     Technique que se va a utilizar en el effect.
+        ///     Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
         public string Technique
         {
@@ -131,49 +80,30 @@ namespace TgcViewer.Utils.TgcGeometry
             set { technique = value; }
         }
 
-
-
-        public TgcLine()
-        {
-            vertices = new CustomVertex.PositionColored[2];
-            this.color = Color.White;
-            this.enabled = true;
-            this.alphaBlendEnable = false;
-
-            //Shader
-            this.effect = GuiController.Instance.Shaders.VariosShader;
-            this.technique = TgcShaders.T_POSITION_COLORED;
-        }
-
         /// <summary>
-        /// Actualizar parámetros de la línea en base a los valores configurados
+        ///     Habilita el renderizado con AlphaBlending para los modelos
+        ///     con textura o colores por vértice de canal Alpha.
+        ///     Por default está deshabilitado.
         /// </summary>
-        public void updateValues()
-        {
-            int c = color.ToArgb();
-
-            vertices[0] = new CustomVertex.PositionColored(pStart, c);
-            vertices[1] = new CustomVertex.PositionColored(pEnd, c);
-        }
-
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
-        /// Renderizar la línea
+        ///     Renderizar la línea
         /// </summary>
         public void render()
         {
-            if (!enabled)
+            if (!Enabled)
                 return;
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
+            var d3dDevice = GuiController.Instance.D3dDevice;
+            var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.effect);
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
-            effect.Technique = this.technique;
+            effect.Technique = technique;
 
             //Render con shader
             effect.Begin(0);
@@ -184,12 +114,57 @@ namespace TgcViewer.Utils.TgcGeometry
         }
 
         /// <summary>
-        /// Liberar recursos de la línea
+        ///     Liberar recursos de la línea
         /// </summary>
         public void dispose()
         {
         }
 
+        /// <summary>
+        ///     Actualizar parámetros de la línea en base a los valores configurados
+        /// </summary>
+        public void updateValues()
+        {
+            var c = color.ToArgb();
 
+            vertices[0] = new CustomVertex.PositionColored(PStart, c);
+            vertices[1] = new CustomVertex.PositionColored(PEnd, c);
+        }
+
+        #region Creacion
+
+        /// <summary>
+        ///     Crea una línea en base a sus puntos extremos
+        /// </summary>
+        /// <param name="start">Punto de inicio</param>
+        /// <param name="end">Punto de fin</param>
+        /// <returns>Línea creada</returns>
+        public static TgcLine fromExtremes(Vector3 start, Vector3 end)
+        {
+            var line = new TgcLine();
+            line.PStart = start;
+            line.PEnd = end;
+            line.updateValues();
+            return line;
+        }
+
+        /// <summary>
+        ///     Crea una línea en base a sus puntos extremos, con el color especificado
+        /// </summary>
+        /// <param name="start">Punto de inicio</param>
+        /// <param name="end">Punto de fin</param>
+        /// <param name="color">Color de la línea</param>
+        /// <returns>Línea creada</returns>
+        public static TgcLine fromExtremes(Vector3 start, Vector3 end, Color color)
+        {
+            var line = new TgcLine();
+            line.PStart = start;
+            line.PEnd = end;
+            line.color = color;
+            line.updateValues();
+            return line;
+        }
+
+        #endregion Creacion
     }
 }

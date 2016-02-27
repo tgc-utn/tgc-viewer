@@ -1,27 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Examples.MeshCreator
 {
     /// <summary>
-    /// Popup para elegir un layer
+    ///     Popup para elegir un layer
     /// </summary>
     public partial class ObjectBrowserSelectLayer : Form
     {
-        string selectedLayer;
+        private string selectedLayer;
+
+        public ObjectBrowserSelectLayer()
+        {
+            InitializeComponent();
+        }
+
         /// <summary>
-        /// El layer elegido
+        ///     El layer elegido
         /// </summary>
         public string SelectedLayer
         {
             get { return selectedLayer; }
-            set { 
+            set
+            {
                 foreach (TreeNode node in treeViewLayers.Nodes)
                 {
                     if (node.Text == value)
@@ -34,22 +37,16 @@ namespace Examples.MeshCreator
             }
         }
 
-
-        public ObjectBrowserSelectLayer()
-        {
-            InitializeComponent();
-        }
-
         /// <summary>
-        /// Cargar layers
+        ///     Cargar layers
         /// </summary>
         public void loadLayers(List<string> layers)
         {
             treeViewLayers.Nodes.Clear();
-            this.selectedLayer = "";
-            foreach (string layerName in layers)
+            selectedLayer = "";
+            foreach (var layerName in layers)
             {
-                TreeNode layerNode = new TreeNode(layerName);
+                var layerNode = new TreeNode(layerName);
                 layerNode.BackColor = Color.LightBlue;
                 treeViewLayers.Nodes.Add(layerNode);
             }
@@ -57,12 +54,12 @@ namespace Examples.MeshCreator
 
         private void treeViewLayers_DoubleClick(object sender, EventArgs e)
         {
-            TreeNode node = treeViewLayers.SelectedNode;
+            var node = treeViewLayers.SelectedNode;
             if (node != null)
             {
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                this.selectedLayer = node.Text;
-                this.Close();
+                DialogResult = DialogResult.OK;
+                selectedLayer = node.Text;
+                Close();
             }
         }
     }

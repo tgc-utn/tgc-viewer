@@ -1,17 +1,13 @@
-﻿using Microsoft.DirectX;
-using Examples.TerrainEditor.Vegetation;
-using TgcViewer;
+﻿using Examples.TerrainEditor.Vegetation;
 
 namespace Examples.TerrainEditor.Brushes.Vegetation
 {
- 
-    public class VegetationBrush:VegetationPicker
+    public class VegetationBrush : VegetationPicker
     {
-
         private string vegetationName;
 
         /// <summary>
-        /// Setea el nombre del mesh que le va a pedir a InstanceManager
+        ///     Setea el nombre del mesh que le va a pedir a InstanceManager
         /// </summary>
         /// <param name="name"></param>
         public void setVegetation(string name)
@@ -20,31 +16,26 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
             removeFloatingVegetation();
         }
 
-      
-
         public override bool mouseMove(TgcTerrainEditor editor)
         {
-            if (Mesh == null) 
+            if (Mesh == null)
                 Mesh = InstancesManager.Instance.newMeshInstanceOf(vegetationName);
-            Vector3 pos = Position;
+            var pos = Position;
             base.mouseMove(editor);
             if (pos == Position) Enabled = false;
             return false;
         }
 
-
         protected override void addVegetation(TgcTerrainEditor editor)
         {
-            Vector3 scale = Mesh.Scale;
-            Vector3 rotation = Mesh.Rotation;
+            var scale = Mesh.Scale;
+            var rotation = Mesh.Rotation;
             base.addVegetation(editor);
 
             Mesh = InstancesManager.Instance.newMeshInstanceOf(vegetationName);
             Mesh.Scale = scale;
             Mesh.Rotation = rotation;
             Mesh.Position = Position;
-
-        } 
-       
+        }
     }
 }

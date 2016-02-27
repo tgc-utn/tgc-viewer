@@ -1,29 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Example;
-using TgcViewer;
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
+using TGC.Core.Example;
+using TgcViewer;
 
 namespace Examples.Transformations
 {
     /// <summary>
-    /// Ejemplo EjemploTextureFiltering:
-    /// Unidades:
+    ///     Ejemplo EjemploTextureFiltering:
+    ///     Unidades:
     ///     # Unidad 3 - Conceptos Básicos de 3D - Transformaciones
-    /// 
-    /// Muestra como aplicar transformaciones de DirectX a un triángulo
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Muestra como aplicar transformaciones de DirectX a un triángulo
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class Transformations : TgcExample
     {
+        //Array de vértices para crear el triángulo
+        private CustomVertex.PositionColored[] data;
 
         private VertexBuffer vertexBuffer;
-
 
         public override string getCategory()
         {
@@ -39,15 +35,14 @@ namespace Examples.Transformations
         {
             return "Transformaciones en 2d";
         }
-        //Array de vértices para crear el triángulo
-        CustomVertex.PositionColored[] data;
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Crear VertexBuffer
-            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, d3dDevice,
+                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             //Cargar informacion de vertices: (X,Y,Z) + Color
             data = new CustomVertex.PositionColored[3];
@@ -57,7 +52,7 @@ namespace Examples.Transformations
 
             //FPS Camara
             GuiController.Instance.FpsCamera.Enable = false;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0.5f, 0,-3), new Vector3(0, 0, 0));
+            GuiController.Instance.FpsCamera.setCamera(new Vector3(0.5f, 0, -3), new Vector3(0, 0, 0));
 
             //User Vars
             GuiController.Instance.UserVars.addVar("Vertices", 0);
@@ -70,7 +65,7 @@ namespace Examples.Transformations
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Especificar formato de triangulos
             d3dDevice.VertexFormat = CustomVertex.PositionColored.Format;
@@ -82,21 +77,19 @@ namespace Examples.Transformations
             d3dDevice.SetStreamSource(0, vertexBuffer, 0);
 
             //Dibujar 1 primitiva
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 1,data);
-            
-
+            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
         }
 
         /// <summary>
-        /// Aplicar transformacion
+        ///     Aplicar transformacion
         /// </summary>
         private void transform(Device d3dDevice)
         {
             //Crear matrices
-            Matrix matTranslate = new Matrix();
-            Matrix matRotate = new Matrix();
-            Matrix matScale = new Matrix();
-            Matrix matFinal = new Matrix();
+            var matTranslate = new Matrix();
+            var matRotate = new Matrix();
+            var matScale = new Matrix();
+            var matFinal = new Matrix();
 
             matTranslate = Matrix.Identity;
             matRotate = Matrix.Identity;
@@ -106,21 +99,18 @@ namespace Examples.Transformations
             //Generar las matrices para cada movimiento
             matTranslate.Translate((float)GuiController.Instance.Modifiers["translateX"], 0, 0);
             matRotate.RotateZ((float)GuiController.Instance.Modifiers["rotationZ"]);
-            float scale = (float)GuiController.Instance.Modifiers["ScaleXYZ"];
-            matScale.Scale(scale,scale,scale);
-            
+            var scale = (float)GuiController.Instance.Modifiers["ScaleXYZ"];
+            matScale.Scale(scale, scale, scale);
 
             //Multiplicar todas las matrices en una sola final
-            matFinal = matScale * matRotate* matTranslate;
+            matFinal = matScale * matRotate * matTranslate;
 
             //Configurar la matriz de transformación actual de DirectX para todo lo que se va a dibujar a continuacion
             d3dDevice.Transform.World = matFinal;
         }
 
-
         public override void close()
         {
         }
-
     }
 }

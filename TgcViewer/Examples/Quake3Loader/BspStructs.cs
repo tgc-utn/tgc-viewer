@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Text;
 using Microsoft.DirectX;
-using System.Drawing;
 using TgcViewer.Utils.TgcGeometry;
 
 namespace Examples.Quake3Loader
@@ -9,7 +9,6 @@ namespace Examples.Quake3Loader
     /*
     * Estructuras para parsear el archivo binario BSP
     */
-
 
     internal enum LumpEnum
     {
@@ -33,36 +32,33 @@ namespace Examples.Quake3Loader
         Header
     }
 
-    class Lump
+    internal class Lump
     {
-        public int fileofs;
         public int filelen;
-        public Lump() { }
+        public int fileofs;
     }
 
     public class QModel
     {
         public const int SIZE = 40;
-        public Vector3 min, max;
-        public int firstSurface, numSurfaces;
         public int firstBrush, numBrushes;
-        public QModel() { }
+        public int firstSurface, numSurfaces;
+        public Vector3 min, max;
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
             min = new Vector3(BitConverter.ToSingle(buffer, offset + 0),
-               BitConverter.ToSingle(buffer, offset + 4),
-               BitConverter.ToSingle(buffer, offset + 8));
+                BitConverter.ToSingle(buffer, offset + 4),
+                BitConverter.ToSingle(buffer, offset + 8));
 
             max = new Vector3(BitConverter.ToSingle(buffer, offset + 12),
-               BitConverter.ToSingle(buffer, offset + 16),
-               BitConverter.ToSingle(buffer, offset + 20));
+                BitConverter.ToSingle(buffer, offset + 16),
+                BitConverter.ToSingle(buffer, offset + 20));
 
             firstSurface = BitConverter.ToInt32(buffer, offset + 24);
             numSurfaces = BitConverter.ToInt32(buffer, offset + 28);
             firstBrush = BitConverter.ToInt32(buffer, offset + 32);
             numBrushes = BitConverter.ToInt32(buffer, offset + 36);
-
         }
     }
 
@@ -70,14 +66,13 @@ namespace Examples.Quake3Loader
     {
         public const int SIZE = 72;
         public const int MAX_QPATH = 64;
+        public int contentFlags;
         public string shader;
         public int surfaceFlags;
-        public int contentFlags;
-        public QShader() { }
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
-            ASCIIEncoding enc = new ASCIIEncoding();
+            var enc = new ASCIIEncoding();
             shader = enc.GetString(buffer, offset, MAX_QPATH);
 
             surfaceFlags = BitConverter.ToInt32(buffer, offset + MAX_QPATH);
@@ -90,17 +85,16 @@ namespace Examples.Quake3Loader
     public class QPlane
     {
         public const int SIZE = 16;
-        public Vector3 normal;
         public float dist;
-        public QPlane() { }
+        public Vector3 normal;
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
             // en el archivo BSP Usan la Z como si fuera el Eje vertical,
             //aca hay que invertir el Z por el Y
             normal = new Vector3(BitConverter.ToSingle(buffer, offset + 0),
-               BitConverter.ToSingle(buffer, offset + 8),
-               BitConverter.ToSingle(buffer, offset + 4));
+                BitConverter.ToSingle(buffer, offset + 8),
+                BitConverter.ToSingle(buffer, offset + 4));
 
             dist = BitConverter.ToSingle(buffer, offset + 12);
         }
@@ -109,11 +103,10 @@ namespace Examples.Quake3Loader
     public class QNode
     {
         public const int SIZE = 36;
-        public int planeNum;
-        public int[] children = new int[2];	// negative numbers are -(leafs+1), not nodes
-        public int[] mins = new int[3];		// for frustom culling
+        public int[] children = new int[2]; // negative numbers are -(leafs+1), not nodes
         public int[] maxs = new int[3];
-        public QNode() { }
+        public int[] mins = new int[3]; // for frustom culling
+        public int planeNum;
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
@@ -135,19 +128,18 @@ namespace Examples.Quake3Loader
     public class QLeaf
     {
         public const int SIZE = 48;
-        public int cluster;			// -1 = opaque cluster (do I still store these?)
         public int area;
-
-        public int[] mins = new int[3];			// Minimos y maximos de bounding box de la hoja
-        public int[] maxs = new int[3];
         public TgcBoundingBox boundingBox;
-
-        public int firstLeafSurface;
-        public int numLeafSurfaces;
+        public int cluster; // -1 = opaque cluster (do I still store these?)
 
         public int firstLeafBrush;
+
+        public int firstLeafSurface;
+        public int[] maxs = new int[3];
+
+        public int[] mins = new int[3]; // Minimos y maximos de bounding box de la hoja
         public int numLeafBrushes;
-        public QLeaf() { }
+        public int numLeafSurfaces;
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
@@ -164,8 +156,8 @@ namespace Examples.Quake3Loader
             maxs[1] = BitConverter.ToInt32(buffer, offset + 28);
             maxs[2] = BitConverter.ToInt32(buffer, offset + 24);
 
-            Vector3 pMin = new Vector3(Math.Min(mins[0], maxs[0]), Math.Min(mins[1], maxs[1]), Math.Min(mins[2], maxs[2]));
-            Vector3 pMax = new Vector3(Math.Max(mins[0], maxs[0]), Math.Max(mins[1], maxs[1]), Math.Max(mins[2], maxs[2]));
+            var pMin = new Vector3(Math.Min(mins[0], maxs[0]), Math.Min(mins[1], maxs[1]), Math.Min(mins[2], maxs[2]));
+            var pMax = new Vector3(Math.Max(mins[0], maxs[0]), Math.Max(mins[1], maxs[1]), Math.Max(mins[2], maxs[2]));
             boundingBox = new TgcBoundingBox(pMin, pMax);
 
             firstLeafSurface = BitConverter.ToInt32(buffer, offset + 32);
@@ -179,9 +171,8 @@ namespace Examples.Quake3Loader
     public class QBrushSide
     {
         public const int SIZE = 8;
-        public int planeNum;			// positive plane side faces out of the leaf
+        public int planeNum; // positive plane side faces out of the leaf
         public int shaderNum;
-        public QBrushSide() { }
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
@@ -195,8 +186,7 @@ namespace Examples.Quake3Loader
         public const int SIZE = 12;
         public int firstSide;
         public int numSides;
-        public int shaderNum;		// the shader that determines the contents flags
-        public QBrush() { }
+        public int shaderNum; // the shader that determines the contents flags
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
@@ -210,15 +200,13 @@ namespace Examples.Quake3Loader
     {
         public const int SIZE = 72;
         public const int MAX_QPATH = 64;
-        public string shader;
         public int brushNum;
-        public int visibleSide;	// the brush side that ray tests need to clip against (-1 == none)
-
-        public QFog() { }
+        public string shader;
+        public int visibleSide; // the brush side that ray tests need to clip against (-1 == none)
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
-            ASCIIEncoding enc = new ASCIIEncoding();
+            var enc = new ASCIIEncoding();
             shader = enc.GetString(buffer, offset, MAX_QPATH);
 
             brushNum = BitConverter.ToInt32(buffer, offset + MAX_QPATH);
@@ -228,29 +216,27 @@ namespace Examples.Quake3Loader
 
     public class QVisData
     {
+        public byte[] data;
         public int nVec;
         public int sizeVec;
-        public byte[] data;
-        public QVisData() { }
     }
 
     public class QDrawVert
     {
         public const int SIZE = 44;
-        public Vector3 xyz;
-        public Vector2 st;
+        public int color;
         public Vector2 lightmap;
         public Vector3 normal;
-        public int color;
-        public QDrawVert() { }
+        public Vector2 st;
+        public Vector3 xyz;
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
             // en el archivo BSP Usan la Z como si fuera el Eje vertical,
             //aca hay que invertir el Z por el Y
             xyz = new Vector3(BitConverter.ToSingle(buffer, offset + 0),
-               BitConverter.ToSingle(buffer, offset + 8),
-               BitConverter.ToSingle(buffer, offset + 4));
+                BitConverter.ToSingle(buffer, offset + 8),
+                BitConverter.ToSingle(buffer, offset + 4));
 
             st = new Vector2(BitConverter.ToSingle(buffer, offset + 12),
                 BitConverter.ToSingle(buffer, offset + 16));
@@ -262,11 +248,10 @@ namespace Examples.Quake3Loader
                 BitConverter.ToSingle(buffer, offset + 36),
                 BitConverter.ToSingle(buffer, offset + 32));
 
-
-            color = Color.FromArgb(buffer[offset + 40], buffer[offset + 37], buffer[offset + 38], buffer[offset + 39]).ToArgb();
-
+            color =
+                Color.FromArgb(buffer[offset + 40], buffer[offset + 37], buffer[offset + 38], buffer[offset + 39])
+                    .ToArgb();
         }
-
     }
 
     public enum QMapSurfaceType
@@ -281,33 +266,31 @@ namespace Examples.Quake3Loader
     public class QSurface
     {
         public const int SIZE = 104;
-        public int shaderNum;
-        public int fogNum;
-        public QMapSurfaceType surfaceType;
-
-        public int firstVert;
-        public int numVerts;
 
         public int firstIndex;
-        public int numIndexes;
+
+        public int firstVert;
+        public int fogNum;
 
         public int lightmapNum;
-        public int lightmapX, lightmapY;
-        public int lightmapWidth, lightmapHeight;
 
         public Vector3 lightmapOrigin;
-        public Vector3[] lightmapVecs = new Vector3[3];	// for patches, [0] and [1] are lodbounds
-
-        public int patchWidth;
+        public Vector3[] lightmapVecs = new Vector3[3]; // for patches, [0] and [1] are lodbounds
+        public int lightmapWidth, lightmapHeight;
+        public int lightmapX, lightmapY;
+        public int numIndexes;
+        public int numVerts;
         public int patchHeight;
 
-        public QSurface() { }
+        public int patchWidth;
+        public int shaderNum;
+        public QMapSurfaceType surfaceType;
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
             shaderNum = BitConverter.ToInt32(buffer, offset);
             fogNum = BitConverter.ToInt32(buffer, offset + 4);
-            surfaceType = (QMapSurfaceType)BitConverter.ToInt32(buffer, offset + 8);
+            surfaceType = (QMapSurfaceType) BitConverter.ToInt32(buffer, offset + 8);
 
             firstVert = BitConverter.ToInt32(buffer, offset + 12);
             numVerts = BitConverter.ToInt32(buffer, offset + 16);
@@ -342,15 +325,11 @@ namespace Examples.Quake3Loader
         }
     }
 
-
     internal class Header
     {
         public const int CANT_LUMPS = 17;
         public int ident;
-        public int version;
         public Lump[] lumps = new Lump[CANT_LUMPS];
-
-        public Header() { }
+        public int version;
     }
-
 }

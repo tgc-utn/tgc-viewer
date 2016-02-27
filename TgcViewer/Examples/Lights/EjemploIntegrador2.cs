@@ -1,45 +1,35 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
-using TgcViewer.Utils.TgcGeometry;
-using Examples.Shaders;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.Interpolation;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Drawing.Imaging;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using TgcViewer;
+using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
+using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
 namespace Examples.Lights
 {
     /// <summary>
-    /// Ejemplo EjemploIntegrador2:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploIntegrador2:
+    ///     Unidades Involucradas:
     ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
-    /// 
-    /// Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploIntegrador"
-    /// Similar al Ejemplo Integrador 1 pero se usan 3 luces para cada mesh.
-    /// Se pre-calcula que luz le corresponde a cada mesh según su cercania.
-    /// 
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploIntegrador"
+    ///     Similar al Ejemplo Integrador 1 pero se usan 3 luces para cada mesh.
+    ///     Se pre-calcula que luz le corresponde a cada mesh según su cercania.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploIntegrador2 : TgcExample
     {
-        Effect effect;
-        List<TgcMesh> commonMeshes;
-        CubeTexture cubeMap;
-        List<LightData> lights;
-        List<MeshLightData> meshesWithLight;
-
+        private List<TgcMesh> commonMeshes;
+        private CubeTexture cubeMap;
+        private Effect effect;
+        private List<LightData> lights;
+        private List<MeshLightData> meshesWithLight;
 
         public override string getCategory()
         {
@@ -58,36 +48,38 @@ namespace Examples.Lights
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Cargar textura de CubeMap para Environment Map, fijo para todos los meshes
-            cubeMap = TextureLoader.FromCubeFile(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Shaders\\CubeMap.dds");
+            cubeMap = TextureLoader.FromCubeFile(d3dDevice,
+                GuiController.Instance.ExamplesMediaDir + "Shaders\\CubeMap.dds");
 
             //Cargar Shader personalizado de EnvironmentMap
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\EnvironmentMap_Integrador2.fx");
-
+            effect =
+                TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\EnvironmentMap_Integrador2.fx");
 
             //Cargar escenario, pero inicialmente solo hacemos el parser, para separar los objetos que son solo luces y no meshes
-            string scenePath = GuiController.Instance.ExamplesDir + "Lights\\NormalMapRoom\\NormalMapRoom-TgcScene.xml";
-            string mediaPath = GuiController.Instance.ExamplesDir + "Lights\\NormalMapRoom\\";
-            TgcSceneParser parser = new TgcSceneParser();
-            TgcSceneData sceneData = parser.parseSceneFromString(File.ReadAllText(scenePath));
+            var scenePath = GuiController.Instance.ExamplesDir + "Lights\\NormalMapRoom\\NormalMapRoom-TgcScene.xml";
+            var mediaPath = GuiController.Instance.ExamplesDir + "Lights\\NormalMapRoom\\";
+            var parser = new TgcSceneParser();
+            var sceneData = parser.parseSceneFromString(File.ReadAllText(scenePath));
 
             //Separar modelos reales de las luces, segun layer "Lights"
             lights = new List<LightData>();
-            List<TgcMeshData> realMeshData = new List<TgcMeshData>();
-            for (int i = 0; i < sceneData.meshesData.Length; i++)
+            var realMeshData = new List<TgcMeshData>();
+            for (var i = 0; i < sceneData.meshesData.Length; i++)
             {
-                TgcMeshData meshData = sceneData.meshesData[i];
+                var meshData = sceneData.meshesData[i];
 
                 //Es una luz, no cargar mesh, solo importan sus datos
                 if (meshData.layerName == "Lights")
                 {
                     //Guardar datos de luz
-                    LightData light = new LightData();
-                    light.color = Color.FromArgb((int)meshData.color[0], (int)meshData.color[1], (int)meshData.color[2]);
-                    light.aabb = new TgcBoundingBox(TgcParserUtils.float3ArrayToVector3(meshData.pMin), TgcParserUtils.float3ArrayToVector3(meshData.pMax));
+                    var light = new LightData();
+                    light.color = Color.FromArgb((int) meshData.color[0], (int) meshData.color[1],
+                        (int) meshData.color[2]);
+                    light.aabb = new TgcBoundingBox(TgcParserUtils.float3ArrayToVector3(meshData.pMin),
+                        TgcParserUtils.float3ArrayToVector3(meshData.pMax));
                     light.pos = light.aabb.calculateBoxCenter();
                     lights.Add(light);
                 }
@@ -102,26 +94,26 @@ namespace Examples.Lights
             sceneData.meshesData = realMeshData.ToArray();
 
             //Ahora si cargar meshes reales
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadScene(sceneData, mediaPath);
+            var loader = new TgcSceneLoader();
+            var scene = loader.loadScene(sceneData, mediaPath);
 
             //Separar meshes con bumpMapping de los comunes
-            List<TgcMeshBumpMapping> bumpMeshes = new List<TgcMeshBumpMapping>();
+            var bumpMeshes = new List<TgcMeshBumpMapping>();
             commonMeshes = new List<TgcMesh>();
-            foreach (TgcMesh mesh in scene.Meshes)
+            foreach (var mesh in scene.Meshes)
             {
                 //Mesh con BumpMapping
                 if (mesh.Layer == "BumpMap")
                 {
                     //Por convencion de este ejemplo el NormalMap se llama igual que el DiffuseMap (y cada mesh tiene una sola)
-                    string path = mesh.DiffuseMaps[0].FilePath;
-                    string[] split = path.Split('.');
+                    var path = mesh.DiffuseMaps[0].FilePath;
+                    var split = path.Split('.');
                     path = split[0] + "_NormalMap.png";
 
                     //Convertir TgcMesh a TgcMeshBumpMapping
-                    TgcTexture normalMap = TgcTexture.createTexture(path);
-                    TgcTexture[] normalMapArray = new TgcTexture[] { normalMap };
-                    TgcMeshBumpMapping bumpMesh = TgcMeshBumpMapping.fromTgcMesh(mesh, normalMapArray);
+                    var normalMap = TgcTexture.createTexture(path);
+                    TgcTexture[] normalMapArray = {normalMap};
+                    var bumpMesh = TgcMeshBumpMapping.fromTgcMesh(mesh, normalMapArray);
                     bumpMesh.Effect = effect;
                     bumpMesh.Technique = "ThreeLightsTechnique";
                     bumpMeshes.Add(bumpMesh);
@@ -136,32 +128,23 @@ namespace Examples.Lights
                 }
             }
 
-
             //Pre-calculamos las 3 luces mas cercanas de cada mesh
             meshesWithLight = new List<MeshLightData>();
-            foreach (TgcMeshBumpMapping mesh in bumpMeshes)
+            foreach (var mesh in bumpMeshes)
             {
-                MeshLightData meshData = new MeshLightData();
+                var meshData = new MeshLightData();
                 meshData.mesh = mesh;
-                Vector3 meshCeter = mesh.BoundingBox.calculateBoxCenter();
+                var meshCeter = mesh.BoundingBox.calculateBoxCenter();
                 meshData.lights[0] = getClosestLight(meshCeter, null, null);
                 meshData.lights[1] = getClosestLight(meshCeter, meshData.lights[0], null);
                 meshData.lights[2] = getClosestLight(meshCeter, meshData.lights[0], meshData.lights[1]);
                 meshesWithLight.Add(meshData);
             }
 
-
-
-            
-
-
-            
             //Camara en 1ra persona
             GuiController.Instance.FpsCamera.Enable = true;
             GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 50, 100), new Vector3(0, 50, -1));
 
-            
-            
             //Modifiers
             GuiController.Instance.Modifiers.addBoolean("lightEnable", "lightEnable", true);
             GuiController.Instance.Modifiers.addFloat("reflection", 0, 1, 0.2f);
@@ -176,21 +159,18 @@ namespace Examples.Lights
             GuiController.Instance.Modifiers.addColor("mSpecular", Color.White);
         }
 
-        
-
-
         public override void render(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
+            var device = GuiController.Instance.D3dDevice;
 
             //Habilitar luz
-            bool lightEnable = (bool)GuiController.Instance.Modifiers["lightEnable"];
+            var lightEnable = (bool) GuiController.Instance.Modifiers["lightEnable"];
             Effect currentShader;
-            String currentTechnique;
+            string currentTechnique;
             if (lightEnable)
             {
                 //Shader personalizado de iluminacion
-                currentShader = this.effect;
+                currentShader = effect;
                 currentTechnique = "ThreeLightsTechnique";
             }
             else
@@ -201,71 +181,82 @@ namespace Examples.Lights
             }
 
             //Aplicar a cada mesh el shader actual
-            foreach (MeshLightData meshData in meshesWithLight)
+            foreach (var meshData in meshesWithLight)
             {
                 meshData.mesh.Effect = currentShader;
                 meshData.mesh.Technique = currentTechnique;
             }
 
+            var eyePosition = GuiController.Instance.FpsCamera.getPosition();
 
-            Vector3 eyePosition = GuiController.Instance.FpsCamera.getPosition();
-            
             //Renderizar meshes con BumpMapping
-            foreach (MeshLightData meshData in meshesWithLight)
+            foreach (var meshData in meshesWithLight)
             {
-                TgcMeshBumpMapping mesh = meshData.mesh;
+                var mesh = meshData.mesh;
 
                 if (lightEnable)
                 {
                     mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(eyePosition));
-                    mesh.Effect.SetValue("bumpiness", (float)GuiController.Instance.Modifiers["bumpiness"]);
-                    mesh.Effect.SetValue("reflection", (float)GuiController.Instance.Modifiers["reflection"]);
+                    mesh.Effect.SetValue("bumpiness", (float) GuiController.Instance.Modifiers["bumpiness"]);
+                    mesh.Effect.SetValue("reflection", (float) GuiController.Instance.Modifiers["reflection"]);
 
                     //Cargar variables de shader del Material
-                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mEmissive"]));
-                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mAmbient"]));
-                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mDiffuse"]));
-                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mSpecular"]));
-                    mesh.Effect.SetValue("materialSpecularExp", (float)GuiController.Instance.Modifiers["specularEx"]);
+                    mesh.Effect.SetValue("materialEmissiveColor",
+                        ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mEmissive"]));
+                    mesh.Effect.SetValue("materialAmbientColor",
+                        ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mAmbient"]));
+                    mesh.Effect.SetValue("materialDiffuseColor",
+                        ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mDiffuse"]));
+                    mesh.Effect.SetValue("materialSpecularColor",
+                        ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mSpecular"]));
+                    mesh.Effect.SetValue("materialSpecularExp", (float) GuiController.Instance.Modifiers["specularEx"]);
 
                     //CubeMap
                     mesh.Effect.SetValue("texCubeMap", cubeMap);
 
                     //Cargar variables de shader de las 3 luces
                     //Intensidad y atenuacion deberian ser atributos propios de cada luz
-                    float lightIntensity = (float)GuiController.Instance.Modifiers["lightIntensity"];
-                    float lightAttenuation = (float)GuiController.Instance.Modifiers["lightAttenuation"];
-                    mesh.Effect.SetValue("lightIntensity", new float[]{lightIntensity, lightIntensity, lightIntensity});
-                    mesh.Effect.SetValue("lightAttenuation", new float[] { lightAttenuation, lightAttenuation, lightAttenuation});
+                    var lightIntensity = (float) GuiController.Instance.Modifiers["lightIntensity"];
+                    var lightAttenuation = (float) GuiController.Instance.Modifiers["lightAttenuation"];
+                    mesh.Effect.SetValue("lightIntensity", new[] {lightIntensity, lightIntensity, lightIntensity});
+                    mesh.Effect.SetValue("lightAttenuation",
+                        new[] {lightAttenuation, lightAttenuation, lightAttenuation});
 
-                    mesh.Effect.SetValue("lightColor", new ColorValue[] { ColorValue.FromColor(meshData.lights[0].color), ColorValue.FromColor(meshData.lights[1].color), ColorValue.FromColor(meshData.lights[2].color) });
-                    mesh.Effect.SetValue("lightPosition", new Vector4[] { TgcParserUtils.vector3ToVector4(meshData.lights[0].pos), TgcParserUtils.vector3ToVector4(meshData.lights[1].pos), TgcParserUtils.vector3ToVector4(meshData.lights[2].pos)});
+                    mesh.Effect.SetValue("lightColor",
+                        new[]
+                        {
+                            ColorValue.FromColor(meshData.lights[0].color), ColorValue.FromColor(meshData.lights[1].color),
+                            ColorValue.FromColor(meshData.lights[2].color)
+                        });
+                    mesh.Effect.SetValue("lightPosition",
+                        new[]
+                        {
+                            TgcParserUtils.vector3ToVector4(meshData.lights[0].pos),
+                            TgcParserUtils.vector3ToVector4(meshData.lights[1].pos),
+                            TgcParserUtils.vector3ToVector4(meshData.lights[2].pos)
+                        });
                 }
-                
 
                 //Renderizar modelo
                 mesh.render();
             }
 
             //Renderizar meshes comunes
-            foreach (TgcMesh mesh in commonMeshes)
+            foreach (var mesh in commonMeshes)
             {
                 mesh.render();
             }
-
-
         }
 
-
         /// <summary>
-        /// Devuelve la luz mas cercana a la posicion especificada
+        ///     Devuelve la luz mas cercana a la posicion especificada
         /// </summary>
         private LightData getClosestLight(Vector3 pos, LightData ignore1, LightData ignore2)
         {
-            float minDist = float.MaxValue;
+            var minDist = float.MaxValue;
             LightData minLight = null;
 
-            foreach (LightData light in lights)
+            foreach (var light in lights)
             {
                 //Ignorar las luces indicadas
                 if (ignore1 != null && light.Equals(ignore1))
@@ -273,7 +264,7 @@ namespace Examples.Lights
                 if (ignore2 != null && light.Equals(ignore2))
                     continue;
 
-                float distSq = Vector3.LengthSq(pos - light.pos);
+                var distSq = Vector3.LengthSq(pos - light.pos);
                 if (distSq < minDist)
                 {
                     minDist = distSq;
@@ -284,15 +275,14 @@ namespace Examples.Lights
             return minLight;
         }
 
-
         public override void close()
         {
             effect.Dispose();
-            foreach (MeshLightData meshData in meshesWithLight)
+            foreach (var meshData in meshesWithLight)
             {
                 meshData.mesh.dispose();
             }
-            foreach (TgcMesh m in commonMeshes)
+            foreach (var m in commonMeshes)
             {
                 m.dispose();
             }
@@ -300,28 +290,22 @@ namespace Examples.Lights
         }
 
         /// <summary>
-        /// Estructura auxiliar para informacion de luces
+        ///     Estructura auxiliar para informacion de luces
         /// </summary>
         public class LightData
         {
-            public Vector3 pos;
             public TgcBoundingBox aabb;
             public Color color;
+            public Vector3 pos;
         }
 
-
         /// <summary>
-        /// Estructura auxiliar para guardar un mesh y sus tres luces mas cercanas
+        ///     Estructura auxiliar para guardar un mesh y sus tres luces mas cercanas
         /// </summary>
         public class MeshLightData
         {
-            public TgcMeshBumpMapping mesh;
             public LightData[] lights = new LightData[3];
+            public TgcMeshBumpMapping mesh;
         }
-
-
     }
-
-    
-
 }

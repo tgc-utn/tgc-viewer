@@ -1,65 +1,41 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer;
 using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using SistPaquetesClient.core;
+using TgcViewer;
 
 namespace Examples.RoomsEditor
 {
     /// <summary>
-    /// Editor de Mapa en 2D
+    ///     Editor de Mapa en 2D
     /// </summary>
     public partial class RoomsEditorMapView : Form
     {
-        const int SNAP_TO_GRID_FACTOR = 10;
-        
+        /// <summary>
+        ///     Estados de la UI
+        /// </summary>
+        public enum EditMode
+        {
+            Nothing,
+            CreateRoom
+        }
 
-        RoomsEditorControl editorControl;
-        EditMode currentMode;
-        bool creatingRoomMouseDown = false;
-        Point creatingRoomOriginalPos;
-        int roomsNameCounter;
-        RoomsEditorTexturesEdit texturesEdit;
-
-        internal RoomsEditorRoom selectedRoom;
+        private const int SNAP_TO_GRID_FACTOR = 10;
+        private bool creatingRoomMouseDown;
+        private Point creatingRoomOriginalPos;
+        private EditMode currentMode;
         internal string defaultTextureDir;
         internal string defaultTextureImage;
 
+        private RoomsEditorControl editorControl;
 
-        List<RoomsEditorRoom> rooms = new List<RoomsEditorRoom>();
-        /// <summary>
-        /// Rooms creados
-        /// </summary>
-        public List<RoomsEditorRoom> Rooms
-        {
-            get { return rooms; }
-        }
+        private int roomsNameCounter;
 
-        Vector3 mapScale;
-        /// <summary>
-        /// Escala del mapa
-        /// </summary>
-        public Vector3 MapScale
-        {
-            get { return mapScale; }
-        }
-
-        /// <summary>
-        /// Tamaño del mapa 2D: Width y Length
-        /// </summary>
-        public Size MapSize
-        {
-            get { return panel2d.MinimumSize; }
-        }
-
-
+        internal RoomsEditorRoom selectedRoom;
+        private readonly RoomsEditorTexturesEdit texturesEdit;
 
         public RoomsEditorMapView(RoomsEditorControl editorControl)
         {
@@ -74,23 +50,30 @@ namespace Examples.RoomsEditor
             texturesEdit = new RoomsEditorTexturesEdit(this);
 
             //Tamaño inicial del panel2
-            panel2d.MinimumSize = new Size((int)numericUpDownMapWidth.Value, (int)numericUpDownMapHeight.Value);
+            panel2d.MinimumSize = new Size((int) numericUpDownMapWidth.Value, (int) numericUpDownMapHeight.Value);
 
             //Estado actual
             radioButtonCreateRoom.Select();
             currentMode = EditMode.CreateRoom;
             groupBoxEditRoom.Enabled = false;
-
-            
         }
 
         /// <summary>
-        /// Estados de la UI
+        ///     Rooms creados
         /// </summary>
-        public enum EditMode
+        public List<RoomsEditorRoom> Rooms { get; } = new List<RoomsEditorRoom>();
+
+        /// <summary>
+        ///     Escala del mapa
+        /// </summary>
+        public Vector3 MapScale { get; private set; }
+
+        /// <summary>
+        ///     Tamaño del mapa 2D: Width y Length
+        /// </summary>
+        public Size MapSize
         {
-            Nothing,
-            CreateRoom,
+            get { return panel2d.MinimumSize; }
         }
 
         private void radioButtonCreateRoom_CheckedChanged(object sender, EventArgs e)
@@ -105,62 +88,58 @@ namespace Examples.RoomsEditor
             }
         }
 
-        
-
         /// <summary>
-        /// Configura los parametros generales del mapa
+        ///     Configura los parametros generales del mapa
         /// </summary>
         public void setMapSettings(Size mapSize, Vector3 mapScale)
         {
-            this.panel2d.MinimumSize = mapSize;
-            this.numericUpDownMapWidth.Value = (decimal)mapSize.Width;
-            this.numericUpDownMapHeight.Value = (decimal)mapSize.Height;
+            panel2d.MinimumSize = mapSize;
+            numericUpDownMapWidth.Value = mapSize.Width;
+            numericUpDownMapHeight.Value = mapSize.Height;
 
-            this.mapScale = mapScale;
-            this.numericUpDownMapScaleX.Value = (decimal)mapScale.X;
-            this.numericUpDownMapScaleY.Value = (decimal)mapScale.Y;
-            this.numericUpDownMapScaleZ.Value = (decimal)mapScale.Z;
+            MapScale = mapScale;
+            numericUpDownMapScaleX.Value = (decimal) mapScale.X;
+            numericUpDownMapScaleY.Value = (decimal) mapScale.Y;
+            numericUpDownMapScaleZ.Value = (decimal) mapScale.Z;
         }
 
         /// <summary>
-        /// Elimina todos los Rooms
+        ///     Elimina todos los Rooms
         /// </summary>
         public void resetRooms(int roomsNameCounter)
         {
             this.roomsNameCounter = roomsNameCounter;
-            this.panel2d.Controls.Clear();
-            this.rooms.Clear();
+            panel2d.Controls.Clear();
+            Rooms.Clear();
         }
-        
-        
 
         /// <summary>
-        /// Devuelve true si un rectangulo se encuentra dentro de los limites del panel2d
+        ///     Devuelve true si un rectangulo se encuentra dentro de los limites del panel2d
         /// </summary>
         private bool validateRoomBounds(Rectangle bounds)
         {
-            return !(bounds.X < 0 || bounds.X + bounds.Width > panel2d.Bounds.Width || bounds.Y < 0 || bounds.Y + bounds.Height > panel2d.Bounds.Height);
+            return
+                !(bounds.X < 0 || bounds.X + bounds.Width > panel2d.Bounds.Width || bounds.Y < 0 ||
+                  bounds.Y + bounds.Height > panel2d.Bounds.Height);
         }
 
-        
-
         /// <summary>
-        /// Ajustar valores a la grilla
+        ///     Ajustar valores a la grilla
         /// </summary>
         internal Point snapPointToGrid(int x, int y)
         {
-            x = x - x % SNAP_TO_GRID_FACTOR;
-            y = y - y % SNAP_TO_GRID_FACTOR;
+            x = x - x%SNAP_TO_GRID_FACTOR;
+            y = y - y%SNAP_TO_GRID_FACTOR;
             return new Point(x, y);
         }
 
         /// <summary>
-        /// Chequea colision con otros rooms.
-        /// Devuelve el room contra el cual colisiono o null
+        ///     Chequea colision con otros rooms.
+        ///     Devuelve el room contra el cual colisiono o null
         /// </summary>
         internal RoomsEditorRoom testRoomPanelCollision(RoomsEditorRoom room, Rectangle testRect)
         {
-            foreach (RoomsEditorRoom r in rooms)
+            foreach (var r in Rooms)
             {
                 if (r != room)
                 {
@@ -175,7 +154,7 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Seleccionar un cuarto
+        ///     Seleccionar un cuarto
         /// </summary>
         private void selectRoom(RoomsEditorRoom room)
         {
@@ -199,7 +178,7 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Clic en eliminar un room
+        ///     Clic en eliminar un room
         /// </summary>
         private void radioButtonDeleteRoom_CheckedChanged(object sender, EventArgs e)
         {
@@ -210,38 +189,38 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Eliminar un room
+        ///     Eliminar un room
         /// </summary>
         internal void deleteRoom(RoomsEditorRoom room)
         {
-            this.rooms.Remove(room);
-            this.panel2d.Controls.Remove(room.RoomPanel.Label);
+            Rooms.Remove(room);
+            panel2d.Controls.Remove(room.RoomPanel.Label);
         }
 
         private void panel2d_MouseEnter(object sender, EventArgs e)
         {
-            this.Cursor = Cursors.Cross;
+            Cursor = Cursors.Cross;
         }
 
         private void panel2d_MouseLeave(object sender, EventArgs e)
         {
-            this.Cursor = Cursors.Arrow;
+            Cursor = Cursors.Arrow;
         }
 
         /// <summary>
-        /// Width escenario
+        ///     Width escenario
         /// </summary>
         private void numericUpDownMapWidth_ValueChanged(object sender, EventArgs e)
         {
             //validar minimo Width de panel2d
-            int newWidth = (int)numericUpDownMapWidth.Value;
+            var newWidth = (int) numericUpDownMapWidth.Value;
             if (newWidth < panel2d.MinimumSize.Width)
             {
                 //buscar maximo X de todos los rooms
-                int maxX = -1;
-                foreach (RoomsEditorRoom room in rooms)
+                var maxX = -1;
+                foreach (var room in Rooms)
                 {
-                    int x = room.RoomPanel.Label.Location.X + room.RoomPanel.Label.Width;
+                    var x = room.RoomPanel.Label.Location.X + room.RoomPanel.Label.Width;
                     if (x > maxX)
                     {
                         maxX = x;
@@ -251,7 +230,7 @@ namespace Examples.RoomsEditor
                 //ver si el nuevo tamaño de panel2d queda chico
                 if (newWidth < maxX)
                 {
-                    MessageBox.Show(this, "The new map Width is not big enought to contains all the existing rooms.", 
+                    MessageBox.Show(this, "The new map Width is not big enought to contains all the existing rooms.",
                         "Map size", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -262,19 +241,19 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Height escenario
+        ///     Height escenario
         /// </summary>
         private void numericUpDownMapHeight_ValueChanged(object sender, EventArgs e)
         {
             //validar minimo Height de panel2d
-            int newHeight = (int)numericUpDownMapHeight.Value;
+            var newHeight = (int) numericUpDownMapHeight.Value;
             if (newHeight < panel2d.MinimumSize.Height)
             {
                 //buscar maximo Y de todos los rooms
-                int maxY = -1;
-                foreach (RoomsEditorRoom room in rooms)
+                var maxY = -1;
+                foreach (var room in Rooms)
                 {
-                    int y = room.RoomPanel.Label.Location.Y + room.RoomPanel.Label.Height;
+                    var y = room.RoomPanel.Label.Location.Y + room.RoomPanel.Label.Height;
                     if (y > maxY)
                     {
                         maxY = y;
@@ -295,7 +274,7 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Popup de Wall textures
+        ///     Popup de Wall textures
         /// </summary>
         private void buttonWallTextures_Click(object sender, EventArgs e)
         {
@@ -304,25 +283,25 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Click para generar escenario 3D
+        ///     Click para generar escenario 3D
         /// </summary>
         private void buttonCreate3dMap_Click(object sender, EventArgs e)
         {
             update3dMap();
-            this.Close();
+            Close();
         }
 
         /// <summary>
-        /// Generar escenario 3D en base a la información del mapa
+        ///     Generar escenario 3D en base a la información del mapa
         /// </summary>
         public void update3dMap()
         {
             //chequear superposicion de rooms
-            StringBuilder sb = new StringBuilder("There are collisions between the following Rooms: ");
-            int totalCol = 0;
-            foreach (RoomsEditorRoom room in rooms)
+            var sb = new StringBuilder("There are collisions between the following Rooms: ");
+            var totalCol = 0;
+            foreach (var room in Rooms)
             {
-                RoomsEditorRoom collRoom = testRoomPanelCollision(room, room.RoomPanel.Label.Bounds);
+                var collRoom = testRoomPanelCollision(room, room.RoomPanel.Label.Bounds);
                 if (collRoom != null)
                 {
                     sb.AppendLine(room.Name + " and " + collRoom.Name + "\n");
@@ -335,21 +314,190 @@ namespace Examples.RoomsEditor
                 return;
             }
 
-
             //Escala del mapa
-            mapScale = new Vector3((float)numericUpDownMapScaleX.Value, (float)numericUpDownMapScaleY.Value, (float)numericUpDownMapScaleZ.Value);
-
+            MapScale = new Vector3((float) numericUpDownMapScaleX.Value, (float) numericUpDownMapScaleY.Value,
+                (float) numericUpDownMapScaleZ.Value);
 
             //Construir rooms en 3D
-            foreach (RoomsEditorRoom room in rooms)
+            foreach (var room in Rooms)
             {
-                room.buildWalls(rooms, mapScale);
+                room.buildWalls(Rooms, MapScale);
             }
         }
 
+        #region RoomPanel
 
+        /// <summary>
+        ///     Panel 2D que representa un Room
+        /// </summary>
+        public class RoomPanel
+        {
+            private readonly Color DEFAULT_ROOM_COLOR = Color.Orange;
+            private readonly Size MINIUM_SIZE = new Size(50, 50);
+            private readonly Color SELECTED_ROOM_COLOR = Color.BlueViolet;
+            private Point initDragP;
 
+            private bool labelDragging;
 
+            internal RoomsEditorMapView mapView;
+            private Point oldLocation;
+
+            public RoomPanel(string name, RoomsEditorMapView mapView, Point location, Size size)
+            {
+                this.mapView = mapView;
+
+                Label = new Label();
+                Label.Text = name;
+                Label.AutoSize = false;
+                Label.Location = location;
+                Label.Size = size;
+                Label.BorderStyle = BorderStyle.FixedSingle;
+                Label.BackColor = DEFAULT_ROOM_COLOR;
+                Label.TextAlign = ContentAlignment.MiddleCenter;
+
+                Label.MouseDown += label_MouseDown;
+                Label.MouseUp += label_MouseUp;
+                Label.MouseMove += label_MouseMove;
+                Label.MouseEnter += label_MouseEnter;
+                Label.PreviewKeyDown += label_PreviewKeyDown;
+            }
+
+            public RoomsEditorRoom Room { get; set; }
+
+            public Label Label { get; }
+
+            /// <summary>
+            ///     Adapta al tamaño del label al minimo permitido
+            /// </summary>
+            internal void adaptaToMiniumSize()
+            {
+                if (Label.Width < MINIUM_SIZE.Width)
+                {
+                    Label.Width = MINIUM_SIZE.Width;
+                }
+                if (Label.Height < MINIUM_SIZE.Height)
+                {
+                    Label.Height = MINIUM_SIZE.Height;
+                }
+            }
+
+            /// <summary>
+            ///     Seleccionar el cuarto
+            /// </summary>
+            internal void setRoomSelected(bool selected)
+            {
+                if (selected)
+                {
+                    Label.BackColor = SELECTED_ROOM_COLOR;
+                    Label.Focus();
+                }
+                else
+                {
+                    Label.BackColor = DEFAULT_ROOM_COLOR;
+                }
+            }
+
+            private void label_MouseDown(object sender, MouseEventArgs e)
+            {
+                //Se quiere hacer drag del label
+                if (mapView.currentMode == EditMode.CreateRoom)
+                {
+                    //seleccionar este cuarto como el actual
+                    mapView.selectRoom(Room);
+
+                    labelDragging = true;
+                    initDragP = mapView.snapPointToGrid(e.X, e.Y);
+                    oldLocation = Label.Location;
+                }
+            }
+
+            private void label_MouseUp(object sender, MouseEventArgs e)
+            {
+                //Se termino de hacer drag del label, validar posicion
+                if (mapView.currentMode == EditMode.CreateRoom)
+                {
+                    labelDragging = false;
+
+                    //Si hay colision con otros labels, restaurar la posicion original
+                    var possibleR = new Rectangle(Label.Location, Label.Size);
+                    var collisionRoom = mapView.testRoomPanelCollision(Room, possibleR);
+                    if (collisionRoom != null)
+                    {
+                        Label.Location = oldLocation;
+                    }
+                }
+            }
+
+            private void label_MouseMove(object sender, MouseEventArgs e)
+            {
+                //Haciendo drag de label, actualizar posicion
+                if (mapView.currentMode == EditMode.CreateRoom)
+                {
+                    if (labelDragging)
+                    {
+                        var x = Label.Location.X - (initDragP.X - e.X);
+                        var y = Label.Location.Y - (initDragP.Y - e.Y);
+                        var newP = mapView.snapPointToGrid(x, y);
+
+                        //Actualizar posicion solo si no se escapa de los limites del escenario
+                        var newRect = new Rectangle(newP, Label.Size);
+                        if (mapView.validateRoomBounds(newRect))
+                        {
+                            Label.Location = newP;
+                        }
+                    }
+                }
+            }
+
+            private void label_MouseEnter(object sender, EventArgs e)
+            {
+                mapView.Cursor = Cursors.SizeAll;
+            }
+
+            private void label_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+            {
+                //Eliminar room
+                if (e.KeyCode == Keys.Delete)
+                {
+                    mapView.selectedRoom = null;
+                    mapView.deleteRoom(Room);
+                }
+            }
+
+            /// <summary>
+            ///     Cambia el nombre del Room
+            /// </summary>
+            internal void changeName(string newName)
+            {
+                Room.Name = newName;
+                Label.Text = newName;
+            }
+
+            /// <summary>
+            ///     Actualiza el Bounds del label del Room validando limites y colisiones.
+            ///     Informa si se pude hacer
+            /// </summary>
+            internal bool updateLabelBounds(Rectangle newR)
+            {
+                //Validar limites del escenario
+                if (!mapView.validateRoomBounds(newR))
+                {
+                    return false;
+                }
+
+                //Validar colision con otros Rooms
+                var collisionRoom = mapView.testRoomPanelCollision(Room, newR);
+                if (collisionRoom != null)
+                {
+                    return false;
+                }
+
+                Label.Bounds = newR;
+                return true;
+            }
+        }
+
+        #endregion RoomPanel
 
         #region Create Room
 
@@ -360,21 +508,21 @@ namespace Examples.RoomsEditor
             {
                 creatingRoomMouseDown = true;
                 creatingRoomOriginalPos = snapPointToGrid(e.X, e.Y);
-                string name = "Room-" + (++roomsNameCounter);
+                var name = "Room-" + ++roomsNameCounter;
                 createRoom(name, creatingRoomOriginalPos, new Size(1, 1));
             }
         }
 
         /// <summary>
-        /// Crea un nuevo Room y lo agrega al panel2D
+        ///     Crea un nuevo Room y lo agrega al panel2D
         /// </summary>
         /// <param name="name"></param>
         /// <param name="pos"></param>
         public RoomsEditorRoom createRoom(string name, Point pos, Size size)
         {
-            RoomPanel rPanel = new RoomPanel(name, this, pos, size);
-            RoomsEditorRoom room = new RoomsEditorRoom(name, rPanel);
-            rooms.Add(room);
+            var rPanel = new RoomPanel(name, this, pos, size);
+            var room = new RoomsEditorRoom(name, rPanel);
+            Rooms.Add(room);
 
             panel2d.Controls.Add(room.RoomPanel.Label);
 
@@ -388,9 +536,9 @@ namespace Examples.RoomsEditor
             {
                 if (creatingRoomMouseDown)
                 {
-                    Point mPoint = snapPointToGrid(e.X, e.Y);
-                    int diffX = mPoint.X - creatingRoomOriginalPos.X;
-                    int diffY = mPoint.Y - creatingRoomOriginalPos.Y;
+                    var mPoint = snapPointToGrid(e.X, e.Y);
+                    var diffX = mPoint.X - creatingRoomOriginalPos.X;
+                    var diffY = mPoint.Y - creatingRoomOriginalPos.Y;
 
                     //dibujar rectangulo en base a las coordenadas elegidas
                     Rectangle rect;
@@ -402,7 +550,8 @@ namespace Examples.RoomsEditor
                         }
                         else
                         {
-                            rect = new Rectangle(creatingRoomOriginalPos.X, creatingRoomOriginalPos.Y + diffY, diffX, -diffY);
+                            rect = new Rectangle(creatingRoomOriginalPos.X, creatingRoomOriginalPos.Y + diffY, diffX,
+                                -diffY);
                         }
                     }
                     else
@@ -417,17 +566,13 @@ namespace Examples.RoomsEditor
                         }
                     }
 
-
                     //Actualizar tamaño solo si no se escapa de los limites del escenario
                     if (validateRoomBounds(rect))
                     {
-                        RoomsEditorRoom lastRoom = rooms[rooms.Count - 1];
+                        var lastRoom = Rooms[Rooms.Count - 1];
                         lastRoom.RoomPanel.Label.Bounds = rect;
                     }
-
-
                 }
-
             }
         }
 
@@ -437,42 +582,40 @@ namespace Examples.RoomsEditor
             if (currentMode == EditMode.CreateRoom)
             {
                 creatingRoomMouseDown = false;
-                RoomsEditorRoom lastRoom = rooms[rooms.Count - 1];
+                var lastRoom = Rooms[Rooms.Count - 1];
                 lastRoom.RoomPanel.adaptaToMiniumSize();
 
                 //Si colisiona no lo borramos
-                RoomsEditorRoom collisionRoom = testRoomPanelCollision(lastRoom, lastRoom.RoomPanel.Label.Bounds);
+                var collisionRoom = testRoomPanelCollision(lastRoom, lastRoom.RoomPanel.Label.Bounds);
                 if (collisionRoom != null)
                 {
-                    rooms.Remove(lastRoom);
+                    Rooms.Remove(lastRoom);
                     panel2d.Controls.Remove(lastRoom.RoomPanel.Label);
                 }
 
                 //Seleccionar room recien creado
                 selectRoom(lastRoom);
             }
-
         }
 
-        #endregion
-
+        #endregion Create Room
 
         #region Edit Room
 
-
         /// <summary>
-        /// Cambiar nombre de room
+        ///     Cambiar nombre de room
         /// </summary>
         private void textBoxRoomName_TextChanged(object sender, EventArgs e)
         {
             if (ValidationUtils.validateRequired(textBoxRoomName.Text))
             {
                 //controlar repetidos
-                foreach (RoomsEditorRoom r in rooms)
+                foreach (var r in Rooms)
                 {
                     if (r != selectedRoom && r.Name == textBoxRoomName.Text)
                     {
-                        MessageBox.Show(this, "Ya existe un cuarto con ese nombre: " + textBoxRoomName.Text, "Edición de nombre", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, "Ya existe un cuarto con ese nombre: " + textBoxRoomName.Text,
+                            "Edición de nombre", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         textBoxRoomName.Text = selectedRoom.Name;
                         return;
                     }
@@ -486,26 +629,25 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Cambiar X de room
+        ///     Cambiar X de room
         /// </summary>
         private void numericUpDownRoomPosX_ValueChanged(object sender, EventArgs e)
         {
-            Rectangle currentR = selectedRoom.RoomPanel.Label.Bounds;
-            Rectangle newR = new Rectangle((int)numericUpDownRoomPosX.Value, currentR.Y, currentR.Width, currentR.Height);
+            var currentR = selectedRoom.RoomPanel.Label.Bounds;
+            var newR = new Rectangle((int) numericUpDownRoomPosX.Value, currentR.Y, currentR.Width, currentR.Height);
             if (!selectedRoom.RoomPanel.updateLabelBounds(newR))
             {
                 numericUpDownRoomPosX.Value = currentR.X;
             }
         }
 
-
         /// <summary>
-        /// Cambiar Y de room
+        ///     Cambiar Y de room
         /// </summary>
         private void numericUpDownRoomPosY_ValueChanged(object sender, EventArgs e)
         {
-            Rectangle currentR = selectedRoom.RoomPanel.Label.Bounds;
-            Rectangle newR = new Rectangle(currentR.X, (int)numericUpDownRoomPosY.Value, currentR.Width, currentR.Height);
+            var currentR = selectedRoom.RoomPanel.Label.Bounds;
+            var newR = new Rectangle(currentR.X, (int) numericUpDownRoomPosY.Value, currentR.Width, currentR.Height);
             selectedRoom.RoomPanel.updateLabelBounds(newR);
             if (!selectedRoom.RoomPanel.updateLabelBounds(newR))
             {
@@ -514,12 +656,12 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Cambiar Width de room
+        ///     Cambiar Width de room
         /// </summary>
         private void numericUpDownRoomWidth_ValueChanged(object sender, EventArgs e)
         {
-            Rectangle currentR = selectedRoom.RoomPanel.Label.Bounds;
-            Rectangle newR = new Rectangle(currentR.X, currentR.Y, (int)numericUpDownRoomWidth.Value, currentR.Height);
+            var currentR = selectedRoom.RoomPanel.Label.Bounds;
+            var newR = new Rectangle(currentR.X, currentR.Y, (int) numericUpDownRoomWidth.Value, currentR.Height);
             selectedRoom.RoomPanel.updateLabelBounds(newR);
             if (!selectedRoom.RoomPanel.updateLabelBounds(newR))
             {
@@ -528,12 +670,12 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Cambiar Length de room
+        ///     Cambiar Length de room
         /// </summary>
         private void numericUpDownRoomLength_ValueChanged(object sender, EventArgs e)
         {
-            Rectangle currentR = selectedRoom.RoomPanel.Label.Bounds;
-            Rectangle newR = new Rectangle(currentR.X, currentR.Y, currentR.Width, (int)numericUpDownRoomLength.Value);
+            var currentR = selectedRoom.RoomPanel.Label.Bounds;
+            var newR = new Rectangle(currentR.X, currentR.Y, currentR.Width, (int) numericUpDownRoomLength.Value);
             selectedRoom.RoomPanel.updateLabelBounds(newR);
             if (!selectedRoom.RoomPanel.updateLabelBounds(newR))
             {
@@ -542,239 +684,23 @@ namespace Examples.RoomsEditor
         }
 
         /// <summary>
-        /// Variar altura de las paredes de un room
+        ///     Variar altura de las paredes de un room
         /// </summary>
         private void numericUpDownRoomHeight_ValueChanged(object sender, EventArgs e)
         {
-            int newHeight = (int)numericUpDownRoomHeight.Value;
+            var newHeight = (int) numericUpDownRoomHeight.Value;
             selectedRoom.Height = newHeight;
         }
 
         /// <summary>
-        /// Variar nivel del piso de un room
+        ///     Variar nivel del piso de un room
         /// </summary>
         private void numericUpDownRoomFloorLevel_ValueChanged(object sender, EventArgs e)
         {
-            int newFloorLevel = (int)numericUpDownRoomFloorLevel.Value;
+            var newFloorLevel = (int) numericUpDownRoomFloorLevel.Value;
             selectedRoom.FloorLevel = newFloorLevel;
         }
 
-        
-
-        #endregion
-
-
-        #region RoomPanel
-
-
-        /// <summary>
-        /// Panel 2D que representa un Room
-        /// </summary>
-        public class RoomPanel
-        {
-            readonly Color DEFAULT_ROOM_COLOR = Color.Orange;
-            readonly Color SELECTED_ROOM_COLOR = Color.BlueViolet;
-            readonly Size MINIUM_SIZE = new Size(50, 50);
-
-            
-            internal RoomsEditorMapView mapView;
-            bool labelDragging = false;
-            Point initDragP;
-            Point oldLocation;
-
-            RoomsEditorRoom room;
-            public RoomsEditorRoom Room
-            {
-                get { return room; }
-                set { room = value; }
-            }
-
-            Label label;
-            public Label Label
-            {
-                get { return label; }
-            }
-
-            public RoomPanel(string name, RoomsEditorMapView mapView, Point location, Size size)
-            {
-                this.mapView = mapView;
-
-                label = new Label();
-                label.Text = name;
-                label.AutoSize = false;
-                label.Location = location;
-                label.Size = size;
-                label.BorderStyle = BorderStyle.FixedSingle;
-                label.BackColor = DEFAULT_ROOM_COLOR;
-                label.TextAlign = ContentAlignment.MiddleCenter;
-
-                label.MouseDown += new MouseEventHandler(label_MouseDown);
-                label.MouseUp += new MouseEventHandler(label_MouseUp);
-                label.MouseMove += new MouseEventHandler(label_MouseMove);
-                label.MouseEnter += new EventHandler(label_MouseEnter);
-                label.PreviewKeyDown += new PreviewKeyDownEventHandler(label_PreviewKeyDown);
-            }
-
-            
-
-            
-
-            /// <summary>
-            /// Adapta al tamaño del label al minimo permitido
-            /// </summary>
-            internal void adaptaToMiniumSize()
-            {
-                if (label.Width < MINIUM_SIZE.Width)
-                {
-                    label.Width = MINIUM_SIZE.Width;
-                }
-                if (label.Height < MINIUM_SIZE.Height)
-                {
-                    label.Height = MINIUM_SIZE.Height;
-                }
-            }
-
-            /// <summary>
-            /// Seleccionar el cuarto
-            /// </summary>
-            internal void setRoomSelected(bool selected)
-            {
-                if (selected)
-                {
-                    label.BackColor = SELECTED_ROOM_COLOR;
-                    label.Focus();
-                }
-                else
-                {
-                    label.BackColor = DEFAULT_ROOM_COLOR;
-                }
-            }
-
-
-            void label_MouseDown(object sender, MouseEventArgs e)
-            {
-                //Se quiere hacer drag del label
-                if (mapView.currentMode == EditMode.CreateRoom)
-                {
-                    //seleccionar este cuarto como el actual
-                    mapView.selectRoom(room);
-
-                    labelDragging = true;
-                    initDragP = mapView.snapPointToGrid(e.X, e.Y);
-                    oldLocation = label.Location;
-                }
-            }
-
-            void label_MouseUp(object sender, MouseEventArgs e)
-            {
-                //Se termino de hacer drag del label, validar posicion
-                if (mapView.currentMode == EditMode.CreateRoom)
-                {
-                    labelDragging = false;
-
-                    //Si hay colision con otros labels, restaurar la posicion original
-                    Rectangle possibleR = new Rectangle(label.Location, label.Size);
-                    RoomsEditorRoom collisionRoom = mapView.testRoomPanelCollision(this.room, possibleR);
-                    if (collisionRoom != null)
-                    {
-                        label.Location = oldLocation;
-                    }
-                }
-
-            }
-
-            void label_MouseMove(object sender, MouseEventArgs e)
-            {
-                //Haciendo drag de label, actualizar posicion
-                if (mapView.currentMode == EditMode.CreateRoom)
-                {
-                    if (labelDragging)
-                    {
-                        int x = label.Location.X - (initDragP.X - e.X);
-                        int y = label.Location.Y - (initDragP.Y - e.Y);
-                        Point newP = mapView.snapPointToGrid(x, y);
-
-                        //Actualizar posicion solo si no se escapa de los limites del escenario
-                        Rectangle newRect = new Rectangle(newP, label.Size);
-                        if (mapView.validateRoomBounds(newRect))
-                        {
-                            label.Location = newP;
-                        }
-
-                    }
-                }
-            }
-
-            void label_MouseEnter(object sender, EventArgs e)
-            {
-                mapView.Cursor = Cursors.SizeAll;
-            }
-
-            void label_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-            {
-                //Eliminar room
-                if (e.KeyCode == Keys.Delete)
-                {
-                    mapView.selectedRoom = null;
-                    mapView.deleteRoom(this.room);
-                }
-            }
-
-            /// <summary>
-            /// Cambia el nombre del Room
-            /// </summary>
-            internal void changeName(string newName)
-            {
-                room.Name = newName;
-                label.Text = newName;
-            }
-
-            /// <summary>
-            /// Actualiza el Bounds del label del Room validando limites y colisiones.
-            /// Informa si se pude hacer
-            /// </summary>
-            internal bool updateLabelBounds(Rectangle newR)
-            {
-                //Validar limites del escenario
-                if (!mapView.validateRoomBounds(newR))
-                {
-                    return false;
-                }
-
-                //Validar colision con otros Rooms
-                RoomsEditorRoom collisionRoom = mapView.testRoomPanelCollision(this.room, newR);
-                if (collisionRoom != null)
-                {
-                    return false;
-                }
-
-                label.Bounds = newR;
-                return true;
-            }
-        }
-
-
-        #endregion
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-
-
-
-
+        #endregion Edit Room
     }
 }

@@ -110,7 +110,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Example\ExampleLoader.cs" />
-    <Compile Include="Example\TgcExample.cs" />
     <Compile Include="GuiController.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -236,14 +235,10 @@
     <Compile Include="Utils\Particles\ParticleEmitter.cs" />
     <Compile Include="Utils\Particles\PilaDeParticulas.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingCell.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingCellData.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingConnection.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingData.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingLoader.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingManager.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingParser.cs" />
     <Compile Include="Utils\PortalRendering\TgcPortalRenderingPortal.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingPortalData.cs" />
     <Compile Include="Utils\Shaders\TgcPostProcessingUtils.cs" />
     <Compile Include="Utils\Shaders\TgcScreenQuad.cs" />
     <Compile Include="Utils\Shaders\TgcShaders.cs" />
@@ -302,14 +297,10 @@
     <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameMesh.cs" />
     <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameMeshData.cs" />
     <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameParser.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcMaterialData.cs" />
     <Compile Include="Utils\TgcSceneLoader\TgcMesh.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcMeshData.cs" />
     <Compile Include="Utils\TgcSceneLoader\TgcScene.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcSceneData.cs" />
     <Compile Include="Utils\TgcSceneLoader\TgcSceneExporter.cs" />
     <Compile Include="Utils\TgcSceneLoader\TgcSceneLoader.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcSceneParser.cs" />
     <Compile Include="Utils\TgcSceneLoader\TgcTexture.cs" />
     <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimation.cs" />
     <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimationFrame.cs" />

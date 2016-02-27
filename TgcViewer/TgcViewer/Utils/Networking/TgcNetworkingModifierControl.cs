@@ -1,64 +1,69 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using SistPaquetesClient.core;
 
 namespace TgcViewer.Utils.Networking
 {
     /// <summary>
-    /// Control grafico de Modifier para Networking
+    ///     Control grafico de Modifier para Networking
     /// </summary>
     public partial class TgcNetworkingModifierControl : UserControl
     {
-        TgcNetworkingModifier modifier;
+        private readonly TgcNetworkingModifierClientsDialog clientsDialog;
+        private readonly TgcNetworkingModifier modifier;
         internal int selectedPlayerId;
         internal int selectedServer;
-        TgcNetworkingModifierClientsDialog clientsDialog;
-        TgcNetworkingModifierServersDialog serversDialog;
+        private readonly TgcNetworkingModifierServersDialog serversDialog;
 
         public TgcNetworkingModifierControl(TgcNetworkingModifier modifier, string serverName, string clientName)
         {
             InitializeComponent();
 
             this.modifier = modifier;
-            this.textBoxServerName.Text = serverName;
-            this.selectedPlayerId = -1;
+            textBoxServerName.Text = serverName;
+            selectedPlayerId = -1;
 
-            this.buttonCloseServer.Enabled = false;
-            this.buttonConnectedClients.Enabled = false;
+            buttonCloseServer.Enabled = false;
+            buttonConnectedClients.Enabled = false;
 
-            this.buttonDisconnect.Enabled = false;
+            buttonDisconnect.Enabled = false;
 
             //Cargar IP local
-            this.textBoxIp.Text = TgcSocketServer.getHostAddress().ToString();
-            
+            textBoxIp.Text = TgcSocketServer.getHostAddress().ToString();
+
             clientsDialog = new TgcNetworkingModifierClientsDialog(this);
             serversDialog = new TgcNetworkingModifierServersDialog(this, clientName);
         }
 
         /// <summary>
-        /// Crear nuevo server
+        ///     Servidores disponibles
+        /// </summary>
+        internal List<TgcSocketClient.TgcAvaliableServer> AvaliableServers
+        {
+            get { return modifier.AvaliableServers; }
+        }
+
+        /// <summary>
+        ///     Crear nuevo server
         /// </summary>
         private void buttonCreateServer_Click(object sender, EventArgs e)
         {
-            string serverName = getServerName();
-            bool result = modifier.createServer(serverName);
+            var serverName = getServerName();
+            var result = modifier.createServer(serverName);
             if (result)
             {
-                this.buttonCloseServer.Enabled = true;
-                this.buttonConnectedClients.Enabled = true;
-                this.buttonCreateServer.Enabled = false;
-                this.textBoxServerName.Enabled = false;
-                this.textBoxServerName.BackColor = Color.Green;
-                this.clientsDialog.onServerCreated();
+                buttonCloseServer.Enabled = true;
+                buttonConnectedClients.Enabled = true;
+                buttonCreateServer.Enabled = false;
+                textBoxServerName.Enabled = false;
+                textBoxServerName.BackColor = Color.Green;
+                clientsDialog.onServerCreated();
             }
             else
             {
-                MessageBox.Show(this, 
+                MessageBox.Show(this,
                     "No se ha podido crear el servidor.\n" +
                     "Compruebe que el puerto no esté siendo utilizado.\n" +
                     "Si se ha cerrado una conexión recientemente, es necesario esperar unos segundos hasta que se libere el puerto.",
@@ -67,11 +72,11 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Obtener nombre de server
+        ///     Obtener nombre de server
         /// </summary>
         private string getServerName()
         {
-            string name = this.textBoxServerName.Text;
+            var name = textBoxServerName.Text;
             if (!ValidationUtils.validateRequired(name))
             {
                 name = "MyServer";
@@ -80,7 +85,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Agregar un cliente a la lista de conectados
+        ///     Agregar un cliente a la lista de conectados
         /// </summary>
         internal void addClient(TgcSocketClientInfo clientInfo)
         {
@@ -88,16 +93,15 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Mostrar ventana de clientes conectados
+        ///     Mostrar ventana de clientes conectados
         /// </summary>
         private void buttonConnectedClients_Click(object sender, EventArgs e)
         {
             clientsDialog.ShowDialog(GuiController.Instance.MainForm);
         }
-   
 
         /// <summary>
-        /// Eliminar un cliente conectado de la lista que se acaba de desconectar
+        ///     Eliminar un cliente conectado de la lista que se acaba de desconectar
         /// </summary>
         internal void onClientDisconnected(TgcSocketClientInfo clientInfo)
         {
@@ -107,7 +111,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Cerrar el servidor
+        ///     Cerrar el servidor
         /// </summary>
         private void buttonCloseServer_Click(object sender, EventArgs e)
         {
@@ -120,9 +124,8 @@ namespace TgcViewer.Utils.Networking
             textBoxServerName.BackColor = Color.Red;
         }
 
-        
         /// <summary>
-        /// Eliminar por decision del server un cliente conectado 
+        ///     Eliminar por decision del server un cliente conectado
         /// </summary>
         internal void deleteClient(int playerId)
         {
@@ -130,7 +133,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Abrir la ventana para buscar servidores
+        ///     Abrir la ventana para buscar servidores
         /// </summary>
         private void buttonJoinServer_Click(object sender, EventArgs e)
         {
@@ -139,17 +142,15 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Buscar servidores
+        ///     Buscar servidores
         /// </summary>
         internal void searchServers()
         {
             modifier.searchServers();
         }
 
-        
-
         /// <summary>
-        /// Agregar server encontrado a la lista de servers disponibles
+        ///     Agregar server encontrado a la lista de servers disponibles
         /// </summary>
         internal void addServerToList(TgcSocketClient.TgcAvaliableServer server)
         {
@@ -157,7 +158,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Conectarse al server elegido
+        ///     Conectarse al server elegido
         /// </summary>
         internal bool connectToServer(int selectedServer, string clientName)
         {
@@ -165,7 +166,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Cuando el cliente se conecto finalmente con el server
+        ///     Cuando el cliente se conecto finalmente con el server
         /// </summary>
         internal void clientConnectedToServer(TgcSocketServerInfo serverInfo, int playerId)
         {
@@ -178,7 +179,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Desconectarse del server
+        ///     Desconectarse del server
         /// </summary>
         private void buttonDisconnect_Click(object sender, EventArgs e)
         {
@@ -200,17 +201,5 @@ namespace TgcViewer.Utils.Networking
             buttonJoinServer.Enabled = true;
             textBoxServerIp.Text = "";
         }
-
-        /// <summary>
-        /// Servidores disponibles
-        /// </summary>
-        internal List<TgcSocketClient.TgcAvaliableServer> AvaliableServers
-        {
-            get { return modifier.AvaliableServers; }
-        }
-
-        
-
-        
     }
 }

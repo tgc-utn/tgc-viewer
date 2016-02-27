@@ -1,22 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace TgcViewer.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador para valores Float
+    ///     Modificador para valores Float
     /// </summary>
     public class TgcFloatModifier : TgcModifierPanel
     {
-        NumericUpDown numericUpDown;
-        TrackBar trackBar;
-        float minValue;
-        float maxValue;
+        private readonly float maxValue;
+        private readonly float minValue;
+        private readonly NumericUpDown numericUpDown;
 
-        bool numericUpDownChange = false;
-        bool trackBarChange = false;
+        private bool numericUpDownChange;
+        private readonly TrackBar trackBar;
+        private bool trackBarChange;
 
         public TgcFloatModifier(string varName, float minValue, float maxValue, float defaultValue) : base(varName)
         {
@@ -24,23 +23,22 @@ namespace TgcViewer.Utils.Modifiers
             this.maxValue = maxValue;
 
             numericUpDown = new NumericUpDown();
-            numericUpDown.Size = new System.Drawing.Size(100, 20);
+            numericUpDown.Size = new Size(100, 20);
             numericUpDown.Margin = new Padding(0);
             numericUpDown.DecimalPlaces = 4;
-            numericUpDown.Minimum = (decimal)minValue;
-            numericUpDown.Maximum = (decimal)maxValue;
-            numericUpDown.Value = (decimal)defaultValue;
-            numericUpDown.Increment = (decimal)(2f * (maxValue - minValue) / 100f);
-            numericUpDown.ValueChanged += new EventHandler(numericUpDown_ValueChanged);
+            numericUpDown.Minimum = (decimal) minValue;
+            numericUpDown.Maximum = (decimal) maxValue;
+            numericUpDown.Value = (decimal) defaultValue;
+            numericUpDown.Increment = (decimal) (2f*(maxValue - minValue)/100f);
+            numericUpDown.ValueChanged += numericUpDown_ValueChanged;
 
             trackBar = new TrackBar();
-            trackBar.Size = new System.Drawing.Size(100, 20);
+            trackBar.Size = new Size(100, 20);
             trackBar.Margin = new Padding(0);
             trackBar.Minimum = 0;
             trackBar.Maximum = 20;
-            trackBar.Value = (int)((defaultValue - minValue) * 20 / (maxValue - minValue));
-            trackBar.ValueChanged += new EventHandler(trackBar_ValueChanged);
-
+            trackBar.Value = (int) ((defaultValue - minValue)*20/(maxValue - minValue));
+            trackBar.ValueChanged += trackBar_ValueChanged;
 
             contentPanel.Controls.Add(numericUpDown);
             contentPanel.Controls.Add(trackBar);
@@ -53,9 +51,9 @@ namespace TgcViewer.Utils.Modifiers
                 trackBarChange = false;
                 return;
             }
-            
+
             numericUpDownChange = true;
-            trackBar.Value = (int)(((float)numericUpDown.Value - minValue) * 20 / (maxValue - minValue));
+            trackBar.Value = (int) (((float) numericUpDown.Value - minValue)*20/(maxValue - minValue));
 
             GuiController.Instance.focus3dPanel();
         }
@@ -66,17 +64,17 @@ namespace TgcViewer.Utils.Modifiers
             {
                 numericUpDownChange = false;
                 return;
-            }   
+            }
 
             trackBarChange = true;
-            numericUpDown.Value = (decimal)(minValue + trackBar.Value * (maxValue - minValue) / 20);
+            numericUpDown.Value = (decimal) (minValue + trackBar.Value*(maxValue - minValue)/20);
 
             GuiController.Instance.focus3dPanel();
         }
 
         public override object getValue()
         {
-            return (float)numericUpDown.Value;
+            return (float) numericUpDown.Value;
         }
     }
 }

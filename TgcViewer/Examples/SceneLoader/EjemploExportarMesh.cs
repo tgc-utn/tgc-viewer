@@ -1,22 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
 using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
 
 namespace Examples.SceneLoader
 {
     /// <summary>
-    /// Exportar una malla a XML
+    ///     Exportar una malla a XML
     /// </summary>
     public class EjemploExportarMesh : TgcExample
     {
-        TgcScene sceneRecover;
+        private TgcScene sceneRecover;
 
         public override string getCategory()
         {
@@ -35,46 +28,44 @@ namespace Examples.SceneLoader
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene sceneOriginal = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Iglesia\\" + "Iglesia-TgcScene.xml");
-            TgcScene sceneOriginal2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Iglesia\\" + "Iglesia-TgcScene.xml");
+            var loader = new TgcSceneLoader();
+            var sceneOriginal =
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Iglesia\\" +
+                                         "Iglesia-TgcScene.xml");
+            var sceneOriginal2 =
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Iglesia\\" +
+                                         "Iglesia-TgcScene.xml");
             //sceneOriginal = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\CajaVerde\\" + "CajaVerde-TgcScene.xml");
             //sceneOriginal = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Avion\\" + "Avion-TgcScene.xml");
             //sceneOriginal = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Iglesia\\" + "Iglesia-TgcScene.xml");
             //TgcScene sceneOriginal = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml");
             //TgcScene sceneOriginal2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml");
-            
-            string destFolder = GuiController.Instance.ExamplesDir + "\\" + "PruebaExporter";
-            TgcScene unifiedScene = new TgcScene("PruebaExporter", destFolder);
+
+            var destFolder = GuiController.Instance.ExamplesDir + "\\" + "PruebaExporter";
+            var unifiedScene = new TgcScene("PruebaExporter", destFolder);
             unifiedScene.Meshes.AddRange(sceneOriginal.Meshes);
             unifiedScene.Meshes.AddRange(sceneOriginal2.Meshes);
 
-
-            
-            TgcSceneExporter exporter = new TgcSceneExporter();
+            var exporter = new TgcSceneExporter();
             //string fileSaved = exporter.exportSceneToXml(unifiedScene, destFolder);
             //string fileSaved = exporter.exportAndAppendSceneToXml(unifiedScene, destFolder);
 
-            TgcSceneExporter.ExportResult r = exporter.exportAndAppendSceneToXml(sceneOriginal, destFolder);
+            var r = exporter.exportAndAppendSceneToXml(sceneOriginal, destFolder);
 
             sceneRecover = loader.loadSceneFromFile(r.filePath);
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             sceneRecover.renderAll();
-
         }
 
         public override void close()
         {
-
         }
-
     }
 }

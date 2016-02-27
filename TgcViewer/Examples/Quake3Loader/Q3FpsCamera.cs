@@ -1,80 +1,57 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer.Utils.Input;
 using TgcViewer;
-using Microsoft.DirectX.Direct3D;
+using TgcViewer.Utils.Input;
+using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace Examples.Quake3Loader
 {
     /// <summary>
-    /// Camara en primera persona personalizada para niveles de Quake 3.
-    /// Evita utilizar senos y cosenos
-    /// 
-    /// Autor: Martin Giachetti
-    /// 
+    ///     Camara en primera persona personalizada para niveles de Quake 3.
+    ///     Evita utilizar senos y cosenos
+    ///     Autor: Martin Giachetti
     /// </summary>
     public class Q3FpsCamera : TgcCamera
     {
-        
+        private const float LADO_CUBO = 1.0f;
+        private const float MEDIO_LADO_CUBO = LADO_CUBO*0.5f;
         /*
          * Esta Camara es un prototipo. Esta pensada para no utilizar senos y cosenos en las rotaciones.
-         * Se utiliza una camara que se desplaza sobre las caras de un cubo sin techo, ni piso. 
+         * Se utiliza una camara que se desplaza sobre las caras de un cubo sin techo, ni piso.
          * La teoria es la siguiente: La direccion donde mira la camara esta formado por dos puntos, el ojo y el target.
          * Si el ojo es el centro del cubo y el target es un punto que se desplaza por las caras del cubo.
-         * Entonces se puede cambiar el angulo de la direccion desplazando proporcionalmente a la cantidad de grados el punto 
+         * Entonces se puede cambiar el angulo de la direccion desplazando proporcionalmente a la cantidad de grados el punto
          * target sobre las caras del cubo.
          */
-        Vector3 eye = new Vector3();
-        Vector3 target = new Vector3();
-        Vector3 up = new Vector3(0.0f, 1.0f, 0.0f);
-        private Matrix viewMatrix = Matrix.Identity;
-        private Vector3 forwardDirection = new Vector3();
-        private Vector3 sideDirection = new Vector3();
-        private bool lockCam = false;
-        protected Point mouseCenter;
-        private float movementSpeed;
-        private float rotationSpeed;
-        private float jumpSpeed;
+        private Vector3 eye = new Vector3();
         private float latitud;
+        private bool lockCam;
         private float longitud;
-
+        protected Point mouseCenter;
+        private Vector3 sideDirection = new Vector3();
+        private readonly float STEP_ANGULO = LADO_CUBO/90;
+        private Vector3 target = new Vector3();
+        private readonly Vector3 up = new Vector3(0.0f, 1.0f, 0.0f);
+        private Matrix viewMatrix = Matrix.Identity;
 
         public Q3FpsCamera()
         {
-            Control focusWindows = GuiController.Instance.D3dDevice.CreationParameters.FocusWindow;
+            var focusWindows = GuiController.Instance.D3dDevice.CreationParameters.FocusWindow;
             mouseCenter = focusWindows.PointToScreen(
                 new Point(
-                    focusWindows.Width / 2,
-                    focusWindows.Height / 2)
-                    );
+                    focusWindows.Width/2,
+                    focusWindows.Height/2)
+                );
         }
 
-        ~Q3FpsCamera()
-        {
-            LockCam = false;
-        }
-
-        //No se usa, solo esta por la herencia
-        public bool Enable
-        {
-            get;
-            set;
-        }
-
-
-        public Vector3 ForwardDirection
-        {
-            get{return forwardDirection;}
-        }
+        public Vector3 ForwardDirection { get; private set; } = new Vector3();
 
         public Vector3 SideDirection
         {
-            get{return sideDirection;}
+            get { return sideDirection; }
         }
 
         public bool LockCam
@@ -94,114 +71,30 @@ namespace Examples.Quake3Loader
             }
         }
 
-        public float MovementSpeed
-        {
-            get { return movementSpeed; }
-            set { movementSpeed = value; }
-        }
+        public float MovementSpeed { get; set; }
 
-        public float RotationSpeed
-        {
-            get { return rotationSpeed; }
-            set { rotationSpeed = value; }
-        }
+        public float RotationSpeed { get; set; }
 
-        public float JumpSpeed
+        public float JumpSpeed { get; set; }
+
+        //No se usa, solo esta por la herencia
+        public bool Enable { get; set; }
+
+        ~Q3FpsCamera()
         {
-            get { return jumpSpeed; }
-            set { jumpSpeed = value; }
+            LockCam = false;
         }
 
         private void recalcularDirecciones()
         {
-            Vector3 forward = target - eye;
+            var forward = target - eye;
             forward.Y = 0;
             forward.Normalize();
 
-            forwardDirection = forward;
+            ForwardDirection = forward;
             sideDirection.X = forward.Z;
             sideDirection.Z = -forward.X;
         }
-
-        #region Miembros de TgcCamera
-
-        public Vector3 getPosition()
-        {
-            return eye;
-        }
-
-        public Vector3 getLookAt()
-        {
-            return target;
-        }
-
-        public void updateCamera()
-        {
-            float elapsedTime = GuiController.Instance.ElapsedTime;
-            //Forward
-            if (GuiController.Instance.D3dInput.keyDown(Key.W))
-            {
-                moveForward(MovementSpeed * elapsedTime);
-            }
-
-            //Backward
-            if (GuiController.Instance.D3dInput.keyDown(Key.S))
-            {
-                moveForward(-MovementSpeed * elapsedTime);
-            }
-
-            //Strafe right
-            if (GuiController.Instance.D3dInput.keyDown(Key.D))
-            {
-                moveSide(MovementSpeed * elapsedTime);
-            }
-
-            //Strafe left
-            if (GuiController.Instance.D3dInput.keyDown(Key.A))
-            {
-                moveSide(-MovementSpeed * elapsedTime);
-            }
-
-            //Jump
-            if (GuiController.Instance.D3dInput.keyDown(Key.Space))
-            {
-                moveUp(JumpSpeed * elapsedTime);
-            }
-
-            //Crouch
-            if (GuiController.Instance.D3dInput.keyDown(Key.LeftControl))
-            {
-                moveUp(-JumpSpeed * elapsedTime);
-            }
-
-            if (GuiController.Instance.D3dInput.keyPressed(Key.L))
-            {
-                LockCam = !LockCam;
-            }
-
-            //Solo rotar si se esta aprentando el boton izq del mouse
-            if (lockCam || GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
-            {
-                rotate(-GuiController.Instance.D3dInput.XposRelative*rotationSpeed,
-                       -GuiController.Instance.D3dInput.YposRelative*rotationSpeed);
-            }
-
-
-            if(lockCam)
-                Cursor.Position = mouseCenter;
-            
-            viewMatrix = Matrix.LookAtLH(eye, target, up);
-
-            updateViewMatrix(GuiController.Instance.D3dDevice);
-        }
-
-        public void updateViewMatrix(Microsoft.DirectX.Direct3D.Device d3dDevice)
-        {
-            d3dDevice.Transform.View = viewMatrix;
-        }
-
-        #endregion
-
 
         public void move(Vector3 v)
         {
@@ -211,13 +104,13 @@ namespace Examples.Quake3Loader
 
         public void moveForward(float movimiento)
         {
-            Vector3 v = ForwardDirection * movimiento;
+            var v = ForwardDirection*movimiento;
             move(v);
         }
 
         public void moveSide(float movimiento)
         {
-            Vector3 v = SideDirection * movimiento;
+            var v = SideDirection*movimiento;
             move(v);
         }
 
@@ -247,28 +140,24 @@ namespace Examples.Quake3Loader
             if (latitud < 0)
                 latitud += 360;
 
-            
             longitud += lon;
             if (longitud > 90)
                 longitud = 90;
             if (longitud < 0)
                 longitud = 0;
-            
+
             recalcularTarget();
         }
 
-        private const float LADO_CUBO = 1.0f;
-        private const float MEDIO_LADO_CUBO = LADO_CUBO*0.5f;
-        private float STEP_ANGULO = LADO_CUBO/90;
         private void recalcularTarget()
         {
             float x = 0;
             float y = 0;
             float z = 0;
-            
+
             if (latitud < 180)
             {
-                if(latitud < 90)
+                if (latitud < 90)
                 {
                     z = latitud*STEP_ANGULO;
                 }
@@ -295,36 +184,109 @@ namespace Examples.Quake3Loader
                 x = x - MEDIO_LADO_CUBO;
             }
 
-            y = longitud * STEP_ANGULO - MEDIO_LADO_CUBO;
-             
-
+            y = longitud*STEP_ANGULO - MEDIO_LADO_CUBO;
 
             target = eye + new Vector3(x, y, z);
 
             recalcularDirecciones();
         }
 
-
         public void setCamera(Vector3 eye, Vector3 target)
         {
             this.eye = eye;
             this.target = target;
 
-            Vector3 dir = eye - target;
+            var dir = eye - target;
 
             //calculo el angulo correspondiente a la latitud y longitud.
             if (Math.Abs(dir.X) > 0)
-                latitud = (180 * (float)Math.Atan(dir.Z / dir.X)) / (float)Math.PI + 45;
+                latitud = 180*(float) Math.Atan(dir.Z/dir.X)/(float) Math.PI + 45;
             else
                 latitud = 135;
 
-            longitud = (180 * (float)Math.Atan(dir.Y / Math.Sqrt(dir.X*dir.X + dir.Z*dir.Z))) / (float)Math.PI + 45;
+            longitud = 180*(float) Math.Atan(dir.Y/Math.Sqrt(dir.X*dir.X + dir.Z*dir.Z))/(float) Math.PI + 45;
 
-            
             rotateY(0);
-
 
             recalcularDirecciones();
         }
+
+        #region Miembros de TgcCamera
+
+        public Vector3 getPosition()
+        {
+            return eye;
+        }
+
+        public Vector3 getLookAt()
+        {
+            return target;
+        }
+
+        public void updateCamera()
+        {
+            var elapsedTime = GuiController.Instance.ElapsedTime;
+            //Forward
+            if (GuiController.Instance.D3dInput.keyDown(Key.W))
+            {
+                moveForward(MovementSpeed*elapsedTime);
+            }
+
+            //Backward
+            if (GuiController.Instance.D3dInput.keyDown(Key.S))
+            {
+                moveForward(-MovementSpeed*elapsedTime);
+            }
+
+            //Strafe right
+            if (GuiController.Instance.D3dInput.keyDown(Key.D))
+            {
+                moveSide(MovementSpeed*elapsedTime);
+            }
+
+            //Strafe left
+            if (GuiController.Instance.D3dInput.keyDown(Key.A))
+            {
+                moveSide(-MovementSpeed*elapsedTime);
+            }
+
+            //Jump
+            if (GuiController.Instance.D3dInput.keyDown(Key.Space))
+            {
+                moveUp(JumpSpeed*elapsedTime);
+            }
+
+            //Crouch
+            if (GuiController.Instance.D3dInput.keyDown(Key.LeftControl))
+            {
+                moveUp(-JumpSpeed*elapsedTime);
+            }
+
+            if (GuiController.Instance.D3dInput.keyPressed(Key.L))
+            {
+                LockCam = !LockCam;
+            }
+
+            //Solo rotar si se esta aprentando el boton izq del mouse
+            if (lockCam || GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            {
+                rotate(-GuiController.Instance.D3dInput.XposRelative*RotationSpeed,
+                    -GuiController.Instance.D3dInput.YposRelative*RotationSpeed);
+            }
+
+            if (lockCam)
+                Cursor.Position = mouseCenter;
+
+            viewMatrix = Matrix.LookAtLH(eye, target, up);
+
+            updateViewMatrix(GuiController.Instance.D3dDevice);
+        }
+
+        public void updateViewMatrix(Device d3dDevice)
+        {
+            d3dDevice.Transform.View = viewMatrix;
+        }
+
+        #endregion Miembros de TgcCamera
     }
 }

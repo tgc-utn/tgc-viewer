@@ -1,29 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TgcViewer.Utils.Modifiers;
 
 namespace Examples.MeshCreator
 {
     /// <summary>
-    /// Modifier customizado que se utiliza en el MeshCreator
+    ///     Modifier customizado que se utiliza en el MeshCreator
     /// </summary>
     public class MeshCreatorModifier : TgcModifierPanel
     {
-
-        MeshCreatorControl control;
-        public MeshCreatorControl Control
-        {
-            get { return control; }
-        }
-
         public MeshCreatorModifier(string varName, TgcMeshCreator creator)
             : base(varName)
         {
-            control = new MeshCreatorControl(creator);
-            contentPanel.Controls.Add(control);
+            Control = new MeshCreatorControl(creator);
+            contentPanel.Controls.Add(Control);
         }
 
+        public MeshCreatorControl Control { get; }
 
         public override object getValue()
         {
@@ -32,7 +23,7 @@ namespace Examples.MeshCreator
 
         public void dispose()
         {
-            control.close();
+            Control.close();
         }
     }
 }

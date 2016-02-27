@@ -1,32 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
 using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
 
 namespace Examples.Collision
 {
     /// <summary>
-    /// Ejemplo EjemploBoundingBox:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploBoundingBox:
+    ///     Unidades Involucradas:
     ///     # Unidad 6 - Detección de Colisiones - BoundingBox
-    /// 
-    /// Carga un modelo 3D estático mediante la herramienta TgcSceneLoader
-    /// y muestra como renderizar su BoundingBox.
-    /// 
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Carga un modelo 3D estático mediante la herramienta TgcSceneLoader
+    ///     y muestra como renderizar su BoundingBox.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploBoundingBox : TgcExample
     {
-        TgcMesh mesh;
-
+        private TgcMesh mesh;
 
         public override string getCategory()
         {
@@ -40,28 +28,27 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Carga un modelo 3D estático mediante la herramienta TgcSceneLoader y muestra como renderizar su BoundingBox. Movimiento con mouse.";
+            return
+                "Carga un modelo 3D estático mediante la herramienta TgcSceneLoader y muestra como renderizar su BoundingBox. Movimiento con mouse.";
         }
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Cargar modelo estatico
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadSceneFromFile(
+            var loader = new TgcSceneLoader();
+            var scene = loader.loadSceneFromFile(
                 GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Buggy\\Buggy-TgcScene.xml");
             mesh = scene.Meshes[0];
-
 
             //Alejar camara rotacional segun tamaño del BoundingBox del objeto
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Renderizar modelo
             mesh.render();
@@ -74,6 +61,5 @@ namespace Examples.Collision
         {
             mesh.dispose();
         }
-
     }
 }

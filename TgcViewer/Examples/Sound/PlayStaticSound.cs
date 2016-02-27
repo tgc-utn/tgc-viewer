@@ -1,35 +1,26 @@
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.Sound;
-using TgcViewer.Utils._2D;
 using System.IO;
+using TGC.Core.Example;
+using TgcViewer;
+using TgcViewer.Utils._2D;
+using TgcViewer.Utils.Sound;
 
 namespace Examples.Sound
 {
     /// <summary>
-    /// Ejemplo PlayMp3:
-    /// Unidades PlayStaticSound:
+    ///     Ejemplo PlayMp3:
+    ///     Unidades PlayStaticSound:
     ///     # Unidad 3 - Conceptos Básicos de 3D - GameEngine
-    /// 
-    /// Muestra como reproducir un archivo de sonido estático en formato WAV.
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Muestra como reproducir un archivo de sonido estático en formato WAV.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class PlayStaticSound : TgcExample
     {
-        string currentFile;
-        TgcText2d currentSoundText;
-        TgcText2d instruccionesText;
-        TgcStaticSound sound;
+        private string currentFile;
+        private TgcText2d currentSoundText;
+        private TgcText2d instruccionesText;
+        private TgcStaticSound sound;
 
         public override string getCategory()
         {
@@ -48,32 +39,33 @@ namespace Examples.Sound
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Texto para el sonido actual
             currentSoundText = new TgcText2d();
             currentSoundText.Text = "No sound";
             currentSoundText.Position = new Point(50, 20);
             currentSoundText.Color = Color.Gold;
-            currentSoundText.changeFont(new System.Drawing.Font(FontFamily.GenericMonospace, 16, FontStyle.Italic));
+            currentSoundText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Italic));
 
             //Texto de instrucciones
             instruccionesText = new TgcText2d();
             instruccionesText.Text = "Y = Play, O = Stop.";
             instruccionesText.Position = new Point(50, 60);
             instruccionesText.Color = Color.Green;
-            instruccionesText.changeFont(new System.Drawing.Font(FontFamily.GenericMonospace, 16, FontStyle.Bold));
+            instruccionesText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Bold));
 
             //Modifier para archivo MP3
             currentFile = null;
-            GuiController.Instance.Modifiers.addFile("WAV-File", GuiController.Instance.ExamplesMediaDir + "Sound\\campanadas horas.wav", "WAVs|*.wav");
-        
+            GuiController.Instance.Modifiers.addFile("WAV-File",
+                GuiController.Instance.ExamplesMediaDir + "Sound\\campanadas horas.wav", "WAVs|*.wav");
+
             //Modifier para loop
             GuiController.Instance.Modifiers.addBoolean("PlayLoop", "Play Loop", false);
         }
 
         /// <summary>
-        /// Cargar un nuevo WAV si hubo una variacion
+        ///     Cargar un nuevo WAV si hubo una variacion
         /// </summary>
         private void loadSound(string filePath)
         {
@@ -98,36 +90,31 @@ namespace Examples.Sound
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Ver si cambio el WAV
-            string filePath = (string)GuiController.Instance.Modifiers["WAV-File"];
+            var filePath = (string)GuiController.Instance.Modifiers["WAV-File"];
             loadSound(filePath);
 
-
             //Contro el input de teclado
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.Y))
+            if (GuiController.Instance.D3dInput.keyPressed(Key.Y))
             {
-                bool playLoop = (bool)GuiController.Instance.Modifiers["PlayLoop"];
+                var playLoop = (bool)GuiController.Instance.Modifiers["PlayLoop"];
                 sound.play(playLoop);
             }
-            else if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.O))
+            else if (GuiController.Instance.D3dInput.keyPressed(Key.O))
             {
                 sound.stop();
             }
-
 
             //Render texto
             currentSoundText.render();
             instruccionesText.render();
         }
 
-        
-
         public override void close()
         {
             sound.dispose();
         }
-
     }
 }

@@ -1,37 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.TgcSceneLoader;
 using System.IO;
+using System.Windows.Forms;
+using TgcViewer;
+using TGC.Core.Example;
 
 namespace Examples.Quake3Loader
 {
     /// <summary>
-    /// Ejemplo EjemploEmpaquetarQ3Level
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploEmpaquetarQ3Level
+    ///     Unidades Involucradas:
     ///     # Unidad 7 - Optimización - BSP y PVS
-    ///     
-    /// Ver primero ejemplo EjemploLoadQ3Level
-    /// Permite empaquetar un escenario de Quake 3 hecho con el editor GtkRadiant.
-    /// Genera como salida una carpeta con todo el contenido mínimo requerido para el escenario especificado.
-    /// Este ejemplo no posee salida gráfica.
-    /// 
-    /// 
-    /// Autor: Martin Giachetti, Matías Leone
-    /// 
+    ///     Ver primero ejemplo EjemploLoadQ3Level
+    ///     Permite empaquetar un escenario de Quake 3 hecho con el editor GtkRadiant.
+    ///     Genera como salida una carpeta con todo el contenido mínimo requerido para el escenario especificado.
+    ///     Este ejemplo no posee salida gráfica.
+    ///     Autor: Martin Giachetti, Matías Leone
     /// </summary>
     public class EjemploEmpaquetarQ3Level : TgcExample
     {
- 
-        string quake3MediaPath;
-        string currentFile;
+        private string currentFile;
+        private string quake3MediaPath;
 
         public override string getCategory()
         {
@@ -50,7 +37,7 @@ namespace Examples.Quake3Loader
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Path de recursos del Quake 3 original (descomprimir archivo pak0.pk3 de la carpeta de instalación del Quake 3, renombrar a .zip)
             quake3MediaPath = "C:\\Program Files\\Quake III Arena\\baseq3\\pak0\\";
@@ -62,37 +49,35 @@ namespace Examples.Quake3Loader
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Ver si se seleccionó alguno nivel a empaquetar
-            string selectedFile = (string)GuiController.Instance.Modifiers["BspFile"];
+            var selectedFile = (string) GuiController.Instance.Modifiers["BspFile"];
             if (selectedFile != currentFile)
             {
                 currentFile = selectedFile;
 
                 //Cargar nivel
-                BspLoader loader = new BspLoader();
-                BspMap bspMap = loader.loadBsp(currentFile, quake3MediaPath);
+                var loader = new BspLoader();
+                var bspMap = loader.loadBsp(currentFile, quake3MediaPath);
 
                 //Empaquetar
-                FileInfo info = new FileInfo(currentFile);
-                string fileName = info.Name.Substring(0, info.Name.IndexOf('.'));
-                string outputDir = info.DirectoryName + "\\" + fileName;
+                var info = new FileInfo(currentFile);
+                var fileName = info.Name.Substring(0, info.Name.IndexOf('.'));
+                var outputDir = info.DirectoryName + "\\" + fileName;
 
                 loader.packLevel(bspMap, quake3MediaPath, outputDir);
 
                 //Librer recursos
                 bspMap.dispose();
 
-                MessageBox.Show(GuiController.Instance.MainForm, "Empaquetado almacenado en: " + outputDir, 
+                MessageBox.Show(GuiController.Instance.MainForm, "Empaquetado almacenado en: " + outputDir,
                     "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         public override void close()
         {
-
         }
-
     }
 }

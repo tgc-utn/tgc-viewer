@@ -1,24 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.Input;
+using TGC.Core.Example;
 
 namespace Examples.Otros
 {
     /// <summary>
-    /// Pan view
+    ///     Pan view
     /// </summary>
     public class EjemploPanView : TgcExample
     {
-
-        TgcBox box;
+        private TgcBox box;
 
         public override string getCategory()
         {
@@ -37,27 +30,23 @@ namespace Examples.Otros
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
-            box = TgcBox.fromSize(new Vector3(0,0,0), new Vector3(20, 20, 20), Color.Red);
+            box = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(20, 20, 20), Color.Red);
 
             GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
-            box.render(); 
+            box.render();
         }
 
         public override void close()
         {
             box.dispose();
         }
-
-
-
     }
 }

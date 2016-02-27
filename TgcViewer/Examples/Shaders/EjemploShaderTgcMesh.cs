@@ -1,33 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
 using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
 
 namespace Examples.Shaders
 {
     /// <summary>
-    /// Ejemplo EjemploShaderTgcMesh:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploShaderTgcMesh:
+    ///     Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
-    /// 
-    /// Muestra como utilizar shaders con un TgcMesh.
-    /// Carga un shader en formato .fx que posee varios Techniques.
-    /// El ejemplo permite elegir que Technique renderizar.
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Muestra como utilizar shaders con un TgcMesh.
+    ///     Carga un shader en formato .fx que posee varios Techniques.
+    ///     El ejemplo permite elegir que Technique renderizar.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploShaderTgcMesh: TgcExample
+    public class EjemploShaderTgcMesh : TgcExample
     {
-
-        TgcMesh mesh;
-        Random r;
-
+        private TgcMesh mesh;
+        private Random r;
 
         public override string getCategory()
         {
@@ -46,23 +37,25 @@ namespace Examples.Shaders
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Crear loader
-            TgcSceneLoader loader = new TgcSceneLoader();
+            var loader = new TgcSceneLoader();
 
             //Cargar mesh
-            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\GruaExcavadora\\GruaExcavadora-TgcScene.xml");
+            var scene =
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
+                                         "MeshCreator\\Meshes\\Vehiculos\\GruaExcavadora\\GruaExcavadora-TgcScene.xml");
             mesh = scene.Meshes[0];
 
             //Cargar Shader personalizado
             mesh.Effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\Ejemplo1.fx");
 
-
             //Modifier para Technique de shader
-            GuiController.Instance.Modifiers.addInterval("Technique", new string[] { 
-                "OnlyTexture", 
-                "OnlyColor", 
+            GuiController.Instance.Modifiers.addInterval("Technique", new[]
+            {
+                "OnlyTexture",
+                "OnlyColor",
                 "Darkening",
                 "Complementing",
                 "MaskRedOut",
@@ -81,19 +74,17 @@ namespace Examples.Shaders
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
-
+            var device = GuiController.Instance.D3dDevice;
 
             //Actualizar Technique
-            mesh.Technique = (string)GuiController.Instance.Modifiers["Technique"];
+            mesh.Technique = (string) GuiController.Instance.Modifiers["Technique"];
 
             //Cargar variables de shader
-            mesh.Effect.SetValue("darkFactor", (float)GuiController.Instance.Modifiers["darkFactor"]);
-            mesh.Effect.SetValue("random", (float)r.NextDouble());
-            mesh.Effect.SetValue("textureOffset", (float)GuiController.Instance.Modifiers["textureOffset"]);
+            mesh.Effect.SetValue("darkFactor", (float) GuiController.Instance.Modifiers["darkFactor"]);
+            mesh.Effect.SetValue("random", (float) r.NextDouble());
+            mesh.Effect.SetValue("textureOffset", (float) GuiController.Instance.Modifiers["textureOffset"]);
 
             mesh.render();
         }
@@ -103,9 +94,5 @@ namespace Examples.Shaders
             mesh.dispose();
             mesh.Effect.Dispose();
         }
-
     }
-
-    
-
 }

@@ -1,85 +1,56 @@
+using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using TGC.Core.Scene;
-using TGC.Core.Utils;
 using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.SceneLoader;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcGeometry
 {
     /// <summary>
-    /// Herramienta para dibujar una línea 3D con color y grosor específico.
+    ///     Herramienta para dibujar una línea 3D con color y grosor específico.
     /// </summary>
     public class TgcBoxLine : IRenderObject
     {
+        private readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
 
-        #region Creacion
+        private Color color;
 
-        /// <summary>
-        /// Crea una línea en base a sus puntos extremos
-        /// </summary>
-        /// <param name="start">Punto de inicio</param>
-        /// <param name="end">Punto de fin</param>
-        /// <returns>Línea creada</returns>
-        public static TgcBoxLine fromExtremes(Vector3 start, Vector3 end)
+        protected Effect effect;
+
+        protected string technique;
+
+        private readonly VertexBuffer vertexBuffer;
+
+        public TgcBoxLine()
         {
-            TgcBoxLine line = new TgcBoxLine();
-            line.pStart = start;
-            line.pEnd = end;
-            line.updateValues();
-            return line;
+            var d3dDevice = GuiController.Instance.D3dDevice;
+
+            vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), 36, d3dDevice,
+                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+
+            Thickness = 0.06f;
+            Enabled = true;
+            color = Color.White;
+            AlphaBlendEnable = false;
+
+            //shader
+            effect = GuiController.Instance.Shaders.VariosShader;
+            technique = TgcShaders.T_POSITION_COLORED;
         }
 
         /// <summary>
-        /// Crea una línea en base a sus puntos extremos, con el color y el grosor especificado
+        ///     Punto de inicio de la linea
         /// </summary>
-        /// <param name="start">Punto de inicio</param>
-        /// <param name="end">Punto de fin</param>
-        /// <param name="color">Color de la línea</param>
-        /// <param name="thickness">Grosor de la línea</param>
-        /// <returns>Línea creada</returns>
-        public static TgcBoxLine fromExtremes(Vector3 start, Vector3 end, Color color, float thickness)
-        {
-            TgcBoxLine line = new TgcBoxLine();
-            line.pStart = start;
-            line.pEnd = end;
-            line.color = color;
-            line.thickness = thickness;
-            line.updateValues();
-            return line;
-        }
+        public Vector3 PStart { get; set; }
 
-        #endregion
-
-
-        readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
-
-        VertexBuffer vertexBuffer;
-
-        Vector3 pStart;
         /// <summary>
-        /// Punto de inicio de la linea
+        ///     Punto final de la linea
         /// </summary>
-        public Vector3 PStart
-        {
-            get { return pStart; }
-            set { pStart = value; }
-        }
+        public Vector3 PEnd { get; set; }
 
-        Vector3 pEnd;
         /// <summary>
-        /// Punto final de la linea
-        /// </summary>
-        public Vector3 PEnd
-        {
-            get { return pEnd; }
-            set { pEnd = value; }
-        }
-
-        Color color;
-        /// <summary>
-        /// Color de la linea
+        ///     Color de la linea
         /// </summary>
         public Color Color
         {
@@ -87,47 +58,24 @@ namespace TgcViewer.Utils.TgcGeometry
             set { color = value; }
         }
 
-        private bool enabled;
         /// <summary>
-        /// Indica si la linea esta habilitada para ser renderizada
+        ///     Indica si la linea esta habilitada para ser renderizada
         /// </summary>
-        public bool Enabled
-        {
-            get { return enabled; }
-            set { enabled = value; }
-        }
+        public bool Enabled { get; set; }
 
-        private float thickness;
         /// <summary>
-        /// Grosor de la línea. Debe ser mayor a cero.
+        ///     Grosor de la línea. Debe ser mayor a cero.
         /// </summary>
-        public float Thickness
-        {
-            get { return thickness; }
-            set { thickness = value; }
-        }
+        public float Thickness { get; set; }
 
         public Vector3 Position
         {
             //Lo correcto sería calcular el centro, pero con un extremo es suficiente.
-            get { return pStart; }
+            get { return PStart; }
         }
 
-        private bool alphaBlendEnable;
         /// <summary>
-        /// Habilita el renderizado con AlphaBlending para los modelos
-        /// con textura o colores por vértice de canal Alpha.
-        /// Por default está deshabilitado.
-        /// </summary>
-        public bool AlphaBlendEnable
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
-
-        protected Effect effect;
-        /// <summary>
-        /// Shader del mesh
+        ///     Shader del mesh
         /// </summary>
         public Effect Effect
         {
@@ -135,10 +83,9 @@ namespace TgcViewer.Utils.TgcGeometry
             set { effect = value; }
         }
 
-        protected string technique;
         /// <summary>
-        /// Technique que se va a utilizar en el effect.
-        /// Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        ///     Technique que se va a utilizar en el effect.
+        ///     Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
         public string Technique
         {
@@ -146,38 +93,64 @@ namespace TgcViewer.Utils.TgcGeometry
             set { technique = value; }
         }
 
+        /// <summary>
+        ///     Habilita el renderizado con AlphaBlending para los modelos
+        ///     con textura o colores por vértice de canal Alpha.
+        ///     Por default está deshabilitado.
+        /// </summary>
+        public bool AlphaBlendEnable { get; set; }
 
-
-        public TgcBoxLine()
+        /// <summary>
+        ///     Renderizar la línea
+        /// </summary>
+        public void render()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            if (!Enabled)
+                return;
 
-            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 36, d3dDevice,
-                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+            var d3dDevice = GuiController.Instance.D3dDevice;
+            var texturesManager = GuiController.Instance.TexturesManager;
 
-            this.thickness = 0.06f;
-            this.enabled = true;
-            this.color = Color.White;
-            this.alphaBlendEnable = false;
+            texturesManager.clear(0);
+            texturesManager.clear(1);
 
-            //shader
-            this.effect = GuiController.Instance.Shaders.VariosShader;
-            this.technique = TgcShaders.T_POSITION_COLORED;
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
+            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            effect.Technique = technique;
+            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+
+            //Render con shader
+            effect.Begin(0);
+            effect.BeginPass(0);
+            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
+            effect.EndPass();
+            effect.End();
         }
 
         /// <summary>
-        /// Actualizar parámetros de la línea en base a los valores configurados
+        ///     Liberar recursos de la línea
+        /// </summary>
+        public void dispose()
+        {
+            if (vertexBuffer != null && !vertexBuffer.Disposed)
+            {
+                vertexBuffer.Dispose();
+            }
+        }
+
+        /// <summary>
+        ///     Actualizar parámetros de la línea en base a los valores configurados
         /// </summary>
         public void updateValues()
         {
-            int c = color.ToArgb();
-            CustomVertex.PositionColored[] vertices = new CustomVertex.PositionColored[36];
+            var c = color.ToArgb();
+            var vertices = new CustomVertex.PositionColored[36];
 
             //Crear caja en vertical en Y con longitud igual al módulo de la recta.
-            Vector3 lineVec = Vector3.Subtract(pEnd, pStart);
-            float lineLength = lineVec.Length();
-            Vector3 min = new Vector3(-thickness, 0, -thickness);
-            Vector3 max = new Vector3(thickness, lineLength, thickness);
+            var lineVec = Vector3.Subtract(PEnd, PStart);
+            var lineLength = lineVec.Length();
+            var min = new Vector3(-Thickness, 0, -Thickness);
+            var max = new Vector3(Thickness, lineLength, Thickness);
 
             //Vértices de la caja con forma de linea
             // Front face
@@ -228,63 +201,59 @@ namespace TgcViewer.Utils.TgcGeometry
             vertices[34] = new CustomVertex.PositionColored(max.X, max.Y, max.Z, c);
             vertices[35] = new CustomVertex.PositionColored(max.X, min.Y, min.Z, c);
 
-
             //Obtener matriz de rotacion respecto del vector de la linea
             lineVec.Normalize();
-            float angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, lineVec));
-            Vector3 axisRotation = Vector3.Cross(ORIGINAL_DIR, lineVec);
+            var angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, lineVec));
+            var axisRotation = Vector3.Cross(ORIGINAL_DIR, lineVec);
             axisRotation.Normalize();
-            Matrix t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(pStart);
+            var t = Matrix.RotationAxis(axisRotation, angle)*Matrix.Translation(PStart);
 
             //Transformar todos los puntos
-            for (int i = 0; i < vertices.Length; i++)
-			{
+            for (var i = 0; i < vertices.Length; i++)
+            {
                 vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, t);
-			}
+            }
 
             //Cargar vertexBuffer
             vertexBuffer.SetData(vertices, 0, LockFlags.None);
         }
 
+        #region Creacion
 
         /// <summary>
-        /// Renderizar la línea
+        ///     Crea una línea en base a sus puntos extremos
         /// </summary>
-        public void render()
+        /// <param name="start">Punto de inicio</param>
+        /// <param name="end">Punto de fin</param>
+        /// <returns>Línea creada</returns>
+        public static TgcBoxLine fromExtremes(Vector3 start, Vector3 end)
         {
-            if (!enabled)
-                return;
-
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
-
-            texturesManager.clear(0);
-            texturesManager.clear(1);
-
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
-            effect.Technique = this.technique;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
-
-            //Render con shader
-            effect.Begin(0);
-            effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
-            effect.EndPass();
-            effect.End();
+            var line = new TgcBoxLine();
+            line.PStart = start;
+            line.PEnd = end;
+            line.updateValues();
+            return line;
         }
 
         /// <summary>
-        /// Liberar recursos de la línea
+        ///     Crea una línea en base a sus puntos extremos, con el color y el grosor especificado
         /// </summary>
-        public void dispose()
+        /// <param name="start">Punto de inicio</param>
+        /// <param name="end">Punto de fin</param>
+        /// <param name="color">Color de la línea</param>
+        /// <param name="thickness">Grosor de la línea</param>
+        /// <returns>Línea creada</returns>
+        public static TgcBoxLine fromExtremes(Vector3 start, Vector3 end, Color color, float thickness)
         {
-            if (vertexBuffer != null && !vertexBuffer.Disposed)
-            {
-                vertexBuffer.Dispose();
-            }
+            var line = new TgcBoxLine();
+            line.PStart = start;
+            line.PEnd = end;
+            line.color = color;
+            line.Thickness = thickness;
+            line.updateValues();
+            return line;
         }
 
-
+        #endregion Creacion
     }
 }

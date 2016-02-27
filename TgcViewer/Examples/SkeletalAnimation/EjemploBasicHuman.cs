@@ -1,45 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.TgcSkeletalAnimation;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
 using System.IO;
+using TGC.Core.Example;
+using TgcViewer;
+using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSkeletalAnimation;
 
 namespace Examples.SkeletalAnimation
 {
     /// <summary>
-    /// Ejemplo BasicHuman:
-    /// Unidades Involucradas:
+    ///     Ejemplo BasicHuman:
+    ///     Unidades Involucradas:
     ///     # Unidad 5 - Animación - Skeletal Animation
-    /// 
-    /// Utiliza el esqueleto genérico BasicHuman provisto por la cátedra para
-    /// animar varios modelos distintos mediante animación esquelética.
-    /// El esqueleto posee una lista de animaciones default que pueden ser reutilizadas
-    /// para varios modelos distintos que se hayan acoplado a estos huesos.
-    /// 
-    /// 
-    /// Autor: Leandro Barbagallo, Matías Leone
-    /// 
+    ///     Utiliza el esqueleto genérico BasicHuman provisto por la cátedra para
+    ///     animar varios modelos distintos mediante animación esquelética.
+    ///     El esqueleto posee una lista de animaciones default que pueden ser reutilizadas
+    ///     para varios modelos distintos que se hayan acoplado a estos huesos.
+    ///     Autor: Leandro Barbagallo, Matías Leone
     /// </summary>
     public class BasicHuman : TgcExample
     {
-
-        string selectedMesh;
-        string selectedAnim;
-        TgcSkeletalMesh mesh;
-        Color currentColor;
-        TgcSkeletalBoneAttach attachment;
-        bool showAttachment;
-        string mediaPath;
-        string[] animationsPath;
-
+        private string[] animationsPath;
+        private TgcSkeletalBoneAttach attachment;
+        private Color currentColor;
+        private string mediaPath;
+        private TgcSkeletalMesh mesh;
+        private string selectedAnim;
+        private string selectedMesh;
+        private bool showAttachment;
 
         public override string getCategory()
         {
@@ -53,34 +41,35 @@ namespace Examples.SkeletalAnimation
 
         public override string getDescription()
         {
-            return "Utiliza el esqueleto genérico BasicHuman provisto por la cátedra para animar varios modelos distintos mediante animación esquelética";
+            return
+                "Utiliza el esqueleto genérico BasicHuman provisto por la cátedra para animar varios modelos distintos mediante animación esquelética";
         }
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Path para carpeta de texturas de la malla
             mediaPath = GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\";
 
             //Cargar dinamicamente todos los Mesh animados que haya en el directorio
-            DirectoryInfo dir = new DirectoryInfo(mediaPath);
-            FileInfo[] meshFiles = dir.GetFiles("*-TgcSkeletalMesh.xml", SearchOption.TopDirectoryOnly);
-            string[] meshList = new string[meshFiles.Length];
-            for (int i = 0; i < meshFiles.Length; i++)
+            var dir = new DirectoryInfo(mediaPath);
+            var meshFiles = dir.GetFiles("*-TgcSkeletalMesh.xml", SearchOption.TopDirectoryOnly);
+            var meshList = new string[meshFiles.Length];
+            for (var i = 0; i < meshFiles.Length; i++)
             {
-                string name = meshFiles[i].Name.Replace("-TgcSkeletalMesh.xml", "");
+                var name = meshFiles[i].Name.Replace("-TgcSkeletalMesh.xml", "");
                 meshList[i] = name;
             }
 
             //Cargar dinamicamente todas las animaciones que haya en el directorio "Animations"
-            DirectoryInfo dirAnim = new DirectoryInfo(mediaPath + "Animations\\");
-            FileInfo[] animFiles = dirAnim.GetFiles("*-TgcSkeletalAnim.xml", SearchOption.TopDirectoryOnly);
-            string[] animationList = new string[animFiles.Length];
+            var dirAnim = new DirectoryInfo(mediaPath + "Animations\\");
+            var animFiles = dirAnim.GetFiles("*-TgcSkeletalAnim.xml", SearchOption.TopDirectoryOnly);
+            var animationList = new string[animFiles.Length];
             animationsPath = new string[animFiles.Length];
-            for (int i = 0; i < animFiles.Length; i++)
+            for (var i = 0; i < animFiles.Length; i++)
             {
-                string name = animFiles[i].Name.Replace("-TgcSkeletalAnim.xml", "");
+                var name = animFiles[i].Name.Replace("-TgcSkeletalAnim.xml", "");
                 animationList[i] = name;
                 animationsPath[i] = animFiles[i].FullName;
             }
@@ -89,7 +78,6 @@ namespace Examples.SkeletalAnimation
             selectedAnim = animationList[0];
             changeMesh(meshList[0]);
 
-
             //Modifier para elegir modelo
             GuiController.Instance.Modifiers.addInterval("mesh", meshList, 0);
 
@@ -97,11 +85,11 @@ namespace Examples.SkeletalAnimation
             GuiController.Instance.Modifiers.addInterval("animation", animationList, 0);
 
             //Modifier para especificar si la animación se anima con loop
-            bool animateWithLoop = true;
+            var animateWithLoop = true;
             GuiController.Instance.Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
 
             //Modifier para renderizar el esqueleto
-            bool renderSkeleton = false;
+            var renderSkeleton = false;
             GuiController.Instance.Modifiers.addBoolean("renderSkeleton", "Show skeleton:", renderSkeleton);
 
             //Modifier para FrameRate
@@ -117,11 +105,10 @@ namespace Examples.SkeletalAnimation
             //Modifier para habilitar attachment
             showAttachment = false;
             GuiController.Instance.Modifiers.addBoolean("Attachment", "Attachment:", showAttachment);
-
         }
 
         /// <summary>
-        /// Cargar una nueva malla
+        ///     Cargar una nueva malla
         /// </summary>
         private void changeMesh(string meshName)
         {
@@ -136,8 +123,9 @@ namespace Examples.SkeletalAnimation
                 selectedMesh = meshName;
 
                 //Cargar mesh y animaciones
-                TgcSkeletalLoader loader = new TgcSkeletalLoader();
-                mesh = loader.loadMeshAndAnimationsFromFile(mediaPath + selectedMesh + "-TgcSkeletalMesh.xml", mediaPath, animationsPath);
+                var loader = new TgcSkeletalLoader();
+                mesh = loader.loadMeshAndAnimationsFromFile(mediaPath + selectedMesh + "-TgcSkeletalMesh.xml", mediaPath,
+                    animationsPath);
 
                 //Crear esqueleto a modo Debug
                 mesh.buildSkletonMesh();
@@ -147,12 +135,11 @@ namespace Examples.SkeletalAnimation
 
                 //Crear caja como modelo de Attachment del hueos "Bip01 L Hand"
                 attachment = new TgcSkeletalBoneAttach();
-                TgcBox attachmentBox = TgcBox.fromSize(new Vector3(2, 40, 2), Color.Red);
+                var attachmentBox = TgcBox.fromSize(new Vector3(2, 40, 2), Color.Red);
                 attachment.Mesh = attachmentBox.toMesh("attachment");
                 attachment.Bone = mesh.getBoneByName("Bip01 L Hand");
                 attachment.Offset = Matrix.Translation(3, -15, 0);
                 attachment.updateValues();
-
 
                 //Configurar camara
                 GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
@@ -168,25 +155,23 @@ namespace Examples.SkeletalAnimation
             }
         }
 
-
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Ver si cambio la malla
-            string meshPath = (string)GuiController.Instance.Modifiers.getValue("mesh");
+            var meshPath = (string)GuiController.Instance.Modifiers.getValue("mesh");
             changeMesh(meshPath);
 
             //Ver si cambio la animacion
-            string anim = (string)GuiController.Instance.Modifiers.getValue("animation");
+            var anim = (string)GuiController.Instance.Modifiers.getValue("animation");
             changeAnimation(anim);
 
             //Ver si rendeizamos el esqueleto
-            bool renderSkeleton = (bool)GuiController.Instance.Modifiers.getValue("renderSkeleton");
+            var renderSkeleton = (bool)GuiController.Instance.Modifiers.getValue("renderSkeleton");
 
             //Ver si cambio el color
-            Color selectedColor = (Color)GuiController.Instance.Modifiers.getValue("Color");
+            var selectedColor = (Color)GuiController.Instance.Modifiers.getValue("Color");
             if (currentColor == null || currentColor != selectedColor)
             {
                 currentColor = selectedColor;
@@ -194,7 +179,7 @@ namespace Examples.SkeletalAnimation
             }
 
             //Agregar o quitar Attachment
-            bool showAttachmentFlag = (bool)GuiController.Instance.Modifiers["Attachment"];
+            var showAttachmentFlag = (bool)GuiController.Instance.Modifiers["Attachment"];
             if (showAttachment != showAttachmentFlag)
             {
                 showAttachment = showAttachmentFlag;
@@ -221,14 +206,12 @@ namespace Examples.SkeletalAnimation
             //Se puede renderizar todo mucho mas simple (sin esqueleto) de la siguiente forma:
             //mesh.animateAndRender();
 
-
             //BoundingBox
-            bool showBB = (bool)GuiController.Instance.Modifiers["BoundingBox"];
+            var showBB = (bool)GuiController.Instance.Modifiers["BoundingBox"];
             if (showBB)
             {
                 mesh.BoundingBox.render();
             }
-
         }
 
         public override void close()
@@ -238,6 +221,5 @@ namespace Examples.SkeletalAnimation
             mesh = null;
             selectedMesh = null;
         }
-
     }
 }

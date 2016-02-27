@@ -48,7 +48,7 @@
             this.splitContainerExamples = new System.Windows.Forms.SplitContainer();
             this.splitContainerDescripcionExample = new System.Windows.Forms.SplitContainer();
             this.groupBoxExamples = new System.Windows.Forms.GroupBox();
-            this.treeViewExamples = new System.Windows.Forms.TreeView();
+            this.TreeViewExamples = new System.Windows.Forms.TreeView();
             this.textBoxExampleDescription = new System.Windows.Forms.TextBox();
             this.splitContainerUserVars = new System.Windows.Forms.SplitContainer();
             this.panel3d = new System.Windows.Forms.Panel();
@@ -60,7 +60,7 @@
             this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ColumnValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxConsole = new System.Windows.Forms.GroupBox();
-            this.logConsole = new System.Windows.Forms.RichTextBox();
+            this.LogConsole = new System.Windows.Forms.RichTextBox();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.splitContainerConsole.Panel1.SuspendLayout();
@@ -275,7 +275,7 @@
             // groupBoxExamples
             // 
             this.groupBoxExamples.BackColor = System.Drawing.SystemColors.Control;
-            this.groupBoxExamples.Controls.Add(this.treeViewExamples);
+            this.groupBoxExamples.Controls.Add(this.TreeViewExamples);
             this.groupBoxExamples.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxExamples.Location = new System.Drawing.Point(0, 0);
             this.groupBoxExamples.Name = "groupBoxExamples";
@@ -286,13 +286,13 @@
             // 
             // treeViewExamples
             // 
-            this.treeViewExamples.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeViewExamples.Location = new System.Drawing.Point(3, 16);
-            this.treeViewExamples.Name = "treeViewExamples";
-            this.treeViewExamples.Size = new System.Drawing.Size(107, 274);
-            this.treeViewExamples.TabIndex = 4;
-            this.treeViewExamples.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewExamples_MouseDoubleClick);
-            this.treeViewExamples.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewExamples_AfterSelect);
+            this.TreeViewExamples.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TreeViewExamples.Location = new System.Drawing.Point(3, 16);
+            this.TreeViewExamples.Name = "TreeViewExamples";
+            this.TreeViewExamples.Size = new System.Drawing.Size(107, 274);
+            this.TreeViewExamples.TabIndex = 4;
+            this.TreeViewExamples.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewExamples_MouseDoubleClick);
+            this.TreeViewExamples.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewExamples_AfterSelect);
             // 
             // textBoxExampleDescription
             // 
@@ -426,7 +426,7 @@
             // 
             // groupBoxConsole
             // 
-            this.groupBoxConsole.Controls.Add(this.logConsole);
+            this.groupBoxConsole.Controls.Add(this.LogConsole);
             this.groupBoxConsole.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxConsole.Location = new System.Drawing.Point(0, 0);
             this.groupBoxConsole.Name = "groupBoxConsole";
@@ -437,12 +437,12 @@
             // 
             // logConsole
             // 
-            this.logConsole.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logConsole.Location = new System.Drawing.Point(3, 16);
-            this.logConsole.Name = "logConsole";
-            this.logConsole.Size = new System.Drawing.Size(775, 70);
-            this.logConsole.TabIndex = 0;
-            this.logConsole.Text = "";
+            this.LogConsole.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LogConsole.Location = new System.Drawing.Point(3, 16);
+            this.LogConsole.Name = "LogConsole";
+            this.LogConsole.Size = new System.Drawing.Size(775, 70);
+            this.LogConsole.TabIndex = 0;
+            this.LogConsole.Text = "";
             // 
             // MainForm
             // 
@@ -510,7 +510,6 @@
         private System.Windows.Forms.ToolStripMenuItem verToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wireframeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem camaraPrimeraPersonaToolStripMenuItem;
-        private System.Windows.Forms.RichTextBox logConsole;
         private System.Windows.Forms.ToolStripMenuItem contadorFPSToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusCurrentExample;
         private System.Windows.Forms.DataGridView dataGridUserVars;
@@ -520,7 +519,6 @@
         private System.Windows.Forms.GroupBox groupBoxModifiers;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelModifiers;
         private System.Windows.Forms.ToolStripMenuItem ejesCartesianosToolStripMenuItem;
-        private System.Windows.Forms.TreeView treeViewExamples;
         private System.Windows.Forms.ToolStripMenuItem ejecutarEnFullScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem acercaDeTgcViewerToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;

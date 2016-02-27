@@ -1,33 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
-using System.Data;
-using System.Text;
+using System.IO;
 using System.Windows.Forms;
-using TgcViewer.Utils.TgcGeometry;
+using Examples.MeshCreator.EditablePolyTools;
+using Examples.MeshCreator.Gizmos;
+using Examples.MeshCreator.Primitives;
 using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 using TgcViewer;
 using TgcViewer.Utils.Input;
-using Examples.MeshCreator.Primitives;
-using Examples.MeshCreator.Gizmos;
-using Microsoft.DirectX.DirectInput;
 using TgcViewer.Utils.Modifiers;
+using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
-using System.IO;
 using TgcViewer.Utils._2D;
-using Examples.MeshCreator.EditablePolyTools;
 using TGC.Core.Utils;
 
 namespace Examples.MeshCreator
 {
     /// <summary>
-    /// Control grafico de MeshCreator
+    ///     Control grafico de MeshCreator
     /// </summary>
     public partial class MeshCreatorControl : UserControl
     {
         /// <summary>
-        /// Estado general del editor
+        ///     Estado general del editor
         /// </summary>
         public enum State
         {
@@ -36,207 +34,54 @@ namespace Examples.MeshCreator
             CreatePrimitiveSelected,
             CreatingPrimitve,
             GizmoActivated,
-            EditablePoly,
+            EditablePoly
         }
 
-        
-        TgcMeshCreator creator;
-        int primitiveNameCounter;
-        TranslateGizmo translateGizmo;
-        ScaleGizmo scaleGizmo;
-        TgcTextureBrowser textureBrowser;
-        TgcTextureBrowser textureBrowserEPoly;
-        string defaultTexturePath;
-        string defaultMeshPath;
-        TgcMeshBrowser meshBrowser;
-        SaveFileDialog exportSceneSaveDialog;
-        TgcText2d objectPositionText;
-        ObjectBrowser objectBrowser;
-        bool fpsCameraEnabled;
-        Vector3 rotationPivot;
-        string lastSavePath;
+        private TgcMeshCreator creator;
 
+        private readonly string defaultMeshPath;
+        private readonly string defaultTexturePath;
+        private readonly SaveFileDialog exportSceneSaveDialog;
+        private bool fpsCameraEnabled;
 
+        private string lastSavePath;
 
-        List<EditorPrimitive> meshes;
-        /// <summary>
-        /// Objetos del escenario
-        /// </summary>
-        public List<EditorPrimitive> Meshes
-        {
-            get { return meshes; }
-        }
+        private readonly TgcMeshBrowser meshBrowser;
 
-        List<EditorPrimitive> selectionList;
-        /// <summary>
-        /// Objetos seleccionados
-        /// </summary>
-        public List<EditorPrimitive> SelectionList
-        {
-            get { return selectionList; }
-        }
+        private readonly ObjectBrowser objectBrowser;
+        private readonly TgcText2d objectPositionText;
 
-        Grid grid;
-        /// <summary>
-        /// Grid
-        /// </summary>
-        public Grid Grid
-        {
-            get { return grid; }
-        }
+        private int primitiveNameCounter;
+        private Vector3 rotationPivot;
+        private readonly ScaleGizmo scaleGizmo;
 
-        MeshCreatorCamera camera;
-        /// <summary>
-        /// Camara
-        /// </summary>
-        public MeshCreatorCamera Camera
-        {
-            get { return camera; }
-        }
-
-        TgcPickingRay pickingRay;
-        /// <summary>
-        /// PickingRay
-        /// </summary>
-        public TgcPickingRay PickingRay
-        {
-            get { return pickingRay; }
-        }
-
-        State currentState;
-        /// <summary>
-        /// Estado actual
-        /// </summary>
-        public State CurrentState
-        {
-            get { return currentState; }
-            set { currentState = value; }
-        }
-
-        EditorPrimitive creatingPrimitive;
-        /// <summary>
-        /// Primitiva actual seleccionada para crear
-        /// </summary>
-        public EditorPrimitive CreatingPrimitive
-        {
-            get { return creatingPrimitive; }
-            set { creatingPrimitive = value; }
-        }
-
-        EditorGizmo currentGizmo;
-        /// <summary>
-        /// Gizmo seleccionado actualmente
-        /// </summary>
-        public EditorGizmo CurrentGizmo
-        {
-            get { return currentGizmo; }
-            set { currentGizmo = value; }
-        }
-
-        SelectionRectangle selectionRectangle;
-        /// <summary>
-        /// Rectangulo de seleccion
-        /// </summary>
-        public SelectionRectangle SelectionRectangle
-        {
-            get { return selectionRectangle; }
-        }
-
-        string mediaPath;
-        /// <summary>
-        /// Archivos de Media propios del editor
-        /// </summary>
-        public string MediaPath
-        {
-            get { return mediaPath; }
-        }
-
-        /// <summary>
-        /// Mostrar AABB de los objetos no seleccionados
-        /// </summary>
-        public bool ShowObjectsAABB
-        {
-            get { return checkBoxShowObjectsBoundingBox.Checked; }
-        }
-
-        /// <summary>
-        /// Hacer Snap to Grid
-        /// </summary>
-        public bool SnapToGridEnabled
-        {
-            get { return checkBoxSnapToGrid.Checked; }
-        }
-
-        float snapToGridCellSize;
-        /// <summary>
-        /// Tamaño de celda de Snap to grid
-        /// </summary>
-        public float SnapToGridCellSize
-        {
-            get { return snapToGridCellSize; }
-        }
-
-        bool popupOpened;
-        /// <summary>
-        /// True si hay un popup abierto y hay que evitar eventos
-        /// </summary>
-        public bool PopupOpened
-        {
-            get { return popupOpened; }
-            set { popupOpened = value; }
-        }
-
-        /// <summary>
-        /// Layer default actual para crear nuevos objetos
-        /// </summary>
-        public string CurrentLayer
-        {
-            get { return textBoxCreateCurrentLayer.Text; }
-        }
-
-        /// <summary>
-        /// Indica si hay que escalar para ambas direcciones o solo una
-        /// </summary>
-        public bool ScaleBothDirections
-        {
-            get { return checkBoxModifyBothDir.Checked; }
-        }
-
-        bool ignoreChangeEvents;
-        /// <summary>
-        /// Flag para ignorar eventos de UI
-        /// </summary>
-        public bool IgnoreChangeEvents
-        {
-            get { return ignoreChangeEvents; }
-            set { ignoreChangeEvents = value; }
-        }
-
-
+        private readonly TgcTextureBrowser textureBrowser;
+        private readonly TgcTextureBrowser textureBrowserEPoly;
+        private readonly TranslateGizmo translateGizmo;
 
         public MeshCreatorControl(TgcMeshCreator creator)
         {
             InitializeComponent();
 
             this.creator = creator;
-            this.meshes = new List<EditorPrimitive>();
-            this.selectionList = new List<EditorPrimitive>();
-            this.pickingRay = new TgcPickingRay();
-            this.grid = new Grid(this);
-            this.selectionRectangle = new SelectionRectangle(this);
-            creatingPrimitive = null;
+            Meshes = new List<EditorPrimitive>();
+            SelectionList = new List<EditorPrimitive>();
+            PickingRay = new TgcPickingRay();
+            Grid = new Grid(this);
+            SelectionRectangle = new SelectionRectangle(this);
+            CreatingPrimitive = null;
             primitiveNameCounter = 0;
-            currentGizmo = null;
-            mediaPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\";
-            defaultTexturePath = mediaPath + "Textures\\Madera\\cajaMadera1.jpg";
+            CurrentGizmo = null;
+            MediaPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\";
+            defaultTexturePath = MediaPath + "Textures\\Madera\\cajaMadera1.jpg";
             checkBoxShowObjectsBoundingBox.Checked = true;
-            popupOpened = false;
+            PopupOpened = false;
             fpsCameraEnabled = false;
             lastSavePath = null;
 
             //meshBrowser
             //defaultMeshPath = mediaPath + "Meshes\\Vegetacion\\Arbusto\\Arbusto-TgcScene.xml";
-            defaultMeshPath = mediaPath + "\\Meshes\\Vegetacion";
+            defaultMeshPath = MediaPath + "\\Meshes\\Vegetacion";
             meshBrowser = new TgcMeshBrowser();
             meshBrowser.setSelectedMesh(defaultMeshPath);
 
@@ -248,10 +93,10 @@ namespace Examples.MeshCreator
             exportSceneSaveDialog.Title = "Export scene to a -TgcScene.xml file";
 
             //Camara
-            camera = new MeshCreatorCamera();
-            camera.Enable = true;
-            camera.setCamera(new Vector3(0, 0, 0), 500);
-            camera.BaseRotX = -FastMath.PI / 4f;
+            Camera = new MeshCreatorCamera();
+            Camera.Enable = true;
+            Camera.setCamera(new Vector3(0, 0, 0), 500);
+            Camera.BaseRotX = -FastMath.PI/4f;
             GuiController.Instance.CurrentCamera.Enable = false;
 
             //Gizmos
@@ -260,7 +105,7 @@ namespace Examples.MeshCreator
 
             //Tab inicial
             tabControl.SelectedTab = tabControl.TabPages["tabPageCreate"];
-            currentState = State.SelectObject;
+            CurrentState = State.SelectObject;
             radioButtonSelectObject.Checked = true;
 
             //Tab Create
@@ -271,8 +116,8 @@ namespace Examples.MeshCreator
             textureBrowser.ShowFolders = true;
             textureBrowser.setSelectedImage(defaultTexturePath);
             textureBrowser.AsyncModeEnable = true;
-            textureBrowser.OnSelectImage += new TgcTextureBrowser.SelectImageHandler(textureBrowser_OnSelectImage);
-            textureBrowser.OnClose += new TgcTextureBrowser.CloseHandler(textureBrowser_OnClose);
+            textureBrowser.OnSelectImage += textureBrowser_OnSelectImage;
+            textureBrowser.OnClose += textureBrowser_OnClose;
             pictureBoxModifyTexture.ImageLocation = defaultTexturePath;
             pictureBoxModifyTexture.Image = MeshCreatorUtils.getImage(defaultTexturePath);
             updateModifyPanel();
@@ -282,10 +127,12 @@ namespace Examples.MeshCreator
             objectPositionText.Align = TgcText2d.TextAlign.LEFT;
             objectPositionText.Color = Color.Yellow;
             objectPositionText.Size = new Size(500, 12);
-            objectPositionText.Position = new Point(GuiController.Instance.Panel3d.Width - objectPositionText.Size.Width, GuiController.Instance.Panel3d.Height - 20);
+            objectPositionText.Position = new Point(
+                GuiController.Instance.Panel3d.Width - objectPositionText.Size.Width,
+                GuiController.Instance.Panel3d.Height - 20);
 
             //Snap to grid
-            snapToGridCellSize = (float)numericUpDownCellSize.Value;
+            SnapToGridCellSize = (float) numericUpDownCellSize.Value;
 
             //ObjectBrowser
             objectBrowser = new ObjectBrowser(this);
@@ -295,15 +142,15 @@ namespace Examples.MeshCreator
             textureBrowserEPoly.ShowFolders = true;
             textureBrowserEPoly.setSelectedImage(defaultTexturePath);
             textureBrowserEPoly.AsyncModeEnable = true;
-            textureBrowserEPoly.OnSelectImage += new TgcTextureBrowser.SelectImageHandler(textureBrowserEPoly_OnSelectImage);
-            textureBrowserEPoly.OnClose += new TgcTextureBrowser.CloseHandler(textureBrowserEPoly_OnClose);
+            textureBrowserEPoly.OnSelectImage += textureBrowserEPoly_OnSelectImage;
+            textureBrowserEPoly.OnClose += textureBrowserEPoly_OnClose;
 
             //Tooltips
             toolTips.SetToolTip(radioButtonSelectObject, "Select object (Q)");
             toolTips.SetToolTip(buttonSelectAll, "Select all objects (CTRL + E)");
             toolTips.SetToolTip(checkBoxShowObjectsBoundingBox, "Show objects BoundingBox");
             toolTips.SetToolTip(checkBoxSnapToGrid, "Toogle snap to grid");
-            toolTips.SetToolTip(numericUpDownCellSize, "Snap to grid cell size");    
+            toolTips.SetToolTip(numericUpDownCellSize, "Snap to grid cell size");
             toolTips.SetToolTip(buttonZoomObject, "Zoom selected object (Z)");
             toolTips.SetToolTip(buttonHideSelected, "Hide selected objects (H)");
             toolTips.SetToolTip(buttonUnhideAll, "Unhide all hidden objects");
@@ -334,7 +181,7 @@ namespace Examples.MeshCreator
             toolTips.SetToolTip(radioButtonModifySelectAndScale, "Scale selected objects (R)");
             toolTips.SetToolTip(pictureBoxModifyTexture, "Change primitive texture");
             toolTips.SetToolTip(buttonModifyRecomputeAABB, "Compute a new BoundingBox for the primitive");
-            
+
             toolTips.SetToolTip(radioButtonEPolyPrimitiveVertex, "Vertex primitve");
             toolTips.SetToolTip(radioButtonEPolyPrimitiveEdge, "Edge primitve");
             toolTips.SetToolTip(radioButtonEPolyPrimitivePolygon, "Polygon primitve");
@@ -345,20 +192,112 @@ namespace Examples.MeshCreator
             toolTips.SetToolTip(buttonEPolyAddTexture, "Add new texture to mesh");
             toolTips.SetToolTip(buttonEPolyDeleteTexture, "Remove current texture");
             toolTips.SetToolTip(pictureBoxEPolyTexture, "Change current texture");
-            
         }
 
-        
-
-        
+        /// <summary>
+        ///     Objetos del escenario
+        /// </summary>
+        public List<EditorPrimitive> Meshes { get; }
 
         /// <summary>
-        /// Ciclo loop del editor
+        ///     Objetos seleccionados
+        /// </summary>
+        public List<EditorPrimitive> SelectionList { get; }
+
+        /// <summary>
+        ///     Grid
+        /// </summary>
+        public Grid Grid { get; }
+
+        /// <summary>
+        ///     Camara
+        /// </summary>
+        public MeshCreatorCamera Camera { get; }
+
+        /// <summary>
+        ///     PickingRay
+        /// </summary>
+        public TgcPickingRay PickingRay { get; }
+
+        /// <summary>
+        ///     Estado actual
+        /// </summary>
+        public State CurrentState { get; set; }
+
+        /// <summary>
+        ///     Primitiva actual seleccionada para crear
+        /// </summary>
+        public EditorPrimitive CreatingPrimitive { get; set; }
+
+        /// <summary>
+        ///     Gizmo seleccionado actualmente
+        /// </summary>
+        public EditorGizmo CurrentGizmo { get; set; }
+
+        /// <summary>
+        ///     Rectangulo de seleccion
+        /// </summary>
+        public SelectionRectangle SelectionRectangle { get; }
+
+        /// <summary>
+        ///     Archivos de Media propios del editor
+        /// </summary>
+        public string MediaPath { get; }
+
+        /// <summary>
+        ///     Mostrar AABB de los objetos no seleccionados
+        /// </summary>
+        public bool ShowObjectsAABB
+        {
+            get { return checkBoxShowObjectsBoundingBox.Checked; }
+        }
+
+        /// <summary>
+        ///     Hacer Snap to Grid
+        /// </summary>
+        public bool SnapToGridEnabled
+        {
+            get { return checkBoxSnapToGrid.Checked; }
+        }
+
+        /// <summary>
+        ///     Tamaño de celda de Snap to grid
+        /// </summary>
+        public float SnapToGridCellSize { get; private set; }
+
+        /// <summary>
+        ///     True si hay un popup abierto y hay que evitar eventos
+        /// </summary>
+        public bool PopupOpened { get; set; }
+
+        /// <summary>
+        ///     Layer default actual para crear nuevos objetos
+        /// </summary>
+        public string CurrentLayer
+        {
+            get { return textBoxCreateCurrentLayer.Text; }
+        }
+
+        /// <summary>
+        ///     Indica si hay que escalar para ambas direcciones o solo una
+        /// </summary>
+        public bool ScaleBothDirections
+        {
+            get { return checkBoxModifyBothDir.Checked; }
+        }
+
+        /// <summary>
+        ///     Flag para ignorar eventos de UI
+        /// </summary>
+        public bool IgnoreChangeEvents { get; set; }
+
+        /// <summary>
+        ///     Ciclo loop del editor
         /// </summary>
         public void render()
         {
             //Hacer update de estado salvo que haya un popup abierto
-            if (!popupOpened)
+            if (!PopupOpened)
             {
                 //Modo camara FPS
                 if (fpsCameraEnabled)
@@ -375,23 +314,28 @@ namespace Examples.MeshCreator
                     updateCamera();
 
                     //Maquina de estados
-                    switch (currentState)
+                    switch (CurrentState)
                     {
                         case State.SelectObject:
                             doSelectObject();
                             break;
+
                         case State.SelectingObject:
                             doSelectingObject();
                             break;
+
                         case State.CreatePrimitiveSelected:
                             doCreatePrimitiveSelected();
                             break;
+
                         case State.CreatingPrimitve:
                             doCreatingPrimitve();
                             break;
+
                         case State.GizmoActivated:
                             doGizmoActivated();
                             break;
+
                         case State.EditablePoly:
                             doEditablePoly();
                             break;
@@ -399,34 +343,29 @@ namespace Examples.MeshCreator
                 }
             }
 
-            
-
-
-
             //Dibujar objetos del escenario (siempre, aunque no haya foco)
             renderObjects();
-            
+
             //Dibujar gizmo (sin Z-Buffer, al final de tod)
-            if (currentGizmo != null && selectionList.Count > 0)
+            if (CurrentGizmo != null && SelectionList.Count > 0)
             {
-                currentGizmo.render();
+                CurrentGizmo.render();
             }
         }
 
-
         /// <summary>
-        /// Procesar shorcuts de teclado
+        ///     Procesar shorcuts de teclado
         /// </summary>
         private void processShortcuts()
         {
             //Solo en estados pasivos
-            if (currentState == State.SelectObject || currentState == State.CreatePrimitiveSelected 
-                || currentState == State.GizmoActivated || currentState == State.EditablePoly)
+            if (CurrentState == State.SelectObject || CurrentState == State.CreatePrimitiveSelected
+                || CurrentState == State.GizmoActivated || CurrentState == State.EditablePoly)
             {
-                TgcD3dInput input = GuiController.Instance.D3dInput;
+                var input = GuiController.Instance.D3dInput;
 
                 //Acciones que no se pueden hacer si estamos en modo EditablePoly
-                if (currentState != State.EditablePoly)
+                if (CurrentState != State.EditablePoly)
                 {
                     //Hide
                     if (input.keyPressed(Key.H))
@@ -522,7 +461,6 @@ namespace Examples.MeshCreator
                     }
                 }
 
-
                 //Save as
                 if (input.keyDown(Key.LeftControl) && input.keyDown(Key.LeftShift) && input.keyPressed(Key.S))
                 {
@@ -538,27 +476,23 @@ namespace Examples.MeshCreator
                 {
                     buttonHelp_Click(null, null);
                 }
-                
             }
         }
 
-        
-
-
         /// <summary>
-        /// Dibujar todos los objetos
+        ///     Dibujar todos los objetos
         /// </summary>
         private void renderObjects()
         {
             //Objetos opacos
-            foreach (EditorPrimitive mesh in meshes)
+            foreach (var mesh in Meshes)
             {
                 if (!mesh.AlphaBlendEnable)
                 {
                     if (mesh.Visible)
                     {
                         mesh.render();
-                        if ((ShowObjectsAABB || mesh.Selected) && !(currentState == State.EditablePoly))
+                        if ((ShowObjectsAABB || mesh.Selected) && !(CurrentState == State.EditablePoly))
                         {
                             mesh.BoundingBox.render();
                         }
@@ -567,22 +501,22 @@ namespace Examples.MeshCreator
             }
 
             //Grid
-            grid.render();
+            Grid.render();
 
             //Objeto que se esta construyendo actualmente
-            if (currentState == State.CreatingPrimitve)
+            if (CurrentState == State.CreatingPrimitve)
             {
-                creatingPrimitive.render();
+                CreatingPrimitive.render();
             }
 
             //Recuadro de seleccion
-            if (currentState == State.SelectingObject)
+            if (CurrentState == State.SelectingObject)
             {
-                selectionRectangle.render();
+                SelectionRectangle.render();
             }
 
             //Objetos transparentes
-            foreach (EditorPrimitive mesh in meshes)
+            foreach (var mesh in Meshes)
             {
                 if (mesh.AlphaBlendEnable)
                 {
@@ -598,46 +532,47 @@ namespace Examples.MeshCreator
             }
 
             //Object position Text
-            if (selectionList.Count > 0)
+            if (SelectionList.Count > 0)
             {
-                string text = selectionList.Count > 1 ? selectionList[0].Name + " + " + (selectionList.Count - 1) + " others" : selectionList[0].Name;
-                text += ", Pos: " + TgcParserUtils.printVector3(selectionList[0].Position);
+                var text = SelectionList.Count > 1
+                    ? SelectionList[0].Name + " + " + (SelectionList.Count - 1) + " others"
+                    : SelectionList[0].Name;
+                text += ", Pos: " + TgcParserUtils.printVector3(SelectionList[0].Position);
                 objectPositionText.Text = text;
                 objectPositionText.render();
             }
         }
 
         /// <summary>
-        /// Actualizar camara segun movimientos
+        ///     Actualizar camara segun movimientos
         /// </summary>
         private void updateCamera()
         {
             //Ajustar velocidad de zoom segun distancia a objeto
             Vector3 q;
-            if (selectionList.Count > 0)
+            if (SelectionList.Count > 0)
             {
-                q = selectionList[0].BoundingBox.PMin;
+                q = SelectionList[0].BoundingBox.PMin;
             }
             else
             {
                 q = Vector3.Empty;
             }
-            camera.ZoomFactor = MeshCreatorUtils.getMouseZoomSpeed(this.camera, q);
+            Camera.ZoomFactor = MeshCreatorUtils.getMouseZoomSpeed(Camera, q);
 
-            camera.updateCamera();
-            camera.updateViewMatrix(GuiController.Instance.D3dDevice);
+            Camera.updateCamera();
+            Camera.updateViewMatrix(GuiController.Instance.D3dDevice);
         }
 
-
         /// <summary>
-        /// Modo camara FPS
+        ///     Modo camara FPS
         /// </summary>
         private void doFpsCameraMode()
         {
             //No hay actualizar la camara FPS, la actualiza GuiController
 
             //Detectar si hay que salor de este modo
-            TgcD3dInput input = GuiController.Instance.D3dInput;
+            var input = GuiController.Instance.D3dInput;
             if (input.keyPressed(Key.F))
             {
                 radioButtonFPSCamera.Checked = false;
@@ -645,79 +580,78 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Estado: seleccionar objetos (estado default)
+        ///     Estado: seleccionar objetos (estado default)
         /// </summary>
         private void doSelectObject()
         {
-            selectionRectangle.doSelectObject();
+            SelectionRectangle.doSelectObject();
         }
 
         /// <summary>
-        /// Estado: Cuando se esta arrastrando el mouse para armar el cuadro de seleccion
+        ///     Estado: Cuando se esta arrastrando el mouse para armar el cuadro de seleccion
         /// </summary>
         private void doSelectingObject()
         {
-            selectionRectangle.render();
+            SelectionRectangle.render();
         }
 
         /// <summary>
-        /// Estado: cuando se hizo clic en algun boton de primitiva para crear
+        ///     Estado: cuando se hizo clic en algun boton de primitiva para crear
         /// </summary>
         private void doCreatePrimitiveSelected()
         {
-            TgcD3dInput input = GuiController.Instance.D3dInput;
+            var input = GuiController.Instance.D3dInput;
 
             //Quitar gizmo actual
-            currentGizmo = null;
+            CurrentGizmo = null;
 
             //Si hacen clic con el mouse, iniciar creacion de la primitiva
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                Vector3 gridPoint = grid.getPicking();
-                creatingPrimitive.initCreation(gridPoint);
-                currentState = State.CreatingPrimitve;
+                var gridPoint = Grid.getPicking();
+                CreatingPrimitive.initCreation(gridPoint);
+                CurrentState = State.CreatingPrimitve;
             }
         }
 
         /// <summary>
-        /// Estado: mientras se esta creando una primitiva
+        ///     Estado: mientras se esta creando una primitiva
         /// </summary>
         private void doCreatingPrimitve()
         {
-            creatingPrimitive.doCreation();
+            CreatingPrimitive.doCreation();
         }
 
         /// <summary>
-        /// Estado: se traslada, rota o escala un objeto
+        ///     Estado: se traslada, rota o escala un objeto
         /// </summary>
         private void doGizmoActivated()
         {
-            if (selectionList.Count > 0)
+            if (SelectionList.Count > 0)
             {
-                currentGizmo.update();
+                CurrentGizmo.update();
             }
         }
 
         /// <summary>
-        /// Estado: hay un objeto en modo editablePoly
+        ///     Estado: hay un objeto en modo editablePoly
         /// </summary>
         private void doEditablePoly()
         {
-            MeshPrimitive p = (MeshPrimitive)selectionList[0];
+            var p = (MeshPrimitive) SelectionList[0];
             p.doEditablePolyUpdate();
         }
 
         /// <summary>
-        /// Agregar mesh creado
+        ///     Agregar mesh creado
         /// </summary>
         public void addMesh(EditorPrimitive mesh)
         {
-            this.meshes.Add(mesh);
+            Meshes.Add(mesh);
         }
 
-
         /// <summary>
-        /// Textura para crear un nuevo objeto
+        ///     Textura para crear un nuevo objeto
         /// </summary>
         /// <returns></returns>
         public string getCreationTexturePath()
@@ -726,7 +660,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Nombre para crear una nueva primitiva
+        ///     Nombre para crear una nueva primitiva
         /// </summary>
         public string getNewPrimitiveName(string type)
         {
@@ -734,17 +668,17 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Eliminar los objetos especificados
+        ///     Eliminar los objetos especificados
         /// </summary>
         public void deleteObjects(List<EditorPrimitive> objectsToDelete)
         {
-            foreach (EditorPrimitive p in objectsToDelete)
+            foreach (var p in objectsToDelete)
             {
                 if (p.Selected)
                 {
-                    selectionList.Remove(p);
+                    SelectionList.Remove(p);
                 }
-                meshes.Remove(p);
+                Meshes.Remove(p);
                 p.dispose();
             }
 
@@ -752,43 +686,43 @@ namespace Examples.MeshCreator
             updateModifyPanel();
 
             //Quitar gizmo actual
-            currentGizmo = null;
+            CurrentGizmo = null;
 
             //Pasar a modo seleccion
-            currentState = MeshCreatorControl.State.SelectObject;
+            CurrentState = State.SelectObject;
         }
 
         /// <summary>
-        /// Eliminar todos los objetos seleccionados
+        ///     Eliminar todos los objetos seleccionados
         /// </summary>
         public void deleteSelectedObjects()
         {
-            foreach (EditorPrimitive p in selectionList)
+            foreach (var p in SelectionList)
             {
-                meshes.Remove(p);
+                Meshes.Remove(p);
                 p.dispose();
             }
 
             //Limpiar lista de seleccion
-            selectionList.Clear();
+            SelectionList.Clear();
             updateModifyPanel();
 
             //Quitar gizmo actual
-            currentGizmo = null;
+            CurrentGizmo = null;
 
             //Pasar a modo seleccion
-            currentState = MeshCreatorControl.State.SelectObject;
+            CurrentState = State.SelectObject;
         }
 
         /// <summary>
-        /// Mostrar u ocultar una lista de objetos.
-        /// Si estaban seleccionados y se ocultan los quita de la lista de seleccion
+        ///     Mostrar u ocultar una lista de objetos.
+        ///     Si estaban seleccionados y se ocultan los quita de la lista de seleccion
         /// </summary>
         public void showHideObjects(List<EditorPrimitive> objects, bool show)
         {
             if (objects.Count > 0)
             {
-                foreach (EditorPrimitive p in objects)
+                foreach (var p in objects)
                 {
                     //Mostrar
                     if (show)
@@ -803,7 +737,7 @@ namespace Examples.MeshCreator
                         if (p.Selected)
                         {
                             p.setSelected(false);
-                            selectionList.Remove(p);
+                            SelectionList.Remove(p);
                         }
                     }
                 }
@@ -811,23 +745,23 @@ namespace Examples.MeshCreator
                 updateModifyPanel();
 
                 //Quitar gizmo actual
-                currentGizmo = null;
+                CurrentGizmo = null;
 
                 //Pasar a modo seleccion
-                currentState = MeshCreatorControl.State.SelectObject;
+                CurrentState = State.SelectObject;
             }
         }
 
         /// <summary>
-        /// Cargar Tab de Modify cuando hay un objeto seleccionado
+        ///     Cargar Tab de Modify cuando hay un objeto seleccionado
         /// </summary>
         public void updateModifyPanel()
         {
-            ignoreChangeEvents = true;
-            if (selectionList.Count >= 1)
+            IgnoreChangeEvents = true;
+            if (SelectionList.Count >= 1)
             {
-                bool onlyOneObjectFlag = selectionList.Count == 1;
-                bool isMeshFlag = selectionList[0].GetType().IsAssignableFrom(typeof(MeshPrimitive));
+                var onlyOneObjectFlag = SelectionList.Count == 1;
+                var isMeshFlag = SelectionList[0].GetType().IsAssignableFrom(typeof (MeshPrimitive));
 
                 //Habilitar paneles
                 groupBoxModifyGeneral.Enabled = true;
@@ -842,15 +776,13 @@ namespace Examples.MeshCreator
                 groupBoxEPolyEditVertices.Enabled = false;
                 groupBoxEPolyEditEdges.Enabled = false;
                 groupBoxEPolyEditPolygons.Enabled = false;
-                
 
                 //Cargar valores generales
-                EditorPrimitive p = selectionList[0];
-                EditorPrimitive.ModifyCapabilities caps = p.ModifyCaps;
+                var p = SelectionList[0];
+                var caps = p.ModifyCaps;
                 textBoxModifyName.Text = p.Name;
                 textBoxModifyName.Enabled = onlyOneObjectFlag;
                 textBoxModifyLayer.Text = p.Layer;
-
 
                 //Cargar textura
                 if (caps.ChangeTexture)
@@ -876,14 +808,14 @@ namespace Examples.MeshCreator
                     pictureBoxModifyTexture.Enabled = false;
                     checkBoxModifyAlphaBlendEnabled.Enabled = false;
                 }
-                
+
                 //Cargar OffsetUV
                 if (caps.ChangeOffsetUV)
                 {
                     numericUpDownTextureOffsetU.Enabled = true;
                     numericUpDownTextureOffsetV.Enabled = true;
-                    numericUpDownTextureOffsetU.Value = (decimal)p.TextureOffset.X;
-                    numericUpDownTextureOffsetV.Value = (decimal)p.TextureOffset.Y;
+                    numericUpDownTextureOffsetU.Value = (decimal) p.TextureOffset.X;
+                    numericUpDownTextureOffsetV.Value = (decimal) p.TextureOffset.Y;
                 }
                 else
                 {
@@ -896,8 +828,8 @@ namespace Examples.MeshCreator
                 {
                     numericUpDownTextureTilingU.Enabled = true;
                     numericUpDownTextureTilingV.Enabled = true;
-                    numericUpDownTextureTilingU.Value = (decimal)p.TextureTiling.X;
-                    numericUpDownTextureTilingV.Value = (decimal)p.TextureTiling.Y;
+                    numericUpDownTextureTilingU.Value = (decimal) p.TextureTiling.X;
+                    numericUpDownTextureTilingV.Value = (decimal) p.TextureTiling.Y;
                 }
                 else
                 {
@@ -911,9 +843,9 @@ namespace Examples.MeshCreator
                     numericUpDownModifyPosX.Enabled = true;
                     numericUpDownModifyPosY.Enabled = true;
                     numericUpDownModifyPosZ.Enabled = true;
-                    numericUpDownModifyPosX.Value = (decimal)p.Position.X;
-                    numericUpDownModifyPosY.Value = (decimal)p.Position.Y;
-                    numericUpDownModifyPosZ.Value = (decimal)p.Position.Z;
+                    numericUpDownModifyPosX.Value = (decimal) p.Position.X;
+                    numericUpDownModifyPosY.Value = (decimal) p.Position.Y;
+                    numericUpDownModifyPosZ.Value = (decimal) p.Position.Z;
                 }
                 else
                 {
@@ -928,9 +860,9 @@ namespace Examples.MeshCreator
                     numericUpDownModifyRotX.Enabled = true;
                     numericUpDownModifyRotY.Enabled = true;
                     numericUpDownModifyRotZ.Enabled = true;
-                    numericUpDownModifyRotX.Value = (decimal)FastMath.ToDeg(p.Rotation.X);
-                    numericUpDownModifyRotY.Value = (decimal)FastMath.ToDeg(p.Rotation.Y);
-                    numericUpDownModifyRotZ.Value = (decimal)FastMath.ToDeg(p.Rotation.Z);
+                    numericUpDownModifyRotX.Value = (decimal) FastMath.ToDeg(p.Rotation.X);
+                    numericUpDownModifyRotY.Value = (decimal) FastMath.ToDeg(p.Rotation.Y);
+                    numericUpDownModifyRotZ.Value = (decimal) FastMath.ToDeg(p.Rotation.Z);
                 }
                 else
                 {
@@ -945,10 +877,10 @@ namespace Examples.MeshCreator
                     numericUpDownModifyScaleX.Enabled = true;
                     numericUpDownModifyScaleY.Enabled = true;
                     numericUpDownModifyScaleZ.Enabled = true;
-                    Vector3 scale = p.Scale;
-                    numericUpDownModifyScaleX.Value = (decimal)scale.X * 100;
-                    numericUpDownModifyScaleY.Value = (decimal)scale.Y * 100;
-                    numericUpDownModifyScaleZ.Value = (decimal)scale.Z * 100;
+                    var scale = p.Scale;
+                    numericUpDownModifyScaleX.Value = (decimal) scale.X*100;
+                    numericUpDownModifyScaleY.Value = (decimal) scale.Y*100;
+                    numericUpDownModifyScaleZ.Value = (decimal) scale.Z*100;
                 }
                 else
                 {
@@ -962,7 +894,7 @@ namespace Examples.MeshCreator
                 userInfo.Enabled = onlyOneObjectFlag;
 
                 //Rotation pivot (remains the same while the group does not change)
-                rotationPivot = selectionRectangle.getRotationPivot();
+                rotationPivot = SelectionRectangle.getRotationPivot();
             }
             else
             {
@@ -981,23 +913,23 @@ namespace Examples.MeshCreator
                 groupBoxEPolyEditPolygons.Enabled = false;
             }
 
-            ignoreChangeEvents = false;
+            IgnoreChangeEvents = false;
         }
 
         /// <summary>
-        /// Liberar recursos
+        ///     Liberar recursos
         /// </summary>
         public void close()
         {
-            foreach (EditorPrimitive mesh in meshes)
+            foreach (var mesh in Meshes)
             {
                 mesh.dispose();
             }
-            grid.dispose();
-            selectionRectangle.dispose();
-            if (creatingPrimitive != null)
+            Grid.dispose();
+            SelectionRectangle.dispose();
+            if (CreatingPrimitive != null)
             {
-                selectionRectangle.dispose();
+                SelectionRectangle.dispose();
             }
             translateGizmo.dipose();
             scaleGizmo.dipose();
@@ -1006,11 +938,10 @@ namespace Examples.MeshCreator
             GuiController.Instance.CurrentCamera.Enable = true;
         }
 
-
         #region Eventos generales
 
         /// <summary>
-        /// Desactivar todos los radios
+        ///     Desactivar todos los radios
         /// </summary>
         private void untoggleAllRadioButtons(RadioButton exceptRadio)
         {
@@ -1049,86 +980,87 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Cambiar de tab
+        ///     Cambiar de tab
         /// </summary>
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Estabamos en el tab de editablePoly y salimos
-            if (currentState == State.EditablePoly && tabControl.SelectedTab != tabControl.TabPages["tabPageEditablePoly"])
+            if (CurrentState == State.EditablePoly &&
+                tabControl.SelectedTab != tabControl.TabPages["tabPageEditablePoly"])
             {
                 setEditablePolyEnable(false, EditablePoly.PrimitiveType.None);
             }
         }
 
         /// <summary>
-        /// Clic en "Crear Box"
+        ///     Clic en "Crear Box"
         /// </summary>
         private void radioButtonPrimitive_Box_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonPrimitive_Box.Checked)
             {
                 untoggleAllRadioButtons(radioButtonPrimitive_Box);
-                currentState = State.CreatePrimitiveSelected;
-                creatingPrimitive = new BoxPrimitive(this);
+                CurrentState = State.CreatePrimitiveSelected;
+                CreatingPrimitive = new BoxPrimitive(this);
             }
         }
 
         /// <summary>
-        /// Clic en "Crear Sphere"
+        ///     Clic en "Crear Sphere"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void radioButtonPrimitive_Sphere_CheckedChanged(object sender, EventArgs e)
         {
-
             if (radioButtonPrimitive_Sphere.Checked)
             {
                 untoggleAllRadioButtons(radioButtonPrimitive_Sphere);
-                currentState = State.CreatePrimitiveSelected;
-                creatingPrimitive = new SpherePrimitive(this);
+                CurrentState = State.CreatePrimitiveSelected;
+                CreatingPrimitive = new SpherePrimitive(this);
             }
         }
+
         /// <summary>
-        /// Clic en "Crear Plano XZ"
+        ///     Clic en "Crear Plano XZ"
         /// </summary>
         private void radioButtonPrimitive_PlaneXZ_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonPrimitive_PlaneXZ.Checked)
             {
                 untoggleAllRadioButtons(radioButtonPrimitive_PlaneXZ);
-                currentState = State.CreatePrimitiveSelected;
-                creatingPrimitive = new PlaneXZPrimitive(this);
+                CurrentState = State.CreatePrimitiveSelected;
+                CreatingPrimitive = new PlaneXZPrimitive(this);
             }
         }
 
         /// <summary>
-        /// Clic en "Crear Plano XY"
+        ///     Clic en "Crear Plano XY"
         /// </summary>
         private void radioButtonPrimitive_PlaneXY_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonPrimitive_PlaneXY.Checked)
             {
                 untoggleAllRadioButtons(radioButtonPrimitive_PlaneXY);
-                currentState = State.CreatePrimitiveSelected;
-                creatingPrimitive = new PlaneXYPrimitive(this);
+                CurrentState = State.CreatePrimitiveSelected;
+                CreatingPrimitive = new PlaneXYPrimitive(this);
             }
         }
 
         /// <summary>
-        /// Clic en "Crear Plano YZ"
+        ///     Clic en "Crear Plano YZ"
         /// </summary>
         private void radioButtonPrimitive_PlaneYZ_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonPrimitive_PlaneYZ.Checked)
             {
                 untoggleAllRadioButtons(radioButtonPrimitive_PlaneYZ);
-                currentState = State.CreatePrimitiveSelected;
-                creatingPrimitive = new PlaneYZPrimitive(this);
+                CurrentState = State.CreatePrimitiveSelected;
+                CreatingPrimitive = new PlaneYZPrimitive(this);
             }
         }
 
         /// <summary>
-        /// Clic en "Seleccionar objeto"
+        ///     Clic en "Seleccionar objeto"
         /// </summary>
         private void radioButtonSelectObject_CheckedChanged(object sender, EventArgs e)
         {
@@ -1139,26 +1071,26 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Setear estado de Seleccion de Objetos
+        ///     Setear estado de Seleccion de Objetos
         /// </summary>
         public void setSelectObjectState()
         {
             untoggleAllRadioButtons(radioButtonSelectObject);
-            currentState = State.SelectObject;
-            creatingPrimitive = null;
-            currentGizmo = null;
+            CurrentState = State.SelectObject;
+            CreatingPrimitive = null;
+            CurrentGizmo = null;
         }
 
         /// <summary>
-        /// Clic en "Select all"
+        ///     Clic en "Select all"
         /// </summary>
         private void buttonSelectAll_Click(object sender, EventArgs e)
         {
-            selectionRectangle.selectAll();
+            SelectionRectangle.selectAll();
         }
 
         /// <summary>
-        /// Camiar checkbox de "Snap to grid"
+        ///     Camiar checkbox de "Snap to grid"
         /// </summary>
         private void checkBoxSnapToGrid_CheckedChanged(object sender, EventArgs e)
         {
@@ -1166,85 +1098,84 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Cambiar tamaño de "Cell size"
+        ///     Cambiar tamaño de "Cell size"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void numericUpDownCellSize_ValueChanged(object sender, EventArgs e)
         {
-            snapToGridCellSize = (float)numericUpDownCellSize.Value;
+            SnapToGridCellSize = (float) numericUpDownCellSize.Value;
         }
 
         /// <summary>
-        /// Clic en "Zoom"
+        ///     Clic en "Zoom"
         /// </summary>
         private void buttonZoomObject_Click(object sender, EventArgs e)
         {
-            selectionRectangle.zoomObject();
+            SelectionRectangle.zoomObject();
         }
 
         /// <summary>
-        /// Clic en "Hide selected"
+        ///     Clic en "Hide selected"
         /// </summary>
         private void buttonHideSelected_Click(object sender, EventArgs e)
         {
-            if (selectionList.Count > 0)
+            if (SelectionList.Count > 0)
             {
-                List<EditorPrimitive> objectsToHide = new List<EditorPrimitive>(selectionList);
+                var objectsToHide = new List<EditorPrimitive>(SelectionList);
                 showHideObjects(objectsToHide, false);
             }
         }
 
         /// <summary>
-        /// Clic en "Unhide all""
+        ///     Clic en "Unhide all""
         /// </summary>
         private void buttonUnhideAll_Click(object sender, EventArgs e)
         {
-            foreach (EditorPrimitive p in meshes)
+            foreach (var p in Meshes)
             {
                 p.Visible = true;
             }
         }
 
         /// <summary>
-        /// Clic en "Delete object"
+        ///     Clic en "Delete object"
         /// </summary>
         private void buttonDeleteObject_Click(object sender, EventArgs e)
         {
             deleteSelectedObjects();
         }
 
-        
         /// <summary>
-        /// Clic en "Clonar seleccion"
+        ///     Clic en "Clonar seleccion"
         /// </summary>
         private void buttonCloneObject_Click(object sender, EventArgs e)
         {
-            if (selectionList.Count > 0)
+            if (SelectionList.Count > 0)
             {
                 //Clonar toda la seleccion
-                List<EditorPrimitive> cloneMeshes = new List<EditorPrimitive>();
-                foreach (EditorPrimitive p in selectionList)
+                var cloneMeshes = new List<EditorPrimitive>();
+                foreach (var p in SelectionList)
                 {
-                    EditorPrimitive pClone = p.clone();
+                    var pClone = p.clone();
                     cloneMeshes.Add(pClone);
                 }
 
                 //Agregar al escenario y seleccionarlas
-                selectionRectangle.clearSelection();
-                foreach (EditorPrimitive pClone in cloneMeshes)
+                SelectionRectangle.clearSelection();
+                foreach (var pClone in cloneMeshes)
                 {
-                    this.meshes.Add(pClone);
-                    selectionRectangle.selectObject(pClone);
+                    Meshes.Add(pClone);
+                    SelectionRectangle.selectObject(pClone);
                 }
-                currentState = MeshCreatorControl.State.SelectObject;
-                selectionRectangle.activateCurrentGizmo();
+                CurrentState = State.SelectObject;
+                SelectionRectangle.activateCurrentGizmo();
                 updateModifyPanel();
             }
         }
 
         /// <summary>
-        /// Clic en "FPS camera"
+        ///     Clic en "FPS camera"
         /// </summary>
         private void radioButtonFPSCamera_CheckedChanged(object sender, EventArgs e)
         {
@@ -1252,26 +1183,26 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Accion de clic en "FPS camera"
+        ///     Accion de clic en "FPS camera"
         /// </summary>
         private void doClicFPSCamera(bool enabled)
         {
             if (enabled)
             {
                 //Limpiar lista de seleccion
-                selectionRectangle.clearSelection();
+                SelectionRectangle.clearSelection();
                 updateModifyPanel();
 
                 //Quitar gizmo actual
-                currentGizmo = null;
+                CurrentGizmo = null;
 
                 //Pasar a modo seleccion
-                currentState = MeshCreatorControl.State.SelectObject;
+                CurrentState = State.SelectObject;
 
                 //Activar modo FPS
                 fpsCameraEnabled = true;
                 GuiController.Instance.FpsCamera.Enable = true;
-                GuiController.Instance.FpsCamera.setCamera(camera.getPosition(), camera.getLookAt());
+                GuiController.Instance.FpsCamera.setCamera(Camera.getPosition(), Camera.getLookAt());
             }
             else
             {
@@ -1280,104 +1211,106 @@ namespace Examples.MeshCreator
                 GuiController.Instance.FpsCamera.Enable = false;
 
                 //Acomodar camara de editor para centrar donde quedo la camara FPS
-                camera.CameraCenter = GuiController.Instance.FpsCamera.getPosition();
+                Camera.CameraCenter = GuiController.Instance.FpsCamera.getPosition();
                 //camera.CameraDistance = 10;
             }
         }
 
         /// <summary>
-        /// Clic en "Speed de FPS Camera"
+        ///     Clic en "Speed de FPS Camera"
         /// </summary>
         private void numericUpDownFPSCameraSpeed_ValueChanged(object sender, EventArgs e)
         {
             //Multiplicar velocidad de camara
-            float speed = (float)numericUpDownFPSCameraSpeed.Value;
-            GuiController.Instance.FpsCamera.MovementSpeed = TgcFpsCamera.DEFAULT_MOVEMENT_SPEED * speed;
-            GuiController.Instance.FpsCamera.JumpSpeed = TgcFpsCamera.DEFAULT_JUMP_SPEED * speed;
+            var speed = (float) numericUpDownFPSCameraSpeed.Value;
+            GuiController.Instance.FpsCamera.MovementSpeed = TgcFpsCamera.DEFAULT_MOVEMENT_SPEED*speed;
+            GuiController.Instance.FpsCamera.JumpSpeed = TgcFpsCamera.DEFAULT_JUMP_SPEED*speed;
         }
 
         /// <summary>
-        /// Clic en "Importar Mesh"
+        ///     Clic en "Importar Mesh"
         /// </summary>
         private void buttonImportMesh_Click(object sender, EventArgs e)
         {
-            DialogResult r = meshBrowser.ShowDialog();
+            var r = meshBrowser.ShowDialog();
             if (r == DialogResult.OK)
             {
                 try
                 {
                     //Cargar scene
-                    string path = meshBrowser.SelectedMesh;
-                    TgcSceneLoader loader = new TgcSceneLoader();
-                    TgcScene scene = loader.loadSceneFromFile(path);
+                    var path = meshBrowser.SelectedMesh;
+                    var loader = new TgcSceneLoader();
+                    var scene = loader.loadSceneFromFile(path);
 
                     //Agregar meshes al escenario y tambien seleccionarlas
-                    selectionRectangle.clearSelection();
-                    foreach (TgcMesh mesh in scene.Meshes)
+                    SelectionRectangle.clearSelection();
+                    foreach (var mesh in scene.Meshes)
                     {
-                        MeshPrimitive p = new MeshPrimitive(this, mesh);
-                        meshes.Add(p);
-                        selectionRectangle.selectObject(p);
+                        var p = new MeshPrimitive(this, mesh);
+                        Meshes.Add(p);
+                        SelectionRectangle.selectObject(p);
                     }
-                    currentState = MeshCreatorControl.State.SelectObject;
-                    selectionRectangle.activateCurrentGizmo();
+                    CurrentState = State.SelectObject;
+                    SelectionRectangle.activateCurrentGizmo();
                     updateModifyPanel();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, "Hubo un error al importar el mesh." + "Error: " + ex.Message + " - " + ex.InnerException.Message,
+                    MessageBox.Show(this,
+                        "Hubo un error al importar el mesh." + "Error: " + ex.Message + " - " +
+                        ex.InnerException.Message,
                         "Import Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
         /// <summary>
-        /// Clic en "Object browser"
+        ///     Clic en "Object browser"
         /// </summary>
         private void buttonObjectBrowser_Click(object sender, EventArgs e)
         {
             objectBrowser.loadObjects("");
-            popupOpened = true;
+            PopupOpened = true;
             objectBrowser.Show(this);
         }
 
         /// <summary>
-        /// Clic en "Top view"
+        ///     Clic en "Top view"
         /// </summary>
         private void buttonTopView_Click(object sender, EventArgs e)
         {
-            selectionRectangle.setTopView();
+            SelectionRectangle.setTopView();
         }
 
         /// <summary>
-        /// Clic en "Front view"
+        ///     Clic en "Front view"
         /// </summary>
         private void buttonFrontView_Click(object sender, EventArgs e)
         {
-            selectionRectangle.setFrontView();
+            SelectionRectangle.setFrontView();
         }
 
         /// <summary>
-        /// Clic en "Left view"
+        ///     Clic en "Left view"
         /// </summary>
         private void buttonLeftView_Click(object sender, EventArgs e)
         {
-            selectionRectangle.setLeftView();
+            SelectionRectangle.setLeftView();
         }
 
         /// <summary>
-        /// Clic en "Merge Selected"
+        ///     Clic en "Merge Selected"
         /// </summary>
         private void buttonMergeSelected_Click(object sender, EventArgs e)
         {
             //Que haya mas de uno seleccionado
-            if (selectionList.Count > 1)
+            if (SelectionList.Count > 1)
             {
                 //Clonar objetos a mergear
-                List<TgcMesh> objectsToMerge = new List<TgcMesh>();
-                foreach (EditorPrimitive p in selectionList)
+                var objectsToMerge = new List<TgcMesh>();
+                foreach (var p in SelectionList)
                 {
-                    TgcMesh m = p.createMeshToExport();
+                    var m = p.createMeshToExport();
                     objectsToMerge.Add(m);
                 }
 
@@ -1385,11 +1318,11 @@ namespace Examples.MeshCreator
                 deleteSelectedObjects();
 
                 //Hacer merge
-                TgcSceneExporter exporter = new TgcSceneExporter();
-                TgcMesh mergedMesh = exporter.mergeMeshes(objectsToMerge);
+                var exporter = new TgcSceneExporter();
+                var mergedMesh = exporter.mergeMeshes(objectsToMerge);
 
                 //Hacer dispose de los objetos clonados para mergear
-                foreach (TgcMesh m in objectsToMerge)
+                foreach (var m in objectsToMerge)
                 {
                     m.dispose();
                 }
@@ -1397,15 +1330,15 @@ namespace Examples.MeshCreator
                 //Agregar nuevo mesh al escenario y seleccionarlo
                 EditorPrimitive pMerged = new MeshPrimitive(this, mergedMesh);
                 addMesh(pMerged);
-                selectionRectangle.selectObject(pMerged);
-                currentState = MeshCreatorControl.State.SelectObject;
-                selectionRectangle.activateCurrentGizmo();
+                SelectionRectangle.selectObject(pMerged);
+                CurrentState = State.SelectObject;
+                SelectionRectangle.activateCurrentGizmo();
                 updateModifyPanel();
             }
         }
 
         /// <summary>
-        /// Clic en "Save"
+        ///     Clic en "Save"
         /// </summary>
         private void buttonSaveScene_Click(object sender, EventArgs e)
         {
@@ -1420,7 +1353,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Clic en "Save as"
+        ///     Clic en "Save as"
         /// </summary>
         private void buttonSaveSceneAs_Click(object sender, EventArgs e)
         {
@@ -1428,7 +1361,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Guardar la escena
+        ///     Guardar la escena
         /// </summary>
         private void exportScene(bool askConfirmation, string path)
         {
@@ -1450,23 +1383,23 @@ namespace Examples.MeshCreator
             //Obtener directorio y nombre
             if (fInfo == null)
                 return;
-            string sceneName = fInfo.Name.Split('.')[0];
+            var sceneName = fInfo.Name.Split('.')[0];
             sceneName = sceneName.Replace("-TgcScene", "");
-            string saveDir = fInfo.DirectoryName;
+            var saveDir = fInfo.DirectoryName;
 
             //Intentar guardar
             try
             {
                 //Convertir todos los objetos del escenario a un TgcMesh y agregarlos a la escena a exportar
-                TgcScene exportScene = new TgcScene(sceneName, saveDir);
-                foreach (EditorPrimitive p in meshes)
+                var exportScene = new TgcScene(sceneName, saveDir);
+                foreach (var p in Meshes)
                 {
-                    TgcMesh m = p.createMeshToExport();
+                    var m = p.createMeshToExport();
                     exportScene.Meshes.Add(m);
                 }
 
                 //Exportar escena
-                TgcSceneExporter exporter = new TgcSceneExporter();
+                var exporter = new TgcSceneExporter();
                 TgcSceneExporter.ExportResult result;
                 if (checkBoxAttachExport.Checked)
                 {
@@ -1486,11 +1419,14 @@ namespace Examples.MeshCreator
                 {
                     if (result.secondaryErrors)
                     {
-                        MessageBox.Show(this, "La escena se exportó OK pero hubo errores secundarios. " + result.listErrors(), "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this,
+                            "La escena se exportó OK pero hubo errores secundarios. " + result.listErrors(),
+                            "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show(this, "Scene exported OK.", "Export Scene", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(this, "Scene exported OK.", "Export Scene", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
                     }
                 }
                 else
@@ -1498,51 +1434,45 @@ namespace Examples.MeshCreator
                     MessageBox.Show(this, "Ocurrieron errores al intentar exportar la escena. " + result.listErrors(),
                         "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Hubo un error al intenar exportar la escena. Puede ocurrir que esté intentando reemplazar el mismo archivo de escena que tiene abierto ahora. Los archivos de Textura por ejemplo no pueden ser reemplazados si se están utilizando dentro del editor. En ese caso debera guardar en uno nuevo. "
+                MessageBox.Show(this,
+                    "Hubo un error al intenar exportar la escena. Puede ocurrir que esté intentando reemplazar el mismo archivo de escena que tiene abierto ahora. Los archivos de Textura por ejemplo no pueden ser reemplazados si se están utilizando dentro del editor. En ese caso debera guardar en uno nuevo. "
                     + "Error: " + ex.Message + " - " + ex.InnerException.Message,
                     "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         /// <summary>
-        /// Clic en "Help"
+        ///     Clic en "Help"
         /// </summary>
         private void buttonHelp_Click(object sender, EventArgs e)
         {
             //Abrir PDF
-            System.Diagnostics.Process.Start(GuiController.Instance.ExamplesDir + "\\MeshCreator\\Guia MeshCreator.pdf");
+            Process.Start(GuiController.Instance.ExamplesDir + "\\MeshCreator\\Guia MeshCreator.pdf");
         }
 
-        #endregion
-
-    
-
-
+        #endregion Eventos generales
 
         #region Eventos de Modify
 
-
         /// <summary>
-        /// Clic en "Seleccionar y Mover"
+        ///     Clic en "Seleccionar y Mover"
         /// </summary>
         private void radioButtonModifySelectAndMove_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonModifySelectAndMove.Checked)
             {
                 untoggleAllRadioButtons(radioButtonModifySelectAndMove);
-                currentState = State.SelectObject;
-                creatingPrimitive = null;
-                currentGizmo = translateGizmo;
+                CurrentState = State.SelectObject;
+                CreatingPrimitive = null;
+                CurrentGizmo = translateGizmo;
 
                 //Activar gizmo si hay seleccion
-                if (selectionList.Count > 0)
+                if (SelectionList.Count > 0)
                 {
-                    selectionRectangle.activateCurrentGizmo();
+                    SelectionRectangle.activateCurrentGizmo();
                 }
             }
         }
@@ -1553,292 +1483,288 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Clic en "Seleccionar y Escalar"
+        ///     Clic en "Seleccionar y Escalar"
         /// </summary>
         private void radioButtonModifySelectAndScale_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonModifySelectAndScale.Checked)
             {
                 untoggleAllRadioButtons(radioButtonModifySelectAndScale);
-                currentState = State.SelectObject;
-                creatingPrimitive = null;
-                currentGizmo = scaleGizmo;
+                CurrentState = State.SelectObject;
+                CreatingPrimitive = null;
+                CurrentGizmo = scaleGizmo;
 
                 //Activar gizmo si hay seleccion
-                if (selectionList.Count > 0)
+                if (SelectionList.Count > 0)
                 {
-                    selectionRectangle.activateCurrentGizmo();
+                    SelectionRectangle.activateCurrentGizmo();
                 }
             }
         }
 
         /// <summary>
-        /// Cambiar nombre de mesh
+        ///     Cambiar nombre de mesh
         /// </summary>
         private void textBoxModifyName_Leave(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
-            selectionList[0].Name = textBoxModifyName.Text;
+            if (IgnoreChangeEvents) return;
+            SelectionList[0].Name = textBoxModifyName.Text;
         }
 
         /// <summary>
-        /// Cambiar nombre de layer
+        ///     Cambiar nombre de layer
         /// </summary>
         private void textBoxModifyLayer_Leave(object sender, EventArgs e)
         {
-            foreach (EditorPrimitive p in selectionList)
+            foreach (var p in SelectionList)
             {
                 p.Layer = textBoxModifyLayer.Text;
             }
-            
         }
 
         /// <summary>
-        /// Elegir otro numero de textura para editar
+        ///     Elegir otro numero de textura para editar
         /// </summary>
         private void numericUpDownModifyTextureNumber_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
-            int n = (int)numericUpDownModifyTextureNumber.Value - 1;
+            if (IgnoreChangeEvents) return;
+            var n = (int) numericUpDownModifyTextureNumber.Value - 1;
 
             //Cambiar imagen del pictureBox
-            Image img = MeshCreatorUtils.getImage(selectionList[0].getTexture(n).FilePath);
-            Image lastImage = pictureBoxModifyTexture.Image;
+            var img = MeshCreatorUtils.getImage(SelectionList[0].getTexture(n).FilePath);
+            var lastImage = pictureBoxModifyTexture.Image;
             pictureBoxModifyTexture.Image = img;
-            pictureBoxModifyTexture.ImageLocation = selectionList[0].getTexture(n).FilePath;
+            pictureBoxModifyTexture.ImageLocation = SelectionList[0].getTexture(n).FilePath;
             lastImage.Dispose();
         }
 
         /// <summary>
-        /// Hacer clic en el recuadro de textura para cambiarla
+        ///     Hacer clic en el recuadro de textura para cambiarla
         /// </summary>
         private void pictureBoxModifyTexture_Click(object sender, EventArgs e)
         {
-            popupOpened = true;
+            PopupOpened = true;
 
-            int n = (int)numericUpDownModifyTextureNumber.Value - 1;
-            textureBrowser.setSelectedImage(selectionList[0].getTexture(n).FilePath);
+            var n = (int) numericUpDownModifyTextureNumber.Value - 1;
+            textureBrowser.setSelectedImage(SelectionList[0].getTexture(n).FilePath);
 
             textureBrowser.Show(this);
         }
 
         /// <summary>
-        /// Cuando se selecciona una imagen en el textureBrowser
+        ///     Cuando se selecciona una imagen en el textureBrowser
         /// </summary>
         public void textureBrowser_OnSelectImage(TgcTextureBrowser textureBrowser)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
             //Cambiar la textura si es distinta a la que tenia el mesh
-            int n = (int)numericUpDownModifyTextureNumber.Value - 1;
-            if (textureBrowser.SelectedImage != selectionList[0].getTexture(n).FilePath)
+            var n = (int) numericUpDownModifyTextureNumber.Value - 1;
+            if (textureBrowser.SelectedImage != SelectionList[0].getTexture(n).FilePath)
             {
-                Image img = MeshCreatorUtils.getImage(textureBrowser.SelectedImage);
-                Image lastImage = pictureBoxModifyTexture.Image;
+                var img = MeshCreatorUtils.getImage(textureBrowser.SelectedImage);
+                var lastImage = pictureBoxModifyTexture.Image;
                 pictureBoxModifyTexture.Image = img;
                 pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
                 lastImage.Dispose();
-                foreach (EditorPrimitive p in selectionList)
+                foreach (var p in SelectionList)
                 {
                     p.setTexture(TgcTexture.createTexture(pictureBoxModifyTexture.ImageLocation), n);
                 }
-                
             }
         }
 
         /// <summary>
-        /// Cuando se cierra el textureBrowser
+        ///     Cuando se cierra el textureBrowser
         /// </summary>
         public void textureBrowser_OnClose(TgcTextureBrowser textureBrowser)
         {
-            popupOpened = false;
+            PopupOpened = false;
         }
 
         /// <summary>
-        /// Cambiar Alpha Blend
+        ///     Cambiar Alpha Blend
         /// </summary>
         private void checkBoxModifyAlphaBlendEnabled_CheckedChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            foreach (EditorPrimitive p in selectionList)
+            foreach (var p in SelectionList)
             {
                 p.AlphaBlendEnable = checkBoxModifyAlphaBlendEnabled.Checked;
             }
         }
 
         /// <summary>
-        /// Cambiar offset U
+        ///     Cambiar offset U
         /// </summary>
         private void numericUpDownTextureOffsetU_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            float value = (float)numericUpDownTextureOffsetU.Value;
-            foreach (EditorPrimitive p in selectionList)
+            var value = (float) numericUpDownTextureOffsetU.Value;
+            foreach (var p in SelectionList)
             {
                 p.TextureOffset = new Vector2(value, p.TextureOffset.Y);
             }
         }
 
         /// <summary>
-        /// Cambiar offset V
+        ///     Cambiar offset V
         /// </summary>
         private void numericUpDownTextureOffsetV_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            float value = (float)numericUpDownTextureOffsetV.Value;
-            foreach (EditorPrimitive p in selectionList)
+            var value = (float) numericUpDownTextureOffsetV.Value;
+            foreach (var p in SelectionList)
             {
                 p.TextureOffset = new Vector2(p.TextureOffset.X, value);
             }
         }
 
         /// <summary>
-        /// Cambiar tile U
+        ///     Cambiar tile U
         /// </summary>
         private void numericUpDownTextureTilingU_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            float value = (float)numericUpDownTextureTilingU.Value;
-            foreach (EditorPrimitive p in selectionList)
+            var value = (float) numericUpDownTextureTilingU.Value;
+            foreach (var p in SelectionList)
             {
                 p.TextureTiling = new Vector2(value, p.TextureTiling.Y);
             }
         }
 
-
         /// <summary>
-        /// Cambiar tile V
+        ///     Cambiar tile V
         /// </summary>
         private void numericUpDownTextureTilingV_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            float value = (float)numericUpDownTextureTilingV.Value;
-            foreach (EditorPrimitive p in selectionList)
+            var value = (float) numericUpDownTextureTilingV.Value;
+            foreach (var p in SelectionList)
             {
                 p.TextureTiling = new Vector2(p.TextureTiling.X, value);
             }
         }
 
-
         /// <summary>
-        /// Cambiar posicion en X
+        ///     Cambiar posicion en X
         /// </summary>
         private void numericUpDownModifyPosX_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            EditorPrimitive p = selectionList[0];
-            Vector3 oldPos = p.Position;
-            p.Position = new Vector3((float)numericUpDownModifyPosX.Value, oldPos.Y, oldPos.Z);
-            Vector3 movement = p.Position - oldPos;
-            if (currentGizmo != null)
+            var p = SelectionList[0];
+            var oldPos = p.Position;
+            p.Position = new Vector3((float) numericUpDownModifyPosX.Value, oldPos.Y, oldPos.Z);
+            var movement = p.Position - oldPos;
+            if (CurrentGizmo != null)
             {
-                currentGizmo.move(p, movement);
+                CurrentGizmo.move(p, movement);
             }
-            for (int i = 1; i < selectionList.Count; i++)
+            for (var i = 1; i < SelectionList.Count; i++)
             {
-                selectionList[i].move(movement);
+                SelectionList[i].move(movement);
             }
         }
 
         /// <summary>
-        /// Cambiar posicion en Y
+        ///     Cambiar posicion en Y
         /// </summary>
         private void numericUpDownModifyPosY_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            EditorPrimitive p = selectionList[0];
-            Vector3 oldPos = p.Position;
-            p.Position = new Vector3(oldPos.X, (float)numericUpDownModifyPosY.Value, oldPos.Z);
-            Vector3 movement = p.Position - oldPos;
-            if (currentGizmo != null)
+            var p = SelectionList[0];
+            var oldPos = p.Position;
+            p.Position = new Vector3(oldPos.X, (float) numericUpDownModifyPosY.Value, oldPos.Z);
+            var movement = p.Position - oldPos;
+            if (CurrentGizmo != null)
             {
-                currentGizmo.move(p, movement);
+                CurrentGizmo.move(p, movement);
             }
-            for (int i = 1; i < selectionList.Count; i++)
+            for (var i = 1; i < SelectionList.Count; i++)
             {
-                selectionList[i].move(movement);
+                SelectionList[i].move(movement);
             }
         }
 
         /// <summary>
-        /// Cambiar posicion en Z
+        ///     Cambiar posicion en Z
         /// </summary>
         private void numericUpDownModifyPosZ_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            EditorPrimitive p = selectionList[0];
-            Vector3 oldPos = p.Position;
-            p.Position = new Vector3(oldPos.X, oldPos.Y, (float)numericUpDownModifyPosZ.Value);
-            Vector3 movement = p.Position - oldPos;
-            if (currentGizmo != null)
+            var p = SelectionList[0];
+            var oldPos = p.Position;
+            p.Position = new Vector3(oldPos.X, oldPos.Y, (float) numericUpDownModifyPosZ.Value);
+            var movement = p.Position - oldPos;
+            if (CurrentGizmo != null)
             {
-                currentGizmo.move(p, movement);
+                CurrentGizmo.move(p, movement);
             }
-            for (int i = 1; i < selectionList.Count; i++)
+            for (var i = 1; i < SelectionList.Count; i++)
             {
-                selectionList[i].move(movement);
+                SelectionList[i].move(movement);
             }
         }
 
         /// <summary>
-        /// Cambiar rotacion en X
+        ///     Cambiar rotacion en X
         /// </summary>
         private void numericUpDownModifyRotX_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            float value = FastMath.ToRad((float)numericUpDownModifyRotX.Value);
-            Vector3 pivot = rotationPivot/*selectionRectangle.getRotationPivot()*/;
-            foreach (EditorPrimitive p in selectionList)
+            var value = FastMath.ToRad((float) numericUpDownModifyRotX.Value);
+            var pivot = rotationPivot /*selectionRectangle.getRotationPivot()*/;
+            foreach (var p in SelectionList)
             {
                 p.setRotationFromPivot(new Vector3(value, p.Rotation.Y, p.Rotation.Z), pivot);
             }
         }
 
         /// <summary>
-        /// Cambiar rotacion en Y
+        ///     Cambiar rotacion en Y
         /// </summary>
         private void numericUpDownModifyRotY_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            float value = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
-            Vector3 pivot = rotationPivot/*selectionRectangle.getRotationPivot()*/;
-            foreach (EditorPrimitive p in selectionList)
+            var value = FastMath.ToRad((float) numericUpDownModifyRotY.Value);
+            var pivot = rotationPivot /*selectionRectangle.getRotationPivot()*/;
+            foreach (var p in SelectionList)
             {
                 p.setRotationFromPivot(new Vector3(p.Rotation.X, value, p.Rotation.Z), pivot);
             }
         }
 
         /// <summary>
-        /// Cambiar rotacion en Z
+        ///     Cambiar rotacion en Z
         /// </summary>
         private void numericUpDownModifyRotZ_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            float value = FastMath.ToRad((float)numericUpDownModifyRotZ.Value);
-            Vector3 pivot = rotationPivot/*selectionRectangle.getRotationPivot()*/;
-            foreach (EditorPrimitive p in selectionList)
+            var value = FastMath.ToRad((float) numericUpDownModifyRotZ.Value);
+            var pivot = rotationPivot /*selectionRectangle.getRotationPivot()*/;
+            foreach (var p in SelectionList)
             {
                 p.setRotationFromPivot(new Vector3(p.Rotation.X, p.Rotation.Y, value), pivot);
             }
         }
 
         /// <summary>
-        /// Calcular "AABB"
+        ///     Calcular "AABB"
         /// </summary>
         private void buttonModifyRecomputeAABB_Click(object sender, EventArgs e)
         {
-            foreach (EditorPrimitive p in selectionList)
+            foreach (var p in SelectionList)
             {
                 p.updateBoundingBox();
             }
@@ -1846,18 +1772,18 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Cambiar escala en X
+        ///     Cambiar escala en X
         /// </summary>
         private void numericUpDownModifyScaleX_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            EditorPrimitive p0 = selectionList[0];
-            Vector3 old = p0.Scale;
-            float value = (float)numericUpDownModifyScaleX.Value / 100f;
-            Vector3 diff = new Vector3(value, p0.Scale.Y, p0.Scale.Z) - old;
+            var p0 = SelectionList[0];
+            var old = p0.Scale;
+            var value = (float) numericUpDownModifyScaleX.Value/100f;
+            var diff = new Vector3(value, p0.Scale.Y, p0.Scale.Z) - old;
 
-            foreach (EditorPrimitive p in selectionList)
+            foreach (var p in SelectionList)
             {
                 if (checkBoxModifyBothDir.Checked)
                 {
@@ -1865,7 +1791,7 @@ namespace Examples.MeshCreator
                 }
                 else
                 {
-                    Vector3 oldMin = p.BoundingBox.PMin;
+                    var oldMin = p.BoundingBox.PMin;
                     p.Scale += diff;
                     p.move(oldMin - p.BoundingBox.PMin);
                 }
@@ -1873,18 +1799,18 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Cambiar escala en Y
+        ///     Cambiar escala en Y
         /// </summary>
         private void numericUpDownModifyScaleY_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            EditorPrimitive p0 = selectionList[0];
-            Vector3 old = p0.Scale;
-            float value = (float)numericUpDownModifyScaleY.Value / 100f;
-            Vector3 diff = new Vector3(p0.Scale.X, value, p0.Scale.Z) - old;
+            var p0 = SelectionList[0];
+            var old = p0.Scale;
+            var value = (float) numericUpDownModifyScaleY.Value/100f;
+            var diff = new Vector3(p0.Scale.X, value, p0.Scale.Z) - old;
 
-            foreach (EditorPrimitive p in selectionList)
+            foreach (var p in SelectionList)
             {
                 if (checkBoxModifyBothDir.Checked)
                 {
@@ -1892,7 +1818,7 @@ namespace Examples.MeshCreator
                 }
                 else
                 {
-                    Vector3 oldMin = p.BoundingBox.PMin;
+                    var oldMin = p.BoundingBox.PMin;
                     p.Scale += diff;
                     p.move(oldMin - p.BoundingBox.PMin);
                 }
@@ -1900,18 +1826,18 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Cambiar escala en Z
+        ///     Cambiar escala en Z
         /// </summary>
         private void numericUpDownModifyScaleZ_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            EditorPrimitive p0 = selectionList[0];
-            Vector3 old = p0.Scale;
-            float value = (float)numericUpDownModifyScaleZ.Value / 100f;
-            Vector3 diff = new Vector3(p0.Scale.X, p0.Scale.Y, value) - old;
+            var p0 = SelectionList[0];
+            var old = p0.Scale;
+            var value = (float) numericUpDownModifyScaleZ.Value/100f;
+            var diff = new Vector3(p0.Scale.X, p0.Scale.Y, value) - old;
 
-            foreach (EditorPrimitive p in selectionList)
+            foreach (var p in SelectionList)
             {
                 if (checkBoxModifyBothDir.Checked)
                 {
@@ -1919,7 +1845,7 @@ namespace Examples.MeshCreator
                 }
                 else
                 {
-                    Vector3 oldMin = p.BoundingBox.PMin;
+                    var oldMin = p.BoundingBox.PMin;
                     p.Scale += diff;
                     p.move(oldMin - p.BoundingBox.PMin);
                 }
@@ -1927,78 +1853,73 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Cambiar user properties
+        ///     Cambiar user properties
         /// </summary>
         private void userInfo_Leave(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
+            if (IgnoreChangeEvents) return;
 
-            EditorPrimitive p = selectionList[0];
+            var p = SelectionList[0];
             p.UserProperties = MeshCreatorUtils.getUserPropertiesDictionary(userInfo.Text);
         }
 
         /// <summary>
-        /// Clic en "Convert to Mesh"
+        ///     Clic en "Convert to Mesh"
         /// </summary>
         private void buttonModifyConvertToMesh_Click(object sender, EventArgs e)
         {
             //Clonar objetos seleccionados
-            List<EditorPrimitive> newObjects = new List<EditorPrimitive>();
-            List<EditorPrimitive> objectToDelete = new List<EditorPrimitive>();
-            foreach (EditorPrimitive p in selectionList)
+            var newObjects = new List<EditorPrimitive>();
+            var objectToDelete = new List<EditorPrimitive>();
+            foreach (var p in SelectionList)
             {
-                TgcMesh mesh = p.createMeshToExport();
+                var mesh = p.createMeshToExport();
                 EditorPrimitive meshP = new MeshPrimitive(this, mesh);
                 newObjects.Add(meshP);
 
                 objectToDelete.Add(p);
             }
-            
+
             //Eliminar objetos anteriores
             deleteObjects(objectToDelete);
 
             //Agregar nuevos objetos al escenario y seleccionarlos
-            foreach (EditorPrimitive p in newObjects)
+            foreach (var p in newObjects)
             {
                 addMesh(p);
-                selectionRectangle.selectObject(p);
+                SelectionRectangle.selectObject(p);
             }
-            currentState = MeshCreatorControl.State.SelectObject;
-            selectionRectangle.activateCurrentGizmo();
+            CurrentState = State.SelectObject;
+            SelectionRectangle.activateCurrentGizmo();
             updateModifyPanel();
-            
         }
-        
 
-        #endregion
-
-
-
+        #endregion Eventos de Modify
 
         #region EditablePoly
 
         /// <summary>
-        /// Setear estado EditablePoly
+        ///     Setear estado EditablePoly
         /// </summary>
         /// <param name="enabled"></param>
         public void setEditablePolyEnable(bool enabled, EditablePoly.PrimitiveType primitiveType)
         {
             if (enabled)
             {
-                currentState = State.EditablePoly;
+                CurrentState = State.EditablePoly;
                 groupBoxEPolyCommon.Enabled = true;
-                creatingPrimitive = null;
-                currentGizmo = null;
-                MeshPrimitive m = (MeshPrimitive)selectionList[0];
+                CreatingPrimitive = null;
+                CurrentGizmo = null;
+                var m = (MeshPrimitive) SelectionList[0];
                 m.enableEditablePoly(true, primitiveType);
             }
             else
             {
-                if (currentState == State.EditablePoly)
+                if (CurrentState == State.EditablePoly)
                 {
-                    MeshPrimitive m = (MeshPrimitive)selectionList[0];
+                    var m = (MeshPrimitive) SelectionList[0];
                     m.enableEditablePoly(false, primitiveType);
-                    
+
                     radioButtonEPolyPrimitiveVertex.Checked = false;
                     radioButtonEPolyPrimitiveEdge.Checked = false;
                     radioButtonEPolyPrimitivePolygon.Checked = false;
@@ -2013,7 +1934,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Clic en Vertex primitive
+        ///     Clic en Vertex primitive
         /// </summary>
         private void radioButtonEPolyPrimitiveVertex_CheckedChanged(object sender, EventArgs e)
         {
@@ -2032,7 +1953,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Clic en Edge primitive
+        ///     Clic en Edge primitive
         /// </summary>
         private void radioButtonEPolyPrimitiveEdge_CheckedChanged(object sender, EventArgs e)
         {
@@ -2048,11 +1969,10 @@ namespace Examples.MeshCreator
             {
                 radioButtonEPolyPrimitiveEdge.BackColor = Color.Transparent;
             }
-
         }
 
         /// <summary>
-        /// Clic en Polygon primitive
+        ///     Clic en Polygon primitive
         /// </summary>
         private void radioButtonEPolyPrimitivePolygon_CheckedChanged(object sender, EventArgs e)
         {
@@ -2071,61 +1991,61 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Clic en Select de EditablePoly
+        ///     Clic en Select de EditablePoly
         /// </summary>
         private void radioButtonEPolySelect_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonEPolySelect.Checked)
             {
-                EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
+                var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
                 editablePoly.setSelectState();
             }
         }
 
         /// <summary>
-        /// Clic en Select All de EditablePoly
+        ///     Clic en Select All de EditablePoly
         /// </summary>
         private void buttonEPolySelectAll_Click(object sender, EventArgs e)
         {
-            EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
+            var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
             editablePoly.selectAll();
         }
 
         /// <summary>
-        /// Clic en Translate de EditablePoly
+        ///     Clic en Translate de EditablePoly
         /// </summary>
         private void radioButtonEPolyTranslate_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonEPolyTranslate.Checked)
             {
-                EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
+                var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
                 editablePoly.activateTranslateGizmo();
             }
         }
 
         /// <summary>
-        /// Clic en Delete de EditablePoly
+        ///     Clic en Delete de EditablePoly
         /// </summary>
         private void buttonEPolyDelete_Click(object sender, EventArgs e)
         {
-            EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
+            var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
             editablePoly.deleteSelectedPrimitives();
         }
 
         /// <summary>
-        /// Clic en pasar numero de textura de EditablePoly
+        ///     Clic en pasar numero de textura de EditablePoly
         /// </summary>
         private void numericUpDownEPolyTextureNumber_ValueChanged(object sender, EventArgs e)
         {
-            if (ignoreChangeEvents) return;
-            EditablePoly editablePoly = ((MeshPrimitive)selectionList[0]).EditablePoly;
-            int n = (int)numericUpDownEPolyTextureNumber.Value - 1;
+            if (IgnoreChangeEvents) return;
+            var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
+            var n = (int) numericUpDownEPolyTextureNumber.Value - 1;
 
             //Cambiar imagen del pictureBox
-            Image img = MeshCreatorUtils.getImage(selectionList[0].getTexture(n).FilePath);
-            Image lastImage = pictureBoxEPolyTexture.Image;
+            var img = MeshCreatorUtils.getImage(SelectionList[0].getTexture(n).FilePath);
+            var lastImage = pictureBoxEPolyTexture.Image;
             pictureBoxEPolyTexture.Image = img;
-            pictureBoxEPolyTexture.ImageLocation = selectionList[0].getTexture(n).FilePath;
+            pictureBoxEPolyTexture.ImageLocation = SelectionList[0].getTexture(n).FilePath;
             lastImage.Dispose();
 
             //Aplicar cambiod de textura en EditablePoly
@@ -2133,13 +2053,13 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Agregar una nueva textura a EditablePoly
+        ///     Agregar una nueva textura a EditablePoly
         /// </summary>
         private void buttonEPolyAddTexture_Click(object sender, EventArgs e)
         {
             //Clonar la primer textura y agregarsela al mesh (al final)
-            MeshPrimitive p = (MeshPrimitive)selectionList[0];
-            TgcTexture newTexutre = p.getTexture(0).clone();
+            var p = (MeshPrimitive) SelectionList[0];
+            var newTexutre = p.getTexture(0).clone();
             p.addNexTexture(newTexutre);
 
             //Agregar nuevo slot de textura en UI
@@ -2153,16 +2073,16 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Clic en Delete Texture de EditablePoly
+        ///     Clic en Delete Texture de EditablePoly
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void buttonEPolyDeleteTexture_Click(object sender, EventArgs e)
         {
-            MeshPrimitive p = (MeshPrimitive)selectionList[0];
+            var p = (MeshPrimitive) SelectionList[0];
             if (p.ModifyCaps.TextureNumbers > 1)
             {
-                int n = (int)numericUpDownEPolyTextureNumber.Value - 1;
+                var n = (int) numericUpDownEPolyTextureNumber.Value - 1;
                 p.deleteTexture(n);
                 p.EditablePoly.deleteTextureId(n, 0);
                 numericUpDownEPolyTextureNumber.Maximum--;
@@ -2171,32 +2091,32 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Clic en icono de Textura de EditablePoly para cambiarla
+        ///     Clic en icono de Textura de EditablePoly para cambiarla
         /// </summary>
         private void pictureBoxEPolyTexture_Click(object sender, EventArgs e)
         {
-            popupOpened = true;
+            PopupOpened = true;
 
-            int n = (int)numericUpDownEPolyTextureNumber.Value - 1;
-            textureBrowserEPoly.setSelectedImage(selectionList[0].getTexture(n).FilePath);
+            var n = (int) numericUpDownEPolyTextureNumber.Value - 1;
+            textureBrowserEPoly.setSelectedImage(SelectionList[0].getTexture(n).FilePath);
 
             textureBrowserEPoly.Show(this);
         }
 
         /// <summary>
-        /// Cuando se selecciona una imagen en el textureBrowser de EditablePoly
+        ///     Cuando se selecciona una imagen en el textureBrowser de EditablePoly
         /// </summary>
         public void textureBrowserEPoly_OnSelectImage(TgcTextureBrowser textureBrowser)
         {
-            if (ignoreChangeEvents) return;
-            EditorPrimitive p = selectionList[0];
+            if (IgnoreChangeEvents) return;
+            var p = SelectionList[0];
 
             //Cambiar la textura si es distinta a la que tenia el mesh
-            int n = (int)numericUpDownEPolyTextureNumber.Value - 1;
+            var n = (int) numericUpDownEPolyTextureNumber.Value - 1;
             if (textureBrowserEPoly.SelectedImage != p.getTexture(n).FilePath)
             {
-                Image img = MeshCreatorUtils.getImage(textureBrowserEPoly.SelectedImage);
-                Image lastImage = pictureBoxEPolyTexture.Image;
+                var img = MeshCreatorUtils.getImage(textureBrowserEPoly.SelectedImage);
+                var lastImage = pictureBoxEPolyTexture.Image;
                 pictureBoxEPolyTexture.Image = img;
                 pictureBoxEPolyTexture.ImageLocation = textureBrowserEPoly.SelectedImage;
                 lastImage.Dispose();
@@ -2206,101 +2126,13 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Cuando se cierra el textureBrowser de EditablePoly
+        ///     Cuando se cierra el textureBrowser de EditablePoly
         /// </summary>
         public void textureBrowserEPoly_OnClose(TgcTextureBrowser textureBrowser)
         {
-            popupOpened = false;
+            PopupOpened = false;
         }
 
-        
-
-        #endregion
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-
-
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+        #endregion EditablePoly
     }
 }

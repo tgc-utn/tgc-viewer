@@ -1,127 +1,60 @@
+using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using TGC.Core.Scene;
-using TGC.Core.Utils;
 using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.SceneLoader;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcGeometry
 {
     /// <summary>
-    /// Herramienta para dibujar una flecha 3D.
+    ///     Herramienta para dibujar una flecha 3D.
     /// </summary>
     public class TgcArrow : IRenderObject
     {
+        private readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
 
-        #region Creacion
+        private Color bodyColor;
 
-        /// <summary>
-        /// Crea una flecha en base a sus puntos extremos
-        /// </summary>
-        /// <param name="start">Punto de inicio</param>
-        /// <param name="end">Punto de fin</param>
-        /// <returns>Flecha creada</returns>
-        public static TgcArrow fromExtremes(Vector3 start, Vector3 end)
+        protected Effect effect;
+
+        private Color headColor;
+
+        protected string technique;
+
+        private readonly VertexBuffer vertexBuffer;
+
+        public TgcArrow()
         {
-            TgcArrow arrow = new TgcArrow();
-            arrow.pStart = start;
-            arrow.pEnd = end;
-            arrow.updateValues();
-            return arrow;
+            var d3dDevice = GuiController.Instance.D3dDevice;
+
+            vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), 54, d3dDevice,
+                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+
+            Thickness = 0.06f;
+            HeadSize = new Vector2(0.3f, 0.6f);
+            Enabled = true;
+            bodyColor = Color.Blue;
+            headColor = Color.LightBlue;
+            AlphaBlendEnable = false;
+
+            //Shader
+            effect = GuiController.Instance.Shaders.VariosShader;
+            technique = TgcShaders.T_POSITION_COLORED;
         }
 
         /// <summary>
-        /// Crea una flecha en base a sus puntos extremos, con el color y el grosor especificado
+        ///     Punto de inicio de la linea
         /// </summary>
-        /// <param name="start">Punto de inicio</param>
-        /// <param name="end">Punto de fin</param>
-        /// <param name="bodyColor">Color del cuerpo de la flecha</param>
-        /// <param name="headColor">Color de la punta de la flecha</param>
-        /// <param name="thickness">Grosor del cuerpo de la flecha</param>
-        /// <param name="headSize">Tamaño de la punta de la flecha</param>
-        /// <returns>Flecha creada</returns>
-        public static TgcArrow fromExtremes(Vector3 start, Vector3 end, Color bodyColor, Color headColor, float thickness, Vector2 headSize)
-        {
-            TgcArrow arrow = new TgcArrow();
-            arrow.pStart = start;
-            arrow.pEnd = end;
-            arrow.bodyColor = bodyColor;
-            arrow.headColor = headColor;
-            arrow.thickness = thickness;
-            arrow.headSize = headSize;
-            arrow.updateValues();
-            return arrow;
-        }
+        public Vector3 PStart { get; set; }
 
         /// <summary>
-        /// Crea una flecha en base a su punto de inicio y dirección
+        ///     Punto final de la linea
         /// </summary>
-        /// <param name="start">Punto de inicio</param>
-        /// <param name="direction">Dirección de la flecha</param>
-        /// <returns>Flecha creada</returns>
-        public static TgcArrow fromDirection(Vector3 start, Vector3 direction)
-        {
-            TgcArrow arrow = new TgcArrow();
-            arrow.pStart = start;
-            arrow.pEnd = start + direction;
-            arrow.updateValues();
-            return arrow;
-        }
+        public Vector3 PEnd { get; set; }
 
         /// <summary>
-        /// Crea una flecha en base a su punto de inicio y dirección, con el color y el grosor especificado
-        /// </summary>
-        /// <param name="start">Punto de inicio</param>
-        /// <param name="direction">Dirección de la flecha</param>
-        /// <param name="bodyColor">Color del cuerpo de la flecha</param>
-        /// <param name="headColor">Color de la punta de la flecha</param>
-        /// <param name="thickness">Grosor del cuerpo de la flecha</param>
-        /// <param name="headSize">Tamaño de la punta de la flecha</param>
-        /// <returns>Flecha creada</returns>
-        public static TgcArrow fromDirection(Vector3 start, Vector3 direction, Color bodyColor, Color headColor, float thickness, Vector2 headSize)
-        {
-            TgcArrow arrow = new TgcArrow();
-            arrow.pStart = start;
-            arrow.pEnd = start + direction;
-            arrow.bodyColor = bodyColor;
-            arrow.headColor = headColor;
-            arrow.thickness = thickness;
-            arrow.headSize = headSize;
-            arrow.updateValues();
-            return arrow;
-        }
-
-        #endregion
-
-
-        readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
-
-        VertexBuffer vertexBuffer;
-
-        Vector3 pStart;
-        /// <summary>
-        /// Punto de inicio de la linea
-        /// </summary>
-        public Vector3 PStart
-        {
-            get { return pStart; }
-            set { pStart = value; }
-        }
-
-        Vector3 pEnd;
-        /// <summary>
-        /// Punto final de la linea
-        /// </summary>
-        public Vector3 PEnd
-        {
-            get { return pEnd; }
-            set { pEnd = value; }
-        }
-
-        Color bodyColor;
-        /// <summary>
-        /// Color del cuerpo de la flecha
+        ///     Color del cuerpo de la flecha
         /// </summary>
         public Color BodyColor
         {
@@ -129,9 +62,8 @@ namespace TgcViewer.Utils.TgcGeometry
             set { bodyColor = value; }
         }
 
-        Color headColor;
         /// <summary>
-        /// Color de la cabeza de la flecha
+        ///     Color de la cabeza de la flecha
         /// </summary>
         public Color HeadColor
         {
@@ -139,57 +71,29 @@ namespace TgcViewer.Utils.TgcGeometry
             set { headColor = value; }
         }
 
-        private bool enabled;
         /// <summary>
-        /// Indica si la flecha esta habilitada para ser renderizada
+        ///     Indica si la flecha esta habilitada para ser renderizada
         /// </summary>
-        public bool Enabled
-        {
-            get { return enabled; }
-            set { enabled = value; }
-        }
+        public bool Enabled { get; set; }
 
-        private float thickness;
         /// <summary>
-        /// Grosor del cuerpo de la flecha. Debe ser mayor a cero.
+        ///     Grosor del cuerpo de la flecha. Debe ser mayor a cero.
         /// </summary>
-        public float Thickness
-        {
-            get { return thickness; }
-            set { thickness = value; }
-        }
+        public float Thickness { get; set; }
 
-        private Vector2 headSize;
         /// <summary>
-        /// Tamaño de la cabeza de la flecha. Debe ser mayor a cero.
+        ///     Tamaño de la cabeza de la flecha. Debe ser mayor a cero.
         /// </summary>
-        public Vector2 HeadSize
-        {
-            get { return headSize; }
-            set { headSize = value; }
-        }
+        public Vector2 HeadSize { get; set; }
 
         public Vector3 Position
         {
             //Lo correcto sería calcular el centro, pero con un extremo es suficiente.
-            get { return pStart; }
+            get { return PStart; }
         }
 
-        private bool alphaBlendEnable;
         /// <summary>
-        /// Habilita el renderizado con AlphaBlending para los modelos
-        /// con textura o colores por vértice de canal Alpha.
-        /// Por default está deshabilitado.
-        /// </summary>
-        public bool AlphaBlendEnable
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
-
-        protected Effect effect;
-        /// <summary>
-        /// Shader del mesh
+        ///     Shader del mesh
         /// </summary>
         public Effect Effect
         {
@@ -197,10 +101,9 @@ namespace TgcViewer.Utils.TgcGeometry
             set { effect = value; }
         }
 
-        protected string technique;
         /// <summary>
-        /// Technique que se va a utilizar en el effect.
-        /// Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        ///     Technique que se va a utilizar en el effect.
+        ///     Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
         public string Technique
         {
@@ -208,42 +111,66 @@ namespace TgcViewer.Utils.TgcGeometry
             set { technique = value; }
         }
 
+        /// <summary>
+        ///     Habilita el renderizado con AlphaBlending para los modelos
+        ///     con textura o colores por vértice de canal Alpha.
+        ///     Por default está deshabilitado.
+        /// </summary>
+        public bool AlphaBlendEnable { get; set; }
 
-
-        public TgcArrow()
+        /// <summary>
+        ///     Renderizar la flecha
+        /// </summary>
+        public void render()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            if (!Enabled)
+                return;
 
-            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 54, d3dDevice,
-                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+            var d3dDevice = GuiController.Instance.D3dDevice;
+            var texturesManager = GuiController.Instance.TexturesManager;
 
-            this.thickness = 0.06f;
-            this.headSize = new Vector2(0.3f, 0.6f);
-            this.enabled = true;
-            this.bodyColor = Color.Blue;
-            this.headColor = Color.LightBlue;
-            this.alphaBlendEnable = false;
+            texturesManager.clear(0);
+            texturesManager.clear(1);
 
-            //Shader
-            this.effect = GuiController.Instance.Shaders.VariosShader;
-            this.technique = TgcShaders.T_POSITION_COLORED;
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
+            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            effect.Technique = technique;
+            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+
+            //Render con shader
+            effect.Begin(0);
+            effect.BeginPass(0);
+            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 18);
+            effect.EndPass();
+            effect.End();
         }
 
         /// <summary>
-        /// Actualizar parámetros de la flecha en base a los valores configurados
+        ///     Liberar recursos de la flecha
+        /// </summary>
+        public void dispose()
+        {
+            if (vertexBuffer != null && !vertexBuffer.Disposed)
+            {
+                vertexBuffer.Dispose();
+            }
+        }
+
+        /// <summary>
+        ///     Actualizar parámetros de la flecha en base a los valores configurados
         /// </summary>
         public void updateValues()
         {
-            CustomVertex.PositionColored[] vertices = new CustomVertex.PositionColored[54];
+            var vertices = new CustomVertex.PositionColored[54];
 
             //Crear caja en vertical en Y con longitud igual al módulo de la recta.
-            Vector3 lineVec = Vector3.Subtract(pEnd, pStart);
-            float lineLength = lineVec.Length();
-            Vector3 min = new Vector3(-thickness, 0, -thickness);
-            Vector3 max = new Vector3(thickness, lineLength, thickness);
+            var lineVec = Vector3.Subtract(PEnd, PStart);
+            var lineLength = lineVec.Length();
+            var min = new Vector3(-Thickness, 0, -Thickness);
+            var max = new Vector3(Thickness, lineLength, Thickness);
 
             //Vertices del cuerpo de la flecha
-            int bc = bodyColor.ToArgb();
+            var bc = bodyColor.ToArgb();
             // Front face
             vertices[0] = new CustomVertex.PositionColored(min.X, max.Y, max.Z, bc);
             vertices[1] = new CustomVertex.PositionColored(min.X, min.Y, max.Z, bc);
@@ -292,11 +219,10 @@ namespace TgcViewer.Utils.TgcGeometry
             vertices[34] = new CustomVertex.PositionColored(max.X, max.Y, max.Z, bc);
             vertices[35] = new CustomVertex.PositionColored(max.X, min.Y, min.Z, bc);
 
-
             //Vertices del cuerpo de la flecha
-            int hc = headColor.ToArgb();
-            Vector3 hMin = new Vector3(-headSize.X, lineLength, -headSize.X);
-            Vector3 hMax = new Vector3(headSize.X, lineLength + headSize.Y, headSize.X);
+            var hc = headColor.ToArgb();
+            var hMin = new Vector3(-HeadSize.X, lineLength, -HeadSize.X);
+            var hMax = new Vector3(HeadSize.X, lineLength + HeadSize.Y, HeadSize.X);
 
             //Bottom face
             vertices[36] = new CustomVertex.PositionColored(hMin.X, hMin.Y, hMax.Z, hc);
@@ -326,63 +252,103 @@ namespace TgcViewer.Utils.TgcGeometry
             vertices[52] = new CustomVertex.PositionColored(0, hMax.Y, 0, hc);
             vertices[53] = new CustomVertex.PositionColored(hMax.X, hMin.Y, hMax.Z, hc);
 
-
             //Obtener matriz de rotacion respecto del vector de la linea
             lineVec.Normalize();
-            float angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, lineVec));
-            Vector3 axisRotation = Vector3.Cross(ORIGINAL_DIR, lineVec);
+            var angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, lineVec));
+            var axisRotation = Vector3.Cross(ORIGINAL_DIR, lineVec);
             axisRotation.Normalize();
-            Matrix t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(pStart);
+            var t = Matrix.RotationAxis(axisRotation, angle)*Matrix.Translation(PStart);
 
             //Transformar todos los puntos
-            for (int i = 0; i < vertices.Length; i++)
-			{
+            for (var i = 0; i < vertices.Length; i++)
+            {
                 vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, t);
-			}
+            }
 
             //Cargar vertexBuffer
             vertexBuffer.SetData(vertices, 0, LockFlags.None);
         }
 
+        #region Creacion
 
         /// <summary>
-        /// Renderizar la flecha
+        ///     Crea una flecha en base a sus puntos extremos
         /// </summary>
-        public void render()
+        /// <param name="start">Punto de inicio</param>
+        /// <param name="end">Punto de fin</param>
+        /// <returns>Flecha creada</returns>
+        public static TgcArrow fromExtremes(Vector3 start, Vector3 end)
         {
-            if (!enabled)
-                return;
-
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
-
-            texturesManager.clear(0);
-            texturesManager.clear(1);
-
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
-            effect.Technique = this.technique;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
-
-            //Render con shader
-            effect.Begin(0);
-            effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 18);
-            effect.EndPass();
-            effect.End();
+            var arrow = new TgcArrow();
+            arrow.PStart = start;
+            arrow.PEnd = end;
+            arrow.updateValues();
+            return arrow;
         }
 
         /// <summary>
-        /// Liberar recursos de la flecha
+        ///     Crea una flecha en base a sus puntos extremos, con el color y el grosor especificado
         /// </summary>
-        public void dispose()
+        /// <param name="start">Punto de inicio</param>
+        /// <param name="end">Punto de fin</param>
+        /// <param name="bodyColor">Color del cuerpo de la flecha</param>
+        /// <param name="headColor">Color de la punta de la flecha</param>
+        /// <param name="thickness">Grosor del cuerpo de la flecha</param>
+        /// <param name="headSize">Tamaño de la punta de la flecha</param>
+        /// <returns>Flecha creada</returns>
+        public static TgcArrow fromExtremes(Vector3 start, Vector3 end, Color bodyColor, Color headColor,
+            float thickness, Vector2 headSize)
         {
-            if (vertexBuffer != null && !vertexBuffer.Disposed)
-            {
-                vertexBuffer.Dispose();
-            }
+            var arrow = new TgcArrow();
+            arrow.PStart = start;
+            arrow.PEnd = end;
+            arrow.bodyColor = bodyColor;
+            arrow.headColor = headColor;
+            arrow.Thickness = thickness;
+            arrow.HeadSize = headSize;
+            arrow.updateValues();
+            return arrow;
         }
 
+        /// <summary>
+        ///     Crea una flecha en base a su punto de inicio y dirección
+        /// </summary>
+        /// <param name="start">Punto de inicio</param>
+        /// <param name="direction">Dirección de la flecha</param>
+        /// <returns>Flecha creada</returns>
+        public static TgcArrow fromDirection(Vector3 start, Vector3 direction)
+        {
+            var arrow = new TgcArrow();
+            arrow.PStart = start;
+            arrow.PEnd = start + direction;
+            arrow.updateValues();
+            return arrow;
+        }
 
+        /// <summary>
+        ///     Crea una flecha en base a su punto de inicio y dirección, con el color y el grosor especificado
+        /// </summary>
+        /// <param name="start">Punto de inicio</param>
+        /// <param name="direction">Dirección de la flecha</param>
+        /// <param name="bodyColor">Color del cuerpo de la flecha</param>
+        /// <param name="headColor">Color de la punta de la flecha</param>
+        /// <param name="thickness">Grosor del cuerpo de la flecha</param>
+        /// <param name="headSize">Tamaño de la punta de la flecha</param>
+        /// <returns>Flecha creada</returns>
+        public static TgcArrow fromDirection(Vector3 start, Vector3 direction, Color bodyColor, Color headColor,
+            float thickness, Vector2 headSize)
+        {
+            var arrow = new TgcArrow();
+            arrow.PStart = start;
+            arrow.PEnd = start + direction;
+            arrow.bodyColor = bodyColor;
+            arrow.headColor = headColor;
+            arrow.Thickness = thickness;
+            arrow.HeadSize = headSize;
+            arrow.updateValues();
+            return arrow;
+        }
+
+        #endregion Creacion
     }
 }

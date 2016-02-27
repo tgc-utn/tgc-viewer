@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace TgcViewer.Utils.TgcKeyFrameLoader
 {
     public class TgcKeyFrameFrameData
@@ -11,6 +7,5 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
 
         //Valores de cada uno de los vertices del mesh para este cuadro
         public float[] verticesCoordinates;
-
     }
 }

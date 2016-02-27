@@ -1,31 +1,20 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.DirectX.DirectSound;
 
 namespace TgcViewer.Utils.Sound
 {
     /// <summary>
-    /// Herramienta para reproducir un sonido WAV estático
+    ///     Herramienta para reproducir un sonido WAV estático
     /// </summary>
     public class TgcStaticSound
     {
-        private SecondaryBuffer soundBuffer;
         /// <summary>
-        /// Buffer con la información del sonido cargado
+        ///     Buffer con la información del sonido cargado
         /// </summary>
-        public SecondaryBuffer SoundBuffer
-        {
-            get { return soundBuffer; }
-        }
-
-
-        public TgcStaticSound()
-        {
-        }
+        public SecondaryBuffer SoundBuffer { get; private set; }
 
         /// <summary>
-        /// Carga un archivo WAV de audio, indicando el volumen del mismo
+        ///     Carga un archivo WAV de audio, indicando el volumen del mismo
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="volume">Volumen del mismo</param>
@@ -35,17 +24,18 @@ namespace TgcViewer.Utils.Sound
             {
                 dispose();
 
-                BufferDescription bufferDescription = new BufferDescription();
+                var bufferDescription = new BufferDescription();
                 if (volume != -1)
                 {
                     bufferDescription.ControlVolume = true;
                 }
 
-                soundBuffer = new SecondaryBuffer(soundPath, bufferDescription, GuiController.Instance.DirectSound.DsDevice);
+                SoundBuffer = new SecondaryBuffer(soundPath, bufferDescription,
+                    GuiController.Instance.DirectSound.DsDevice);
 
                 if (volume != -1)
                 {
-                    soundBuffer.Volume = volume;
+                    SoundBuffer.Volume = volume;
                 }
             }
             catch (Exception ex)
@@ -55,7 +45,7 @@ namespace TgcViewer.Utils.Sound
         }
 
         /// <summary>
-        /// Carga un archivo WAV de audio, con el volumen default del mismo
+        ///     Carga un archivo WAV de audio, con el volumen default del mismo
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         public void loadSound(string soundPath)
@@ -64,18 +54,18 @@ namespace TgcViewer.Utils.Sound
         }
 
         /// <summary>
-        /// Reproduce el sonido, indicando si se hace con Loop.
-        /// Si ya se está reproduciedo, no vuelve a empezar.
+        ///     Reproduce el sonido, indicando si se hace con Loop.
+        ///     Si ya se está reproduciedo, no vuelve a empezar.
         /// </summary>
         /// <param name="playLoop">TRUE para reproducir en loop</param>
         public void play(bool playLoop)
         {
-            soundBuffer.Play(0, playLoop ? BufferPlayFlags.Looping : BufferPlayFlags.Default);
+            SoundBuffer.Play(0, playLoop ? BufferPlayFlags.Looping : BufferPlayFlags.Default);
         }
 
         /// <summary>
-        /// Reproduce el sonido, sin Loop.
-        /// Si ya se está reproduciedo, no vuelve a empezar.
+        ///     Reproduce el sonido, sin Loop.
+        ///     Si ya se está reproduciedo, no vuelve a empezar.
         /// </summary>
         public void play()
         {
@@ -83,26 +73,25 @@ namespace TgcViewer.Utils.Sound
         }
 
         /// <summary>
-        /// Pausa la ejecución del sonido.
-        /// Si el sonido no se estaba ejecutando, no hace nada.
-        /// Si se hace stop() y luego play(), el sonido continua desde donde había dejado la última vez.
+        ///     Pausa la ejecución del sonido.
+        ///     Si el sonido no se estaba ejecutando, no hace nada.
+        ///     Si se hace stop() y luego play(), el sonido continua desde donde había dejado la última vez.
         /// </summary>
         public void stop()
         {
-            soundBuffer.Stop();
+            SoundBuffer.Stop();
         }
 
         /// <summary>
-        /// Liberar recursos del sonido
+        ///     Liberar recursos del sonido
         /// </summary>
         public void dispose()
         {
-            if (soundBuffer != null && !soundBuffer.Disposed)
+            if (SoundBuffer != null && !SoundBuffer.Disposed)
             {
-                soundBuffer.Dispose();
-                soundBuffer = null;
+                SoundBuffer.Dispose();
+                SoundBuffer = null;
             }
         }
-
     }
 }

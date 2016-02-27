@@ -1,47 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX.Direct3D;
-
-namespace Examples.Quake3Loader
+﻿namespace Examples.Quake3Loader
 {
     /// <summary>
-    /// Datos parseados de un mapa BSP
+    ///     Datos parseados de un mapa BSP
     /// </summary>
     public class BspMapData
     {
-        /// <summary>
-        /// Ruta del mapa
-        /// </summary>
-        public string filePath;
+        public QBrush[] brushes;
+        public QBrushSide[] brushSides;
+        public int[] drawIndexes;
+        public QSurface[] drawSurfaces;
+        public QDrawVert[] drawVerts;
 
         /// <summary>
-        /// Metadata del escenario (sin parsear)
+        ///     Metadata del escenario (sin parsear)
         /// </summary>
         public string entdata;
 
-        public QModel[] models;
-        public QShader[] shaders;
-        public QLeaf[] leafs;
-        public QPlane[] planes;
-        public QNode[] nodes;
-        public int[] leafSurfaces;
-        public int[] leafbrushes;
-        public QBrush[] brushes;
-        public QBrushSide[] brushSides;
-        public byte[] lightBytes;
-        public byte[] gridData;
-        public QDrawVert[] drawVerts;
-        public int[] drawIndexes;
-        public QSurface[] drawSurfaces;
+        /// <summary>
+        ///     Ruta del mapa
+        /// </summary>
+        public string filePath;
+
         public QFog[] fogs;
+        public byte[] gridData;
+        public int[] leafbrushes;
+        public QLeaf[] leafs;
+        public int[] leafSurfaces;
+        public byte[] lightBytes;
+
+        public QModel[] models;
+        public QNode[] nodes;
+        public QPlane[] planes;
+        public QShader[] shaders;
         public QShaderData[] shaderXSurface;
 
         /// <summary>
-        /// Matriz PVS
+        ///     Matriz PVS
         /// </summary>
         public QVisData visData;
-        //public byte[] visBytes;
 
+        //public byte[] visBytes;
     }
 }

@@ -1,38 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace TgcViewer.Utils.Sound
 {
     public class TgcMp3Player
     {
+        /// <summary>
+        ///     Estados del reproductor
+        /// </summary>
+        public enum States
+        {
+            Open,
+            Playing,
+            Paused,
+            Stopped
+        }
 
-        #region DLLs externas
-
-        [DllImport("winmm.dll")]
-        public static extern int mciSendString(string lpstrCommand,
-        StringBuilder lpstrReturnString, int uReturnLengh, int hwndCallback);
-
-        [DllImport("winmm.dll")]
-        public static extern int mciGetErrorString(int fwdError, StringBuilder lpszErrorText,
-        int cchErrorText);
-
-        [DllImport("winmm.dll")]
-        public static extern int waveOutGetNumDevs();
-
-        [DllImport("kernel32.dll")]
-        public static extern int GetShortPathName(string lpszLongPath,
-        StringBuilder lpszShortPath, int cchBuffer);
-
-        [DllImport("kernel32.dll")]
-        public static extern int GetLongPathName(string
-        lpszShortPath, StringBuilder lpszLongPath, int cchBuffer);
-
-        #endregion
-
-        // Constante con la longitud máxima de un nombre de archivo.     
+        // Constante con la longitud máxima de un nombre de archivo.
         private const int MAX_PATH = 260;
 
         // Constante con el formato de archivo a reproducir.
@@ -41,53 +27,31 @@ namespace TgcViewer.Utils.Sound
         // Alias asignado al archivo especificado.
         private const string WINMM_FILE_ALIAS = "TgcMp3MediaFile";
 
-
-        private string fileName;
         /// <summary>
-        /// Path del archivo a reproducir
+        ///     Path del archivo a reproducir
         /// </summary>
-        public string FileName
-        {
-            get { return fileName; }
-            set { fileName = value; }
-        }
+        public string FileName { get; set; }
 
         /// <summary>
-        /// Estados del reproductor
-        /// </summary>
-        public enum States
-        {
-            Open,
-            Playing,
-            Paused,
-            Stopped,
-        }
-
-        public TgcMp3Player()
-        {
-        }
-
-        /// <summary>
-        /// Inicia la reproducción del archivo MP3.
-        /// <param name="playLoop">True para reproducir en loop</param>
+        ///     Inicia la reproducción del archivo MP3.
+        ///     <param name="playLoop">True para reproducir en loop</param>
         /// </summary>
         public void play(bool playLoop)
         {
             // Nos cersioramos que hay un archivo que reproducir.
-            if (fileName != "")
+            if (FileName != "")
             {
                 // intentamos iniciar la reproducción.
                 if (LoadFile())
                 {
-                    StringBuilder command = new StringBuilder("play ");
+                    var command = new StringBuilder("play ");
                     command.Append(WINMM_FILE_ALIAS);
                     if (playLoop)
                     {
                         command.Append(" REPEAT");
                     }
 
-
-                    int mciResul = mciSendString(command.ToString(), null, 0, 0);
+                    var mciResul = mciSendString(command.ToString(), null, 0, 0);
                     if (mciResul != 0)
                     {
                         throw new Exception("Error al reproducir MP3: " + MciMensajesDeError(mciResul));
@@ -95,9 +59,8 @@ namespace TgcViewer.Utils.Sound
                 }
                 else
                 {
-                    throw new Exception("Error al abrir MP3: " + fileName);
+                    throw new Exception("Error al abrir MP3: " + FileName);
                 }
-
             }
             else
             {
@@ -106,24 +69,12 @@ namespace TgcViewer.Utils.Sound
         }
 
         /// <summary>
-        /// Pausa la reproducción en proceso.
+        ///     Pausa la reproducción en proceso.
         /// </summary>
         public void pause()
         {
             // Enviamos el comando de pausa mediante la función mciSendString,
-            int mciResul = mciSendString("pause " + WINMM_FILE_ALIAS, null, 0, 0);
-            if (mciResul != 0)
-            {
-                throw new Exception(MciMensajesDeError(mciResul));
-            }
-        }
-        /// <summary>
-        /// Continúa con la reproducción actual.
-        /// </summary>
-        public void resume()
-        {
-            // Enviamos el comando de pausa mediante la función mciSendString,
-            int mciResul = mciSendString("resume " + WINMM_FILE_ALIAS, null, 0, 0);
+            var mciResul = mciSendString("pause " + WINMM_FILE_ALIAS, null, 0, 0);
             if (mciResul != 0)
             {
                 throw new Exception(MciMensajesDeError(mciResul));
@@ -131,7 +82,20 @@ namespace TgcViewer.Utils.Sound
         }
 
         /// <summary>
-        /// Detiene la reproducción del archivo de audio.
+        ///     Continúa con la reproducción actual.
+        /// </summary>
+        public void resume()
+        {
+            // Enviamos el comando de pausa mediante la función mciSendString,
+            var mciResul = mciSendString("resume " + WINMM_FILE_ALIAS, null, 0, 0);
+            if (mciResul != 0)
+            {
+                throw new Exception(MciMensajesDeError(mciResul));
+            }
+        }
+
+        /// <summary>
+        ///     Detiene la reproducción del archivo de audio.
         /// </summary>
         public void stop()
         {
@@ -140,7 +104,7 @@ namespace TgcViewer.Utils.Sound
         }
 
         /// <summary>
-        /// Detiene la reproducción actual y cierra el archivo de audio.
+        ///     Detiene la reproducción actual y cierra el archivo de audio.
         /// </summary>
         public void closeFile()
         {
@@ -149,17 +113,16 @@ namespace TgcViewer.Utils.Sound
             mciSendString("close " + WINMM_FILE_ALIAS, null, 0, 0);
         }
 
-
         /// <summary>
-        /// Obtiene el estado de la reproducción en proceso.
+        ///     Obtiene el estado de la reproducción en proceso.
         /// </summary>
         /// <returns>Estado del reproducto</returns>
         public States getStatus()
         {
-            StringBuilder sbBuffer = new StringBuilder(MAX_PATH);
+            var sbBuffer = new StringBuilder(MAX_PATH);
             // Obtenemos la información mediante el comando adecuado.
             mciSendString("status " + WINMM_FILE_ALIAS + " mode", sbBuffer, MAX_PATH, 0);
-            string strState = sbBuffer.ToString();
+            var strState = sbBuffer.ToString();
 
             if (strState == "playing")
             {
@@ -177,116 +140,136 @@ namespace TgcViewer.Utils.Sound
         }
 
         /// <summary>
-        /// Mueve el apuntador de archivo al inicio del mismo.
+        ///     Mueve el apuntador de archivo al inicio del mismo.
         /// </summary>
         public void goToBeginning()
         {
             // Establecemos la cadena de comando para mover el apuntador del archivo,
             // al inicio de este.
-            int mciResul = mciSendString("seek " + WINMM_FILE_ALIAS + " to start", null, 0, 0);
+            var mciResul = mciSendString("seek " + WINMM_FILE_ALIAS + " to start", null, 0, 0);
             if (mciResul != 0)
             {
                 throw new Exception(MciMensajesDeError(mciResul));
             }
         }
+
         /// <summary>
-        /// Mueve el apuntador de archivo al final del mismo.
+        ///     Mueve el apuntador de archivo al final del mismo.
         /// </summary>
         public void goToEnd()
         {
             // Establecemos la cadena de comando para mover el apuntador del archivo,
             // al final de este.
-            int mciResul = mciSendString("seek " + WINMM_FILE_ALIAS + " to end", null, 0, 0);
+            var mciResul = mciSendString("seek " + WINMM_FILE_ALIAS + " to end", null, 0, 0);
             if (mciResul != 0)
             {
                 throw new Exception(MciMensajesDeError(mciResul));
             }
         }
-        
+
+        #region DLLs externas
+
+        [DllImport("winmm.dll")]
+        public static extern int mciSendString(string lpstrCommand,
+            StringBuilder lpstrReturnString, int uReturnLengh, int hwndCallback);
+
+        [DllImport("winmm.dll")]
+        public static extern int mciGetErrorString(int fwdError, StringBuilder lpszErrorText,
+            int cchErrorText);
+
+        [DllImport("winmm.dll")]
+        public static extern int waveOutGetNumDevs();
+
+        [DllImport("kernel32.dll")]
+        public static extern int GetShortPathName(string lpszLongPath,
+            StringBuilder lpszShortPath, int cchBuffer);
+
+        [DllImport("kernel32.dll")]
+        public static extern int GetLongPathName(string
+            lpszShortPath, StringBuilder lpszLongPath, int cchBuffer);
+
+        #endregion DLLs externas
 
         #region Metodos auxiliares
 
         /// <summary>
-        /// Método para convertir un nombre de archivo largo en uno corto,
-        /// necesario para usarlo como parámetro de la función MciSendString.
+        ///     Método para convertir un nombre de archivo largo en uno corto,
+        ///     necesario para usarlo como parámetro de la función MciSendString.
         /// </summary>
         /// <param name="nombreLargo">Nombre y ruta del archivo a convertir.</param>
         /// <returns>Nombre corto del archivo especificado.</returns>
         private string NombreCorto(string NombreLargo)
         {
             // Creamos un buffer usando un constructor de la clase StringBuider.
-            StringBuilder sBuffer = new StringBuilder(MAX_PATH);
+            var sBuffer = new StringBuilder(MAX_PATH);
             // intentamos la conversión del archivo.
             if (GetShortPathName(NombreLargo, sBuffer, MAX_PATH) > 0)
                 // si la función ha tenido éxito devolvemos el buffer formateado
                 // a tipo string.
                 return sBuffer.ToString();
-            else // en caso contrario, devolvemos una cadena vacía.
-                return "";
+            return "";
         }
 
         /// <summary>
-        /// Método que convierte un nombre de archivo corto, en uno largo.
+        ///     Método que convierte un nombre de archivo corto, en uno largo.
         /// </summary>
         /// <param name="NombreCorto">Nombre del archivo a convertir.</param>
         /// <returns>Cadena con el nombre de archivo resultante.</returns>
         public string NombreLargo(string NombreCorto)
         {
-            StringBuilder sbBuffer = new StringBuilder(MAX_PATH);
+            var sbBuffer = new StringBuilder(MAX_PATH);
             if (GetLongPathName(NombreCorto, sbBuffer, MAX_PATH) > 0)
                 return sbBuffer.ToString();
-            else
-                return "";
+            return "";
         }
 
         /// <summary>
-        /// Método para convertir los mensajes de error numéricos, generados por la
-        /// función mciSendString, en su correspondiente cadena de caracteres.
+        ///     Método para convertir los mensajes de error numéricos, generados por la
+        ///     función mciSendString, en su correspondiente cadena de caracteres.
         /// </summary>
-        /// <param name="ErrorCode">Código de error devuelto por la función 
-        /// mciSendString</param>
+        /// <param name="ErrorCode">
+        ///     Código de error devuelto por la función
+        ///     mciSendString
+        /// </param>
         /// <returns>Cadena de tipo string, con el mensaje de error</returns>
         private string MciMensajesDeError(int ErrorCode)
         {
             // Creamos un buffer, con suficiente espacio, para almacenar el mensaje
             // devuelto por la función.
-            StringBuilder sbBuffer = new StringBuilder(MAX_PATH);
+            var sbBuffer = new StringBuilder(MAX_PATH);
             // Obtenemos la cadena de mensaje.
             if (mciGetErrorString(ErrorCode, sbBuffer, MAX_PATH) != 0)
                 // Sí la función ha tenido éxito, valor devuelto diferente de 0,
                 // devolvemos el valor del buffer, formateado a string.
                 return sbBuffer.ToString();
-            else // si no, devolvemos una cadena vacía.
-                return "";
+            return "";
         }
 
         /// <summary>
-        /// Abre el archivo MP3 específicado.
+        ///     Abre el archivo MP3 específicado.
         /// </summary>
-        /// <returns>Verdadero si se tuvo éxito al abrir el archivo
-        /// falso en caso contrario.</returns>
+        /// <returns>
+        ///     Verdadero si se tuvo éxito al abrir el archivo
+        ///     falso en caso contrario.
+        /// </returns>
         private bool LoadFile()
         {
             // verificamos que el archivo existe; si no, regresamos falso.
-            if (!File.Exists(fileName)) return false;
+            if (!File.Exists(FileName)) return false;
             // obtenemos el nombre corto del archivo.
-            string nombreCorto = NombreCorto(fileName);
+            var nombreCorto = NombreCorto(FileName);
             // intentamos abrir el archivo, utilizando su nombre corto
             // y asignándole un alias para trabajar con él.
             if (mciSendString("open " + nombreCorto + " type " + WINMM_FILE_TYPE +
-            " alias " + WINMM_FILE_ALIAS, null, 0, 0) == 0)
+                              " alias " + WINMM_FILE_ALIAS, null, 0, 0) == 0)
                 // si el resultado es igual a 0, la función tuvo éxito,
                 // devolvemos verdadero.
                 return true;
-            else
-                // en caso contrario, falso.
-                return false;
+            return false;
         }
 
-        #endregion
+        #endregion Metodos auxiliares
 
-        
-        
         #region Metodos aun no probados
 
         /*
@@ -328,7 +311,7 @@ namespace TgcViewer.Utils.Sound
         }
 
         /// <summary>
-        /// Devuelve el número de dispositivos de salida, 
+        /// Devuelve el número de dispositivos de salida,
         /// instalados en nuestro sistema.
         /// </summary>
         /// <returns>Número de dispositivos.</returns>
@@ -336,7 +319,7 @@ namespace TgcViewer.Utils.Sound
         {
             return waveOutGetNumDevs();
         }
-        
+
         /// <summary>
         /// Mueve el apuntador del archivo a la posición especificada.
         /// </summary>
@@ -353,9 +336,7 @@ namespace TgcViewer.Utils.Sound
             else
                 ReproductorEstado(MciMensajesDeError(mciResul));
         }
-        
-        
-        
+
         /// <summary>
         /// Calcula la posición actual del apuntador del archivo.
         /// </summary>
@@ -455,7 +436,7 @@ namespace TgcViewer.Utils.Sound
         }
 
         */
-        #endregion
 
+        #endregion Metodos aun no probados
     }
 }

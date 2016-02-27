@@ -1,31 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using TgcViewer;
+using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Example;
 using TGC.Core.Utils;
 
 namespace Examples.Collision
 {
     /// <summary>
-    /// Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
+    ///     Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
     /// </summary>
     public class EjemploBoundingCylinder : TgcExample
     {
+        private const float PICKING_TIME = 0.5f;
         private TgcBoundingCylinder collider;
         private TgcBoundingSphere collisionableSphere;
+        private readonly Color collisionColor = Color.Red;
 
-        private Color noCollisionColor = Color.Yellow;
-        private Color collisionColor = Color.Red;
-        private Color pickingColor = Color.DarkGreen;
+        private readonly Color noCollisionColor = Color.Yellow;
+        private readonly Color pickingColor = Color.DarkGreen;
 
         private float pickingTimeLeft;
-        private const float PICKING_TIME = 0.5f;
 
         public override string getCategory()
         {
@@ -39,7 +35,8 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Muestra el testeo de colision entre cilindro orientable y esfera. Hacer click sobre el viewport para testear colision PickingRay-Cylinder.";
+            return
+                "Muestra el testeo de colision entre cilindro orientable y esfera. Hacer click sobre el viewport para testear colision PickingRay-Cylinder.";
         }
 
         public override void init()
@@ -47,21 +44,23 @@ namespace Examples.Collision
             collider = new TgcBoundingCylinder(new Vector3(0, 0, 0), 2, 4);
             collisionableSphere = new TgcBoundingSphere(new Vector3(0, 0, -6), 3);
 
-            GuiController.Instance.Modifiers.addVertex2f("size", new Vector2(1, 1), new Vector2(5, 10), new Vector2(2, 5));
-            GuiController.Instance.Modifiers.addVertex3f("position", new Vector3(-20, -20, -20), new Vector3(20, 20, 20), new Vector3(0, 0, 0));
-            float angle = FastMath.TWO_PI;
-            GuiController.Instance.Modifiers.addVertex3f("rotation", new Vector3(-angle, -angle, -angle), new Vector3(angle, angle, angle), new Vector3(0, 0, 0));
+            GuiController.Instance.Modifiers.addVertex2f("size", new Vector2(1, 1), new Vector2(5, 10),
+                new Vector2(2, 5));
+            GuiController.Instance.Modifiers.addVertex3f("position", new Vector3(-20, -20, -20), new Vector3(20, 20, 20),
+                new Vector3(0, 0, 0));
+            var angle = FastMath.TWO_PI;
+            GuiController.Instance.Modifiers.addVertex3f("rotation", new Vector3(-angle, -angle, -angle),
+                new Vector3(angle, angle, angle), new Vector3(0, 0, 0));
 
             collider.setRenderColor(Color.LimeGreen);
         }
 
-
         public override void render(float elapsedTime)
         {
-            TgcModifiers modifiers = GuiController.Instance.Modifiers;
-            Vector2 size = (Vector2)modifiers.getValue("size");
-            Vector3 position = (Vector3)modifiers.getValue("position");
-            Vector3 rotation = (Vector3)modifiers.getValue("rotation");
+            var modifiers = GuiController.Instance.Modifiers;
+            var size = (Vector2) modifiers.getValue("size");
+            var position = (Vector3) modifiers.getValue("position");
+            var rotation = (Vector3) modifiers.getValue("rotation");
 
             collider.Center = position;
             collider.Rotation = rotation;
@@ -78,9 +77,9 @@ namespace Examples.Collision
             if (pickingTimeLeft > 0) pickingTimeLeft -= elapsedTime;
             else collider.setRenderColor(noCollisionColor);
 
-            if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                TgcPickingRay pickingRay = new TgcPickingRay();
+                var pickingRay = new TgcPickingRay();
                 pickingRay.updateRay();
                 if (TgcCollisionUtils.testRayCylinder(pickingRay.Ray, collider))
                 {
@@ -98,6 +97,5 @@ namespace Examples.Collision
             collider.dispose();
             collisionableSphere.dispose();
         }
-
     }
 }

@@ -1,36 +1,47 @@
-﻿using Microsoft.DirectX;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
+using Microsoft.DirectX;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace TgcViewer.Utils.TgcGeometry
 {
     /// <summary>
-    /// Herramienta para dibujar una lista de triangulos.
-    /// No está pensado para rasterizar en forma performante, sino mas
-    /// para una herramienta de debug.
+    ///     Herramienta para dibujar una lista de triangulos.
+    ///     No está pensado para rasterizar en forma performante, sino mas
+    ///     para una herramienta de debug.
     /// </summary>
     public class TgcTriangleArray
     {
-        TgcPickingRay pickingRay;
+        private readonly TgcPickingRay pickingRay;
+
+        public TgcTriangleArray()
+        {
+            Triangles = new List<TgcTriangle>();
+            pickingRay = new TgcPickingRay();
+        }
 
         /// <summary>
-        /// Crear a partir de un mesh
+        ///     Triangulos
+        /// </summary>
+        public List<TgcTriangle> Triangles { get; }
+
+        /// <summary>
+        ///     Crear a partir de un mesh
         /// </summary>
         public static TgcTriangleArray fromMesh(TgcMesh mesh)
         {
-            TgcTriangleArray triangleArray = new TgcTriangleArray();
+            var triangleArray = new TgcTriangleArray();
 
-            Vector3[] vertices = mesh.getVertexPositions();
-            int triCount = vertices.Length / 3;
-            List<TgcTriangle> triangles = new List<TgcTriangle>(triCount);
-            for (int i = 0; i < triCount; i++)
+            var vertices = mesh.getVertexPositions();
+            var triCount = vertices.Length/3;
+            var triangles = new List<TgcTriangle>(triCount);
+            for (var i = 0; i < triCount; i++)
             {
-                Vector3 v1 = vertices[i * 3];
-                Vector3 v2 = vertices[i * 3 + 1];
-                Vector3 v3 = vertices[i * 3 + 2];
+                var v1 = vertices[i*3];
+                var v2 = vertices[i*3 + 1];
+                var v3 = vertices[i*3 + 2];
 
-                TgcTriangle t = new TgcTriangle();
+                var t = new TgcTriangle();
                 t.A = v1;
                 t.B = v2;
                 t.C = v3;
@@ -39,29 +50,13 @@ namespace TgcViewer.Utils.TgcGeometry
                 triangles.Add(t);
             }
 
-            triangleArray.triangles.AddRange(triangles);
+            triangleArray.Triangles.AddRange(triangles);
             return triangleArray;
-        }
-
-
-        List<TgcTriangle> triangles;
-        /// <summary>
-        /// Triangulos
-        /// </summary>
-        public List<TgcTriangle> Triangles
-        {
-            get { return triangles; }
-        }
-
-        public TgcTriangleArray()
-        {
-            triangles = new List<TgcTriangle>();
-            pickingRay = new TgcPickingRay();
         }
 
         public void render()
         {
-            foreach (TgcTriangle t in triangles)
+            foreach (var t in Triangles)
             {
                 t.render();
             }
@@ -69,7 +64,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
         public void setEnabled(bool enabled)
         {
-            foreach (TgcTriangle t in triangles)
+            foreach (var t in Triangles)
             {
                 t.Enabled = enabled;
             }
@@ -77,35 +72,36 @@ namespace TgcViewer.Utils.TgcGeometry
 
         public void dispose()
         {
-            foreach (TgcTriangle t in triangles)
+            foreach (var t in Triangles)
             {
                 t.dispose();
             }
         }
 
         /// <summary>
-        /// Picking sobre un triangulo
+        ///     Picking sobre un triangulo
         /// </summary>
         public bool pickTriangle(out TgcTriangle triangle, out int triangleIndex)
         {
             pickingRay.updateRay();
-            Vector3 segmentA = pickingRay.Ray.Origin;
-            Vector3 segmentB = segmentA + Vector3.Scale(pickingRay.Ray.Direction, 10000f);
-            float minDist = float.MaxValue;
+            var segmentA = pickingRay.Ray.Origin;
+            var segmentB = segmentA + Vector3.Scale(pickingRay.Ray.Direction, 10000f);
+            var minDist = float.MaxValue;
             triangle = null;
             triangleIndex = -1;
 
             //Buscar la menor colision rayo-triangulo
-            for (int i = 0; i < triangles.Count; i++)
+            for (var i = 0; i < Triangles.Count; i++)
             {
-                TgcTriangle tri = triangles[i];
+                var tri = Triangles[i];
 
                 float t;
                 Vector3 uvw;
                 Vector3 col;
-                if (TgcCollisionUtils.intersectLineTriangle(segmentA, segmentB, tri.A, tri.B, tri.C, out uvw, out t, out col))
+                if (TgcCollisionUtils.intersectLineTriangle(segmentA, segmentB, tri.A, tri.B, tri.C, out uvw, out t,
+                    out col))
                 {
-                    float dist = Vector3.Length(col - segmentA);
+                    var dist = Vector3.Length(col - segmentA);
                     if (dist < minDist)
                     {
                         minDist = dist;
@@ -117,6 +113,5 @@ namespace TgcViewer.Utils.TgcGeometry
 
             return triangle != null;
         }
-
     }
 }

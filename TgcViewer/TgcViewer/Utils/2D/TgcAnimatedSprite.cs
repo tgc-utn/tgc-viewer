@@ -1,31 +1,75 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer;
 
 namespace TgcViewer.Utils._2D
 {
     /// <summary>
-    /// Utilidad para Sprites 2D animados en forma de tile dentro de una textura
+    ///     Utilidad para Sprites 2D animados en forma de tile dentro de una textura
     /// </summary>
     public class TgcAnimatedSprite
     {
-        Size frameSize;
-        int totalFrames;
-        float currentTime;
-        float animationTimeLenght;
-        int framesPerRow;
-        int framesPerColumn;
-        float textureWidth;
-        float textureHeight;
+        private float animationTimeLenght;
+
+        protected int currentFrame;
+        private float currentTime;
 
         protected bool enabled;
+
+        protected float frameRate;
+        private Size frameSize;
+        private readonly int framesPerColumn;
+        private readonly int framesPerRow;
+
+        protected bool playing;
+
+        private readonly float textureHeight;
+        private readonly float textureWidth;
+        private readonly int totalFrames;
+
         /// <summary>
-        /// Indica si el sprite esta habilitado para ser renderizada
+        ///     Crear un nuevo Sprite animado
+        /// </summary>
+        /// <param name="texturePath">path de la textura animada</param>
+        /// <param name="frameSize">tamaño de un tile de la animacion</param>
+        /// <param name="totalFrames">cantidad de frames que tiene la animacion</param>
+        /// <param name="frameRate">velocidad en cuadros por segundo</param>
+        public TgcAnimatedSprite(string texturePath, Size frameSize, int totalFrames, float frameRate)
+        {
+            enabled = true;
+            currentFrame = 0;
+            this.frameSize = frameSize;
+            this.totalFrames = totalFrames;
+            currentTime = 0;
+            playing = true;
+
+            //Crear textura
+            var d3dDevice = GuiController.Instance.D3dDevice;
+            var texture = TgcTexture.createTexture(d3dDevice, texturePath);
+
+            //Sprite
+            Sprite = new TgcSprite();
+            Sprite.Texture = texture;
+
+            //Calcular valores de frames de la textura
+            textureWidth = texture.Width;
+            textureHeight = texture.Height;
+            framesPerColumn = (int) textureWidth/frameSize.Width;
+            framesPerRow = (int) textureHeight/frameSize.Height;
+            var realTotalFrames = framesPerRow*framesPerColumn;
+            if (realTotalFrames > totalFrames)
+            {
+                throw new Exception(
+                    "Error en AnimatedSprite. No coinciden la cantidad de frames y el tamaño de la textura: " +
+                    totalFrames);
+            }
+
+            setFrameRate(frameRate);
+        }
+
+        /// <summary>
+        ///     Indica si el sprite esta habilitado para ser renderizada
         /// </summary>
         public bool Enabled
         {
@@ -33,9 +77,8 @@ namespace TgcViewer.Utils._2D
             set { enabled = value; }
         }
 
-        protected bool playing;
         /// <summary>
-        /// Arrancar o parar avance de animacion
+        ///     Arrancar o parar avance de animacion
         /// </summary>
         public bool Playing
         {
@@ -43,27 +86,21 @@ namespace TgcViewer.Utils._2D
             set { playing = value; }
         }
 
-        TgcSprite sprite;
         /// <summary>
-        /// Sprite con toda la textura a animar
+        ///     Sprite con toda la textura a animar
         /// </summary>
-        public TgcSprite Sprite
-        {
-            get { return sprite; }
-        }
+        public TgcSprite Sprite { get; }
 
-        protected float frameRate;
         /// <summary>
-        /// Velocidad de la animacion medida en cuadros por segundo.
+        ///     Velocidad de la animacion medida en cuadros por segundo.
         /// </summary>
         public float FrameRate
         {
             get { return frameRate; }
         }
 
-        protected int currentFrame;
         /// <summary>
-        /// Frame actual de la textura animada
+        ///     Frame actual de la textura animada
         /// </summary>
         public int CurrentFrame
         {
@@ -72,81 +109,43 @@ namespace TgcViewer.Utils._2D
         }
 
         /// <summary>
-        /// Posicion del sprite
+        ///     Posicion del sprite
         /// </summary>
         public Vector2 Position
         {
-            get { return sprite.Position; }
-            set { sprite.Position = value; }
+            get { return Sprite.Position; }
+            set { Sprite.Position = value; }
         }
 
         /// <summary>
-        /// Factor de escala en X e Y
+        ///     Factor de escala en X e Y
         /// </summary>
         public Vector2 Scaling
         {
-            get { return sprite.Scaling; }
-            set { sprite.Scaling = value; }
+            get { return Sprite.Scaling; }
+            set { Sprite.Scaling = value; }
         }
 
         /// <summary>
-        /// Angulo de rotación en radianes
+        ///     Angulo de rotación en radianes
         /// </summary>
         public float Rotation
         {
-            get { return sprite.Rotation; }
-            set { sprite.Rotation = value; }
+            get { return Sprite.Rotation; }
+            set { Sprite.Rotation = value; }
         }
 
         /// <summary>
-        /// Crear un nuevo Sprite animado
-        /// </summary>
-        /// <param name="texturePath">path de la textura animada</param>
-        /// <param name="frameSize">tamaño de un tile de la animacion</param>
-        /// <param name="totalFrames">cantidad de frames que tiene la animacion</param>
-        /// <param name="frameRate">velocidad en cuadros por segundo</param>
-        public TgcAnimatedSprite(string texturePath, Size frameSize, int totalFrames, float frameRate)
-        {
-            this.enabled = true;
-            this.currentFrame = 0;
-            this.frameSize = frameSize;
-            this.totalFrames = totalFrames;
-            this.currentTime = 0;
-            this.playing = true;
-
-            //Crear textura
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture texture = TgcTexture.createTexture(d3dDevice, texturePath);
-
-            //Sprite
-            sprite = new TgcSprite();
-            sprite.Texture = texture;
-
-            //Calcular valores de frames de la textura
-            textureWidth = texture.Width;
-            textureHeight = texture.Height;
-            framesPerColumn = (int)textureWidth / frameSize.Width;
-            framesPerRow = (int)textureHeight / frameSize.Height;
-            int realTotalFrames = framesPerRow * framesPerColumn;
-            if (realTotalFrames > totalFrames)
-            {
-                throw new Exception("Error en AnimatedSprite. No coinciden la cantidad de frames y el tamaño de la textura: " + totalFrames);
-            }
-
-            setFrameRate(frameRate);
-        }
-
-        /// <summary>
-        /// Cambiar la velocidad de animacion
+        ///     Cambiar la velocidad de animacion
         /// </summary>
         public void setFrameRate(float frameRate)
         {
             this.frameRate = frameRate;
-            animationTimeLenght = (float)totalFrames / frameRate;
+            animationTimeLenght = totalFrames/frameRate;
         }
 
         /// <summary>
-        /// Actualizar frame de animacion
+        ///     Actualizar frame de animacion
         /// </summary>
         public void update()
         {
@@ -165,21 +164,21 @@ namespace TgcViewer.Utils._2D
             }
 
             //Obtener cuadro actual
-            currentFrame = (int)(currentTime * frameRate);
+            currentFrame = (int) (currentTime*frameRate);
 
             //Obtener rectangulo de dibujado de la textura para este frame
-            Rectangle srcRect = new Rectangle();
-            srcRect.Y = frameSize.Width * (currentFrame % framesPerRow);
+            var srcRect = new Rectangle();
+            srcRect.Y = frameSize.Width*(currentFrame%framesPerRow);
             srcRect.Width = frameSize.Width;
-            srcRect.X = frameSize.Height * (currentFrame % framesPerColumn);
+            srcRect.X = frameSize.Height*(currentFrame%framesPerColumn);
             srcRect.Height = frameSize.Height;
-            sprite.SrcRect = srcRect;
+            Sprite.SrcRect = srcRect;
         }
 
         /// <summary>
-        /// Renderizar Sprite.
-        /// Se debe llamar primero a update().
-        /// Sino se dibuja el ultimo estado actualizado.
+        ///     Renderizar Sprite.
+        ///     Se debe llamar primero a update().
+        ///     Sino se dibuja el ultimo estado actualizado.
         /// </summary>
         public void render()
         {
@@ -187,11 +186,11 @@ namespace TgcViewer.Utils._2D
                 return;
 
             //Dibujar sprite
-            sprite.render();
+            Sprite.render();
         }
 
         /// <summary>
-        /// Actualiza la animacion y dibuja el Sprite
+        ///     Actualiza la animacion y dibuja el Sprite
         /// </summary>
         public void updateAndRender()
         {
@@ -200,12 +199,11 @@ namespace TgcViewer.Utils._2D
         }
 
         /// <summary>
-        /// Liberar recursos
+        ///     Liberar recursos
         /// </summary>
         public void dispose()
         {
-            sprite.dispose();
+            Sprite.dispose();
         }
-
     }
 }

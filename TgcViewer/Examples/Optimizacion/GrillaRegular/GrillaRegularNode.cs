@@ -1,43 +1,30 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace Examples.Optimizacion.GrillaRegular
 {
     /// <summary>
-    /// Celda de una grilla regular
+    ///     Celda de una grilla regular
     /// </summary>
     public class GrillaRegularNode
     {
-        private List<TgcMesh> models;
         /// <summary>
-        /// Modelos de la celda
+        ///     Modelos de la celda
         /// </summary>
-        public List<TgcMesh> Models
-        {
-          get { return models; }
-          set { models = value; }
-        }
+        public List<TgcMesh> Models { get; set; }
 
-        private TgcBoundingBox boundingBox;
         /// <summary>
-        /// BoundingBox de la celda
+        ///     BoundingBox de la celda
         /// </summary>
-        public TgcBoundingBox BoundingBox
-        {
-            get { return boundingBox; }
-            set { boundingBox = value; }
-        }
-
+        public TgcBoundingBox BoundingBox { get; set; }
 
         /// <summary>
-        /// Activar todos los modelos de la celda
+        ///     Activar todos los modelos de la celda
         /// </summary>
         public void activateCellMeshes()
         {
-            foreach (TgcMesh mesh in models)
+            foreach (var mesh in Models)
             {
                 mesh.Enabled = true;
             }
