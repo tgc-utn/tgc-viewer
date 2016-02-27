@@ -1,72 +1,65 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX.Direct3D;
 using System.IO;
-using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
 using Ionic.Zip;
-using TgcViewer.Utils.TgcGeometry;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using TgcViewer.Utils.PortalRendering;
+using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcSceneLoader
 {
     /// <summary>
-    /// Herramienta para cargar un archivo de escena XML con formato de TGC (tgcScene)
+    ///     Herramienta para cargar un archivo de escena XML con formato de TGC (tgcScene)
     /// </summary>
     public class TgcSceneLoader
     {
-        Device device;
-
-        IMeshFactory meshFactory;
-        /// <summary>
-        /// Factory utilizado para crear una instancia de TgcMesh.
-        /// Por default se utiliza la clase DefaultMeshFactory.
-        /// </summary>
-        public IMeshFactory MeshFactory
-        {
-            get { return meshFactory; }
-            set { meshFactory = value; }
-        }
+        private readonly Device device;
 
         /// <summary>
-        /// Crear un nuevo Loader
+        ///     Crear un nuevo Loader
         /// </summary>
         public TgcSceneLoader()
         {
-            this.device = GuiController.Instance.D3dDevice;
-            this.meshFactory = new DefaultMeshFactory();
+            device = GuiController.Instance.D3dDevice;
+            MeshFactory = new DefaultMeshFactory();
         }
 
         /// <summary>
-        /// Carga una escena a partir de un archivo
+        ///     Factory utilizado para crear una instancia de TgcMesh.
+        ///     Por default se utiliza la clase DefaultMeshFactory.
+        /// </summary>
+        public IMeshFactory MeshFactory { get; set; }
+
+        /// <summary>
+        ///     Carga una escena a partir de un archivo
         /// </summary>
         /// <param name="filePath">Ubicacion del archivo XML</param>
         /// <param name="mediaPath">Path a partir del cual hay que buscar los recursos de escena (Texturas, LightMaps, etc.)</param>
         /// <returns>Escena cargada</returns>
         public TgcScene loadSceneFromFile(string filePath, string mediaPath)
         {
-            string xmlString = File.ReadAllText(filePath);
+            var xmlString = File.ReadAllText(filePath);
             return loadSceneFromString(xmlString, mediaPath);
         }
 
         /// <summary>
-        /// Carga una escena a partir de un archivo. 
-        /// Como carpeta de Media utiliza la misma carpeta en la que se encuentra el archivo XML de la malla
+        ///     Carga una escena a partir de un archivo.
+        ///     Como carpeta de Media utiliza la misma carpeta en la que se encuentra el archivo XML de la malla
         /// </summary>
         /// <param name="filePath">Ubicacion del archivo XML</param>
         /// <returns>Escena cargada</returns>
         public TgcScene loadSceneFromFile(string filePath)
         {
-            string mediaPath = filePath.Substring(0, filePath.LastIndexOf('\\') + 1);
+            var mediaPath = filePath.Substring(0, filePath.LastIndexOf('\\') + 1);
             return loadSceneFromFile(filePath, mediaPath);
         }
 
         /// <summary>
-        /// Carga una escena a partir de un archivo en formato .ZIP.
-        /// Se asume que dentro del ZIP se encuentra el archivo XML de la escena y todas las texturas necesarias.
+        ///     Carga una escena a partir de un archivo en formato .ZIP.
+        ///     Se asume que dentro del ZIP se encuentra el archivo XML de la escena y todas las texturas necesarias.
         /// </summary>
         /// <param name="sceneFileName">Nombre del archivo XML que tiene la información de la escena</param>
         /// <param name="zipFilePath">Path del archivo ZIP que contiene la escena.</param>
@@ -75,9 +68,9 @@ namespace TgcViewer.Utils.TgcSceneLoader
         public TgcScene loadSceneFromZipFile(string sceneFileName, string zipFilePath, string extractDir)
         {
             //extraer archivo pisando archivos existentes
-            using (ZipFile zip = ZipFile.Read(zipFilePath))
+            using (var zip = ZipFile.Read(zipFilePath))
             {
-                foreach (ZipEntry e in zip)
+                foreach (var e in zip)
                 {
                     e.Extract(extractDir, ExtractExistingFileAction.OverwriteSilently);
                 }
@@ -87,34 +80,34 @@ namespace TgcViewer.Utils.TgcSceneLoader
         }
 
         /// <summary>
-        /// Carga la escena a partir del string del XML
+        ///     Carga la escena a partir del string del XML
         /// </summary>
         /// <param name="xmlString">contenido del XML</param>
         /// <param name="mediaPath">Path a partir del cual hay que buscar los recursos de escena (Texturas, LightMaps, etc.)</param>
         /// <returns>Escena cargada</returns>
         public TgcScene loadSceneFromString(string xmlString, string mediaPath)
         {
-            TgcSceneParser parser = new TgcSceneParser();
-            TgcSceneData sceneData = parser.parseSceneFromString(xmlString);
+            var parser = new TgcSceneParser();
+            var sceneData = parser.parseSceneFromString(xmlString);
             return loadScene(sceneData, mediaPath);
         }
 
         /// <summary>
-        /// Carga la escena a partir de un objeto TgcSceneData ya parseado
+        ///     Carga la escena a partir de un objeto TgcSceneData ya parseado
         /// </summary>
         /// <param name="sceneData">Objeto con datos de la escena ya parseados</param>
         /// <param name="mediaPath">Path a partir del cual hay que buscar los recursos de escena (Texturas, LightMaps, etc.)</param>
         /// <returns></returns>
         public TgcScene loadScene(TgcSceneData sceneData, string mediaPath)
         {
-            TgcScene tgcScene = new TgcScene(sceneData.name, null);
+            var tgcScene = new TgcScene(sceneData.name, null);
 
             //Cargar Texturas
-            TgcSceneLoaderMaterialAux[] materialsArray = new TgcSceneLoaderMaterialAux[sceneData.materialsData.Length];
-            for (int i = 0; i < sceneData.materialsData.Length; i++)
+            var materialsArray = new TgcSceneLoaderMaterialAux[sceneData.materialsData.Length];
+            for (var i = 0; i < sceneData.materialsData.Length; i++)
             {
-                TgcMaterialData materialData = sceneData.materialsData[i];
-                string texturesPath = mediaPath + sceneData.texturesDir + "\\";
+                var materialData = sceneData.materialsData[i];
+                var texturesPath = mediaPath + sceneData.texturesDir + "\\";
 
                 //Crear StandardMaterial
                 if (materialData.type.Equals(TgcMaterialData.StandardMaterial))
@@ -125,21 +118,20 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 //Crear MultiMaterial
                 else if (materialData.type.Equals(TgcMaterialData.MultiMaterial))
                 {
-                    TgcSceneLoaderMaterialAux matAux = new TgcSceneLoaderMaterialAux();
+                    var matAux = new TgcSceneLoaderMaterialAux();
                     materialsArray[i] = matAux;
                     matAux.subMaterials = new TgcSceneLoaderMaterialAux[materialData.subMaterials.Length];
-                    for (int j = 0; j < materialData.subMaterials.Length; j++)
+                    for (var j = 0; j < materialData.subMaterials.Length; j++)
                     {
                         matAux.subMaterials[j] = createTextureAndMaterial(materialData.subMaterials[j], texturesPath);
                     }
                 }
             }
 
-
             //Cargar Meshes
-            for (int i = 0; i < sceneData.meshesData.Length; i++)
+            for (var i = 0; i < sceneData.meshesData.Length; i++)
             {
-                TgcMeshData meshData = sceneData.meshesData[i];
+                var meshData = sceneData.meshesData[i];
                 TgcMesh tgcMesh = null;
 
                 //Crear malla original
@@ -174,9 +166,6 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     tgcMesh = crearMeshInstance(meshData, tgcScene.Meshes);
                 }
 
-
-
-
                 //Crear BoundingBox, aprovechar lo que viene del XML o crear uno por nuestra cuenta
                 if (meshData.pMin != null && meshData.pMax != null)
                 {
@@ -186,7 +175,6 @@ namespace TgcViewer.Utils.TgcSceneLoader
                         tgcMesh.Position,
                         tgcMesh.Scale
                         );
-
                 }
                 else
                 {
@@ -195,7 +183,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
 
                 //Cargar layer
                 tgcMesh.Layer = meshData.layerName;
-                
+
                 //Cargar AlphaBlending
                 tgcMesh.AlphaBlendEnable = meshData.alphaBlending;
 
@@ -207,7 +195,6 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 tgcMesh.UserProperties = meshData.userProperties;
             }
 
-
             //BoundingBox del escenario, utilizar el que viene del XML o crearlo nosotros
             if (sceneData.pMin != null && sceneData.pMax != null)
             {
@@ -218,47 +205,45 @@ namespace TgcViewer.Utils.TgcSceneLoader
             }
             else
             {
-                List<TgcBoundingBox> boundingBoxes = new List<TgcBoundingBox>();
-                foreach (TgcMesh mesh in tgcScene.Meshes)
+                var boundingBoxes = new List<TgcBoundingBox>();
+                foreach (var mesh in tgcScene.Meshes)
                 {
                     boundingBoxes.Add(mesh.BoundingBox);
                 }
                 tgcScene.BoundingBox = TgcBoundingBox.computeFromBoundingBoxes(boundingBoxes);
             }
-            
 
             //Cargar parte de PortalRendering, solo hay información
             if (sceneData.portalData != null)
             {
-                TgcPortalRenderingLoader portalLoader = new TgcPortalRenderingLoader();
+                var portalLoader = new TgcPortalRenderingLoader();
                 tgcScene.PortalRendering = portalLoader.loadFromData(tgcScene, sceneData.portalData);
             }
-
 
             return tgcScene;
         }
 
-        
-
         /// <summary>
-        /// Crea un mesh con uno o varios DiffuseMap y un Lightmap
+        ///     Crea un mesh con uno o varios DiffuseMap y un Lightmap
         /// </summary>
         /// <returns></returns>
-        private TgcMesh crearMeshDiffuseMapLightmap(TgcSceneData sceneData, string mediaPath, TgcSceneLoaderMaterialAux[] materialsArray, TgcMeshData meshData)
+        private TgcMesh crearMeshDiffuseMapLightmap(TgcSceneData sceneData, string mediaPath,
+            TgcSceneLoaderMaterialAux[] materialsArray, TgcMeshData meshData)
         {
             //Crear Mesh
-            Mesh mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length, MeshFlags.Managed, DiffuseMapAndLightmapVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, DiffuseMapAndLightmapVertexElements, device);
 
             //Cargar vertexBuffer
-            using (VertexBuffer vb = mesh.VertexBuffer)
+            using (var vb = mesh.VertexBuffer)
             {
-                GraphicsStream data = vb.Lock(0, 0, LockFlags.None);
-                for (int j = 0; j < meshData.coordinatesIndices.Length; j++)
+                var data = vb.Lock(0, 0, LockFlags.None);
+                for (var j = 0; j < meshData.coordinatesIndices.Length; j++)
                 {
-                    DiffuseMapAndLightmapVertex v = new DiffuseMapAndLightmapVertex();
+                    var v = new DiffuseMapAndLightmapVertex();
 
                     //vertices
-                    int coordIdx = meshData.coordinatesIndices[j] * 3;
+                    var coordIdx = meshData.coordinatesIndices[j]*3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -278,7 +263,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     //o una normal propia por cada vertice de cada triangulo (version mejorada del exporter)
                     else
                     {
-                        int normalIdx = j * 3;
+                        var normalIdx = j*3;
                         v.Normal = new Vector3(
                             meshData.verticesNormals[normalIdx],
                             meshData.verticesNormals[normalIdx + 1],
@@ -287,95 +272,96 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     }
 
                     //texture coordinates diffuseMap
-                    int texCoordIdx = meshData.texCoordinatesIndices[j] * 2;
+                    var texCoordIdx = meshData.texCoordinatesIndices[j]*2;
                     v.Tu0 = meshData.textureCoordinates[texCoordIdx];
                     v.Tv0 = meshData.textureCoordinates[texCoordIdx + 1];
 
                     //texture coordinates LightMap
-                    int texCoordIdxLM = meshData.texCoordinatesIndicesLightMap[j] * 2;
+                    var texCoordIdxLM = meshData.texCoordinatesIndicesLightMap[j]*2;
                     v.Tu1 = meshData.textureCoordinatesLightMap[texCoordIdxLM];
                     v.Tv1 = meshData.textureCoordinatesLightMap[texCoordIdxLM + 1];
 
                     //color
-                    int colorIdx = meshData.colorIndices[j];
+                    var colorIdx = meshData.colorIndices[j];
                     v.Color = meshData.verticesColors[colorIdx];
 
                     data.Write(v);
                 }
                 vb.Unlock();
-
             }
 
             //Cargar IndexBuffer
-            using (IndexBuffer ib = mesh.IndexBuffer)
+            using (var ib = mesh.IndexBuffer)
             {
-                short[] indices = new short[meshData.coordinatesIndices.Length];
-                for (int j = 0; j < indices.Length; j++)
+                var indices = new short[meshData.coordinatesIndices.Length];
+                for (var j = 0; j < indices.Length; j++)
                 {
-                    indices[j] = (short)j;
+                    indices[j] = (short) j;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
 
             //Configurar Material y Textura para un solo SubSet
-            TgcSceneLoaderMaterialAux matAux = materialsArray[meshData.materialId];
+            var matAux = materialsArray[meshData.materialId];
             Material[] meshMaterials;
             TgcTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
-                meshMaterials = new Material[] { matAux.materialId };
-                meshTextures = new TgcTexture[] { TgcTexture.createTexture(device, matAux.textureFileName, matAux.texturePath) };
+                meshMaterials = new[] {matAux.materialId};
+                meshTextures = new[] {TgcTexture.createTexture(device, matAux.textureFileName, matAux.texturePath)};
             }
 
             //Configurar Material y Textura para varios SubSet
             else
             {
                 //Cargar attributeBuffer con los id de las texturas de cada triángulo
-                int[] attributeBuffer = mesh.LockAttributeBufferArray(LockFlags.None);
+                var attributeBuffer = mesh.LockAttributeBufferArray(LockFlags.None);
                 Array.Copy(meshData.materialsIds, attributeBuffer, attributeBuffer.Length);
                 mesh.UnlockAttributeBuffer(attributeBuffer);
 
                 //Cargar array de Materials y Texturas
                 meshMaterials = new Material[matAux.subMaterials.Length];
                 meshTextures = new TgcTexture[matAux.subMaterials.Length];
-                for (int m = 0; m < matAux.subMaterials.Length; m++)
+                for (var m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
-                    meshTextures[m] = TgcTexture.createTexture(device, matAux.subMaterials[m].textureFileName, matAux.subMaterials[m].texturePath);
+                    meshTextures[m] = TgcTexture.createTexture(device, matAux.subMaterials[m].textureFileName,
+                        matAux.subMaterials[m].texturePath);
                 }
             }
 
             //Cargar lightMap
-            TgcTexture lightMap = TgcTexture.createTexture(device, meshData.lightmap, mediaPath + sceneData.lightmapsDir + "\\" + meshData.lightmap);
+            var lightMap = TgcTexture.createTexture(device, meshData.lightmap,
+                mediaPath + sceneData.lightmapsDir + "\\" + meshData.lightmap);
 
             //Crear mesh de TGC
-            TgcMesh tgcMesh = meshFactory.createNewMesh(mesh, meshData.name, TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP);
+            var tgcMesh = MeshFactory.createNewMesh(mesh, meshData.name, TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP);
             tgcMesh.Materials = meshMaterials;
             tgcMesh.DiffuseMaps = meshTextures;
             tgcMesh.LightMap = lightMap;
             return tgcMesh;
         }
 
-
         /// <summary>
-        /// Crea un mesh con uno o varios DiffuseMap
+        ///     Crea un mesh con uno o varios DiffuseMap
         /// </summary>
         /// <returns></returns>
         private TgcMesh crearMeshDiffuseMap(TgcSceneLoaderMaterialAux[] materialsArray, TgcMeshData meshData)
         {
             //Crear Mesh
-            Mesh mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length, MeshFlags.Managed, DiffuseMapVertexElements, device);
-            
+            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, DiffuseMapVertexElements, device);
+
             //Cargar VertexBuffer
-            using (VertexBuffer vb = mesh.VertexBuffer)
+            using (var vb = mesh.VertexBuffer)
             {
-                GraphicsStream data = vb.Lock(0, 0, LockFlags.None);
-                for (int j = 0; j < meshData.coordinatesIndices.Length; j++)
+                var data = vb.Lock(0, 0, LockFlags.None);
+                for (var j = 0; j < meshData.coordinatesIndices.Length; j++)
                 {
-                    DiffuseMapVertex v = new DiffuseMapVertex();
+                    var v = new DiffuseMapVertex();
 
                     //vertices
-                    int coordIdx = meshData.coordinatesIndices[j] * 3;
+                    var coordIdx = meshData.coordinatesIndices[j]*3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -395,22 +381,21 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     //o una normal propia por cada vertice de cada triangulo (version mejorada del exporter)
                     else
                     {
-                        int normalIdx = j * 3;
+                        var normalIdx = j*3;
                         v.Normal = new Vector3(
                             meshData.verticesNormals[normalIdx],
                             meshData.verticesNormals[normalIdx + 1],
                             meshData.verticesNormals[normalIdx + 2]
                             );
                     }
-                    
 
                     //texture coordinates diffuseMap
-                    int texCoordIdx = meshData.texCoordinatesIndices[j] * 2;
+                    var texCoordIdx = meshData.texCoordinatesIndices[j]*2;
                     v.Tu = meshData.textureCoordinates[texCoordIdx];
                     v.Tv = meshData.textureCoordinates[texCoordIdx + 1];
 
                     //color
-                    int colorIdx = meshData.colorIndices[j];
+                    var colorIdx = meshData.colorIndices[j];
                     v.Color = meshData.verticesColors[colorIdx];
 
                     data.Write(v);
@@ -419,71 +404,72 @@ namespace TgcViewer.Utils.TgcSceneLoader
             }
 
             //Cargar IndexBuffer en forma plana
-            using (IndexBuffer ib = mesh.IndexBuffer)
+            using (var ib = mesh.IndexBuffer)
             {
-                short[] indices = new short[meshData.coordinatesIndices.Length];
-                for (int j = 0; j < indices.Length; j++)
+                var indices = new short[meshData.coordinatesIndices.Length];
+                for (var j = 0; j < indices.Length; j++)
                 {
-                    indices[j] = (short)j;
+                    indices[j] = (short) j;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
 
             //Configurar Material y Textura para un solo SubSet
-            TgcSceneLoaderMaterialAux matAux = materialsArray[meshData.materialId];
+            var matAux = materialsArray[meshData.materialId];
             Material[] meshMaterials;
             TgcTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
-                meshMaterials = new Material[] { matAux.materialId };
-                meshTextures = new TgcTexture[] { TgcTexture.createTexture(device, matAux.textureFileName, matAux.texturePath) };
+                meshMaterials = new[] {matAux.materialId};
+                meshTextures = new[] {TgcTexture.createTexture(device, matAux.textureFileName, matAux.texturePath)};
             }
 
             //Configurar Material y Textura para varios SubSet
             else
             {
                 //Cargar attributeBuffer con los id de las texturas de cada triángulo
-                int[] attributeBuffer = mesh.LockAttributeBufferArray(LockFlags.None);
+                var attributeBuffer = mesh.LockAttributeBufferArray(LockFlags.None);
                 Array.Copy(meshData.materialsIds, attributeBuffer, attributeBuffer.Length);
                 mesh.UnlockAttributeBuffer(attributeBuffer);
 
                 //Cargar array de Materials y Texturas
                 meshMaterials = new Material[matAux.subMaterials.Length];
                 meshTextures = new TgcTexture[matAux.subMaterials.Length];
-                for (int m = 0; m < matAux.subMaterials.Length; m++)
+                for (var m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
-                    meshTextures[m] = TgcTexture.createTexture(device, matAux.subMaterials[m].textureFileName, matAux.subMaterials[m].texturePath);
+                    meshTextures[m] = TgcTexture.createTexture(device, matAux.subMaterials[m].textureFileName,
+                        matAux.subMaterials[m].texturePath);
                 }
             }
 
             //Crear mesh de TGC
-            TgcMesh tgcMesh = meshFactory.createNewMesh(mesh, meshData.name, TgcMesh.MeshRenderType.DIFFUSE_MAP);
+            var tgcMesh = MeshFactory.createNewMesh(mesh, meshData.name, TgcMesh.MeshRenderType.DIFFUSE_MAP);
             tgcMesh.Materials = meshMaterials;
             tgcMesh.DiffuseMaps = meshTextures;
             return tgcMesh;
         }
 
-
         /// <summary>
-        /// Crea un mesh sin texturas, solo con VertexColors
+        ///     Crea un mesh sin texturas, solo con VertexColors
         /// </summary>
         /// <param name="meshData"></param>
         private TgcMesh crearMeshSoloColor(TgcMeshData meshData)
         {
             //Crear Mesh
-            Mesh mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length, MeshFlags.Managed, VertexColorVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, VertexColorVertexElements, device);
 
             //Cargar VertexBuffer
-            using (VertexBuffer vb = mesh.VertexBuffer)
+            using (var vb = mesh.VertexBuffer)
             {
-                GraphicsStream data = vb.Lock(0, 0, LockFlags.None);
-                for (int j = 0; j < meshData.coordinatesIndices.Length; j++)
+                var data = vb.Lock(0, 0, LockFlags.None);
+                for (var j = 0; j < meshData.coordinatesIndices.Length; j++)
                 {
-                    VertexColorVertex v = new VertexColorVertex();
+                    var v = new VertexColorVertex();
 
                     //vertices
-                    int coordIdx = meshData.coordinatesIndices[j] * 3;
+                    var coordIdx = meshData.coordinatesIndices[j]*3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -503,7 +489,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     //o una normal propia por cada vertice de cada triangulo (version mejorada del exporter)
                     else
                     {
-                        int normalIdx = j * 3;
+                        var normalIdx = j*3;
                         v.Normal = new Vector3(
                             meshData.verticesNormals[normalIdx],
                             meshData.verticesNormals[normalIdx + 1],
@@ -512,7 +498,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     }
 
                     //color
-                    int colorIdx = meshData.colorIndices[j];
+                    var colorIdx = meshData.colorIndices[j];
                     v.Color = meshData.verticesColors[colorIdx];
 
                     data.Write(v);
@@ -521,67 +507,66 @@ namespace TgcViewer.Utils.TgcSceneLoader
             }
 
             //Cargar indexBuffer en forma plana
-            using (IndexBuffer ib = mesh.IndexBuffer)
+            using (var ib = mesh.IndexBuffer)
             {
-                short[] indices = new short[meshData.coordinatesIndices.Length];
-                for (int i = 0; i < indices.Length; i++)
+                var indices = new short[meshData.coordinatesIndices.Length];
+                for (var i = 0; i < indices.Length; i++)
                 {
-                    indices[i] = (short)i;
+                    indices[i] = (short) i;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
 
-
             //Crear mesh de TGC
-            TgcMesh tgcMesh = meshFactory.createNewMesh(mesh, meshData.name, TgcMesh.MeshRenderType.VERTEX_COLOR);
+            var tgcMesh = MeshFactory.createNewMesh(mesh, meshData.name, TgcMesh.MeshRenderType.VERTEX_COLOR);
             return tgcMesh;
         }
 
-
         /// <summary>
-        /// Crear una malla instancia de una original
+        ///     Crear una malla instancia de una original
         /// </summary>
         private TgcMesh crearMeshInstance(TgcMeshData meshData, List<TgcMesh> meshes)
         {
-            TgcMesh originalMesh = meshes[meshData.originalMesh];
-            Vector3 translation = new Vector3(meshData.position[0], meshData.position[1], meshData.position[2]);
-            Quaternion rotationQuat = new Quaternion(meshData.rotation[0], meshData.rotation[1], meshData.rotation[2], meshData.rotation[3]);
-            Vector3 rotation = quaternionToEuler(rotationQuat);
-            Vector3 scale = new Vector3(meshData.scale[0], meshData.scale[1], meshData.scale[2]);
+            var originalMesh = meshes[meshData.originalMesh];
+            var translation = new Vector3(meshData.position[0], meshData.position[1], meshData.position[2]);
+            var rotationQuat = new Quaternion(meshData.rotation[0], meshData.rotation[1], meshData.rotation[2],
+                meshData.rotation[3]);
+            var rotation = quaternionToEuler(rotationQuat);
+            var scale = new Vector3(meshData.scale[0], meshData.scale[1], meshData.scale[2]);
 
-            TgcMesh tgcMesh = new TgcMesh(meshData.name, originalMesh, translation, rotation, scale);
+            var tgcMesh = new TgcMesh(meshData.name, originalMesh, translation, rotation, scale);
             return tgcMesh;
         }
 
         /// <summary>
-        /// Convierte un Quaternion a rotación de Euler
+        ///     Convierte un Quaternion a rotación de Euler
         /// </summary>
         private Vector3 quaternionToEuler(Quaternion quat)
         {
             //TODO revisar que esta conversion a Euler ande bien
 
-            Matrix mat = Matrix.RotationQuaternion(quat);
-            Vector3 matrixGetRotation = new Vector3();
+            var mat = Matrix.RotationQuaternion(quat);
+            var matrixGetRotation = new Vector3();
 
             //gets the x axis rotation from the matrix
-            matrixGetRotation.X = (float)Math.Asin(mat.M32);
-            float cosX = (float)Math.Cos(matrixGetRotation.X);
+            matrixGetRotation.X = (float) Math.Asin(mat.M32);
+            var cosX = (float) Math.Cos(matrixGetRotation.X);
 
             //checks for gimbal lock
             if (cosX < 0.005)
             {
                 matrixGetRotation.Z = 0;
-                matrixGetRotation.Y = (float)Math.Sign(-mat.M21) * (float)Math.Acos(mat.M11);
+                matrixGetRotation.Y = Math.Sign(-mat.M21)*(float) Math.Acos(mat.M11);
             }
             //normal calculation
             else
             {
-                matrixGetRotation.Z = (float)Math.Sign(mat.M12) * (float)Math.Acos(mat.M22 / cosX);
-                matrixGetRotation.Y = (float)Math.Sign(mat.M31) * (float)Math.Acos(mat.M33 / cosX);
+                matrixGetRotation.Z = Math.Sign(mat.M12)*(float) Math.Acos(mat.M22/cosX);
+                matrixGetRotation.Y = Math.Sign(mat.M31)*(float) Math.Acos(mat.M33/cosX);
                 //converts the rotations because the x axis rotation can't be bigger than 90 and -90
                 if (Math.Sign(mat.M22) == -1 && matrixGetRotation.Z == 0)
                 {
-                    float pi = (float)Math.PI;
+                    var pi = (float) Math.PI;
                     matrixGetRotation.Z += pi;
                     matrixGetRotation.Y += pi;
                 }
@@ -591,14 +576,14 @@ namespace TgcViewer.Utils.TgcSceneLoader
         }
 
         /// <summary>
-        /// Crea Material y Textura
+        ///     Crea Material y Textura
         /// </summary>
         private TgcSceneLoaderMaterialAux createTextureAndMaterial(TgcMaterialData materialData, string texturesPath)
         {
-            TgcSceneLoaderMaterialAux matAux = new TgcSceneLoaderMaterialAux();
+            var matAux = new TgcSceneLoaderMaterialAux();
 
             //Crear material
-            Material material = new Material();
+            var material = new Material();
             matAux.materialId = material;
             material.AmbientColor = new ColorValue(
                 materialData.ambientColor[0],
@@ -629,37 +614,42 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 matAux.texturePath = null;
                 matAux.textureFileName = null;
             }
-            
 
             return matAux;
         }
 
+        /// <summary>
+        ///     Estructura auxiliar para cargar SubMaterials y Texturas
+        /// </summary>
+        private class TgcSceneLoaderMaterialAux
+        {
+            public Material materialId;
+            public TgcSceneLoaderMaterialAux[] subMaterials;
+            public string textureFileName;
+            public string texturePath;
+        }
 
         #region Mesh FVF
 
         /// <summary>
-        /// FVF para formato de malla VERTEX_COLOR
+        ///     FVF para formato de malla VERTEX_COLOR
         /// </summary>
-        public static readonly VertexElement[] VertexColorVertexElements = new VertexElement[]
+        public static readonly VertexElement[] VertexColorVertexElements =
         {
             new VertexElement(0, 0, DeclarationType.Float3,
-                                    DeclarationMethod.Default,
-                                    DeclarationUsage.Position, 0),
-                                    
+                DeclarationMethod.Default,
+                DeclarationUsage.Position, 0),
             new VertexElement(0, 12, DeclarationType.Float3,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.Normal, 0),
-                                    
+                DeclarationMethod.Default,
+                DeclarationUsage.Normal, 0),
             new VertexElement(0, 24, DeclarationType.Color,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.Color, 0),
-           
-            VertexElement.VertexDeclarationEnd 
+                DeclarationMethod.Default,
+                DeclarationUsage.Color, 0),
+            VertexElement.VertexDeclarationEnd
         };
 
-
         /// <summary>
-        /// Estructura de Vertice para formato de malla VERTEX_COLOR
+        ///     Estructura de Vertice para formato de malla VERTEX_COLOR
         /// </summary>
         public struct VertexColorVertex
         {
@@ -668,34 +658,28 @@ namespace TgcViewer.Utils.TgcSceneLoader
             public int Color;
         }
 
-
         /// <summary>
-        /// FVF para formato de malla DIFFUSE_MAP
+        ///     FVF para formato de malla DIFFUSE_MAP
         /// </summary>
-        public static readonly VertexElement[] DiffuseMapVertexElements = new VertexElement[]
+        public static readonly VertexElement[] DiffuseMapVertexElements =
         {
             new VertexElement(0, 0, DeclarationType.Float3,
-                                    DeclarationMethod.Default,
-                                    DeclarationUsage.Position, 0),
-                                    
+                DeclarationMethod.Default,
+                DeclarationUsage.Position, 0),
             new VertexElement(0, 12, DeclarationType.Float3,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.Normal, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.Normal, 0),
             new VertexElement(0, 24, DeclarationType.Color,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.Color, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.Color, 0),
             new VertexElement(0, 28, DeclarationType.Float2,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.TextureCoordinate, 0),
-
-            VertexElement.VertexDeclarationEnd 
+                DeclarationMethod.Default,
+                DeclarationUsage.TextureCoordinate, 0),
+            VertexElement.VertexDeclarationEnd
         };
 
-
         /// <summary>
-        /// Estructura de Vertice para formato de malla DIFFUSE_MAP
+        ///     Estructura de Vertice para formato de malla DIFFUSE_MAP
         /// </summary>
         public struct DiffuseMapVertex
         {
@@ -707,35 +691,30 @@ namespace TgcViewer.Utils.TgcSceneLoader
         }
 
         /// <summary>
-        /// FVF para formato de malla DIFFUSE_MAP_AND_LIGHTMAP
+        ///     FVF para formato de malla DIFFUSE_MAP_AND_LIGHTMAP
         /// </summary>
-        public static readonly VertexElement[] DiffuseMapAndLightmapVertexElements = new VertexElement[]
+        public static readonly VertexElement[] DiffuseMapAndLightmapVertexElements =
         {
             new VertexElement(0, 0, DeclarationType.Float3,
-                                    DeclarationMethod.Default,
-                                    DeclarationUsage.Position, 0),
-                                    
+                DeclarationMethod.Default,
+                DeclarationUsage.Position, 0),
             new VertexElement(0, 12, DeclarationType.Float3,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.Normal, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.Normal, 0),
             new VertexElement(0, 24, DeclarationType.Color,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.Color, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.Color, 0),
             new VertexElement(0, 28, DeclarationType.Float2,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.TextureCoordinate, 0),
-
+                DeclarationMethod.Default,
+                DeclarationUsage.TextureCoordinate, 0),
             new VertexElement(0, 36, DeclarationType.Float2,
-                                     DeclarationMethod.Default,
-                                     DeclarationUsage.TextureCoordinate, 1),
-
-            VertexElement.VertexDeclarationEnd 
+                DeclarationMethod.Default,
+                DeclarationUsage.TextureCoordinate, 1),
+            VertexElement.VertexDeclarationEnd
         };
 
         /// <summary>
-        /// Estructura de Vertice para formato de malla DIFFUSE_MAP_AND_LIGHTMAP
+        ///     Estructura de Vertice para formato de malla DIFFUSE_MAP_AND_LIGHTMAP
         /// </summary>
         public struct DiffuseMapAndLightmapVertex
         {
@@ -748,31 +727,17 @@ namespace TgcViewer.Utils.TgcSceneLoader
             public float Tv1;
         }
 
-
-        #endregion
-
-
-        /// <summary>
-        /// Estructura auxiliar para cargar SubMaterials y Texturas
-        /// </summary>
-        class TgcSceneLoaderMaterialAux
-        {
-            public Material materialId;
-            public string texturePath;
-            public string textureFileName;
-            public TgcSceneLoaderMaterialAux[] subMaterials;
-        }
-
+        #endregion Mesh FVF
 
         #region MeshFactory
 
         /// <summary>
-        /// Factory para permitir crear una instancia especifica de la clase TgcMesh
+        ///     Factory para permitir crear una instancia especifica de la clase TgcMesh
         /// </summary>
         public interface IMeshFactory
         {
             /// <summary>
-            /// Crear una nueva instancia de la clase TgcMesh o derivados
+            ///     Crear una nueva instancia de la clase TgcMesh o derivados
             /// </summary>
             /// <param name="d3dMesh">Mesh de Direct3D</param>
             /// <param name="meshName">Nombre de la malla</param>
@@ -782,8 +747,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
             TgcMesh createNewMesh(Mesh d3dMesh, string meshName, TgcMesh.MeshRenderType renderType);
 
             /// <summary>
-            /// Crear una nueva malla que es una instancia de otra malla original.
-            /// Crear una instancia de la clase TgcMesh o derivados
+            ///     Crear una nueva malla que es una instancia de otra malla original.
+            ///     Crear una instancia de la clase TgcMesh o derivados
             /// </summary>
             /// <param name="name">Nombre de la malla</param>
             /// <param name="parentInstance">Malla original desde la cual basarse</param>
@@ -791,11 +756,12 @@ namespace TgcViewer.Utils.TgcSceneLoader
             /// <param name="rotation">Rotación respecto de la malla original</param>
             /// <param name="scale">Escala respecto de la malla original</param>
             /// <returns>Instancia de TgcMesh creada</returns>
-            TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, Vector3 translation, Vector3 rotation, Vector3 scale);
+            TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, Vector3 translation, Vector3 rotation,
+                Vector3 scale);
         }
 
         /// <summary>
-        /// Factory default que crea una instancia de la clase TgcMesh
+        ///     Factory default que crea una instancia de la clase TgcMesh
         /// </summary>
         public class DefaultMeshFactory : IMeshFactory
         {
@@ -804,13 +770,13 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 return new TgcMesh(d3dMesh, meshName, renderType);
             }
 
-            public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, Vector3 translation, Vector3 rotation, Vector3 scale)
+            public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, Vector3 translation,
+                Vector3 rotation, Vector3 scale)
             {
                 return new TgcMesh(meshName, originalMesh, translation, rotation, scale);
             }
         }
 
-        #endregion
-
+        #endregion MeshFactory
     }
 }

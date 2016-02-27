@@ -1,53 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.TgcGeometry;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Input;
+﻿using Microsoft.DirectX;
 using TgcViewer;
-using System.Drawing;
+using TgcViewer.Utils.Input;
+using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace Examples.MeshCreator.Primitives
 {
     /// <summary>
-    /// Primitiva de Sphere 3D
+    ///     Primitiva de Sphere 3D
     /// </summary>
     public class SpherePrimitive : EditorPrimitive
     {
-
-    
-        TgcSphere mesh;
-        Vector3 initSelectionPoint;
-        TgcBoundingBox bb;
-        float originalRadius;
-        float scale = 1;
+        private readonly TgcBoundingBox bb;
+        private Vector3 initSelectionPoint;
+        private TgcSphere mesh;
+        private float originalRadius;
+        private float scale = 1;
 
         public SpherePrimitive(MeshCreatorControl control)
             : base(control)
         {
-            this.bb = new TgcBoundingBox();
-            this.Name = "Sphere_" + EditorPrimitive.PRIMITIVE_COUNT++;
-        }
-
-
-        public override void render()
-        {
-            mesh.render();
-        }
-
-
-        public override void dispose()
-        {
-            mesh.dispose();
-        }
-
-        public override void setSelected(bool selected)
-        {
-            this.selected = selected;
-            Color color = selected ? MeshCreatorUtils.SELECTED_OBJECT_COLOR : MeshCreatorUtils.UNSELECTED_OBJECT_COLOR;
-           // mesh.BoundingSphere.setRenderColor(color);
-            bb.setRenderColor(color);
+            bb = new TgcBoundingBox();
+            Name = "Sphere_" + PRIMITIVE_COUNT++;
         }
 
         /*public override TgcBoundingSphere BoundingSphere
@@ -64,88 +38,6 @@ namespace Examples.MeshCreator.Primitives
         {
             get { return mesh.AlphaBlendEnable; }
             set { mesh.AlphaBlendEnable = value; }
-        }
-
-        /// <summary>
-        /// Iniciar la creacion
-        /// </summary>
-        public override void initCreation(Vector3 gridPoint)
-        {
-            initSelectionPoint = gridPoint;
-
-            //Crear caja inicial
-            TgcTexture sphereTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
-            mesh = new TgcSphere();
-       
-            mesh.setTexture(sphereTexture);
-           // mesh.BoundingSphere.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
-            bb.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
-            this.Layer = Control.CurrentLayer;
-        }
-
-        /// <summary>
-        /// Construir caja
-        /// </summary>
-        public override void doCreation()
-        {
-            TgcD3dInput input = GuiController.Instance.D3dInput;
-
-            
-
-            //Si hacen clic con el mouse, ver si hay colision con el suelo
-            if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
-            {
-                //Determinar el size en XZ del box
-                Vector3 collisionPoint = Control.Grid.getPicking();
-
-                mesh.Position = initSelectionPoint;
-                //Configurar BOX
-                mesh.Radius = (collisionPoint - initSelectionPoint).Length();
-                mesh.updateValues();
-
-            }
-            else 
-            {
-                originalRadius = mesh.Radius;
-                updateBB();
-                //Dejar cargado para que se pueda crear un nuevo sphere
-                Control.CurrentState = MeshCreatorControl.State.CreatePrimitiveSelected;
-                Control.CreatingPrimitive = new SpherePrimitive(Control);
-
-                //Agregar sphere a la lista de modelos
-                Control.addMesh(this);
-
-                //Seleccionar Box
-                Control.SelectionRectangle.clearSelection();
-                Control.SelectionRectangle.selectObject(this);
-                Control.updateModifyPanel();
-            }
-                  
-            
-        }
-
-
-        public override void move(Vector3 move)
-        {
-            mesh.move(move); 
-            updateBB();
-        }
-
-        private void updateBB()
-        {
-
-            Vector3 r = new Vector3(mesh.Radius, mesh.Radius, mesh.Radius);
-            bb.setExtremes(Vector3.Subtract(mesh.Position, r), Vector3.Add(mesh.Position, r));
-        }
-
-        public override void setTexture(TgcTexture texture, int slot)
-        {
-            mesh.setTexture(texture);
-        }
-
-        public override TgcTexture getTexture(int slot)
-        {
-            return mesh.Texture;
         }
 
         public override Vector2 TextureOffset
@@ -171,7 +63,11 @@ namespace Examples.MeshCreator.Primitives
         public override Vector3 Position
         {
             get { return mesh.Position; }
-            set { mesh.Position = value; updateBB(); }
+            set
+            {
+                mesh.Position = value;
+                updateBB();
+            }
         }
 
         public override Vector3 Rotation
@@ -179,64 +75,160 @@ namespace Examples.MeshCreator.Primitives
             get { return mesh.Rotation; }
         }
 
-        public override void setRotationFromPivot(Vector3 rotation, Vector3 pivot)
-        {
-            mesh.Rotation = rotation;
-            Vector3 translation = pivot - mesh.Position;
-            Matrix m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * Matrix.Translation(translation);
-            mesh.move(new Vector3(m.M41, m.M42, m.M43));
-        }
-
         /// <summary>
-        /// Configurar tamaño del sphere
+        ///     Configurar tamaño del sphere
         /// </summary>
         public override Vector3 Scale
         {
-            get
-            {
-                return new Vector3(scale, scale, scale);
-            }
+            get { return new Vector3(scale, scale, scale); }
             set
             {
-                if (scale != value.X){ scale = value.X;}
-                
-                else if (scale != value.Y){scale = value.Y;}
+                if (scale != value.X)
+                {
+                    scale = value.X;
+                }
+                else if (scale != value.Y)
+                {
+                    scale = value.Y;
+                }
+                else if (scale != value.Z)
+                {
+                    scale = value.Z;
+                }
 
-                else if (scale != value.Z) { scale = value.Z; }
+                mesh.Radius = originalRadius*scale;
 
-                mesh.Radius = originalRadius * scale;              
-               
                 mesh.updateValues();
                 updateBB();
-
             }
+        }
+
+        public override void render()
+        {
+            mesh.render();
+        }
+
+        public override void dispose()
+        {
+            mesh.dispose();
+        }
+
+        public override void setSelected(bool selected)
+        {
+            this.selected = selected;
+            var color = selected ? MeshCreatorUtils.SELECTED_OBJECT_COLOR : MeshCreatorUtils.UNSELECTED_OBJECT_COLOR;
+            // mesh.BoundingSphere.setRenderColor(color);
+            bb.setRenderColor(color);
+        }
+
+        /// <summary>
+        ///     Iniciar la creacion
+        /// </summary>
+        public override void initCreation(Vector3 gridPoint)
+        {
+            initSelectionPoint = gridPoint;
+
+            //Crear caja inicial
+            var sphereTexture = TgcTexture.createTexture(Control.getCreationTexturePath());
+            mesh = new TgcSphere();
+
+            mesh.setTexture(sphereTexture);
+            // mesh.BoundingSphere.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
+            bb.setRenderColor(MeshCreatorUtils.UNSELECTED_OBJECT_COLOR);
+            Layer = Control.CurrentLayer;
+        }
+
+        /// <summary>
+        ///     Construir caja
+        /// </summary>
+        public override void doCreation()
+        {
+            var input = GuiController.Instance.D3dInput;
+
+            //Si hacen clic con el mouse, ver si hay colision con el suelo
+            if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            {
+                //Determinar el size en XZ del box
+                var collisionPoint = Control.Grid.getPicking();
+
+                mesh.Position = initSelectionPoint;
+                //Configurar BOX
+                mesh.Radius = (collisionPoint - initSelectionPoint).Length();
+                mesh.updateValues();
+            }
+            else
+            {
+                originalRadius = mesh.Radius;
+                updateBB();
+                //Dejar cargado para que se pueda crear un nuevo sphere
+                Control.CurrentState = MeshCreatorControl.State.CreatePrimitiveSelected;
+                Control.CreatingPrimitive = new SpherePrimitive(Control);
+
+                //Agregar sphere a la lista de modelos
+                Control.addMesh(this);
+
+                //Seleccionar Box
+                Control.SelectionRectangle.clearSelection();
+                Control.SelectionRectangle.selectObject(this);
+                Control.updateModifyPanel();
+            }
+        }
+
+        public override void move(Vector3 move)
+        {
+            mesh.move(move);
+            updateBB();
+        }
+
+        private void updateBB()
+        {
+            var r = new Vector3(mesh.Radius, mesh.Radius, mesh.Radius);
+            bb.setExtremes(Vector3.Subtract(mesh.Position, r), Vector3.Add(mesh.Position, r));
+        }
+
+        public override void setTexture(TgcTexture texture, int slot)
+        {
+            mesh.setTexture(texture);
+        }
+
+        public override TgcTexture getTexture(int slot)
+        {
+            return mesh.Texture;
+        }
+
+        public override void setRotationFromPivot(Vector3 rotation, Vector3 pivot)
+        {
+            mesh.Rotation = rotation;
+            var translation = pivot - mesh.Position;
+            var m = Matrix.Translation(-translation)*Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)*
+                    Matrix.Translation(translation);
+            mesh.move(new Vector3(m.M41, m.M42, m.M43));
         }
 
         public override TgcMesh createMeshToExport()
         {
-            TgcMesh m = mesh.toMesh(this.Name);
-            m.UserProperties = this.UserProperties;
-            m.Layer = this.Layer;
+            var m = mesh.toMesh(Name);
+            m.UserProperties = UserProperties;
+            m.Layer = Layer;
             return m;
         }
 
         public override EditorPrimitive clone()
         {
-            SpherePrimitive p = new SpherePrimitive(this.Control);
-            p.mesh = this.mesh.clone();
-            p.originalRadius = this.originalRadius;
-            p.Scale = this.Scale;
-            p.UserProperties = this.UserProperties;
-            p.Layer = this.Layer;
+            var p = new SpherePrimitive(Control);
+            p.mesh = mesh.clone();
+            p.originalRadius = originalRadius;
+            p.Scale = Scale;
+            p.UserProperties = UserProperties;
+            p.Layer = Layer;
             return p;
         }
 
         public override void updateBoundingBox()
         {
-            TgcMesh m = mesh.toMesh(this.Name);
-            this.bb.setExtremes(m.BoundingBox.PMin, m.BoundingBox.PMax);
+            var m = mesh.toMesh(Name);
+            bb.setExtremes(m.BoundingBox.PMin, m.BoundingBox.PMax);
             m.dispose();
         }
-
     }
 }

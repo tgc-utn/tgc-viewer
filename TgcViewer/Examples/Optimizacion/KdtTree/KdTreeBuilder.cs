@@ -1,30 +1,30 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.TgcGeometry;
-using Microsoft.DirectX;
 using System.Drawing;
+using System.Text;
+using Microsoft.DirectX;
+using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace Examples.Optimizacion.KdTree
 {
     /// <summary>
-    /// Herramienta para construir un KdTree
+    ///     Herramienta para construir un KdTree
     /// </summary>
-    class KdTreeBuilder
+    internal class KdTreeBuilder
     {
-        //Parametros de corte del KdTree
-        int MAX_SECTOR_KDTREE_RECURSION = 3;
-        int MIN_MESH_PER_LEAVE_THRESHOLD = 10;
-
         //Parametros de generacion de planos de corte
-        float D_DESPLAZAMIENTO = 1;
-        float MIN_VOL = 10;
+        private readonly float D_DESPLAZAMIENTO = 1;
+        //Parametros de corte del KdTree
+        private readonly int MAX_SECTOR_KDTREE_RECURSION = 3;
 
+        private readonly int MIN_MESH_PER_LEAVE_THRESHOLD = 10;
+
+        private readonly float MIN_VOL = 10;
 
         public KdTreeNode crearKdTree(List<TgcMesh> modelos, TgcBoundingBox sceneBounds)
         {
-            KdTreeNode rootNode = new KdTreeNode();
+            var rootNode = new KdTreeNode();
 
             //iniciar generacion recursiva de KdTree
             doSectorKdTreeX(rootNode, sceneBounds.PMin, sceneBounds.PMax, 0, modelos);
@@ -41,80 +41,75 @@ namespace Examples.Optimizacion.KdTree
             return rootNode;
         }
 
-
-
-
-
         /// <summary>
-        /// Corte con plano X
+        ///     Corte con plano X
         /// </summary>
         private void doSectorKdTreeX(KdTreeNode parent, Vector3 pMin, Vector3 pMax,
             int step, List<TgcMesh> meshes)
         {
             //Crear listas para realizar corte
-            List<TgcMesh> possitiveList = new List<TgcMesh>();
-            List<TgcMesh> negativeList = new List<TgcMesh>();
+            var possitiveList = new List<TgcMesh>();
+            var negativeList = new List<TgcMesh>();
 
             //X-cut
             float cutValue = 0;
-            Plane xCutPlane = getCutPlane(meshes, new Vector3(1, 0, 0), pMin.X, pMax.X, ref cutValue);
+            var xCutPlane = getCutPlane(meshes, new Vector3(1, 0, 0), pMin.X, pMax.X, ref cutValue);
             splitByPlane(xCutPlane, meshes, possitiveList, negativeList);
 
             //recursividad de positivos con plano Y, usando resultados positivos y childIndex 0
             doSectorKdTreeY(parent,
-                    new Vector3(cutValue, pMin.Y, pMin.Z),
-                    pMax,
-                    step, possitiveList, 0, cutValue);
+                new Vector3(cutValue, pMin.Y, pMin.Z),
+                pMax,
+                step, possitiveList, 0, cutValue);
 
             //recursividad de negativos con plano Y, usando resultados negativos y childIndex 4
             doSectorKdTreeY(parent,
-                    pMin,
-                    new Vector3(cutValue, pMax.Y, pMax.Z),
-                    step, negativeList, 4, cutValue);
+                pMin,
+                new Vector3(cutValue, pMax.Y, pMax.Z),
+                step, negativeList, 4, cutValue);
         }
 
-
         /// <summary>
-        /// Corte con plano Y
+        ///     Corte con plano Y
         /// </summary>
         private void doSectorKdTreeY(KdTreeNode parent, Vector3 pMin, Vector3 pMax, int step,
             List<TgcMesh> meshes, int childIndex, float xCutValue)
         {
             //Crear listas para realizar corte
-            List<TgcMesh> possitiveList = new List<TgcMesh>();
-            List<TgcMesh> negativeList = new List<TgcMesh>();
+            var possitiveList = new List<TgcMesh>();
+            var negativeList = new List<TgcMesh>();
 
             //Y-cut
             float cutValue = 0;
-            Plane yCutPlane = getCutPlane(meshes, new Vector3(0, 1, 0), pMin.Y, pMax.Y, ref cutValue);
+            var yCutPlane = getCutPlane(meshes, new Vector3(0, 1, 0), pMin.Y, pMax.Y, ref cutValue);
             splitByPlane(yCutPlane, meshes, possitiveList, negativeList);
 
             //recursividad de positivos con plano Z, usando resultados positivos y childIndex 0
             doSectorKdTreeZ(parent,
-                    new Vector3(pMin.X, cutValue, pMin.Z),
-                    pMax,
-                    step, possitiveList, childIndex + 0, xCutValue, cutValue);
+                new Vector3(pMin.X, cutValue, pMin.Z),
+                pMax,
+                step, possitiveList, childIndex + 0, xCutValue, cutValue);
 
             //recursividad de negativos con plano Z, usando plano X negativo y childIndex 2
             doSectorKdTreeZ(parent,
-                    pMin,
-                    new Vector3(pMax.X, cutValue, pMax.Z),
-                    step, negativeList, childIndex + 2, xCutValue, cutValue);
+                pMin,
+                new Vector3(pMax.X, cutValue, pMax.Z),
+                step, negativeList, childIndex + 2, xCutValue, cutValue);
         }
 
         /// <summary>
-        /// Corte de plano Z
+        ///     Corte de plano Z
         /// </summary>
         private void doSectorKdTreeZ(KdTreeNode parent, Vector3 pMin, Vector3 pMax, int step,
             List<TgcMesh> meshes, int childIndex, float xCutValue, float yCutValue)
         {
             //Crear listas para realizar corte
-            List<TgcMesh> possitiveList = new List<TgcMesh>();
-            List<TgcMesh> negativeList = new List<TgcMesh>();
+            var possitiveList = new List<TgcMesh>();
+            var negativeList = new List<TgcMesh>();
 
             //Z-cut
             float cutValue = 0;
-            Plane zCutPlane = getCutPlane(meshes, new Vector3(0, 0, 1), pMin.Z, pMax.Z, ref cutValue);
+            var zCutPlane = getCutPlane(meshes, new Vector3(0, 0, 1), pMin.Z, pMax.Z, ref cutValue);
             splitByPlane(zCutPlane, meshes, possitiveList, negativeList);
 
             //obtener lista de children del parent, con iniciacion lazy
@@ -124,11 +119,11 @@ namespace Examples.Optimizacion.KdTree
             }
 
             //crear nodo positivo en parent, segun childIndex
-            KdTreeNode posNode = new KdTreeNode();
+            var posNode = new KdTreeNode();
             parent.children[childIndex] = posNode;
 
             //cargar nodo negativo en parent, segun childIndex
-            KdTreeNode negNode = new KdTreeNode();
+            var negNode = new KdTreeNode();
             parent.children[childIndex + 1] = negNode;
 
             //cargar cortes en parent
@@ -137,8 +132,8 @@ namespace Examples.Optimizacion.KdTree
             parent.zCut = cutValue;
 
             //nuevos limites
-            Vector3 v1 = new Vector3(pMax.X - pMin.X, pMax.Y - pMin.Y, pMax.Z - cutValue);
-            Vector3 v2 = new Vector3(pMax.X - pMin.X, pMax.Y - pMin.Y, cutValue - pMin.Z);
+            var v1 = new Vector3(pMax.X - pMin.X, pMax.Y - pMin.Y, pMax.Z - cutValue);
+            var v2 = new Vector3(pMax.X - pMin.X, pMax.Y - pMin.Y, cutValue - pMin.Z);
 
             //condicion de corte
             if (step >= MAX_SECTOR_KDTREE_RECURSION || meshes.Count <= MIN_MESH_PER_LEAVE_THRESHOLD
@@ -151,7 +146,6 @@ namespace Examples.Optimizacion.KdTree
 
                 //cargar hijos de nodo negativo
                 negNode.models = negativeList.ToArray();
-
             }
             //seguir recursividad
             else
@@ -160,41 +154,41 @@ namespace Examples.Optimizacion.KdTree
 
                 //recursividad de positivos con plano X, usando resultados positivos
                 doSectorKdTreeX(posNode,
-                        new Vector3(pMin.X, pMin.Y, cutValue),
-                        pMax,
-                        step, possitiveList);
+                    new Vector3(pMin.X, pMin.Y, cutValue),
+                    pMax,
+                    step, possitiveList);
 
                 //recursividad de negativos con plano Y, usando resultados negativos
                 doSectorKdTreeX(negNode,
-                        pMin,
-                        new Vector3(pMax.X, pMax.Y, cutValue),
-                        step, negativeList);
+                    pMin,
+                    new Vector3(pMax.X, pMax.Y, cutValue),
+                    step, negativeList);
             }
         }
 
         /// <summary>
-        /// Obtiene el mejor plano de corte recto, en el volumen dado, en la direccion dada
+        ///     Obtiene el mejor plano de corte recto, en el volumen dado, en la direccion dada
         /// </summary>
         private Plane getCutPlane(List<TgcMesh> modelos, Vector3 n, float pMin, float pMax, ref float cutValue)
         {
-            int vueltas = (int)((pMax - pMin) / D_DESPLAZAMIENTO);
-            int bestBalance = int.MaxValue;
-            Plane bestPlane = Plane.Empty;
+            var vueltas = (int) ((pMax - pMin)/D_DESPLAZAMIENTO);
+            var bestBalance = int.MaxValue;
+            var bestPlane = Plane.Empty;
             cutValue = 0;
 
-            for (int i = 0; i < vueltas; i++)
+            for (var i = 0; i < vueltas; i++)
             {
                 //crear plano de corte
-                float currentCutValue = pMin + D_DESPLAZAMIENTO * i;
-                Plane p = new Plane(n.X, n.Y, n.Z, -currentCutValue);
+                var currentCutValue = pMin + D_DESPLAZAMIENTO*i;
+                var p = new Plane(n.X, n.Y, n.Z, -currentCutValue);
 
                 //clasificar todos los modelos contra ese plano
-                List<TgcMesh> possitiveList = new List<TgcMesh>();
-                List<TgcMesh> negativeList = new List<TgcMesh>();
+                var possitiveList = new List<TgcMesh>();
+                var negativeList = new List<TgcMesh>();
                 splitByPlane(p, modelos, possitiveList, negativeList);
 
                 //calcular balance
-                int balance = Math.Abs(possitiveList.Count - negativeList.Count);
+                var balance = Math.Abs(possitiveList.Count - negativeList.Count);
 
                 //guardar mejor
                 if (balance < bestBalance)
@@ -203,21 +197,19 @@ namespace Examples.Optimizacion.KdTree
                     bestPlane = p;
                     cutValue = currentCutValue;
                 }
-
             }
 
             return bestPlane;
         }
 
-
         /// <summary>
-        /// Separa los modelos en dos listas, segun el testo contra el plano de corte
+        ///     Separa los modelos en dos listas, segun el testo contra el plano de corte
         /// </summary>
         private void splitByPlane(Plane cutPlane, List<TgcMesh> modelos,
             List<TgcMesh> possitiveList, List<TgcMesh> negativeList)
         {
             TgcCollisionUtils.PlaneBoxResult c;
-            foreach (TgcMesh modelo in modelos)
+            foreach (var modelo in modelos)
             {
                 c = TgcCollisionUtils.classifyPlaneAABB(cutPlane, modelo.BoundingBox);
 
@@ -243,14 +235,14 @@ namespace Examples.Optimizacion.KdTree
         }
 
         /// <summary>
-        /// Separa los modelos en dos listas, segun el testo contra el plano de corte.
-        /// No tiene en cuenta los que estan atravezando
+        ///     Separa los modelos en dos listas, segun el testo contra el plano de corte.
+        ///     No tiene en cuenta los que estan atravezando
         /// </summary>
         private void splitByPlaneWithoutRepeating(Plane cutPlane, List<TgcMesh> modelos,
             List<TgcMesh> possitiveList, List<TgcMesh> negativeList)
         {
             TgcCollisionUtils.PlaneBoxResult c;
-            foreach (TgcMesh modelo in modelos)
+            foreach (var modelo in modelos)
             {
                 c = TgcCollisionUtils.classifyPlaneAABB(cutPlane, modelo.BoundingBox);
 
@@ -268,10 +260,8 @@ namespace Examples.Optimizacion.KdTree
             }
         }
 
-
-
         /// <summary>
-        /// Se quitan padres cuyos nodos no tengan ningun triangulo
+        ///     Se quitan padres cuyos nodos no tengan ningun triangulo
         /// </summary>
         private void optimizeSectorKdTree(KdTreeNode[] children)
         {
@@ -280,10 +270,10 @@ namespace Examples.Optimizacion.KdTree
                 return;
             }
 
-            for (int i = 0; i < children.Length; i++)
+            for (var i = 0; i < children.Length; i++)
             {
-                KdTreeNode childNode = children[i];
-                KdTreeNode[] childNodeChildren = childNode.children;
+                var childNode = children[i];
+                var childNodeChildren = childNode.children;
                 if (childNodeChildren != null && hasEmptyChilds(childNode))
                 {
                     childNode.children = null;
@@ -294,18 +284,17 @@ namespace Examples.Optimizacion.KdTree
                     optimizeSectorKdTree(childNodeChildren);
                 }
             }
-
         }
 
         /// <summary>
-        /// Se fija si los hijos de un nodo no tienen mas hijos y no tienen ningun triangulo
+        ///     Se fija si los hijos de un nodo no tienen mas hijos y no tienen ningun triangulo
         /// </summary>
         private bool hasEmptyChilds(KdTreeNode node)
         {
-            KdTreeNode[] children = node.children;
-            for (int i = 0; i < children.Length; i++)
+            var children = node.children;
+            for (var i = 0; i < children.Length; i++)
             {
-                KdTreeNode childNode = children[i];
+                var childNode = children[i];
                 if (childNode.children != null || childNode.models.Length > 0)
                 {
                     return false;
@@ -315,26 +304,25 @@ namespace Examples.Optimizacion.KdTree
             return true;
         }
 
-
         /// <summary>
-        /// Imprime por consola la generacion del KdTree
+        ///     Imprime por consola la generacion del KdTree
         /// </summary>
         private void printDebugKdTree(KdTreeNode rootNode)
         {
             Console.WriteLine("########## KdTree DEBUG ##########");
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             doPrintDebugKdTree(rootNode, 0, sb);
             Console.WriteLine(sb.ToString());
             Console.WriteLine("########## FIN KdTree DEBUG ##########");
         }
 
         /// <summary>
-        /// Impresion recursiva
+        ///     Impresion recursiva
         /// </summary>
         private void doPrintDebugKdTree(KdTreeNode node, int index, StringBuilder sb)
         {
-            String lineas = "";
-            for (int i = 0; i < index; i++)
+            var lineas = "";
+            for (var i = 0; i < index; i++)
             {
                 lineas += "-";
             }
@@ -349,13 +337,12 @@ namespace Examples.Optimizacion.KdTree
                 {
                     sb.Append(lineas + "[0]" + "\n");
                 }
-
             }
             else
             {
                 sb.Append(lineas + "\n");
                 index++;
-                for (int i = 0; i < node.children.Length; i++)
+                for (var i = 0; i < node.children.Length; i++)
                 {
                     doPrintDebugKdTree(node.children[i], index, sb);
                 }
@@ -363,14 +350,14 @@ namespace Examples.Optimizacion.KdTree
         }
 
         /// <summary>
-        /// Dibujar meshes que representan los sectores del KdTree
+        ///     Dibujar meshes que representan los sectores del KdTree
         /// </summary>
         public List<TgcDebugBox> createDebugKdTreeMeshes(KdTreeNode rootNode, TgcBoundingBox sceneBounds)
         {
-            Vector3 pMax = sceneBounds.PMax;
-            Vector3 pMin = sceneBounds.PMin;
+            var pMax = sceneBounds.PMax;
+            var pMin = sceneBounds.PMin;
 
-            List<TgcDebugBox> debugBoxes = new List<TgcDebugBox>();
+            var debugBoxes = new List<TgcDebugBox>();
             doCreateKdTreeDebugBox(rootNode, debugBoxes,
                 pMin.X, pMin.Y, pMin.Z,
                 pMax.X, pMax.Y, pMax.Z, 0);
@@ -382,16 +369,15 @@ namespace Examples.Optimizacion.KdTree
             float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
         {
-            KdTreeNode[] children = node.children;
+            var children = node.children;
 
             //Crear caja debug
-            TgcDebugBox box = createDebugBox(boxLowerX, boxLowerY, boxLowerZ, boxUpperX, boxUpperY, boxUpperZ, step);
+            var box = createDebugBox(boxLowerX, boxLowerY, boxLowerZ, boxUpperX, boxUpperY, boxUpperZ, step);
             debugBoxes.Add(box);
 
             //es hoja, dibujar caja
             if (children == null)
             {
-                
             }
 
             //recursividad sobre hijos
@@ -399,10 +385,9 @@ namespace Examples.Optimizacion.KdTree
             {
                 step++;
 
-                float xCut = node.xCut;
-                float yCut = node.yCut;
-                float zCut = node.zCut;
-
+                var xCut = node.xCut;
+                var yCut = node.yCut;
+                var zCut = node.zCut;
 
                 //000
                 doCreateKdTreeDebugBox(children[0], debugBoxes, xCut, yCut, zCut, boxUpperX, boxUpperY, boxUpperZ, step);
@@ -424,12 +409,10 @@ namespace Examples.Optimizacion.KdTree
                 //111
                 doCreateKdTreeDebugBox(children[7], debugBoxes, boxLowerX, boxLowerY, boxLowerZ, xCut, yCut, zCut, step);
             }
-
-
         }
 
         /// <summary>
-        /// Construir caja debug
+        ///     Construir caja debug
         /// </summary>
         private TgcDebugBox createDebugBox(float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
@@ -443,18 +426,22 @@ namespace Examples.Optimizacion.KdTree
                     c = Color.Red;
                     thickness = 4f;
                     break;
+
                 case 1:
                     c = Color.Violet;
                     thickness = 3f;
                     break;
+
                 case 2:
                     c = Color.Brown;
                     thickness = 2f;
                     break;
+
                 case 3:
                     c = Color.Gold;
                     thickness = 1f;
                     break;
+
                 default:
                     c = Color.Orange;
                     thickness = 0.5f;
@@ -462,7 +449,7 @@ namespace Examples.Optimizacion.KdTree
             }
 
             //Crear caja Debug
-            TgcDebugBox box = TgcDebugBox.fromExtremes(
+            var box = TgcDebugBox.fromExtremes(
                 new Vector3(boxLowerX, boxLowerY, boxLowerZ),
                 new Vector3(boxUpperX, boxUpperY, boxUpperZ),
                 c, thickness);
@@ -470,22 +457,20 @@ namespace Examples.Optimizacion.KdTree
             return box;
         }
 
-
         /// <summary>
-        /// Imprime estadisticas del KdTree
+        ///     Imprime estadisticas del KdTree
         /// </summary>
         private void printEstadisticasKdTree(KdTreeNode rootNode)
         {
             Console.WriteLine("*********** KdTree Statics ***********");
 
-            int minModels = int.MaxValue;
-            int maxModels = int.MinValue;
+            var minModels = int.MaxValue;
+            var maxModels = int.MinValue;
 
             obtenerEstadisticas(rootNode, ref minModels, ref maxModels);
 
             Console.WriteLine("Minima cantidad de modelos en hoja: " + minModels);
             Console.WriteLine("Maxima cantidad de modelos en hoja: " + maxModels);
-
 
             Console.WriteLine("*********** FIN Octree Statics ************");
         }
@@ -494,7 +479,7 @@ namespace Examples.Optimizacion.KdTree
         {
             if (node.isLeaf())
             {
-                int n = node.models.Length;
+                var n = node.models.Length;
                 if (n < minModels)
                     minModels = n;
                 if (n > maxModels)
@@ -502,7 +487,7 @@ namespace Examples.Optimizacion.KdTree
             }
             else
             {
-                for (int i = 0; i < node.children.Length; i++)
+                for (var i = 0; i < node.children.Length; i++)
                 {
                     obtenerEstadisticas(node.children[i], ref minModels, ref maxModels);
                 }

@@ -1,32 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using System.Drawing;
+using TGC.Core.Example;
+using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
 
 namespace Examples.Tutorial
 {
     /// <summary>
-    /// Tutorial 1:
-    /// Unidades Involucradas:
+    ///     Tutorial 1:
+    ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
-    /// 
-    /// Muestra como crear una caja 3D de color y como mostrarla por pantalla.
-    /// 
-    /// Autor: Matías Leone
-    /// 
+    ///     Muestra como crear una caja 3D de color y como mostrarla por pantalla.
+    ///     Autor: Matías Leone
     /// </summary>
     public class Tutorial1 : TgcExample
     {
-
         //Variable para caja 3D
-        TgcBox box;
-
+        private TgcBox box;
 
         public override string getCategory()
         {
@@ -44,23 +34,22 @@ namespace Examples.Tutorial
         }
 
         /// <summary>
-        /// Método en el que se deben crear todas las cosas que luego se van a querer usar.
-        /// Es invocado solo una vez al inicio del ejemplo.
+        ///     Método en el que se deben crear todas las cosas que luego se van a querer usar.
+        ///     Es invocado solo una vez al inicio del ejemplo.
         /// </summary>
         public override void init()
         {
             //Acceso a Device de DirectX. Siempre conviene tenerlo a mano. Suele ser pedido como parámetro de varios métodos
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
-            Vector3 center = new Vector3(0, 0, 0);
-            Vector3 size = new Vector3(10, 10, 10);
-            Color color = Color.Red;
+            var center = new Vector3(0, 0, 0);
+            var size = new Vector3(10, 10, 10);
+            var color = Color.Red;
             box = TgcBox.fromSize(center, size, color);
 
             //Todos los recursos que se van a necesitar (objetos 3D, meshes, texturas, etc) se deben cargar en el metodo init().
             //Crearlos cada vez en el metodo render() es un error grave. Destruye la performance y suele provocar memory leaks.
-
 
             //Ubicar la camara del framework mirando al centro de este objeto.
             //La camara por default del framework es RotCamera, cuyo comportamiento es
@@ -72,25 +61,25 @@ namespace Examples.Tutorial
         }
 
         /// <summary>
-        /// Método que se invoca todo el tiempo. Es el render-loop de una aplicación gráfica.
-        /// En este método se deben dibujar todos los objetos que se desean mostrar.
-        /// Antes de llamar a este método el framework limpia toda la pantalla. 
-        /// Por lo tanto para que un objeto se vea hay volver a dibujarlo siempre.
-        /// La variable elapsedTime indica la cantidad de segundos que pasaron entre esta invocación
-        /// y la anterior de render(). Es útil para animar e interpolar valores.
+        ///     Método que se invoca todo el tiempo. Es el render-loop de una aplicación gráfica.
+        ///     En este método se deben dibujar todos los objetos que se desean mostrar.
+        ///     Antes de llamar a este método el framework limpia toda la pantalla.
+        ///     Por lo tanto para que un objeto se vea hay volver a dibujarlo siempre.
+        ///     La variable elapsedTime indica la cantidad de segundos que pasaron entre esta invocación
+        ///     y la anterior de render(). Es útil para animar e interpolar valores.
         /// </summary>
         public override void render(float elapsedTime)
         {
             //Acceso a Device de DirectX. Siempre conviene tenerlo a mano. Suele ser pedido como parámetro de varios métodos
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Dibujar la caja en pantalla
             box.render();
         }
 
         /// <summary>
-        /// Método que se invoca una sola vez al finalizar el ejemplo.
-        /// Se debe liberar la memoria de todos los recursos utilizados.
+        ///     Método que se invoca una sola vez al finalizar el ejemplo.
+        ///     Se debe liberar la memoria de todos los recursos utilizados.
         /// </summary>
         public override void close()
         {
@@ -99,6 +88,5 @@ namespace Examples.Tutorial
             //Porque están utilizando memoria de la placa de video (y ahí no hay Garbage Collector).
             box.dispose();
         }
-
     }
 }

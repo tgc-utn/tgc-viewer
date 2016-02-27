@@ -1,219 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TgcViewer.Utils.Input;
 using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
 using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
 using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.Input;
 using TGC.Core.Utils;
+using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace Examples.TerrainEditor
 {
     /// <summary>
-    /// Copypaste de TgcFPSCamera con algunas modificaciones para que se adapte a la altura del terreno.
+    ///     Copypaste de TgcFPSCamera con algunas modificaciones para que se adapte a la altura del terreno.
     /// </summary>
-    public class TerrainFpsCamera:TgcCamera
+    public class TerrainFpsCamera : TgcCamera
     {
-         //Constantes de movimiento
-        const float DEFAULT_ROTATION_SPEED = 2f;
-        const float DEFAULT_MOVEMENT_SPEED = 100f;
-        const float HEAD_POSITION = 50f;
-        const float DEFAULT_JUMP_SPEED = 100f;
-        readonly Vector3 CAMERA_VELOCITY = new Vector3(DEFAULT_MOVEMENT_SPEED, DEFAULT_JUMP_SPEED, DEFAULT_MOVEMENT_SPEED);
-        readonly Vector3 CAMERA_POS = new Vector3(0.0f, 1.0f, 0.0f);
-        readonly Vector3 CAMERA_ACCELERATION = new Vector3(400f, 400f, 400f);
+        //Constantes de movimiento
+        private const float DEFAULT_ROTATION_SPEED = 2f;
+
+        private const float DEFAULT_MOVEMENT_SPEED = 100f;
+        private const float HEAD_POSITION = 50f;
+        private const float DEFAULT_JUMP_SPEED = 100f;
+        private readonly Vector3 CAMERA_ACCELERATION = new Vector3(400f, 400f, 400f);
+        private readonly Vector3 CAMERA_POS = new Vector3(0.0f, 1.0f, 0.0f);
+
+        private readonly Vector3 CAMERA_VELOCITY = new Vector3(DEFAULT_MOVEMENT_SPEED, DEFAULT_JUMP_SPEED,
+            DEFAULT_MOVEMENT_SPEED);
+
+        private readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
 
         //Ejes para ViewMatrix
-        readonly Vector3 WORLD_XAXIS = new Vector3(1.0f, 0.0f, 0.0f);
-        readonly Vector3 WORLD_YAXIS = new Vector3(0.0f, 1.0f, 0.0f);
-        readonly Vector3 WORLD_ZAXIS = new Vector3(0.0f, 0.0f, 1.0f);
-        readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
-        
+        private readonly Vector3 WORLD_XAXIS = new Vector3(1.0f, 0.0f, 0.0f);
 
-        float accumPitchDegrees;
-        Vector3 eye;
-        Vector3 xAxis;
-        Vector3 yAxis;
-        Vector3 zAxis;
-        Vector3 viewDir;
-        Vector3 lookAt;
+        private readonly Vector3 WORLD_YAXIS = new Vector3(0.0f, 1.0f, 0.0f);
+        private readonly Vector3 WORLD_ZAXIS = new Vector3(0.0f, 0.0f, 1.0f);
+
+        private float accumPitchDegrees;
+        private Vector3 eye;
+
+        private bool moveBackwardsPressed;
+        private bool moveDownPressed;
 
         //Banderas de Input
-        bool moveForwardsPressed = false;
-        bool moveBackwardsPressed = false;
-        bool moveRightPressed = false;
-        bool moveLeftPressed = false;
-        bool moveUpPressed = false;
-        bool moveDownPressed = false;
-
-
-        #region Getters y Setters
-        bool fpsModeEnable;
-        private float previousY;
-        public bool FpsModeEnable { 
-            get { if(Terrain==null) return false; else return fpsModeEnable; }
-            set
-            {
-                if (value && Terrain == null) return;
-
-                if (value && !fpsModeEnable)
-                {
-                    previousY = eye.Y;
-                    float y;
-                    Terrain.interpoledHeight(eye.X, eye.Z, out y);
-                    eye.Y = y + HeadPosition * WORLD_YAXIS.Y;
-                }
-                else if (!value && fpsModeEnable) eye.Y = previousY;
-                fpsModeEnable = value;
-                setPosition(eye);
-            }
-                
-            
-        }
-        bool enable;
-        /// <summary>
-        /// Habilita o no el uso de la camara
-        /// </summary>
-        public bool Enable
-        {
-            get { return enable; }
-            set
-            {
-                enable = value;
-
-                //Si se habilito la camara, cargar como la cámara actual
-                if (value)
-                {
-                    GuiController.Instance.CurrentCamera = this;
-                }
-            }
-        }
-
-        Vector3 acceleration;
-        /// <summary>
-        /// Aceleracion de la camara en cada uno de sus ejes
-        /// </summary>
-        public Vector3 Acceleration
-        {
-            get { return acceleration; }
-            set { acceleration = value; }
-        }
-
-        bool accelerationEnable;
-        /// <summary>
-        /// Activa o desactiva el efecto de Aceleración/Desaceleración
-        /// </summary>
-        public bool AccelerationEnable
-        {
-            get { return accelerationEnable; }
-            set { accelerationEnable = value; }
-        }
-
-        Vector3 currentVelocity;
-        /// <summary>
-        /// Velocidad de desplazamiento actual, teniendo en cuenta la aceleracion
-        /// </summary>
-        public Vector3 CurrentVelocity
-        {
-            get { return currentVelocity; }
-        }
-
-        Vector3 velocity;
-        /// <summary>
-        /// Velocidad de desplazamiento de la cámara en cada uno de sus ejes
-        /// </summary>
-        public Vector3 Velocity
-        {
-            get { return velocity; }
-            set { velocity = value; }
-        }
+        private bool moveForwardsPressed;
+        private bool moveLeftPressed;
+        private bool moveRightPressed;
+        private bool moveUpPressed;
+        private Vector3 viewDir;
+        private Vector3 xAxis;
+        private Vector3 yAxis;
+        private Vector3 zAxis;
 
         /// <summary>
-        /// Velocidad de desplazamiento de los ejes XZ de la cámara
-        /// </summary>
-        public float MovementSpeed
-        {
-            get { return velocity.X; }
-            set {
-                velocity.X = value;
-                velocity.Z = value;
-            }
-        }
-
-        /// <summary>
-        /// Velocidad de desplazamiento del eje Y de la cámara
-        /// </summary>
-        public float JumpSpeed
-        {
-            get { return velocity.Y; }
-            set { velocity.Y = value; }
-        }
-
-        float rotationSpeed;
-        /// <summary>
-        /// Velocidad de rotacion de la cámara
-        /// </summary>
-        public float RotationSpeed
-        {
-            get { return rotationSpeed; }
-            set { rotationSpeed = value; }
-        }
-
-        Matrix viewMatrix;
-        /// <summary>
-        /// View Matrix resultante
-        /// </summary>
-        public Matrix ViewMatrix
-        {
-            get { return viewMatrix; }
-        }
-
-        /// <summary>
-        /// Posicion actual de la camara
-        /// </summary>
-        public Vector3 Position
-        {
-            get { return eye; }
-        }
-
-        /// <summary>
-        /// Punto hacia donde mira la cámara
-        /// </summary>
-        public Vector3 LookAt
-        {
-            get { return lookAt; }
-        }
-
-        TgcD3dInput.MouseButtons rotateMouseButton;
-        /// <summary>
-        /// Boton del mouse que debe ser presionado para rotar la camara.
-        /// Por default es boton izquierdo.
-        /// </summary>
-        public TgcD3dInput.MouseButtons RotateMouseButton
-        {
-            get { return rotateMouseButton; }
-            set { rotateMouseButton = value; }
-        }
-
-
-        /// <summary>
-        /// Terreno del que tomara la altura.
-        /// </summary>
-       
-        public SmartTerrain Terrain { get; set; }
-
-        /// <summary>
-        /// Posicion de la cabeza respecto del suelo.
-        /// </summary>
-        public float HeadPosition { get; set; }
-
-        #endregion
-        /// <summary>
-        /// Crea la cámara con valores iniciales.
-        /// Aceleración desactivada por Default
+        ///     Crea la cámara con valores iniciales.
+        ///     Aceleración desactivada por Default
         /// </summary>
         public TerrainFpsCamera(SmartTerrain terrain)
         {
@@ -222,8 +61,8 @@ namespace Examples.TerrainEditor
         }
 
         /// <summary>
-        /// Crea la cámara con valores iniciales.
-        /// Aceleración desactivada por Default
+        ///     Crea la cámara con valores iniciales.
+        ///     Aceleración desactivada por Default
         /// </summary>
         public TerrainFpsCamera()
         {
@@ -231,32 +70,93 @@ namespace Examples.TerrainEditor
         }
 
         /// <summary>
-        /// Carga los valores default de la camara
+        ///     Actualiza los valores de la camara
+        /// </summary>
+        public void updateCamera()
+        {
+            //Si la camara no está habilitada, no procesar el resto del input
+            if (!enable)
+            {
+                return;
+            }
+
+            var elapsedTimeSec = GuiController.Instance.ElapsedTime;
+            var d3dInput = GuiController.Instance.D3dInput;
+
+            //Imprimir por consola la posicion actual de la camara
+            if ((d3dInput.keyDown(Key.LeftShift) || d3dInput.keyDown(Key.RightShift)) && d3dInput.keyPressed(Key.P))
+            {
+                GuiController.Instance.Logger.logVector3(getPosition());
+                return;
+            }
+
+            var heading = 0.0f;
+            var pitch = 0.0f;
+
+            //Obtener direccion segun entrada de teclado
+            var direction = getMovementDirection(d3dInput);
+
+            pitch = d3dInput.YposRelative*RotationSpeed;
+            heading = d3dInput.XposRelative*RotationSpeed;
+
+            //Solo rotar si se esta aprentando el boton del mouse configurado
+            if (d3dInput.buttonDown(RotateMouseButton))
+            {
+                rotate(heading, pitch, 0.0f);
+            }
+
+            updatePosition(direction, elapsedTimeSec);
+        }
+
+        /// <summary>
+        ///     Actualiza la ViewMatrix, si es que la camara esta activada
+        /// </summary>
+        public void updateViewMatrix(Device d3dDevice)
+        {
+            if (!enable)
+            {
+                return;
+            }
+
+            d3dDevice.Transform.View = viewMatrix;
+        }
+
+        public Vector3 getPosition()
+        {
+            return eye;
+        }
+
+        public Vector3 getLookAt()
+        {
+            return LookAt;
+        }
+
+        /// <summary>
+        ///     Carga los valores default de la camara
         /// </summary>
         public void resetValues()
         {
             accumPitchDegrees = 0.0f;
-            rotationSpeed = DEFAULT_ROTATION_SPEED;
+            RotationSpeed = DEFAULT_ROTATION_SPEED;
             eye = new Vector3(0.0f, 0.0f, 0.0f);
             xAxis = new Vector3(1.0f, 0.0f, 0.0f);
             yAxis = new Vector3(0.0f, 1.0f, 0.0f);
             zAxis = new Vector3(0.0f, 0.0f, 1.0f);
             viewDir = new Vector3(0.0f, 0.0f, 1.0f);
-            lookAt = eye + viewDir;
+            LookAt = eye + viewDir;
             HeadPosition = HEAD_POSITION;
-            accelerationEnable = false;
-            acceleration = CAMERA_ACCELERATION;
+            AccelerationEnable = false;
+            Acceleration = CAMERA_ACCELERATION;
             currentVelocity = new Vector3(0.0f, 0.0f, 0.0f);
             velocity = CAMERA_VELOCITY;
             viewMatrix = Matrix.Identity;
-            setPosition(CAMERA_POS+HeadPosition*WORLD_YAXIS);
+            setPosition(CAMERA_POS + HeadPosition*WORLD_YAXIS);
 
-            rotateMouseButton = TgcD3dInput.MouseButtons.BUTTON_LEFT;
+            RotateMouseButton = TgcD3dInput.MouseButtons.BUTTON_LEFT;
         }
 
-
         /// <summary>
-        /// Configura la posicion de la cámara
+        ///     Configura la posicion de la cámara
         /// </summary>
         private void setCamera(Vector3 eye, Vector3 target, Vector3 up)
         {
@@ -266,7 +166,7 @@ namespace Examples.TerrainEditor
             zAxis.Normalize();
 
             viewDir = zAxis;
-            lookAt = eye + viewDir;
+            LookAt = eye + viewDir;
 
             xAxis = Vector3.Cross(up, zAxis);
             xAxis.Normalize();
@@ -293,11 +193,11 @@ namespace Examples.TerrainEditor
             viewMatrix.M43 = -Vector3.Dot(zAxis, eye);
 
             // Extract the pitch angle from the view matrix.
-            accumPitchDegrees = Geometry.RadianToDegree((float)-Math.Asin((double)viewMatrix.M23));
+            accumPitchDegrees = Geometry.RadianToDegree((float) -Math.Asin(viewMatrix.M23));
         }
 
         /// <summary>
-        /// Configura la posicion de la cámara
+        ///     Configura la posicion de la cámara
         /// </summary>
         public void setCamera(Vector3 pos, Vector3 lookAt)
         {
@@ -305,14 +205,13 @@ namespace Examples.TerrainEditor
         }
 
         /// <summary>
-        /// Moves the camera by dx world units to the left or right; dy
-        /// world units upwards or downwards; and dz world units forwards
-        /// or backwards.
+        ///     Moves the camera by dx world units to the left or right; dy
+        ///     world units upwards or downwards; and dz world units forwards
+        ///     or backwards.
         /// </summary>
         private void move(float dx, float dy, float dz)
         {
-
-            Vector3 auxEye = this.eye;
+            var auxEye = eye;
             Vector3 forwards;
 
             // Calculate the forwards direction. Can't just use the camera's local
@@ -321,10 +220,9 @@ namespace Examples.TerrainEditor
             forwards = Vector3.Cross(xAxis, WORLD_YAXIS);
             forwards.Normalize();
 
-           
-            auxEye += xAxis * dx;
+            auxEye += xAxis*dx;
             auxEye += WORLD_YAXIS*dy;
-            auxEye += forwards * dz;
+            auxEye += forwards*dz;
             if (FpsModeEnable)
             {
                 HeadPosition += dy;
@@ -339,15 +237,13 @@ namespace Examples.TerrainEditor
             setPosition(auxEye);
         }
 
-    
         /// <summary>
-        /// Rotates the camera based on its current behavior.
-        /// Note that not all behaviors support rolling.
-        ///
-        /// This Camera class follows the left-hand rotation rule.
-        /// Angles are measured clockwise when looking along the rotation
-        /// axis toward the origin. Since the Z axis is pointing into the
-        /// screen we need to negate rolls.
+        ///     Rotates the camera based on its current behavior.
+        ///     Note that not all behaviors support rolling.
+        ///     This Camera class follows the left-hand rotation rule.
+        ///     Angles are measured clockwise when looking along the rotation
+        ///     axis toward the origin. Since the Z axis is pointing into the
+        ///     screen we need to negate rolls.
         /// </summary>
         private void rotate(float headingDegrees, float pitchDegrees, float rollDegrees)
         {
@@ -357,44 +253,43 @@ namespace Examples.TerrainEditor
         }
 
         /// <summary>
-        /// This method applies a scaling factor to the rotation angles prior to
-        /// using these rotation angles to rotate the camera. This method is usually
-        /// called when the camera is being rotated using an input device (such as a
-        /// mouse or a joystick).
+        ///     This method applies a scaling factor to the rotation angles prior to
+        ///     using these rotation angles to rotate the camera. This method is usually
+        ///     called when the camera is being rotated using an input device (such as a
+        ///     mouse or a joystick).
         /// </summary>
         private void rotateSmoothly(float headingDegrees, float pitchDegrees, float rollDegrees)
         {
-            headingDegrees *= rotationSpeed;
-            pitchDegrees *= rotationSpeed;
-            rollDegrees *= rotationSpeed;
+            headingDegrees *= RotationSpeed;
+            pitchDegrees *= RotationSpeed;
+            rollDegrees *= RotationSpeed;
 
             rotate(headingDegrees, pitchDegrees, rollDegrees);
         }
 
         /// <summary>
-        /// Moves the camera using Newton's second law of motion. Unit mass is
-        /// assumed here to somewhat simplify the calculations. The direction vector
-        /// is in the range [-1,1].
+        ///     Moves the camera using Newton's second law of motion. Unit mass is
+        ///     assumed here to somewhat simplify the calculations. The direction vector
+        ///     is in the range [-1,1].
         /// </summary>
         private void updatePosition(Vector3 direction, float elapsedTimeSec)
         {
-            if(Vector3.LengthSq(currentVelocity) != 0.0f)
+            if (Vector3.LengthSq(currentVelocity) != 0.0f)
             {
                 // Only move the camera if the velocity vector is not of zero length.
                 // Doing this guards against the camera slowly creeping around due to
                 // floating point rounding errors.
 
                 Vector3 displacement;
-                if (accelerationEnable)
+                if (AccelerationEnable)
                 {
-                    displacement = (currentVelocity * elapsedTimeSec) +
-                    (0.5f * acceleration * elapsedTimeSec * elapsedTimeSec);
+                    displacement = currentVelocity*elapsedTimeSec +
+                                   0.5f*Acceleration*elapsedTimeSec*elapsedTimeSec;
                 }
                 else
                 {
-                    displacement = (currentVelocity * elapsedTimeSec);
+                    displacement = currentVelocity*elapsedTimeSec;
                 }
-                
 
                 // Floating point rounding errors will slowly accumulate and cause the
                 // camera to move along each axis. To prevent any unintended movement
@@ -420,7 +315,7 @@ namespace Examples.TerrainEditor
             // hasn't moved during this call. When the camera is no longer being moved
             // the camera is decelerating back to its stationary state.
 
-            if (accelerationEnable)
+            if (AccelerationEnable)
             {
                 updateVelocity(direction, elapsedTimeSec);
             }
@@ -432,9 +327,8 @@ namespace Examples.TerrainEditor
 
         private void setPosition(Vector3 pos)
         {
-           
-            eye = pos;          
-            
+            eye = pos;
+
             reconstructViewMatrix(false);
         }
 
@@ -454,9 +348,9 @@ namespace Examples.TerrainEditor
                 accumPitchDegrees = -90.0f;
             }
 
-            float heading = Geometry.DegreeToRadian(headingDegrees);
-            float pitch = Geometry.DegreeToRadian(pitchDegrees);
-            
+            var heading = Geometry.DegreeToRadian(headingDegrees);
+            var pitch = Geometry.DegreeToRadian(pitchDegrees);
+
             Matrix rotMtx;
             Vector4 result;
 
@@ -484,12 +378,11 @@ namespace Examples.TerrainEditor
                 zAxis = new Vector3(result.X, result.Y, result.Z);
             }
         }
- 
 
         /// <summary>
-        /// Updates the camera's velocity based on the supplied movement direction
-        /// and the elapsed time (since this method was last called). The movement
-        /// direction is the in the range [-1,1].
+        ///     Updates the camera's velocity based on the supplied movement direction
+        ///     and the elapsed time (since this method was last called). The movement
+        ///     direction is the in the range [-1,1].
         /// </summary>
         private void updateVelocity(Vector3 direction, float elapsedTimeSec)
         {
@@ -498,7 +391,7 @@ namespace Examples.TerrainEditor
                 // Camera is moving along the x axis.
                 // Linearly accelerate up to the camera's max speed.
 
-                currentVelocity.X += direction.X * acceleration.X * elapsedTimeSec;
+                currentVelocity.X += direction.X*Acceleration.X*elapsedTimeSec;
 
                 if (currentVelocity.X > velocity.X)
                     currentVelocity.X = velocity.X;
@@ -512,12 +405,12 @@ namespace Examples.TerrainEditor
 
                 if (currentVelocity.X > 0.0f)
                 {
-                    if ((currentVelocity.X -= acceleration.X * elapsedTimeSec) < 0.0f)
+                    if ((currentVelocity.X -= Acceleration.X*elapsedTimeSec) < 0.0f)
                         currentVelocity.X = 0.0f;
                 }
                 else
                 {
-                    if ((currentVelocity.X += acceleration.X * elapsedTimeSec) > 0.0f)
+                    if ((currentVelocity.X += Acceleration.X*elapsedTimeSec) > 0.0f)
                         currentVelocity.X = 0.0f;
                 }
             }
@@ -527,7 +420,7 @@ namespace Examples.TerrainEditor
                 // Camera is moving along the y axis.
                 // Linearly accelerate up to the camera's max speed.
 
-                currentVelocity.Y += direction.Y * acceleration.Y * elapsedTimeSec;
+                currentVelocity.Y += direction.Y*Acceleration.Y*elapsedTimeSec;
 
                 if (currentVelocity.Y > velocity.Y)
                     currentVelocity.Y = velocity.Y;
@@ -541,12 +434,12 @@ namespace Examples.TerrainEditor
 
                 if (currentVelocity.Y > 0.0f)
                 {
-                    if ((currentVelocity.Y -= acceleration.Y * elapsedTimeSec) < 0.0f)
+                    if ((currentVelocity.Y -= Acceleration.Y*elapsedTimeSec) < 0.0f)
                         currentVelocity.Y = 0.0f;
                 }
                 else
                 {
-                    if ((currentVelocity.Y += acceleration.Y * elapsedTimeSec) > 0.0f)
+                    if ((currentVelocity.Y += Acceleration.Y*elapsedTimeSec) > 0.0f)
                         currentVelocity.Y = 0.0f;
                 }
             }
@@ -556,7 +449,7 @@ namespace Examples.TerrainEditor
                 // Camera is moving along the z axis.
                 // Linearly accelerate up to the camera's max speed.
 
-                currentVelocity.Z += direction.Z * acceleration.Z * elapsedTimeSec;
+                currentVelocity.Z += direction.Z*Acceleration.Z*elapsedTimeSec;
 
                 if (currentVelocity.Z > velocity.Z)
                     currentVelocity.Z = velocity.Z;
@@ -570,29 +463,29 @@ namespace Examples.TerrainEditor
 
                 if (currentVelocity.Z > 0.0f)
                 {
-                    if ((currentVelocity.Z -= acceleration.Z * elapsedTimeSec) < 0.0f)
+                    if ((currentVelocity.Z -= Acceleration.Z*elapsedTimeSec) < 0.0f)
                         currentVelocity.Z = 0.0f;
                 }
                 else
                 {
-                    if ((currentVelocity.Z += acceleration.Z * elapsedTimeSec) > 0.0f)
+                    if ((currentVelocity.Z += Acceleration.Z*elapsedTimeSec) > 0.0f)
                         currentVelocity.Z = 0.0f;
                 }
             }
         }
 
         /// <summary>
-        /// Actualizar currentVelocity sin aplicar aceleracion
+        ///     Actualizar currentVelocity sin aplicar aceleracion
         /// </summary>
         private void updateVelocityNoAcceleration(Vector3 direction)
         {
-            currentVelocity.X = velocity.X * direction.X;
-            currentVelocity.Y = velocity.Y * direction.Y;
-            currentVelocity.Z = velocity.Z * direction.Z;
+            currentVelocity.X = velocity.X*direction.X;
+            currentVelocity.Y = velocity.Y*direction.Y;
+            currentVelocity.Z = velocity.Z*direction.Z;
         }
 
         /// <summary>
-        /// Reconstruct the view matrix.
+        ///     Reconstruct the view matrix.
         /// </summary>
         private void reconstructViewMatrix(bool orthogonalizeAxes)
         {
@@ -609,7 +502,7 @@ namespace Examples.TerrainEditor
                 xAxis.Normalize();
 
                 viewDir = zAxis;
-                lookAt = eye + viewDir;
+                LookAt = eye + viewDir;
             }
 
             // Reconstruct the view matrix.
@@ -636,65 +529,11 @@ namespace Examples.TerrainEditor
         }
 
         /// <summary>
-        /// Actualiza los valores de la camara
-        /// </summary>
-        public void updateCamera()
-        {
-            //Si la camara no está habilitada, no procesar el resto del input
-            if (!enable)
-            {
-                return;
-            }
-
-            float elapsedTimeSec = GuiController.Instance.ElapsedTime;
-            TgcD3dInput d3dInput = GuiController.Instance.D3dInput;
-           
-            //Imprimir por consola la posicion actual de la camara
-            if ((d3dInput.keyDown(Key.LeftShift) || d3dInput.keyDown(Key.RightShift)) && d3dInput.keyPressed(Key.P))
-            {
-                GuiController.Instance.Logger.logVector3(getPosition());
-                return;
-            }
-            
-
-            float heading = 0.0f;
-            float pitch = 0.0f;
-
-            //Obtener direccion segun entrada de teclado
-            Vector3 direction = getMovementDirection(d3dInput);
-
-            pitch = d3dInput.YposRelative * rotationSpeed;
-            heading = d3dInput.XposRelative * rotationSpeed;
-
-            //Solo rotar si se esta aprentando el boton del mouse configurado
-            if (d3dInput.buttonDown(rotateMouseButton))
-            {
-                rotate(heading, pitch, 0.0f);
-            }
-            
-                
-            updatePosition(direction, elapsedTimeSec);
-        }
-
-        /// <summary>
-        /// Actualiza la ViewMatrix, si es que la camara esta activada
-        /// </summary>
-        public void updateViewMatrix(Microsoft.DirectX.Direct3D.Device d3dDevice)
-        {
-            if (!enable)
-            {
-                return;
-            }
-
-            d3dDevice.Transform.View = viewMatrix;
-        }
-
-        /// <summary>
-        /// Obtiene la direccion a moverse por la camara en base a la entrada de teclado
+        ///     Obtiene la direccion a moverse por la camara en base a la entrada de teclado
         /// </summary>
         private Vector3 getMovementDirection(TgcD3dInput d3dInput)
         {
-            Vector3 direction = new Vector3(0.0f, 0.0f, 0.0f);
+            var direction = new Vector3(0.0f, 0.0f, 0.0f);
 
             //Forward
             if (d3dInput.keyDown(Key.W))
@@ -795,28 +634,167 @@ namespace Examples.TerrainEditor
             return direction;
         }
 
-        public Vector3 getPosition()
-        {
-            return eye;
-        }
-
-        public Vector3 getLookAt()
-        {
-            return lookAt;
-        }
-
         /// <summary>
-        /// String de codigo para setear la camara desde GuiController, con la posicion actual y direccion de la camara
+        ///     String de codigo para setear la camara desde GuiController, con la posicion actual y direccion de la camara
         /// </summary>
         internal string getPositionCode()
         {
             //TODO ver de donde carajo sacar el LookAt de esta camara
-            Vector3 lookAt = this.LookAt;
+            var lookAt = LookAt;
 
             return "GuiController.Instance.setCamera(new Vector3(" +
-                TgcParserUtils.printFloat(eye.X) + "f, " + TgcParserUtils.printFloat(eye.Y) + "f, " + TgcParserUtils.printFloat(eye.Z) + "f), new Vector3(" +
-                TgcParserUtils.printFloat(lookAt.X) + "f, " + TgcParserUtils.printFloat(lookAt.Y) + "f, " + TgcParserUtils.printFloat(lookAt.Z) + "f));";
+                   TgcParserUtils.printFloat(eye.X) + "f, " + TgcParserUtils.printFloat(eye.Y) + "f, " +
+                   TgcParserUtils.printFloat(eye.Z) + "f), new Vector3(" +
+                   TgcParserUtils.printFloat(lookAt.X) + "f, " + TgcParserUtils.printFloat(lookAt.Y) + "f, " +
+                   TgcParserUtils.printFloat(lookAt.Z) + "f));";
         }
 
+        #region Getters y Setters
+
+        private bool fpsModeEnable;
+        private float previousY;
+
+        public bool FpsModeEnable
+        {
+            get
+            {
+                if (Terrain == null) return false;
+                return fpsModeEnable;
+            }
+            set
+            {
+                if (value && Terrain == null) return;
+
+                if (value && !fpsModeEnable)
+                {
+                    previousY = eye.Y;
+                    float y;
+                    Terrain.interpoledHeight(eye.X, eye.Z, out y);
+                    eye.Y = y + HeadPosition*WORLD_YAXIS.Y;
+                }
+                else if (!value && fpsModeEnable) eye.Y = previousY;
+                fpsModeEnable = value;
+                setPosition(eye);
+            }
+        }
+
+        private bool enable;
+
+        /// <summary>
+        ///     Habilita o no el uso de la camara
+        /// </summary>
+        public bool Enable
+        {
+            get { return enable; }
+            set
+            {
+                enable = value;
+
+                //Si se habilito la camara, cargar como la cámara actual
+                if (value)
+                {
+                    GuiController.Instance.CurrentCamera = this;
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Aceleracion de la camara en cada uno de sus ejes
+        /// </summary>
+        public Vector3 Acceleration { get; set; }
+
+        /// <summary>
+        ///     Activa o desactiva el efecto de Aceleración/Desaceleración
+        /// </summary>
+        public bool AccelerationEnable { get; set; }
+
+        private Vector3 currentVelocity;
+
+        /// <summary>
+        ///     Velocidad de desplazamiento actual, teniendo en cuenta la aceleracion
+        /// </summary>
+        public Vector3 CurrentVelocity
+        {
+            get { return currentVelocity; }
+        }
+
+        private Vector3 velocity;
+
+        /// <summary>
+        ///     Velocidad de desplazamiento de la cámara en cada uno de sus ejes
+        /// </summary>
+        public Vector3 Velocity
+        {
+            get { return velocity; }
+            set { velocity = value; }
+        }
+
+        /// <summary>
+        ///     Velocidad de desplazamiento de los ejes XZ de la cámara
+        /// </summary>
+        public float MovementSpeed
+        {
+            get { return velocity.X; }
+            set
+            {
+                velocity.X = value;
+                velocity.Z = value;
+            }
+        }
+
+        /// <summary>
+        ///     Velocidad de desplazamiento del eje Y de la cámara
+        /// </summary>
+        public float JumpSpeed
+        {
+            get { return velocity.Y; }
+            set { velocity.Y = value; }
+        }
+
+        /// <summary>
+        ///     Velocidad de rotacion de la cámara
+        /// </summary>
+        public float RotationSpeed { get; set; }
+
+        private Matrix viewMatrix;
+
+        /// <summary>
+        ///     View Matrix resultante
+        /// </summary>
+        public Matrix ViewMatrix
+        {
+            get { return viewMatrix; }
+        }
+
+        /// <summary>
+        ///     Posicion actual de la camara
+        /// </summary>
+        public Vector3 Position
+        {
+            get { return eye; }
+        }
+
+        /// <summary>
+        ///     Punto hacia donde mira la cámara
+        /// </summary>
+        public Vector3 LookAt { get; private set; }
+
+        /// <summary>
+        ///     Boton del mouse que debe ser presionado para rotar la camara.
+        ///     Por default es boton izquierdo.
+        /// </summary>
+        public TgcD3dInput.MouseButtons RotateMouseButton { get; set; }
+
+        /// <summary>
+        ///     Terreno del que tomara la altura.
+        /// </summary>
+        public SmartTerrain Terrain { get; set; }
+
+        /// <summary>
+        ///     Posicion de la cabeza respecto del suelo.
+        /// </summary>
+        public float HeadPosition { get; set; }
+
+        #endregion Getters y Setters
     }
 }

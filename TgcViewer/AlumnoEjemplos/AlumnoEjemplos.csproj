@@ -101,6 +101,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">
+      <Project>{2b8c77a8-2427-4da0-a33e-93f877b2d7d9}</Project>
+      <Name>TGC.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TgcViewer\TGC.Viewer.csproj">
       <Project>{990e714f-7ff2-4a87-86b1-e5fc8d4c2f4c}</Project>
       <Name>TGC.Viewer</Name>

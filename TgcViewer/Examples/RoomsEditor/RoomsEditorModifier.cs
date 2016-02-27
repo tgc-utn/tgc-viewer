@@ -1,45 +1,37 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using TgcViewer.Utils.Modifiers;
 
 namespace Examples.RoomsEditor
 {
     public class RoomsEditorModifier : TgcModifierPanel
     {
-        TgcRoomsEditor editor;
-
-        RoomsEditorControl editorControl;
-        public RoomsEditorControl EditorControl
-        {
-            get { return editorControl; }
-        }
-
-        /// <summary>
-        /// Rooms creados
-        /// </summary>
-        public List<RoomsEditorRoom> Rooms
-        {
-            get { return editorControl.Rooms; }
-        }
+        private TgcRoomsEditor editor;
 
         public RoomsEditorModifier(string varName, TgcRoomsEditor editor)
             : base(varName)
         {
-            editorControl = new RoomsEditorControl(editor);
-            contentPanel.Controls.Add(editorControl);
+            EditorControl = new RoomsEditorControl(editor);
+            contentPanel.Controls.Add(EditorControl);
         }
 
+        public RoomsEditorControl EditorControl { get; }
+
+        /// <summary>
+        ///     Rooms creados
+        /// </summary>
+        public List<RoomsEditorRoom> Rooms
+        {
+            get { return EditorControl.Rooms; }
+        }
 
         public override object getValue()
         {
             return null;
         }
 
-
         public void dispose()
         {
-            foreach (RoomsEditorRoom room in Rooms)
+            foreach (var room in Rooms)
             {
                 room.dispose();
             }

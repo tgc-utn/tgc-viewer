@@ -1,79 +1,67 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace TgcViewer.Utils.Networking
 {
     public class TgcSocketClient
     {
-        public const String CLIENT_HANDSHAKE = "TgcClient";
-
-        private string clientName;
-        /// <summary>
-        /// Nombre del cliente
-        /// </summary>
-        public string ClientName
-        {
-            get { return clientName; }
-        }
-
-        private TgcSocketClientInfo.ClientStatus status;
-        /// <summary>
-        /// Estado del cliente
-        /// </summary>
-        public TgcSocketClientInfo.ClientStatus Status
-        {
-            get { return status; }
-        }
-
-        private int playerId;
-        /// <summary>
-        /// ID que identifica unívocamente al cliente
-        /// </summary>
-        public int PlayerId
-        {
-            get { return playerId; }
-        }
-
-        private TgcSocketServerInfo serverInfo;
-        /// <summary>
-        /// Información del server al cual se conectó
-        /// </summary>
-        public TgcSocketServerInfo ServerInfo
-        {
-            get { return serverInfo; }
-        }
-
-        /// <summary>
-        /// Indica si el cliente está online
-        /// </summary>
-        public bool Online
-        {
-            get { return status == TgcSocketClientInfo.ClientStatus.Connected; }
-        }
+        public const string CLIENT_HANDSHAKE = "TgcClient";
 
         private Socket clientSocket;
-        private Queue<TgcSocketRecvMsg> receivedMessages;
 
-
+        private readonly Queue<TgcSocketRecvMsg> receivedMessages;
 
         public TgcSocketClient()
         {
-            this.receivedMessages = new Queue<TgcSocketRecvMsg>();
+            receivedMessages = new Queue<TgcSocketRecvMsg>();
+        }
+
+        /// <summary>
+        ///     Nombre del cliente
+        /// </summary>
+        public string ClientName { get; private set; }
+
+        /// <summary>
+        ///     Estado del cliente
+        /// </summary>
+        public TgcSocketClientInfo.ClientStatus Status { get; private set; }
+
+        /// <summary>
+        ///     ID que identifica unívocamente al cliente
+        /// </summary>
+        public int PlayerId { get; private set; }
+
+        /// <summary>
+        ///     Información del server al cual se conectó
+        /// </summary>
+        public TgcSocketServerInfo ServerInfo { get; private set; }
+
+        /// <summary>
+        ///     Indica si el cliente está online
+        /// </summary>
+        public bool Online
+        {
+            get { return Status == TgcSocketClientInfo.ClientStatus.Connected; }
+        }
+
+        public int ReceivedMessagesCount
+        {
+            get { return receivedMessages.Count; }
         }
 
         public void initializeClient(string clientName)
         {
-            this.clientName = clientName;
-            this.receivedMessages.Clear();
-            this.status = TgcSocketClientInfo.ClientStatus.Disconnected;
+            ClientName = clientName;
+            receivedMessages.Clear();
+            Status = TgcSocketClientInfo.ClientStatus.Disconnected;
         }
 
         /// <summary>
-        /// Se conecta a un nuevo servidor. Pero todavía no lo toma como definitivo hasta
-        /// que no se hace la selección final.
+        ///     Se conecta a un nuevo servidor. Pero todavía no lo toma como definitivo hasta
+        ///     que no se hace la selección final.
         /// </summary>
         /// <param name="ip">IP del server</param>
         /// <param name="port">Puerto del server</param>
@@ -83,17 +71,17 @@ namespace TgcViewer.Utils.Networking
             try
             {
                 //Conectar con el server, en forma no bloqueante
-                IPAddress address = IPAddress.Parse(ip);
-                IPEndPoint Ipep = new IPEndPoint(address, port);
+                var address = IPAddress.Parse(ip);
+                var Ipep = new IPEndPoint(address, port);
                 clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 clientSocket.Connect(Ipep);
                 clientSocket.Blocking = false;
 
-                serverInfo = new TgcSocketServerInfo(address, port);
-                
+                ServerInfo = new TgcSocketServerInfo(address, port);
+
                 //Enviar mensaje de Handshake
                 clientSocket.Send(Encoding.ASCII.GetBytes(CLIENT_HANDSHAKE));
-                status = TgcSocketClientInfo.ClientStatus.HandshakePending;
+                Status = TgcSocketClientInfo.ClientStatus.HandshakePending;
 
                 return true;
             }
@@ -104,7 +92,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Desconecta el cliente
+        ///     Desconecta el cliente
         /// </summary>
         public void disconnectClient()
         {
@@ -118,14 +106,13 @@ namespace TgcViewer.Utils.Networking
                 catch (Exception)
                 {
                 }
-                status = TgcSocketClientInfo.ClientStatus.Disconnected;
+                Status = TgcSocketClientInfo.ClientStatus.Disconnected;
                 clientSocket = null;
             }
         }
 
-
         /// <summary>
-        /// Recibe todos los mensajes pendientes de la red y actualiza todos los estados
+        ///     Recibe todos los mensajes pendientes de la red y actualiza todos los estados
         /// </summary>
         public void updateNetwork()
         {
@@ -141,11 +128,11 @@ namespace TgcViewer.Utils.Networking
             }
 
             //Ver si recibimos algún mensaje
-            if(clientSocket.Poll(0, SelectMode.SelectRead))
+            if (clientSocket.Poll(0, SelectMode.SelectRead))
             {
                 bool result;
 
-                switch (status)
+                switch (Status)
                 {
                     //Hanshake para aprobación del servidor
                     case TgcSocketClientInfo.ClientStatus.HandshakePending:
@@ -178,17 +165,12 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Enviar un mensaje al server
+        ///     Enviar un mensaje al server
         /// </summary>
         /// <param name="msg">Mensaje a enviar</param>
         public void send(TgcSocketSendMsg msg)
         {
             TgcSocketMessages.sendMessage(clientSocket, msg, TgcSocketMessageHeader.MsgType.RegularMessage);
-        }
-
-        public int ReceivedMessagesCount
-        {
-            get { return receivedMessages.Count; }
         }
 
         public TgcSocketRecvMsg nextReceivedMessage()
@@ -201,7 +183,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Recibir mensaje del servidor
+        ///     Recibir mensaje del servidor
         /// </summary>
         /// <returns>True si todo salio bien, False en caso de problemas en la conexión</returns>
         private bool getReceiveMessage()
@@ -209,7 +191,7 @@ namespace TgcViewer.Utils.Networking
             try
             {
                 //Recibir mensaje
-                TgcSocketRecvMsg msg = TgcSocketMessages.receiveMessage(clientSocket, TgcSocketMessageHeader.MsgType.RegularMessage);
+                var msg = TgcSocketMessages.receiveMessage(clientSocket, TgcSocketMessageHeader.MsgType.RegularMessage);
                 if (msg == null)
                 {
                     return false;
@@ -227,7 +209,7 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Recibir informacion inicial del server
+        ///     Recibir informacion inicial del server
         /// </summary>
         /// <returns>True si todo salio bien</returns>
         private bool getServerInitialInfo()
@@ -235,22 +217,23 @@ namespace TgcViewer.Utils.Networking
             try
             {
                 //Recibir info inicial del server
-                TgcSocketRecvMsg msg = TgcSocketMessages.receiveMessage(clientSocket, TgcSocketMessageHeader.MsgType.InitialMessage);
+                var msg = TgcSocketMessages.receiveMessage(clientSocket, TgcSocketMessageHeader.MsgType.InitialMessage);
                 if (msg == null)
                 {
                     return false;
                 }
 
                 //Guardar sus datos y cambiar su estado
-                TgcSocketInitialInfoServer serverInitInfo = (TgcSocketInitialInfoServer)msg.readNext();
-                serverInfo.Name = serverInitInfo.serverName;
-                playerId = serverInitInfo.playerId;
+                var serverInitInfo = (TgcSocketInitialInfoServer) msg.readNext();
+                ServerInfo.Name = serverInitInfo.serverName;
+                PlayerId = serverInitInfo.playerId;
 
                 //Enviar OK final
-                this.status = TgcSocketClientInfo.ClientStatus.Connected;
-                TgcSocketSendMsg sendMsg = new TgcSocketSendMsg();
+                Status = TgcSocketClientInfo.ClientStatus.Connected;
+                var sendMsg = new TgcSocketSendMsg();
                 sendMsg.write(true);
-                return TgcSocketMessages.sendMessage(clientSocket, sendMsg, TgcSocketMessageHeader.MsgType.InitialMessage);
+                return TgcSocketMessages.sendMessage(clientSocket, sendMsg,
+                    TgcSocketMessageHeader.MsgType.InitialMessage);
             }
             catch (SocketException)
             {
@@ -258,31 +241,31 @@ namespace TgcViewer.Utils.Networking
             }
         }
 
-
         /// <summary>
-        /// Empezar el handshake con el server
+        ///     Empezar el handshake con el server
         /// </summary>
         /// <returns>True si todo salio bien</returns>
         private bool doHandShake()
         {
             try
             {
-                int serverHandshakeLength = Encoding.ASCII.GetBytes(TgcSocketServer.SERVER_HANDSHAKE).Length;
-                byte[] data = new byte[serverHandshakeLength];
-                int recv = clientSocket.Receive(data, data.Length, SocketFlags.None);
+                var serverHandshakeLength = Encoding.ASCII.GetBytes(TgcSocketServer.SERVER_HANDSHAKE).Length;
+                var data = new byte[serverHandshakeLength];
+                var recv = clientSocket.Receive(data, data.Length, SocketFlags.None);
                 if (recv > 0 && recv == serverHandshakeLength)
                 {
-                    string msg = Encoding.ASCII.GetString(data, 0, recv);
+                    var msg = Encoding.ASCII.GetString(data, 0, recv);
                     if (msg.Equals(TgcSocketServer.SERVER_HANDSHAKE))
                     {
                         //Server correcto, enviar informacion inicial
-                        status = TgcSocketClientInfo.ClientStatus.RequireInitialInfo;
-                        TgcSocketInitialInfoClient clientInitInfo = new TgcSocketInitialInfoClient();
-                        clientInitInfo.clientName = clientName;
+                        Status = TgcSocketClientInfo.ClientStatus.RequireInitialInfo;
+                        var clientInitInfo = new TgcSocketInitialInfoClient();
+                        clientInitInfo.clientName = ClientName;
 
-                        TgcSocketSendMsg sendMsg = new TgcSocketSendMsg();
+                        var sendMsg = new TgcSocketSendMsg();
                         sendMsg.write(clientInitInfo);
-                        TgcSocketMessages.sendMessage(clientSocket, sendMsg, TgcSocketMessageHeader.MsgType.InitialMessage);
+                        TgcSocketMessages.sendMessage(clientSocket, sendMsg,
+                            TgcSocketMessageHeader.MsgType.InitialMessage);
 
                         return true;
                     }
@@ -298,64 +281,52 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Buscar todos los servers disponibles de la LAN bajo el puerto especificado
+        ///     Buscar todos los servers disponibles de la LAN bajo el puerto especificado
         /// </summary>
         public List<TgcAvaliableServer> findLanServers(int port)
         {
-            TgcLanBrowser lanBrowser = new TgcLanBrowser();
-            List<string> computersDomains = lanBrowser.getNetworkComputers();
-            List<TgcAvaliableServer> servers = new List<TgcAvaliableServer>();
+            var lanBrowser = new TgcLanBrowser();
+            var computersDomains = lanBrowser.getNetworkComputers();
+            var servers = new List<TgcAvaliableServer>();
 
-            foreach (string computerDomain in computersDomains)
+            foreach (var computerDomain in computersDomains)
             {
                 //Intentar conectarse
                 try
                 {
-                    IPAddress[] addresses = Dns.GetHostAddresses(computerDomain);
-                    IPAddress address = addresses[0];
+                    var addresses = Dns.GetHostAddresses(computerDomain);
+                    var address = addresses[0];
                     servers.Add(new TgcAvaliableServer(computerDomain, address.ToString()));
                 }
                 catch (Exception)
                 {
                     //Hubo algún problema un una IP, ignorar en la lista
                 }
-                
             }
 
             return servers;
         }
 
         /// <summary>
-        /// Representa un servidor de la LAN disponible para conectarse
+        ///     Representa un servidor de la LAN disponible para conectarse
         /// </summary>
         public class TgcAvaliableServer
         {
-            private string hostName;
-            /// <summary>
-            /// HostName
-            /// </summary>
-            public string HostName
-            {
-                get { return hostName; }
-            }
-
-            private string ip;
-            /// <summary>
-            /// IP
-            /// </summary>
-            public string Ip
-            {
-                get { return ip; }
-            }
-
             public TgcAvaliableServer(string hostName, string ip)
             {
-                this.hostName = hostName;
-                this.ip = ip;
+                HostName = hostName;
+                Ip = ip;
             }
+
+            /// <summary>
+            ///     HostName
+            /// </summary>
+            public string HostName { get; }
+
+            /// <summary>
+            ///     IP
+            /// </summary>
+            public string Ip { get; }
         }
-
     }
-
-    
 }

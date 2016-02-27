@@ -1,24 +1,21 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.TgcGeometry;
 using Microsoft.DirectX;
+using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Utils;
 
 namespace Examples.Optimizacion.Quadtree
 {
     /// <summary>
-    /// Herramienta para crear y utilizar un Quadtree para renderizar por Frustum Culling
+    ///     Herramienta para crear y utilizar un Quadtree para renderizar por Frustum Culling
     /// </summary>
     public class Quadtree
     {
-
-        QuadtreeNode quadtreeRootNode;
-        List<TgcMesh> modelos;
-        TgcBoundingBox sceneBounds;
-        QuadtreeBuilder builder;
-        List<TgcDebugBox> debugQuadtreeBoxes;
+        private readonly QuadtreeBuilder builder;
+        private List<TgcDebugBox> debugQuadtreeBoxes;
+        private List<TgcMesh> modelos;
+        private QuadtreeNode quadtreeRootNode;
+        private TgcBoundingBox sceneBounds;
 
         public Quadtree()
         {
@@ -26,7 +23,7 @@ namespace Examples.Optimizacion.Quadtree
         }
 
         /// <summary>
-        /// Crear nuevo Quadtree
+        ///     Crear nuevo Quadtree
         /// </summary>
         /// <param name="modelos">Modelos a optimizar</param>
         /// <param name="sceneBounds">Límites del escenario</param>
@@ -36,17 +33,17 @@ namespace Examples.Optimizacion.Quadtree
             this.sceneBounds = sceneBounds;
 
             //Crear Quadtree
-            this.quadtreeRootNode = builder.crearQuadtree(modelos, sceneBounds);
+            quadtreeRootNode = builder.crearQuadtree(modelos, sceneBounds);
 
             //Deshabilitar todos los mesh inicialmente
-            foreach (TgcMesh mesh in modelos)
+            foreach (var mesh in modelos)
             {
                 mesh.Enabled = false;
             }
         }
 
         /// <summary>
-        /// Crear meshes para debug
+        ///     Crear meshes para debug
         /// </summary>
         public void createDebugQuadtreeMeshes()
         {
@@ -54,18 +51,18 @@ namespace Examples.Optimizacion.Quadtree
         }
 
         /// <summary>
-        /// Renderizar en forma optimizado utilizando el Quadtree para hacer FrustumCulling
+        ///     Renderizar en forma optimizado utilizando el Quadtree para hacer FrustumCulling
         /// </summary>
         public void render(TgcFrustum frustum, bool debugEnabled)
         {
-            Vector3 pMax = sceneBounds.PMax;
-            Vector3 pMin = sceneBounds.PMin;
+            var pMax = sceneBounds.PMax;
+            var pMin = sceneBounds.PMin;
             findVisibleMeshes(frustum, quadtreeRootNode,
                 pMin.X, pMin.Y, pMin.Z,
                 pMax.X, pMax.Y, pMax.Z);
 
             //Renderizar
-            foreach (TgcMesh mesh in modelos)
+            foreach (var mesh in modelos)
             {
                 if (mesh.Enabled)
                 {
@@ -76,22 +73,21 @@ namespace Examples.Optimizacion.Quadtree
 
             if (debugEnabled)
             {
-                foreach (TgcDebugBox debugBox in debugQuadtreeBoxes)
+                foreach (var debugBox in debugQuadtreeBoxes)
                 {
                     debugBox.render();
                 }
             }
         }
 
-
         /// <summary>
-        /// Recorrer recursivamente el Quadtree para encontrar los nodos visibles
+        ///     Recorrer recursivamente el Quadtree para encontrar los nodos visibles
         /// </summary>
         private void findVisibleMeshes(TgcFrustum frustum, QuadtreeNode node,
             float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ)
         {
-            QuadtreeNode[] children = node.children;
+            var children = node.children;
 
             //es hoja, cargar todos los meshes
             if (children == null)
@@ -102,38 +98,38 @@ namespace Examples.Optimizacion.Quadtree
             //recursividad sobre hijos
             else
             {
-                float midX = FastMath.Abs((boxUpperX - boxLowerX) / 2);
-                float midZ = FastMath.Abs((boxUpperZ - boxLowerZ) / 2);
+                var midX = FastMath.Abs((boxUpperX - boxLowerX)/2);
+                var midZ = FastMath.Abs((boxUpperZ - boxLowerZ)/2);
 
                 //00
-                testChildVisibility(frustum, children[0], boxLowerX + midX, boxLowerY, boxLowerZ + midZ, boxUpperX, boxUpperY, boxUpperZ);
+                testChildVisibility(frustum, children[0], boxLowerX + midX, boxLowerY, boxLowerZ + midZ, boxUpperX,
+                    boxUpperY, boxUpperZ);
 
                 //01
-                testChildVisibility(frustum, children[1], boxLowerX + midX, boxLowerY, boxLowerZ, boxUpperX, boxUpperY, boxUpperZ - midZ);
+                testChildVisibility(frustum, children[1], boxLowerX + midX, boxLowerY, boxLowerZ, boxUpperX, boxUpperY,
+                    boxUpperZ - midZ);
 
                 //10
-                testChildVisibility(frustum, children[2], boxLowerX, boxLowerY, boxLowerZ + midZ, boxUpperX - midX, boxUpperY, boxUpperZ);
-                
+                testChildVisibility(frustum, children[2], boxLowerX, boxLowerY, boxLowerZ + midZ, boxUpperX - midX,
+                    boxUpperY, boxUpperZ);
+
                 //11
-                testChildVisibility(frustum, children[3], boxLowerX, boxLowerY, boxLowerZ, boxUpperX - midX, boxUpperY, boxUpperZ - midZ);
-
-
+                testChildVisibility(frustum, children[3], boxLowerX, boxLowerY, boxLowerZ, boxUpperX - midX, boxUpperY,
+                    boxUpperZ - midZ);
             }
         }
 
-
         /// <summary>
-        /// Hacer visible las meshes de un nodo si es visible por el Frustum
+        ///     Hacer visible las meshes de un nodo si es visible por el Frustum
         /// </summary>
         private void testChildVisibility(TgcFrustum frustum, QuadtreeNode childNode,
-                float boxLowerX, float boxLowerY, float boxLowerZ, float boxUpperX, float boxUpperY, float boxUpperZ)
+            float boxLowerX, float boxLowerY, float boxLowerZ, float boxUpperX, float boxUpperY, float boxUpperZ)
         {
-
             //test frustum-box intersection
-            TgcBoundingBox caja = new TgcBoundingBox(
+            var caja = new TgcBoundingBox(
                 new Vector3(boxLowerX, boxLowerY, boxLowerZ),
                 new Vector3(boxUpperX, boxUpperY, boxUpperZ));
-            TgcCollisionUtils.FrustumResult c = TgcCollisionUtils.classifyFrustumAABB(frustum, caja);
+            var c = TgcCollisionUtils.classifyFrustumAABB(frustum, caja);
 
             //complementamente adentro: cargar todos los hijos directamente, sin testeos
             if (c == TgcCollisionUtils.FrustumResult.INSIDE)
@@ -149,11 +145,11 @@ namespace Examples.Optimizacion.Quadtree
         }
 
         /// <summary>
-        /// Hacer visibles todas las meshes de un nodo, buscando recursivamente sus hojas
+        ///     Hacer visibles todas las meshes de un nodo, buscando recursivamente sus hojas
         /// </summary>
         private void addAllLeafMeshes(QuadtreeNode node)
         {
-            QuadtreeNode[] children = node.children;
+            var children = node.children;
 
             //es hoja, cargar todos los meshes
             if (children == null)
@@ -163,30 +159,23 @@ namespace Examples.Optimizacion.Quadtree
             //pedir hojas a hijos
             else
             {
-                for (int i = 0; i < children.Length; i++)
+                for (var i = 0; i < children.Length; i++)
                 {
                     addAllLeafMeshes(children[i]);
                 }
             }
         }
 
-
         /// <summary>
-        /// Hacer visibles todas las meshes de un nodo
+        ///     Hacer visibles todas las meshes de un nodo
         /// </summary>
         private void selectLeafMeshes(QuadtreeNode node)
         {
-            TgcMesh[] models = node.models;
-            foreach (TgcMesh m in models)
+            var models = node.models;
+            foreach (var m in models)
             {
                 m.Enabled = true;
             }
         }
-
-
-
-
-
-
     }
 }

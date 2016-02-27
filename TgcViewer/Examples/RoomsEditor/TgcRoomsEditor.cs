@@ -1,42 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using System.Windows.Forms;
-using TgcViewer.Utils.Terrain;
-using System.Xml;
-using System.Globalization;
-using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer;
+using TGC.Core.Example;
 
 namespace Examples.RoomsEditor
 {
     /// <summary>
-    /// Ejemplo Caja
-    /// Unidades Involucradas:
+    ///     Ejemplo Caja
+    ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
     ///     # Unidad 7 - Técnicas de Optimización - Indoor
-    /// 
-    /// Herramienta para crear escenarios Indoor compuestos por cuartos rectangulares 
-    /// que se comunican entre sí.
-    /// Permite crear cuartos rectangulares en un plano 2D con vista superior y, a partir
-    /// de este plano, genera el escenario 3D. 
-    /// Calcula automáticamente los lados de los rectángulos que tocan entre sí y genera
-    /// las aberturas necesarias que permien comunicar ambos cuartos (simulando puertas o ventanas)
-    /// Las instrucciones se muestran al hacer clic en el botón "Help" de este Modifier.
-    /// 
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Herramienta para crear escenarios Indoor compuestos por cuartos rectangulares
+    ///     que se comunican entre sí.
+    ///     Permite crear cuartos rectangulares en un plano 2D con vista superior y, a partir
+    ///     de este plano, genera el escenario 3D.
+    ///     Calcula automáticamente los lados de los rectángulos que tocan entre sí y genera
+    ///     las aberturas necesarias que permien comunicar ambos cuartos (simulando puertas o ventanas)
+    ///     Las instrucciones se muestran al hacer clic en el botón "Help" de este Modifier.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class TgcRoomsEditor : TgcExample
     {
-        RoomsEditorModifier modifier;
-
+        private RoomsEditorModifier modifier;
 
         public override string getCategory()
         {
@@ -50,12 +34,13 @@ namespace Examples.RoomsEditor
 
         public override string getDescription()
         {
-            return "Herramienta para crear escenarios Indoor compuestos por cuartos rectangulares que se comunican entre sí.";
+            return
+                "Herramienta para crear escenarios Indoor compuestos por cuartos rectangulares que se comunican entre sí.";
         }
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             modifier = new RoomsEditorModifier("RoomsEditor", this);
             GuiController.Instance.Modifiers.add(modifier);
@@ -63,22 +48,21 @@ namespace Examples.RoomsEditor
             GuiController.Instance.FpsCamera.Enable = true;
             GuiController.Instance.FpsCamera.MovementSpeed = 200f;
             GuiController.Instance.FpsCamera.JumpSpeed = 200f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(133.0014f, 264.8258f, -119.0311f), new Vector3(498.1584f, -299.4199f, 621.433f));
+            GuiController.Instance.FpsCamera.setCamera(new Vector3(133.0014f, 264.8258f, -119.0311f),
+                new Vector3(498.1584f, -299.4199f, 621.433f));
         }
-
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
-            foreach (RoomsEditorRoom room in modifier.Rooms)
+            foreach (var room in modifier.Rooms)
             {
-                foreach (RoomsEditorWall wall in room.Walls)
+                foreach (var wall in room.Walls)
                 {
                     wall.render();
                 }
             }
-
         }
 
         public override void close()
@@ -86,21 +70,13 @@ namespace Examples.RoomsEditor
             modifier.dispose();
         }
 
-
-
         /// <summary>
-        /// Método que se llama cuando se quiere exportar la informacion de la escena a un XML,
-        /// a través del botón "Custom Export"
-        /// 
-        /// 
-        /// MODIFICAR ESTA SECCION PARA ADAPTARSE A LAS NECESIDADES DEL ALUMNO
-        /// 
-        /// 
-        /// 
+        ///     Método que se llama cuando se quiere exportar la informacion de la escena a un XML,
+        ///     a través del botón "Custom Export"
+        ///     MODIFICAR ESTA SECCION PARA ADAPTARSE A LAS NECESIDADES DEL ALUMNO
         /// </summary>
         internal void customExport(string savePath)
         {
-            
         }
     }
 }

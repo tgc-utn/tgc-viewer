@@ -1,76 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.Input;
-using Microsoft.DirectX;
-using TgcViewer;
+﻿using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 
 namespace TgcViewer.Utils.Input
 {
     /// <summary>
-    /// Camara en tercera persona que sigue a un objeto a un determinada distancia.
+    ///     Camara en tercera persona que sigue a un objeto a un determinada distancia.
     /// </summary>
     public class TgcThirdPersonCamera : TgcCamera
     {
+        private static readonly Vector3 UP_VECTOR = new Vector3(0, 1, 0);
 
-        static readonly Vector3 UP_VECTOR = new Vector3(0, 1, 0);
+        private bool enable;
 
+        private Vector3 position;
 
-        float offsetHeight;
+        private Matrix viewMatrix;
+
         /// <summary>
-        /// Desplazamiento en altura de la camara respecto del target
+        ///     Crear una nueva camara
         /// </summary>
-        public float OffsetHeight
+        public TgcThirdPersonCamera()
         {
-            get { return offsetHeight; }
-            set { offsetHeight = value; }
+            resetValues();
         }
 
-        float offsetForward;
         /// <summary>
-        /// Desplazamiento hacia adelante o atras de la camara repecto del target.
-        /// Para que sea hacia atras tiene que ser negativo.
+        ///     Desplazamiento en altura de la camara respecto del target
         /// </summary>
-        public float OffsetForward
-        {
-            get { return offsetForward; }
-            set { offsetForward = value; }
-        }
+        public float OffsetHeight { get; set; }
 
-        Vector3 targetDisplacement;
         /// <summary>
-        /// Desplazamiento final que se le hace al target para acomodar la camara en un cierto
-        /// rincon de la pantalla
+        ///     Desplazamiento hacia adelante o atras de la camara repecto del target.
+        ///     Para que sea hacia atras tiene que ser negativo.
         /// </summary>
-        public Vector3 TargetDisplacement
-        {
-            get { return targetDisplacement; }
-            set { targetDisplacement = value; }
-        }
+        public float OffsetForward { get; set; }
 
-        float rotationY;
         /// <summary>
-        /// Rotacion absoluta en Y de la camara
+        ///     Desplazamiento final que se le hace al target para acomodar la camara en un cierto
+        ///     rincon de la pantalla
         /// </summary>
-        public float RotationY
-        {
-            get { return rotationY; }
-            set { rotationY = value; }
-        }
+        public Vector3 TargetDisplacement { get; set; }
 
-        Vector3 target;
         /// <summary>
-        /// Objetivo al cual la camara tiene que apuntar
+        ///     Rotacion absoluta en Y de la camara
         /// </summary>
-        public Vector3 Target
-        {
-            get { return target; }
-            set { target = value; }
-        }
+        public float RotationY { get; set; }
 
-        Vector3 position;
         /// <summary>
-        /// Posicion del ojo de la camara
+        ///     Objetivo al cual la camara tiene que apuntar
+        /// </summary>
+        public Vector3 Target { get; set; }
+
+        /// <summary>
+        ///     Posicion del ojo de la camara
         /// </summary>
         public Vector3 Position
         {
@@ -78,9 +60,8 @@ namespace TgcViewer.Utils.Input
             set { position = value; }
         }
 
-        bool enable;
         /// <summary>
-        /// Habilita o no el uso de la camara
+        ///     Habilita o no el uso de la camara
         /// </summary>
         public bool Enable
         {
@@ -97,46 +78,61 @@ namespace TgcViewer.Utils.Input
             }
         }
 
-        Matrix viewMatrix;
-
-
-        /// <summary>
-        /// Crear una nueva camara
-        /// </summary>
-        public TgcThirdPersonCamera()
+        public void updateCamera()
         {
-            resetValues();
+            Vector3 targetCenter;
+            viewMatrix = generateViewMatrix(out position, out targetCenter);
+        }
+
+        public Vector3 getPosition()
+        {
+            return position;
+        }
+
+        public Vector3 getLookAt()
+        {
+            return Target;
+        }
+
+        public void updateViewMatrix(Device d3dDevice)
+        {
+            if (!enable)
+            {
+                return;
+            }
+
+            d3dDevice.Transform.View = viewMatrix;
         }
 
         /// <summary>
-        /// Carga los valores default de la camara y limpia todos los cálculos intermedios
+        ///     Carga los valores default de la camara y limpia todos los cálculos intermedios
         /// </summary>
         public void resetValues()
         {
-            offsetHeight = 20;
-            offsetForward = -120;
-            rotationY = 0;
-            targetDisplacement = Vector3.Empty;
-            target = Vector3.Empty;
+            OffsetHeight = 20;
+            OffsetForward = -120;
+            RotationY = 0;
+            TargetDisplacement = Vector3.Empty;
+            Target = Vector3.Empty;
             position = Vector3.Empty;
             viewMatrix = Matrix.Identity;
         }
 
         /// <summary>
-        /// Configura los valores iniciales de la cámara
+        ///     Configura los valores iniciales de la cámara
         /// </summary>
         /// <param name="target">Objetivo al cual la camara tiene que apuntar</param>
         /// <param name="offsetHeight">Desplazamiento en altura de la camara respecto del target</param>
         /// <param name="offsetForward">Desplazamiento hacia adelante o atras de la camara repecto del target.</param>
         public void setCamera(Vector3 target, float offsetHeight, float offsetForward)
         {
-            this.target = target;
-            this.offsetHeight = offsetHeight;
-            this.offsetForward = offsetForward;
+            Target = target;
+            OffsetHeight = offsetHeight;
+            OffsetForward = offsetForward;
         }
 
         /// <summary>
-        /// Genera la proxima matriz de view, sin actualizar aun los valores internos
+        ///     Genera la proxima matriz de view, sin actualizar aun los valores internos
         /// </summary>
         /// <param name="pos">Futura posicion de camara generada</param>
         /// <param name="pos">Futuro centro de camara a generada</param>
@@ -144,8 +140,9 @@ namespace TgcViewer.Utils.Input
         public Matrix generateViewMatrix(out Vector3 pos, out Vector3 targetCenter)
         {
             //alejarse, luego rotar y lueg ubicar camara en el centro deseado
-            targetCenter = Vector3.Add(target, targetDisplacement);
-            Matrix m = Matrix.Translation(0, offsetHeight, offsetForward) * Matrix.RotationY(rotationY) * Matrix.Translation(targetCenter);
+            targetCenter = Vector3.Add(Target, TargetDisplacement);
+            var m = Matrix.Translation(0, OffsetHeight, OffsetForward)*Matrix.RotationY(RotationY)*
+                    Matrix.Translation(targetCenter);
 
             //Extraer la posicion final de la matriz de transformacion
             pos.X = m.M41;
@@ -156,41 +153,13 @@ namespace TgcViewer.Utils.Input
             return Matrix.LookAtLH(pos, targetCenter, UP_VECTOR);
         }
 
-        public void updateCamera()
-        {
-            Vector3 targetCenter;
-            viewMatrix = generateViewMatrix(out position, out targetCenter); 
-        }
-
         /// <summary>
-        /// Rotar la camara respecto del eje Y
+        ///     Rotar la camara respecto del eje Y
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
         public void rotateY(float angle)
         {
-            rotationY += angle;
+            RotationY += angle;
         }
-
-        public Vector3 getPosition()
-        {
-            return position;
-        }
-
-        public Vector3 getLookAt()
-        {
-            return target;
-        }
-
-
-        public void updateViewMatrix(Microsoft.DirectX.Direct3D.Device d3dDevice)
-        {
-            if (!enable)
-            {
-                return;
-            }
-
-            d3dDevice.Transform.View = viewMatrix;
-        }
-
     }
 }

@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Networking;
 
@@ -10,9 +9,9 @@ namespace TgcViewer.Utils.Modifiers
 {
     public class TgcModifiers
     {
-        Panel modifiersPanel;
-        Dictionary<string, TgcModifierPanel> modifiers;
-        Panel spacePanel;
+        private readonly Dictionary<string, TgcModifierPanel> modifiers;
+        private readonly Panel modifiersPanel;
+        private readonly Panel spacePanel;
 
         public TgcModifiers(Panel modifiersPanel)
         {
@@ -20,7 +19,12 @@ namespace TgcViewer.Utils.Modifiers
             modifiers = new Dictionary<string, TgcModifierPanel>();
 
             spacePanel = new Panel();
-            spacePanel.Size = new System.Drawing.Size(10, 100);
+            spacePanel.Size = new Size(10, 100);
+        }
+
+        public object this[string varName]
+        {
+            get { return modifiers[varName].getValue(); }
         }
 
         public void add(TgcModifierPanel modifier)
@@ -29,10 +33,9 @@ namespace TgcViewer.Utils.Modifiers
             {
                 modifiersPanel.Controls.RemoveAt(modifiersPanel.Controls.Count - 1);
             }
-            
+
             modifiers.Add(modifier.VarName, modifier);
             modifiersPanel.Controls.Add(modifier.MainPanel);
-
 
             modifiersPanel.Controls.Add(spacePanel);
         }
@@ -42,29 +45,20 @@ namespace TgcViewer.Utils.Modifiers
             return modifiers[varName].getValue();
         }
 
-        public object this[string varName]
-        {
-            get { return modifiers[varName].getValue(); }
-        }
-
-
         internal void variableChanged()
         {
         }
 
         public void clear()
         {
-            this.modifiersPanel.Controls.Clear();
-            this.modifiers.Clear();
+            modifiersPanel.Controls.Clear();
+            modifiers.Clear();
         }
-
-
-
 
         #region Facilitadores de Modifiers
 
         /// <summary>
-        /// Modificador para valores Float
+        ///     Modificador para valores Float
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="minValue">Valor minimo</param>
@@ -76,7 +70,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para valores Int
+        ///     Modificador para valores Int
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="minValue">Valor minimo</param>
@@ -88,7 +82,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para valores Boolean
+        ///     Modificador para valores Boolean
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="text">Descripcion</param>
@@ -99,7 +93,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para elegir un color
+        ///     Modificador para elegir un color
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="defaultValue">Valor default</param>
@@ -109,7 +103,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para un intervalo discreto de valores
+        ///     Modificador para un intervalo discreto de valores
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="values">Array de valores discretos</param>
@@ -120,7 +114,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para un intervalo discreto de valores creados con una estructura Enum
+        ///     Modificador para un intervalo discreto de valores creados con una estructura Enum
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="enumType">tipo del Enum a utilizar. Se obtiene con typeof(MyEnum)</param>
@@ -131,7 +125,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para elegir un archivo del FileSystem
+        ///     Modificador para elegir un archivo del FileSystem
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="defaultPath">path del archivo default</param>
@@ -146,7 +140,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para elegir una textura
+        ///     Modificador para elegir una textura
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="values">path de la textura default</param>
@@ -156,7 +150,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para valores floats (X,Y,Z) de un vertice
+        ///     Modificador para valores floats (X,Y,Z) de un vertice
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="minValue">Valor minimo</param>
@@ -168,7 +162,7 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modificador para valores floats (X,Y) o (U,V) de un vertice
+        ///     Modificador para valores floats (X,Y) o (U,V) de un vertice
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="minValue">Valor minimo</param>
@@ -180,9 +174,9 @@ namespace TgcViewer.Utils.Modifiers
         }
 
         /// <summary>
-        /// Modifier para Networking.
-        /// Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
-        /// Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
+        ///     Modifier para Networking.
+        ///     Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
+        ///     Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
         /// </summary>
         /// <param name="varName">Identificador del modifier</param>
         /// <param name="serverName">Nombre default que va a usar el servidor</param>
@@ -191,16 +185,16 @@ namespace TgcViewer.Utils.Modifiers
         /// <returns>Modificador creado</returns>
         public TgcNetworkingModifier addNetworking(string varName, string serverName, string clientName, int port)
         {
-            TgcNetworkingModifier m = new TgcNetworkingModifier(varName, serverName, clientName, port);
+            var m = new TgcNetworkingModifier(varName, serverName, clientName, port);
             add(m);
             return m;
         }
 
         /// <summary>
-        /// Modifier para Networking.
-        /// Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
-        /// Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
-        /// Utiliza el puerto default del framework.
+        ///     Modifier para Networking.
+        ///     Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
+        ///     Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
+        ///     Utiliza el puerto default del framework.
         /// </summary>
         /// <param name="varName">Identificador del modifier</param>
         /// <param name="serverName">Nombre default que va a usar el servidor</param>
@@ -208,13 +202,13 @@ namespace TgcViewer.Utils.Modifiers
         /// <returns>Modificador creado</returns>
         public TgcNetworkingModifier addNetworking(string varName, string serverName, string clientName)
         {
-            TgcNetworkingModifier m = new TgcNetworkingModifier(varName, serverName, clientName, TgcSocketMessages.DEFAULT_PORT);
+            var m = new TgcNetworkingModifier(varName, serverName, clientName, TgcSocketMessages.DEFAULT_PORT);
             add(m);
             return m;
         }
 
         /// <summary>
-        /// Modificador que agrega un Boton
+        ///     Modificador que agrega un Boton
         /// </summary>
         /// <param name="varName">Nombre del modificador</param>
         /// <param name="text">Descripcion</param>
@@ -224,7 +218,6 @@ namespace TgcViewer.Utils.Modifiers
             add(new TgcButtonModifier(varName, text, clickEventHandler));
         }
 
-        #endregion
-        
+        #endregion Facilitadores de Modifiers
     }
 }

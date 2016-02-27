@@ -3,12 +3,12 @@ using Microsoft.DirectX;
 namespace TGC.Core.Utils
 {
     /// <summary>
-    /// Herramientas de manipulación de vectores
+    ///     Herramientas de manipulación de vectores
     /// </summary>
     public abstract class TgcVectorUtils
     {
         /// <summary>
-        /// Longitud al cuadrado del segmento ab
+        ///     Longitud al cuadrado del segmento ab
         /// </summary>
         /// <param name="a">Punto inicial del segmento</param>
         /// <param name="b">Punto final del segmento</param>
@@ -19,44 +19,44 @@ namespace TGC.Core.Utils
         }
 
         /// <summary>
-        /// Multiplicar dos vectores.
-        /// Se multiplica cada componente
+        ///     Multiplicar dos vectores.
+        ///     Se multiplica cada componente
         /// </summary>
         /// <param name="v1">Vector 1</param>
         /// <param name="v2">Vector 2</param>
         /// <returns>Vector resultante</returns>
         public static Vector3 mul(Vector3 v1, Vector3 v2)
         {
-            return new Vector3(v1.X * v2.X, v1.Y * v2.Y, v1.Z * v2.Z);
+            return new Vector3(v1.X*v2.X, v1.Y*v2.Y, v1.Z*v2.Z);
         }
 
         /// <summary>
-        /// Dividir dos vectores.
-        /// Se divide cada componente
+        ///     Dividir dos vectores.
+        ///     Se divide cada componente
         /// </summary>
         /// <param name="v1">Vector 1</param>
         /// <param name="v2">Vector 2</param>
         /// <returns>Vector resultante</returns>
         public static Vector3 div(Vector3 v1, Vector3 v2)
         {
-            return new Vector3(v1.X / v2.X, v1.Y / v2.Y, v1.Z / v2.Z);
+            return new Vector3(v1.X/v2.X, v1.Y/v2.Y, v1.Z/v2.Z);
         }
 
         /// <summary>
-        /// Multiplicar un Vector3 por una Matriz.
-        /// Devuelve un Vector3 ignorando W.
+        ///     Multiplicar un Vector3 por una Matriz.
+        ///     Devuelve un Vector3 ignorando W.
         /// </summary>
         /// <param name="v">Vector</param>
         /// <param name="m">Matriz</param>
         /// <returns>Vector resultante, sin W</returns>
         public static Vector3 transform(Vector3 v, Matrix m)
         {
-            Vector4 t = Vector3.Transform(v, m);
+            var t = Vector3.Transform(v, m);
             return new Vector3(t.X, t.Y, t.Z);
         }
 
         /// <summary>
-        /// Aplica el valor absoluto a todos los componentes del vector
+        ///     Aplica el valor absoluto a todos los componentes del vector
         /// </summary>
         /// <param name="v">Vector</param>
         /// <returns>Vector resultante</returns>
@@ -66,7 +66,7 @@ namespace TGC.Core.Utils
         }
 
         /// <summary>
-        /// Devuelve el menor valor de los 3 componentes del vector
+        ///     Devuelve el menor valor de los 3 componentes del vector
         /// </summary>
         /// <param name="v">Vector</param>
         /// <returns>Menor valor de los tres</returns>

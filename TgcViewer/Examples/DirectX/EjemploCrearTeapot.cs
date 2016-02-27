@@ -1,39 +1,31 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using Microsoft.DirectX.Direct3D;
+using TgcViewer;
+using TGC.Core.Example;
 
 namespace Examples.DirectX
 {
     /// <summary>
-    /// Ejemplo EjemploCrearTeapot:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploCrearTeapot:
+    ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
     ///     # Unidad 4 - Texturas e Iluminación - Iluminación Dinámica, Material
-    /// 
-    /// 
-    /// Crea una malla de Teapot (tetera) que viene pre-fabricada en DirectX.
-    /// A esta malla se le agrega un Material y se configura una fuente de luz
-    /// para mostrar como se utiliza el esquema de iluminación dinámica.
-    /// El Teapot gira sobre los distintso ejes, en base a los valores especificados
-    /// por el usuario en los Modifiers
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Crea una malla de Teapot (tetera) que viene pre-fabricada en DirectX.
+    ///     A esta malla se le agrega un Material y se configura una fuente de luz
+    ///     para mostrar como se utiliza el esquema de iluminación dinámica.
+    ///     El Teapot gira sobre los distintso ejes, en base a los valores especificados
+    ///     por el usuario en los Modifiers
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploCrearTeapot : TgcExample
     {
-
-        Mesh mesh;
-        float angleX = 0f;
-        float angleY = 0f;
-        float angleZ = 0f;
-        Material material;
+        private float angleX;
+        private float angleY;
+        private float angleZ;
+        private Material material;
+        private Mesh mesh;
 
         public override string getCategory()
         {
@@ -52,7 +44,7 @@ namespace Examples.DirectX
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Crear Teapot
             mesh = Mesh.Teapot(d3dDevice);
@@ -73,7 +65,6 @@ namespace Examples.DirectX
             //Habilitar esquema de Iluminación Dinámica
             d3dDevice.RenderState.Lighting = true;
 
-
             //Configurar camara rotacional
             GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), 10f);
 
@@ -89,15 +80,14 @@ namespace Examples.DirectX
             GuiController.Instance.Modifiers.addColor("color", Color.Green);
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Obtener valores de Modifiers
-            float vAngleX = (float)GuiController.Instance.Modifiers["angleX"];
-            float vAngleY = (float)GuiController.Instance.Modifiers["angleY"];
-            float vAngleZ = (float)GuiController.Instance.Modifiers["angleZ"];
+            var vAngleX = (float) GuiController.Instance.Modifiers["angleX"];
+            var vAngleY = (float) GuiController.Instance.Modifiers["angleY"];
+            var vAngleZ = (float) GuiController.Instance.Modifiers["angleZ"];
 
             //Convertir a radianes
             vAngleX = Geometry.DegreeToRadian(vAngleX);
@@ -105,14 +95,14 @@ namespace Examples.DirectX
             vAngleZ = Geometry.DegreeToRadian(vAngleZ);
 
             //Acumular rotacion actual, sin pasarnos de una vuelta entera
-            float doublePI = (float)Math.PI * 2f;
-            angleX = (angleX + vAngleX) % doublePI;
-            angleY = (angleY + vAngleY) % doublePI;
-            angleZ = (angleZ + vAngleZ) % doublePI;
+            var doublePI = (float) Math.PI*2f;
+            angleX = (angleX + vAngleX)%doublePI;
+            angleY = (angleY + vAngleY)%doublePI;
+            angleZ = (angleZ + vAngleZ)%doublePI;
 
             //Ver si hay que usar Quaternions
-            bool useQuat = (bool)GuiController.Instance.Modifiers["quaternion"];
-            
+            var useQuat = (bool) GuiController.Instance.Modifiers["quaternion"];
+
             //Rotación Euler
             if (!useQuat)
             {
@@ -121,26 +111,21 @@ namespace Examples.DirectX
             //Rotación Quaternion
             else
             {
-                Quaternion q = Quaternion.RotationYawPitchRoll(angleY, angleX, angleZ);
+                var q = Quaternion.RotationYawPitchRoll(angleY, angleX, angleZ);
                 d3dDevice.Transform.World = Matrix.RotationQuaternion(q);
             }
 
-            
-
-
             //Variar el color de Diffuse del Material
-            material.Diffuse = (Color)GuiController.Instance.Modifiers["color"];
+            material.Diffuse = (Color) GuiController.Instance.Modifiers["color"];
             d3dDevice.Material = material;
 
             //Renderizar malla
             mesh.DrawSubset(0);
-            
         }
 
         public override void close()
         {
             mesh.Dispose();
         }
-
     }
 }

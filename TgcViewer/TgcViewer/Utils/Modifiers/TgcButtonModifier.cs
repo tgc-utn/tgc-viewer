@@ -1,17 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 
 namespace TgcViewer.Utils.Modifiers
 {
     /// <summary>
-    /// Modificador con un Boton
+    ///     Modificador con un Boton
     /// </summary>
     public class TgcButtonModifier : TgcModifierPanel
     {
-
-        Button button;
+        private readonly Button button;
 
         public TgcButtonModifier(string varName, string text, EventHandler clickEventHandler)
             : base(varName)
@@ -24,7 +21,6 @@ namespace TgcViewer.Utils.Modifiers
             contentPanel.Controls.Add(button);
         }
 
-        
         public override object getValue()
         {
             throw new Exception("El TgcButtonModifier no soporta getValue()");

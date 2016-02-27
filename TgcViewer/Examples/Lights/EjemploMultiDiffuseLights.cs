@@ -1,43 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
-using TgcViewer.Utils.TgcGeometry;
-using Examples.Shaders;
-using TgcViewer.Utils.Shaders;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using TgcViewer;
 using TgcViewer.Utils.Interpolation;
+using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
 using TGC.Core.Utils;
 
 namespace Examples.Lights
 {
     /// <summary>
-    /// Ejemplo EjemploMultiDiffuseLights:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploMultiDiffuseLights:
+    ///     Unidades Involucradas:
     ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
-    /// 
-    /// Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploMultipleLights".
-    /// 
-    /// Muestra como aplicar iluminación dinámica con PhongShading por pixel en un Pixel Shader.
-    /// Utiliza varias luces para un mismo objeto, en una misma pasada de Shaders.
-    /// Solo calcula el componente Diffuse, para acelerar los cálculos.
-    /// Las luces poseen atenuación por la distancia.
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploMultipleLights".
+    ///     Muestra como aplicar iluminación dinámica con PhongShading por pixel en un Pixel Shader.
+    ///     Utiliza varias luces para un mismo objeto, en una misma pasada de Shaders.
+    ///     Solo calcula el componente Diffuse, para acelerar los cálculos.
+    ///     Las luces poseen atenuación por la distancia.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploMultiDiffuseLights : TgcExample
     {
-        TgcScene scene;
-        Effect effect;
-        TgcBox[] lightMeshes;
-        InterpoladorVaiven interp;
-        Vector3[] origLightPos;
+        private Effect effect;
+        private InterpoladorVaiven interp;
+        private TgcBox[] lightMeshes;
+        private Vector3[] origLightPos;
+        private TgcScene scene;
 
         public override string getCategory()
         {
@@ -56,17 +48,20 @@ namespace Examples.Lights
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Cargar escenario
-            TgcSceneLoader loader = new TgcSceneLoader();
-            scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
+            var loader = new TgcSceneLoader();
+            scene =
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
+                                         "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
             GuiController.Instance.FpsCamera.Enable = true;
             GuiController.Instance.FpsCamera.MovementSpeed = 400f;
             GuiController.Instance.FpsCamera.JumpSpeed = 300f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(-210.0958f, 114.911f, -109.2159f), new Vector3(-209.559f, 114.8029f, -108.3791f));
+            GuiController.Instance.FpsCamera.setCamera(new Vector3(-210.0958f, 114.911f, -109.2159f),
+                new Vector3(-209.559f, 114.8029f, -108.3791f));
 
             //Cargar Shader personalizado de MultiDiffuseLights
             /*
@@ -77,16 +72,15 @@ namespace Examples.Lights
              */
             effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\MultiDiffuseLights.fx");
 
-
             //Crear 4 mesh para representar las 4 para la luces. Las ubicamos en distintas posiciones del escenario, cada una con un color distinto.
             lightMeshes = new TgcBox[4];
             origLightPos = new Vector3[lightMeshes.Length];
-            Color[] c = new Color[4] { Color.Red, Color.Blue, Color.Green, Color.Yellow };
-            for (int i = 0; i < lightMeshes.Length; i++)
+            var c = new Color[4] {Color.Red, Color.Blue, Color.Green, Color.Yellow};
+            for (var i = 0; i < lightMeshes.Length; i++)
             {
-                Color co = c[i % c.Length];
+                var co = c[i%c.Length];
                 lightMeshes[i] = TgcBox.fromSize(new Vector3(10, 10, 10), co);
-                origLightPos[i] = new Vector3(-40, 20 + i * 20, 400);
+                origLightPos[i] = new Vector3(-40, 20 + i*20, 400);
             }
 
             //Modifiers
@@ -98,7 +92,6 @@ namespace Examples.Lights
             GuiController.Instance.Modifiers.addColor("mEmissive", Color.Black);
             GuiController.Instance.Modifiers.addColor("mDiffuse", Color.White);
 
-
             //Interpolador para mover las luces de un lado para el otro
             interp = new InterpoladorVaiven();
             interp.Min = -200f;
@@ -107,21 +100,18 @@ namespace Examples.Lights
             interp.Current = 0f;
         }
 
-        
-
-
         public override void render(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
+            var device = GuiController.Instance.D3dDevice;
 
             //Habilitar luz
-            bool lightEnable = (bool)GuiController.Instance.Modifiers["lightEnable"];
+            var lightEnable = (bool) GuiController.Instance.Modifiers["lightEnable"];
             Effect currentShader;
-            String currentTechnique;
+            string currentTechnique;
             if (lightEnable)
             {
                 //Shader personalizado de iluminacion
-                currentShader = this.effect;
+                currentShader = effect;
                 currentTechnique = "MultiDiffuseLightsTechnique";
             }
             else
@@ -132,35 +122,31 @@ namespace Examples.Lights
             }
 
             //Aplicar a cada mesh el shader actual
-            foreach (TgcMesh mesh in scene.Meshes)
+            foreach (var mesh in scene.Meshes)
             {
                 mesh.Effect = currentShader;
                 mesh.Technique = currentTechnique;
             }
 
-
-
-
             //Configurar los valores de cada luz
-            Vector3 move = new Vector3(0, 0, ((bool)GuiController.Instance.Modifiers["lightMove"]) ? interp.update() : 0);
-            ColorValue[] lightColors = new ColorValue[lightMeshes.Length];
-            Vector4[] pointLightPositions = new Vector4[lightMeshes.Length];
-            float[] pointLightIntensity = new float[lightMeshes.Length];
-            float[] pointLightAttenuation = new float[lightMeshes.Length];
-            for (int i = 0; i < lightMeshes.Length; i++)
+            var move = new Vector3(0, 0, (bool) GuiController.Instance.Modifiers["lightMove"] ? interp.update() : 0);
+            var lightColors = new ColorValue[lightMeshes.Length];
+            var pointLightPositions = new Vector4[lightMeshes.Length];
+            var pointLightIntensity = new float[lightMeshes.Length];
+            var pointLightAttenuation = new float[lightMeshes.Length];
+            for (var i = 0; i < lightMeshes.Length; i++)
             {
-                TgcBox lightMesh = lightMeshes[i];
+                var lightMesh = lightMeshes[i];
                 lightMesh.Position = origLightPos[i] + Vector3.Scale(move, i + 1);
 
                 lightColors[i] = ColorValue.FromColor(lightMesh.Color);
                 pointLightPositions[i] = TgcParserUtils.vector3ToVector4(lightMesh.Position);
-                pointLightIntensity[i] = (float)GuiController.Instance.Modifiers["lightIntensity"];
-                pointLightAttenuation[i] = (float)GuiController.Instance.Modifiers["lightAttenuation"];
+                pointLightIntensity[i] = (float) GuiController.Instance.Modifiers["lightIntensity"];
+                pointLightAttenuation[i] = (float) GuiController.Instance.Modifiers["lightAttenuation"];
             }
 
-            
             //Renderizar meshes
-            foreach (TgcMesh mesh in scene.Meshes)
+            foreach (var mesh in scene.Meshes)
             {
                 if (lightEnable)
                 {
@@ -169,42 +155,33 @@ namespace Examples.Lights
                     mesh.Effect.SetValue("lightPosition", pointLightPositions);
                     mesh.Effect.SetValue("lightIntensity", pointLightIntensity);
                     mesh.Effect.SetValue("lightAttenuation", pointLightAttenuation);
-                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mEmissive"]));
-                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mDiffuse"]));
+                    mesh.Effect.SetValue("materialEmissiveColor",
+                        ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mEmissive"]));
+                    mesh.Effect.SetValue("materialDiffuseColor",
+                        ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mDiffuse"]));
                 }
 
                 //Renderizar modelo
                 mesh.render();
             }
 
-
             //Renderizar meshes de luz
-            for (int i = 0; i < lightMeshes.Length; i++)
+            for (var i = 0; i < lightMeshes.Length; i++)
             {
-                TgcBox lightMesh = lightMeshes[i];
+                var lightMesh = lightMeshes[i];
                 lightMesh.render();
             }
-            
         }
-
-
-
 
         public override void close()
         {
             scene.disposeAll();
             effect.Dispose();
-            for (int i = 0; i < lightMeshes.Length; i++)
+            for (var i = 0; i < lightMeshes.Length; i++)
             {
-                TgcBox lightMesh = lightMeshes[i];
+                var lightMesh = lightMeshes[i];
                 lightMesh.dispose();
             }
         }
-
-
-
     }
-
-    
-
 }

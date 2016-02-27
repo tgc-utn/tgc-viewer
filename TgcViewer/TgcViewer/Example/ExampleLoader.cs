@@ -1,31 +1,21 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Reflection;
-using System.Collections;
 using System.Windows.Forms;
+using TGC.Core.Example;
 
 namespace TgcViewer.Example
 {
     /// <summary>
-    /// Utilidad para cargar dinamicamente las DLL de los ejemplos
+    ///     Utilidad para cargar dinamicamente las DLL de los ejemplos
     /// </summary>
-    class ExampleLoader
+    internal class ExampleLoader
     {
         public const string EXAMPLES_DIR = "Examples";
-        public static string[] DIR_SKIP_LISP = new string[] { "\\bin", "\\obj"};
+        public static string[] DIR_SKIP_LISP = {"\\bin", "\\obj"};
 
-        private Dictionary<TreeNode, TgcExample> treeExamplesDict;
-
-        List<TgcExample> currentExamples;
-        /// <summary>
-        /// Ejemplos actualmente cargados
-        /// </summary>
-        public List<TgcExample> CurrentExamples
-        {
-            get { return currentExamples; }
-        }
+        private readonly Dictionary<TreeNode, TgcExample> treeExamplesDict;
 
         public ExampleLoader()
         {
@@ -33,30 +23,35 @@ namespace TgcViewer.Example
         }
 
         /// <summary>
-        /// Carga los ejemplos dinámicamente en el TreeView de Ejemplo
+        ///     Ejemplos actualmente cargados
+        /// </summary>
+        public List<TgcExample> CurrentExamples { get; private set; }
+
+        /// <summary>
+        ///     Carga los ejemplos dinámicamente en el TreeView de Ejemplo
         /// </summary>
         public void loadExamplesInGui(TreeView treeView, string[] exampleDirs)
         {
             //Cargar ejemplos dinamicamente
-            currentExamples = new List<TgcExample>();
-            foreach (string exampleDir in exampleDirs)
+            CurrentExamples = new List<TgcExample>();
+            foreach (var exampleDir in exampleDirs)
             {
-                currentExamples.AddRange(loadExamples(exampleDir));
+                CurrentExamples.AddRange(loadExamples(exampleDir));
             }
 
             //Cargar el TreeView, agrupando ejemplos por categoria
             treeExamplesDict.Clear();
-            foreach (TgcExample example in currentExamples)
+            foreach (var example in CurrentExamples)
             {
-                TreeNode node = new TreeNode();
-                string exampleName = example.getName();
-                string exampleCategory = example.getCategory();
+                var node = new TreeNode();
+                var exampleName = example.getName();
+                var exampleCategory = example.getCategory();
                 node.Text = exampleName;
                 node.Name = exampleName;
                 node.ToolTipText = example.getDescription();
 
                 //Crear nodo padre si no existe
-                TreeNode parent = treeNodeExists(treeView, exampleCategory);
+                var parent = treeNodeExists(treeView, exampleCategory);
                 if (parent == null)
                 {
                     parent = new TreeNode();
@@ -74,10 +69,8 @@ namespace TgcViewer.Example
             treeView.Sort();
         }
 
-        
-
         /// <summary>
-        /// Devuelve el Ejemplo correspondiente a un TreeNode
+        ///     Devuelve el Ejemplo correspondiente a un TreeNode
         /// </summary>
         public TgcExample getExampleByTreeNode(TreeNode treeNode)
         {
@@ -85,39 +78,39 @@ namespace TgcViewer.Example
         }
 
         /// <summary>
-        /// Indica si ya existe un nodo en el arbol de ejemplos bajo esa categoria.
-        /// Devuelve el nodo encontrado o Null.
+        ///     Indica si ya existe un nodo en el arbol de ejemplos bajo esa categoria.
+        ///     Devuelve el nodo encontrado o Null.
         /// </summary>
         private TreeNode treeNodeExists(TreeView treeView, string category)
         {
             foreach (TreeNode n in treeView.Nodes)
-	        {
+            {
                 if (n.Name == category)
                 {
                     return n;
                 }
-	        }
+            }
 
             return null;
         }
 
         /// <summary>
-        /// Carga dinamicamente todas las dll de ejemplos de la carpeta de ejemplos
+        ///     Carga dinamicamente todas las dll de ejemplos de la carpeta de ejemplos
         /// </summary>
         /// <param name="exampleDir"></param>
         /// <returns></returns>
         public List<TgcExample> loadExamples(string exampleDir)
         {
             //Buscar todas las dll que esten en el directorio de ejemplos, evitando las creadas de DEBUG Y BIN por parte del IDE
-            List<string> exampleFiles = getExampleFiles(exampleDir, DIR_SKIP_LISP);
+            var exampleFiles = getExampleFiles(exampleDir, DIR_SKIP_LISP);
 
-            List<TgcExample> examples = new List<TgcExample>();
-            foreach (string file in exampleFiles)
+            var examples = new List<TgcExample>();
+            foreach (var file in exampleFiles)
             {
                 try
                 {
-                    Assembly assembly = Assembly.LoadFile(file);
-                    foreach (Type type in assembly.GetTypes())
+                    var assembly = Assembly.LoadFile(file);
+                    foreach (var type in assembly.GetTypes())
                     {
                         if (!type.IsClass || type.IsNotPublic || type.IsAbstract)
                             continue;
@@ -128,37 +121,35 @@ namespace TgcViewer.Example
                         {
                         */
 
-                        if(type.BaseType.Equals(typeof(TgcExample)))
+                        if (type.BaseType.Equals(typeof (TgcExample)))
                         {
-                            object obj = Activator.CreateInstance(type);
-                            TgcExample example = (TgcExample)obj;
+                            var obj = Activator.CreateInstance(type);
+                            var example = (TgcExample) obj;
                             examples.Add(example);
 
                             //cargar path del ejemplo
                             example.setExampleDir(file.Substring(0, file.LastIndexOf("\\") + 1));
                         }
                     }
-
                 }
                 catch (Exception e)
                 {
                     GuiController.Instance.Logger.logError("No se pudo cargar la dll: " + file, e);
                 }
-
             }
 
             return examples;
         }
 
         /// <summary>
-        /// Busca recursivamente en un directorio todos los archivos .DLL, evitando los directorios
-        /// especificados en la skipList
+        ///     Busca recursivamente en un directorio todos los archivos .DLL, evitando los directorios
+        ///     especificados en la skipList
         /// </summary>
         public List<string> getExampleFiles(string rootDir, string[] skipList)
         {
-            List<string> exampleFiles = new List<string>();
-            string[] dllArray = Directory.GetFiles(rootDir, "*.dll", SearchOption.TopDirectoryOnly);
-            foreach (string dll in dllArray)
+            var exampleFiles = new List<string>();
+            var dllArray = Directory.GetFiles(rootDir, "*.dll", SearchOption.TopDirectoryOnly);
+            foreach (var dll in dllArray)
             {
                 if (!isInSkipList(dll, skipList))
                 {
@@ -170,11 +161,11 @@ namespace TgcViewer.Example
         }
 
         /// <summary>
-        /// Informa si un directorio es parte de la skipList
+        ///     Informa si un directorio es parte de la skipList
         /// </summary>
         public bool isInSkipList(string dir, string[] skipList)
         {
-            foreach (string skipDir in skipList)
+            foreach (var skipDir in skipList)
             {
                 if (dir.IndexOf(skipDir) > 0)
                 {
@@ -185,11 +176,11 @@ namespace TgcViewer.Example
         }
 
         /// <summary>
-        /// Devuelve el primer TgcExample con el name y category especificados (de los metodos getName y getCategory)
+        ///     Devuelve el primer TgcExample con el name y category especificados (de los metodos getName y getCategory)
         /// </summary>
         public TgcExample getExampleByName(string name, string category)
         {
-            foreach (TgcExample example in this.currentExamples)
+            foreach (var example in CurrentExamples)
             {
                 if (example.getName() == name && example.getCategory() == category)
                 {
@@ -198,7 +189,5 @@ namespace TgcViewer.Example
             }
             throw new Exception("Example not found. Name: " + name + ", Category: " + category);
         }
-
-
     }
 }

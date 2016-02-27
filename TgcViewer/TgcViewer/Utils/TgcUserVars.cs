@@ -1,29 +1,32 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace TgcViewer.Utils
 {
     /// <summary>
-    /// Admnistrador de la tabla de User Vars.
+    ///     Admnistrador de la tabla de User Vars.
     /// </summary>
     public class TgcUserVars
     {
-        const string NAME_COL = "ColumnName";
-        const string VALUE_COL = "ColumnValue";
-        readonly Color DEFAULT_VALUE_COLOR = Color.Black;
+        private const string NAME_COL = "ColumnName";
+        private const string VALUE_COL = "ColumnValue";
+        private readonly Color DEFAULT_VALUE_COLOR = Color.Black;
 
-        DataGridView dataGrid;
+        private readonly DataGridView dataGrid;
 
         public TgcUserVars(DataGridView dataGrid)
         {
             this.dataGrid = dataGrid;
         }
 
+        public string this[string varName]
+        {
+            set { setValue(varName, value); }
+        }
+
         /// <summary>
-        /// Elimina todas las UserVars
+        ///     Elimina todas las UserVars
         /// </summary>
         public void clearVars()
         {
@@ -31,7 +34,7 @@ namespace TgcViewer.Utils
         }
 
         /// <summary>
-        /// Agrega una nueva UserVar
+        ///     Agrega una nueva UserVar
         /// </summary>
         /// <param name="name">Identificador unico de la variable</param>
         public void addVar(string name)
@@ -40,14 +43,14 @@ namespace TgcViewer.Utils
         }
 
         /// <summary>
-        /// Carga el valor de una variable
+        ///     Carga el valor de una variable
         /// </summary>
         /// <param name="name">Identificador de la variable, cargado previamente</param>
         /// <param name="value">Valor a cargar</param>
         /// <param name="foreColor">Color de la letra</param>
         public void setValue(string name, object value, Color foreColor)
         {
-            DataGridViewRow row = findRowByVarName(name);
+            var row = findRowByVarName(name);
             if (row == null)
             {
                 throw new Exception("Se intentó cargar una UserVar inexistente: " + name);
@@ -57,7 +60,7 @@ namespace TgcViewer.Utils
         }
 
         /// <summary>
-        /// Carga el valor de una variable
+        ///     Carga el valor de una variable
         /// </summary>
         /// <param name="name">Identificador de la variable, cargado previamente</param>
         /// <param name="value">Valor a cargar</param>
@@ -67,13 +70,13 @@ namespace TgcViewer.Utils
         }
 
         /// <summary>
-        /// Devuelve el valor de la variable especificada
+        ///     Devuelve el valor de la variable especificada
         /// </summary>
         /// <param name="?">Identificador de la variable</param>
         /// <returns></returns>
         public object getValue(string name)
         {
-            DataGridViewRow row = findRowByVarName(name);
+            var row = findRowByVarName(name);
             if (row == null)
             {
                 throw new Exception("Se intentó acceder una UserVar inexistente: " + name);
@@ -82,7 +85,7 @@ namespace TgcViewer.Utils
         }
 
         /// <summary>
-        /// Agrega una nueva variable junto con su valor
+        ///     Agrega una nueva variable junto con su valor
         /// </summary>
         /// <param name="name">Identificador unico de la variable</param>
         /// <param name="value">Valor a cargar</param>
@@ -90,11 +93,6 @@ namespace TgcViewer.Utils
         {
             addVar(name);
             setValue(name, value);
-        }
-
-        public string this[string varName]
-        {
-            set { setValue(varName, value); }
         }
 
         private DataGridViewRow findRowByVarName(string name)
@@ -108,6 +106,5 @@ namespace TgcViewer.Utils
             }
             return null;
         }
-
     }
 }

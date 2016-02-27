@@ -1,31 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.TgcGeometry;
+﻿using Examples.MeshCreator.Primitives;
 using Microsoft.DirectX;
-using System.Drawing;
-using TgcViewer.Utils.Input;
-using Examples.MeshCreator.Primitives;
+using Microsoft.DirectX.DirectInput;
 using TgcViewer;
+using TgcViewer.Utils.Input;
 using TGC.Core.Utils;
 
 namespace Examples.MeshCreator.Gizmos
 {
     /// <summary>
-    /// Gizmo para trasladar objetos
+    ///     Gizmo para trasladar objetos
     /// </summary>
     public class TranslateGizmo : EditorGizmo
     {
-        enum State
-        {
-            Init,
-            Dragging,
-        }
+        private Vector3 acumMovement;
 
-        State currentState;
-        Vector3 initMouseP3d;
-        Vector3 acumMovement;
-        TranslateGizmoMesh gizmoMesh;
+        private State currentState;
+        private readonly TranslateGizmoMesh gizmoMesh;
+        private Vector3 initMouseP3d;
 
         public TranslateGizmo(MeshCreatorControl control)
             : base(control)
@@ -43,15 +34,14 @@ namespace Examples.MeshCreator.Gizmos
                 currentState = State.Init;
 
                 //Posicionar gizmo
-                TgcBoundingBox aabb = MeshCreatorUtils.getSelectionBoundingBox(Control.SelectionList);
+                var aabb = MeshCreatorUtils.getSelectionBoundingBox(Control.SelectionList);
                 gizmoMesh.setCenter(aabb.calculateBoxCenter(), Control.Camera);
             }
-
         }
 
         public override void update()
         {
-            TgcD3dInput input = GuiController.Instance.D3dInput;
+            var input = GuiController.Instance.D3dInput;
 
             switch (currentState)
             {
@@ -100,7 +90,7 @@ namespace Examples.MeshCreator.Gizmos
                         {
                             if (input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                             {
-                                bool additive = input.keyDown(Microsoft.DirectX.DirectInput.Key.LeftControl) || input.keyDown(Microsoft.DirectX.DirectInput.Key.RightControl);
+                                var additive = input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl);
                                 Control.CurrentState = MeshCreatorControl.State.SelectObject;
                                 Control.SelectionRectangle.doDirectSelection(additive);
                             }
@@ -112,7 +102,6 @@ namespace Examples.MeshCreator.Gizmos
                         //Buscar colision con eje con Picking
                         Control.PickingRay.updateRay();
                         gizmoMesh.selectAxisByPicking(Control.PickingRay.Ray);
-
                     }
 
                     break;
@@ -123,10 +112,10 @@ namespace Examples.MeshCreator.Gizmos
                     if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
                         Control.PickingRay.updateRay();
-                        Vector3 endMouseP3d = initMouseP3d;
+                        var endMouseP3d = initMouseP3d;
 
                         //Solo se mueve un eje
-                        Vector3 currentMove = new Vector3(0, 0, 0);
+                        var currentMove = new Vector3(0, 0, 0);
                         if (gizmoMesh.isSingleAxis(gizmoMesh.SelectedAxis))
                         {
                             //Desplazamiento en eje X
@@ -183,14 +172,14 @@ namespace Examples.MeshCreator.Gizmos
                             snapMovementToGrid(ref currentMove.X, ref acumMovement.X, Control.SnapToGridCellSize);
                             snapMovementToGrid(ref currentMove.Y, ref acumMovement.Y, Control.SnapToGridCellSize);
                             snapMovementToGrid(ref currentMove.Z, ref acumMovement.Z, Control.SnapToGridCellSize);
-                        }                      
+                        }
 
                         //Mover objetos
-                        foreach (EditorPrimitive p in Control.SelectionList)
-	                    {
-                    		 p.move(currentMove);
-	                    }
-                        
+                        foreach (var p in Control.SelectionList)
+                        {
+                            p.move(currentMove);
+                        }
+
                         //Mover ejes
                         gizmoMesh.moveGizmo(currentMove);
 
@@ -199,55 +188,48 @@ namespace Examples.MeshCreator.Gizmos
                     }
 
                     //Soltar movimiento
-                    else if(input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+                    else if (input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                     {
                         currentState = State.Init;
                         gizmoMesh.unSelect();
                     }
 
-
                     break;
             }
-
-            
 
             //Ajustar tamaño de ejes
             gizmoMesh.setCenter(gizmoMesh.GizmoCenter, Control.Camera);
         }
-
-        
 
         public override void render()
         {
             gizmoMesh.render();
         }
 
-
         /// <summary>
-        /// Mover gizmo
+        ///     Mover gizmo
         /// </summary>
         public override void move(EditorPrimitive selectedPrimitive, Vector3 movement)
         {
             gizmoMesh.moveGizmo(movement);
         }
 
-
         /// <summary>
-        /// Calcular desplazamiento en unidades de grilla
+        ///     Calcular desplazamiento en unidades de grilla
         /// </summary>
         private float snapMovementToGrid(ref float currentMove, ref float acumMove, float cellSize)
         {
             //Se movio algo?
-            float totalMove = acumMove + currentMove;
+            var totalMove = acumMove + currentMove;
             const float epsilon = 0.1f;
-            float absMove = FastMath.Abs(totalMove);
+            var absMove = FastMath.Abs(totalMove);
             float snapMove = 0;
             if (absMove > epsilon)
             {
                 if (absMove > cellSize)
                 {
                     //Moverse en unidades de la grilla
-                    currentMove = ((int)(totalMove / cellSize)) * cellSize;
+                    currentMove = (int) (totalMove/cellSize)*cellSize;
                     acumMove = 0;
                 }
                 else
@@ -261,10 +243,15 @@ namespace Examples.MeshCreator.Gizmos
             return snapMove;
         }
 
-
         public override void dipose()
         {
             gizmoMesh.dispose();
+        }
+
+        private enum State
+        {
+            Init,
+            Dragging
         }
     }
 }

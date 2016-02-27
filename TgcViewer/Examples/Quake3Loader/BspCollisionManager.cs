@@ -1,180 +1,141 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using TgcViewer.Utils.TgcGeometry;
 
 namespace Examples.Quake3Loader
 {
     /// <summary>
-    /// Herramienta para manipular las colisiones en un escenario BSP.
-    /// Código basado en el siguiente artículo: http://www.devmaster.net/articles/quake3collision/
-    /// y en código de Quake 3 para WebGL: http://blog.tojicode.com/2010/08/rendering-quake-3-maps-with-webgl-demo.html
-    /// Aún posee muchos puntos a mejorar.
-    /// 
-    /// 
-    /// Autor: Martin Giachetti
-    /// 
+    ///     Herramienta para manipular las colisiones en un escenario BSP.
+    ///     Código basado en el siguiente artículo: http://www.devmaster.net/articles/quake3collision/
+    ///     y en código de Quake 3 para WebGL: http://blog.tojicode.com/2010/08/rendering-quake-3-maps-with-webgl-demo.html
+    ///     Aún posee muchos puntos a mejorar.
+    ///     Autor: Martin Giachetti
     /// </summary>
     public class BspCollisionManager
     {
-        private BspMap bspMap;
         private Vector3 antCamPos;
-        private float time;
-        private bool firstTime;
-
-        //Variables de colision
-        private float traceRatio;
-        private int traceType;
-        private float traceRadius;
-        private Vector3 vCollisionNormal;
 
         // Almacena si colisiono o no
         private bool bCollided;
+        private readonly BspMap bspMap;
+
         private bool bTryStep;
+
+        private bool firstTime;
+
+        private float time;
+        private float traceRadius;
+
+        //Variables de colision
+        private float traceRatio;
+
+        private int traceType;
+        private Vector3 vCollisionNormal;
         private Vector3 velocidad;
+        private Vector3 vExtents;
 
         //Boundingbox de la camara
         private Vector3 vTraceMaxs;
+
         private Vector3 vTraceMins;
-        private Vector3 vExtents;
-
-
-        Vector3 initialPos;
-        /// <summary>
-        /// Posicion inicial en el mapa
-        /// </summary>
-        public Vector3 InitialPos
-        {
-            get { return initialPos; }
-            set { initialPos = value; }
-        }
-
-        private Q3FpsCamera camera;
-        /// <summary>
-        /// Camara FPS especial para BSP
-        /// </summary>
-        public Q3FpsCamera Camera
-        {
-            get { return camera; }
-        }
-
-        private bool onGround;
-        /// <summary>
-        /// Indica si la camara esta en el piso o saltando
-        /// </summary>
-        private bool OnGround
-        {
-            get { return onGround; }
-        }
-
-        private float jumpSpeed;
-        /// <summary>
-        /// Velocidad de salto
-        /// </summary>
-        public float JumpSpeed
-        {
-            get { return jumpSpeed; }
-            set { jumpSpeed = value; }
-        }
-        private float gravity;
-        /// <summary>
-        /// Gravedad
-        /// </summary>
-        public float Gravity
-        {
-            get { return gravity; }
-            set { gravity = value; }
-        }
-
-        private bool noClip;
-        /// <summary>
-        /// Permite atravesar paredes
-        /// </summary>
-        public bool NoClip
-        {
-            get { return noClip; }
-            set { noClip = value; }
-        }
-
-        private float maxStepHeight;
-        /// <summary>
-        /// Máxima altura permitida para trepar
-        /// </summary>
-        public float MaxStepHeight
-        {
-            get { return maxStepHeight; }
-            set { maxStepHeight = value; }
-        }
-
-        private TgcBoundingBox playerBB;
-        /// <summary>
-        /// AABB que representa el volumen del jugador o camara
-        /// </summary>
-        public TgcBoundingBox PlayerBB
-        {
-            get { return playerBB; }
-            set { playerBB = value; }
-        }
 
         /// <summary>
-        /// Crear nuevo manejador de colsiones
+        ///     Crear nuevo manejador de colsiones
         /// </summary>
         public BspCollisionManager(BspMap bspMap)
         {
             this.bspMap = bspMap;
-            this.camera = new Q3FpsCamera();
+            Camera = new Q3FpsCamera();
 
-            jumpSpeed = 80.0f;
-            gravity = 80.0f;
-            maxStepHeight = 40;
+            JumpSpeed = 80.0f;
+            Gravity = 80.0f;
+            MaxStepHeight = 40;
 
-            noClip = false;
+            NoClip = false;
             velocidad = new Vector3();
             antCamPos = Vector3.Empty;
             time = 0;
             firstTime = true;
-            playerBB = new TgcBoundingBox(new Vector3(-20, -60, -20), new Vector3(20, 20, 20));
+            PlayerBB = new TgcBoundingBox(new Vector3(-20, -60, -20), new Vector3(20, 20, 20));
         }
 
         /// <summary>
-        /// Configurar la cámara en la posicion inicial
+        ///     Posicion inicial en el mapa
+        /// </summary>
+        public Vector3 InitialPos { get; set; }
+
+        /// <summary>
+        ///     Camara FPS especial para BSP
+        /// </summary>
+        public Q3FpsCamera Camera { get; }
+
+        /// <summary>
+        ///     Indica si la camara esta en el piso o saltando
+        /// </summary>
+        private bool OnGround { get; set; }
+
+        /// <summary>
+        ///     Velocidad de salto
+        /// </summary>
+        public float JumpSpeed { get; set; }
+
+        /// <summary>
+        ///     Gravedad
+        /// </summary>
+        public float Gravity { get; set; }
+
+        /// <summary>
+        ///     Permite atravesar paredes
+        /// </summary>
+        public bool NoClip { get; set; }
+
+        /// <summary>
+        ///     Máxima altura permitida para trepar
+        /// </summary>
+        public float MaxStepHeight { get; set; }
+
+        /// <summary>
+        ///     AABB que representa el volumen del jugador o camara
+        /// </summary>
+        public TgcBoundingBox PlayerBB { get; set; }
+
+        /// <summary>
+        ///     Configurar la cámara en la posicion inicial
         /// </summary>
         public void initCamera()
         {
-            this.camera.setCamera(initialPos, initialPos + new Vector3(1.0f, 0.0f, 0.0f));
+            Camera.setCamera(InitialPos, InitialPos + new Vector3(1.0f, 0.0f, 0.0f));
         }
 
         /// <summary>
-        /// Actualizar colisiones y camara
+        ///     Actualizar colisiones y camara
         /// </summary>
         /// <returns>Nueva posicion de la camara</returns>
         public Vector3 update()
         {
-            Device device = GuiController.Instance.D3dDevice;
-            float elapsedTime = GuiController.Instance.ElapsedTime;
+            var device = GuiController.Instance.D3dDevice;
+            var elapsedTime = GuiController.Instance.ElapsedTime;
 
-            camera.updateCamera();
+            Camera.updateCamera();
 
             //Capturar eventos de algunas teclas
 
             //Jump
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.Space))
+            if (GuiController.Instance.D3dInput.keyPressed(Key.Space))
             {
                 //Salta si esta en el piso
-                if (onGround)
+                if (OnGround)
                 {
                     //Vector3 velocity = GuiController.Instance.FpsCamera.Velocity;
-                    velocidad.Y = jumpSpeed;
+                    velocidad.Y = JumpSpeed;
                 }
             }
 
-
             time += elapsedTime;
-            Vector3 camPos = camera.getPosition();
-            Vector3 camLookAt = camera.getLookAt();
+            var camPos = Camera.getPosition();
+            var camLookAt = Camera.getLookAt();
 
             /*
             if (noClip)
@@ -184,24 +145,24 @@ namespace Examples.Quake3Loader
             */
 
             //Detecto las colisiones
-            if (!firstTime && !noClip)
+            if (!firstTime && !NoClip)
             {
-                Vector3 lookDir = camLookAt - camPos;
+                var lookDir = camLookAt - camPos;
 
                 //aplico la velocidad
-                Vector3 aceleracion = new Vector3(0, -gravity, 0);
+                var aceleracion = new Vector3(0, -Gravity, 0);
 
                 //aplico la gravedad
-                velocidad = velocidad + elapsedTime * aceleracion;
+                velocidad = velocidad + elapsedTime*aceleracion;
 
-                camPos = camPos + velocidad * elapsedTime;
-                camPos.Y -= kEpsilon * 1.5f;
+                camPos = camPos + velocidad*elapsedTime;
+                camPos.Y -= kEpsilon*1.5f;
 
                 //aplico las colisiones
                 //traceType = TYPE_SPHERE;
 
                 //camPos = TraceSphere(antCamPos, camPos, 25.0f);
-                camPos = TraceBox(antCamPos, camPos, playerBB.PMin, playerBB.PMax);
+                camPos = TraceBox(antCamPos, camPos, PlayerBB.PMin, PlayerBB.PMax);
 
                 //dist
                 if (bCollided)
@@ -210,10 +171,9 @@ namespace Examples.Quake3Loader
                     //velocidad = velocidad - vCollisionNormal*dist;
                 }
 
-
                 // actualizo la posicion de la camara
                 //Camara.setCamera(camPos, camPos + lookDir);
-                camera.move(camPos - camera.getPosition());
+                Camera.move(camPos - Camera.getPosition());
 
                 if (!OnGround)
                 {
@@ -226,7 +186,6 @@ namespace Examples.Quake3Loader
                     if (velocidad.Y < 0)
                         velocidad.Y = 0;
                 }
-
             }
 
             antCamPos = camPos;
@@ -236,20 +195,17 @@ namespace Examples.Quake3Loader
         }
 
         /// <summary>
-        /// Posicion actual
+        ///     Posicion actual
         /// </summary>
         public Vector3 getCurrentPosition()
         {
-            return camera.getPosition();
+            return Camera.getPosition();
         }
-
-
 
         #region Metodos de colision de Quake 3 para BSP
 
-
         /// <summary>
-        /// Recorrer el BSP desde un punto de inicio hasta un punto de fin y detectar colisiones
+        ///     Recorrer el BSP desde un punto de inicio hasta un punto de fin y detectar colisiones
         /// </summary>
         private Vector3 Trace(Vector3 vStart, Vector3 vEnd)
         {
@@ -267,35 +223,31 @@ namespace Examples.Quake3Loader
             {
                 return vEnd;
             }
-            else	// Else COLLISION!!!!
-            {
-                // If we get here then it's assumed that we collided and need to move the position
-                // the correct distance from the starting position a position around the intersection
-                // point.  This is done by the cool equation below (described in detail at top of page).
+            // If we get here then it's assumed that we collided and need to move the position
+            // the correct distance from the starting position a position around the intersection
+            // point.  This is done by the cool equation below (described in detail at top of page).
 
-                // Set our new position to a position that is right up to the brush we collided with
-                Vector3 vNewPosition = vStart + ((vEnd - vStart) * traceRatio);
+            // Set our new position to a position that is right up to the brush we collided with
+            var vNewPosition = vStart + (vEnd - vStart)*traceRatio;
 
-                //Aplico el Sliding
-                Vector3 vMove = vEnd - vNewPosition;
+            //Aplico el Sliding
+            var vMove = vEnd - vNewPosition;
 
-                float distance = Vector3.Dot(vMove, vCollisionNormal);
+            var distance = Vector3.Dot(vMove, vCollisionNormal);
 
-                Vector3 vEndPosition = vEnd - vCollisionNormal * distance;
+            var vEndPosition = vEnd - vCollisionNormal*distance;
 
-                //como me movi, Hay que detectar si hubo otra colision
-                vNewPosition = Trace(vNewPosition, vEndPosition);
+            //como me movi, Hay que detectar si hubo otra colision
+            vNewPosition = Trace(vNewPosition, vEndPosition);
 
-                if (vCollisionNormal.Y > 0.2f || onGround)
-                    onGround = true;
-                else
-                    onGround = false;
+            if (vCollisionNormal.Y > 0.2f || OnGround)
+                OnGround = true;
+            else
+                OnGround = false;
 
-                // Return the new position to be used by our camera (or player))
-                return vNewPosition;
-            }
+            // Return the new position to be used by our camera (or player))
+            return vNewPosition;
         }
-
 
         private readonly int TYPE_RAY = 0;
         private readonly int TYPE_SPHERE = 1;
@@ -303,22 +255,21 @@ namespace Examples.Quake3Loader
         private const float kEpsilon = 0.03125f;
 
         /// <summary>
-        /// Takes a start and end position (ray) to test against the BSP brushes
+        ///     Takes a start and end position (ray) to test against the BSP brushes
         /// </summary>
-        Vector3 TraceRay(Vector3 vStart, Vector3 vEnd)
+        private Vector3 TraceRay(Vector3 vStart, Vector3 vEnd)
         {
             // We don't use this function, but we set it up to allow us to just check a
             // ray with the BSP tree brushes.  We do so by setting the trace type to TYPE_RAY.
             traceType = TYPE_RAY;
 
-            // Run the normal Trace() function with our start and end 
+            // Run the normal Trace() function with our start and end
             // position and return a new position
             return Trace(vStart, vEnd);
         }
 
-
         /// <summary>
-        /// Tests a sphere around our movement vector against the BSP brushes for collision
+        ///     Tests a sphere around our movement vector against the BSP brushes for collision
         /// </summary>
         private Vector3 TraceSphere(Vector3 vStart, Vector3 vEnd, float radius)
         {
@@ -329,11 +280,11 @@ namespace Examples.Quake3Loader
             traceType = TYPE_SPHERE;
             bCollided = false;
             traceRadius = radius;
-            onGround = false;
+            OnGround = false;
             bTryStep = false;
 
             // Get the new position that we will return to the camera or player
-            Vector3 vNewPosition = Trace(vStart, vEnd);
+            var vNewPosition = Trace(vStart, vEnd);
 
             // Se fija si colisiono con algo y si puede intentar subirse
             if (bCollided && bTryStep)
@@ -345,27 +296,25 @@ namespace Examples.Quake3Loader
             return vNewPosition;
         }
 
-
         /// <summary>
-        /// Tests a BoundingBox around our movement vector against the BSP brushes for collision
+        ///     Tests a BoundingBox around our movement vector against the BSP brushes for collision
         /// </summary>
         private Vector3 TraceBox(Vector3 vStart, Vector3 vEnd, Vector3 vMin, Vector3 vMax)
         {
-            traceType = TYPE_BOX;			// Set the trace type to a BOX
-            vTraceMaxs = vMax;			// Set the max value of our AABB
-            vTraceMins = vMin;			// Set the min value of our AABB
-            bCollided = false;			// Reset the collised flag
-            onGround = false;
+            traceType = TYPE_BOX; // Set the trace type to a BOX
+            vTraceMaxs = vMax; // Set the max value of our AABB
+            vTraceMins = vMin; // Set the min value of our AABB
+            bCollided = false; // Reset the collised flag
+            OnGround = false;
             bTryStep = false;
 
             // Grab the extend of our box (the largest size for each x, y, z axis)
             vExtents = new Vector3(-vTraceMins.X > vTraceMaxs.X ? -vTraceMins.X : vTraceMaxs.X,
-                                  -vTraceMins.Y > vTraceMaxs.Y ? -vTraceMins.Y : vTraceMaxs.Y,
-                                  -vTraceMins.Z > vTraceMaxs.Z ? -vTraceMins.Z : vTraceMaxs.Z);
-
+                -vTraceMins.Y > vTraceMaxs.Y ? -vTraceMins.Y : vTraceMaxs.Y,
+                -vTraceMins.Z > vTraceMaxs.Z ? -vTraceMins.Z : vTraceMaxs.Z);
 
             // Check if our movement collided with anything, then get back our new position
-            Vector3 vNewPosition = Trace(vStart, vEnd);
+            var vNewPosition = Trace(vStart, vEnd);
 
             // Se fija si colisiono con algo y si puede intentar subirse
             if (bCollided && bTryStep)
@@ -377,26 +326,25 @@ namespace Examples.Quake3Loader
             return vNewPosition;
         }
 
-
         /// <summary>
-        /// Traverses the BSP to find the brushes closest to our position
+        ///     Traverses the BSP to find the brushes closest to our position
         /// </summary>
         private void CheckNode(int nodeIndex, float startRatio, float endRatio, Vector3 vStart, Vector3 vEnd)
         {
-            // Remember, the nodeIndices are stored as negative numbers when we get to a leaf, so we 
+            // Remember, the nodeIndices are stored as negative numbers when we get to a leaf, so we
             // check if the current node is a leaf, which holds brushes.  If the nodeIndex is negative,
             // the next index is a leaf (note the: nodeIndex + 1)
             if (nodeIndex < 0)
             {
                 // If this node in the BSP is a leaf, we need to negate and add 1 to offset
                 // the real node index into the m_pLeafs[] array.  You could also do [~nodeIndex].
-                QLeaf pLeaf = bspMap.Data.leafs[~nodeIndex];
+                var pLeaf = bspMap.Data.leafs[~nodeIndex];
 
                 // We have a leaf, so let's go through all of the brushes for that leaf
-                for (int i = 0; i < pLeaf.numLeafBrushes; i++)
+                for (var i = 0; i < pLeaf.numLeafBrushes; i++)
                 {
                     // Get the current brush that we going to check
-                    QBrush pBrush = bspMap.Data.brushes[bspMap.Data.leafbrushes[pLeaf.firstLeafBrush + i]];
+                    var pBrush = bspMap.Data.brushes[bspMap.Data.leafbrushes[pLeaf.firstLeafBrush + i]];
 
                     // This is kind of an important line.  First, we check if there is actually
                     // and brush sides (which store indices to the normal and plane data for the brush).
@@ -425,16 +373,16 @@ namespace Examples.Quake3Loader
             // until we find the leafs which store the brush information for collision detection.
 
             // Grad the next node to work with and grab this node's plane data
-            QNode pNode = bspMap.Data.nodes[nodeIndex];
-            QPlane pPlane = bspMap.Data.planes[pNode.planeNum];
+            var pNode = bspMap.Data.nodes[nodeIndex];
+            var pPlane = bspMap.Data.planes[pNode.planeNum];
 
             // Now we do some quick tests to see which side we fall on of the node in the BSP
 
             // Here we use the plane equation to find out where our initial start position is
             // according the the node that we are checking.  We then grab the same info for the end pos.
-            float startDistance = Vector3.Dot(vStart, pPlane.normal) - pPlane.dist;
-            float endDistance = Vector3.Dot(vEnd, pPlane.normal) - pPlane.dist;
-            float offset = 0.0f;
+            var startDistance = Vector3.Dot(vStart, pPlane.normal) - pPlane.dist;
+            var endDistance = Vector3.Dot(vEnd, pPlane.normal) - pPlane.dist;
+            var offset = 0.0f;
 
             // If we are doing any type of collision detection besides a ray, we need to change
             // the offset for which we are testing collision against the brushes.  If we are testing
@@ -453,10 +401,9 @@ namespace Examples.Quake3Loader
                 // value, which calls for the fabs() function (abs() for floats).
 
                 // Get the distance our AABB is from the current splitter plane
-                offset = Math.Abs(vExtents.X * pPlane.normal.X) +
-                          Math.Abs(vExtents.Y * pPlane.normal.Y) +
-                          Math.Abs(vExtents.Z * pPlane.normal.Z);
-
+                offset = Math.Abs(vExtents.X*pPlane.normal.X) +
+                         Math.Abs(vExtents.Y*pPlane.normal.Y) +
+                         Math.Abs(vExtents.Z*pPlane.normal.Z);
             }
 
             // Below we just do a basic traversal down the BSP tree.  If the points are in
@@ -484,10 +431,10 @@ namespace Examples.Quake3Loader
                 // If we get here, then our ray needs to be split in half to check the nodes
                 // on both sides of the current splitter plane.  Thus we create 2 ratios.
                 float Ratio1 = 1.0f, Ratio2 = 0.0f, middleRatio = 0.0f;
-                Vector3 vMiddle;	// This stores the middle point for our split ray
+                Vector3 vMiddle; // This stores the middle point for our split ray
 
                 // Start of the side as the front side to check
-                int side = pNode.children[0];
+                var side = pNode.children[0];
 
                 // Here we check to see if the start point is in back of the plane (negative)
                 if (startDistance < endDistance)
@@ -500,9 +447,9 @@ namespace Examples.Quake3Loader
                     // We use epsilon like Quake does to compensate for float errors.  The second
                     // ratio holds a distance from the other size of the extents on the other side
                     // of the plane.  This essential splits the ray for both sides of the splitter plane.
-                    float inverseDistance = 1.0f / (startDistance - endDistance);
-                    Ratio1 = (startDistance - offset - kEpsilon) * inverseDistance;
-                    Ratio2 = (startDistance + offset + kEpsilon) * inverseDistance;
+                    var inverseDistance = 1.0f/(startDistance - endDistance);
+                    Ratio1 = (startDistance - offset - kEpsilon)*inverseDistance;
+                    Ratio2 = (startDistance + offset + kEpsilon)*inverseDistance;
                 }
                 // Check if the starting point is greater than the end point (positive)
                 else if (startDistance > endDistance)
@@ -511,9 +458,9 @@ namespace Examples.Quake3Loader
                     // We do the same thing as above and get 2 ratios for split ray.
                     // Ratio 1 and 2 are switched in contrast to the last if statement.
                     // This is because the start is starting in the front of the splitter plane.
-                    float inverseDistance = 1.0f / (startDistance - endDistance);
-                    Ratio1 = (startDistance + offset + kEpsilon) * inverseDistance;
-                    Ratio2 = (startDistance - offset - kEpsilon) * inverseDistance;
+                    var inverseDistance = 1.0f/(startDistance - endDistance);
+                    Ratio1 = (startDistance + offset + kEpsilon)*inverseDistance;
+                    Ratio2 = (startDistance - offset - kEpsilon)*inverseDistance;
                 }
 
                 // Make sure that we have valid numbers and not some weird float problems.
@@ -528,15 +475,15 @@ namespace Examples.Quake3Loader
                 // point on the ray, but instead of a point we get a middleRatio percentage.
                 // This isn't the true middle point since we are using offset's and the epsilon value.
                 // We also grab the middle point to go with the ratio.
-                middleRatio = startRatio + ((endRatio - startRatio) * Ratio1);
-                vMiddle = vStart + ((vEnd - vStart) * Ratio1);
+                middleRatio = startRatio + (endRatio - startRatio)*Ratio1;
+                vMiddle = vStart + (vEnd - vStart)*Ratio1;
 
                 // Now we recurse on the current side with only the first half of the ray
                 CheckNode(side, startRatio, middleRatio, vStart, vMiddle);
 
                 // Now we need to make a middle point and ratio for the other side of the node
-                middleRatio = startRatio + ((endRatio - startRatio) * Ratio2);
-                vMiddle = vStart + ((vEnd - vStart) * Ratio2);
+                middleRatio = startRatio + (endRatio - startRatio)*Ratio2;
+                vMiddle = vStart + (vEnd - vStart)*Ratio2;
 
                 // Depending on which side should go last, traverse the bsp with the
                 // other side of the split ray (movement vector).
@@ -548,13 +495,13 @@ namespace Examples.Quake3Loader
         }
 
         /// <summary>
-        /// Checks our movement vector against all the planes of the brush
+        ///     Checks our movement vector against all the planes of the brush
         /// </summary>
         private void CheckBrush(QBrush pBrush, Vector3 vStart, Vector3 vEnd)
         {
-            float startRatio = -1.0f;		// Like in BrushCollision.htm, start a ratio at -1
-            float endRatio = 1.0f;			// Set the end ratio to 1
-            bool startsOut = false;			// This tells us if we starting outside the brush
+            var startRatio = -1.0f; // Like in BrushCollision.htm, start a ratio at -1
+            var endRatio = 1.0f; // Set the end ratio to 1
+            var startsOut = false; // This tells us if we starting outside the brush
 
             // This function actually does the collision detection between our movement
             // vector and the brushes in the world data.  We will go through all of the
@@ -565,14 +512,14 @@ namespace Examples.Quake3Loader
             // is definitely not a collision.
 
             // Go through all of the brush sides and check collision against each plane
-            for (int i = 0; i < pBrush.numSides; i++)
+            for (var i = 0; i < pBrush.numSides; i++)
             {
                 // Here we grab the current brush side and plane in this brush
-                QBrushSide pBrushSide = bspMap.Data.brushSides[pBrush.firstSide + i];
-                QPlane pPlane = bspMap.Data.planes[pBrushSide.planeNum];
+                var pBrushSide = bspMap.Data.brushSides[pBrush.firstSide + i];
+                var pPlane = bspMap.Data.planes[pBrushSide.planeNum];
 
                 // Let's store a variable for the offset (like for sphere collision)
-                float offset = 0.0f;
+                var offset = 0.0f;
 
                 // If we are testing sphere collision we need to add the sphere radius
                 if (traceType == TYPE_SPHERE)
@@ -581,10 +528,8 @@ namespace Examples.Quake3Loader
                 // Test the start and end points against the current plane of the brush side.
                 // Notice that we add an offset to the distance from the origin, which makes
                 // our sphere collision work.
-                float startDistance = Vector3.Dot(vStart, pPlane.normal) - (pPlane.dist + offset);
-                float endDistance = Vector3.Dot(vEnd, pPlane.normal) - (pPlane.dist + offset);
-
-
+                var startDistance = Vector3.Dot(vStart, pPlane.normal) - (pPlane.dist + offset);
+                var endDistance = Vector3.Dot(vEnd, pPlane.normal) - (pPlane.dist + offset);
 
                 // This is the last beefy part of code in this tutorial.  In this
                 // section we need to do a few special checks to see which extents
@@ -598,15 +543,14 @@ namespace Examples.Quake3Loader
 
                 // Store the offset that we will check against the plane
 
-
                 // If we are using AABB collision
                 if (traceType == TYPE_BOX)
                 {
-                    Vector3 vOffset = new Vector3();
+                    var vOffset = new Vector3();
                     // Grab the closest corner (x, y, or z value) that is closest to the plane
-                    vOffset.X = (pPlane.normal.X < 0) ? vTraceMaxs.X : vTraceMins.X;
-                    vOffset.Y = (pPlane.normal.Y < 0) ? vTraceMaxs.Y : vTraceMins.Y;
-                    vOffset.Z = (pPlane.normal.Z < 0) ? vTraceMaxs.Z : vTraceMins.Z;
+                    vOffset.X = pPlane.normal.X < 0 ? vTraceMaxs.X : vTraceMins.X;
+                    vOffset.Y = pPlane.normal.Y < 0 ? vTraceMaxs.Y : vTraceMins.Y;
+                    vOffset.Z = pPlane.normal.Z < 0 ? vTraceMaxs.Z : vTraceMins.Z;
 
                     // Use the plane equation to grab the distance our start position is from the plane.
                     // We need to add the offset to this to see if the box collides with the plane,
@@ -616,9 +560,6 @@ namespace Examples.Quake3Loader
                     // Get the distance our end position is from this current brush plane
                     endDistance = Vector3.Dot(vEnd + vOffset, pPlane.normal) - pPlane.dist;
                 }
-
-
-
 
                 // Make sure we start outside of the brush's volume
                 if (startDistance > 0) startsOut = true;
@@ -635,7 +576,7 @@ namespace Examples.Quake3Loader
                 if (startDistance > endDistance)
                 {
                     // This gets a ratio from our starting point to the approximate collision spot
-                    float Ratio1 = (startDistance - kEpsilon) / (startDistance - endDistance);
+                    var Ratio1 = (startDistance - kEpsilon)/(startDistance - endDistance);
 
                     // If this is the first time coming here, then this will always be true,
                     // since startRatio starts at -1.0f.  We want to find the closest collision,
@@ -644,11 +585,10 @@ namespace Examples.Quake3Loader
                     {
                         // Set the startRatio (currently the closest collision distance from start)
                         startRatio = Ratio1;
-                        bCollided = true;		// Let us know we collided!
+                        bCollided = true; // Let us know we collided!
                         vCollisionNormal = pPlane.normal;
                         if (vCollisionNormal.Y >= 0.2f)
-                            onGround = true;
-
+                            OnGround = true;
 
                         // This checks first tests if we actually moved along the x or z-axis,
                         // meaning that we went in a direction somewhere.  The next check makes
@@ -660,13 +600,12 @@ namespace Examples.Quake3Loader
                             // We can try and step over the wall we collided with
                             bTryStep = true;
                         }
-
                     }
                 }
                 else
                 {
                     // Get the ratio of the current brush side for the endRatio
-                    float Ratio = (startDistance + kEpsilon) / (startDistance - endDistance);
+                    var Ratio = (startDistance + kEpsilon)/(startDistance - endDistance);
 
                     // If the ratio is less than the current endRatio, assign a new endRatio.
                     // This will usually always be true when starting out.
@@ -700,7 +639,7 @@ namespace Examples.Quake3Loader
         }
 
         /// <summary>
-        /// Checks a bunch of different heights to see if we can step up
+        ///     Checks a bunch of different heights to see if we can step up
         /// </summary>
         /// <param name="vStart"></param>
         /// <param name="vEnd"></param>
@@ -713,7 +652,7 @@ namespace Examples.Quake3Loader
             // a collision.  If we don't collide, then we climb over the step.
 
             // Go through and check different heights to step up
-            for (float height = 1.0f; height <= maxStepHeight; height++)
+            for (var height = 1.0f; height <= MaxStepHeight; height++)
             {
                 // Reset our variables for each loop interation
                 bCollided = false;
@@ -721,11 +660,11 @@ namespace Examples.Quake3Loader
 
                 // Here we add the current height to our y position of a new start and end.
                 // If these 2 new start and end positions are okay, we can step up.
-                Vector3 vStepStart = new Vector3(vStart.X, vStart.Y + height, vStart.Z);
-                Vector3 vStepEnd = new Vector3(vEnd.X, vStart.Y + height, vEnd.Z);
+                var vStepStart = new Vector3(vStart.X, vStart.Y + height, vStart.Z);
+                var vStepEnd = new Vector3(vEnd.X, vStart.Y + height, vEnd.Z);
 
                 // Test to see if the new position we are trying to step collides or not
-                Vector3 vStepPosition = Trace(vStepStart, vStepEnd);
+                var vStepPosition = Trace(vStepStart, vStepEnd);
 
                 // If we didn't collide, we can step!
                 if (!bCollided)
@@ -739,10 +678,6 @@ namespace Examples.Quake3Loader
             return vStart;
         }
 
-
-
-        #endregion
-
-
+        #endregion Metodos de colision de Quake 3 para BSP
     }
 }

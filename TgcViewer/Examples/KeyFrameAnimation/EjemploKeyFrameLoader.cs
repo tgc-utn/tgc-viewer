@@ -1,41 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using TgcViewer;
 using TgcViewer.Utils.TgcKeyFrameLoader;
+using TGC.Core.Example;
 
 namespace Examples.KeyFrameAnimation
 {
     /// <summary>
-    /// Ejemplo EjemploKeyFrameLoader:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploKeyFrameLoader:
+    ///     Unidades Involucradas:
     ///     # Unidad 5 - Animación - KeyFrame Animation
-    /// 
-    /// Carga un personaje animado con el método de KeyFrameAnimation, utilizando
-    /// la herramienta TgcKeyFrameLoader.
-    /// Es una alternativa de animación a la herramienta TgcSkeletalLoader
-    /// Se crea un Modifier para que el usuario puede alternar la animación que se muestra.
-    /// La herramienta TgcKeyFrameLoader crea una malla del tipo TgcKeyFrameMesh.
-    /// Una malla TgcKeyFrameMesh puede tener una o varias animaciones.
-    /// Cada animacion es un archivo XML diferente.
-    /// La estructura general de la malla tambien es un XML diferente.
-    /// Todos los XML son del formato TGC.
-    /// 
-    /// Autor: Leandro Barbagallo, Matías Leone
-    /// 
+    ///     Carga un personaje animado con el método de KeyFrameAnimation, utilizando
+    ///     la herramienta TgcKeyFrameLoader.
+    ///     Es una alternativa de animación a la herramienta TgcSkeletalLoader
+    ///     Se crea un Modifier para que el usuario puede alternar la animación que se muestra.
+    ///     La herramienta TgcKeyFrameLoader crea una malla del tipo TgcKeyFrameMesh.
+    ///     Una malla TgcKeyFrameMesh puede tener una o varias animaciones.
+    ///     Cada animacion es un archivo XML diferente.
+    ///     La estructura general de la malla tambien es un XML diferente.
+    ///     Todos los XML son del formato TGC.
+    ///     Autor: Leandro Barbagallo, Matías Leone
     /// </summary>
     public class EjemploKeyFrameLoader : TgcExample
     {
-
-        TgcKeyFrameMesh mesh;
-        string selectedAnim;
-        bool animateWithLoop;
-        Color currentColor;
+        private bool animateWithLoop;
+        private Color currentColor;
+        private TgcKeyFrameMesh mesh;
+        private string selectedAnim;
 
         public override string getCategory()
         {
@@ -54,16 +45,18 @@ namespace Examples.KeyFrameAnimation
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Paths para archivo XML de la malla
-            string pathMesh = GuiController.Instance.ExamplesMediaDir + "KeyframeAnimations\\Robot\\Robot-TgcKeyFrameMesh.xml";
-            
+            var pathMesh = GuiController.Instance.ExamplesMediaDir +
+                           "KeyframeAnimations\\Robot\\Robot-TgcKeyFrameMesh.xml";
+
             //Path para carpeta de texturas de la malla
-            string mediaPath = GuiController.Instance.ExamplesMediaDir + "KeyframeAnimations\\Robot\\";
+            var mediaPath = GuiController.Instance.ExamplesMediaDir + "KeyframeAnimations\\Robot\\";
 
             //Lista de animaciones disponibles
-            string[] animationList = new string[]{
+            string[] animationList =
+            {
                 "Parado",
                 "Caminando",
                 "Correr",
@@ -72,18 +65,18 @@ namespace Examples.KeyFrameAnimation
                 "Empujar",
                 "Patear",
                 "Pegar",
-                "Arrojar",
+                "Arrojar"
             };
 
             //Crear rutas con cada animacion
-            string[] animationsPath = new string[animationList.Length];
-            for (int i = 0; i < animationList.Length; i++)
+            var animationsPath = new string[animationList.Length];
+            for (var i = 0; i < animationList.Length; i++)
             {
                 animationsPath[i] = mediaPath + animationList[i] + "-TgcKeyFrameAnim.xml";
             }
 
             //Cargar mesh y animaciones
-            TgcKeyFrameLoader loader = new TgcKeyFrameLoader();
+            var loader = new TgcKeyFrameLoader();
             mesh = loader.loadMeshAndAnimationsFromFile(pathMesh, mediaPath, animationsPath);
 
             //Agregar combo para elegir animacion
@@ -104,43 +97,40 @@ namespace Examples.KeyFrameAnimation
             //Elegir animacion Caminando
             mesh.playAnimation(selectedAnim, true);
 
-
             //Configurar camara
             GuiController.Instance.RotCamera.setCamera(new Vector3(0, 70, 0), 200);
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Ver si cambio la animacion
-            string anim = (string)GuiController.Instance.Modifiers.getValue("animation");
-            if(!anim.Equals(selectedAnim))
+            var anim = (string) GuiController.Instance.Modifiers.getValue("animation");
+            if (!anim.Equals(selectedAnim))
             {
                 //Ver si animamos con o sin loop
-                animateWithLoop = (bool)GuiController.Instance.Modifiers.getValue("loop");
-                
+                animateWithLoop = (bool) GuiController.Instance.Modifiers.getValue("loop");
+
                 //Cargar nueva animacion elegida
                 selectedAnim = anim;
                 mesh.playAnimation(selectedAnim, animateWithLoop);
             }
 
             //Ver si cambio el color
-            Color selectedColor = (Color)GuiController.Instance.Modifiers.getValue("Color");
+            var selectedColor = (Color) GuiController.Instance.Modifiers.getValue("Color");
             if (currentColor == null || currentColor != selectedColor)
             {
                 currentColor = selectedColor;
                 mesh.setColor(currentColor);
             }
 
-            //Animar y Renderizar. 
+            //Animar y Renderizar.
             //Este metodo actualiza la animacion actual segun el tiempo transcurrido y renderiza la malla resultante
             mesh.animateAndRender();
 
-
             //BoundingBox
-            bool showBB = (bool)GuiController.Instance.Modifiers["BoundingBox"];
+            var showBB = (bool) GuiController.Instance.Modifiers["BoundingBox"];
             if (showBB)
             {
                 mesh.BoundingBox.render();
@@ -151,6 +141,5 @@ namespace Examples.KeyFrameAnimation
         {
             mesh.dispose();
         }
-
     }
 }

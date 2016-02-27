@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace Examples.Optimizacion.Octree
 {
     /// <summary>
-    /// Nodo del árbol Octree
+    ///     Nodo del árbol Octree
     /// </summary>
-    class OctreeNode
+    internal class OctreeNode
     {
         public OctreeNode[] children;
         public TgcMesh[] models;
@@ -17,6 +14,5 @@ namespace Examples.Optimizacion.Octree
         {
             return children == null;
         }
-
     }
 }

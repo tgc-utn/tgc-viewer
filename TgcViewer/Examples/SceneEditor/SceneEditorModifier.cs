@@ -1,30 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TgcViewer.Utils.Modifiers;
 
 namespace Examples.SceneEditor
 {
     /// <summary>
-    /// Modifier customizado que se utiliza en el SceneEditor
+    ///     Modifier customizado que se utiliza en el SceneEditor
     /// </summary>
     public class SceneEditorModifier : TgcModifierPanel
     {
-        TgcSceneEditor editor;
-
-        SceneEditorControl editorControl;
-        public SceneEditorControl EditorControl
-        {
-            get { return editorControl; }
-        }
+        private TgcSceneEditor editor;
 
         public SceneEditorModifier(string varName, TgcSceneEditor editor)
             : base(varName)
         {
-            editorControl = new SceneEditorControl(editor);
-            contentPanel.Controls.Add(editorControl);
+            EditorControl = new SceneEditorControl(editor);
+            contentPanel.Controls.Add(EditorControl);
         }
 
+        public SceneEditorControl EditorControl { get; }
 
         public override object getValue()
         {

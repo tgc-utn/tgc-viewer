@@ -1,34 +1,25 @@
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.Sound;
-using TgcViewer.Utils._2D;
 using System.IO;
+using TGC.Core.Example;
+using TgcViewer;
+using TgcViewer.Utils._2D;
+using TgcViewer.Utils.Sound;
 
 namespace Examples.Sound
 {
     /// <summary>
-    /// Ejemplo PlayMp3:
-    /// Unidades Involucradas:
+    ///     Ejemplo PlayMp3:
+    ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - GameEngine
-    /// 
-    /// Muestra como reproducir un archivo de sonido en formato MP3.
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Muestra como reproducir un archivo de sonido en formato MP3.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class PlayMp3 : TgcExample
     {
-        string currentFile;
-        TgcText2d currentMusicText;
-        TgcText2d instruccionesText;
+        private string currentFile;
+        private TgcText2d currentMusicText;
+        private TgcText2d instruccionesText;
 
         public override string getCategory()
         {
@@ -47,29 +38,30 @@ namespace Examples.Sound
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Texto para la musica actual
             currentMusicText = new TgcText2d();
             currentMusicText.Text = "No music";
             currentMusicText.Position = new Point(50, 20);
             currentMusicText.Color = Color.Gold;
-            currentMusicText.changeFont(new System.Drawing.Font(FontFamily.GenericMonospace, 16, FontStyle.Italic));
+            currentMusicText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Italic));
 
             //Texto para las instrucciones de uso
             instruccionesText = new TgcText2d();
             instruccionesText.Text = "Y = Play, U = Pause, I = Resume, O = Stop.";
             instruccionesText.Position = new Point(50, 60);
             instruccionesText.Color = Color.Green;
-            instruccionesText.changeFont(new System.Drawing.Font(FontFamily.GenericMonospace, 16, FontStyle.Bold));
+            instruccionesText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Bold));
 
             //Modifier para archivo MP3
             currentFile = null;
-            GuiController.Instance.Modifiers.addFile("MP3-File", GuiController.Instance.ExamplesMediaDir + "Music\\I am The Money.mp3", "MP3s|*.mp3");
+            GuiController.Instance.Modifiers.addFile("MP3-File",
+                GuiController.Instance.ExamplesMediaDir + "Music\\I am The Money.mp3", "MP3s|*.mp3");
         }
 
         /// <summary>
-        /// Cargar un nuevo MP3 si hubo una variacion
+        ///     Cargar un nuevo MP3 si hubo una variacion
         /// </summary>
         private void loadMp3(string filePath)
         {
@@ -87,17 +79,16 @@ namespace Examples.Sound
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Ver si cambio el MP3
-            string filePath = (string)GuiController.Instance.Modifiers["MP3-File"];
+            var filePath = (string)GuiController.Instance.Modifiers["MP3-File"];
             loadMp3(filePath);
 
-
             //Contro del reproductor por teclado
-            TgcMp3Player player = GuiController.Instance.Mp3Player;
-            TgcMp3Player.States currentState = player.getStatus();
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.Y))
+            var player = GuiController.Instance.Mp3Player;
+            var currentState = player.getStatus();
+            if (GuiController.Instance.D3dInput.keyPressed(Key.Y))
             {
                 if (currentState == TgcMp3Player.States.Open)
                 {
@@ -111,15 +102,15 @@ namespace Examples.Sound
                     player.play(true);
                 }
             }
-            else if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.U))
+            else if (GuiController.Instance.D3dInput.keyPressed(Key.U))
             {
                 if (currentState == TgcMp3Player.States.Playing)
                 {
                     //Pausar el MP3
                     player.pause();
                 }
-            } 
-            else if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.I))
+            }
+            else if (GuiController.Instance.D3dInput.keyPressed(Key.I))
             {
                 if (currentState == TgcMp3Player.States.Paused)
                 {
@@ -127,7 +118,7 @@ namespace Examples.Sound
                     player.resume();
                 }
             }
-            else if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.O))
+            else if (GuiController.Instance.D3dInput.keyPressed(Key.O))
             {
                 if (currentState == TgcMp3Player.States.Playing)
                 {
@@ -136,18 +127,14 @@ namespace Examples.Sound
                 }
             }
 
-
             //Render texto
             currentMusicText.render();
             instruccionesText.render();
         }
 
-        
-
         public override void close()
         {
             //el Mp3Player se limpia solo al salir del ejemplo
         }
-
     }
 }

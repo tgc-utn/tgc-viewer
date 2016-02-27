@@ -1,44 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using Examples.SceneEditor;
-using System.Windows.Forms;
-using TgcViewer.Utils.Terrain;
 using System.Xml;
-using System.Globalization;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.Input;
+using TgcViewer;
+using TGC.Core.Example;
 using TGC.Core.Utils;
 
 namespace Examples.SceneEditor
 {
     /// <summary>
-    /// Ejemplo TgcSceneEditor:
-    /// Unidades Involucradas:
+    ///     Ejemplo TgcSceneEditor:
+    ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh, Transformaciones, GameEngine
     ///     # Unidad 6 - Detección de Colisiones - BoundingBox, Picking
     ///     # Unidad 7 - Técnicas de Optimización - Frustum Culling
-    /// 
-    /// Ejemplo que muestra como crear un editor de escenarios.
-    /// Permite cargar varias mallas estaticas, moverlas, rotarlas y escalarlas.
-    /// También permite crear un terreno.
-    /// El ejemplo crea su propio Modifier con todos los controles visuales de .NET que necesita.
-    /// Luego toda la información puede ser exportada a un archivo para su posterior uso.
-    /// Se utiliza el método "exportScene()" para grabar la información de la escena en un XML de formato TgcScene.
-    /// Las instrucciones se muestran al hacer clic en el botón "Help" de este Modifier.
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Ejemplo que muestra como crear un editor de escenarios.
+    ///     Permite cargar varias mallas estaticas, moverlas, rotarlas y escalarlas.
+    ///     También permite crear un terreno.
+    ///     El ejemplo crea su propio Modifier con todos los controles visuales de .NET que necesita.
+    ///     Luego toda la información puede ser exportada a un archivo para su posterior uso.
+    ///     Se utiliza el método "exportScene()" para grabar la información de la escena en un XML de formato TgcScene.
+    ///     Las instrucciones se muestran al hacer clic en el botón "Help" de este Modifier.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class TgcSceneEditor : TgcExample
     {
-        SceneEditorModifier modifier;
+        private SceneEditorModifier modifier;
 
         public override string getCategory()
         {
@@ -53,12 +37,12 @@ namespace Examples.SceneEditor
         public override string getDescription()
         {
             return "Editor de escena. Permite abrir modelos en formato TGC y posicionarlos dentro de un escenario." +
-                "Luego esa información se puede exportar a un archivo XML para su posterior uso.";
+                   "Luego esa información se puede exportar a un archivo XML para su posterior uso.";
         }
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             modifier = new SceneEditorModifier("SceneEditor", this);
             GuiController.Instance.Modifiers.add(modifier);
@@ -66,10 +50,9 @@ namespace Examples.SceneEditor
             GuiController.Instance.RotCamera.Enable = false;
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Delegar render al control
             modifier.EditorControl.render();
@@ -81,26 +64,19 @@ namespace Examples.SceneEditor
             modifier.EditorControl.close();
         }
 
-
-
         /// <summary>
-        /// Método que se llama cuando se quiere exportar la informacion de la escena a un XML.
-        /// 
-        /// 
-        /// MODIFICAR ESTA SECCION PARA ADAPTARSE A LAS NECESIDADES DEL ALUMNO
-        /// 
-        /// 
-        /// 
+        ///     Método que se llama cuando se quiere exportar la informacion de la escena a un XML.
+        ///     MODIFICAR ESTA SECCION PARA ADAPTARSE A LAS NECESIDADES DEL ALUMNO
         /// </summary>
         internal void exportScene(string savePath)
         {
             //Crea XML
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             XmlNode root = doc.CreateElement("SceneEditor-Export");
 
             //Guardar info del terreno
-            XmlElement terrainNode = doc.CreateElement("Terrain");
-            TgcSimpleTerrain terrain = modifier.EditorControl.TgcTerrain;
+            var terrainNode = doc.CreateElement("Terrain");
+            var terrain = modifier.EditorControl.TgcTerrain;
             if (terrain != null)
             {
                 terrainNode.SetAttribute("enable", true.ToString());
@@ -118,14 +94,13 @@ namespace Examples.SceneEditor
                 terrainNode.SetAttribute("enable", false.ToString());
             }
             root.AppendChild(terrainNode);
-             
 
             //Recorrer Meshes del escenario, ordenadas por grupo
-            List<SceneEditorMeshObject> meshObjects = modifier.EditorControl.getMeshObjectsOrderByGroup();
-            XmlElement meshesNode = doc.CreateElement("Meshes");
-            int groupIndex = -1;
+            var meshObjects = modifier.EditorControl.getMeshObjectsOrderByGroup();
+            var meshesNode = doc.CreateElement("Meshes");
+            var groupIndex = -1;
             XmlElement lastGroupNode = null;
-            foreach (SceneEditorMeshObject meshObject in meshObjects)
+            foreach (var meshObject in meshObjects)
             {
                 //Crear grupo con corte de control
                 if (meshObject.groupIndex > groupIndex)
@@ -137,8 +112,8 @@ namespace Examples.SceneEditor
                 }
 
                 //Guardar info de mesh
-                TgcMesh mesh = meshObject.mesh;
-                XmlElement meshNode = doc.CreateElement("Mesh");
+                var mesh = meshObject.mesh;
+                var meshNode = doc.CreateElement("Mesh");
                 meshNode.SetAttribute("name", meshObject.name);
                 meshNode.SetAttribute("index", meshObject.index.ToString());
                 meshNode.SetAttribute("file", meshObject.fileName);
@@ -151,7 +126,6 @@ namespace Examples.SceneEditor
                 lastGroupNode.AppendChild(meshNode);
             }
             root.AppendChild(meshesNode);
-
 
             //Guardar XML
             doc.AppendChild(root);

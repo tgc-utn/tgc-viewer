@@ -1,56 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using TgcViewer.Utils.Modifiers;
-using Microsoft.DirectX.DirectPlay;
-using System.Windows.Forms;
 
 namespace TgcViewer.Utils.Networking
 {
     /// <summary>
-    /// Modifier para Networking.
-    /// Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
-    /// Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
+    ///     Modifier para Networking.
+    ///     Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
+    ///     Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
     /// </summary>
     public class TgcNetworkingModifier : TgcModifierPanel
     {
-        TgcNetworkingModifierControl networkingControl;
-        int port;
-        Queue<TgcSocketClientInfo> newConnectedClients;
-        Queue<TgcSocketClientInfo> disconnectedClients;
-        bool clientConnected;
-
-        List<TgcSocketClient.TgcAvaliableServer> avaliableServers;
-        /// <summary>
-        /// Servidores disponibles
-        /// </summary>
-        internal List<TgcSocketClient.TgcAvaliableServer> AvaliableServers
-        {
-            get { return avaliableServers; }
-        }
-
-        TgcSocketServer server;
-        /// <summary>
-        /// Servidor de la conexion. 
-        /// Solo estara Online si creó una nueva sesion de servidor en la aplicacion
-        /// </summary>
-        public TgcSocketServer Server
-        {
-            get { return server; }
-        }
-
-        TgcSocketClient client;
-        /// <summary>
-        /// Cliente de la conexion.
-        /// Solo estara Conectado si se especificó desde la aplicacion a que servidor conectarse 
-        /// </summary>
-        public TgcSocketClient Client
-        {
-            get { return client; }
-        }
+        private bool clientConnected;
+        private readonly Queue<TgcSocketClientInfo> disconnectedClients;
+        private readonly TgcNetworkingModifierControl networkingControl;
+        private readonly Queue<TgcSocketClientInfo> newConnectedClients;
+        private readonly int port;
 
         /// <summary>
-        /// Crea el modificador de Networking
+        ///     Crea el modificador de Networking
         /// </summary>
         /// <param name="varName">Identificador del modifier</param>
         /// <param name="serverName">Nombre default que va a usar el servidor</param>
@@ -59,19 +27,54 @@ namespace TgcViewer.Utils.Networking
         public TgcNetworkingModifier(string varName, string serverName, string clientName, int port)
             : base(varName)
         {
-            server = new TgcSocketServer();
-            client = new TgcSocketClient();
+            Server = new TgcSocketServer();
+            Client = new TgcSocketClient();
             this.port = port;
             clientConnected = false;
             networkingControl = new TgcNetworkingModifierControl(this, serverName, clientName);
-            avaliableServers = new List<TgcSocketClient.TgcAvaliableServer>();
+            AvaliableServers = new List<TgcSocketClient.TgcAvaliableServer>();
 
             newConnectedClients = new Queue<TgcSocketClientInfo>();
-            disconnectedClients = new Queue<TgcSocketClientInfo>(); ;
+            disconnectedClients = new Queue<TgcSocketClientInfo>();
+            ;
 
             contentPanel.Controls.Add(networkingControl);
         }
 
+        /// <summary>
+        ///     Servidores disponibles
+        /// </summary>
+        internal List<TgcSocketClient.TgcAvaliableServer> AvaliableServers { get; private set; }
+
+        /// <summary>
+        ///     Servidor de la conexion.
+        ///     Solo estara Online si creó una nueva sesion de servidor en la aplicacion
+        /// </summary>
+        public TgcSocketServer Server { get; }
+
+        /// <summary>
+        ///     Cliente de la conexion.
+        ///     Solo estara Conectado si se especificó desde la aplicacion a que servidor conectarse
+        /// </summary>
+        public TgcSocketClient Client { get; }
+
+        /// <summary>
+        ///     Cantidad de clientes nuevos que se han conectado recientemente y que aún
+        ///     están pendientes de lectura.
+        /// </summary>
+        public int NewClientsCount
+        {
+            get { return newConnectedClients.Count; }
+        }
+
+        /// <summary>
+        ///     Cantidad de clientes que se han desconectado recientemente y que aún
+        ///     están pendientes de lectura.
+        /// </summary>
+        public int DisconnectedClientsCount
+        {
+            get { return disconnectedClients.Count; }
+        }
 
         public override object getValue()
         {
@@ -79,17 +82,17 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Intenta crear un nuevo servidor
+        ///     Intenta crear un nuevo servidor
         /// </summary>
         internal bool createServer(string serverName)
         {
-            return server.initializeServer(serverName, this.port);
+            return Server.initializeServer(serverName, port);
         }
 
         /// <summary>
-        /// Actualiza todo el estado de la red, tanto para clientes como servidores.
-        /// Debe llamarse en cada cuadro de render, antes de comenzar a analizar
-        /// los mensajes de la red.
+        ///     Actualiza todo el estado de la red, tanto para clientes como servidores.
+        ///     Debe llamarse en cada cuadro de render, antes de comenzar a analizar
+        ///     los mensajes de la red.
         /// </summary>
         public void updateNetwork()
         {
@@ -99,46 +102,35 @@ namespace TgcViewer.Utils.Networking
 
         private void updateServer()
         {
-            if (server.Online)
+            if (Server.Online)
             {
-                server.updateNetwork();
+                Server.updateNetwork();
 
                 //Nuevos clientes conectados, leer sin consumir
                 newConnectedClients.Clear();
-                for (int i = 0; i < server.NewClientsCount; i++)
+                for (var i = 0; i < Server.NewClientsCount; i++)
                 {
-                    TgcSocketClientInfo clientInfo = server.nextNewClient();
+                    var clientInfo = Server.nextNewClient();
                     newConnectedClients.Enqueue(clientInfo);
                     networkingControl.addClient(clientInfo);
                 }
 
                 //Clientes desconectados
                 disconnectedClients.Clear();
-                for (int i = 0; i < server.DisconnectedClientsCount; i++)
+                for (var i = 0; i < Server.DisconnectedClientsCount; i++)
                 {
-                    TgcSocketClientInfo clientInfo = server.nextDisconnectedClient();
+                    var clientInfo = Server.nextDisconnectedClient();
                     disconnectedClients.Enqueue(clientInfo);
                     networkingControl.onClientDisconnected(clientInfo);
                 }
             }
-
-            
         }
 
         /// <summary>
-        /// Cantidad de clientes nuevos que se han conectado recientemente y que aún
-        /// están pendientes de lectura.
-        /// </summary>
-        public int NewClientsCount
-        {
-            get { return newConnectedClients.Count; }
-        }
-
-        /// <summary>
-        /// Devuelve el próximo cliente que se ha conectado recientemente y que aún
-        /// está pendiente de lectura.
-        /// Cada vez que se llama al método se consume el aviso y ese cliente ya no se
-        /// considera más pendietne de lectura.
+        ///     Devuelve el próximo cliente que se ha conectado recientemente y que aún
+        ///     está pendiente de lectura.
+        ///     Cada vez que se llama al método se consume el aviso y ese cliente ya no se
+        ///     considera más pendietne de lectura.
         /// </summary>
         /// <returns>Información del cliente recientemente conectado</returns>
         public TgcSocketClientInfo nextNewClient()
@@ -151,19 +143,10 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Cantidad de clientes que se han desconectado recientemente y que aún
-        /// están pendientes de lectura.
-        /// </summary>
-        public int DisconnectedClientsCount
-        {
-            get { return disconnectedClients.Count; }
-        }
-
-        /// <summary>
-        /// Devuelve el próximo cliente que se ha desconectado recientemente y que aún
-        /// está pendiente de lectura.
-        /// Cada vez que se llama al método se consume el aviso y ese cliente ya no se
-        /// considera más pendietne de lectura.
+        ///     Devuelve el próximo cliente que se ha desconectado recientemente y que aún
+        ///     está pendiente de lectura.
+        ///     Cada vez que se llama al método se consume el aviso y ese cliente ya no se
+        ///     considera más pendietne de lectura.
         /// </summary>
         /// <returns>Información del cliente recientemente desconectado</returns>
         public TgcSocketClientInfo nextDisconnectedClient()
@@ -175,40 +158,35 @@ namespace TgcViewer.Utils.Networking
             return disconnectedClients.Dequeue();
         }
 
-
-
-
         private void updateClient()
         {
-            if (client.Status != TgcSocketClientInfo.ClientStatus.Disconnected)
+            if (Client.Status != TgcSocketClientInfo.ClientStatus.Disconnected)
             {
-                client.updateNetwork();
+                Client.updateNetwork();
             }
-            
-            if (clientConnected && client.Status == TgcSocketClientInfo.ClientStatus.Disconnected)
+
+            if (clientConnected && Client.Status == TgcSocketClientInfo.ClientStatus.Disconnected)
             {
                 clientConnected = false;
                 networkingControl.serverDisconnected();
             }
-            else if (!clientConnected && client.Status == TgcSocketClientInfo.ClientStatus.Connected)
+            else if (!clientConnected && Client.Status == TgcSocketClientInfo.ClientStatus.Connected)
             {
                 clientConnected = true;
-                networkingControl.clientConnectedToServer(client.ServerInfo, client.PlayerId);
+                networkingControl.clientConnectedToServer(Client.ServerInfo, Client.PlayerId);
             }
         }
 
-
-
         /// <summary>
-        /// Cerrar el server
+        ///     Cerrar el server
         /// </summary>
         internal void closeServer()
         {
-            server.disconnectServer();
+            Server.disconnectServer();
         }
 
         /// <summary>
-        /// Eliminar un cliente por parte del server
+        ///     Eliminar un cliente por parte del server
         /// </summary>
         internal void deleteClient(int playerId)
         {
@@ -216,42 +194,41 @@ namespace TgcViewer.Utils.Networking
         }
 
         /// <summary>
-        /// Buscar servers el puerto especificado
+        ///     Buscar servers el puerto especificado
         /// </summary>
         internal void searchServers()
         {
-            avaliableServers = client.findLanServers(this.port);
-            foreach (TgcSocketClient.TgcAvaliableServer server in avaliableServers)
+            AvaliableServers = Client.findLanServers(port);
+            foreach (var server in AvaliableServers)
             {
                 networkingControl.addServerToList(server);
             }
         }
 
         /// <summary>
-        /// Conectarse a un server en particular
+        ///     Conectarse a un server en particular
         /// </summary>
         internal bool connectToServer(int serverIndex, string clientName)
         {
-            TgcSocketClient.TgcAvaliableServer server = avaliableServers[serverIndex];
-            client.initializeClient(clientName);
-            return client.connect(server.Ip, this.port);
+            var server = AvaliableServers[serverIndex];
+            Client.initializeClient(clientName);
+            return Client.connect(server.Ip, port);
         }
 
         /// <summary>
-        /// Desconectar el cliente del server
+        ///     Desconectar el cliente del server
         /// </summary>
         internal void disconnectFromServer()
         {
-            client.disconnectClient();
+            Client.disconnectClient();
         }
 
         /// <summary>
-        /// Limpia todas las conexiones que se hayan abierto
+        ///     Limpia todas las conexiones que se hayan abierto
         /// </summary>
         public void dispose()
         {
-            server.disconnectServer();
+            Server.disconnectServer();
         }
-
     }
 }

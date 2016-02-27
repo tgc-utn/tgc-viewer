@@ -1,37 +1,29 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using TgcViewer;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
 using TGC.Core.Utils;
 
 namespace Examples.SceneLoader
 {
     /// <summary>
-    /// Ejemplo EjemploMeshLoader:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploMeshLoader:
+    ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
-    /// 
-    /// Permite cargar una malla estática de formato TGC desde el FileSystem.
-    /// Utiliza la herramienta TgcMeshLoader.
-    /// Esta herramienta crea un objeto TgcScene, compuesto a su vez por N TgcMesh
-    /// Cada uno representa una malla estática.
-    /// La escena es cargada desde un archivo XML de formato TGC
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Permite cargar una malla estática de formato TGC desde el FileSystem.
+    ///     Utiliza la herramienta TgcMeshLoader.
+    ///     Esta herramienta crea un objeto TgcScene, compuesto a su vez por N TgcMesh
+    ///     Cada uno representa una malla estática.
+    ///     La escena es cargada desde un archivo XML de formato TGC
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploMeshLoader : TgcExample
     {
-        TgcScene currentScene;
-        string currentPath;
-        Color currentColor;
-        bool currentAlphaBlending;
+        private bool currentAlphaBlending;
+        private Color currentColor;
+        private string currentPath;
+        private TgcScene currentScene;
 
         public override string getCategory()
         {
@@ -50,17 +42,18 @@ namespace Examples.SceneLoader
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Malla default
-            string initialMeshFile = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml";
+            var initialMeshFile = GuiController.Instance.ExamplesMediaDir +
+                                  "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml";
 
             //Modifiers
             currentScene = null;
             currentPath = null;
             GuiController.Instance.Modifiers.addFile("Mesh", initialMeshFile, "-TgcScene.xml |*-TgcScene.xml");
 
-            GuiController.Instance.Modifiers.addButton("Reload", "Reload", new EventHandler(Reload_ButtonClick));
+            GuiController.Instance.Modifiers.addButton("Reload", "Reload", Reload_ButtonClick);
 
             currentColor = Color.White;
             GuiController.Instance.Modifiers.addColor("Color", currentColor);
@@ -69,7 +62,6 @@ namespace Examples.SceneLoader
 
             currentAlphaBlending = false;
             GuiController.Instance.Modifiers.addBoolean("AlphaBlending", "AlphaBlending", currentAlphaBlending);
-
 
             //UserVars
             GuiController.Instance.UserVars.addVar("Name");
@@ -80,11 +72,10 @@ namespace Examples.SceneLoader
             GuiController.Instance.UserVars.addVar("SizeX");
             GuiController.Instance.UserVars.addVar("SizeY");
             GuiController.Instance.UserVars.addVar("SizeZ");
-            
         }
 
         /// <summary>
-        /// Ver si hay que cargar una nueva malla
+        ///     Ver si hay que cargar una nueva malla
         /// </summary>
         private void checkLoadMesh(string path)
         {
@@ -92,11 +83,10 @@ namespace Examples.SceneLoader
             {
                 loadMesh(path);
             }
-            
         }
 
         /// <summary>
-        /// Carga una malla estatica de formato TGC
+        ///     Carga una malla estatica de formato TGC
         /// </summary>
         private void loadMesh(string path)
         {
@@ -109,17 +99,17 @@ namespace Examples.SceneLoader
             }
 
             //Cargar escena con herramienta TgcSceneLoader
-            TgcSceneLoader loader = new TgcSceneLoader();
+            var loader = new TgcSceneLoader();
             currentScene = loader.loadSceneFromFile(path);
 
             //Ajustar camara en base al tamaño del objeto
             GuiController.Instance.RotCamera.targetObject(currentScene.BoundingBox);
 
             //Calcular cantidad de triangulos y texturas
-            int triangleCount = 0;
-            int verticesCount = 0;
-            int texturesCount = 0;
-            foreach (TgcMesh mesh in currentScene.Meshes)
+            var triangleCount = 0;
+            var verticesCount = 0;
+            var texturesCount = 0;
+            foreach (var mesh in currentScene.Meshes)
             {
                 triangleCount += mesh.NumberTriangles;
                 verticesCount += mesh.NumberVertices;
@@ -132,24 +122,24 @@ namespace Examples.SceneLoader
             GuiController.Instance.UserVars.setValue("Textures", texturesCount);
             GuiController.Instance.UserVars.setValue("Triangles", triangleCount);
             GuiController.Instance.UserVars.setValue("Vertices", verticesCount);
-            Vector3 size = currentScene.BoundingBox.calculateSize();
+            var size = currentScene.BoundingBox.calculateSize();
             GuiController.Instance.UserVars.setValue("SizeX", TgcParserUtils.printFloat(size.X));
             GuiController.Instance.UserVars.setValue("SizeY", TgcParserUtils.printFloat(size.Y));
             GuiController.Instance.UserVars.setValue("SizeZ", TgcParserUtils.printFloat(size.Z));
         }
 
         /// <summary>
-        /// Cambiar color de vertices de la malla
+        ///     Cambiar color de vertices de la malla
         /// </summary>
         /// <param name="color"></param>
         private void changeColor(Color color)
         {
-            if(currentColor == null || currentColor != color)
+            if (currentColor == null || currentColor != color)
             {
                 currentColor = color;
 
                 //Aplicar color a todas las mallas de la escena
-                foreach (TgcMesh mesh in currentScene.Meshes)
+                foreach (var mesh in currentScene.Meshes)
                 {
                     mesh.setColor(color);
                 }
@@ -157,50 +147,46 @@ namespace Examples.SceneLoader
         }
 
         /// <summary>
-        /// Evento de clic en Reload
+        ///     Evento de clic en Reload
         /// </summary>
-        void Reload_ButtonClick(object sender, EventArgs e)
+        private void Reload_ButtonClick(object sender, EventArgs e)
         {
             loadMesh(currentPath);
         }
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Ver si cambio la malla
-            string selectedPath = (string)GuiController.Instance.Modifiers["Mesh"];
+            var selectedPath = (string) GuiController.Instance.Modifiers["Mesh"];
             checkLoadMesh(selectedPath);
 
             //Ver si cambio el color
-            Color color = (Color)GuiController.Instance.Modifiers["Color"];
+            var color = (Color) GuiController.Instance.Modifiers["Color"];
             changeColor(color);
 
             //Mostrar BoundingBox
-            bool showBoundingBox = (bool)GuiController.Instance.Modifiers["BoundingBox"];
+            var showBoundingBox = (bool) GuiController.Instance.Modifiers["BoundingBox"];
 
             //AlphaBlending
-            bool alphaBlending = (bool)GuiController.Instance.Modifiers["AlphaBlending"];
+            var alphaBlending = (bool) GuiController.Instance.Modifiers["AlphaBlending"];
             if (alphaBlending != currentAlphaBlending)
             {
                 currentAlphaBlending = alphaBlending;
-                foreach (TgcMesh mesh in currentScene.Meshes)
+                foreach (var mesh in currentScene.Meshes)
                 {
                     mesh.AlphaBlendEnable = currentAlphaBlending;
                 }
             }
-            
 
             //Renderizar escena entera
             currentScene.renderAll(showBoundingBox);
         }
 
-        
-
         public override void close()
         {
             currentScene.disposeAll();
         }
-
     }
 }

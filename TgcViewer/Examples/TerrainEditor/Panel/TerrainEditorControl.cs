@@ -1,30 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Examples.MeshCreator;
+using Examples.TerrainEditor.Brushes;
 using Examples.TerrainEditor.Brushes.Terrain;
 using Examples.TerrainEditor.Brushes.Vegetation;
 using Examples.TerrainEditor.Vegetation;
+using Microsoft.DirectX;
 using TgcViewer;
 using TgcViewer.Utils.Modifiers;
-using Microsoft.DirectX;
-using System.Collections.Generic;
-using Examples.TerrainEditor.Brushes;
 
 namespace Examples.TerrainEditor.Panel
 {
     public partial class TerrainEditorControl : UserControl
     {
-        TgcTerrainEditor terrainEditor;
-        TgcTextureBrowser heightmapBrowser;
-        TgcTextureBrowser textureBrowser;
-        Shovel shovel;
-        Steamroller steamroller;
-        VegetationBrush vegetationBrush;
-        VegetationPicker vegetationPicker;
-   
+        private TgcTextureBrowser heightmapBrowser;
+        private readonly Shovel shovel;
+        private readonly Steamroller steamroller;
+        private readonly TgcTerrainEditor terrainEditor;
+        private readonly TgcTextureBrowser textureBrowser;
+        private readonly VegetationBrush vegetationBrush;
+        private readonly VegetationPicker vegetationPicker;
+
         public TerrainEditorControl(TgcTerrainEditor terrainEditor)
         {
             // TODO: Complete member initialization
@@ -38,11 +37,13 @@ namespace Examples.TerrainEditor.Panel
 
             textureBrowser = new TgcTextureBrowser();
             textureBrowser.ShowFolders = true;
-            textureBrowser.setSelectedImage(GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture1-256x256.jpg");
+            textureBrowser.setSelectedImage(GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" +
+                                            "TerrainTexture1-256x256.jpg");
             pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
-            terrainEditor.Terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value, (float)nudScaleY.Value, new Microsoft.DirectX.Vector3(0, 0, 0));
+            terrainEditor.Terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float) nudScaleXZ.Value,
+                (float) nudScaleY.Value, new Vector3(0, 0, 0));
             terrainEditor.Terrain.loadTexture(textureBrowser.SelectedImage);
-            
+
             shovel = new Shovel();
             vegetationBrush = new VegetationBrush();
             steamroller = new Steamroller();
@@ -50,18 +51,21 @@ namespace Examples.TerrainEditor.Panel
 
             //Tooltips
             toolTip1.SetToolTip(rbShovel, "Pala.\nAumenta la altura del terreno.\nShovel sound by adough1@freesound");
-            toolTip1.SetToolTip(rbSteamroller, "Aplanadora.\nNivela el terreno\nSteamroller stock image by presterjohn1@deviantArt");
+            toolTip1.SetToolTip(rbSteamroller,
+                "Aplanadora.\nNivela el terreno\nSteamroller stock image by presterjohn1@deviantArt");
             toolTip1.SetToolTip(tbRadius, "Regula el tamaño del pincel");
             toolTip1.SetToolTip(tbIntensity, "Regula la intesidad del efecto del pincel");
-            toolTip1.SetToolTip(tbHardness, "Regula el tamaño del radio interno.\nA medida que los vertices se alejan del radio interno, la intensidad disminuye.");
+            toolTip1.SetToolTip(tbHardness,
+                "Regula el tamaño del radio interno.\nA medida que los vertices se alejan del radio interno, la intensidad disminuye.");
             toolTip1.SetToolTip(cbRounded, "Cuando se deselecciona, el pincel es cuadrado");
-            toolTip1.SetToolTip(cbInvert, "Invierte el efecto del pincel.\n(La pala hunde, la aplanadora aumenta los desniveles)");
-            toolTip1.SetToolTip(bChangeFolder, "La carpeta seleccionada debe contener carpetas con\nel mismo nombre que el -TgcScene.xml que llevan dentro.");
-            
+            toolTip1.SetToolTip(cbInvert,
+                "Invierte el efecto del pincel.\n(La pala hunde, la aplanadora aumenta los desniveles)");
+            toolTip1.SetToolTip(bChangeFolder,
+                "La carpeta seleccionada debe contener carpetas con\nel mismo nombre que el -TgcScene.xml que llevan dentro.");
+
             //Camera
             terrainEditor.Camera.MovementSpeed = tbCameraMovementSpeed.Value;
             terrainEditor.Camera.JumpSpeed = tbCameraJumpSpeed.Value;
-        
 
             //Info
             setInfo();
@@ -73,7 +77,6 @@ namespace Examples.TerrainEditor.Panel
 
         private void tabControl_TabIndexChanged(object sender, EventArgs e)
         {
-
             vegetationBrush.removeFloatingVegetation();
             if (tabControl.SelectedTab == pageEdit)
             {
@@ -88,12 +91,7 @@ namespace Examples.TerrainEditor.Panel
                 else if (rbPickVegetation.Checked) setBrush(vegetationPicker);
             }
             else terrainEditor.Brush = null;
-
         }
-
-
-
-
 
         public void dispose()
         {
@@ -102,12 +100,15 @@ namespace Examples.TerrainEditor.Panel
             steamroller.dispose();
         }
 
-
         private void setBrush(ITerrainEditorBrush brush)
         {
-
             terrainEditor.Brush = brush;
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Desarrollado por Daniela Kazarian.\n", "About", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
         #region General
@@ -117,20 +118,19 @@ namespace Examples.TerrainEditor.Panel
             heightmapBrowser = new TgcTextureBrowser();
             heightmapBrowser.ShowFolders = true;
             heightmapBrowser.setSelectedImage(GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap1.jpg");
-
         }
 
         private void pictureBoxModifyHeightmap_Click(object sender, EventArgs e)
         {
-
-            string selected = heightmapBrowser.SelectedImage;
+            var selected = heightmapBrowser.SelectedImage;
             if (heightmapBrowser.ShowDialog() == DialogResult.OK && !selected.Equals(heightmapBrowser.SelectedImage))
             {
-                Image img = MeshCreatorUtils.getImage(heightmapBrowser.SelectedImage);
+                var img = MeshCreatorUtils.getImage(heightmapBrowser.SelectedImage);
                 pictureBoxModifyHeightmap.Image = img;
                 pictureBoxModifyHeightmap.ImageLocation = heightmapBrowser.SelectedImage;
 
-                terrainEditor.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value, (float)nudScaleY.Value);
+                terrainEditor.loadHeightmap(heightmapBrowser.SelectedImage, (float) nudScaleXZ.Value,
+                    (float) nudScaleY.Value);
 
                 setInfo();
             }
@@ -140,7 +140,7 @@ namespace Examples.TerrainEditor.Panel
         {
             if (textureBrowser.ShowDialog() == DialogResult.OK)
             {
-                Image img = MeshCreatorUtils.getImage(textureBrowser.SelectedImage);
+                var img = MeshCreatorUtils.getImage(textureBrowser.SelectedImage);
                 pictureBoxModifyTexture.Image = img;
                 pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
 
@@ -152,15 +152,14 @@ namespace Examples.TerrainEditor.Panel
         {
             pictureBoxModifyHeightmap.Image = null;
             pictureBoxModifyHeightmap.Refresh();
-            terrainEditor.loadPlainHeightmap((int)nupWidth.Value, (int)nupHeight.Value, (int)nupLevel.Value, (float)nudScaleXZ.Value, (float)nudScaleY.Value);
+            terrainEditor.loadPlainHeightmap((int) nupWidth.Value, (int) nupHeight.Value, (int) nupLevel.Value,
+                (float) nudScaleXZ.Value, (float) nudScaleY.Value);
             setInfo();
         }
 
-
-
         private void nudScale_ValueChanged(object sender, EventArgs e)
         {
-            terrainEditor.setScale((float)nudScaleXZ.Value, (float)nudScaleY.Value);
+            terrainEditor.setScale((float) nudScaleXZ.Value, (float) nudScaleY.Value);
             setInfo();
         }
 
@@ -172,10 +171,15 @@ namespace Examples.TerrainEditor.Panel
         private void openFileVegetation_FileOk(object sender, CancelEventArgs e)
         {
             if (terrainEditor.HasVegetation)
-                if (MessageBox.Show("¿Remover vegetacion actual?", "El terreno ya tiene vegetacion", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (
+                    MessageBox.Show("¿Remover vegetacion actual?", "El terreno ya tiene vegetacion",
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
                     terrainEditor.clearVegetation();
-                else MessageBox.Show("Por ahora no se pueden importar modelos con nombres iguales a los ya cargados, de darse ese caso, las instancias viejas se eliminaran.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
+                else
+                    MessageBox.Show(
+                        "Por ahora no se pueden importar modelos con nombres iguales a los ya cargados, de darse ese caso, las instancias viejas se eliminaran.",
+                        "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             terrainEditor.addVegetation(InstancesManager.Instance.import(openFileVegetation.FileName));
             terrainEditor.removeDisposedVegetation();
             terrainEditor.updateVegetationY();
@@ -183,36 +187,30 @@ namespace Examples.TerrainEditor.Panel
 
         private void bReload_Click(object sender, EventArgs e)
         {
-            terrainEditor.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value, (float)nudScaleY.Value);
-
+            terrainEditor.loadHeightmap(heightmapBrowser.SelectedImage, (float) nudScaleXZ.Value,
+                (float) nudScaleY.Value);
         }
 
-        #endregion
+        #endregion General
 
         #region Vegetation
 
-
-
-       
         private void fillVegetationList(string path)
         {
-            string[] folders = Directory.GetDirectories(path);
-            List<string> names = new List<string>();
-            foreach (string folder in folders)
+            var folders = Directory.GetDirectories(path);
+            var names = new List<string>();
+            foreach (var folder in folders)
             {
-
-                string name = folder.Substring(folder.LastIndexOf("\\") + 1);
+                var name = folder.Substring(folder.LastIndexOf("\\") + 1);
                 if (File.Exists(folder + "\\" + name + "-TgcScene.xml")) names.Add(name);
             }
 
-           
             if (names.Count > 0)
             {
                 InstancesManager.Location = path;
                 lbVegetation.Items.Clear();
                 lbVegetation.Items.AddRange(names.ToArray());
                 lbVegetation.SelectedIndex = 0;
-
             }
         }
 
@@ -225,14 +223,12 @@ namespace Examples.TerrainEditor.Panel
                 return;
             }
 
-            pbVegetationPreview.ImageLocation = InstancesManager.Location + lbVegetation.SelectedItem.ToString() + "\\preview.jpg";
+            pbVegetationPreview.ImageLocation = InstancesManager.Location + lbVegetation.SelectedItem + "\\preview.jpg";
             vegetationBrush.setVegetation(lbVegetation.SelectedItem.ToString());
-
         }
 
         private void bVegetationClear_Click(object sender, EventArgs e)
         {
-
             vegetationBrush.removeFloatingVegetation();
             terrainEditor.clearVegetation();
         }
@@ -241,12 +237,9 @@ namespace Examples.TerrainEditor.Panel
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                
                 fillVegetationList(folderBrowserDialog1.SelectedPath);
-
             }
         }
-
 
         private void updateVBScaleAxis(object sender, EventArgs e)
         {
@@ -255,7 +248,7 @@ namespace Examples.TerrainEditor.Panel
 
         private void configVegetationBrush()
         {
-            Vector3 scale = new Vector3(0, 0, 0);
+            var scale = new Vector3(0, 0, 0);
 
             if (cbSx.Checked) scale += new Vector3(1, 0, 0);
             if (cbSy.Checked) scale += new Vector3(0, 1, 0);
@@ -280,18 +273,22 @@ namespace Examples.TerrainEditor.Panel
                 setBrush(vegetationBrush);
             }
         }
+
         private void updateVBRotationAxis(object sender, EventArgs e)
         {
-            if (rbRx.Checked){
-                vegetationBrush.Rotation = VegetationBrush.RotationAxis.X;
+            if (rbRx.Checked)
+            {
+                vegetationBrush.Rotation = VegetationPicker.RotationAxis.X;
                 vegetationPicker.Rotation = VegetationPicker.RotationAxis.X;
             }
-            else if (rbRy.Checked){
-                vegetationBrush.Rotation = VegetationBrush.RotationAxis.Y;
+            else if (rbRy.Checked)
+            {
+                vegetationBrush.Rotation = VegetationPicker.RotationAxis.Y;
                 vegetationPicker.Rotation = VegetationPicker.RotationAxis.Y;
             }
-            else if (rbRz.Checked){
-                vegetationBrush.Rotation = VegetationBrush.RotationAxis.Z;
+            else if (rbRz.Checked)
+            {
+                vegetationBrush.Rotation = VegetationPicker.RotationAxis.Z;
                 vegetationPicker.Rotation = VegetationPicker.RotationAxis.Z;
             }
         }
@@ -300,15 +297,15 @@ namespace Examples.TerrainEditor.Panel
         {
             vegetationBrush.setVegetation(lbVegetation.SelectedItem.ToString());
         }
-        
-        #endregion
+
+        #endregion Vegetation
 
         #region Edit
 
         private void tbBrush_Scroll(object sender, EventArgs e)
         {
-            TrackBar tb = (TrackBar)sender;
-            String prop = (string)tb.Tag;
+            var tb = (TrackBar) sender;
+            var prop = (string) tb.Tag;
 
             //Reflection para escribir menos :P
             shovel.GetType().GetProperty(prop).SetValue(shovel, tb.Value, null);
@@ -317,26 +314,22 @@ namespace Examples.TerrainEditor.Panel
 
         private void cbBrush_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox cb = (CheckBox)sender;
-            String prop = (string)cb.Tag;
+            var cb = (CheckBox) sender;
+            var prop = (string) cb.Tag;
 
             //Reflection para escribir menos :P
             shovel.GetType().GetProperty(prop).SetValue(shovel, cb.Checked, null);
             steamroller.GetType().GetProperty(prop).SetValue(steamroller, cb.Checked, null);
-
         }
-
 
         private void rbShovel_CheckedChanged(object sender, EventArgs e)
         {
             if (rbShovel.Checked) setBrush(shovel);
-
         }
 
         private void bSteamroller_CheckedChanged(object sender, EventArgs e)
         {
             if (rbSteamroller.Checked) setBrush(steamroller);
-
         }
 
         private void setBrush(TerrainBrush brush)
@@ -348,27 +341,28 @@ namespace Examples.TerrainEditor.Panel
             brush.Rounded = cbRounded.Checked;
 
             terrainEditor.Brush = brush;
-
         }
 
-        #endregion
+        #endregion Edit
 
         #region Export
+
         private void setInfo()
         {
-            labelVerticesCount.Text = "Vertices: " + terrainEditor.Terrain.TotalVertices.ToString();
-            lbCenter.Text = String.Format("Center:  ({0},{1},{2})", terrainEditor.Terrain.Center.X, terrainEditor.Terrain.Center.Y,terrainEditor.Terrain.Center.Z);
-            lbScaleXZ.Text = "ScaleXZ:  " + terrainEditor.Terrain.ScaleXZ.ToString();
-            lbScaleY.Text = "ScaleY:  " + terrainEditor.Terrain.ScaleY.ToString();
-            lwidth.Text = "Width:  "+terrainEditor.Terrain.HeightmapData.GetLength(1).ToString();
-            lheight.Text = "Height:  "+terrainEditor.Terrain.HeightmapData.GetLength(0).ToString();
-            lname.Text = "Name: " + heightmapBrowser.SelectedImage.Substring(heightmapBrowser.SelectedImage.LastIndexOf("\\")+1);
+            labelVerticesCount.Text = "Vertices: " + terrainEditor.Terrain.TotalVertices;
+            lbCenter.Text = string.Format("Center:  ({0},{1},{2})", terrainEditor.Terrain.Center.X,
+                terrainEditor.Terrain.Center.Y, terrainEditor.Terrain.Center.Z);
+            lbScaleXZ.Text = "ScaleXZ:  " + terrainEditor.Terrain.ScaleXZ;
+            lbScaleY.Text = "ScaleY:  " + terrainEditor.Terrain.ScaleY;
+            lwidth.Text = "Width:  " + terrainEditor.Terrain.HeightmapData.GetLength(1);
+            lheight.Text = "Height:  " + terrainEditor.Terrain.HeightmapData.GetLength(0);
+            lname.Text = "Name: " +
+                         heightmapBrowser.SelectedImage.Substring(heightmapBrowser.SelectedImage.LastIndexOf("\\") + 1);
         }
 
-      
         private void buttonSaveHeightmap_Click(object sender, EventArgs e)
         {
-            saveFileHeightmap.ShowDialog(this);           
+            saveFileHeightmap.ShowDialog(this);
         }
 
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
@@ -378,18 +372,15 @@ namespace Examples.TerrainEditor.Panel
                 terrainEditor.save(saveFileHeightmap.FileName);
                 heightmapBrowser.setSelectedImage(saveFileHeightmap.FileName);
                 pictureBoxModifyHeightmap.ImageLocation = heightmapBrowser.SelectedImage;
-
             }
             catch (Exception ex)
             {
-
-                MessageBox.Show(this, "Hubo un error al intentar exportar la textura. Puede ocurrir que este intentando reemplazar una textura que se encuentra en la misma carpeta de la textura que tiene abierta. Intente crear una nueva.\n"
-                       + "Error: " + ex.Message + " - " + ex.InnerException.Message,
-                       "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this,
+                    "Hubo un error al intentar exportar la textura. Puede ocurrir que este intentando reemplazar una textura que se encuentra en la misma carpeta de la textura que tiene abierta. Intente crear una nueva.\n"
+                    + "Error: " + ex.Message + " - " + ex.InnerException.Message,
+                    "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
 
         private void buttonSaveVegetation_Click(object sender, EventArgs e)
         {
@@ -398,32 +389,26 @@ namespace Examples.TerrainEditor.Panel
 
         private void saveFileVegetation_FileOk(object sender, CancelEventArgs e)
         {
-            FileInfo fInfo = new FileInfo(saveFileVegetation.FileName);
-            string sceneName = fInfo.Name.Split('.')[0];
+            var fInfo = new FileInfo(saveFileVegetation.FileName);
+            var sceneName = fInfo.Name.Split('.')[0];
             sceneName = sceneName.Replace("-TgcScene", "");
 
             try
             {
-
                 terrainEditor.saveVegetation(sceneName, fInfo.DirectoryName);
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Hubo un error al intentar exportar la escena. Puede ocurrir que esté intentando reemplazar el mismo archivo de escena que tiene abierto ahora. Los archivos de Textura por ejemplo no pueden ser reemplazados si se están utilizando dentro del editor. En ese caso debera guardar en uno nuevo. "
-                       + "Error: " + ex.Message + " - " + ex.InnerException.Message,
-                       "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                MessageBox.Show(this,
+                    "Hubo un error al intentar exportar la escena. Puede ocurrir que esté intentando reemplazar el mismo archivo de escena que tiene abierto ahora. Los archivos de Textura por ejemplo no pueden ser reemplazados si se están utilizando dentro del editor. En ese caso debera guardar en uno nuevo. "
+                    + "Error: " + ex.Message + " - " + ex.InnerException.Message,
+                    "Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-   
-
-
-        #endregion
+        #endregion Export
 
         #region Settings
-
 
         private void tbCameraMovementSpeed_Scroll(object sender, EventArgs e)
         {
@@ -442,27 +427,6 @@ namespace Examples.TerrainEditor.Panel
             shovel.SoundEnabled = cbSound.Checked;
         }
 
-        #endregion
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Desarrollado por Daniela Kazarian.\n","About", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-   
-
-
-       
-
-       
-
-
-    
-
-       
-
-
-     
-
+        #endregion Settings
     }
 }

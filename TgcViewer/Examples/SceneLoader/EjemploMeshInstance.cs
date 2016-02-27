@@ -1,22 +1,18 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using Microsoft.DirectX.DirectInput;
+using TgcViewer;
 using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
 
 namespace Examples.SceneLoader
 {
     /// <summary>
-    /// Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
+    ///     Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
     /// </summary>
     public class EjemploMeshInstance : TgcExample
     {
-        List<TgcMesh> meshes;
+        private List<TgcMesh> meshes;
 
         public override string getCategory()
         {
@@ -35,18 +31,19 @@ namespace Examples.SceneLoader
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
+            var loader = new TgcSceneLoader();
+            var sceneOriginal =
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" +
+                                         "Box-TgcScene.xml");
+            var meshOriginal = sceneOriginal.Meshes[0];
 
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene sceneOriginal = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml");
-            TgcMesh meshOriginal = sceneOriginal.Meshes[0];
-
-            TgcMesh meshInstance1 = new TgcMesh(meshOriginal.Name + "-1", meshOriginal, 
+            var meshInstance1 = new TgcMesh(meshOriginal.Name + "-1", meshOriginal,
                 new Vector3(50, 0, 0), meshOriginal.Rotation, meshOriginal.Scale);
             meshInstance1.Enabled = true;
 
-            TgcMesh meshInstance2 = new TgcMesh(meshOriginal.Name + "-2", meshOriginal,
+            var meshInstance2 = new TgcMesh(meshOriginal.Name + "-2", meshOriginal,
                 new Vector3(100, 0, 0), meshOriginal.Rotation, meshOriginal.Scale);
             meshInstance2.Enabled = true;
 
@@ -55,25 +52,23 @@ namespace Examples.SceneLoader
             meshes.Add(meshInstance1);
             meshes.Add(meshInstance2);
 
-
-            TgcTexture texture = TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Piso\\Textures\\piso2.jpg");
-            meshOriginal.changeDiffuseMaps(new TgcTexture[] { texture });
-
+            var texture = TgcTexture.createTexture(d3dDevice,
+                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Piso\\Textures\\piso2.jpg");
+            meshOriginal.changeDiffuseMaps(new[] {texture});
 
             GuiController.Instance.FpsCamera.Enable = true;
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
-            foreach (TgcMesh mesh in meshes)
+            foreach (var mesh in meshes)
             {
                 mesh.render();
             }
 
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.H))
+            if (GuiController.Instance.D3dInput.keyPressed(Key.H))
             {
                 meshes[0].dispose();
             }
@@ -81,11 +76,10 @@ namespace Examples.SceneLoader
 
         public override void close()
         {
-            foreach (TgcMesh mesh in meshes)
+            foreach (var mesh in meshes)
             {
                 mesh.dispose();
             }
         }
-
     }
 }

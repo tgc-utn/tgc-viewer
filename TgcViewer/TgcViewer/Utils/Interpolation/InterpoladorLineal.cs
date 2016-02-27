@@ -1,106 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer;
-
-namespace TgcViewer.Utils.Interpolation
+﻿namespace TgcViewer.Utils.Interpolation
 {
     /// <summary>
-    /// Utilidad para interpolar un valor que arranca en INIT y va hasta END, a una velocidad determinada.
-    /// El metodo isEnd() indica si termino.
+    ///     Utilidad para interpolar un valor que arranca en INIT y va hasta END, a una velocidad determinada.
+    ///     El metodo isEnd() indica si termino.
     /// </summary>
     public class InterpoladorLineal
     {
-        float init;
         /// <summary>
-        /// Valor inicial
+        ///     Valor inicial
         /// </summary>
-        public float Init
-        {
-            get { return init; }
-            set { init = value; }
-        }
-
-        float current;
-        /// <summary>
-        /// Valor actual
-        /// </summary>
-        public float Current
-        {
-            get { return current; }
-            set { current = value; }
-        }
-
-        float end;
-        /// <summary>
-        /// Valor final
-        /// </summary>
-        public float End
-        {
-            get { return end; }
-            set { end = value; }
-        }
-
-        float speed;
-        /// <summary>
-        /// Velocidad de incremento en segundos
-        /// </summary>
-        public float Speed
-        {
-            get { return speed; }
-            set { speed = value; }
-        }
+        public float Init { get; set; }
 
         /// <summary>
-        /// Crear interpolador lineal
+        ///     Valor actual
         /// </summary>
-        public InterpoladorLineal()
-        {
-        }
+        public float Current { get; set; }
 
         /// <summary>
-        /// Cargar valores iniciales del interpolador
+        ///     Valor final
+        /// </summary>
+        public float End { get; set; }
+
+        /// <summary>
+        ///     Velocidad de incremento en segundos
+        /// </summary>
+        public float Speed { get; set; }
+
+        /// <summary>
+        ///     Cargar valores iniciales del interpolador
         /// </summary>
         public void reset()
         {
-            this.current = init;
+            Current = Init;
         }
 
         /// <summary>
-        /// Interpolar y devolver incremento.
-        /// Llamar a reset() la primera vez.
+        ///     Interpolar y devolver incremento.
+        ///     Llamar a reset() la primera vez.
         /// </summary>
         /// <returns>Valor actual</returns>
         public float update()
         {
-            float n = speed * GuiController.Instance.ElapsedTime;
-            current += n;
-            if (speed > 0)
+            var n = Speed*GuiController.Instance.ElapsedTime;
+            Current += n;
+            if (Speed > 0)
             {
-                if (current > end)
+                if (Current > End)
                 {
-                    current = end;
+                    Current = End;
                 }
             }
             else
             {
-                if (current < end)
+                if (Current < End)
                 {
-                    current = end;
+                    Current = End;
                 }
             }
 
-            return current;
+            return Current;
         }
 
         /// <summary>
-        /// Indica si el interpolador llego al final
+        ///     Indica si el interpolador llego al final
         /// </summary>
         public bool isEnd()
         {
-            return current == end;
+            return Current == End;
         }
-
     }
 }

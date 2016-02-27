@@ -1,35 +1,26 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Example;
 
 namespace Examples.Collision
 {
     /// <summary>
-    /// Ejemplo EjemploComputeObb:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploComputeObb:
+    ///     Unidades Involucradas:
     ///     # Unidad 6 - Detección de Colisiones - Oriented BoundingBox
-    /// 
-    /// Muestra como calcular un Oriented BoundingBox (OBB) a partir de una nueva aleatoria de puntos
-    /// 
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Muestra como calcular un Oriented BoundingBox (OBB) a partir de una nueva aleatoria de puntos
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploComputeObb : TgcExample
     {
-        static Random rand = new Random();
-        TgcObb obb;
-        bool generate;
-        Vector3[] points;
-        TgcBox[] vertices;
-
+        private static readonly Random rand = new Random();
+        private bool generate;
+        private TgcObb obb;
+        private Vector3[] points;
+        private TgcBox[] vertices;
 
         public override string getCategory()
         {
@@ -43,18 +34,19 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Muestra como calcular un Oriented BoundingBox (OBB) a partir de una nueva aleatoria de puntos. Movimiento con mouse.";
+            return
+                "Muestra como calcular un Oriented BoundingBox (OBB) a partir de una nueva aleatoria de puntos. Movimiento con mouse.";
         }
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             obb = new TgcObb();
             generateObb();
             generate = false;
 
-            GuiController.Instance.Modifiers.addButton("generate", "generate", new EventHandler(this.random_clic));
+            GuiController.Instance.Modifiers.addButton("generate", "generate", random_clic);
         }
 
         public void random_clic(object sender, EventArgs args)
@@ -62,10 +54,9 @@ namespace Examples.Collision
             generate = true;
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             if (generate)
             {
@@ -73,19 +64,16 @@ namespace Examples.Collision
                 generate = false;
             }
 
-
-
-            for (int i = 0; i < vertices.Length; i++)
+            for (var i = 0; i < vertices.Length; i++)
             {
                 vertices[i].render();
             }
 
             obb.render();
-            
         }
 
         /// <summary>
-        /// Crear nube de puntos aleatorios y luego computar el mejor OBB que los ajusta
+        ///     Crear nube de puntos aleatorios y luego computar el mejor OBB que los ajusta
         /// </summary>
         private void generateObb()
         {
@@ -93,34 +81,32 @@ namespace Examples.Collision
             obb = null;
 
             //Crear nube ed puntos
-            int COUNT = 10;
-            float MIN_RAND = -20f;
-            float MAX_RAND = 20f;
+            var COUNT = 10;
+            var MIN_RAND = -20f;
+            var MAX_RAND = 20f;
 
             points = new Vector3[COUNT];
-            for (int i = 0; i < points.Length; i++)
+            for (var i = 0; i < points.Length; i++)
             {
-                float x = MIN_RAND + (float)rand.NextDouble() * (MAX_RAND - MIN_RAND);
-                float y = MIN_RAND + (float)rand.NextDouble() * (MAX_RAND - MIN_RAND);
-                float z = MIN_RAND + (float)rand.NextDouble() * (MAX_RAND - MIN_RAND);
+                var x = MIN_RAND + (float) rand.NextDouble()*(MAX_RAND - MIN_RAND);
+                var y = MIN_RAND + (float) rand.NextDouble()*(MAX_RAND - MIN_RAND);
+                var z = MIN_RAND + (float) rand.NextDouble()*(MAX_RAND - MIN_RAND);
                 points[i] = new Vector3(x, y, z);
             }
 
             //Computar mejor OBB
             obb = TgcObb.computeFromPoints(points);
 
-
-
             if (vertices != null)
             {
-                for (int i = 0; i < vertices.Length; i++)
+                for (var i = 0; i < vertices.Length; i++)
                 {
                     vertices[i].dispose();
                 }
             }
 
             vertices = new TgcBox[points.Length];
-            for (int i = 0; i < vertices.Length; i++)
+            for (var i = 0; i < vertices.Length; i++)
             {
                 vertices[i] = TgcBox.fromSize(points[i], new Vector3(1, 1, 1), Color.White);
             }
@@ -129,11 +115,10 @@ namespace Examples.Collision
         public override void close()
         {
             obb.dispose();
-            for (int i = 0; i < vertices.Length; i++)
+            for (var i = 0; i < vertices.Length; i++)
             {
                 vertices[i].dispose();
             }
         }
-
     }
 }

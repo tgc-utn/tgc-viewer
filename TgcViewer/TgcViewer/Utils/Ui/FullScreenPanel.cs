@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace TgcViewer.Utils.Ui
 {
     /// <summary>
-    /// Panel para modo FullScreen
+    ///     Panel para modo FullScreen
     /// </summary>
     public partial class FullScreenPanel : Form
     {
@@ -17,12 +11,12 @@ namespace TgcViewer.Utils.Ui
         {
             InitializeComponent();
 
-            Rectangle screenRect = Screen.FromControl(this).WorkingArea;
-            Size fullScreenSize = screenRect.Size;
-            this.Size = fullScreenSize;
-            this.Location = screenRect.Location;
-            this.MaximumSize = fullScreenSize;
-            this.MinimumSize = fullScreenSize;
+            var screenRect = Screen.FromControl(this).WorkingArea;
+            var fullScreenSize = screenRect.Size;
+            Size = fullScreenSize;
+            Location = screenRect.Location;
+            MaximumSize = fullScreenSize;
+            MinimumSize = fullScreenSize;
         }
     }
 }

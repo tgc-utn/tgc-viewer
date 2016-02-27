@@ -1,37 +1,32 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX;
-using TgcViewer;
 using System.Drawing;
+using Microsoft.DirectX;
 
 namespace Examples.Engine2D
 {
     public class Asteroide : GameObject
     {
+        private const int SpriteWidth = 64;
+        private const int SpriteHeight = 64;
 
-        //La lista de sprites.
-        List<Sprite> sprites;
+        public static int Size = 64;
+        private float angle;
 
         //El bitmap del spritesheet
-        Bitmap asteroidBitmap;
+        private Bitmap asteroidBitmap;
 
         //El indice el sprite actual.
-        int currentSprite;
-
-        float size;
-        float angle;
+        private int currentSprite;
 
         //La posicion
         public Vector2 Position;
 
-        Vector2 spriteSize;
+        private float size;
+        //La lista de sprites.
+        private List<Sprite> sprites;
 
-        const int SpriteWidth = 64;
-        const int SpriteHeight = 64;
-
-
-        public static int Size = 64;
+        private Vector2 spriteSize;
 
         public void Load(string exampleDir, Bitmap spriteSheet)
         {
@@ -45,13 +40,14 @@ namespace Examples.Engine2D
 
             Sprite newSprite;
             //Creo 64 sprites asignando distintos clipping rects a cada uno.
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (var j = 0; j < 8; j++)
                 {
                     newSprite = new Sprite();
                     newSprite.Bitmap = asteroidBitmap;
-                    newSprite.SrcRect = new Rectangle(j * (int)spriteSize.X, i * (int)spriteSize.Y, (int)spriteSize.X, (int)spriteSize.Y);
+                    newSprite.SrcRect = new Rectangle(j*(int) spriteSize.X, i*(int) spriteSize.Y, (int) spriteSize.X,
+                        (int) spriteSize.Y);
                     newSprite.Scaling = new Vector2(size, size);
                     newSprite.Rotation = angle;
                     sprites.Add(newSprite);
@@ -61,26 +57,22 @@ namespace Examples.Engine2D
             currentSprite = 0;
 
             GenerateRandomPosition();
-   
         }
 
         public override void Update(float ElapsedTime)
         {
-
-
-
             //Chequeo si se escapa de la pantalla.
-            if (Position.X < -SpriteWidth || Position.Y < -SpriteHeight * 2 ||
+            if (Position.X < -SpriteWidth || Position.Y < -SpriteHeight*2 ||
                 Position.X > GameManager.ScreenWidth + SpriteWidth
-                 || Position.Y > GameManager.ScreenHeight + SpriteHeight)
+                || Position.Y > GameManager.ScreenHeight + SpriteHeight)
             {
                 GenerateRandomPosition();
             }
 
             float speed = 250;
 
-            Position.X += speed * ElapsedTime * (float)Math.Cos(angle);
-            Position.Y += speed * ElapsedTime * (float)Math.Sin(angle);
+            Position.X += speed*ElapsedTime*(float) Math.Cos(angle);
+            Position.Y += speed*ElapsedTime*(float) Math.Sin(angle);
 
             currentSprite++;
             if (currentSprite > 63)
@@ -92,25 +84,24 @@ namespace Examples.Engine2D
         //Genero posicion aleatoria para el asteoride.
         public void GenerateRandomPosition()
         {
-            Random rnd = new Random();
+            var rnd = new Random();
 
             //Determina de que lado de la pantalla aparece
-            int lado = (int)(rnd.NextDouble() * 2);
-            if( lado == 0)
+            var lado = (int) (rnd.NextDouble()*2);
+            if (lado == 0)
                 Position.X = 0;
             else
                 Position.X = GameManager.ScreenWidth;
-           
-            Position.Y = GameManager.ScreenHeight * (float)rnd.NextDouble();
 
+            Position.Y = GameManager.ScreenHeight*(float) rnd.NextDouble();
 
             //Busco el angulo del asteroide para que vaya al centro de la pantalla.
-            Vector2 ScreenCenterVector = new Vector2();
-            Vector2 ScreenCenter = new Vector2(GameManager.ScreenWidth / 2, GameManager.ScreenHeight / 2);
+            var ScreenCenterVector = new Vector2();
+            var ScreenCenter = new Vector2(GameManager.ScreenWidth/2, GameManager.ScreenHeight/2);
             ScreenCenterVector = Vector2.Subtract(ScreenCenter, Position);
 
             if (ScreenCenterVector.Length() > 0)
-                angle = (float)Math.Atan2(ScreenCenterVector.Y, ScreenCenterVector.X);
+                angle = (float) Math.Atan2(ScreenCenterVector.Y, ScreenCenterVector.X);
         }
 
         public override void Render(float elapsedTime, Drawer drawer)

@@ -1,47 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using System.Drawing;
+using TGC.Core.Example;
+using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.TgcSkeletalAnimation;
 
 namespace Examples.SkeletalAnimation
 {
     /// <summary>
-    /// Ejemplo EjemploSkeletalLoader:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploSkeletalLoader:
+    ///     Unidades Involucradas:
     ///     # Unidad 5 - Animación - Skeletal Animation
-    /// 
-    /// Carga un personaje animado con el método de Animacion Esqueletica, utilizando
-    /// la herramienta TgcSkeletalLoader.
-    /// Es una alternativa a la herramienta de animación TgcKeyFrameLoader.
-    /// Se crea un Modifier para que el usuario puede alternar la animación que se muestra.
-    /// La herramienta TgcSkeletalLoader crea una malla del tipo TgcSkeletalMesh.
-    /// Una malla TgcSkeletalMesh puede tener una o varias animaciones.
-    /// Cada animacion es un archivo XML diferente.
-    /// La estructura general de la malla tambien es un XML diferente.
-    /// Todos los XML son del formato TGC.
-    /// Muestra como renderizar el esqueleto del modelo.
-    /// También muestra como agregar un objeto "Attachment" que siga un hueso del modelo.
-    /// 
-    /// 
-    /// Autor: Leandro Barbagallo, Matías Leone
-    /// 
+    ///     Carga un personaje animado con el método de Animacion Esqueletica, utilizando
+    ///     la herramienta TgcSkeletalLoader.
+    ///     Es una alternativa a la herramienta de animación TgcKeyFrameLoader.
+    ///     Se crea un Modifier para que el usuario puede alternar la animación que se muestra.
+    ///     La herramienta TgcSkeletalLoader crea una malla del tipo TgcSkeletalMesh.
+    ///     Una malla TgcSkeletalMesh puede tener una o varias animaciones.
+    ///     Cada animacion es un archivo XML diferente.
+    ///     La estructura general de la malla tambien es un XML diferente.
+    ///     Todos los XML son del formato TGC.
+    ///     Muestra como renderizar el esqueleto del modelo.
+    ///     También muestra como agregar un objeto "Attachment" que siga un hueso del modelo.
+    ///     Autor: Leandro Barbagallo, Matías Leone
     /// </summary>
     public class EjemploSkeletalLoader : TgcExample
     {
-
-        TgcSkeletalMesh mesh;
-        string selectedAnim;
-        Color currentColor;
-        TgcSkeletalBoneAttach attachment;
-        bool showAttachment;
+        private TgcSkeletalBoneAttach attachment;
+        private Color currentColor;
+        private TgcSkeletalMesh mesh;
+        private string selectedAnim;
+        private bool showAttachment;
 
         public override string getCategory()
         {
@@ -60,16 +49,18 @@ namespace Examples.SkeletalAnimation
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Paths para archivo XML de la malla
-            string pathMesh = GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml";
+            var pathMesh = GuiController.Instance.ExamplesMediaDir +
+                           "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml";
 
             //Path para carpeta de texturas de la malla
-            string mediaPath = GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\";
+            var mediaPath = GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\";
 
             //Lista de animaciones disponibles
-            string[] animationList = new string[]{
+            string[] animationList =
+            {
                 "Parado",
                 "Caminando",
                 "Correr",
@@ -78,18 +69,18 @@ namespace Examples.SkeletalAnimation
                 "Empujar",
                 "Patear",
                 "Pegar",
-                "Arrojar",
+                "Arrojar"
             };
 
             //Crear rutas con cada animacion
-            string[] animationsPath = new string[animationList.Length];
-            for (int i = 0; i < animationList.Length; i++)
+            var animationsPath = new string[animationList.Length];
+            for (var i = 0; i < animationList.Length; i++)
             {
                 animationsPath[i] = mediaPath + animationList[i] + "-TgcSkeletalAnim.xml";
             }
 
             //Cargar mesh y animaciones
-            TgcSkeletalLoader loader = new TgcSkeletalLoader();
+            var loader = new TgcSkeletalLoader();
             mesh = loader.loadMeshAndAnimationsFromFile(pathMesh, mediaPath, animationsPath);
 
             //Crear esqueleto a modo Debug
@@ -100,11 +91,11 @@ namespace Examples.SkeletalAnimation
             selectedAnim = animationList[0];
 
             //Modifier para especificar si la animación se anima con loop
-            bool animateWithLoop = true;
+            var animateWithLoop = true;
             GuiController.Instance.Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
 
             //Modifier para renderizar el esqueleto
-            bool renderSkeleton = false;
+            var renderSkeleton = false;
             GuiController.Instance.Modifiers.addBoolean("renderSkeleton", "Show skeleton:", renderSkeleton);
 
             //Modifier para FrameRate
@@ -122,7 +113,7 @@ namespace Examples.SkeletalAnimation
 
             //Crear caja como modelo de Attachment del hueos "Bip01 L Hand"
             attachment = new TgcSkeletalBoneAttach();
-            TgcBox attachmentBox = TgcBox.fromSize(new Vector3(5, 100, 5), Color.Blue);
+            var attachmentBox = TgcBox.fromSize(new Vector3(5, 100, 5), Color.Blue);
             attachment.Mesh = attachmentBox.toMesh("attachment");
             attachment.Bone = mesh.getBoneByName("Bip01 L Hand");
             attachment.Offset = Matrix.Translation(10, -40, 0);
@@ -136,18 +127,17 @@ namespace Examples.SkeletalAnimation
             GuiController.Instance.RotCamera.setCamera(new Vector3(0, 70, 0), 200);
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Ver si cambio la animacion
-            string anim = (string)GuiController.Instance.Modifiers.getValue("animation");
+            var anim = (string)GuiController.Instance.Modifiers.getValue("animation");
             if (!anim.Equals(selectedAnim))
             {
                 //Ver si animamos con o sin loop
-                bool animateWithLoop = (bool)GuiController.Instance.Modifiers.getValue("loop");
-                float frameRate = (float)GuiController.Instance.Modifiers.getValue("frameRate");
+                var animateWithLoop = (bool)GuiController.Instance.Modifiers.getValue("loop");
+                var frameRate = (float)GuiController.Instance.Modifiers.getValue("frameRate");
 
                 //Cargar nueva animacion elegida
                 selectedAnim = anim;
@@ -155,10 +145,10 @@ namespace Examples.SkeletalAnimation
             }
 
             //Ver si rendeizamos el esqueleto
-            bool renderSkeleton = (bool)GuiController.Instance.Modifiers.getValue("renderSkeleton");
+            var renderSkeleton = (bool)GuiController.Instance.Modifiers.getValue("renderSkeleton");
 
             //Ver si cambio el color
-            Color selectedColor = (Color)GuiController.Instance.Modifiers.getValue("Color");
+            var selectedColor = (Color)GuiController.Instance.Modifiers.getValue("Color");
             if (currentColor == null || currentColor != selectedColor)
             {
                 currentColor = selectedColor;
@@ -166,7 +156,7 @@ namespace Examples.SkeletalAnimation
             }
 
             //Agregar o quitar Attachment
-            bool showAttachmentFlag = (bool)GuiController.Instance.Modifiers["Attachment"];
+            var showAttachmentFlag = (bool)GuiController.Instance.Modifiers["Attachment"];
             if (showAttachment != showAttachmentFlag)
             {
                 showAttachment = showAttachmentFlag;
@@ -193,14 +183,12 @@ namespace Examples.SkeletalAnimation
             //Se puede renderizar todo mucho mas simple (sin esqueleto) de la siguiente forma:
             //mesh.animateAndRender();
 
-
             //BoundingBox
-            bool showBB = (bool)GuiController.Instance.Modifiers["BoundingBox"];
+            var showBB = (bool)GuiController.Instance.Modifiers["BoundingBox"];
             if (showBB)
             {
                 mesh.BoundingBox.render();
             }
-
         }
 
         public override void close()
@@ -208,6 +196,5 @@ namespace Examples.SkeletalAnimation
             //La malla también hace dispose del attachment
             mesh.dispose();
         }
-
     }
 }

@@ -1,111 +1,93 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Utils.TgcGeometry;
 using Microsoft.DirectX;
-using TgcViewer;
+using TgcViewer.Utils.TgcGeometry;
 
 namespace Examples.Collision.SphereCollision
 {
     /// <summary>
-    /// Herramienta para realizar el movimiento de una Esfera con detección de colisiones,
-    /// efecto de Sliding y gravedad.
-    /// Basado en el paper de Kasper Fauerby
-    /// http://www.peroxide.dk/papers/collision/collision.pdf
-    /// Su utiliza una estrategia distinta al paper en el nivel más bajo de colisión.
-    /// No se analizan colisiones a nivel de tríangulo, sino que todo objeto se descompone
-    /// a nivel de un BoundingBox con 6 caras rectangulares.
-    /// 
+    ///     Herramienta para realizar el movimiento de una Esfera con detección de colisiones,
+    ///     efecto de Sliding y gravedad.
+    ///     Basado en el paper de Kasper Fauerby
+    ///     http://www.peroxide.dk/papers/collision/collision.pdf
+    ///     Su utiliza una estrategia distinta al paper en el nivel más bajo de colisión.
+    ///     No se analizan colisiones a nivel de tríangulo, sino que todo objeto se descompone
+    ///     a nivel de un BoundingBox con 6 caras rectangulares.
     /// </summary>
     public class SphereCollisionManager
     {
-        const float EPSILON = 0.05f;
+        private const float EPSILON = 0.05f;
 
-        private Vector3 gravityForce;
-        /// <summary>
-        /// Vector que representa la fuerza de gravedad.
-        /// Debe tener un valor negativo en Y para que la fuerza atraiga hacia el suelo
-        /// </summary>
-        public Vector3 GravityForce
-        {
-            get { return gravityForce; }
-            set { gravityForce = value; }
-        }
-
-        private bool gravityEnabled;
-        /// <summary>
-        /// Habilita o deshabilita la aplicación de fuerza de gravedad
-        /// </summary>
-        public bool GravityEnabled
-        {
-            get { return gravityEnabled; }
-            set { gravityEnabled = value; }
-        }
-
-        private float slideFactor;
-        /// <summary>
-        /// Multiplicador de la fuerza de Sliding
-        /// </summary>
-        public float SlideFactor
-        {
-            get { return slideFactor; }
-            set { slideFactor = value; }
-        }
-
-
-        List<TgcBoundingBox> objetosCandidatos = new List<TgcBoundingBox>();
+        private readonly List<TgcBoundingBox> objetosCandidatos = new List<TgcBoundingBox>();
 
         public SphereCollisionManager()
         {
-            gravityEnabled = true;
-            gravityForce = new Vector3(0, -10, 0);
-            slideFactor = 1.3f;
+            GravityEnabled = true;
+            GravityForce = new Vector3(0, -10, 0);
+            SlideFactor = 1.3f;
         }
 
         /// <summary>
-        /// Mover BoundingSphere con detección de colisiones, sliding y gravedad.
-        /// Se actualiza la posición del centrodel BoundingSphere.
+        ///     Vector que representa la fuerza de gravedad.
+        ///     Debe tener un valor negativo en Y para que la fuerza atraiga hacia el suelo
+        /// </summary>
+        public Vector3 GravityForce { get; set; }
+
+        /// <summary>
+        ///     Habilita o deshabilita la aplicación de fuerza de gravedad
+        /// </summary>
+        public bool GravityEnabled { get; set; }
+
+        /// <summary>
+        ///     Multiplicador de la fuerza de Sliding
+        /// </summary>
+        public float SlideFactor { get; set; }
+
+        /// <summary>
+        ///     Mover BoundingSphere con detección de colisiones, sliding y gravedad.
+        ///     Se actualiza la posición del centrodel BoundingSphere.
         /// </summary>
         /// <param name="characterSphere">BoundingSphere del cuerpo a mover</param>
         /// <param name="movementVector">Movimiento a realizar</param>
         /// <param name="obstaculos">BoundingBox de obstáculos contra los cuales se puede colisionar</param>
-        /// <returns>Desplazamiento relativo final efecutado al BoundingSphere</returns> 
-        public Vector3 moveCharacter(TgcBoundingSphere characterSphere, Vector3 movementVector, List<TgcBoundingBox> obstaculos)
+        /// <returns>Desplazamiento relativo final efecutado al BoundingSphere</returns>
+        public Vector3 moveCharacter(TgcBoundingSphere characterSphere, Vector3 movementVector,
+            List<TgcBoundingBox> obstaculos)
         {
-            Vector3 originalSphereCenter = characterSphere.Center;
+            var originalSphereCenter = characterSphere.Center;
 
             //Realizar movimiento
             collideWithWorld(characterSphere, movementVector, obstaculos);
 
             //Aplicar gravedad
-            if (gravityEnabled)
+            if (GravityEnabled)
             {
-                collideWithWorld(characterSphere, gravityForce, obstaculos);
+                collideWithWorld(characterSphere, GravityForce, obstaculos);
             }
 
             return characterSphere.Center - originalSphereCenter;
         }
 
         /// <summary>
-        /// Detección de colisiones, filtrando los obstaculos que se encuentran dentro del radio de movimiento
+        ///     Detección de colisiones, filtrando los obstaculos que se encuentran dentro del radio de movimiento
         /// </summary>
-        private void collideWithWorld(TgcBoundingSphere characterSphere, Vector3 movementVector, List<TgcBoundingBox> obstaculos)
+        private void collideWithWorld(TgcBoundingSphere characterSphere, Vector3 movementVector,
+            List<TgcBoundingBox> obstaculos)
         {
             if (movementVector.LengthSq() < EPSILON)
             {
                 return;
             }
 
-            Vector3 lastCenterSafePosition = characterSphere.Center;
+            var lastCenterSafePosition = characterSphere.Center;
 
             //Dejar solo los obstáculos que están dentro del radio de movimiento de la esfera
-            Vector3 halfMovementVec = Vector3.Multiply(movementVector, 0.5f);
-            TgcBoundingSphere testSphere = new TgcBoundingSphere(
+            var halfMovementVec = Vector3.Multiply(movementVector, 0.5f);
+            var testSphere = new TgcBoundingSphere(
                 characterSphere.Center + halfMovementVec,
                 halfMovementVec.Length() + characterSphere.Radius
                 );
             objetosCandidatos.Clear();
-            foreach (TgcBoundingBox obstaculo in obstaculos)
+            foreach (var obstaculo in obstaculos)
             {
                 if (TgcCollisionUtils.testSphereAABB(testSphere, obstaculo))
                 {
@@ -116,9 +98,8 @@ namespace Examples.Collision.SphereCollision
             //Detectar colisiones y deplazar con sliding
             doCollideWithWorld(characterSphere, movementVector, objetosCandidatos, 0);
 
-
             //Manejo de error. No deberiamos colisionar con nadie si todo salio bien
-            foreach (TgcBoundingBox obstaculo in objetosCandidatos)
+            foreach (var obstaculo in objetosCandidatos)
             {
                 if (TgcCollisionUtils.testSphereAABB(characterSphere, obstaculo))
                 {
@@ -129,12 +110,11 @@ namespace Examples.Collision.SphereCollision
             }
         }
 
-
-
         /// <summary>
-        /// Detección de colisiones recursiva
+        ///     Detección de colisiones recursiva
         /// </summary>
-        public void doCollideWithWorld(TgcBoundingSphere characterSphere, Vector3 movementVector, List<TgcBoundingBox> obstaculos, int recursionDepth)
+        public void doCollideWithWorld(TgcBoundingSphere characterSphere, Vector3 movementVector,
+            List<TgcBoundingBox> obstaculos, int recursionDepth)
         {
             //Limitar recursividad
             if (recursionDepth > 5)
@@ -143,54 +123,56 @@ namespace Examples.Collision.SphereCollision
             }
 
             //Ver si la distancia a recorrer es para tener en cuenta
-            float distanceToTravelSq = movementVector.LengthSq();
+            var distanceToTravelSq = movementVector.LengthSq();
             if (distanceToTravelSq < EPSILON)
             {
                 return;
             }
 
             //Posicion deseada
-            Vector3 originalSphereCenter = characterSphere.Center;
-            Vector3 nextSphereCenter = originalSphereCenter + movementVector;
+            var originalSphereCenter = characterSphere.Center;
+            var nextSphereCenter = originalSphereCenter + movementVector;
 
             //Buscar el punto de colision mas cercano de todos los objetos candidatos
-            float minCollisionDistSq = float.MaxValue;
-            Vector3 realMovementVector = movementVector;
+            var minCollisionDistSq = float.MaxValue;
+            var realMovementVector = movementVector;
             TgcBoundingBox.Face collisionFace = null;
             TgcBoundingBox collisionObstacle = null;
-            Vector3 nearestPolygonIntersectionPoint = Vector3.Empty;
-            foreach (TgcBoundingBox obstaculoBB in obstaculos)
+            var nearestPolygonIntersectionPoint = Vector3.Empty;
+            foreach (var obstaculoBB in obstaculos)
             {
                 //Obtener los polígonos que conforman las 6 caras del BoundingBox
-                TgcBoundingBox.Face[] bbFaces = obstaculoBB.computeFaces();
+                var bbFaces = obstaculoBB.computeFaces();
 
-                foreach (TgcBoundingBox.Face bbFace in bbFaces)
+                foreach (var bbFace in bbFaces)
                 {
-                    Vector3 pNormal = TgcCollisionUtils.getPlaneNormal(bbFace.Plane);
+                    var pNormal = TgcCollisionUtils.getPlaneNormal(bbFace.Plane);
 
-                    TgcRay movementRay = new TgcRay(originalSphereCenter, movementVector);
+                    var movementRay = new TgcRay(originalSphereCenter, movementVector);
                     float brutePlaneDist;
                     Vector3 brutePlaneIntersectionPoint;
-                    if (!TgcCollisionUtils.intersectRayPlane(movementRay, bbFace.Plane, out brutePlaneDist, out brutePlaneIntersectionPoint))
+                    if (
+                        !TgcCollisionUtils.intersectRayPlane(movementRay, bbFace.Plane, out brutePlaneDist,
+                            out brutePlaneIntersectionPoint))
                     {
                         continue;
                     }
 
-                    float movementRadiusLengthSq = Vector3.Multiply(movementVector, characterSphere.Radius).LengthSq();
-                    if (brutePlaneDist * brutePlaneDist > movementRadiusLengthSq)
+                    var movementRadiusLengthSq = Vector3.Multiply(movementVector, characterSphere.Radius).LengthSq();
+                    if (brutePlaneDist*brutePlaneDist > movementRadiusLengthSq)
                     {
                         continue;
                     }
-
 
                     //Obtener punto de colisión en el plano, según la normal del plano
                     float pDist;
                     Vector3 planeIntersectionPoint;
                     Vector3 sphereIntersectionPoint;
-                    TgcRay planeNormalRay = new TgcRay(originalSphereCenter, -pNormal);
-                    bool embebbed = false;
-                    bool collisionFound = false;
-                    if (TgcCollisionUtils.intersectRayPlane(planeNormalRay, bbFace.Plane, out pDist, out planeIntersectionPoint))
+                    var planeNormalRay = new TgcRay(originalSphereCenter, -pNormal);
+                    var embebbed = false;
+                    var collisionFound = false;
+                    if (TgcCollisionUtils.intersectRayPlane(planeNormalRay, bbFace.Plane, out pDist,
+                        out planeIntersectionPoint))
                     {
                         //Ver si el plano está embebido en la esfera
                         if (pDist <= characterSphere.Radius)
@@ -198,17 +180,20 @@ namespace Examples.Collision.SphereCollision
                             embebbed = true;
 
                             //TODO: REVISAR ESTO, caso embebido a analizar con más detalle
-                            sphereIntersectionPoint = originalSphereCenter - pNormal * characterSphere.Radius;
+                            sphereIntersectionPoint = originalSphereCenter - pNormal*characterSphere.Radius;
                         }
                         //Esta fuera de la esfera
                         else
                         {
                             //Obtener punto de colisión del contorno de la esfera según la normal del plano
-                            sphereIntersectionPoint = originalSphereCenter - Vector3.Multiply(pNormal, characterSphere.Radius);
+                            sphereIntersectionPoint = originalSphereCenter -
+                                                      Vector3.Multiply(pNormal, characterSphere.Radius);
 
                             //Disparar un rayo desde el contorno de la esfera hacia el plano, con el vector de movimiento
-                            TgcRay sphereMovementRay = new TgcRay(sphereIntersectionPoint, movementVector);
-                            if (!TgcCollisionUtils.intersectRayPlane(sphereMovementRay, bbFace.Plane, out pDist, out planeIntersectionPoint))
+                            var sphereMovementRay = new TgcRay(sphereIntersectionPoint, movementVector);
+                            if (
+                                !TgcCollisionUtils.intersectRayPlane(sphereMovementRay, bbFace.Plane, out pDist,
+                                    out planeIntersectionPoint))
                             {
                                 //no hay colisión
                                 continue;
@@ -237,8 +222,9 @@ namespace Examples.Collision.SphereCollision
                                 bbFace.Extremes[0], bbFace.Extremes[1], bbFace.Extremes[2]);
 
                             //Revertir el vector de velocidad desde el nuevo polygonIntersectionPoint para ver donde colisiona la esfera, si es que llega
-                            Vector3 reversePointSeg = polygonIntersectionPoint - movementVector;
-                            if (TgcCollisionUtils.intersectSegmentSphere(polygonIntersectionPoint, reversePointSeg, characterSphere, out pDist, out sphereIntersectionPoint))
+                            var reversePointSeg = polygonIntersectionPoint - movementVector;
+                            if (TgcCollisionUtils.intersectSegmentSphere(polygonIntersectionPoint, reversePointSeg,
+                                characterSphere, out pDist, out sphereIntersectionPoint))
                             {
                                 collisionFound = true;
                             }
@@ -257,7 +243,6 @@ namespace Examples.Collision.SphereCollision
                                 nearestPolygonIntersectionPoint = polygonIntersectionPoint;
                                 collisionFace = bbFace;
                                 collisionObstacle = obstaculoBB;
-
                             }
                         }
                     }
@@ -268,8 +253,8 @@ namespace Examples.Collision.SphereCollision
             if (collisionFace == null)
             {
                 //Avanzar hasta muy cerca
-                float movementLength = movementVector.Length();
-                movementVector.Multiply((movementLength - EPSILON) / movementLength);
+                var movementLength = movementVector.Length();
+                movementVector.Multiply((movementLength - EPSILON)/movementLength);
                 characterSphere.moveCenter(movementVector);
                 return;
             }
@@ -278,29 +263,28 @@ namespace Examples.Collision.SphereCollision
             if (minCollisionDistSq >= EPSILON)
             {
                 //Mover el BoundingSphere hasta casi la nueva posición real
-                float movementLength = realMovementVector.Length();
-                realMovementVector.Multiply((movementLength - EPSILON) / movementLength);
+                var movementLength = realMovementVector.Length();
+                realMovementVector.Multiply((movementLength - EPSILON)/movementLength);
                 characterSphere.moveCenter(realMovementVector);
             }
 
-
-
             //Calcular plano de Sliding
-            Vector3 slidePlaneOrigin = nearestPolygonIntersectionPoint;
-            Vector3 slidePlaneNormal = characterSphere.Center - nearestPolygonIntersectionPoint;
+            var slidePlaneOrigin = nearestPolygonIntersectionPoint;
+            var slidePlaneNormal = characterSphere.Center - nearestPolygonIntersectionPoint;
             slidePlaneNormal.Normalize();
 
-            Plane slidePlane = Plane.FromPointNormal(slidePlaneOrigin, slidePlaneNormal);
+            var slidePlane = Plane.FromPointNormal(slidePlaneOrigin, slidePlaneNormal);
 
             //Proyectamos el punto original de destino en el plano de sliding
-            TgcRay slideRay = new TgcRay(nearestPolygonIntersectionPoint + Vector3.Multiply(movementVector, slideFactor), slidePlaneNormal);
+            var slideRay = new TgcRay(nearestPolygonIntersectionPoint + Vector3.Multiply(movementVector, SlideFactor),
+                slidePlaneNormal);
             float slideT;
             Vector3 slideDestinationPoint;
 
             if (TgcCollisionUtils.intersectRayPlane(slideRay, slidePlane, out slideT, out slideDestinationPoint))
             {
                 //Nuevo vector de movimiento
-                Vector3 slideMovementVector = slideDestinationPoint - nearestPolygonIntersectionPoint;
+                var slideMovementVector = slideDestinationPoint - nearestPolygonIntersectionPoint;
 
                 if (slideMovementVector.LengthSq() < EPSILON)
                 {
@@ -313,20 +297,16 @@ namespace Examples.Collision.SphereCollision
         }
 
         /// <summary>
-        /// Ver si un punto pertenece a una cara de un BoundingBox
+        ///     Ver si un punto pertenece a una cara de un BoundingBox
         /// </summary>
         /// <returns>True si pertenece</returns>
         private bool pointInBounbingBoxFace(Vector3 p, TgcBoundingBox.Face bbFace)
         {
-            Vector3 min = bbFace.Extremes[0];
-            Vector3 max = bbFace.Extremes[3];
+            var min = bbFace.Extremes[0];
+            var max = bbFace.Extremes[3];
 
             return p.X >= min.X && p.Y >= min.Y && p.Z >= min.Z &&
-               p.X <= max.X && p.Y <= max.Y && p.Z <= max.Z;
+                   p.X <= max.X && p.Y <= max.Y && p.Z <= max.Z;
         }
-
-
-
-
     }
 }

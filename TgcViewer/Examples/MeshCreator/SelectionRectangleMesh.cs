@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using Microsoft.DirectX.Direct3D;
+﻿using System.Drawing;
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils;
 
 namespace Examples.MeshCreator
 {
     /// <summary>
-    /// Mesh para dibujar el rectangulo de seleccion 2D en pantalla
+    ///     Mesh para dibujar el rectangulo de seleccion 2D en pantalla
     /// </summary>
     public class SelectionRectangleMesh
     {
-        static readonly int RECT_COLOR = Color.White.ToArgb();
+        private static readonly int RECT_COLOR = Color.White.ToArgb();
 
-        CustomVertex.TransformedColored[] vertices;
+        private CustomVertex.TransformedColored[] vertices;
 
         public SelectionRectangleMesh()
         {
@@ -26,7 +21,7 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Actualizar mesh del recuadro de seleccion
+        ///     Actualizar mesh del recuadro de seleccion
         /// </summary>
         public void updateMesh(Vector2 min, Vector2 max)
         {
@@ -48,12 +43,12 @@ namespace Examples.MeshCreator
         }
 
         /// <summary>
-        /// Dibujar recuadro
+        ///     Dibujar recuadro
         /// </summary>
         public void render()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
+            var d3dDevice = GuiController.Instance.D3dDevice;
+            var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
@@ -68,6 +63,5 @@ namespace Examples.MeshCreator
         {
             vertices = null;
         }
-
     }
 }

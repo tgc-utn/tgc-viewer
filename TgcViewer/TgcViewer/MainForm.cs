@@ -1,128 +1,140 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using TgcViewer.Utils;
 using System.Diagnostics;
+using System.Threading;
+using System.Windows.Forms;
+using Microsoft.DirectX.Direct3D;
 using TgcViewer.Utils.Ui;
 
 namespace TgcViewer
 {
     /// <summary>
-    /// Formulario principal de la aplicación
+    ///     Formulario principal de la aplicación
     /// </summary>
     public partial class MainForm : Form
     {
-        static bool applicationRunning;
         /// <summary>
-        /// Obtener o parar el estado del RenderLoop.
+        ///     Ventana de About
         /// </summary>
-        public static bool ApplicationRunning
-        {
-            get { return MainForm.applicationRunning; }
-            set { MainForm.applicationRunning = value; }
-        }
+        private readonly AboutWindow aboutWindow;
 
         /// <summary>
-        /// Ventana de About
-        /// </summary>
-        private AboutWindow aboutWindow;
-
-        private TgcViewerConfig config;
-        /// <summary>
-        /// Configuracion de arranque de la aplicacion
-        /// </summary>
-        public TgcViewerConfig Config
-        {
-            get { return config; }
-        }
-
-
-        /// <summary>
-        /// Constructor principal de la aplicacion
+        ///     Constructor principal de la aplicacion
         /// </summary>
         /// <param name="args">Argumentos de consola</param>
         public MainForm(string[] args)
         {
             //Cargar configuracion de arranque
-            config = new TgcViewerConfig();
-            config.parseCommandLineArgs(args);
+            Config = new TgcViewerConfig();
+            Config.parseCommandLineArgs(args);
 
             InitializeComponent();
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.Opaque, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.Opaque, true);
 
             aboutWindow = new AboutWindow();
         }
 
+        /// <summary>
+        ///     Obtener o parar el estado del RenderLoop.
+        /// </summary>
+        public static bool ApplicationRunning { get; set; }
+
+        /// <summary>
+        ///     Configuracion de arranque de la aplicacion
+        /// </summary>
+        public TgcViewerConfig Config { get; }
+
+        /// <summary>
+        ///     Consola de Log
+        /// </summary>
+        public RichTextBox LogConsole { get; private set; }
+
+        /// <summary>
+        ///     TreeView de ejemplos
+        /// </summary>
+        public TreeView TreeViewExamples { get; private set; }
+
+        /// <summary>
+        ///     Modo FullScreen
+        /// </summary>
+        internal bool FullScreenEnable
+        {
+            get { return ejecutarEnFullScreenToolStripMenuItem.Checked; }
+            set { ejecutarEnFullScreenToolStripMenuItem.Checked = value; }
+        }
+
+        /// <summary>
+        ///     Mostrar posicion de camara
+        /// </summary>
+        internal bool MostrarPosicionDeCamaraEnable
+        {
+            get { return mostrarPosiciónDeCámaraToolStripMenuItem.Checked; }
+            set { mostrarPosiciónDeCámaraToolStripMenuItem.Checked = value; }
+        }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             //Configuracion de ventana principal
-            this.Text = config.title;
-            if (!config.showTitleBar)
+            Text = Config.title;
+            if (!Config.showTitleBar)
             {
-                this.ControlBox = false;
-                this.Text = null;
+                ControlBox = false;
+                Text = null;
             }
 
             //Modo fullscreen
-            if (this.config.fullScreenMode)
+            if (Config.fullScreenMode)
             {
                 //Quitar todos los paneles que no queremos que se vean
-                this.Controls.Clear();
-                this.splitContainerUserVars.Panel1.Controls.Remove(this.panel3d);
-                this.splitContainerModifiers.Panel1.Controls.Remove(this.groupBoxModifiers);
+                Controls.Clear();
+                splitContainerUserVars.Panel1.Controls.Remove(panel3d);
+                splitContainerModifiers.Panel1.Controls.Remove(groupBoxModifiers);
 
                 //Acomodar paneles para fullscreen
-                if (config.showModifiersPanel)
+                if (Config.showModifiersPanel)
                 {
-                    SplitContainer sp = new SplitContainer();
+                    var sp = new SplitContainer();
                     sp.Orientation = Orientation.Vertical;
                     sp.Dock = DockStyle.Fill;
                     sp.SplitterDistance = 600;
                     sp.IsSplitterFixed = true;
-                    sp.Panel1.Controls.Add(this.panel3d);
-                    sp.Panel2.Controls.Add(this.groupBoxModifiers);
-                    this.Controls.Add(sp);
+                    sp.Panel1.Controls.Add(panel3d);
+                    sp.Panel2.Controls.Add(groupBoxModifiers);
+                    Controls.Add(sp);
                 }
                 else
                 {
-                    this.Controls.Add(this.panel3d);
+                    Controls.Add(panel3d);
                 }
             }
 
-
             //Show the App before we init
-            this.Show();
-            this.panel3d.Focus();
+            Show();
+            panel3d.Focus();
 
-            MainForm.ApplicationRunning = true;
+            ApplicationRunning = true;
             GuiController.newInstance();
-            GuiController guiController = GuiController.Instance;
+            var guiController = GuiController.Instance;
             guiController.initGraphics(this, panel3d);
-            this.resetMenuOptions();
+            resetMenuOptions();
 
-            while (MainForm.ApplicationRunning)
+            while (ApplicationRunning)
             {
                 //Solo renderizamos si la aplicacion tiene foco, para no consumir recursos innecesarios
-                if (this.applicationActive())
+                if (applicationActive())
                 {
                     guiController.render();
                 }
                 //Contemplar también la ventana del modo FullScreen
-                else if (this.FullScreenEnable && guiController.FullScreenPanel.ContainsFocus)
+                else if (FullScreenEnable && guiController.FullScreenPanel.ContainsFocus)
                 {
                     guiController.render();
                 }
                 else
                 {
                     //Si no tenemos el foco, dormir cada tanto para no consumir gran cantida de CPU
-                    System.Threading.Thread.Sleep(100); 
+                    Thread.Sleep(100);
                 }
-                
+
                 // Process application messages
                 Application.DoEvents();
             }
@@ -131,21 +143,21 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Finalizar aplicacion
+        ///     Finalizar aplicacion
         /// </summary>
         private void shutDown()
         {
-            MainForm.ApplicationRunning = false;
+            ApplicationRunning = false;
             //GuiController.Instance.shutDown();
             //Application.Exit();
 
             //Matar proceso principal a la fuerza
-            Process currentProcess = Process.GetCurrentProcess();
+            var currentProcess = Process.GetCurrentProcess();
             currentProcess.Kill();
         }
 
         /// <summary>
-        /// Cerrando el formulario
+        ///     Cerrando el formulario
         /// </summary>
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -153,25 +165,7 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Consola de Log
-        /// </summary>
-        public RichTextBox LogConsole
-        {
-            get { return logConsole; }
-        }
-
-        /// <summary>
-        /// TreeView de ejemplos
-        /// </summary>
-        public TreeView TreeViewExamples
-        {
-            get { return treeViewExamples; }
-        }
-
-        
-
-        /// <summary>
-        /// Texto de ToolStripStatusPosition
+        ///     Texto de ToolStripStatusPosition
         /// </summary>
         public void setStatusPosition(string text)
         {
@@ -179,7 +173,7 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Texto de ToolStripStatusCurrentExample
+        ///     Texto de ToolStripStatusCurrentExample
         /// </summary>
         /// <param name="text"></param>
         public void setCurrentExampleStatus(string text)
@@ -188,7 +182,7 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Tabla de variables de usuario
+        ///     Tabla de variables de usuario
         /// </summary>
         /// <returns></returns>
         public DataGridView getDataGridUserVars()
@@ -197,7 +191,7 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Panel de Modifiers
+        ///     Panel de Modifiers
         /// </summary>
         /// <returns></returns>
         internal Panel getModifiersPanel()
@@ -209,11 +203,11 @@ namespace TgcViewer
         {
             if (wireframeToolStripMenuItem.Checked)
             {
-                GuiController.Instance.D3dDevice.RenderState.FillMode = Microsoft.DirectX.Direct3D.FillMode.WireFrame;
+                GuiController.Instance.D3dDevice.RenderState.FillMode = FillMode.WireFrame;
             }
             else
             {
-                GuiController.Instance.D3dDevice.RenderState.FillMode = Microsoft.DirectX.Direct3D.FillMode.Solid;
+                GuiController.Instance.D3dDevice.RenderState.FillMode = FillMode.Solid;
             }
         }
 
@@ -227,21 +221,20 @@ namespace TgcViewer
             GuiController.Instance.FpsCounterEnable = contadorFPSToolStripMenuItem.Checked;
         }
 
-
         private void treeViewExamples_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (treeViewExamples.SelectedNode != null)
+            if (TreeViewExamples.SelectedNode != null)
             {
-                TreeNode selectedNode = treeViewExamples.SelectedNode;
+                var selectedNode = TreeViewExamples.SelectedNode;
                 textBoxExampleDescription.Text = selectedNode.ToolTipText;
             }
         }
 
         private void treeViewExamples_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (treeViewExamples.SelectedNode != null)
+            if (TreeViewExamples.SelectedNode != null)
             {
-                TreeNode selectedNode = treeViewExamples.SelectedNode;
+                var selectedNode = TreeViewExamples.SelectedNode;
                 if (selectedNode.Nodes.Count == 0)
                 {
                     GuiController.Instance.executeSelectedExample(selectedNode, FullScreenEnable);
@@ -249,17 +242,13 @@ namespace TgcViewer
             }
         }
 
-        
-
-        
-
         private void ejesCartesianosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GuiController.Instance.AxisLines.Enable = ejesCartesianosToolStripMenuItem.Checked;
         }
 
         /// <summary>
-        /// Setea los valores default de las opciones del menu
+        ///     Setea los valores default de las opciones del menu
         /// </summary>
         internal void resetMenuOptions()
         {
@@ -269,41 +258,22 @@ namespace TgcViewer
             ejesCartesianosToolStripMenuItem.Checked = true;
         }
 
-        /// <summary>
-        /// Modo FullScreen
-        /// </summary>
-        internal bool FullScreenEnable
-        {
-            get { return ejecutarEnFullScreenToolStripMenuItem.Checked; }
-            set { ejecutarEnFullScreenToolStripMenuItem.Checked = value; }
-        }
-
         public void removePanel3dFromMainForm()
         {
-            this.splitContainerUserVars.Panel1.Controls.Remove(this.panel3d);
+            splitContainerUserVars.Panel1.Controls.Remove(panel3d);
         }
 
         public void addPanel3dToMainForm()
         {
-            this.splitContainerUserVars.Panel1.Controls.Add(this.panel3d);
+            splitContainerUserVars.Panel1.Controls.Add(panel3d);
         }
 
         /// <summary>
-        /// Mostrar ventana de About
+        ///     Mostrar ventana de About
         /// </summary>
         private void acercaDeTgcViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             aboutWindow.ShowDialog(this);
-        }
-
-
-        /// <summary>
-        /// Mostrar posicion de camara
-        /// </summary>
-        internal bool MostrarPosicionDeCamaraEnable
-        {
-            get { return mostrarPosiciónDeCámaraToolStripMenuItem.Checked; }
-            set { mostrarPosiciónDeCámaraToolStripMenuItem.Checked = value; }
         }
 
         private void mostrarPosiciónDeCámaraToolStripMenuItem_Click(object sender, EventArgs e)
@@ -315,20 +285,17 @@ namespace TgcViewer
         }
 
         /// <summary>
-        /// Indica si la aplicacion esta activa.
-        /// Busca si la ventana principal tiene foco o si alguna de sus hijas tiene.
+        ///     Indica si la aplicacion esta activa.
+        ///     Busca si la ventana principal tiene foco o si alguna de sus hijas tiene.
         /// </summary>
         private bool applicationActive()
         {
-            if (this.ContainsFocus) return true;
-            foreach (Form form in this.OwnedForms)
+            if (ContainsFocus) return true;
+            foreach (var form in OwnedForms)
             {
                 if (form.ContainsFocus) return true;
             }
             return false;
         }
-
-
-        
     }
 }

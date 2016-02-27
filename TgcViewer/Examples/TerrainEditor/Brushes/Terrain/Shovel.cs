@@ -3,9 +3,9 @@
 namespace Examples.TerrainEditor.Brushes.Terrain
 {
     /// <summary>
-    /// Eleva o hunde el terreno
+    ///     Eleva o hunde el terreno
     /// </summary>
-    public class Shovel:TerrainBrush
+    public class Shovel : TerrainBrush
     {
         public Shovel()
         {
@@ -15,7 +15,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
             bBrush.Color = Color1;
             bBrush.updateValues();
         }
-       
+
         protected override float intensityFor(float[,] heightmapData, int i, int j)
         {
             return Intensity;
@@ -23,8 +23,8 @@ namespace Examples.TerrainEditor.Brushes.Terrain
 
         protected override void renderText()
         {
-            string label = Invert? "Dig" : "Raise";
-            if (text.Text==null || !text.Text.Equals(label)) text.Text = label;
+            var label = Invert ? "Dig" : "Raise";
+            if (text.Text == null || !text.Text.Equals(label)) text.Text = label;
             text.render();
         }
     }

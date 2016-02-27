@@ -1,43 +1,56 @@
+using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using TGC.Core.Scene;
-using TGC.Core.Utils;
 using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.SceneLoader;
+using TGC.Core.Utils;
 
 namespace TgcViewer.Utils.TgcGeometry
 {
     /// <summary>
-    /// Herramienta para crear un Quad 3D, o un plano con ancho y largo acotado,
-    /// en base al centro y una normal.
+    ///     Herramienta para crear un Quad 3D, o un plano con ancho y largo acotado,
+    ///     en base al centro y una normal.
     /// </summary>
     public class TgcQuad : IRenderObject
     {
+        private readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
 
-        #region Creacion
+        private Color color;
 
+        protected Effect effect;
 
-        #endregion
+        private Vector3 normal;
 
+        protected string technique;
 
-        readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
+        private readonly VertexBuffer vertexBuffer;
 
-        VertexBuffer vertexBuffer;
-
-        Vector3 center;
-        /// <summary>
-        /// Centro del plano
-        /// </summary>
-        public Vector3 Center
+        public TgcQuad()
         {
-            get { return center; }
-            set { center = value; }
+            var d3dDevice = GuiController.Instance.D3dDevice;
+
+            vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), 6, d3dDevice,
+                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+
+            Center = Vector3.Empty;
+            normal = new Vector3(0, 1, 0);
+            Size = new Vector2(10, 10);
+            Enabled = true;
+            color = Color.Blue;
+            AlphaBlendEnable = false;
+
+            //Shader
+            effect = GuiController.Instance.Shaders.VariosShader;
+            technique = TgcShaders.T_POSITION_COLORED;
         }
 
-        Vector3 normal;
         /// <summary>
-        /// Normal del plano
+        ///     Centro del plano
+        /// </summary>
+        public Vector3 Center { get; set; }
+
+        /// <summary>
+        ///     Normal del plano
         /// </summary>
         public Vector3 Normal
         {
@@ -45,19 +58,13 @@ namespace TgcViewer.Utils.TgcGeometry
             set { normal = value; }
         }
 
-        Vector2 size;
         /// <summary>
-        /// Tamaño del plano, en ancho y longitud
+        ///     Tamaño del plano, en ancho y longitud
         /// </summary>
-        public Vector2 Size
-        {
-            get { return size; }
-            set { size = value; }
-        }
+        public Vector2 Size { get; set; }
 
-        Color color;
         /// <summary>
-        /// Color del plano
+        ///     Color del plano
         /// </summary>
         public Color Color
         {
@@ -65,37 +72,18 @@ namespace TgcViewer.Utils.TgcGeometry
             set { color = value; }
         }
 
-
-        private bool enabled;
         /// <summary>
-        /// Indica si el plano habilitado para ser renderizado
+        ///     Indica si el plano habilitado para ser renderizado
         /// </summary>
-        public bool Enabled
-        {
-            get { return enabled; }
-            set { enabled = value; }
-        }
+        public bool Enabled { get; set; }
 
         public Vector3 Position
         {
-            get { return center; }
+            get { return Center; }
         }
 
-        private bool alphaBlendEnable;
         /// <summary>
-        /// Habilita el renderizado con AlphaBlending para los modelos
-        /// con textura o colores por vértice de canal Alpha.
-        /// Por default está deshabilitado.
-        /// </summary>
-        public bool AlphaBlendEnable
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
-
-        protected Effect effect;
-        /// <summary>
-        /// Shader del mesh
+        ///     Shader del mesh
         /// </summary>
         public Effect Effect
         {
@@ -103,10 +91,9 @@ namespace TgcViewer.Utils.TgcGeometry
             set { effect = value; }
         }
 
-        protected string technique;
         /// <summary>
-        /// Technique que se va a utilizar en el effect.
-        /// Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        ///     Technique que se va a utilizar en el effect.
+        ///     Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
         public string Technique
         {
@@ -114,83 +101,30 @@ namespace TgcViewer.Utils.TgcGeometry
             set { technique = value; }
         }
 
-
-
-        public TgcQuad()
-        {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-
-            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 6, d3dDevice,
-                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
-
-            this.center = Vector3.Empty;
-            this.normal = new Vector3(0, 1, 0);
-            this.size = new Vector2(10, 10);
-            this.enabled = true;
-            this.color = Color.Blue;
-            this.alphaBlendEnable = false;
-
-            //Shader
-            this.effect = GuiController.Instance.Shaders.VariosShader;
-            this.technique = TgcShaders.T_POSITION_COLORED;
-        }
-
         /// <summary>
-        /// Actualizar parámetros del plano en base a los valores configurados
+        ///     Habilita el renderizado con AlphaBlending para los modelos
+        ///     con textura o colores por vértice de canal Alpha.
+        ///     Por default está deshabilitado.
         /// </summary>
-        public void updateValues()
-        {
-            CustomVertex.PositionColored[] vertices = new CustomVertex.PositionColored[6];
-            
-            //Crear un Quad con dos triángulos sobre XZ con normal default (0, 1, 0)
-            Vector3 min = new Vector3(-size.X / 2, 0, -size.Y / 2);
-            Vector3 max = new Vector3(size.X / 2, 0, size.Y / 2);
-            int c = color.ToArgb();
-
-            vertices[0] = new CustomVertex.PositionColored(min, c);
-            vertices[1] = new CustomVertex.PositionColored(min.X, 0, max.Z, c);
-            vertices[2] = new CustomVertex.PositionColored(max, c);
-
-            vertices[3] = new CustomVertex.PositionColored(min, c);
-            vertices[4] = new CustomVertex.PositionColored(max, c);
-            vertices[5] = new CustomVertex.PositionColored(max.X, 0, min.Z, c);
-
-            //Obtener matriz de rotacion respecto de la normal del plano
-            normal.Normalize();
-            float angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, normal));
-            Vector3 axisRotation = Vector3.Cross(ORIGINAL_DIR, normal);
-            axisRotation.Normalize();
-            Matrix t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(center);
-
-            //Transformar todos los puntos
-            for (int i = 0; i < vertices.Length; i++)
-			{
-                vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, t);
-			}
-
-            //Cargar vertexBuffer
-            vertexBuffer.SetData(vertices, 0, LockFlags.None);
-        }
-
-        
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
-        /// Renderizar el Quad
+        ///     Renderizar el Quad
         /// </summary>
         public void render()
         {
-            if (!enabled)
+            if (!Enabled)
                 return;
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
+            var d3dDevice = GuiController.Instance.D3dDevice;
+            var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.effect);
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
-            effect.Technique = this.technique;
+            effect.Technique = technique;
             d3dDevice.SetStreamSource(0, vertexBuffer, 0);
 
             //Render con shader
@@ -202,7 +136,7 @@ namespace TgcViewer.Utils.TgcGeometry
         }
 
         /// <summary>
-        /// Liberar recursos de la flecha
+        ///     Liberar recursos de la flecha
         /// </summary>
         public void dispose()
         {
@@ -212,6 +146,41 @@ namespace TgcViewer.Utils.TgcGeometry
             }
         }
 
+        /// <summary>
+        ///     Actualizar parámetros del plano en base a los valores configurados
+        /// </summary>
+        public void updateValues()
+        {
+            var vertices = new CustomVertex.PositionColored[6];
 
+            //Crear un Quad con dos triángulos sobre XZ con normal default (0, 1, 0)
+            var min = new Vector3(-Size.X/2, 0, -Size.Y/2);
+            var max = new Vector3(Size.X/2, 0, Size.Y/2);
+            var c = color.ToArgb();
+
+            vertices[0] = new CustomVertex.PositionColored(min, c);
+            vertices[1] = new CustomVertex.PositionColored(min.X, 0, max.Z, c);
+            vertices[2] = new CustomVertex.PositionColored(max, c);
+
+            vertices[3] = new CustomVertex.PositionColored(min, c);
+            vertices[4] = new CustomVertex.PositionColored(max, c);
+            vertices[5] = new CustomVertex.PositionColored(max.X, 0, min.Z, c);
+
+            //Obtener matriz de rotacion respecto de la normal del plano
+            normal.Normalize();
+            var angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, normal));
+            var axisRotation = Vector3.Cross(ORIGINAL_DIR, normal);
+            axisRotation.Normalize();
+            var t = Matrix.RotationAxis(axisRotation, angle)*Matrix.Translation(Center);
+
+            //Transformar todos los puntos
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, t);
+            }
+
+            //Cargar vertexBuffer
+            vertexBuffer.SetData(vertices, 0, LockFlags.None);
+        }
     }
 }

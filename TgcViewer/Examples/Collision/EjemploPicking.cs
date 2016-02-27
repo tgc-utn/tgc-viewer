@@ -1,39 +1,33 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer;
+using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
 
 namespace Examples.Collision
 {
     /// <summary>
-    /// Ejemplo EjemploPicking:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploPicking:
+    ///     Unidades Involucradas:
     ///     # Unidad 6 - Detección de Colisiones - Picking
-    /// 
-    /// Permite seleccionar un objeto de la escena haciendo clic con el mouse sobre la pantalla.
-    /// Utiliza la técnica de Picking para hacer un testing Ray-AABB contra cada Mesh.
-    /// Los objetos de la escena son creados con TgcBox.
-    /// Se utiliza la utiliadad intersectRayAABB() de TgcCollisionUtils para detectar colisiones
-    /// entre un Ray y un BoundingBox.
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Permite seleccionar un objeto de la escena haciendo clic con el mouse sobre la pantalla.
+    ///     Utiliza la técnica de Picking para hacer un testing Ray-AABB contra cada Mesh.
+    ///     Los objetos de la escena son creados con TgcBox.
+    ///     Se utiliza la utiliadad intersectRayAABB() de TgcCollisionUtils para detectar colisiones
+    ///     entre un Ray y un BoundingBox.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploPicking : TgcExample
     {
-        List<TgcBox> boxes;
-        bool selected;
-        Vector3 collisionPoint;
-        TgcBox collisionPointMesh;
-        TgcBox selectedMesh;
-        TgcPickingRay pickingRay;
+        private List<TgcBox> boxes;
+        private Vector3 collisionPoint;
+        private TgcBox collisionPointMesh;
+        private TgcPickingRay pickingRay;
+        private bool selected;
+        private TgcBox selectedMesh;
 
         public override string getCategory()
         {
@@ -47,26 +41,26 @@ namespace Examples.Collision
 
         public override string getDescription()
         {
-            return "Permite seleccionar un objeto de la escena haciendo clic con el mouse sobre la pantalla, " + 
-                "utilizando Picking sobre el AABB de cada Mesh";
+            return "Permite seleccionar un objeto de la escena haciendo clic con el mouse sobre la pantalla, " +
+                   "utilizando Picking sobre el AABB de cada Mesh";
         }
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Cargar 25 cajas formando una matriz
-            TgcSceneLoader loader = new TgcSceneLoader();
+            var loader = new TgcSceneLoader();
             boxes = new List<TgcBox>();
-            TgcTexture texture = TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg");
-            Vector3 boxSize = new Vector3(30, 30, 30);
-            for (int i = 0; i < 5; i++)
+            var texture = TgcTexture.createTexture(d3dDevice,
+                GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg");
+            var boxSize = new Vector3(30, 30, 30);
+            for (var i = 0; i < 5; i++)
             {
-                for (int j = 0; j < 5; j++)
+                for (var j = 0; j < 5; j++)
                 {
-                    Vector3 center = new Vector3((boxSize.X + boxSize.X / 2)  * i, (boxSize.Y + boxSize.Y / 2) * j,  0);
-                    TgcBox box = TgcBox.fromSize(center, boxSize, texture);
+                    var center = new Vector3((boxSize.X + boxSize.X/2)*i, (boxSize.Y + boxSize.Y/2)*j, 0);
+                    var box = TgcBox.fromSize(center, boxSize, texture);
                     boxes.Add(box);
                 }
             }
@@ -74,11 +68,10 @@ namespace Examples.Collision
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay();
 
-
             //Camara fija
             GuiController.Instance.RotCamera.Enable = false;
-            GuiController.Instance.setCamera(new Vector3(94.9854f, 138.4992f, -284.3344f), new Vector3(86.4563f, -15.4191f, 703.7123f));
-
+            GuiController.Instance.setCamera(new Vector3(94.9854f, 138.4992f, -284.3344f),
+                new Vector3(86.4563f, -15.4191f, 703.7123f));
 
             //Crear caja para marcar en que lugar hubo colision
             collisionPointMesh = TgcBox.fromSize(new Vector3(3, 3, 3), Color.Red);
@@ -90,22 +83,20 @@ namespace Examples.Collision
             GuiController.Instance.UserVars.addVar("CollP-Z:");
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Si hacen clic con el mouse, ver si hay colision RayAABB
-            if (GuiController.Instance.D3dInput.buttonPressed(TgcViewer.Utils.Input.TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Actualizar Ray de colisión en base a posición del mouse
                 pickingRay.updateRay();
 
-
                 //Testear Ray contra el AABB de todos los meshes
-                foreach (TgcBox box in boxes)
+                foreach (var box in boxes)
                 {
-                    TgcBoundingBox aabb = box.BoundingBox;
+                    var aabb = box.BoundingBox;
 
                     //Ejecutar test, si devuelve true se carga el punto de colision collisionPoint
                     selected = TgcCollisionUtils.intersectRayAABB(pickingRay.Ray, aabb, out collisionPoint);
@@ -117,16 +108,11 @@ namespace Examples.Collision
                 }
             }
 
-
-
             //Renderizar modelos
-            foreach (TgcBox box in boxes)
+            foreach (var box in boxes)
             {
                 box.render();
             }
-
-
-
 
             //Renderizar BoundingBox del mesh seleccionado
             if (selected)
@@ -154,12 +140,11 @@ namespace Examples.Collision
 
         public override void close()
         {
-            foreach (TgcBox box in boxes)
+            foreach (var box in boxes)
             {
                 box.dispose();
             }
             collisionPointMesh.dispose();
         }
-
     }
 }

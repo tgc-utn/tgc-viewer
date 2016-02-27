@@ -1,26 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer;
 using Microsoft.DirectX;
 
 namespace Examples.Engine2D
 {
     public class Misil : GameObject
     {
-        static Bitmap misilBitmap;
-        Sprite sprite;
-
-        public Vector2 Position;
+        private static Bitmap misilBitmap;
 
         public float Angle;
 
-        float speed;
+        public Vector2 Position;
 
-        public Misil()
-        {
-            
-        }
+        private float speed;
+        private Sprite sprite;
 
         public void Load(string exampleDir, Bitmap spriteBitmap)
         {
@@ -30,23 +22,20 @@ namespace Examples.Engine2D
             sprite.Bitmap = misilBitmap;
         }
 
-
         public override void Update(float ElapsedTime)
         {
             float speed = 500;
 
-            Position.X += speed * ElapsedTime * (float)Math.Cos(Angle);
-            Position.Y += speed * ElapsedTime * (float)Math.Sin(Angle);
+            Position.X += speed*ElapsedTime*(float) Math.Cos(Angle);
+            Position.Y += speed*ElapsedTime*(float) Math.Sin(Angle);
 
             sprite.Position = Position;
             sprite.Rotation = Angle;
-           
         }
 
         public override void Render(float ElapsedTime, Drawer drawer)
         {
             drawer.DrawSprite(sprite);
         }
-
     }
 }

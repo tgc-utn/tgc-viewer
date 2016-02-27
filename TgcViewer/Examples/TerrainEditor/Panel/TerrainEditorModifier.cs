@@ -1,23 +1,17 @@
 ﻿using TgcViewer.Utils.Modifiers;
 
-
 namespace Examples.TerrainEditor.Panel
 {
-    public class TerrainEditorModifier:TgcModifierPanel
+    public class TerrainEditorModifier : TgcModifierPanel
     {
-        TerrainEditorControl control;
-        public TerrainEditorControl Control
-        {
-            get { return control; }
-        }
-
         public TerrainEditorModifier(string varName, TgcTerrainEditor creator)
             : base(varName)
         {
-            control = new TerrainEditorControl(creator);
-            contentPanel.Controls.Add(control);
+            Control = new TerrainEditorControl(creator);
+            contentPanel.Controls.Add(Control);
         }
 
+        public TerrainEditorControl Control { get; }
 
         public override object getValue()
         {
@@ -26,7 +20,7 @@ namespace Examples.TerrainEditor.Panel
 
         public void dispose()
         {
-            control.dispose();
+            Control.dispose();
         }
     }
 }

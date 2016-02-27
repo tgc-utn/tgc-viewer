@@ -1,26 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using System.Net.Sockets;
 using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using TgcViewer;
+using TGC.Core.Example;
 
 namespace Examples
 {
     /// <summary>
-    /// EjemploClient
+    ///     EjemploClient
     /// </summary>
     public class EjemploClient : TgcExample
     {
-
-        Socket serverSocket;
-        float acumulatedTime;
-        int mensaje;
+        private float acumulatedTime;
+        private int mensaje;
+        private Socket serverSocket;
 
         public override string getCategory()
         {
@@ -39,12 +32,11 @@ namespace Examples
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
-            IPAddress[] ipAddress = Dns.GetHostAddresses("localhost");
-            IPEndPoint Ipep = new IPEndPoint(ipAddress[0], 4444);
+            var ipAddress = Dns.GetHostAddresses("localhost");
+            var Ipep = new IPEndPoint(ipAddress[0], 4444);
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            
 
             serverSocket.Connect(Ipep);
             serverSocket.Blocking = false;
@@ -53,18 +45,17 @@ namespace Examples
             mensaje = 0;
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             if (serverSocket.Poll(0, SelectMode.SelectRead))
             {
-                byte[] data = new byte[1024];
-                int recv = serverSocket.Receive(data);
+                var data = new byte[1024];
+                var recv = serverSocket.Receive(data);
                 if (recv > 0)
                 {
-                    string msg = Encoding.ASCII.GetString(data, 0, recv);
+                    var msg = Encoding.ASCII.GetString(data, 0, recv);
                     GuiController.Instance.Logger.log(msg);
                 }
                 else
@@ -73,7 +64,6 @@ namespace Examples
                 }
             }
 
-
             if (serverSocket.Connected)
             {
                 acumulatedTime += elapsedTime;
@@ -81,12 +71,10 @@ namespace Examples
                 {
                     acumulatedTime = 0;
 
-                    string msg = "Mensaje Cliente: " + (mensaje++);
+                    var msg = "Mensaje Cliente: " + mensaje++;
                     serverSocket.Send(Encoding.ASCII.GetBytes(msg));
                 }
             }
-            
-
         }
 
         public override void close()
@@ -94,6 +82,5 @@ namespace Examples
             serverSocket.Shutdown(SocketShutdown.Both);
             serverSocket.Close();
         }
-
     }
 }

@@ -1,53 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TgcViewer.Utils.TgcGeometry;
 
 namespace TgcViewer.Utils.PortalRendering
 {
     /// <summary>
-    /// Portal de PortalRendering que comunica dos celdas
+    ///     Portal de PortalRendering que comunica dos celdas
     /// </summary>
     public class TgcPortalRenderingPortal
     {
         public TgcPortalRenderingPortal(string name, TgcBoundingBox boundingBox)
         {
-            this.name = name;
-            this.boundingBox = boundingBox;
+            Name = name;
+            BoundingBox = boundingBox;
         }
 
-        private string name;
         /// <summary>
-        /// Nombre del portal
+        ///     Nombre del portal
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name { get; }
 
-        private TgcBoundingBox boundingBox;
         /// <summary>
-        /// BoundingBox del Portal
+        ///     BoundingBox del Portal
         /// </summary>
-        public TgcBoundingBox BoundingBox
-        {
-            get { return boundingBox; }
-        }
+        public TgcBoundingBox BoundingBox { get; }
 
-        private bool visited;
         /// <summary>
-        /// Indica si la celda ya fue visitada por el algoritmo de visibilidad
+        ///     Indica si la celda ya fue visitada por el algoritmo de visibilidad
         /// </summary>
-        public bool Visited
-        {
-            get { return visited; }
-            set { visited = value; }
-        }
+        public bool Visited { get; set; }
 
         public override string ToString()
         {
-            return "Portal: " + name;
+            return "Portal: " + Name;
         }
-
     }
 }

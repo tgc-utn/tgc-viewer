@@ -1,33 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
+using TgcViewer;
 using TgcViewer.Utils.Networking;
+using TGC.Core.Example;
 
 namespace Examples
 {
     /// <summary>
-    /// Ejemplo EjemploNetworkingModifier:
-    /// Unidades Involucradas:
+    ///     Ejemplo EjemploNetworkingModifier:
+    ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Básicos de 3D - GameEngine
-    /// 
-    /// Utiliza la herramienta TgcNetworkingModifier para manejo de Networking.
-    /// Aplicación sencilla en la cual el cliente envia un mensaje cada 1 segundo al servidor,
-    /// y el servidor lo imprime por consola.... o como hacer el TP de Operativo en 5 min.
-    /// 
-    /// 
-    /// Autor: Matías Leone, Leandro Barbagallo
-    /// 
+    ///     Utiliza la herramienta TgcNetworkingModifier para manejo de Networking.
+    ///     Aplicación sencilla en la cual el cliente envia un mensaje cada 1 segundo al servidor,
+    ///     y el servidor lo imprime por consola.... o como hacer el TP de Operativo en 5 min.
+    ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
     public class EjemploNetworkingModifier : TgcExample
     {
-        TgcNetworkingModifier networkingMod;
-        float acumulatedTime;
+        private float acumulatedTime;
+        private TgcNetworkingModifier networkingMod;
 
         public override string getCategory()
         {
@@ -46,7 +36,7 @@ namespace Examples
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Crear Modifier de Networking
             networkingMod = GuiController.Instance.Modifiers.addNetworking("Networking", "MyServer", "MyClient");
@@ -54,10 +44,9 @@ namespace Examples
             acumulatedTime = 0;
         }
 
-
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = GuiController.Instance.D3dDevice;
 
             //Actualizar siempre primero todos los valores de red.
             //Esto hace que el cliente y el servidor reciban todos los mensajes y actualicen su es
@@ -67,18 +56,17 @@ namespace Examples
             if (networkingMod.Server.Online)
             {
                 //Analizar los mensajes recibidos
-                for (int i = 0; i < networkingMod.Server.ReceivedMessagesCount; i++)
-			    {
+                for (var i = 0; i < networkingMod.Server.ReceivedMessagesCount; i++)
+                {
                     //Leer el siguiente mensaje, cada vez que llamamos a nextReceivedMessage() consumimos un mensaje pendiente.
-                    TgcSocketClientRecvMesg msg = networkingMod.Server.nextReceivedMessage();
+                    var msg = networkingMod.Server.nextReceivedMessage();
 
                     //Obtenter el primer elemento del mensaje, un string en este caso
-                    string strMsg = (string)msg.Msg.readNext();
+                    var strMsg = (string) msg.Msg.readNext();
 
                     //Mostrar mensaje recibido en consola
                     GuiController.Instance.Logger.log(strMsg, Color.Green);
-			    }
-                
+                }
             }
 
             //Si el cliente está online, analizar sus mensajes
@@ -91,7 +79,7 @@ namespace Examples
                     acumulatedTime = 0;
 
                     //Crear nuevo mensaje a enviar
-                    TgcSocketSendMsg msg = new TgcSocketSendMsg();
+                    var msg = new TgcSocketSendMsg();
 
                     //Agregar un dato al mensaje, un string en este caso
                     msg.write("Hello world - ElapsedTime: " + elapsedTime);
@@ -100,8 +88,6 @@ namespace Examples
                     networkingMod.Client.send(msg);
                 }
             }
-            
-            
         }
 
         public override void close()
@@ -109,6 +95,5 @@ namespace Examples
             //Cerrar todas las conexiones
             networkingMod.dispose();
         }
-
     }
 }
