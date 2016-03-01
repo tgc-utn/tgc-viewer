@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using TgcViewer.Utils.Modifiers;
+using TGC.Viewer.Utils.Modifiers;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     /// <summary>
     ///     Modifier para Networking.
@@ -11,11 +11,11 @@ namespace TgcViewer.Utils.Networking
     /// </summary>
     public class TgcNetworkingModifier : TgcModifierPanel
     {
-        private bool clientConnected;
         private readonly Queue<TgcSocketClientInfo> disconnectedClients;
         private readonly TgcNetworkingModifierControl networkingControl;
         private readonly Queue<TgcSocketClientInfo> newConnectedClients;
         private readonly int port;
+        private bool clientConnected;
 
         /// <summary>
         ///     Crea el modificador de Networking

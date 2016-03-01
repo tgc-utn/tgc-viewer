@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.GrillaRegular
+namespace TGC.Examples.Optimizacion.GrillaRegular
 {
     /// <summary>
     ///     Celda de una grilla regular

@@ -1,11 +1,12 @@
-﻿using System;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcKeyFrameLoader;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using System;
+using TGC.Core.Direct3D;
+using TGC.Viewer.Utils.TgcKeyFrameLoader;
+using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
-namespace TgcViewer.Utils.Shaders
+namespace TGC.Viewer.Utils.Shaders
 {
     /// <summary>
     ///     Utilidad para manejo de shaders
@@ -137,8 +138,6 @@ namespace TgcViewer.Utils.Shaders
         /// </summary>
         public void loadCommonShaders()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar shaders genericos para todo el framework
             var shadersPath = GuiController.Instance.ExamplesMediaDir + "Shaders\\TgcViewer\\";
             TgcMeshShader = loadEffect(shadersPath + "TgcMeshShader.fx");
@@ -151,9 +150,10 @@ namespace TgcViewer.Utils.Shaders
             VariosShader = loadEffect(shadersPath + "Varios.fx");
 
             //Crear vertexDeclaration comunes
-            VdecPositionColoredTextured = new VertexDeclaration(d3dDevice, PositionColoredTextured_VertexElements);
-            VdecPositionTextured = new VertexDeclaration(d3dDevice, PositionTextured_VertexElements);
-            VdecPositionColored = new VertexDeclaration(d3dDevice, PositionColored_VertexElements);
+            VdecPositionColoredTextured = new VertexDeclaration(D3DDevice.Instance.Device,
+                PositionColoredTextured_VertexElements);
+            VdecPositionTextured = new VertexDeclaration(D3DDevice.Instance.Device, PositionTextured_VertexElements);
+            VdecPositionColored = new VertexDeclaration(D3DDevice.Instance.Device, PositionColored_VertexElements);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace TgcViewer.Utils.Shaders
         public static Effect loadEffect(string path)
         {
             string compilationErrors;
-            var effect = Effect.FromFile(GuiController.Instance.D3dDevice, path, null, null, ShaderFlags.None, null,
+            var effect = Effect.FromFile(D3DDevice.Instance.Device, path, null, null, ShaderFlags.None, null,
                 out compilationErrors);
             if (effect == null)
             {
@@ -238,10 +238,8 @@ namespace TgcViewer.Utils.Shaders
         /// </summary>
         public void setShaderMatrix(Effect effect, Matrix world)
         {
-            var device = GuiController.Instance.D3dDevice;
-
-            var matWorldView = world*device.Transform.View;
-            var matWorldViewProj = matWorldView*device.Transform.Projection;
+            var matWorldView = world * D3DDevice.Instance.Device.Transform.View;
+            var matWorldViewProj = matWorldView * D3DDevice.Instance.Device.Transform.Projection;
             effect.SetValue("matWorld", world);
             effect.SetValue("matWorldView", matWorldView);
             effect.SetValue("matWorldViewProj", matWorldViewProj);
@@ -255,10 +253,8 @@ namespace TgcViewer.Utils.Shaders
         /// </summary>
         public void setShaderMatrixIdentity(Effect effect)
         {
-            var device = GuiController.Instance.D3dDevice;
-
-            var matWorldView = device.Transform.View;
-            var matWorldViewProj = matWorldView*device.Transform.Projection;
+            var matWorldView = D3DDevice.Instance.Device.Transform.View;
+            var matWorldViewProj = matWorldView * D3DDevice.Instance.Device.Transform.Projection;
             effect.SetValue("matWorld", Matrix.Identity);
             effect.SetValue("matWorldView", matWorldView);
             effect.SetValue("matWorldViewProj", matWorldViewProj);

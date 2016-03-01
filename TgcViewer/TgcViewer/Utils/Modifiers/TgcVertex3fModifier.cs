@@ -1,33 +1,33 @@
+using Microsoft.DirectX;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Viewer.Utils.Modifiers
 {
     /// <summary>
     ///     Modificador para valores floats (X,Y,Z) de un vertice
     /// </summary>
     public class TgcVertex3fModifier : TgcModifierPanel
     {
+        private readonly NumericUpDown numericUpDownX;
+        private readonly NumericUpDown numericUpDownY;
+        private readonly NumericUpDown numericUpDownZ;
+        private readonly TrackBar trackBarX;
+        private readonly TrackBar trackBarY;
+        private readonly TrackBar trackBarZ;
+        private readonly FlowLayoutPanel vertexValuesPanel;
         private Vector3 maxValue;
         private Vector3 minValue;
 
         private bool numericUpDownChangeX;
         private bool numericUpDownChangeY;
         private bool numericUpDownChangeZ;
-        private readonly NumericUpDown numericUpDownX;
-        private readonly NumericUpDown numericUpDownY;
-        private readonly NumericUpDown numericUpDownZ;
 
         private Vector3 result = new Vector3();
         private bool trackBarChangeX;
         private bool trackBarChangeY;
         private bool trackBarChangeZ;
-        private readonly TrackBar trackBarX;
-        private readonly TrackBar trackBarY;
-        private readonly TrackBar trackBarZ;
-        private readonly FlowLayoutPanel vertexValuesPanel;
 
         public TgcVertex3fModifier(string varName, Vector3 minValue, Vector3 maxValue, Vector3 defaultValue)
             : base(varName)
@@ -40,10 +40,10 @@ namespace TgcViewer.Utils.Modifiers
             numericUpDownX.Size = new Size(50, 20);
             numericUpDownX.Margin = new Padding(0);
             numericUpDownX.DecimalPlaces = 4;
-            numericUpDownX.Minimum = (decimal) minValue.X;
-            numericUpDownX.Maximum = (decimal) maxValue.X;
-            numericUpDownX.Value = (decimal) defaultValue.X;
-            numericUpDownX.Increment = (decimal) (2f*(maxValue.X - minValue.X)/100f);
+            numericUpDownX.Minimum = (decimal)minValue.X;
+            numericUpDownX.Maximum = (decimal)maxValue.X;
+            numericUpDownX.Value = (decimal)defaultValue.X;
+            numericUpDownX.Increment = (decimal)(2f * (maxValue.X - minValue.X) / 100f);
             numericUpDownX.ValueChanged += numericUpDownX_ValueChanged;
 
             //numericUpDownY
@@ -51,10 +51,10 @@ namespace TgcViewer.Utils.Modifiers
             numericUpDownY.Size = new Size(50, 20);
             numericUpDownY.Margin = new Padding(0);
             numericUpDownY.DecimalPlaces = 4;
-            numericUpDownY.Minimum = (decimal) minValue.Y;
-            numericUpDownY.Maximum = (decimal) maxValue.Y;
-            numericUpDownY.Value = (decimal) defaultValue.Y;
-            numericUpDownY.Increment = (decimal) (2f*(maxValue.Y - minValue.Y)/100f);
+            numericUpDownY.Minimum = (decimal)minValue.Y;
+            numericUpDownY.Maximum = (decimal)maxValue.Y;
+            numericUpDownY.Value = (decimal)defaultValue.Y;
+            numericUpDownY.Increment = (decimal)(2f * (maxValue.Y - minValue.Y) / 100f);
             numericUpDownY.ValueChanged += numericUpDownY_ValueChanged;
 
             //numericUpDownZ
@@ -62,10 +62,10 @@ namespace TgcViewer.Utils.Modifiers
             numericUpDownZ.Size = new Size(50, 20);
             numericUpDownZ.Margin = new Padding(0);
             numericUpDownZ.DecimalPlaces = 4;
-            numericUpDownZ.Minimum = (decimal) minValue.Z;
-            numericUpDownZ.Maximum = (decimal) maxValue.Z;
-            numericUpDownZ.Value = (decimal) defaultValue.Z;
-            numericUpDownZ.Increment = (decimal) (2f*(maxValue.Z - minValue.Z)/100f);
+            numericUpDownZ.Minimum = (decimal)minValue.Z;
+            numericUpDownZ.Maximum = (decimal)maxValue.Z;
+            numericUpDownZ.Value = (decimal)defaultValue.Z;
+            numericUpDownZ.Increment = (decimal)(2f * (maxValue.Z - minValue.Z) / 100f);
             numericUpDownZ.ValueChanged += numericUpDownZ_ValueChanged;
 
             //Panel para los tres numericUpDown
@@ -84,7 +84,7 @@ namespace TgcViewer.Utils.Modifiers
             trackBarX.Margin = new Padding(0);
             trackBarX.Minimum = 0;
             trackBarX.Maximum = 20;
-            trackBarX.Value = (int) ((defaultValue.X - minValue.X)*20/(maxValue.X - minValue.X));
+            trackBarX.Value = (int)((defaultValue.X - minValue.X) * 20 / (maxValue.X - minValue.X));
             trackBarX.ValueChanged += trackBarX_ValueChanged;
 
             //trackBarY
@@ -93,7 +93,7 @@ namespace TgcViewer.Utils.Modifiers
             trackBarY.Margin = new Padding(0);
             trackBarY.Minimum = 0;
             trackBarY.Maximum = 20;
-            trackBarY.Value = (int) ((defaultValue.Y - minValue.Y)*20/(maxValue.Y - minValue.Y));
+            trackBarY.Value = (int)((defaultValue.Y - minValue.Y) * 20 / (maxValue.Y - minValue.Y));
             trackBarY.ValueChanged += trackBarY_ValueChanged;
 
             //trackBarZ
@@ -102,7 +102,7 @@ namespace TgcViewer.Utils.Modifiers
             trackBarZ.Margin = new Padding(0);
             trackBarZ.Minimum = 0;
             trackBarZ.Maximum = 20;
-            trackBarZ.Value = (int) ((defaultValue.Z - minValue.Z)*20/(maxValue.Z - minValue.Z));
+            trackBarZ.Value = (int)((defaultValue.Z - minValue.Z) * 20 / (maxValue.Z - minValue.Z));
             trackBarZ.ValueChanged += trackBarZ_ValueChanged;
 
             contentPanel.Controls.Add(vertexValuesPanel);
@@ -120,7 +120,7 @@ namespace TgcViewer.Utils.Modifiers
             }
 
             numericUpDownChangeX = true;
-            trackBarX.Value = (int) (((float) numericUpDownX.Value - minValue.X)*20/(maxValue.X - minValue.X));
+            trackBarX.Value = (int)(((float)numericUpDownX.Value - minValue.X) * 20 / (maxValue.X - minValue.X));
 
             GuiController.Instance.focus3dPanel();
         }
@@ -134,7 +134,7 @@ namespace TgcViewer.Utils.Modifiers
             }
 
             numericUpDownChangeY = true;
-            trackBarY.Value = (int) (((float) numericUpDownY.Value - minValue.Y)*20/(maxValue.Y - minValue.Y));
+            trackBarY.Value = (int)(((float)numericUpDownY.Value - minValue.Y) * 20 / (maxValue.Y - minValue.Y));
 
             GuiController.Instance.focus3dPanel();
         }
@@ -148,7 +148,7 @@ namespace TgcViewer.Utils.Modifiers
             }
 
             numericUpDownChangeZ = true;
-            trackBarZ.Value = (int) (((float) numericUpDownZ.Value - minValue.Z)*20/(maxValue.Z - minValue.Z));
+            trackBarZ.Value = (int)(((float)numericUpDownZ.Value - minValue.Z) * 20 / (maxValue.Z - minValue.Z));
 
             GuiController.Instance.focus3dPanel();
         }
@@ -162,7 +162,7 @@ namespace TgcViewer.Utils.Modifiers
             }
 
             trackBarChangeX = true;
-            numericUpDownX.Value = (decimal) (minValue.X + trackBarX.Value*(maxValue.X - minValue.X)/20);
+            numericUpDownX.Value = (decimal)(minValue.X + trackBarX.Value * (maxValue.X - minValue.X) / 20);
 
             GuiController.Instance.focus3dPanel();
         }
@@ -176,7 +176,7 @@ namespace TgcViewer.Utils.Modifiers
             }
 
             trackBarChangeY = true;
-            numericUpDownY.Value = (decimal) (minValue.Y + trackBarY.Value*(maxValue.Y - minValue.Y)/20);
+            numericUpDownY.Value = (decimal)(minValue.Y + trackBarY.Value * (maxValue.Y - minValue.Y) / 20);
 
             GuiController.Instance.focus3dPanel();
         }
@@ -190,16 +190,16 @@ namespace TgcViewer.Utils.Modifiers
             }
 
             trackBarChangeZ = true;
-            numericUpDownZ.Value = (decimal) (minValue.Z + trackBarZ.Value*(maxValue.Z - minValue.Z)/20);
+            numericUpDownZ.Value = (decimal)(minValue.Z + trackBarZ.Value * (maxValue.Z - minValue.Z) / 20);
 
             GuiController.Instance.focus3dPanel();
         }
 
         public override object getValue()
         {
-            result.X = (float) numericUpDownX.Value;
-            result.Y = (float) numericUpDownY.Value;
-            result.Z = (float) numericUpDownZ.Value;
+            result.X = (float)numericUpDownX.Value;
+            result.Y = (float)numericUpDownY.Value;
+            result.Z = (float)numericUpDownZ.Value;
             return result;
         }
     }

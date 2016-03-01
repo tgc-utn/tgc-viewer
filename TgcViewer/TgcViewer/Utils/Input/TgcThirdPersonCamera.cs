@@ -1,7 +1,7 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace TgcViewer.Utils.Input
+namespace TGC.Viewer.Utils.Input
 {
     /// <summary>
     ///     Camara en tercera persona que sigue a un objeto a un determinada distancia.
@@ -141,7 +141,7 @@ namespace TgcViewer.Utils.Input
         {
             //alejarse, luego rotar y lueg ubicar camara en el centro deseado
             targetCenter = Vector3.Add(Target, TargetDisplacement);
-            var m = Matrix.Translation(0, OffsetHeight, OffsetForward)*Matrix.RotationY(RotationY)*
+            var m = Matrix.Translation(0, OffsetHeight, OffsetForward) * Matrix.RotationY(RotationY) *
                     Matrix.Translation(targetCenter);
 
             //Extraer la posicion final de la matriz de transformacion

@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.KdTree
+namespace TGC.Examples.Optimizacion.KdtTree
 {
     /// <summary>
     ///     Herramienta para crear y utilizar un KdTree para renderizar por Frustum Culling

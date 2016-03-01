@@ -20,6 +20,7 @@ namespace TGC.Core.SceneLoader
 
         //Datos de PortalRendering
         public TgcPortalRenderingData portalData;
+
         public string texturesDir;
     }
 }

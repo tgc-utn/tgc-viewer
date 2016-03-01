@@ -1,8 +1,8 @@
-using System;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectSound;
+using System;
 
-namespace TgcViewer.Utils.Sound
+namespace TGC.Viewer.Utils.Sound
 {
     /// <summary>
     ///     Herramienta para reproducir un sonido WAV en 3D, variando como suena respecto de su posición

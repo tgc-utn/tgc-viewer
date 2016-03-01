@@ -1,11 +1,12 @@
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Ui;
+using TGC.Core.Direct3D;
+using TGC.Viewer.Utils.Ui;
 
-namespace TgcViewer
+namespace TGC.Viewer
 {
     /// <summary>
     ///     Formulario principal de la aplicación
@@ -112,7 +113,6 @@ namespace TgcViewer
             panel3d.Focus();
 
             ApplicationRunning = true;
-            GuiController.newInstance();
             var guiController = GuiController.Instance;
             guiController.initGraphics(this, panel3d);
             resetMenuOptions();
@@ -203,11 +203,11 @@ namespace TgcViewer
         {
             if (wireframeToolStripMenuItem.Checked)
             {
-                GuiController.Instance.D3dDevice.RenderState.FillMode = FillMode.WireFrame;
+                D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
             }
             else
             {
-                GuiController.Instance.D3dDevice.RenderState.FillMode = FillMode.Solid;
+                D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;
             }
         }
 

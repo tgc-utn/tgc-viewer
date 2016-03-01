@@ -1,11 +1,11 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Tutorial
+namespace TGC.Examples.Tutorial
 {
     /// <summary>
     ///     Tutorial 4:
@@ -37,8 +37,6 @@ namespace Examples.Tutorial
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Creamos una caja 3D con textura
             var center = new Vector3(0, -3, 0);
             var size = new Vector3(5, 5, 5);
@@ -52,8 +50,6 @@ namespace Examples.Tutorial
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Obtenemos acceso al objeto que maneja input de mouse y teclado del framework
             var input = GuiController.Instance.D3dInput;
 

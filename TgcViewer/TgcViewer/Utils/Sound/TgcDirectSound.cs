@@ -2,7 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.DirectSound;
 using TGC.Core.SceneLoader;
 
-namespace TgcViewer.Utils.Sound
+namespace TGC.Viewer.Utils.Sound
 {
     /// <summary>
     ///     Herramienta para manipular el Device de DirectSound

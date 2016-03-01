@@ -1,24 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using Examples.MeshCreator.Primitives;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
+using System.Collections.Generic;
+using System.Drawing;
 using TGC.Core.Utils;
+using TGC.Examples.MeshCreator.Primitives;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Cuadro 2D de seleccion de objetos con el mouse
     /// </summary>
     public class SelectionRectangle
     {
-        private List<TgcBoundingBox> auxBoundingBoxList;
         private readonly MeshCreatorControl control;
-        private Vector2 initMousePos;
         private readonly SelectionRectangleMesh rectMesh;
+        private List<TgcBoundingBox> auxBoundingBoxList;
+        private Vector2 initMousePos;
         private bool selectiveObjectsAdditive;
 
         public SelectionRectangle(MeshCreatorControl control)
@@ -85,7 +85,7 @@ namespace Examples.MeshCreator
                 var mousePos = new Vector2(input.Xpos, input.Ypos);
                 var min = Vector2.Minimize(initMousePos, mousePos);
                 var max = Vector2.Maximize(initMousePos, mousePos);
-                var r = new Rectangle((int) min.X, (int) min.Y, (int) (max.X - min.X), (int) (max.Y - min.Y));
+                var r = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
 
                 //Usar recuadro de seleccion solo si tiene un tamaño minimo
                 if (r.Width > 1 && r.Height > 1)

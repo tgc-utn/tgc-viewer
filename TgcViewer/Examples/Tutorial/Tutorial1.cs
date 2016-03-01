@@ -1,10 +1,11 @@
 using Microsoft.DirectX;
 using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.Tutorial
+namespace TGC.Examples.Tutorial
 {
     /// <summary>
     ///     Tutorial 1:
@@ -40,7 +41,7 @@ namespace Examples.Tutorial
         public override void init()
         {
             //Acceso a Device de DirectX. Siempre conviene tenerlo a mano. Suele ser pedido como parámetro de varios métodos
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
 
             //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
             var center = new Vector3(0, 0, 0);
@@ -71,7 +72,7 @@ namespace Examples.Tutorial
         public override void render(float elapsedTime)
         {
             //Acceso a Device de DirectX. Siempre conviene tenerlo a mano. Suele ser pedido como parámetro de varios métodos
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
 
             //Dibujar la caja en pantalla
             box.render();

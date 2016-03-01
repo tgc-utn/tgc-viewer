@@ -1,9 +1,8 @@
 using System.Drawing;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils._2D;
+using TGC.Viewer.Utils._2D;
 
-namespace Examples
+namespace TGC.Examples.UserInterface
 {
     /// <summary>
     ///     Ejemplo EjemploTextureFiltering:
@@ -35,8 +34,6 @@ namespace Examples
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear texto 1, básico
             text1 = new TgcText2d();
             text1.Text = "Texto de prueba";
@@ -61,8 +58,6 @@ namespace Examples
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Renderizar los tres textoss
             text1.render();
             text2.render();

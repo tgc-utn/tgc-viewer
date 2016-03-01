@@ -1,21 +1,21 @@
-﻿using Examples.MeshCreator.Primitives;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
 using TGC.Core.Utils;
+using TGC.Examples.MeshCreator.Primitives;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
 
-namespace Examples.MeshCreator.Gizmos
+namespace TGC.Examples.MeshCreator.Gizmos
 {
     /// <summary>
     ///     Gizmo para trasladar objetos
     /// </summary>
     public class TranslateGizmo : EditorGizmo
     {
+        private readonly TranslateGizmoMesh gizmoMesh;
         private Vector3 acumMovement;
 
         private State currentState;
-        private readonly TranslateGizmoMesh gizmoMesh;
         private Vector3 initMouseP3d;
 
         public TranslateGizmo(MeshCreatorControl control)
@@ -229,7 +229,7 @@ namespace Examples.MeshCreator.Gizmos
                 if (absMove > cellSize)
                 {
                     //Moverse en unidades de la grilla
-                    currentMove = (int) (totalMove/cellSize)*cellSize;
+                    currentMove = (int)(totalMove / cellSize) * cellSize;
                     acumMove = 0;
                 }
                 else

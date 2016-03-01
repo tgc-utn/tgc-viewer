@@ -1,6 +1,6 @@
 using Microsoft.DirectX;
 
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Key frame de animacion para un hueso particular

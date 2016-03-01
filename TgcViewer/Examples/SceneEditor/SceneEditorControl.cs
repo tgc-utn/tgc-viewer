@@ -1,32 +1,26 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using SistPaquetesClient.core;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.SceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.Terrain;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.Ui;
 
-namespace Examples.SceneEditor
+namespace TGC.Examples.SceneEditor
 {
     /// <summary>
     ///     Control de .NET para crear un Modifier personalizado para el ejemplo SceneEditor
     /// </summary>
     public partial class SceneEditorControl : UserControl
     {
-        private GuiState currentState;
         private readonly TgcSceneEditor editor;
-        private string heighmapFilePath;
         private readonly SceneEditorHelpWindow helpWindow;
-        private int meshCounter = 1;
-        private string meshFilePath;
-        private string meshFolderName;
-        private int meshGroupCounter;
 
         private readonly OpenFileDialog openHeighmapDialog;
         private readonly OpenFileDialog openMeshDialog;
@@ -36,14 +30,20 @@ namespace Examples.SceneEditor
         private readonly SaveFileDialog saveSceneDialog;
         private readonly TgcSceneLoader sceneLoader;
 
+        private readonly SceneEditorTranslateGizmo translateGizmo;
+        private GuiState currentState;
+        private string heighmapFilePath;
+        private int meshCounter = 1;
+        private string meshFilePath;
+        private string meshFolderName;
+        private int meshGroupCounter;
+
         private string terrainTextureFilePath;
 
         /// <summary>
         ///     Terreno del escenario
         /// </summary>
         private TgcSimpleTerrain tgcTerrain;
-
-        private readonly SceneEditorTranslateGizmo translateGizmo;
 
         public SceneEditorControl(TgcSceneEditor editor)
         {
@@ -356,13 +356,13 @@ namespace Examples.SceneEditor
                 var sceneData = parser.parseSceneFromString(xmlString);
 
                 //Crear el mesh tantas veces como se haya pedido
-                var cantidad = (int) amountToCreate.Value;
+                var cantidad = (int)amountToCreate.Value;
                 var initialPos = getInitialPos();
                 for (var i = 0; i < cantidad; i++)
                 {
                     var scene = sceneLoader.loadScene(sceneData, mediaPath);
                     var radius = scene.Meshes[0].BoundingBox.calculateBoxRadius();
-                    var posOffsetX = radius*2;
+                    var posOffsetX = radius * 2;
 
                     //cargar meshes en dataGrid
                     foreach (var mesh in scene.Meshes)
@@ -377,7 +377,7 @@ namespace Examples.SceneEditor
                         mo.folderName = meshFolderName;
 
                         //Mover mesh a la posicion correcta
-                        mesh.Position = new Vector3(initialPos.X + i*posOffsetX, initialPos.Y, initialPos.Z);
+                        mesh.Position = new Vector3(initialPos.X + i * posOffsetX, initialPos.Y, initialPos.Z);
 
                         MeshObjects.Add(mo);
                         dataGridMeshList.Rows.Add(dataGridMeshList.Rows.Count + 1, meshGroupCounter, mo.name);
@@ -431,8 +431,8 @@ namespace Examples.SceneEditor
         /// </summary>
         private void cameraSpeed_ValueChanged(object sender, EventArgs e)
         {
-            GuiController.Instance.FpsCamera.MovementSpeed = (float) cameraSpeed.Value;
-            GuiController.Instance.FpsCamera.JumpSpeed = (float) cameraSpeed.Value;
+            GuiController.Instance.FpsCamera.MovementSpeed = (float)cameraSpeed.Value;
+            GuiController.Instance.FpsCamera.JumpSpeed = (float)cameraSpeed.Value;
         }
 
         /// <summary>
@@ -863,9 +863,9 @@ namespace Examples.SceneEditor
             }
 
             //Actualizar las 3 trackbars de rotacion
-            trackBarRotationX.Value = (int) newRot.X;
-            trackBarRotationY.Value = (int) newRot.Y;
-            trackBarRotationZ.Value = (int) newRot.Z;
+            trackBarRotationX.Value = (int)newRot.X;
+            trackBarRotationY.Value = (int)newRot.Y;
+            trackBarRotationZ.Value = (int)newRot.Z;
 
             //Actualizar rotacion, pasar a Radianes
             newRot.X = Geometry.DegreeToRadian(newRot.X);
@@ -1071,7 +1071,7 @@ namespace Examples.SceneEditor
 
                 //Crear nuevo
                 tgcTerrain = new TgcSimpleTerrain();
-                tgcTerrain.loadHeightmap(heighmapFilePath, (float) terrainXZscale.Value, (float) terrainYscale.Value,
+                tgcTerrain.loadHeightmap(heighmapFilePath, (float)terrainXZscale.Value, (float)terrainYscale.Value,
                     getTerrainCenter());
                 tgcTerrain.loadTexture(terrainTextureFilePath);
             }

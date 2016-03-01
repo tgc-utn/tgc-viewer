@@ -2,15 +2,16 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.Shaders.WorkshopShaders
 {
     /// <summary>
     ///     Ejemplo PhongShading:
@@ -52,7 +53,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
             MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
 
@@ -110,20 +110,19 @@ namespace Examples.Shaders.WorkshopShaders
             View3.MinZ = 0;
             View3.MaxZ = 1;
 
-            ViewF = d3dDevice.Viewport;
+            ViewF = D3DDevice.Instance.Device.Viewport;
 
             // Creo la luz para el fixed pipeline
-            d3dDevice.Lights[0].Type = LightType.Point;
-            d3dDevice.Lights[0].Diffuse = Color.FromArgb(255, 255, 255, 255);
-            d3dDevice.Lights[0].Specular = Color.FromArgb(255, 255, 255, 255);
-            d3dDevice.Lights[0].Attenuation0 = 0.0f;
-            d3dDevice.Lights[0].Range = 50000.0f;
-            d3dDevice.Lights[0].Enabled = true;
+            D3DDevice.Instance.Device.Lights[0].Type = LightType.Point;
+            D3DDevice.Instance.Device.Lights[0].Diffuse = Color.FromArgb(255, 255, 255, 255);
+            D3DDevice.Instance.Device.Lights[0].Specular = Color.FromArgb(255, 255, 255, 255);
+            D3DDevice.Instance.Device.Lights[0].Attenuation0 = 0.0f;
+            D3DDevice.Instance.Device.Lights[0].Range = 50000.0f;
+            D3DDevice.Instance.Device.Lights[0].Enabled = true;
         }
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
             var panel3d = GuiController.Instance.Panel3d;
             var aspectRatio = panel3d.Width / (float)panel3d.Height;
 
@@ -147,8 +146,8 @@ namespace Examples.Shaders.WorkshopShaders
             if (vista_unica)
             {
                 // solo una vista
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-                device.Viewport = ViewF;
+                D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                D3DDevice.Instance.Device.Viewport = ViewF;
                 foreach (var m in scene.Meshes)
                 {
                     m.Effect = effect;
@@ -161,8 +160,8 @@ namespace Examples.Shaders.WorkshopShaders
             {
                 // 3 vistas:
                 // 1- vista: usando el shader
-                device.Viewport = View1;
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                D3DDevice.Instance.Device.Viewport = View1;
+                D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 foreach (var m in scene.Meshes)
                 {
                     m.Effect = effect;
@@ -172,13 +171,13 @@ namespace Examples.Shaders.WorkshopShaders
                 lightBox.render();
 
                 // 2- vista: fixed pipeline con iluminacion dinamica
-                device.Viewport = View2;
-                device.SetRenderState(RenderStates.Lighting, true);
-                device.SetRenderState(RenderStates.SpecularEnable, true);
-                device.Lights[0].Position = lightPosition;
-                device.Lights[0].Update();
+                D3DDevice.Instance.Device.Viewport = View2;
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.Lighting, true);
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.SpecularEnable, true);
+                D3DDevice.Instance.Device.Lights[0].Position = lightPosition;
+                D3DDevice.Instance.Device.Lights[0].Update();
 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 foreach (var m in scene.Meshes)
                 {
                     m.Technique = "DefaultTechnique";
@@ -188,9 +187,9 @@ namespace Examples.Shaders.WorkshopShaders
                 lightBox.render();
 
                 // 3- vista: fixed pipeline con iluminacion estatica
-                device.Viewport = View3;
-                device.SetRenderState(RenderStates.Lighting, false);
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                D3DDevice.Instance.Device.Viewport = View3;
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.Lighting, false);
+                D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 foreach (var m in scene.Meshes)
                 {
                     m.Technique = "DefaultTechnique";

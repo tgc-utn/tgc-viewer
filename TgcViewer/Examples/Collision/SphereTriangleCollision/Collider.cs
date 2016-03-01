@@ -1,7 +1,7 @@
 ﻿using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.Collision.SphereTriangleCollision
+namespace TGC.Examples.Collision.SphereTriangleCollision
 {
     /// <summary>
     ///     Colisionador abstracto

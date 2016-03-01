@@ -1,11 +1,12 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+using TGC.Core.Direct3D;
 using TGC.Core.Utils;
 
-namespace TgcViewer.Utils
+namespace TGC.Viewer.Utils
 {
     public class TgcD3dDevice
     {
@@ -24,18 +25,14 @@ namespace TgcViewer.Utils
         public static float zFarPlaneDistance = 10000f;
         private readonly Color DEFAULT_CLEAR_COLOR = Color.FromArgb(255, 78, 129, 179);
 
-        private readonly Control panel3d;
-
         public TgcD3dDevice(Control panel3d)
         {
-            this.panel3d = panel3d;
-            aspectRatio = (float) this.panel3d.Width/this.panel3d.Height;
+            aspectRatio = (float)panel3d.Width / panel3d.Height;
 
             var caps = Manager.GetDeviceCaps(Manager.Adapters.Default.Adapter, DeviceType.Hardware);
-            CreateFlags flags;
-
             Console.WriteLine("Max primitive count:" + caps.MaxPrimitiveCount);
 
+            CreateFlags flags;
             if (caps.DeviceCaps.SupportsHardwareTransformAndLight)
                 flags = CreateFlags.HardwareVertexProcessing;
             else
@@ -64,14 +61,11 @@ namespace TgcViewer.Utils
 
             //Crear Graphics Device
             Device.IsUsingEventHandlers = false;
-            D3dDevice = new Device(0, DeviceType.Hardware, panel3d, flags, d3dpp);
-            D3dDevice.DeviceReset += OnResetDevice;
-        }
+            var d3DDevice = new Device(0, DeviceType.Hardware, panel3d, flags, d3dpp);
+            d3DDevice.DeviceReset += OnResetDevice;
 
-        /// <summary>
-        ///     Direct3D Device
-        /// </summary>
-        public Device D3dDevice { get; }
+            D3DDevice.Instance.Device = d3DDevice;
+        }
 
         /// <summary>
         ///     Color con el que se limpia la pantalla
@@ -105,43 +99,43 @@ namespace TgcViewer.Utils
         internal void setDefaultValues()
         {
             //Frustum values
-            D3dDevice.Transform.Projection =
+            D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, zNearPlaneDistance, zFarPlaneDistance);
 
             //Render state
-            D3dDevice.RenderState.SpecularEnable = false;
-            D3dDevice.RenderState.FillMode = FillMode.Solid;
-            D3dDevice.RenderState.CullMode = Cull.None;
-            D3dDevice.RenderState.ShadeMode = ShadeMode.Gouraud;
-            D3dDevice.RenderState.MultiSampleAntiAlias = true;
-            D3dDevice.RenderState.SlopeScaleDepthBias = -0.1f;
-            D3dDevice.RenderState.DepthBias = 0f;
-            D3dDevice.RenderState.ColorVertex = true;
-            D3dDevice.RenderState.Lighting = false;
-            D3dDevice.RenderState.ZBufferEnable = true;
-            D3dDevice.RenderState.FogEnable = false;
+            D3DDevice.Instance.Device.RenderState.SpecularEnable = false;
+            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;
+            D3DDevice.Instance.Device.RenderState.CullMode = Cull.None;
+            D3DDevice.Instance.Device.RenderState.ShadeMode = ShadeMode.Gouraud;
+            D3DDevice.Instance.Device.RenderState.MultiSampleAntiAlias = true;
+            D3DDevice.Instance.Device.RenderState.SlopeScaleDepthBias = -0.1f;
+            D3DDevice.Instance.Device.RenderState.DepthBias = 0f;
+            D3DDevice.Instance.Device.RenderState.ColorVertex = true;
+            D3DDevice.Instance.Device.RenderState.Lighting = false;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = true;
+            D3DDevice.Instance.Device.RenderState.FogEnable = false;
 
             //Alpha Blending
-            D3dDevice.RenderState.AlphaBlendEnable = false;
-            D3dDevice.RenderState.AlphaTestEnable = false;
-            D3dDevice.RenderState.ReferenceAlpha = 100;
-            D3dDevice.RenderState.AlphaFunction = Compare.Greater;
-            D3dDevice.RenderState.BlendOperation = BlendOperation.Add;
-            D3dDevice.RenderState.SourceBlend = Blend.SourceAlpha;
-            D3dDevice.RenderState.DestinationBlend = Blend.InvSourceAlpha;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+            D3DDevice.Instance.Device.RenderState.ReferenceAlpha = 100;
+            D3DDevice.Instance.Device.RenderState.AlphaFunction = Compare.Greater;
+            D3DDevice.Instance.Device.RenderState.BlendOperation = BlendOperation.Add;
+            D3DDevice.Instance.Device.RenderState.SourceBlend = Blend.SourceAlpha;
+            D3DDevice.Instance.Device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
 
             //Texture Filtering
-            D3dDevice.SetSamplerState(0, SamplerStageStates.MinFilter, (int) TextureFilter.Linear);
-            D3dDevice.SetSamplerState(0, SamplerStageStates.MagFilter, (int) TextureFilter.Linear);
-            D3dDevice.SetSamplerState(0, SamplerStageStates.MipFilter, (int) TextureFilter.Linear);
+            D3DDevice.Instance.Device.SetSamplerState(0, SamplerStageStates.MinFilter, (int)TextureFilter.Linear);
+            D3DDevice.Instance.Device.SetSamplerState(0, SamplerStageStates.MagFilter, (int)TextureFilter.Linear);
+            D3DDevice.Instance.Device.SetSamplerState(0, SamplerStageStates.MipFilter, (int)TextureFilter.Linear);
 
-            D3dDevice.SetSamplerState(1, SamplerStageStates.MinFilter, (int) TextureFilter.Linear);
-            D3dDevice.SetSamplerState(1, SamplerStageStates.MagFilter, (int) TextureFilter.Linear);
-            D3dDevice.SetSamplerState(1, SamplerStageStates.MipFilter, (int) TextureFilter.Linear);
+            D3DDevice.Instance.Device.SetSamplerState(1, SamplerStageStates.MinFilter, (int)TextureFilter.Linear);
+            D3DDevice.Instance.Device.SetSamplerState(1, SamplerStageStates.MagFilter, (int)TextureFilter.Linear);
+            D3DDevice.Instance.Device.SetSamplerState(1, SamplerStageStates.MipFilter, (int)TextureFilter.Linear);
 
             //Clear lights
-            foreach (Light light in D3dDevice.Lights)
+            foreach (Light light in D3DDevice.Instance.Device.Lights)
             {
                 light.Enabled = false;
             }
@@ -150,11 +144,11 @@ namespace TgcViewer.Utils
             GuiController.Instance.TexturesManager.clearAll();
 
             //Reset Material
-            D3dDevice.Material = DEFAULT_MATERIAL;
+            D3DDevice.Instance.Device.Material = DEFAULT_MATERIAL;
             ClearColor = DEFAULT_CLEAR_COLOR;
 
             //Limpiar IndexBuffer
-            D3dDevice.Indices = null;
+            D3DDevice.Instance.Device.Indices = null;
 
             /* INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
 
@@ -169,13 +163,13 @@ namespace TgcViewer.Utils
 
         internal void doClear()
         {
-            D3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, ClearColor, 1.0f, 0);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, ClearColor, 1.0f, 0);
             HighResolutionTimer.Instance.Set();
         }
 
         internal void resetWorldTransofrm()
         {
-            D3dDevice.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
         }
 
         /// <summary>
@@ -183,7 +177,7 @@ namespace TgcViewer.Utils
         /// </summary>
         internal void shutDown()
         {
-            D3dDevice.Dispose();
+            D3DDevice.Instance.Device.Dispose();
         }
     }
 }

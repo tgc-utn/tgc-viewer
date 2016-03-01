@@ -1,11 +1,12 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.SceneLoader
+namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
@@ -31,8 +32,6 @@ namespace Examples.SceneLoader
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             var loader = new TgcSceneLoader();
             var sceneOriginal =
                 loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" +
@@ -52,17 +51,15 @@ namespace Examples.SceneLoader
             meshes.Add(meshInstance1);
             meshes.Add(meshInstance2);
 
-            var texture = TgcTexture.createTexture(d3dDevice,
+            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Piso\\Textures\\piso2.jpg");
-            meshOriginal.changeDiffuseMaps(new[] {texture});
+            meshOriginal.changeDiffuseMaps(new[] { texture });
 
             GuiController.Instance.FpsCamera.Enable = true;
         }
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             foreach (var mesh in meshes)
             {
                 mesh.render();

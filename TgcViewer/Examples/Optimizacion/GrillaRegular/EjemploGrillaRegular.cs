@@ -1,11 +1,11 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Terrain;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.GrillaRegular
+namespace TGC.Examples.Optimizacion.GrillaRegular
 {
     /// <summary>
     ///     Ejemplo EjemploGrillaRegular
@@ -40,8 +40,6 @@ namespace Examples.Optimizacion.GrillaRegular
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear SkyBox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 500, 0);
@@ -62,7 +60,7 @@ namespace Examples.Optimizacion.GrillaRegular
 
             //Separar el Terreno del resto de los objetos
             var list1 = new List<TgcMesh>();
-            scene.separeteMeshList(new[] {"Terreno"}, out list1, out objetosIsla);
+            scene.separeteMeshList(new[] { "Terreno" }, out list1, out objetosIsla);
             terreno = list1[0];
 
             //Crear grilla
@@ -82,10 +80,8 @@ namespace Examples.Optimizacion.GrillaRegular
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var showGrid = (bool) GuiController.Instance.Modifiers["showGrid"];
-            var showTerrain = (bool) GuiController.Instance.Modifiers["showTerrain"];
+            var showGrid = (bool)GuiController.Instance.Modifiers["showGrid"];
+            var showTerrain = (bool)GuiController.Instance.Modifiers["showTerrain"];
 
             skyBox.render();
             if (showTerrain)

@@ -1,14 +1,15 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Malla que representa un modelo 3D con varias animaciones, animadas por Skeletal Animation
@@ -408,14 +409,13 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             if (!enabled)
                 return;
 
-            var device = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             //Actualizar transformacion de malla
             updateMeshTransform();
 
             //Cargar VertexDeclaration
-            device.VertexDeclaration = vertexDeclaration;
+            D3DDevice.Instance.Device.VertexDeclaration = vertexDeclaration;
 
             //Activar AlphaBlending si corresponde
             activateAlphaBlend();
@@ -653,8 +653,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
         public void moveOrientedY(float movement)
         {
-            var z = (float) Math.Cos(rotation.Y)*movement;
-            var x = (float) Math.Sin(rotation.Y)*movement;
+            var z = (float)Math.Cos(rotation.Y) * movement;
+            var x = (float)Math.Sin(rotation.Y) * movement;
 
             move(x, 0, z);
         }
@@ -761,7 +761,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 else
                 {
                     //Multiplicar por la matriz del padre
-                    bone.MatFinal = bone.MatLocal*bone.ParentBone.MatFinal;
+                    bone.MatFinal = bone.MatLocal * bone.ParentBone.MatFinal;
                 }
 
                 //Almacenar la inversa de la posicion original del hueso, para la referencia inicial de los vertices
@@ -898,7 +898,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             }
 
             //La duracion de la animacion.
-            animationTimeLenght = ((float) currentAnimation.FramesCount - 1)/frameRate;
+            animationTimeLenght = ((float)currentAnimation.FramesCount - 1) / frameRate;
 
             //Configurar postura inicial de los huesos
             for (var i = 0; i < bones.Length; i++)
@@ -912,12 +912,12 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
 
                 //Determinar matriz local inicial
                 var firstFrame = currentAnimation.BoneFrames[i][0];
-                bone.MatLocal = Matrix.RotationQuaternion(firstFrame.Rotation)*Matrix.Translation(firstFrame.Position);
+                bone.MatLocal = Matrix.RotationQuaternion(firstFrame.Rotation) * Matrix.Translation(firstFrame.Position);
 
                 //Multiplicar por matriz del padre, si tiene
                 if (bone.ParentBone != null)
                 {
-                    bone.MatFinal = bone.MatLocal*bone.ParentBone.MatFinal;
+                    bone.MatFinal = bone.MatLocal * bone.ParentBone.MatFinal;
                 }
                 else
                 {
@@ -950,7 +950,6 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         /// </summary>
         public void updateAnimation()
         {
-            var device = GuiController.Instance.D3dDevice;
             var elapsedTime = GuiController.Instance.ElapsedTime;
 
             //Ver que haya transcurrido cierta cantidad de tiempo
@@ -969,7 +968,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 if (playLoop)
                 {
                     //Dejar el remanente de tiempo transcurrido para el proximo loop
-                    currentTime = currentTime%animationTimeLenght;
+                    currentTime = currentTime % animationTimeLenght;
                     //setSkleletonLastPose();
                     //updateMeshVertices();
                 }
@@ -1009,7 +1008,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 }
 
                 //Obtener cuadro actual segun el tiempo transcurrido
-                var currentFrameF = currentTime*frameRate;
+                var currentFrameF = currentTime * frameRate;
                 //Ve a que KeyFrame le corresponde
                 var keyFrameIdx = getCurrentFrameBone(boneFrames, currentFrameF);
                 currentFrame = keyFrameIdx;
@@ -1020,21 +1019,21 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
 
                 //Calcular la cantidad que hay interpolar en base al la diferencia entre cuadros
                 float framesDiff = frame2.Frame - frame1.Frame;
-                var interpolationValue = (currentFrameF - frame1.Frame)/framesDiff;
+                var interpolationValue = (currentFrameF - frame1.Frame) / framesDiff;
 
                 //Interpolar traslacion
-                var frameTranslation = (frame2.Position - frame1.Position)*interpolationValue + frame1.Position;
+                var frameTranslation = (frame2.Position - frame1.Position) * interpolationValue + frame1.Position;
 
                 //Interpolar rotacion con SLERP
                 var quatFrameRotation = Quaternion.Slerp(frame1.Rotation, frame2.Rotation, interpolationValue);
 
                 //Unir ambas transformaciones de este frame
-                var frameMatrix = Matrix.RotationQuaternion(quatFrameRotation)*Matrix.Translation(frameTranslation);
+                var frameMatrix = Matrix.RotationQuaternion(quatFrameRotation) * Matrix.Translation(frameTranslation);
 
                 //Multiplicar por la matriz del padre, si tiene
                 if (bone.ParentBone != null)
                 {
-                    bone.MatFinal = frameMatrix*bone.ParentBone.MatFinal;
+                    bone.MatFinal = frameMatrix * bone.ParentBone.MatFinal;
                 }
                 else
                 {
@@ -1069,7 +1068,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             for (var i = 0; i < bones.Length; i++)
             {
                 var bone = bones[i];
-                boneSpaceFinalTransforms[i] = bone.MatInversePose*bone.MatFinal;
+                boneSpaceFinalTransforms[i] = bone.MatInversePose * bone.MatFinal;
             }
         }
 
@@ -1089,8 +1088,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             if (autoTransformEnable)
             {
                 transform = Matrix.Scaling(scale)
-                            *Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            *Matrix.Translation(translation);
+                            * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
+                            * Matrix.Translation(translation);
             }
         }
 
@@ -1099,11 +1098,10 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         /// </summary>
         protected void activateAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
             if (alphaBlendEnable)
             {
-                device.RenderState.AlphaTestEnable = true;
-                device.RenderState.AlphaBlendEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
             }
         }
 
@@ -1112,9 +1110,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         /// </summary>
         protected void resetAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
-            device.RenderState.AlphaTestEnable = false;
-            device.RenderState.AlphaBlendEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>
@@ -1122,7 +1119,6 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         /// </summary>
         protected void renderSkeletonMesh()
         {
-            var device = GuiController.Instance.D3dDevice;
             var ceroVec = new Vector3(0, 0, 0);
 
             //Dibujar huesos y joints
@@ -1132,7 +1128,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
 
                 //Renderizar Joint
                 var jointBox = skeletonRenderJoints[i];
-                jointBox.Transform = bone.MatFinal*transform;
+                jointBox.Transform = bone.MatFinal * transform;
                 jointBox.render();
 
                 //Modificar línea del bone
@@ -1140,8 +1136,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 {
                     var boneLine = skeletonRenderBones[i];
 
-                    boneLine.PStart = TgcVectorUtils.transform(ceroVec, bone.MatFinal*transform);
-                    boneLine.PEnd = TgcVectorUtils.transform(ceroVec, bone.ParentBone.MatFinal*transform);
+                    boneLine.PStart = TgcVectorUtils.transform(ceroVec, bone.MatFinal * transform);
+                    boneLine.PEnd = TgcVectorUtils.transform(ceroVec, bone.ParentBone.MatFinal * transform);
                     boneLine.updateValues();
                 }
             }
@@ -1179,8 +1175,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
-                    var verts1 = (TgcSkeletalLoader.VertexColorVertex[]) d3dMesh.LockVertexBuffer(
-                        typeof (TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts1 = (TgcSkeletalLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
+                        typeof(TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     points = new Vector3[verts1.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
@@ -1190,8 +1186,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                     break;
 
                 case MeshRenderType.DIFFUSE_MAP:
-                    var verts2 = (TgcSkeletalLoader.DiffuseMapVertex[]) d3dMesh.LockVertexBuffer(
-                        typeof (TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts2 = (TgcSkeletalLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
+                        typeof(TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     points = new Vector3[verts2.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
@@ -1217,16 +1213,16 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 case MeshRenderType.DIFFUSE_MAP:
 
                     //Calcular normales usando DirectX
-                    var adj = new int[d3dMesh.NumberFaces*3];
+                    var adj = new int[d3dMesh.NumberFaces * 3];
                     d3dMesh.GenerateAdjacency(0, adj);
                     d3dMesh.ComputeNormals(adj);
 
                     //Obtener vertexBuffer original
-                    var origVertexBuffer = (TgcSkeletalLoader.DiffuseMapVertex[]) d3dMesh.LockVertexBuffer(
-                        typeof (TgcSkeletalLoader.DiffuseMapVertex), LockFlags.Discard, d3dMesh.NumberVertices);
+                    var origVertexBuffer = (TgcSkeletalLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
+                        typeof(TgcSkeletalLoader.DiffuseMapVertex), LockFlags.Discard, d3dMesh.NumberVertices);
 
                     //Calcular normales recorriendo los triangulos
-                    var triCount = origVertexBuffer.Length/3;
+                    var triCount = origVertexBuffer.Length / 3;
                     var normals = new Vector3[origVertexBuffer.Length];
                     for (var i = 0; i < normals.Length; i++)
                     {
@@ -1255,9 +1251,9 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                          */
 
                         //Invetir normal
-                        origVertexBuffer[i*3].Normal = -origVertexBuffer[i*3].Normal;
-                        origVertexBuffer[i*3 + 1].Normal = -origVertexBuffer[i*3 + 1].Normal;
-                        origVertexBuffer[i*3 + 2].Normal = -origVertexBuffer[i*3 + 2].Normal;
+                        origVertexBuffer[i * 3].Normal = -origVertexBuffer[i * 3].Normal;
+                        origVertexBuffer[i * 3 + 1].Normal = -origVertexBuffer[i * 3 + 1].Normal;
+                        origVertexBuffer[i * 3 + 2].Normal = -origVertexBuffer[i * 3 + 2].Normal;
                     }
 
                     //Aplicar cambios
@@ -1306,8 +1302,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
-                    var verts1 = (TgcSkeletalLoader.VertexColorVertex[]) d3dMesh.LockVertexBuffer(
-                        typeof (TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts1 = (TgcSkeletalLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
+                        typeof(TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     for (var i = 0; i < verts1.Length; i++)
                     {
                         verts1[i].Color = c;
@@ -1317,8 +1313,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                     break;
 
                 case MeshRenderType.DIFFUSE_MAP:
-                    var verts2 = (TgcSkeletalLoader.DiffuseMapVertex[]) d3dMesh.LockVertexBuffer(
-                        typeof (TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts2 = (TgcSkeletalLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
+                        typeof(TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     for (var i = 0; i < verts2.Length; i++)
                     {
                         verts2[i].Color = c;

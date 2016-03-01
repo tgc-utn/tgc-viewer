@@ -1,13 +1,13 @@
-﻿using System;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
+using System;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
-namespace Examples.TerrainEditor
+namespace TGC.Examples.TerrainEditor
 {
     /// <summary>
     ///     Copypaste de TgcFPSCamera con algunas modificaciones para que se adapte a la altura del terreno.
@@ -42,6 +42,7 @@ namespace Examples.TerrainEditor
 
         //Banderas de Input
         private bool moveForwardsPressed;
+
         private bool moveLeftPressed;
         private bool moveRightPressed;
         private bool moveUpPressed;
@@ -96,8 +97,8 @@ namespace Examples.TerrainEditor
             //Obtener direccion segun entrada de teclado
             var direction = getMovementDirection(d3dInput);
 
-            pitch = d3dInput.YposRelative*RotationSpeed;
-            heading = d3dInput.XposRelative*RotationSpeed;
+            pitch = d3dInput.YposRelative * RotationSpeed;
+            heading = d3dInput.XposRelative * RotationSpeed;
 
             //Solo rotar si se esta aprentando el boton del mouse configurado
             if (d3dInput.buttonDown(RotateMouseButton))
@@ -150,7 +151,7 @@ namespace Examples.TerrainEditor
             currentVelocity = new Vector3(0.0f, 0.0f, 0.0f);
             velocity = CAMERA_VELOCITY;
             viewMatrix = Matrix.Identity;
-            setPosition(CAMERA_POS + HeadPosition*WORLD_YAXIS);
+            setPosition(CAMERA_POS + HeadPosition * WORLD_YAXIS);
 
             RotateMouseButton = TgcD3dInput.MouseButtons.BUTTON_LEFT;
         }
@@ -193,7 +194,7 @@ namespace Examples.TerrainEditor
             viewMatrix.M43 = -Vector3.Dot(zAxis, eye);
 
             // Extract the pitch angle from the view matrix.
-            accumPitchDegrees = Geometry.RadianToDegree((float) -Math.Asin(viewMatrix.M23));
+            accumPitchDegrees = Geometry.RadianToDegree((float)-Math.Asin(viewMatrix.M23));
         }
 
         /// <summary>
@@ -220,9 +221,9 @@ namespace Examples.TerrainEditor
             forwards = Vector3.Cross(xAxis, WORLD_YAXIS);
             forwards.Normalize();
 
-            auxEye += xAxis*dx;
-            auxEye += WORLD_YAXIS*dy;
-            auxEye += forwards*dz;
+            auxEye += xAxis * dx;
+            auxEye += WORLD_YAXIS * dy;
+            auxEye += forwards * dz;
             if (FpsModeEnable)
             {
                 HeadPosition += dy;
@@ -231,7 +232,7 @@ namespace Examples.TerrainEditor
                 if (Terrain.interpoledHeight(auxEye.X, auxEye.Z, out y))
                 {
                     auxEye.Y = y;
-                    auxEye += HeadPosition*WORLD_YAXIS;
+                    auxEye += HeadPosition * WORLD_YAXIS;
                 }
             }
             setPosition(auxEye);
@@ -283,12 +284,12 @@ namespace Examples.TerrainEditor
                 Vector3 displacement;
                 if (AccelerationEnable)
                 {
-                    displacement = currentVelocity*elapsedTimeSec +
-                                   0.5f*Acceleration*elapsedTimeSec*elapsedTimeSec;
+                    displacement = currentVelocity * elapsedTimeSec +
+                                   0.5f * Acceleration * elapsedTimeSec * elapsedTimeSec;
                 }
                 else
                 {
-                    displacement = currentVelocity*elapsedTimeSec;
+                    displacement = currentVelocity * elapsedTimeSec;
                 }
 
                 // Floating point rounding errors will slowly accumulate and cause the
@@ -391,7 +392,7 @@ namespace Examples.TerrainEditor
                 // Camera is moving along the x axis.
                 // Linearly accelerate up to the camera's max speed.
 
-                currentVelocity.X += direction.X*Acceleration.X*elapsedTimeSec;
+                currentVelocity.X += direction.X * Acceleration.X * elapsedTimeSec;
 
                 if (currentVelocity.X > velocity.X)
                     currentVelocity.X = velocity.X;
@@ -405,12 +406,12 @@ namespace Examples.TerrainEditor
 
                 if (currentVelocity.X > 0.0f)
                 {
-                    if ((currentVelocity.X -= Acceleration.X*elapsedTimeSec) < 0.0f)
+                    if ((currentVelocity.X -= Acceleration.X * elapsedTimeSec) < 0.0f)
                         currentVelocity.X = 0.0f;
                 }
                 else
                 {
-                    if ((currentVelocity.X += Acceleration.X*elapsedTimeSec) > 0.0f)
+                    if ((currentVelocity.X += Acceleration.X * elapsedTimeSec) > 0.0f)
                         currentVelocity.X = 0.0f;
                 }
             }
@@ -420,7 +421,7 @@ namespace Examples.TerrainEditor
                 // Camera is moving along the y axis.
                 // Linearly accelerate up to the camera's max speed.
 
-                currentVelocity.Y += direction.Y*Acceleration.Y*elapsedTimeSec;
+                currentVelocity.Y += direction.Y * Acceleration.Y * elapsedTimeSec;
 
                 if (currentVelocity.Y > velocity.Y)
                     currentVelocity.Y = velocity.Y;
@@ -434,12 +435,12 @@ namespace Examples.TerrainEditor
 
                 if (currentVelocity.Y > 0.0f)
                 {
-                    if ((currentVelocity.Y -= Acceleration.Y*elapsedTimeSec) < 0.0f)
+                    if ((currentVelocity.Y -= Acceleration.Y * elapsedTimeSec) < 0.0f)
                         currentVelocity.Y = 0.0f;
                 }
                 else
                 {
-                    if ((currentVelocity.Y += Acceleration.Y*elapsedTimeSec) > 0.0f)
+                    if ((currentVelocity.Y += Acceleration.Y * elapsedTimeSec) > 0.0f)
                         currentVelocity.Y = 0.0f;
                 }
             }
@@ -449,7 +450,7 @@ namespace Examples.TerrainEditor
                 // Camera is moving along the z axis.
                 // Linearly accelerate up to the camera's max speed.
 
-                currentVelocity.Z += direction.Z*Acceleration.Z*elapsedTimeSec;
+                currentVelocity.Z += direction.Z * Acceleration.Z * elapsedTimeSec;
 
                 if (currentVelocity.Z > velocity.Z)
                     currentVelocity.Z = velocity.Z;
@@ -463,12 +464,12 @@ namespace Examples.TerrainEditor
 
                 if (currentVelocity.Z > 0.0f)
                 {
-                    if ((currentVelocity.Z -= Acceleration.Z*elapsedTimeSec) < 0.0f)
+                    if ((currentVelocity.Z -= Acceleration.Z * elapsedTimeSec) < 0.0f)
                         currentVelocity.Z = 0.0f;
                 }
                 else
                 {
-                    if ((currentVelocity.Z += Acceleration.Z*elapsedTimeSec) > 0.0f)
+                    if ((currentVelocity.Z += Acceleration.Z * elapsedTimeSec) > 0.0f)
                         currentVelocity.Z = 0.0f;
                 }
             }
@@ -479,9 +480,9 @@ namespace Examples.TerrainEditor
         /// </summary>
         private void updateVelocityNoAcceleration(Vector3 direction)
         {
-            currentVelocity.X = velocity.X*direction.X;
-            currentVelocity.Y = velocity.Y*direction.Y;
-            currentVelocity.Z = velocity.Z*direction.Z;
+            currentVelocity.X = velocity.X * direction.X;
+            currentVelocity.Y = velocity.Y * direction.Y;
+            currentVelocity.Z = velocity.Z * direction.Z;
         }
 
         /// <summary>
@@ -670,7 +671,7 @@ namespace Examples.TerrainEditor
                     previousY = eye.Y;
                     float y;
                     Terrain.interpoledHeight(eye.X, eye.Z, out y);
-                    eye.Y = y + HeadPosition*WORLD_YAXIS.Y;
+                    eye.Y = y + HeadPosition * WORLD_YAXIS.Y;
                 }
                 else if (!value && fpsModeEnable) eye.Y = previousY;
                 fpsModeEnable = value;

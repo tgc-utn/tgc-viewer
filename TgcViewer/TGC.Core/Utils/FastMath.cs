@@ -1,5 +1,5 @@
-using System;
 using Microsoft.DirectX.Direct3D;
+using System;
 
 namespace TGC.Core.Utils
 {
@@ -12,27 +12,27 @@ namespace TGC.Core.Utils
         ///     Representa la relación entre la longitud de la circunferencia de un círculo
         ///     y su diámetro, especificada por la constante PI.
         /// </summary>
-        public static readonly float PI = (float) Math.PI;
+        public static readonly float PI = (float)Math.PI;
 
         /// <summary>
         ///     PI / 2
         /// </summary>
-        public static readonly float PI_HALF = PI/2.0f;
+        public static readonly float PI_HALF = PI / 2.0f;
 
         /// <summary>
         ///     2 PI
         /// </summary>
-        public static readonly float TWO_PI = 2.0f*PI;
+        public static readonly float TWO_PI = 2.0f * PI;
 
         /// <summary>
         ///     PI / 4
         /// </summary>
-        public static readonly float QUARTER_PI = PI/4;
+        public static readonly float QUARTER_PI = PI / 4;
 
         /// <summary>
         ///     Representa la base logarítmica natural, especificada por la constante, e.
         /// </summary>
-        public static readonly float E = (float) Math.E;
+        public static readonly float E = (float)Math.E;
 
         private static readonly int precision = 0x100000;
 
@@ -42,7 +42,7 @@ namespace TGC.Core.Utils
 
         private static int radToIndex(float radians)
         {
-            return (int) (radians/TWO_PI*precision) & (precision - 1);
+            return (int)(radians / TWO_PI * precision) & (precision - 1);
         }
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace TGC.Core.Utils
             {
                 sinTable = new float[precision];
 
-                var rad_slice = TWO_PI/precision;
+                var rad_slice = TWO_PI / precision;
 
                 for (var i = 0; i < precision; i++)
                 {
-                    sinTable[i] = (float) Math.Sin(i*rad_slice);
+                    sinTable[i] = (float)Math.Sin(i * rad_slice);
                 }
             }
 
@@ -76,7 +76,7 @@ namespace TGC.Core.Utils
         /// <returns>Arcoseno de x</returns>
         public static float Asin(float x)
         {
-            return (float) Math.Asin(x);
+            return (float)Math.Asin(x);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace TGC.Core.Utils
         /// <returns>Seno hiperbólico de x</returns>
         public static float Sinh(float x)
         {
-            return (float) Math.Sinh(x);
+            return (float)Math.Sinh(x);
         }
 
         /// <summary>
@@ -101,11 +101,11 @@ namespace TGC.Core.Utils
             {
                 cosTable = new float[precision];
 
-                var rad_slice = TWO_PI/precision;
+                var rad_slice = TWO_PI / precision;
 
                 for (var i = 0; i < precision; i++)
                 {
-                    cosTable[i] = (float) Math.Cos(i*rad_slice);
+                    cosTable[i] = (float)Math.Cos(i * rad_slice);
                 }
             }
 
@@ -120,7 +120,7 @@ namespace TGC.Core.Utils
         /// <returns>Arcocoseno de x</returns>
         public static float Acos(float x)
         {
-            return (float) Math.Acos(x);
+            return (float)Math.Acos(x);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace TGC.Core.Utils
         /// <returns>Coseno hiperbólico de x</returns>
         public static float Cosh(float x)
         {
-            return (float) Math.Cosh(x);
+            return (float)Math.Cosh(x);
         }
 
         /// <summary>
@@ -145,11 +145,11 @@ namespace TGC.Core.Utils
             {
                 tanTable = new float[precision];
 
-                var rad_slice = TWO_PI/precision;
+                var rad_slice = TWO_PI / precision;
 
                 for (var i = 0; i < precision; i++)
                 {
-                    tanTable[i] = (float) Math.Tan(i*rad_slice);
+                    tanTable[i] = (float)Math.Tan(i * rad_slice);
                 }
             }
 
@@ -163,7 +163,7 @@ namespace TGC.Core.Utils
         /// <returns>Arcotangente de x</returns>
         public static float Atan(float x)
         {
-            return (float) Math.Atan(x);
+            return (float)Math.Atan(x);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace TGC.Core.Utils
         /// <returns>Arcotangente</returns>
         public static float Atan2(float y, float x)
         {
-            return (float) Math.Atan2(y, x);
+            return (float)Math.Atan2(y, x);
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace TGC.Core.Utils
         /// <returns>Tangente hiperbólica de x</returns>
         public static float Tanh(float x)
         {
-            return (float) Math.Tanh(x);
+            return (float)Math.Tanh(x);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace TGC.Core.Utils
         /// <returns>Raíz cuadrada</returns>
         public static float Sqrt(float x)
         {
-            return (float) Math.Sqrt(x);
+            return (float)Math.Sqrt(x);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace TGC.Core.Utils
         /// <returns>Inversa de la raíz</returns>
         public static float InvSqrt(float x)
         {
-            return 1.0f/(float) Math.Sqrt(x);
+            return 1.0f / (float)Math.Sqrt(x);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace TGC.Core.Utils
         /// <returns>El número entero más pequeño mayor o igual que x.</returns>
         public static float Ceiling(float x)
         {
-            return (float) Math.Ceiling(x);
+            return (float)Math.Ceiling(x);
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace TGC.Core.Utils
         /// <returns>Número entero más grande menor o igual que x.</returns>
         public static float Floor(float x)
         {
-            return (float) Math.Floor(x);
+            return (float)Math.Floor(x);
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace TGC.Core.Utils
         /// <returns>Logaritmo natural de x</returns>
         public static float Log(float x)
         {
-            return (float) Math.Log(x);
+            return (float)Math.Log(x);
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace TGC.Core.Utils
         /// <returns>Logaritmo en base 10 de x</returns>
         public static float Log10(float x)
         {
-            return (float) Math.Log10(x);
+            return (float)Math.Log10(x);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace TGC.Core.Utils
         /// <returns>Número x elevado a la potencia y</returns>
         public static float Pow(float x, float y)
         {
-            return (float) Math.Pow(x, y);
+            return (float)Math.Pow(x, y);
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace TGC.Core.Utils
         /// <returns>Número x elevado a la potencia y</returns>
         public static int Pow(int x, int y)
         {
-            return (int) Math.Pow(x, y);
+            return (int)Math.Pow(x, y);
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace TGC.Core.Utils
         /// <returns>E elevado a la n</returns>
         public static float Exp(float n)
         {
-            return (float) Math.Exp(n);
+            return (float)Math.Exp(n);
         }
 
         /// <summary>
@@ -410,8 +410,8 @@ namespace TGC.Core.Utils
         /// <returns>valor de la funcion de distribucion de Gauss</returns>
         public static float GaussianDistribution(float x, float y, float rho)
         {
-            var g = 1.0f/Sqrt(2.0f*PI*rho*rho);
-            g *= Exp(-(x*x + y*y)/(2*rho*rho));
+            var g = 1.0f / Sqrt(2.0f * PI * rho * rho);
+            g *= Exp(-(x * x + y * y) / (2 * rho * rho));
             return g;
         }
 
@@ -423,8 +423,8 @@ namespace TGC.Core.Utils
         /// <returns>valor de la funcion de distribucion de Gauss</returns>
         public static float GaussianDistribution(float x, float rho)
         {
-            var g = 1.0f/Sqrt(2.0f*PI*rho*rho);
-            g *= Exp(-(x*x)/(2*rho*rho));
+            var g = 1.0f / Sqrt(2.0f * PI * rho * rho);
+            g *= Exp(-(x * x) / (2 * rho * rho));
             return g;
         }
     }

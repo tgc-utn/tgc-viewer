@@ -48,6 +48,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Direct3D\D3DDevice.cs" />
     <Compile Include="Example\TgcExample.cs" />
     <Compile Include="Geometries\TgcConvexPolyhedron.cs" />
     <Compile Include="Geometries\TgcRay.cs" />

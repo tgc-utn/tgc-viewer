@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Un MessageBox con un campo de texto para llenar
@@ -65,7 +65,7 @@ namespace Examples.MeshCreator
         private void textBoxText_KeyPress(object sender, KeyPressEventArgs e)
         {
             //Enter
-            if (e.KeyChar == (char) 13)
+            if (e.KeyChar == (char)13)
             {
                 buttonOk_Click(null, null);
             }

@@ -2,11 +2,11 @@ using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils._2D;
-using TgcViewer.Utils.Sound;
+using TGC.Viewer;
+using TGC.Viewer.Utils._2D;
+using TGC.Viewer.Utils.Sound;
 
-namespace Examples.Sound
+namespace TGC.Examples.Sound
 {
     /// <summary>
     ///     Ejemplo PlayMp3:
@@ -38,8 +38,6 @@ namespace Examples.Sound
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Texto para la musica actual
             currentMusicText = new TgcText2d();
             currentMusicText.Text = "No music";
@@ -79,8 +77,6 @@ namespace Examples.Sound
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si cambio el MP3
             var filePath = (string)GuiController.Instance.Modifiers["MP3-File"];
             loadMp3(filePath);

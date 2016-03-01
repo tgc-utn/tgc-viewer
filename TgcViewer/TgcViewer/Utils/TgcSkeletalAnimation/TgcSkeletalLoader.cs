@@ -1,22 +1,21 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Herramienta para cargar una Malla con animacion del tipo Skeletal Animation, segun formato TGC
     /// </summary>
     public class TgcSkeletalLoader
     {
-        private readonly Device device;
-
         private readonly Dictionary<string, TgcTexture> texturesDict;
 
         /// <summary>
@@ -24,7 +23,6 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         /// </summary>
         public TgcSkeletalLoader()
         {
-            device = GuiController.Instance.D3dDevice;
             texturesDict = new Dictionary<string, TgcTexture>();
             MeshFactory = new DefaultMeshFactory();
         }
@@ -309,19 +307,19 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             var weightComparer = new TgcSkeletalVertexWeight.BoneWeight.GreaterComparer();
 
             //Crear un array de Weights para cada uno de los vertices de la malla
-            var weights = new TgcSkeletalVertexWeight[meshData.verticesCoordinates.Length/3];
+            var weights = new TgcSkeletalVertexWeight[meshData.verticesCoordinates.Length / 3];
             for (var i = 0; i < weights.Length; i++)
             {
                 weights[i] = new TgcSkeletalVertexWeight();
             }
 
             //Cargar los weights de cada vertice
-            var weightsCount = meshData.verticesWeights.Length/3;
+            var weightsCount = meshData.verticesWeights.Length / 3;
             for (var i = 0; i < weightsCount; i++)
             {
-                var vertexIdx = (int) meshData.verticesWeights[i*3];
-                var boneIdx = (int) meshData.verticesWeights[i*3 + 1];
-                var weightVal = meshData.verticesWeights[i*3 + 2];
+                var vertexIdx = (int)meshData.verticesWeights[i * 3];
+                var boneIdx = (int)meshData.verticesWeights[i * 3 + 1];
+                var weightVal = meshData.verticesWeights[i * 3 + 2];
 
                 var bone = bones[boneIdx];
                 var weight = new TgcSkeletalVertexWeight.BoneWeight(bone, weightVal);
@@ -358,7 +356,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 //Normalizar cada valor segun el total acumulado en el vertice
                 foreach (var w in vertexWeight.Weights)
                 {
-                    w.Weight = w.Weight/weightTotal;
+                    w.Weight = w.Weight / weightTotal;
                 }
             }
 
@@ -373,8 +371,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             TgcSkeletalMeshData meshData)
         {
             //Crear Mesh
-            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
-                MeshFlags.Managed, DiffuseMapVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, DiffuseMapVertexElements, D3DDevice.Instance.Device);
 
             //Cargar esqueleto
             var bones = loadSkeleton(meshData);
@@ -389,7 +387,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                     var v = new DiffuseMapVertex();
 
                     //vertices
-                    var coordIdx = meshData.coordinatesIndices[j]*3;
+                    var coordIdx = meshData.coordinatesIndices[j] * 3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -397,7 +395,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                         );
 
                     //texture coordinates diffuseMap
-                    var texCoordIdx = meshData.texCoordinatesIndices[j]*2;
+                    var texCoordIdx = meshData.texCoordinatesIndices[j] * 2;
                     v.Tu = meshData.textureCoordinates[texCoordIdx];
                     v.Tv = meshData.textureCoordinates[texCoordIdx + 1];
 
@@ -462,7 +460,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 var indices = new short[meshData.coordinatesIndices.Length];
                 for (var j = 0; j < indices.Length; j++)
                 {
-                    indices[j] = (short) j;
+                    indices[j] = (short)j;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -473,8 +471,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             TgcTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
-                meshMaterials = new[] {matAux.materialId};
-                meshTextures = new[] {matAux.texture};
+                meshMaterials = new[] { matAux.materialId };
+                meshTextures = new[] { matAux.texture };
             }
 
             //Configurar Material y Textura para varios SubSet
@@ -510,8 +508,8 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         private TgcSkeletalMesh crearMeshSoloColor(TgcSkeletalMeshData meshData)
         {
             //Crear Mesh
-            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
-                MeshFlags.Managed, VertexColorVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, VertexColorVertexElements, D3DDevice.Instance.Device);
 
             //Cargar esqueleto
             var bones = loadSkeleton(meshData);
@@ -526,7 +524,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                     var v = new VertexColorVertex();
 
                     //vertices
-                    var coordIdx = meshData.coordinatesIndices[j]*3;
+                    var coordIdx = meshData.coordinatesIndices[j] * 3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -594,7 +592,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 var indices = new short[meshData.coordinatesIndices.Length];
                 for (var i = 0; i < indices.Length; i++)
                 {
-                    indices[i] = (short) i;
+                    indices[i] = (short)i;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -645,7 +643,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                 }
                 else
                 {
-                    texture = TgcTexture.createTexture(device, materialData.fileName,
+                    texture = TgcTexture.createTexture(D3DDevice.Instance.Device, materialData.fileName,
                         texturesPath + "\\" + materialData.fileName);
                     texturesDict[materialData.fileName] = texture;
                     //TODO usar para algo el OFFSET y el TILING

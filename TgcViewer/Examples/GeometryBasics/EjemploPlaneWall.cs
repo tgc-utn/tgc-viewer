@@ -1,10 +1,11 @@
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo EjemploPlaneWall.
@@ -38,21 +39,19 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Modifiers para variar parámetros de la pared
             GuiController.Instance.Modifiers.addVertex3f("origin", new Vector3(-100, -100, -100),
                 new Vector3(100, 100, 100), new Vector3(0, 0, 0));
             GuiController.Instance.Modifiers.addVertex3f("dimension", new Vector3(-100, -100, -100),
                 new Vector3(1000, 1000, 100), new Vector3(100, 100, 100));
-            GuiController.Instance.Modifiers.addInterval("orientation", new[] {"XY", "XZ", "YZ"}, 0);
+            GuiController.Instance.Modifiers.addInterval("orientation", new[] { "XY", "XZ", "YZ" }, 0);
             GuiController.Instance.Modifiers.addVertex2f("tiling", new Vector2(0, 0), new Vector2(10, 10),
                 new Vector2(1, 1));
             GuiController.Instance.Modifiers.addBoolean("autoAdjust", "autoAdjust", false);
 
             //Modifier de textura
             var texturePath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack2\\brick1_1.jpg";
-            currentTexture = TgcTexture.createTexture(d3dDevice, texturePath);
+            currentTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, texturePath);
             GuiController.Instance.Modifiers.addTexture("texture", currentTexture.FilePath);
 
             //Crear pared
@@ -68,26 +67,24 @@ namespace Examples.GeometryBasics
         /// </summary>
         private void updateWall()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Origen, dimensiones, tiling y AutoAdjust
-            var origin = (Vector3) GuiController.Instance.Modifiers["origin"];
-            var dimension = (Vector3) GuiController.Instance.Modifiers["dimension"];
-            var tiling = (Vector2) GuiController.Instance.Modifiers["tiling"];
-            var autoAdjust = (bool) GuiController.Instance.Modifiers["autoAdjust"];
+            var origin = (Vector3)GuiController.Instance.Modifiers["origin"];
+            var dimension = (Vector3)GuiController.Instance.Modifiers["dimension"];
+            var tiling = (Vector2)GuiController.Instance.Modifiers["tiling"];
+            var autoAdjust = (bool)GuiController.Instance.Modifiers["autoAdjust"];
 
             //Cambiar orienación
-            var orientation = (string) GuiController.Instance.Modifiers["orientation"];
+            var orientation = (string)GuiController.Instance.Modifiers["orientation"];
             TgcPlaneWall.Orientations or;
             if (orientation == "XY") or = TgcPlaneWall.Orientations.XYplane;
             else if (orientation == "XZ") or = TgcPlaneWall.Orientations.XZplane;
             else or = TgcPlaneWall.Orientations.YZplane;
 
             //Cambiar textura
-            var text = (string) GuiController.Instance.Modifiers["texture"];
+            var text = (string)GuiController.Instance.Modifiers["texture"];
             if (text != currentTexture.FilePath)
             {
-                currentTexture = TgcTexture.createTexture(d3dDevice, text);
+                currentTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, text);
                 wall.setTexture(currentTexture);
             }
 
@@ -108,8 +105,6 @@ namespace Examples.GeometryBasics
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Actualizar valrores de pared
             updateWall();
 

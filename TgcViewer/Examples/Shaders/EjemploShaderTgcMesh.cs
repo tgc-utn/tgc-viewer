@@ -1,10 +1,10 @@
 using System;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Shaders
+namespace TGC.Examples.Shaders
 {
     /// <summary>
     ///     Ejemplo EjemploShaderTgcMesh:
@@ -37,8 +37,6 @@ namespace Examples.Shaders
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear loader
             var loader = new TgcSceneLoader();
 
@@ -76,15 +74,13 @@ namespace Examples.Shaders
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
-
             //Actualizar Technique
-            mesh.Technique = (string) GuiController.Instance.Modifiers["Technique"];
+            mesh.Technique = (string)GuiController.Instance.Modifiers["Technique"];
 
             //Cargar variables de shader
-            mesh.Effect.SetValue("darkFactor", (float) GuiController.Instance.Modifiers["darkFactor"]);
-            mesh.Effect.SetValue("random", (float) r.NextDouble());
-            mesh.Effect.SetValue("textureOffset", (float) GuiController.Instance.Modifiers["textureOffset"]);
+            mesh.Effect.SetValue("darkFactor", (float)GuiController.Instance.Modifiers["darkFactor"]);
+            mesh.Effect.SetValue("random", (float)r.NextDouble());
+            mesh.Effect.SetValue("textureOffset", (float)GuiController.Instance.Modifiers["textureOffset"]);
 
             mesh.render();
         }

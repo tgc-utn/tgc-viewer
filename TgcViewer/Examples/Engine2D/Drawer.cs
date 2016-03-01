@@ -1,16 +1,15 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
+using System.Drawing;
+using TGC.Core.Direct3D;
 
-namespace Examples.Engine2D
+namespace TGC.Examples.Engine2D
 {
     /// <summary>
     ///     Draws sprites and primitives.
     /// </summary>
     public class Drawer
     {
-        private readonly Device d3dDevice;
         private readonly Microsoft.DirectX.Direct3D.Sprite DxSprite;
         private readonly Line line;
 
@@ -19,9 +18,8 @@ namespace Examples.Engine2D
 
         public Drawer()
         {
-            d3dDevice = GuiController.Instance.D3dDevice;
-            DxSprite = new Microsoft.DirectX.Direct3D.Sprite(d3dDevice);
-            line = new Line(d3dDevice);
+            DxSprite = new Microsoft.DirectX.Direct3D.Sprite(D3DDevice.Instance.Device);
+            line = new Line(D3DDevice.Instance.Device);
         }
 
         /// <summary>
@@ -61,9 +59,9 @@ namespace Examples.Engine2D
             LineVertexData[0].Y = position.Y;
             LineVertexData[0].Color = color.ToArgb();
 
-            d3dDevice.VertexFormat = CustomVertex.PositionColoredTextured.Format;
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColoredTextured.Format;
 
-            d3dDevice.DrawUserPrimitives(PrimitiveType.PointList, 1, LineVertexData);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.PointList, 1, LineVertexData);
         }
 
         /// <summary>
@@ -76,7 +74,7 @@ namespace Examples.Engine2D
         /// <param name="antiAlias">Anti-alias enabled.</param>
         public void DrawLine(Vector2 position1, Vector2 position2, Color color, int width, bool antiAlias)
         {
-            var positionList = new Vector2[2] {position1, position2};
+            var positionList = new Vector2[2] { position1, position2 };
             DrawPolyline(positionList, color, width, antiAlias);
         }
 

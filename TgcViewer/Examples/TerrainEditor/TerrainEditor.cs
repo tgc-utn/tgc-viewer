@@ -1,7 +1,4 @@
-﻿using Examples.TerrainEditor.Brushes;
-using Examples.TerrainEditor.Panel;
-using Examples.TerrainEditor.Vegetation;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
@@ -10,14 +7,17 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils._2D;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Examples.TerrainEditor.Brushes;
+using TGC.Examples.TerrainEditor.Instances;
+using TGC.Examples.TerrainEditor.Panel;
+using TGC.Viewer;
+using TGC.Viewer.Utils._2D;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 using Font = System.Drawing.Font;
 
-namespace Examples.TerrainEditor
+namespace TGC.Examples.TerrainEditor
 {
     /// <summary>
     ///     Ejemplo TgcTerrainEditor:
@@ -55,8 +55,6 @@ Mostar AABBs: B";
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             Camera = new TerrainFpsCamera();
             Terrain = new SmartTerrain();
             brush = new DummyBrush();
@@ -308,8 +306,6 @@ Mostar AABBs: B";
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             if (GuiController.Instance.D3dInput.keyPressed(Key.V))
                 ShowVegetation ^= true;
 

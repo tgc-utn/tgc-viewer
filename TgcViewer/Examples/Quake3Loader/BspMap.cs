@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using TGC.Core.Direct3D;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Quake3Loader
+namespace TGC.Examples.Quake3Loader
 {
     /// <summary>
     ///     Herramienta para renderizar un escenario BSP de Quake 3
@@ -13,10 +14,10 @@ namespace Examples.Quake3Loader
     /// </summary>
     public class BspMap
     {
+        private readonly List<int> clusterVis;
+
         //Variables para visibilidad de clusters
         private int antCluster;
-
-        private readonly List<int> clusterVis;
 
         private Matrix mViewProj;
         private float time;
@@ -67,8 +68,6 @@ namespace Examples.Quake3Loader
         /// <param name="camPos">Posición actual de la camara</param>
         public void render(Vector3 camPos)
         {
-            var device = GuiController.Instance.D3dDevice;
-
             var elapsedTime = GuiController.Instance.ElapsedTime;
             time += elapsedTime;
 
@@ -90,7 +89,8 @@ namespace Examples.Quake3Loader
 
             //Actualizar volumen del Frustum con nuevos valores de camara
             var frustum = GuiController.Instance.Frustum;
-            frustum.updateVolume(device.Transform.View, device.Transform.Projection);
+            frustum.updateVolume(D3DDevice.Instance.Device.Transform.View,
+                D3DDevice.Instance.Device.Transform.Projection);
 
             foreach (var nleaf in clusterVis)
             {
@@ -115,7 +115,7 @@ namespace Examples.Quake3Loader
             }
 
             //Renderizar meshes visibles
-            mViewProj = device.Transform.View*device.Transform.Projection;
+            mViewProj = D3DDevice.Instance.Device.Transform.View * D3DDevice.Instance.Device.Transform.Projection;
             for (var i = 0; i < Meshes.Count; i++)
             {
                 //Ignonar si no está habilitada
@@ -160,8 +160,6 @@ namespace Examples.Quake3Loader
             //    return;
             //}
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             var fx = shader.Fx;
             fx.Technique = "tec0";
             fx.SetValue("g_mWorld", Matrix.Identity);
@@ -184,11 +182,11 @@ namespace Examples.Quake3Loader
                 }
 
                 //mesh.render();
-                d3dDevice.SetTexture(0, mesh.DiffuseMaps[0].D3dTexture);
+                D3DDevice.Instance.Device.SetTexture(0, mesh.DiffuseMaps[0].D3dTexture);
                 if (mesh.LightMap != null)
-                    d3dDevice.SetTexture(1, mesh.LightMap.D3dTexture);
+                    D3DDevice.Instance.Device.SetTexture(1, mesh.LightMap.D3dTexture);
                 else
-                    d3dDevice.SetTexture(1, null);
+                    D3DDevice.Instance.Device.SetTexture(1, null);
 
                 mesh.D3dMesh.DrawSubset(0);
 
@@ -242,7 +240,7 @@ namespace Examples.Quake3Loader
                 return true;
             }
 
-            var i = visCluster*Data.visData.sizeVec + (testCluster >> 3);
+            var i = visCluster * Data.visData.sizeVec + (testCluster >> 3);
             var visSet = Data.visData.data[i];
 
             return (visSet & (1 << (testCluster & 7))) != 0;

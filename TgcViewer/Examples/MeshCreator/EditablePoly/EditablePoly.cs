@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using Examples.MeshCreator.EditablePolyTools.Primitives;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using System.Drawing;
+using TGC.Core.Direct3D;
+using TGC.Examples.MeshCreator.EditablePoly.Primitives;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.MeshCreator.EditablePolyTools
+namespace TGC.Examples.MeshCreator.EditablePoly
 {
     /// <summary>
     ///     Herramienta para poder editar todos los componentes de un mesh: vertices, aristas y poligonos.
@@ -37,18 +38,18 @@ namespace Examples.MeshCreator.EditablePolyTools
         }
 
         private readonly List<int> deletedTriangles;
+
+        private readonly PrimitiveRenderer primitiveRenderer;
+        private readonly SelectionRectangleMesh rectMesh;
+        private readonly EditablePolyTranslateGizmo translateGizmo;
         private bool dirtyValues;
 
         private Vector2 initMousePos;
 
         private TgcMesh mesh;
-
-        private readonly PrimitiveRenderer primitiveRenderer;
         private bool recreateMesh;
-        private readonly SelectionRectangleMesh rectMesh;
 
         private bool selectiveObjectsAdditive;
-        private readonly EditablePolyTranslateGizmo translateGizmo;
 
         /// <summary>
         ///     Construir un EditablePoly a partir de un mesh
@@ -355,7 +356,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 var mousePos = new Vector2(input.Xpos, input.Ypos);
                 var min = Vector2.Minimize(initMousePos, mousePos);
                 var max = Vector2.Maximize(initMousePos, mousePos);
-                var r = new Rectangle((int) min.X, (int) min.Y, (int) (max.X - min.X), (int) (max.Y - min.Y));
+                var r = new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
 
                 //Usar recuadro de seleccion solo si tiene un tamaño minimo
                 if (r.Width > 1 && r.Height > 1)
@@ -426,7 +427,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             //Modificacion de textura en poligonos
             if (SelectionList.Count > 0 && mesh.DiffuseMaps.Length > 0 && CurrentPrimitive == PrimitiveType.Polygon)
             {
-                var firstPolygon = (EditPolyPolygon) SelectionList[0];
+                var firstPolygon = (EditPolyPolygon)SelectionList[0];
                 Control.numericUpDownEPolyTextureNumber.Enabled = true;
                 Control.numericUpDownEPolyTextureNumber.Minimum = 1;
                 Control.numericUpDownEPolyTextureNumber.Maximum = mesh.DiffuseMaps.Length;
@@ -605,15 +606,15 @@ namespace Examples.MeshCreator.EditablePolyTools
                 switch (p.Type)
                 {
                     case PrimitiveType.Vertex:
-                        deleteVertex((EditPolyVertex) p);
+                        deleteVertex((EditPolyVertex)p);
                         break;
 
                     case PrimitiveType.Edge:
-                        deleteEdge((EditPolyEdge) p);
+                        deleteEdge((EditPolyEdge)p);
                         break;
 
                     case PrimitiveType.Polygon:
-                        deletePolygon((EditPolyPolygon) p);
+                        deletePolygon((EditPolyPolygon)p);
                         break;
                 }
             }
@@ -722,7 +723,7 @@ namespace Examples.MeshCreator.EditablePolyTools
         private void deletePolygon(EditPolyPolygon p)
         {
             //Quitar triangulos de index buffer
-            var vertexToDelete = p.vbTriangles.Count*3;
+            var vertexToDelete = p.vbTriangles.Count * 3;
             var newIndexBuffer = new short[IndexBuffer.Length - vertexToDelete];
             var w = 0;
             for (var i = 0; i < IndexBuffer.Length; i += 3)
@@ -818,20 +819,20 @@ namespace Examples.MeshCreator.EditablePolyTools
             //Obtener vertices del mesh
             mesh = origMesh;
             var origVertices = getMeshOriginalVertexData(origMesh);
-            var origTriCount = origVertices.Count/3;
+            var origTriCount = origVertices.Count / 3;
 
             //Iterar sobre los triangulos y generar data auxiliar unificada
             Vertices = new List<EditPolyVertex>();
             Edges = new List<EditPolyEdge>();
             Polygons = new List<EditPolyPolygon>();
-            IndexBuffer = new short[origTriCount*3];
+            IndexBuffer = new short[origTriCount * 3];
             var attributeBuffer = origMesh.D3dMesh.LockAttributeBufferArray(LockFlags.ReadOnly);
             origMesh.D3dMesh.UnlockAttributeBuffer(attributeBuffer);
             for (var i = 0; i < origTriCount; i++)
             {
-                var v1 = origVertices[i*3];
-                var v2 = origVertices[i*3 + 1];
-                var v3 = origVertices[i*3 + 2];
+                var v1 = origVertices[i * 3];
+                var v2 = origVertices[i * 3 + 1];
+                var v3 = origVertices[i * 3 + 2];
 
                 //Agregar vertices a la lista, si es que son nuevos
                 var v1Idx = EditablePolyUtils.addVertexToListIfUnique(Vertices, v1);
@@ -863,15 +864,15 @@ namespace Examples.MeshCreator.EditablePolyTools
                 p.edges.Add(e2);
                 p.edges.Add(e3);
                 p.vbTriangles = new List<int>();
-                p.vbTriangles.Add(i*3);
+                p.vbTriangles.Add(i * 3);
                 p.plane = Plane.FromPoints(v1.position, v2.position, v3.position);
                 p.plane.Normalize();
                 p.matId = attributeBuffer[i];
 
                 //Agregar triangulo al index buffer
-                IndexBuffer[i*3] = (short) v1Idx;
-                IndexBuffer[i*3 + 1] = (short) v2Idx;
-                IndexBuffer[i*3 + 2] = (short) v3Idx;
+                IndexBuffer[i * 3] = (short)v1Idx;
+                IndexBuffer[i * 3 + 1] = (short)v2Idx;
+                IndexBuffer[i * 3 + 2] = (short)v3Idx;
 
                 //Agregar a lista de poligonos
                 Polygons.Add(p);
@@ -974,8 +975,8 @@ namespace Examples.MeshCreator.EditablePolyTools
             switch (origMesh.RenderType)
             {
                 case TgcMesh.MeshRenderType.VERTEX_COLOR:
-                    var verts1 = (TgcSceneLoader.VertexColorVertex[]) origMesh.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, origMesh.D3dMesh.NumberVertices);
+                    var verts1 = (TgcSceneLoader.VertexColorVertex[])origMesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, origMesh.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts1.Length; i++)
                     {
                         var v = new EditPolyVertex();
@@ -988,8 +989,8 @@ namespace Examples.MeshCreator.EditablePolyTools
                     break;
 
                 case TgcMesh.MeshRenderType.DIFFUSE_MAP:
-                    var verts2 = (TgcSceneLoader.DiffuseMapVertex[]) origMesh.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, origMesh.D3dMesh.NumberVertices);
+                    var verts2 = (TgcSceneLoader.DiffuseMapVertex[])origMesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, origMesh.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts2.Length; i++)
                     {
                         var v = new EditPolyVertex();
@@ -1003,8 +1004,8 @@ namespace Examples.MeshCreator.EditablePolyTools
                     break;
 
                 case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
-                    var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[]) origMesh.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
+                    var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])origMesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
                         origMesh.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts3.Length; i++)
                     {
@@ -1033,7 +1034,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             {
                 //Crear nuevo mesh con una cantidad distinta de triangulos y vertices
                 Mesh newD3dMesh = null;
-                var triCount = IndexBuffer.Length/3;
+                var triCount = IndexBuffer.Length / 3;
                 var vertCount = IndexBuffer.Length;
                 var w = 0;
                 var delTriIdx = 0;
@@ -1041,12 +1042,12 @@ namespace Examples.MeshCreator.EditablePolyTools
                 {
                     case TgcMesh.MeshRenderType.VERTEX_COLOR:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed,
-                            TgcSceneLoader.VertexColorVertexElements, GuiController.Instance.D3dDevice);
-                        var origVert1 = (TgcSceneLoader.VertexColorVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                            typeof (TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                            TgcSceneLoader.VertexColorVertexElements, D3DDevice.Instance.Device);
+                        var origVert1 = (TgcSceneLoader.VertexColorVertex[])mesh.D3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         mesh.D3dMesh.UnlockVertexBuffer();
-                        var newVert1 = (TgcSceneLoader.VertexColorVertex[]) newD3dMesh.LockVertexBuffer(
-                            typeof (TgcSceneLoader.VertexColorVertex), LockFlags.None, newD3dMesh.NumberVertices);
+                        var newVert1 = (TgcSceneLoader.VertexColorVertex[])newD3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.VertexColorVertex), LockFlags.None, newD3dMesh.NumberVertices);
                         for (var i = 0; i < origVert1.Length; i += 3)
                         {
                             if (delTriIdx < deletedTriangles.Count && i == deletedTriangles[delTriIdx])
@@ -1067,12 +1068,12 @@ namespace Examples.MeshCreator.EditablePolyTools
 
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed,
-                            TgcSceneLoader.DiffuseMapVertexElements, GuiController.Instance.D3dDevice);
-                        var origVert2 = (TgcSceneLoader.DiffuseMapVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                            typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                            TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
+                        var origVert2 = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         mesh.D3dMesh.UnlockVertexBuffer();
-                        var newVert2 = (TgcSceneLoader.DiffuseMapVertex[]) newD3dMesh.LockVertexBuffer(
-                            typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.None, newD3dMesh.NumberVertices);
+                        var newVert2 = (TgcSceneLoader.DiffuseMapVertex[])newD3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.None, newD3dMesh.NumberVertices);
                         for (var i = 0; i < origVert2.Length; i += 3)
                         {
                             if (delTriIdx < deletedTriangles.Count && i == deletedTriangles[delTriIdx])
@@ -1092,13 +1093,13 @@ namespace Examples.MeshCreator.EditablePolyTools
 
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                         newD3dMesh = new Mesh(triCount, vertCount, MeshFlags.Managed,
-                            TgcSceneLoader.DiffuseMapAndLightmapVertexElements, GuiController.Instance.D3dDevice);
-                        var origVert3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                            typeof (TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
+                            TgcSceneLoader.DiffuseMapAndLightmapVertexElements, D3DDevice.Instance.Device);
+                        var origVert3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
                             mesh.D3dMesh.NumberVertices);
                         mesh.D3dMesh.UnlockVertexBuffer();
-                        var newVert3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[]) newD3dMesh.LockVertexBuffer(
-                            typeof (TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.None,
+                        var newVert3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])newD3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.None,
                             newD3dMesh.NumberVertices);
                         for (var i = 0; i < origVert3.Length; i += 3)
                         {
@@ -1136,8 +1137,8 @@ namespace Examples.MeshCreator.EditablePolyTools
                 switch (mesh.RenderType)
                 {
                     case TgcMesh.MeshRenderType.VERTEX_COLOR:
-                        var verts1 = (TgcSceneLoader.VertexColorVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                            typeof (TgcSceneLoader.VertexColorVertex), LockFlags.None, mesh.D3dMesh.NumberVertices);
+                        var verts1 = (TgcSceneLoader.VertexColorVertex[])mesh.D3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.VertexColorVertex), LockFlags.None, mesh.D3dMesh.NumberVertices);
                         for (var i = 0; i < verts1.Length; i++)
                         {
                             verts1[i].Position = Vertices[IndexBuffer[i]].position;
@@ -1147,8 +1148,8 @@ namespace Examples.MeshCreator.EditablePolyTools
                         break;
 
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP:
-                        var verts2 = (TgcSceneLoader.DiffuseMapVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                            typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                        var verts2 = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                         for (var i = 0; i < verts2.Length; i++)
                         {
                             verts2[i].Position = Vertices[IndexBuffer[i]].position;
@@ -1158,8 +1159,8 @@ namespace Examples.MeshCreator.EditablePolyTools
                         break;
 
                     case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
-                        var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                            typeof (TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
+                        var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                            typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
                             mesh.D3dMesh.NumberVertices);
                         for (var i = 0; i < verts3.Length; i++)
                         {
@@ -1177,7 +1178,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 var seqIndexBuffer = new short[IndexBuffer.Length];
                 for (var i = 0; i < seqIndexBuffer.Length; i++)
                 {
-                    seqIndexBuffer[i] = (short) i;
+                    seqIndexBuffer[i] = (short)i;
                 }
                 ib.SetData(seqIndexBuffer, 0, LockFlags.None);
             }
@@ -1189,7 +1190,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 //Setear en cada triangulo el material ID del poligono
                 foreach (var idx in p.vbTriangles)
                 {
-                    var triIdx = idx/3;
+                    var triIdx = idx / 3;
                     attributeBuffer[triIdx] = p.matId;
                 }
             }

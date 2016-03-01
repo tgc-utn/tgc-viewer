@@ -4,7 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     public class TgcSocketMessages
     {
@@ -170,7 +170,7 @@ namespace TgcViewer.Utils.Networking
         {
             var stream = new MemoryStream(bytesData, false);
             binaryFormatter = new BinaryFormatter();
-            data = (List<byte[]>) binaryFormatter.Deserialize(stream);
+            data = (List<byte[]>)binaryFormatter.Deserialize(stream);
             dataIndex = 0;
         }
 

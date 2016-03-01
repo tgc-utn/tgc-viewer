@@ -1,12 +1,13 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Representa un volumen de esfera con un centro y un radio
@@ -96,7 +97,6 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
@@ -117,13 +117,13 @@ namespace TgcViewer.Utils.TgcGeometry
             }
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length/2, vertices);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length / 2, vertices);
             effect.EndPass();
             effect.End();
         }
@@ -184,22 +184,22 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             if (vertices == null)
             {
-                var verticesCount = (SPHERE_MESH_RESOLUTION*2 + 2)*3;
+                var verticesCount = (SPHERE_MESH_RESOLUTION * 2 + 2) * 3;
                 vertices = new CustomVertex.PositionColored[verticesCount];
             }
 
             var index = 0;
 
-            var step = FastMath.TWO_PI/SPHERE_MESH_RESOLUTION;
+            var step = FastMath.TWO_PI / SPHERE_MESH_RESOLUTION;
             // Plano XY
             for (var a = 0f; a <= FastMath.TWO_PI; a += step)
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a)*Radius, FastMath.Sin(a)*Radius, 0f) + Center, RenderColor);
+                        new Vector3(FastMath.Cos(a) * Radius, FastMath.Sin(a) * Radius, 0f) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a + step)*Radius, FastMath.Sin(a + step)*Radius, 0f) + Center,
+                        new Vector3(FastMath.Cos(a + step) * Radius, FastMath.Sin(a + step) * Radius, 0f) + Center,
                         RenderColor);
             }
 
@@ -208,10 +208,10 @@ namespace TgcViewer.Utils.TgcGeometry
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a)*Radius, 0f, FastMath.Sin(a)*Radius) + Center, RenderColor);
+                        new Vector3(FastMath.Cos(a) * Radius, 0f, FastMath.Sin(a) * Radius) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a + step)*Radius, 0f, FastMath.Sin(a + step)*Radius) + Center,
+                        new Vector3(FastMath.Cos(a + step) * Radius, 0f, FastMath.Sin(a + step) * Radius) + Center,
                         RenderColor);
             }
 
@@ -220,10 +220,10 @@ namespace TgcViewer.Utils.TgcGeometry
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(0f, FastMath.Cos(a)*Radius, FastMath.Sin(a)*Radius) + Center, RenderColor);
+                        new Vector3(0f, FastMath.Cos(a) * Radius, FastMath.Sin(a) * Radius) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(0f, FastMath.Cos(a + step)*Radius, FastMath.Sin(a + step)*Radius) + Center,
+                        new Vector3(0f, FastMath.Cos(a + step) * Radius, FastMath.Sin(a + step) * Radius) + Center,
                         RenderColor);
             }
         }
@@ -306,13 +306,13 @@ namespace TgcViewer.Utils.TgcGeometry
             var d = p - s.center;
             var dist2 = Vector3.Dot(d, d);
             // Only update s if point p is outside it
-            if (dist2 > s.radius*s.radius)
+            if (dist2 > s.radius * s.radius)
             {
                 var dist = FastMath.Sqrt(dist2);
-                var newRadius = (s.radius + dist)*0.5f;
-                var k = (newRadius - s.radius)/dist;
+                var newRadius = (s.radius + dist) * 0.5f;
+                var k = (newRadius - s.radius) / dist;
                 s.radius = newRadius;
-                s.center += d*k;
+                s.center += d * k;
             }
         }
 
@@ -327,7 +327,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
             // Set up sphere to just encompass these two points
             var s = new SphereStruct();
-            s.center = (pt[min] + pt[max])*0.5f;
+            s.center = (pt[min] + pt[max]) * 0.5f;
             s.radius = Vector3.Dot(pt[max] - s.center, pt[max] - s.center);
             s.radius = FastMath.Sqrt(s.radius);
             return s;

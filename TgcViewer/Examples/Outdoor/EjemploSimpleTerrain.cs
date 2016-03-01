@@ -1,9 +1,9 @@
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Terrain;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Terrain;
 
-namespace Examples.Outdoor
+namespace TGC.Examples.Outdoor
 {
     /// <summary>
     ///     Ejemplo EjemploSimpleTerrain:
@@ -41,8 +41,6 @@ namespace Examples.Outdoor
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Path de Heightmap default del terreno y Modifier para cambiarla
             currentHeightmap = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap2.jpg";
             GuiController.Instance.Modifiers.addTexture("heightmap", currentHeightmap);
@@ -72,10 +70,8 @@ namespace Examples.Outdoor
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si cambio el heightmap
-            var selectedHeightmap = (string) GuiController.Instance.Modifiers["heightmap"];
+            var selectedHeightmap = (string)GuiController.Instance.Modifiers["heightmap"];
             if (currentHeightmap != selectedHeightmap)
             {
                 //Volver a cargar el Heightmap
@@ -84,8 +80,8 @@ namespace Examples.Outdoor
             }
 
             //Ver si cambio alguno de los valores de escala
-            var selectedScaleXZ = (float) GuiController.Instance.Modifiers["scaleXZ"];
-            var selectedScaleY = (float) GuiController.Instance.Modifiers["scaleY"];
+            var selectedScaleXZ = (float)GuiController.Instance.Modifiers["scaleXZ"];
+            var selectedScaleY = (float)GuiController.Instance.Modifiers["scaleY"];
             if (currentScaleXZ != selectedScaleXZ || currentScaleY != selectedScaleY)
             {
                 //Volver a cargar el Heightmap
@@ -95,7 +91,7 @@ namespace Examples.Outdoor
             }
 
             //Ver si cambio la textura del terreno
-            var selectedTexture = (string) GuiController.Instance.Modifiers["texture"];
+            var selectedTexture = (string)GuiController.Instance.Modifiers["texture"];
             if (currentTexture != selectedTexture)
             {
                 //Volver a cargar el DiffuseMap

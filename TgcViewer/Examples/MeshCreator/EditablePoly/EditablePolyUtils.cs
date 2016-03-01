@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Examples.MeshCreator.EditablePolyTools.Primitives;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+﻿using Microsoft.DirectX;
+using System.Collections.Generic;
 using TGC.Core.Utils;
+using TGC.Examples.MeshCreator.EditablePoly.Primitives;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools
+namespace TGC.Examples.MeshCreator.EditablePoly
 {
     public class EditablePolyUtils
     {
@@ -261,7 +261,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             obb.Orientation[2] = new Vector3(rotM.M31, rotM.M32, rotM.M33);
 
             //Actualizar extent de OBB segun el thickness del segmento
-            obb.Extents = new Vector3(thickness, lineLength/2, thickness);
+            obb.Extents = new Vector3(thickness, lineLength / 2, thickness);
 
             //Actualizar centro del OBB segun centro del segmento
             obb.Center = a + Vector3.Scale(lineDiff, 0.5f);

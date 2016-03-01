@@ -1,10 +1,10 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo CrearFlecha
@@ -34,8 +34,6 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crea flecha genérica
             arrow = new TgcArrow();
 
@@ -60,14 +58,12 @@ namespace Examples.GeometryBasics
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var start = (Vector3) GuiController.Instance.Modifiers["start"];
-            var end = (Vector3) GuiController.Instance.Modifiers["end"];
-            var thickness = (float) GuiController.Instance.Modifiers["thickness"];
-            var headSize = (Vector2) GuiController.Instance.Modifiers["headSize"];
-            var bodyColor = (Color) GuiController.Instance.Modifiers["bodyColor"];
-            var headColor = (Color) GuiController.Instance.Modifiers["headColor"];
+            var start = (Vector3)GuiController.Instance.Modifiers["start"];
+            var end = (Vector3)GuiController.Instance.Modifiers["end"];
+            var thickness = (float)GuiController.Instance.Modifiers["thickness"];
+            var headSize = (Vector2)GuiController.Instance.Modifiers["headSize"];
+            var bodyColor = (Color)GuiController.Instance.Modifiers["bodyColor"];
+            var headColor = (Color)GuiController.Instance.Modifiers["headColor"];
 
             //Cargar valores de la flecha
             arrow.PStart = start;

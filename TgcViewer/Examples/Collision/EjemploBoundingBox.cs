@@ -1,8 +1,8 @@
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploBoundingBox:
@@ -34,8 +34,6 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar modelo estatico
             var loader = new TgcSceneLoader();
             var scene = loader.loadSceneFromFile(
@@ -48,8 +46,6 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Renderizar modelo
             mesh.render();
 

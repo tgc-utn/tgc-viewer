@@ -1,10 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo TrianguloVertexBuffer:
@@ -39,10 +40,8 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear vertexBuffer
-            vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), 3, d3dDevice,
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             //Cargar informacion de vertices: (X,Y,Z) + Color
@@ -64,14 +63,12 @@ namespace Examples.GeometryBasics
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Especificar formato de triangulos
-            d3dDevice.VertexFormat = CustomVertex.PositionColored.Format;
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
             //Cargar VertexBuffer a renderizar
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
             //Dibujar 1 primitiva
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
         }
 
         public override void close()

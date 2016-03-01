@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.DirectX;
+using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools.Primitives
+namespace TGC.Examples.MeshCreator.EditablePoly.Primitives
 {
     /// <summary>
     ///     Vertice de EditablePoly

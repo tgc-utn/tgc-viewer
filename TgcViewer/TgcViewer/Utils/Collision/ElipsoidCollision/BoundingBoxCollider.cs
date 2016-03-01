@@ -1,8 +1,8 @@
 ﻿using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace TgcViewer.Utils.Collision.ElipsoidCollision
+namespace TGC.Viewer.Utils.Collision.ElipsoidCollision
 {
     /// <summary>
     ///     Collider a base de un BoundingBox
@@ -125,7 +125,7 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             if (i == 1)
             {
                 n = new Vector3(sign[0], sign[1], sign[2]);
-                q = eSphere.Center + t*eMovementVector - eSphere.Radius*n;
+                q = eSphere.Center + t * eMovementVector - eSphere.Radius * n;
                 return true;
             }
 
@@ -140,19 +140,19 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             if (i == 2)
             {
                 //Generar los dos puntos extremos del Edge
-                float[] extentDir = {sign[0], sign[1], sign[2]};
+                float[] extentDir = { sign[0], sign[1], sign[2] };
                 var zeroIndex = sign[0] == 0 ? 0 : (sign[1] == 0 ? 1 : 2);
                 extentDir[zeroIndex] = 1;
-                var capsuleA = center + new Vector3(extent.X*extentDir[0], extent.Y*extentDir[1], extent.Z*extentDir[2]);
+                var capsuleA = center + new Vector3(extent.X * extentDir[0], extent.Y * extentDir[1], extent.Z * extentDir[2]);
                 extentDir[zeroIndex] = -1;
-                var capsuleB = center + new Vector3(extent.X*extentDir[0], extent.Y*extentDir[1], extent.Z*extentDir[2]);
+                var capsuleB = center + new Vector3(extent.X * extentDir[0], extent.Y * extentDir[1], extent.Z * extentDir[2]);
 
                 //Colision contra el Edge hecho Capsula
                 if (intersectSegmentCapsule(seg, new Capsule(capsuleA, capsuleB, eSphere.Radius), out t))
                 {
                     n = new Vector3(sign[0], sign[1], sign[2]);
                     n.Normalize();
-                    q = eSphere.Center + t*eMovementVector - eSphere.Radius*n;
+                    q = eSphere.Center + t * eMovementVector - eSphere.Radius * n;
                     return true;
                 }
             }
@@ -161,18 +161,18 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             if (i == 3)
             {
                 var tmin = float.MaxValue;
-                var capsuleA = center + new Vector3(extent.X*sign[0], extent.Y*sign[1], extent.Z*sign[2]);
+                var capsuleA = center + new Vector3(extent.X * sign[0], extent.Y * sign[1], extent.Z * sign[2]);
                 Vector3 capsuleB;
 
-                capsuleB = center + new Vector3(extent.X*-sign[0], extent.Y*sign[1], extent.Z*sign[2]);
+                capsuleB = center + new Vector3(extent.X * -sign[0], extent.Y * sign[1], extent.Z * sign[2]);
                 if (intersectSegmentCapsule(seg, new Capsule(capsuleA, capsuleB, eSphere.Radius), out t))
                     tmin = TgcCollisionUtils.min(t, tmin);
 
-                capsuleB = center + new Vector3(extent.X*sign[0], extent.Y*-sign[1], extent.Z*sign[2]);
+                capsuleB = center + new Vector3(extent.X * sign[0], extent.Y * -sign[1], extent.Z * sign[2]);
                 if (intersectSegmentCapsule(seg, new Capsule(capsuleA, capsuleB, eSphere.Radius), out t))
                     tmin = TgcCollisionUtils.min(t, tmin);
 
-                capsuleB = center + new Vector3(extent.X*sign[0], extent.Y*sign[1], extent.Z*-sign[2]);
+                capsuleB = center + new Vector3(extent.X * sign[0], extent.Y * sign[1], extent.Z * -sign[2]);
                 if (intersectSegmentCapsule(seg, new Capsule(capsuleA, capsuleB, eSphere.Radius), out t))
                     tmin = TgcCollisionUtils.min(t, tmin);
 
@@ -181,7 +181,7 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
                 t = tmin;
                 n = new Vector3(sign[0], sign[1], sign[2]);
                 n.Normalize();
-                q = eSphere.Center + t*eMovementVector - eSphere.Radius*n;
+                q = eSphere.Center + t * eMovementVector - eSphere.Radius * n;
                 return true; // Intersection at time t == tmin
             }
 
@@ -240,7 +240,7 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             var V = U;
             var W = U;
             generateComplementBasis(ref U, ref V, W);
-            var rSqr = capsule.radius*capsule.radius;
+            var rSqr = capsule.radius * capsule.radius;
             var extent = capsule.segment.extent;
 
             // Convert incoming line origin to capsule coordinates.
@@ -252,7 +252,7 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             if (FastMath.Abs(dz) >= 1f - float.Epsilon)
             {
                 // The line is parallel to the capsule axis.  Determine whether the line intersects the capsule hemispheres.
-                var radialSqrDist = rSqr - P.X*P.X - P.Y*P.Y;
+                var radialSqrDist = rSqr - P.X * P.X - P.Y * P.Y;
                 if (radialSqrDist < 0f)
                 {
                     // Line outside the cylinder of the capsule, no intersection.
@@ -279,10 +279,10 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             // This reduces to computing the roots of a quadratic equation.  If
             // P = (px,py,pz) and D = (dx,dy,dz), then the quadratic equation is
             //   (dx^2+dy^2)*t^2 + 2*(px*dx+py*dy)*t + (px^2+py^2-r^2) = 0
-            var a0 = P.X*P.X + P.Y*P.Y - rSqr;
-            var a1 = P.X*D.X + P.Y*D.Y;
-            var a2 = D.X*D.X + D.Y*D.Y;
-            var discr = a1*a1 - a0*a2;
+            var a0 = P.X * P.X + P.Y * P.Y - rSqr;
+            var a1 = P.X * D.X + P.Y * D.Y;
+            var a2 = D.X * D.X + D.Y * D.Y;
+            var discr = a1 * a1 - a0 * a2;
             if (discr < 0f)
             {
                 // Line does not intersect infinite cylinder.
@@ -295,17 +295,17 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             {
                 // Line intersects infinite cylinder in two places.
                 root = FastMath.Sqrt(discr);
-                inv = 1f/a2;
-                tValue = (-a1 - root)*inv;
-                zValue = P.Z + tValue*D.Z;
+                inv = 1f / a2;
+                tValue = (-a1 - root) * inv;
+                zValue = P.Z + tValue * D.Z;
                 if (FastMath.Abs(zValue) <= extent)
                 {
                     quantity++;
                     t = tValue;
                 }
 
-                tValue = (-a1 + root)*inv;
-                zValue = P.Z + tValue*D.Z;
+                tValue = (-a1 + root) * inv;
+                zValue = P.Z + tValue * D.Z;
                 if (FastMath.Abs(zValue) <= extent)
                 {
                     quantity++;
@@ -321,8 +321,8 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             else
             {
                 // Line is tangent to infinite cylinder.
-                tValue = -a1/a2;
-                zValue = P.Z + tValue*D.Z;
+                tValue = -a1 / a2;
+                zValue = P.Z + tValue * D.Z;
                 if (FastMath.Abs(zValue) <= extent)
                 {
                     t = tValue;
@@ -336,14 +336,14 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             // The leading coefficient is a2 = 1, so no need to include in the
             // construction.
             var PZpE = P.Z + extent;
-            a1 += PZpE*D.Z;
-            a0 += PZpE*PZpE;
-            discr = a1*a1 - a0;
+            a1 += PZpE * D.Z;
+            a0 += PZpE * PZpE;
+            discr = a1 * a1 - a0;
             if (discr > float.Epsilon)
             {
                 root = FastMath.Sqrt(discr);
                 tValue = -a1 - root;
-                zValue = P.Z + tValue*D.Z;
+                zValue = P.Z + tValue * D.Z;
                 if (zValue <= -extent)
                 {
                     quantity++;
@@ -355,7 +355,7 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
                 }
 
                 tValue = -a1 + root;
-                zValue = P.Z + tValue*D.Z;
+                zValue = P.Z + tValue * D.Z;
                 if (zValue <= -extent)
                 {
                     quantity++;
@@ -369,7 +369,7 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             else if (FastMath.Abs(discr) <= float.Epsilon)
             {
                 tValue = -a1;
-                zValue = P.Z + tValue*D.Z;
+                zValue = P.Z + tValue * D.Z;
                 if (zValue <= -extent)
                 {
                     quantity++;
@@ -386,14 +386,14 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             // Use the fact that currently a1 = px*dx+py*dy+(pz+e)*dz and
             // a0 = px^2+py^2+(pz+e)^2-r^2.  The leading coefficient is a2 = 1, so
             // no need to include in the construction.
-            a1 -= 2f*extent*D.Z;
-            a0 -= 4*extent*P.Z;
-            discr = a1*a1 - a0;
+            a1 -= 2f * extent * D.Z;
+            a0 -= 4 * extent * P.Z;
+            discr = a1 * a1 - a0;
             if (discr > float.Epsilon)
             {
                 root = FastMath.Sqrt(discr);
                 tValue = -a1 - root;
-                zValue = P.Z + tValue*D.Z;
+                zValue = P.Z + tValue * D.Z;
                 if (zValue >= extent)
                 {
                     quantity++;
@@ -405,7 +405,7 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
                 }
 
                 tValue = -a1 + root;
-                zValue = P.Z + tValue*D.Z;
+                zValue = P.Z + tValue * D.Z;
                 if (zValue >= extent)
                 {
                     quantity++;
@@ -419,7 +419,7 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             else if (FastMath.Abs(discr) <= float.Epsilon)
             {
                 tValue = -a1;
-                zValue = P.Z + tValue*D.Z;
+                zValue = P.Z + tValue * D.Z;
                 if (zValue >= extent)
                 {
                     quantity++;
@@ -445,24 +445,24 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
             if (FastMath.Abs(w.X) >= FastMath.Abs(w.Y))
             {
                 // W.x or W.z is the largest magnitude component, swap them
-                invLength = FastMath.InvSqrt(w.X*w.X + w.Z*w.Z);
-                u.X = -w.Z*invLength;
+                invLength = FastMath.InvSqrt(w.X * w.X + w.Z * w.Z);
+                u.X = -w.Z * invLength;
                 u.Y = 0f;
-                u.Z = +w.X*invLength;
-                v.X = w.Y*u.Z;
-                v.Y = w.Z*u.X - w.X*u.Z;
-                v.Z = -w.Y*u.X;
+                u.Z = +w.X * invLength;
+                v.X = w.Y * u.Z;
+                v.Y = w.Z * u.X - w.X * u.Z;
+                v.Z = -w.Y * u.X;
             }
             else
             {
                 // W.y or W.z is the largest magnitude component, swap them
-                invLength = FastMath.InvSqrt(w.Y*w.Y + w.Z*w.Z);
+                invLength = FastMath.InvSqrt(w.Y * w.Y + w.Z * w.Z);
                 u.X = 0f;
-                u.Y = +w.Z*invLength;
-                u.Z = -w.Y*invLength;
-                v.X = w.Y*u.Z - w.Z*u.Y;
-                v.Y = -w.X*u.Z;
-                v.Z = w.X*u.Y;
+                u.Y = +w.Z * invLength;
+                u.Z = -w.Y * invLength;
+                v.X = w.Y * u.Z - w.Z * u.Y;
+                v.Y = -w.X * u.Z;
+                v.Z = w.X * u.Y;
             }
         }
 
@@ -497,9 +497,9 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
                 else
                 {
                     // Compute intersection t value of ray with near and far plane of slab
-                    var ood = 1.0f/d[i];
-                    var t1 = (aabbMin[i] - p[i])*ood;
-                    var t2 = (aabbMax[i] - p[i])*ood;
+                    var ood = 1.0f / d[i];
+                    var t1 = (aabbMin[i] - p[i]) * ood;
+                    var t2 = (aabbMax[i] - p[i]) * ood;
                     // Make t1 be intersection with near plane, t2 with far plane
                     if (t1 > t2) TgcCollisionUtils.swap(ref t1, ref t2);
                     // Compute the intersection of slab intersection intervals
@@ -510,7 +510,7 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
                 }
             }
             // Ray intersects all 3 slabs. Return point (q) and intersection t value (tmin)
-            q = ray.origin + ray.direction*tmin;
+            q = ray.origin + ray.direction * tmin;
             return true;
         }
 
@@ -525,9 +525,9 @@ namespace TgcViewer.Utils.Collision.ElipsoidCollision
                 this.b = b;
 
                 dir = b - a;
-                center = (a + b)*0.5f;
+                center = (a + b) * 0.5f;
                 length = dir.Length();
-                extent = length*0.5f;
+                extent = length * 0.5f;
                 dir.Normalize();
             }
 

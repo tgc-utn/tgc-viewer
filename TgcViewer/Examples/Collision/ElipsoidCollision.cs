@@ -1,18 +1,18 @@
-using System.Collections.Generic;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Collision.ElipsoidCollision;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using System.Collections.Generic;
+using System.Drawing;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Collision.ElipsoidCollision;
+using TGC.Viewer.Utils.Terrain;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo ElipsoidCollision
@@ -33,6 +33,7 @@ namespace Examples.Collision
     /// </summary>
     public class ElipsoidCollision : TgcExample
     {
+        private readonly List<Collider> objetosColisionables = new List<Collider>();
         private TgcElipsoid characterElipsoid;
         private ElipsoidCollisionManager collisionManager;
         private TgcArrow collisionNormalArrow;
@@ -41,7 +42,6 @@ namespace Examples.Collision
         private TgcScene escenario;
         private bool jumping;
         private float jumpingElapsedTime;
-        private readonly List<Collider> objetosColisionables = new List<Collider>();
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
 
@@ -63,8 +63,6 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar escenario específico para este ejemplo. Este escenario tiene dos layers: objetos normales y objetos con colisión a nivel de triángulo.
             //La colisión a nivel de triángulos es costosa. Solo debe utilizarse para objetos puntuales (como el piso). Y es recomendable dividirlo en varios
             //meshes (y no hacer un único piso que ocupe todo el escenario)
@@ -177,16 +175,14 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Obtener boolean para saber si hay que mostrar Bounding Box
-            var showBB = (bool) GuiController.Instance.Modifiers.getValue("showBoundingBox");
+            var showBB = (bool)GuiController.Instance.Modifiers.getValue("showBoundingBox");
 
             //obtener velocidades de Modifiers
-            var velocidadCaminar = (float) GuiController.Instance.Modifiers.getValue("VelocidadCaminar");
-            var velocidadRotacion = (float) GuiController.Instance.Modifiers.getValue("VelocidadRotacion");
-            var velocidadSalto = (float) GuiController.Instance.Modifiers.getValue("VelocidadSalto");
-            var tiempoSalto = (float) GuiController.Instance.Modifiers.getValue("TiempoSalto");
+            var velocidadCaminar = (float)GuiController.Instance.Modifiers.getValue("VelocidadCaminar");
+            var velocidadRotacion = (float)GuiController.Instance.Modifiers.getValue("VelocidadRotacion");
+            var velocidadSalto = (float)GuiController.Instance.Modifiers.getValue("VelocidadSalto");
+            var tiempoSalto = (float)GuiController.Instance.Modifiers.getValue("TiempoSalto");
 
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
@@ -240,7 +236,7 @@ namespace Examples.Collision
             if (rotating)
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
-                var rotAngle = Geometry.DegreeToRadian(rotate*elapsedTime);
+                var rotAngle = Geometry.DegreeToRadian(rotate * elapsedTime);
                 personaje.rotateY(rotAngle);
                 GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
             }
@@ -274,7 +270,7 @@ namespace Examples.Collision
                 }
                 else
                 {
-                    jump = velocidadSalto*(tiempoSalto - jumpingElapsedTime);
+                    jump = velocidadSalto * (tiempoSalto - jumpingElapsedTime);
                 }
             }
 
@@ -284,17 +280,17 @@ namespace Examples.Collision
             {
                 //Aplicar movimiento, desplazarse en base a la rotacion actual del personaje
                 movementVector = new Vector3(
-                    FastMath.Sin(personaje.Rotation.Y)*moveForward,
+                    FastMath.Sin(personaje.Rotation.Y) * moveForward,
                     jump,
-                    FastMath.Cos(personaje.Rotation.Y)*moveForward
+                    FastMath.Cos(personaje.Rotation.Y) * moveForward
                     );
             }
 
             //Actualizar valores de gravedad
-            collisionManager.GravityEnabled = (bool) GuiController.Instance.Modifiers["HabilitarGravedad"];
-            collisionManager.GravityForce = (Vector3) GuiController.Instance.Modifiers["Gravedad"] /** elapsedTime*/;
-            collisionManager.SlideFactor = (float) GuiController.Instance.Modifiers["SlideFactor"];
-            collisionManager.OnGroundMinDotValue = (float) GuiController.Instance.Modifiers["Pendiente"];
+            collisionManager.GravityEnabled = (bool)GuiController.Instance.Modifiers["HabilitarGravedad"];
+            collisionManager.GravityForce = (Vector3)GuiController.Instance.Modifiers["Gravedad"] /** elapsedTime*/;
+            collisionManager.SlideFactor = (float)GuiController.Instance.Modifiers["SlideFactor"];
+            collisionManager.OnGroundMinDotValue = (float)GuiController.Instance.Modifiers["Pendiente"];
 
             //Si esta saltando, desactivar gravedad
             if (jumping)
@@ -303,7 +299,7 @@ namespace Examples.Collision
             }
 
             //Mover personaje con detección de colisiones, sliding y gravedad
-            if ((bool) GuiController.Instance.Modifiers["Collisions"])
+            if ((bool)GuiController.Instance.Modifiers["Collisions"])
             {
                 //Aca se aplica toda la lógica de detección de colisiones del CollisionManager. Intenta mover el Elipsoide
                 //del personaje a la posición deseada. Retorna la verdadera posicion (realMovement) a la que se pudo mover

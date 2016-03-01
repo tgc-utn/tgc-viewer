@@ -1,10 +1,11 @@
 using Microsoft.DirectX;
 using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Transformations.SistemaSolar
+namespace TGC.Examples.Transformations.SistemaSolar
 {
     /// <summary>
     ///     Ejemplo SistemaSolar:
@@ -55,8 +56,6 @@ namespace Examples.Transformations.SistemaSolar
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             var sphere = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml";
 
             var loader = new TgcSceneLoader();
@@ -65,21 +64,21 @@ namespace Examples.Transformations.SistemaSolar
             sun = loader.loadSceneFromFile(sphere).Meshes[0];
             sun.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(d3dDevice,
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
                     GuiController.Instance.ExamplesDir + "Transformations\\SistemaSolar\\SunTexture.jpg")
             });
 
             earth = loader.loadSceneFromFile(sphere).Meshes[0];
             earth.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(d3dDevice,
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
                     GuiController.Instance.ExamplesDir + "Transformations\\SistemaSolar\\EarthTexture.jpg")
             });
 
             moon = loader.loadSceneFromFile(sphere).Meshes[0];
             moon.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(d3dDevice,
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
                     GuiController.Instance.ExamplesDir + "Transformations\\SistemaSolar\\MoonTexture.jpg")
             });
 
@@ -99,8 +98,6 @@ namespace Examples.Transformations.SistemaSolar
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Actualizar transformacion y renderizar el sol
             sun.Transform = getSunTransform(elapsedTime);
             sun.render();
@@ -119,7 +116,7 @@ namespace Examples.Transformations.SistemaSolar
             moonOrbitRotation += MOON_ORBIT_SPEED * elapsedTime;
 
             //Limpiamos todas las transformaciones con la Matrix identidad
-            d3dDevice.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
         }
 
         private Matrix getSunTransform(float elapsedTime)

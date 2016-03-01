@@ -1,8 +1,8 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
+﻿using Microsoft.DirectX;
+using System.Drawing;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils._2D
+namespace TGC.Viewer.Utils._2D
 {
     /// <summary>
     ///     Representa un Sprite 2D con transformaciones

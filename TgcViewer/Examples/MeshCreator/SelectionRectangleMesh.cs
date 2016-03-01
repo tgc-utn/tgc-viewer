@@ -1,10 +1,11 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils;
+using System.Drawing;
+using TGC.Core.Direct3D;
+using TGC.Viewer;
+using TGC.Viewer.Utils;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Mesh para dibujar el rectangulo de seleccion 2D en pantalla
@@ -47,16 +48,15 @@ namespace Examples.MeshCreator
         /// </summary>
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
-            d3dDevice.Material = TgcD3dDevice.DEFAULT_MATERIAL;
-            d3dDevice.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Material = TgcD3dDevice.DEFAULT_MATERIAL;
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
-            d3dDevice.VertexFormat = CustomVertex.TransformedColored.Format;
-            d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, 4, vertices);
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.TransformedColored.Format;
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, 4, vertices);
         }
 
         public void dipose()

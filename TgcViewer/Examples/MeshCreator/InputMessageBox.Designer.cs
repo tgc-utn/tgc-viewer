@@ -1,4 +1,4 @@
-﻿namespace Examples.MeshCreator
+﻿namespace TGC.Examples.MeshCreator
 {
     partial class InputMessageBox
     {

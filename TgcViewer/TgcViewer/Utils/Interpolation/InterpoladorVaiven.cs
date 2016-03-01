@@ -1,4 +1,4 @@
-﻿namespace TgcViewer.Utils.Interpolation
+﻿namespace TGC.Viewer.Utils.Interpolation
 {
     /// <summary>
     ///     Utilidad para interpolar linealmente un valor entre un MIN y un MAX, variando en forma de vaiven (subi y baja)
@@ -42,7 +42,7 @@
         /// </summary>
         public float update()
         {
-            var n = Speed*GuiController.Instance.ElapsedTime;
+            var n = Speed * GuiController.Instance.ElapsedTime;
             Current += n;
             if (Current > Max)
             {

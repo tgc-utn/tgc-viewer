@@ -1,6 +1,6 @@
 using TGC.Core.SceneLoader;
 
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Información de la Malla de un modelo animado por Animación Esquelética
@@ -12,6 +12,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
 
         //Color general, por si no tiene Material
         public float[] color;
+
         public int[] colorIndices;
 
         //Valores por triangulo
@@ -40,6 +41,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
 
         //Valores por vertice
         public float[] verticesCoordinates;
+
         public float[] verticesNormals;
         public float[] verticesTangents;
 

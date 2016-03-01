@@ -1,13 +1,13 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Shaders
+namespace TGC.Examples.Shaders
 {
     /// <summary>
     ///     Ejemplo EjemploPhongShading:
@@ -41,8 +41,6 @@ namespace Examples.Shaders
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear loader
             var loader = new TgcSceneLoader();
 
@@ -69,10 +67,8 @@ namespace Examples.Shaders
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
-
             //Habilitar luz
-            var lightEnable = (bool) GuiController.Instance.Modifiers["lightEnable"];
+            var lightEnable = (bool)GuiController.Instance.Modifiers["lightEnable"];
             Effect currentShader;
             if (lightEnable)
             {
@@ -91,7 +87,7 @@ namespace Examples.Shaders
             mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
 
             //Actualzar posición de la luz
-            var lightPos = (Vector3) GuiController.Instance.Modifiers["lightPos"];
+            var lightPos = (Vector3)GuiController.Instance.Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 
             if (lightEnable)
@@ -101,12 +97,12 @@ namespace Examples.Shaders
                 mesh.Effect.SetValue("eyePosition",
                     TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.RotCamera.getPosition()));
                 mesh.Effect.SetValue("ambientColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["ambient"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["ambient"]));
                 mesh.Effect.SetValue("diffuseColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["diffuse"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["diffuse"]));
                 mesh.Effect.SetValue("specularColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["specular"]));
-                mesh.Effect.SetValue("specularExp", (float) GuiController.Instance.Modifiers["specularEx"]);
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["specular"]));
+                mesh.Effect.SetValue("specularExp", (float)GuiController.Instance.Modifiers["specularEx"]);
             }
 
             //Renderizar modelo

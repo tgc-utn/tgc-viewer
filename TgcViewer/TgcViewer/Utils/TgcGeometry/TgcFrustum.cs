@@ -1,10 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Clase que representa el volumen del Frustum.
@@ -80,7 +81,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public Plane LeftPlane
         {
-            get { return FrustumPlanes[(int) PlaneTypes.Left]; }
+            get { return FrustumPlanes[(int)PlaneTypes.Left]; }
         }
 
         /// <summary>
@@ -88,7 +89,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public Plane RightPlane
         {
-            get { return FrustumPlanes[(int) PlaneTypes.Right]; }
+            get { return FrustumPlanes[(int)PlaneTypes.Right]; }
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public Plane TopPlane
         {
-            get { return FrustumPlanes[(int) PlaneTypes.Top]; }
+            get { return FrustumPlanes[(int)PlaneTypes.Top]; }
         }
 
         /// <summary>
@@ -104,7 +105,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public Plane BottomPlane
         {
-            get { return FrustumPlanes[(int) PlaneTypes.Bottom]; }
+            get { return FrustumPlanes[(int)PlaneTypes.Bottom]; }
         }
 
         /// <summary>
@@ -112,7 +113,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public Plane NearPlane
         {
-            get { return FrustumPlanes[(int) PlaneTypes.Near]; }
+            get { return FrustumPlanes[(int)PlaneTypes.Near]; }
         }
 
         /// <summary>
@@ -120,7 +121,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public Plane FarPlane
         {
-            get { return FrustumPlanes[(int) PlaneTypes.Far]; }
+            get { return FrustumPlanes[(int)PlaneTypes.Far]; }
         }
 
         /// <summary>
@@ -145,7 +146,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <param name="projectionMatrix">Projection matrix</param>
         public void updateVolume(Matrix viewMatrix, Matrix projectionMatrix)
         {
-            var viewProjection = viewMatrix*projectionMatrix;
+            var viewProjection = viewMatrix * projectionMatrix;
 
             //Left plane
             FrustumPlanes[0].A = viewProjection.M14 + viewProjection.M11;
@@ -215,11 +216,11 @@ namespace TgcViewer.Utils.TgcGeometry
              (fbl)6 ---- 7(fbr)
              */
 
-            var tang = FastMath.Tan(fieldOfViewY*0.5f);
-            var nh = nearDistance*tang;
-            var nw = nh*aspectRatio;
-            var fh = farDistance*tang;
-            var fw = fh*aspectRatio;
+            var tang = FastMath.Tan(fieldOfViewY * 0.5f);
+            var nh = nearDistance * tang;
+            var nw = nh * aspectRatio;
+            var fh = farDistance * tang;
+            var fw = fh * aspectRatio;
 
             // compute the Z axis of camera
             // this axis points in the opposite direction from
@@ -235,20 +236,20 @@ namespace TgcViewer.Utils.TgcGeometry
             var Y = Vector3.Cross(Z, X);
 
             // compute the centers of the near and far planes
-            var nc = position - Z*nearDistance;
-            var fc = position - Z*farDistance;
+            var nc = position - Z * nearDistance;
+            var fc = position - Z * farDistance;
 
             // compute the 4 corners of the frustum on the near plane
-            corners[0] = nc + Y*nh - X*nw; //ntl
-            corners[1] = nc + Y*nh + X*nw; //ntr
-            corners[2] = nc - Y*nh - X*nw; //nbl
-            corners[3] = nc - Y*nh + X*nw; //nbr
+            corners[0] = nc + Y * nh - X * nw; //ntl
+            corners[1] = nc + Y * nh + X * nw; //ntr
+            corners[2] = nc - Y * nh - X * nw; //nbl
+            corners[3] = nc - Y * nh + X * nw; //nbr
 
             // compute the 4 corners of the frustum on the far plane
-            corners[4] = fc + Y*fh - X*fw; //ftl
-            corners[5] = fc + Y*fh + X*fw; //ftr
-            corners[6] = fc - Y*fh - X*fw; //fbl
-            corners[7] = fc - Y*fh + X*fw; //fbr
+            corners[4] = fc + Y * fh - X * fw; //ftl
+            corners[5] = fc + Y * fh + X * fw; //ftr
+            corners[6] = fc - Y * fh - X * fw; //fbl
+            corners[7] = fc - Y * fh + X * fw; //fbr
 
             return corners;
         }
@@ -280,12 +281,10 @@ namespace TgcViewer.Utils.TgcGeometry
             //Calcular los 8 vertices extremos
             var corners = computeFrustumCorners(position, lookAt, aspectRatio, nearDistance, farDistance, fieldOfViewY);
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear vertexBuffer
             if (vertexBuffer == null)
             {
-                vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), 36, d3dDevice,
+                vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 36, D3DDevice.Instance.Device,
                     Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
             }
 
@@ -353,7 +352,6 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
             texturesManager.clear(0);
             texturesManager.clear(1);
@@ -366,24 +364,24 @@ namespace TgcViewer.Utils.TgcGeometry
             }
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //transparencia
             effect.SetValue("alphaValue", AlphaBlendingValue);
-            d3dDevice.RenderState.AlphaTestEnable = true;
-            d3dDevice.RenderState.AlphaBlendEnable = true;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
 
             //Draw shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
             effect.EndPass();
             effect.End();
 
-            d3dDevice.RenderState.AlphaTestEnable = false;
-            d3dDevice.RenderState.AlphaBlendEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>

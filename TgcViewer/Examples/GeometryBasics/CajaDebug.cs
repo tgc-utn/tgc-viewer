@@ -1,10 +1,10 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo CajaDebug
@@ -37,8 +37,6 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear caja debug vacia
             debugBox = new TgcDebugBox();
 
@@ -58,12 +56,10 @@ namespace Examples.GeometryBasics
         /// </summary>
         private void updateBox()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var size = (Vector3) GuiController.Instance.Modifiers["size"];
-            var position = (Vector3) GuiController.Instance.Modifiers["position"];
-            var thickness = (float) GuiController.Instance.Modifiers["thickness"];
-            var color = (Color) GuiController.Instance.Modifiers["color"];
+            var size = (Vector3)GuiController.Instance.Modifiers["size"];
+            var position = (Vector3)GuiController.Instance.Modifiers["position"];
+            var thickness = (float)GuiController.Instance.Modifiers["thickness"];
+            var color = (Color)GuiController.Instance.Modifiers["color"];
 
             //Actualizar valores en la caja.
             debugBox.setPositionSize(position, size);
@@ -74,8 +70,6 @@ namespace Examples.GeometryBasics
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Actualizar parametros de la caja
             updateBox();
 

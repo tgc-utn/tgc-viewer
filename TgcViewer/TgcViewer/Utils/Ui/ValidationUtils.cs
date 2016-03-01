@@ -1,6 +1,6 @@
 using System;
 
-namespace SistPaquetesClient.core
+namespace TGC.Viewer.Utils.Ui
 {
     /// <summary>
     ///     Herramientas de validacion valores

@@ -1,9 +1,9 @@
 using System.Drawing;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Otros
+namespace TGC.Examples.Otros
 {
     /// <summary>
     ///     EjemploDisposeMesh2
@@ -29,8 +29,6 @@ namespace Examples.Otros
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             for (var i = 0; i < 100; i++)
             {
                 var loader = new TgcSceneLoader();
@@ -48,8 +46,6 @@ namespace Examples.Otros
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             GuiController.Instance.Text3d.drawText("ok", 100, 100, Color.Red);
             scene1.renderAll();
         }

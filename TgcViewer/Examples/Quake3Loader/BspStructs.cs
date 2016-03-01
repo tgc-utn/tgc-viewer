@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using System;
 using System.Drawing;
 using System.Text;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.Quake3Loader
+namespace TGC.Examples.Quake3Loader
 {
     /*
     * Estructuras para parsear el archivo binario BSP
@@ -290,7 +290,7 @@ namespace Examples.Quake3Loader
         {
             shaderNum = BitConverter.ToInt32(buffer, offset);
             fogNum = BitConverter.ToInt32(buffer, offset + 4);
-            surfaceType = (QMapSurfaceType) BitConverter.ToInt32(buffer, offset + 8);
+            surfaceType = (QMapSurfaceType)BitConverter.ToInt32(buffer, offset + 8);
 
             firstVert = BitConverter.ToInt32(buffer, offset + 12);
             numVerts = BitConverter.ToInt32(buffer, offset + 16);

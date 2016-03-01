@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using TgcViewer.Utils.PortalRendering;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.PortalRendering;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace TgcViewer.Utils.TgcSceneLoader
+namespace TGC.Viewer.Utils.TgcSceneLoader
 {
     /// <summary>
     ///     Escena compuesta por un conjunto de Meshes estáticos

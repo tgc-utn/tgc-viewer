@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+using System.Collections.Generic;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.Collision.SphereCollision
+namespace TGC.Examples.Collision.SphereCollision
 {
     /// <summary>
     ///     Herramienta para realizar el movimiento de una Esfera con detección de colisiones,
@@ -159,7 +159,7 @@ namespace Examples.Collision.SphereCollision
                     }
 
                     var movementRadiusLengthSq = Vector3.Multiply(movementVector, characterSphere.Radius).LengthSq();
-                    if (brutePlaneDist*brutePlaneDist > movementRadiusLengthSq)
+                    if (brutePlaneDist * brutePlaneDist > movementRadiusLengthSq)
                     {
                         continue;
                     }
@@ -180,7 +180,7 @@ namespace Examples.Collision.SphereCollision
                             embebbed = true;
 
                             //TODO: REVISAR ESTO, caso embebido a analizar con más detalle
-                            sphereIntersectionPoint = originalSphereCenter - pNormal*characterSphere.Radius;
+                            sphereIntersectionPoint = originalSphereCenter - pNormal * characterSphere.Radius;
                         }
                         //Esta fuera de la esfera
                         else
@@ -254,7 +254,7 @@ namespace Examples.Collision.SphereCollision
             {
                 //Avanzar hasta muy cerca
                 var movementLength = movementVector.Length();
-                movementVector.Multiply((movementLength - EPSILON)/movementLength);
+                movementVector.Multiply((movementLength - EPSILON) / movementLength);
                 characterSphere.moveCenter(movementVector);
                 return;
             }
@@ -264,7 +264,7 @@ namespace Examples.Collision.SphereCollision
             {
                 //Mover el BoundingSphere hasta casi la nueva posición real
                 var movementLength = realMovementVector.Length();
-                realMovementVector.Multiply((movementLength - EPSILON)/movementLength);
+                realMovementVector.Multiply((movementLength - EPSILON) / movementLength);
                 characterSphere.moveCenter(realMovementVector);
             }
 

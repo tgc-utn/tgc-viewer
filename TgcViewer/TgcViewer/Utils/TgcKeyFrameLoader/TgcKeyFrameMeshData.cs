@@ -1,11 +1,12 @@
 using TGC.Core.SceneLoader;
 
-namespace TgcViewer.Utils.TgcKeyFrameLoader
+namespace TGC.Viewer.Utils.TgcKeyFrameLoader
 {
     public class TgcKeyFrameMeshData
     {
         //Color general, por si no tiene Material
         public float[] color;
+
         public int[] colorIndices;
 
         //Valores por triangulo

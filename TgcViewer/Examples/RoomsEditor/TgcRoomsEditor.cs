@@ -1,8 +1,8 @@
 using Microsoft.DirectX;
-using TgcViewer;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.RoomsEditor
+namespace TGC.Examples.RoomsEditor
 {
     /// <summary>
     ///     Ejemplo Caja
@@ -40,8 +40,6 @@ namespace Examples.RoomsEditor
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             modifier = new RoomsEditorModifier("RoomsEditor", this);
             GuiController.Instance.Modifiers.add(modifier);
 
@@ -54,8 +52,6 @@ namespace Examples.RoomsEditor
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             foreach (var room in modifier.Rooms)
             {
                 foreach (var wall in room.Walls)

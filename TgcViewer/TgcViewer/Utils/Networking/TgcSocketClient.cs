@@ -4,15 +4,15 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     public class TgcSocketClient
     {
         public const string CLIENT_HANDSHAKE = "TgcClient";
 
-        private Socket clientSocket;
-
         private readonly Queue<TgcSocketRecvMsg> receivedMessages;
+
+        private Socket clientSocket;
 
         public TgcSocketClient()
         {
@@ -224,7 +224,7 @@ namespace TgcViewer.Utils.Networking
                 }
 
                 //Guardar sus datos y cambiar su estado
-                var serverInitInfo = (TgcSocketInitialInfoServer) msg.readNext();
+                var serverInitInfo = (TgcSocketInitialInfoServer)msg.readNext();
                 ServerInfo.Name = serverInitInfo.serverName;
                 PlayerId = serverInitInfo.playerId;
 

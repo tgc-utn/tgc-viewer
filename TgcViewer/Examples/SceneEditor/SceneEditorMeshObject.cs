@@ -1,6 +1,6 @@
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.SceneEditor
+namespace TGC.Examples.SceneEditor
 {
     /// <summary>
     ///     Representa un modelo del escenario

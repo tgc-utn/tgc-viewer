@@ -1,13 +1,14 @@
+using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploPicking:
@@ -47,19 +48,17 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar 25 cajas formando una matriz
             var loader = new TgcSceneLoader();
             boxes = new List<TgcBox>();
-            var texture = TgcTexture.createTexture(d3dDevice,
+            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg");
             var boxSize = new Vector3(30, 30, 30);
             for (var i = 0; i < 5; i++)
             {
                 for (var j = 0; j < 5; j++)
                 {
-                    var center = new Vector3((boxSize.X + boxSize.X/2)*i, (boxSize.Y + boxSize.Y/2)*j, 0);
+                    var center = new Vector3((boxSize.X + boxSize.X / 2) * i, (boxSize.Y + boxSize.Y / 2) * j, 0);
                     var box = TgcBox.fromSize(center, boxSize, texture);
                     boxes.Add(box);
                 }
@@ -85,8 +84,6 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Si hacen clic con el mouse, ver si hay colision RayAABB
             if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {

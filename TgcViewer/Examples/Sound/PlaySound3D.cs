@@ -2,13 +2,14 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.Sound;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Sound;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Sound
+namespace TGC.Examples.Sound
 {
     /// <summary>
     ///     Ejemplo PlaySound3D:
@@ -51,10 +52,8 @@ namespace Examples.Sound
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(d3dDevice,
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\tierra.jpg");
             piso = TgcBox.fromSize(new Vector3(0, -60, 0), new Vector3(5000, 5, 5000), pisoTexture);
 
@@ -68,7 +67,7 @@ namespace Examples.Sound
             obstaculo = TgcBox.fromSize(
                 new Vector3(-200, 0, 0),
                 new Vector3(80, 150, 80),
-                TgcTexture.createTexture(d3dDevice,
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
                     GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack3\\goo2.jpg"));
             obstaculos.Add(obstaculo);
 
@@ -85,7 +84,7 @@ namespace Examples.Sound
             obstaculo = TgcBox.fromSize(
                 new Vector3(200, 0, 800),
                 new Vector3(80, 300, 80),
-                TgcTexture.createTexture(d3dDevice,
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
                     GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack3\\lun_dirt.jpg"));
             obstaculos.Add(obstaculo);
 
@@ -99,7 +98,7 @@ namespace Examples.Sound
             obstaculo = TgcBox.fromSize(
                 new Vector3(600, 0, 400),
                 new Vector3(80, 100, 150),
-                TgcTexture.createTexture(d3dDevice,
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
                     GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack3\\Metal2_1.jpg"));
             obstaculos.Add(obstaculo);
 
@@ -134,8 +133,6 @@ namespace Examples.Sound
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;

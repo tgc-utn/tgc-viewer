@@ -1,8 +1,8 @@
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.AlphaBlending
+namespace TGC.Examples.AlphaBlending
 {
     /// <summary>
     ///     Ejemplo EjemploModeloAlpha:
@@ -35,8 +35,6 @@ namespace Examples.AlphaBlending
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             /* Cargar ecena que tiene un modelo configurado con AlphaBlending
              * Los modelos fueron exportados en 3Ds MAX con el mapa "Opacity" cargado en el "Material Editor"
              * Entonces el TgcSceneLoader automáticamente hace mesh.AlphaBlendEnable(true);

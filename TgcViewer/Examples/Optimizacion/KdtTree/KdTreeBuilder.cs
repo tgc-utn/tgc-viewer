@@ -1,12 +1,12 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.KdTree
+namespace TGC.Examples.Optimizacion.KdtTree
 {
     /// <summary>
     ///     Herramienta para construir un KdTree
@@ -15,6 +15,7 @@ namespace Examples.Optimizacion.KdTree
     {
         //Parametros de generacion de planos de corte
         private readonly float D_DESPLAZAMIENTO = 1;
+
         //Parametros de corte del KdTree
         private readonly int MAX_SECTOR_KDTREE_RECURSION = 3;
 
@@ -171,7 +172,7 @@ namespace Examples.Optimizacion.KdTree
         /// </summary>
         private Plane getCutPlane(List<TgcMesh> modelos, Vector3 n, float pMin, float pMax, ref float cutValue)
         {
-            var vueltas = (int) ((pMax - pMin)/D_DESPLAZAMIENTO);
+            var vueltas = (int)((pMax - pMin) / D_DESPLAZAMIENTO);
             var bestBalance = int.MaxValue;
             var bestPlane = Plane.Empty;
             cutValue = 0;
@@ -179,7 +180,7 @@ namespace Examples.Optimizacion.KdTree
             for (var i = 0; i < vueltas; i++)
             {
                 //crear plano de corte
-                var currentCutValue = pMin + D_DESPLAZAMIENTO*i;
+                var currentCutValue = pMin + D_DESPLAZAMIENTO * i;
                 var p = new Plane(n.X, n.Y, n.Z, -currentCutValue);
 
                 //clasificar todos los modelos contra ese plano

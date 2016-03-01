@@ -1,11 +1,11 @@
 ﻿using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.MeshCreator.Primitives
+namespace TGC.Examples.MeshCreator.Primitives
 {
     /// <summary>
     ///     Primitiva de plano en el eje YZ

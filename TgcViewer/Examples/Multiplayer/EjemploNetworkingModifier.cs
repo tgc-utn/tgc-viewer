@@ -1,9 +1,9 @@
 using System.Drawing;
-using TgcViewer;
-using TgcViewer.Utils.Networking;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Networking;
 
-namespace Examples
+namespace TGC.Examples.Multiplayer
 {
     /// <summary>
     ///     Ejemplo EjemploNetworkingModifier:
@@ -36,8 +36,6 @@ namespace Examples
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear Modifier de Networking
             networkingMod = GuiController.Instance.Modifiers.addNetworking("Networking", "MyServer", "MyClient");
 
@@ -46,8 +44,6 @@ namespace Examples
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Actualizar siempre primero todos los valores de red.
             //Esto hace que el cliente y el servidor reciban todos los mensajes y actualicen su es
             networkingMod.updateNetwork();
@@ -62,7 +58,7 @@ namespace Examples
                     var msg = networkingMod.Server.nextReceivedMessage();
 
                     //Obtenter el primer elemento del mensaje, un string en este caso
-                    var strMsg = (string) msg.Msg.readNext();
+                    var strMsg = (string)msg.Msg.readNext();
 
                     //Mostrar mensaje recibido en consola
                     GuiController.Instance.Logger.log(strMsg, Color.Green);

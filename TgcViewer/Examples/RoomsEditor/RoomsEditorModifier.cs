@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using TgcViewer.Utils.Modifiers;
+using TGC.Viewer.Utils.Modifiers;
 
-namespace Examples.RoomsEditor
+namespace TGC.Examples.RoomsEditor
 {
     public class RoomsEditorModifier : TgcModifierPanel
     {

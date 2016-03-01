@@ -1,11 +1,11 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Networking;
+using TGC.Viewer.Utils.Networking;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Viewer.Utils.Modifiers
 {
     public class TgcModifiers
     {

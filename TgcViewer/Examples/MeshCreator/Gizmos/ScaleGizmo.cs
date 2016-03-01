@@ -1,12 +1,13 @@
-﻿using System.Drawing;
-using Examples.MeshCreator.Primitives;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
+using TGC.Core.Direct3D;
+using TGC.Examples.MeshCreator.Primitives;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.Gizmos
+namespace TGC.Examples.MeshCreator.Gizmos
 {
     /// <summary>
     ///     Gizmo para escalar objetos
@@ -231,7 +232,7 @@ namespace Examples.MeshCreator.Gizmos
         public override void render()
         {
             //Desactivar Z-Buffer para dibujar arriba de todo el escenario
-            GuiController.Instance.D3dDevice.RenderState.ZBufferEnable = false;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = false;
 
             //Dibujar
             boxX.render();
@@ -244,7 +245,7 @@ namespace Examples.MeshCreator.Gizmos
                 selectedBox.BoundingBox.render();
             }
 
-            GuiController.Instance.D3dDevice.RenderState.ZBufferEnable = true;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = true;
         }
 
         private TgcBox getAxisBox(Axis axis)
@@ -271,7 +272,6 @@ namespace Examples.MeshCreator.Gizmos
             gizmoCenter += movement;
             boxX.move(movement);
             boxY.move(movement);
-            boxZ.move(movement);
         }
 
         /// <summary>

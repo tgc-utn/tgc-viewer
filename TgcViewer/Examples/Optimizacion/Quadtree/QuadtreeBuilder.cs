@@ -1,13 +1,13 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.Quadtree
+namespace TGC.Examples.Optimizacion.Quadtree
 {
     /// <summary>
     ///     Herramienta para construir un Quadtree
@@ -59,13 +59,13 @@ namespace Examples.Optimizacion.Quadtree
             splitByPlane(xCutPlane, meshes, possitiveList, negativeList);
 
             //recursividad de positivos con plano Z, usando resultados positivos y childIndex 0
-            doSectorQuadtreeZ(parent, new Vector3(x + size.X/2, center.Y, center.Z),
-                new Vector3(size.X/2, size.Y, size.Z),
+            doSectorQuadtreeZ(parent, new Vector3(x + size.X / 2, center.Y, center.Z),
+                new Vector3(size.X / 2, size.Y, size.Z),
                 step, possitiveList, 0);
 
             //recursividad de negativos con plano Z, usando resultados negativos y childIndex 4
-            doSectorQuadtreeZ(parent, new Vector3(x - size.X/2, center.Y, center.Z),
-                new Vector3(size.X/2, size.Y, size.Z),
+            doSectorQuadtreeZ(parent, new Vector3(x - size.X / 2, center.Y, center.Z),
+                new Vector3(size.X / 2, size.Y, size.Z),
                 step, negativeList, 2);
         }
 
@@ -115,13 +115,13 @@ namespace Examples.Optimizacion.Quadtree
                 step++;
 
                 //recursividad de positivos con plano X, usando resultados positivos
-                doSectorQuadtreeX(posNode, new Vector3(center.X, center.Y, z + size.Z/2),
-                    new Vector3(size.X, size.Y, size.Z/2),
+                doSectorQuadtreeX(posNode, new Vector3(center.X, center.Y, z + size.Z / 2),
+                    new Vector3(size.X, size.Y, size.Z / 2),
                     step, possitiveList);
 
                 //recursividad de negativos con plano Y, usando resultados negativos
-                doSectorQuadtreeX(negNode, new Vector3(center.X, center.Y, z - size.Z/2),
-                    new Vector3(size.X, size.Y, size.Z/2),
+                doSectorQuadtreeX(negNode, new Vector3(center.X, center.Y, z - size.Z / 2),
+                    new Vector3(size.X, size.Y, size.Z / 2),
                     step, negativeList);
             }
         }
@@ -269,8 +269,8 @@ namespace Examples.Optimizacion.Quadtree
         {
             var children = node.children;
 
-            var midX = FastMath.Abs((boxUpperX - boxLowerX)/2);
-            var midZ = FastMath.Abs((boxUpperZ - boxLowerZ)/2);
+            var midX = FastMath.Abs((boxUpperX - boxLowerX) / 2);
+            var midZ = FastMath.Abs((boxUpperZ - boxLowerZ) / 2);
 
             //Crear caja debug
             var box = createDebugBox(boxLowerX, boxLowerY, boxLowerZ, boxUpperX, boxUpperY, boxUpperZ, step);

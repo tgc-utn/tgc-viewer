@@ -1,9 +1,9 @@
 using System.IO;
 using System.Windows.Forms;
-using TgcViewer;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.Quake3Loader
+namespace TGC.Examples.Quake3Loader
 {
     /// <summary>
     ///     Ejemplo EjemploEmpaquetarQ3Level
@@ -37,8 +37,6 @@ namespace Examples.Quake3Loader
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Path de recursos del Quake 3 original (descomprimir archivo pak0.pk3 de la carpeta de instalación del Quake 3, renombrar a .zip)
             quake3MediaPath = "C:\\Program Files\\Quake III Arena\\baseq3\\pak0\\";
 
@@ -49,10 +47,8 @@ namespace Examples.Quake3Loader
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si se seleccionó alguno nivel a empaquetar
-            var selectedFile = (string) GuiController.Instance.Modifiers["BspFile"];
+            var selectedFile = (string)GuiController.Instance.Modifiers["BspFile"];
             if (selectedFile != currentFile)
             {
                 currentFile = selectedFile;

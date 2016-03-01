@@ -3,14 +3,15 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.Shaders.WorkshopShaders
 {
     /// <summary>
     ///     Ejemplo ShadowMap:
@@ -51,7 +52,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
             MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
 
@@ -136,30 +136,34 @@ namespace Examples.Shaders.WorkshopShaders
             // no es lo mismo que lockear una textura para acceder desde la CPU, que tiene el problema
             // de transferencia via AGP.
 
-            g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
-                d3dDevice.PresentationParameters.BackBufferHeight,
-                DepthFormat.D24S8,
-                MultiSampleType.None,
-                0,
-                true);
+            g_pDepthStencil =
+                D3DDevice.Instance.Device.CreateDepthStencilSurface(
+                    D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                    D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
+                    DepthFormat.D24S8,
+                    MultiSampleType.None,
+                    0,
+                    true);
 
             // inicializo el render target
-            g_pRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            g_pRenderTarget = new Texture(D3DDevice.Instance.Device,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
+                , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
             effect.SetValue("g_RenderTarget", g_pRenderTarget);
 
             // inicializo el mapa de normales
-            g_pNormals = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            g_pNormals = new Texture(D3DDevice.Instance.Device,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
+                , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.A16B16G16R16F, Pool.Default);
 
             effect.SetValue("g_Normals", g_pNormals);
 
             // Resolucion de pantalla
-            effect.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
-            effect.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
+            effect.SetValue("screen_dx", D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth);
+            effect.SetValue("screen_dy", D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight);
 
             //Se crean 2 triangulos con las dimensiones de la pantalla con sus posiciones ya transformadas
             // x = -1 es el extremo izquiedo de la pantalla, x=1 es el extremo derecho
@@ -174,7 +178,7 @@ namespace Examples.Shaders.WorkshopShaders
             };
             //vertex buffer de los triangulos
             g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured),
-                4, d3dDevice, Usage.Dynamic | Usage.WriteOnly,
+                4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
                 CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
@@ -183,7 +187,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
             var panel3d = GuiController.Instance.Panel3d;
             var aspectRatio = panel3d.Width / (float)panel3d.Height;
 
@@ -201,59 +204,59 @@ namespace Examples.Shaders.WorkshopShaders
             effect.SetValue("k_ls", (float)GuiController.Instance.Modifiers["Specular"]);
             effect.SetValue("fSpecularPower", (float)GuiController.Instance.Modifiers["SpecularPower"]);
 
-            device.EndScene();
+            D3DDevice.Instance.Device.EndScene();
 
             // dibujo la escena una textura
             effect.Technique = "DefaultTechnique";
             // guardo el Render target anterior y seteo la textura como render target
-            var pOldRT = device.GetRenderTarget(0);
+            var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             var pSurf = g_pRenderTarget.GetSurfaceLevel(0);
-            device.SetRenderTarget(0, pSurf);
+            D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);
             // hago lo mismo con el depthbuffer, necesito el que no tiene multisampling
-            var pOldDS = device.DepthStencilSurface;
+            var pOldDS = D3DDevice.Instance.Device.DepthStencilSurface;
             // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
             // por no soportar usualmente el multisampling en el render to texture.
-            device.DepthStencilSurface = g_pDepthStencil;
+            D3DDevice.Instance.Device.DepthStencilSurface = g_pDepthStencil;
 
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            device.BeginScene();
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
             foreach (var instance in instances)
             {
                 instance.Technique = "DefaultTechnique";
                 instance.render();
             }
-            device.EndScene();
+            D3DDevice.Instance.Device.EndScene();
             //TextureLoader.Save("scene.bmp", ImageFileFormat.Bmp, g_pRenderTarget);
 
             // genero el normal map:
             pSurf = g_pNormals.GetSurfaceLevel(0);
-            device.SetRenderTarget(0, pSurf);
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            device.BeginScene();
+            D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
             foreach (var instance in instances)
             {
                 instance.Technique = "NormalMap";
                 instance.render();
             }
 
-            device.EndScene();
+            D3DDevice.Instance.Device.EndScene();
             // restuaro el render target y el stencil
-            device.DepthStencilSurface = pOldDS;
-            device.SetRenderTarget(0, pOldRT);
+            D3DDevice.Instance.Device.DepthStencilSurface = pOldDS;
+            D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
             //TextureLoader.Save("normal.bmp", ImageFileFormat.Bmp, g_pNormals);
 
             // dibujo el quad pp dicho :
-            device.BeginScene();
+            D3DDevice.Instance.Device.BeginScene();
             effect.Technique = efecto_blur ? "CopyScreen" : "EdgeDetect";
-            device.VertexFormat = CustomVertex.PositionTextured.Format;
-            device.SetStreamSource(0, g_pVBV3D, 0);
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
+            D3DDevice.Instance.Device.SetStreamSource(0, g_pVBV3D, 0);
             effect.SetValue("g_Normals", g_pNormals);
             effect.SetValue("g_RenderTarget", g_pRenderTarget);
 
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             effect.Begin(FX.None);
             effect.BeginPass(0);
-            device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             effect.EndPass();
             effect.End();
         }

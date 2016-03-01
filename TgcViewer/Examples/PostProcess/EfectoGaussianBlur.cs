@@ -1,15 +1,16 @@
-using System.Collections.Generic;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.PostProcess
+namespace TGC.Examples.PostProcess
 {
     /// <summary>
     ///     Ejemplo EfectoGaussianBlur:
@@ -49,8 +50,6 @@ namespace Examples.PostProcess
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Activamos el renderizado customizado. De esta forma el framework nos delega control total sobre como dibujar en pantalla
             //La responsabilidad cae toda de nuestro lado
             GuiController.Instance.CustomRenderEnabled = true;
@@ -59,17 +58,19 @@ namespace Examples.PostProcess
             screenQuad = new TgcScreenQuad();
 
             //Creamos un Render Targer sobre el cual se va a dibujar toda la escena original
-            var backBufferWidth = d3dDevice.PresentationParameters.BackBufferWidth;
-            var backBufferHeight = d3dDevice.PresentationParameters.BackBufferHeight;
-            sceneRT = new Texture(d3dDevice, backBufferWidth, backBufferHeight, 1, Usage.RenderTarget, Format.X8R8G8B8,
+            var backBufferWidth = D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth;
+            var backBufferHeight = D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight;
+            sceneRT = new Texture(D3DDevice.Instance.Device, backBufferWidth, backBufferHeight, 1, Usage.RenderTarget,
+                Format.X8R8G8B8,
                 Pool.Default);
 
             //Definimos el tamaño de una textura que sea de 1/4 x 1/4 de la original, y que sean divisibles por 8 para facilitar los calculos de sampleo
-            var cropWidth = (backBufferWidth - backBufferWidth%8)/4;
-            var cropHeight = (backBufferHeight - backBufferHeight%8)/4;
+            var cropWidth = (backBufferWidth - backBufferWidth % 8) / 4;
+            var cropHeight = (backBufferHeight - backBufferHeight % 8) / 4;
 
             //Creamos un Render Target para auxiliar para almacenar la pasada horizontal de blur
-            blurTempRT = new Texture(d3dDevice, cropWidth, cropHeight, 1, Usage.RenderTarget, Format.X8R8G8B8,
+            blurTempRT = new Texture(D3DDevice.Instance.Device, cropWidth, cropHeight, 1, Usage.RenderTarget,
+                Format.X8R8G8B8,
                 Pool.Default);
 
             //Cargar shader con efectos de Post-Procesado
@@ -97,17 +98,15 @@ namespace Examples.PostProcess
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargamos el Render Targer al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
             //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro Render Target.
-            pOldRT = d3dDevice.GetRenderTarget(0);
+            pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             var pSurf = sceneRT.GetSurfaceLevel(0);
-            d3dDevice.SetRenderTarget(0, pSurf);
-            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
-            drawSceneToRenderTarget(d3dDevice);
+            drawSceneToRenderTarget(D3DDevice.Instance.Device);
 
             //Liberar memoria de surface de Render Target
             pSurf.Dispose();
@@ -116,7 +115,7 @@ namespace Examples.PostProcess
             //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
-            drawPostProcess(d3dDevice);
+            drawPostProcess(D3DDevice.Instance.Device);
         }
 
         /// <summary>
@@ -147,12 +146,12 @@ namespace Examples.PostProcess
             d3dDevice.BeginScene();
 
             //Ver si el efecto de oscurecer esta activado, configurar Technique del shader segun corresponda
-            var activar_efecto = (bool) GuiController.Instance.Modifiers["activar_efecto"];
+            var activar_efecto = (bool)GuiController.Instance.Modifiers["activar_efecto"];
 
             //Hacer blur
             if (activar_efecto)
             {
-                var deviation = (float) GuiController.Instance.Modifiers["deviation"];
+                var deviation = (float)GuiController.Instance.Modifiers["deviation"];
                 var blurTempS = blurTempRT.GetSurfaceLevel(0);
 
                 //Gaussian blur horizontal

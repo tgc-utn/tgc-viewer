@@ -22,6 +22,7 @@ namespace TGC.Core.SceneLoader
 
         //Submaterials
         public TgcMaterialData[] subMaterials;
+
         public string type;
         public float[] uvOffset;
 

@@ -1,11 +1,12 @@
-using System;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
+using System;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.DirectX
+namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo EjemploCrearTeapot:
@@ -44,10 +45,8 @@ namespace Examples.DirectX
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear Teapot
-            mesh = Mesh.Teapot(d3dDevice);
+            mesh = Mesh.Teapot(D3DDevice.Instance.Device);
 
             //Crear Material
             material = new Material();
@@ -56,14 +55,14 @@ namespace Examples.DirectX
             material.Specular = Color.Red;
 
             //Crear una fuente de Luz en la posición 0 (Cada adaptador de video soporta hasta un límite máximo de luces)
-            d3dDevice.Lights[0].Type = LightType.Directional;
-            d3dDevice.Lights[0].Diffuse = Color.Yellow;
-            d3dDevice.Lights[0].Position = new Vector3(0, 10, 0);
-            d3dDevice.Lights[0].Direction = new Vector3(0, -1, 0);
-            d3dDevice.Lights[0].Enabled = true;
+            D3DDevice.Instance.Device.Lights[0].Type = LightType.Directional;
+            D3DDevice.Instance.Device.Lights[0].Diffuse = Color.Yellow;
+            D3DDevice.Instance.Device.Lights[0].Position = new Vector3(0, 10, 0);
+            D3DDevice.Instance.Device.Lights[0].Direction = new Vector3(0, -1, 0);
+            D3DDevice.Instance.Device.Lights[0].Enabled = true;
 
             //Habilitar esquema de Iluminación Dinámica
-            d3dDevice.RenderState.Lighting = true;
+            D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
             GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), 10f);
@@ -82,12 +81,10 @@ namespace Examples.DirectX
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Obtener valores de Modifiers
-            var vAngleX = (float) GuiController.Instance.Modifiers["angleX"];
-            var vAngleY = (float) GuiController.Instance.Modifiers["angleY"];
-            var vAngleZ = (float) GuiController.Instance.Modifiers["angleZ"];
+            var vAngleX = (float)GuiController.Instance.Modifiers["angleX"];
+            var vAngleY = (float)GuiController.Instance.Modifiers["angleY"];
+            var vAngleZ = (float)GuiController.Instance.Modifiers["angleZ"];
 
             //Convertir a radianes
             vAngleX = Geometry.DegreeToRadian(vAngleX);
@@ -95,29 +92,29 @@ namespace Examples.DirectX
             vAngleZ = Geometry.DegreeToRadian(vAngleZ);
 
             //Acumular rotacion actual, sin pasarnos de una vuelta entera
-            var doublePI = (float) Math.PI*2f;
-            angleX = (angleX + vAngleX)%doublePI;
-            angleY = (angleY + vAngleY)%doublePI;
-            angleZ = (angleZ + vAngleZ)%doublePI;
+            var doublePI = (float)Math.PI * 2f;
+            angleX = (angleX + vAngleX) % doublePI;
+            angleY = (angleY + vAngleY) % doublePI;
+            angleZ = (angleZ + vAngleZ) % doublePI;
 
             //Ver si hay que usar Quaternions
-            var useQuat = (bool) GuiController.Instance.Modifiers["quaternion"];
+            var useQuat = (bool)GuiController.Instance.Modifiers["quaternion"];
 
             //Rotación Euler
             if (!useQuat)
             {
-                d3dDevice.Transform.World = Matrix.RotationYawPitchRoll(angleY, angleX, angleZ);
+                D3DDevice.Instance.Device.Transform.World = Matrix.RotationYawPitchRoll(angleY, angleX, angleZ);
             }
             //Rotación Quaternion
             else
             {
                 var q = Quaternion.RotationYawPitchRoll(angleY, angleX, angleZ);
-                d3dDevice.Transform.World = Matrix.RotationQuaternion(q);
+                D3DDevice.Instance.Device.Transform.World = Matrix.RotationQuaternion(q);
             }
 
             //Variar el color de Diffuse del Material
-            material.Diffuse = (Color) GuiController.Instance.Modifiers["color"];
-            d3dDevice.Material = material;
+            material.Diffuse = (Color)GuiController.Instance.Modifiers["color"];
+            D3DDevice.Instance.Device.Material = material;
 
             //Renderizar malla
             mesh.DrawSubset(0);

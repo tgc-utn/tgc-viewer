@@ -1,4 +1,4 @@
-namespace Examples.Engine2D
+namespace TGC.Examples.Engine2D
 {
     public abstract class GameObject
     {

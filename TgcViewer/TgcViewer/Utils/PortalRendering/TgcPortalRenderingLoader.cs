@@ -1,12 +1,12 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
 using TGC.Core.Geometries;
 using TGC.Core.PortalRendering;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Viewer.Utils.PortalRendering
 {
     /// <summary>
     ///     Loader de información de PortalRendering de una escena
@@ -32,23 +32,23 @@ namespace TgcViewer.Utils.PortalRendering
             {
                 //Crear cuerpo Convexo
                 var convexPoly = new TgcConvexPolyhedron();
-                convexPoly.Planes = new Plane[cellData.facePlanes.Length/4];
+                convexPoly.Planes = new Plane[cellData.facePlanes.Length / 4];
                 for (var i = 0; i < convexPoly.Planes.Length; i++)
                 {
                     convexPoly.Planes[i] = new Plane(
-                        cellData.facePlanes[i*4],
-                        cellData.facePlanes[i*4 + 1],
-                        cellData.facePlanes[i*4 + 2],
-                        cellData.facePlanes[i*4 + 3]
+                        cellData.facePlanes[i * 4],
+                        cellData.facePlanes[i * 4 + 1],
+                        cellData.facePlanes[i * 4 + 2],
+                        cellData.facePlanes[i * 4 + 3]
                         );
                 }
-                convexPoly.BoundingVertices = new Vector3[cellData.boundingVertices.Length/3];
+                convexPoly.BoundingVertices = new Vector3[cellData.boundingVertices.Length / 3];
                 for (var i = 0; i < convexPoly.BoundingVertices.Length; i++)
                 {
                     convexPoly.BoundingVertices[i] = new Vector3(
-                        cellData.boundingVertices[i*3],
-                        cellData.boundingVertices[i*3 + 1],
-                        cellData.boundingVertices[i*3 + 2]
+                        cellData.boundingVertices[i * 3],
+                        cellData.boundingVertices[i * 3 + 1],
+                        cellData.boundingVertices[i * 3 + 2]
                         );
                 }
 
@@ -83,13 +83,13 @@ namespace TgcViewer.Utils.PortalRendering
 
                 //Poligono del portal para la celda A
                 var polygonA = new TgcConvexPolygon();
-                polygonA.BoundingVertices = new Vector3[portalData.boundingVerticesA.Length/3];
+                polygonA.BoundingVertices = new Vector3[portalData.boundingVerticesA.Length / 3];
                 for (var i = 0; i < polygonA.BoundingVertices.Length; i++)
                 {
                     polygonA.BoundingVertices[i] = new Vector3(
-                        portalData.boundingVerticesA[i*3],
-                        portalData.boundingVerticesA[i*3 + 1],
-                        portalData.boundingVerticesA[i*3 + 2]
+                        portalData.boundingVerticesA[i * 3],
+                        portalData.boundingVerticesA[i * 3 + 1],
+                        portalData.boundingVerticesA[i * 3 + 2]
                         );
                 }
 
@@ -102,13 +102,13 @@ namespace TgcViewer.Utils.PortalRendering
 
                 //Poligono del portal para la celda B
                 var polygonB = new TgcConvexPolygon();
-                polygonB.BoundingVertices = new Vector3[portalData.boundingVerticesB.Length/3];
+                polygonB.BoundingVertices = new Vector3[portalData.boundingVerticesB.Length / 3];
                 for (var i = 0; i < polygonB.BoundingVertices.Length; i++)
                 {
                     polygonB.BoundingVertices[i] = new Vector3(
-                        portalData.boundingVerticesB[i*3],
-                        portalData.boundingVerticesB[i*3 + 1],
-                        portalData.boundingVerticesB[i*3 + 2]
+                        portalData.boundingVerticesB[i * 3],
+                        portalData.boundingVerticesB[i * 3 + 1],
+                        portalData.boundingVerticesB[i * 3 + 2]
                         );
                 }
 

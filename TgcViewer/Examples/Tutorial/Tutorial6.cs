@@ -1,8 +1,8 @@
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Tutorial
+namespace TGC.Examples.Tutorial
 {
     /// <summary>
     ///     Tutorial 6:
@@ -33,8 +33,6 @@ namespace Examples.Tutorial
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //En este ejemplo no cargamos un solo modelo 3D sino una escena completa, compuesta por varios modelos.
             //El framework posee varias escenas ya hechas en la carpeta TgcViewer\Examples\Media\MeshCreator\Scenes.
             var loader = new TgcSceneLoader();
@@ -48,8 +46,6 @@ namespace Examples.Tutorial
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Dibujar la escena entera
             scene.renderAll();
 

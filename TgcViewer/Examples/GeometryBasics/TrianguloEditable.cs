@@ -1,10 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo TrianguloEditable:
@@ -40,14 +41,12 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Configurar camara en rotacion
             GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0.5f, 0), 3f);
 
             //Current texture
             currentTexurePah = GuiController.Instance.ExamplesMediaDir + "Texturas" + "\\" + "baldosaFacultad.jpg";
-            loadTexture(d3dDevice, currentTexurePah);
+            loadTexture(D3DDevice.Instance.Device, currentTexurePah);
 
             //Modifiers
             GuiController.Instance.Modifiers.addVertex3f("vertex1", new Vector3(-3, -3, -3), new Vector3(3, 3, 3),
@@ -80,70 +79,68 @@ namespace Examples.GeometryBasics
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si cambio la textura
-            var selectedTexture = (string) GuiController.Instance.Modifiers["Texture image"];
+            var selectedTexture = (string)GuiController.Instance.Modifiers["Texture image"];
             if (currentTexurePah != selectedTexture)
             {
                 currentTexurePah = selectedTexture;
-                loadTexture(d3dDevice, currentTexurePah);
+                loadTexture(D3DDevice.Instance.Device, currentTexurePah);
             }
 
             //Crear triangulo segun datos del usuario
             var data = new CustomVertex.PositionColoredTextured[3];
 
             //vertice 1
-            var v1 = (Vector3) GuiController.Instance.Modifiers["vertex1"];
-            var t1 = (Vector2) GuiController.Instance.Modifiers["texCoord1"];
+            var v1 = (Vector3)GuiController.Instance.Modifiers["vertex1"];
+            var t1 = (Vector2)GuiController.Instance.Modifiers["texCoord1"];
             data[0] = new CustomVertex.PositionColoredTextured(
                 v1.X,
                 v1.Y,
                 v1.Z,
-                ((Color) GuiController.Instance.Modifiers["color1"]).ToArgb(),
+                ((Color)GuiController.Instance.Modifiers["color1"]).ToArgb(),
                 t1.X,
                 t1.Y);
 
             //vertice 2
-            var v2 = (Vector3) GuiController.Instance.Modifiers["vertex2"];
-            var t2 = (Vector2) GuiController.Instance.Modifiers["texCoord2"];
+            var v2 = (Vector3)GuiController.Instance.Modifiers["vertex2"];
+            var t2 = (Vector2)GuiController.Instance.Modifiers["texCoord2"];
             data[1] = new CustomVertex.PositionColoredTextured(
                 v2.X,
                 v2.Y,
                 v2.Z,
-                ((Color) GuiController.Instance.Modifiers["color2"]).ToArgb(),
+                ((Color)GuiController.Instance.Modifiers["color2"]).ToArgb(),
                 t2.X,
                 t2.Y);
 
             //vertice 3
-            var v3 = (Vector3) GuiController.Instance.Modifiers["vertex3"];
-            var t3 = (Vector2) GuiController.Instance.Modifiers["texCoord3"];
+            var v3 = (Vector3)GuiController.Instance.Modifiers["vertex3"];
+            var t3 = (Vector2)GuiController.Instance.Modifiers["texCoord3"];
             data[2] = new CustomVertex.PositionColoredTextured(
                 v3.X,
                 v3.Y,
                 v3.Z,
-                ((Color) GuiController.Instance.Modifiers["color3"]).ToArgb(),
+                ((Color)GuiController.Instance.Modifiers["color3"]).ToArgb(),
                 t3.X,
                 t3.Y);
 
             //Rotacion
-            var rotation = (float) GuiController.Instance.Modifiers["rotation"];
-            d3dDevice.Transform.World = Matrix.Identity*Matrix.RotationY(rotation);
+            var rotation = (float)GuiController.Instance.Modifiers["rotation"];
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity * Matrix.RotationY(rotation);
 
             //Habilitar textura
-            var textureEnable = (bool) GuiController.Instance.Modifiers["TextureEnable"];
+            var textureEnable = (bool)GuiController.Instance.Modifiers["TextureEnable"];
             if (textureEnable)
             {
-                d3dDevice.SetTexture(0, texture);
+                D3DDevice.Instance.Device.SetTexture(0, texture);
             }
             else
             {
-                d3dDevice.SetTexture(0, null);
+                D3DDevice.Instance.Device.SetTexture(0, null);
             }
 
             //Render triangulo
-            d3dDevice.VertexFormat = CustomVertex.PositionColoredTextured.Format;
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColoredTextured.Format;
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
         }
 
         public override void close()

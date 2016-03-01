@@ -1,9 +1,9 @@
 using System;
 using System.Net;
 using System.Windows.Forms;
-using SistPaquetesClient.core;
+using TGC.Viewer.Utils.Ui;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     /// <summary>
     ///     Ventana para buscar servidores

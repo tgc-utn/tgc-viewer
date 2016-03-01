@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     public class TgcSocketServer
     {
@@ -391,7 +391,7 @@ namespace TgcViewer.Utils.Networking
 
                 //Respuesta del cliente
                 //bool userOk = bool.Parse(msg.readString());
-                var userOk = (bool) msg.readNext();
+                var userOk = (bool)msg.readNext();
                 if (userOk)
                 {
                     //Habilitar estado de cliente para escuchar mensajes
@@ -426,7 +426,7 @@ namespace TgcViewer.Utils.Networking
                 }
 
                 //Guardar sus datos y cambiar su estado
-                var clientInitInfo = (TgcSocketInitialInfoClient) msg.readNext();
+                var clientInitInfo = (TgcSocketInitialInfoClient)msg.readNext();
                 clientInfo.Name = clientInitInfo.clientName;
                 clientInfo.Status = TgcSocketClientInfo.ClientStatus.WaitingClientOk;
 

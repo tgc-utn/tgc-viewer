@@ -1,15 +1,16 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Networking;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System;
+using System.Collections.Generic;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Networking;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples
+namespace TGC.Examples.Multiplayer
 {
     /// <summary>
     ///     Ejemplo VehiculosMultiplayer:
@@ -179,7 +180,7 @@ namespace Examples
                 //El primer mensaje es el header de nuestro protocolo del ejemplo
                 var clientMsg = networkingMod.Server.nextReceivedMessage();
                 var msg = clientMsg.Msg;
-                var msgType = (MyClientProtocol) msg.readNext();
+                var msgType = (MyClientProtocol)msg.readNext();
 
                 switch (msgType)
                 {
@@ -248,7 +249,7 @@ namespace Examples
         private void serverAtenderPosicionActualizada(TgcSocketClientRecvMesg clientMsg)
         {
             //Nueva posicion del cliente
-            var newPos = (Matrix) clientMsg.Msg.readNext();
+            var newPos = (Matrix)clientMsg.Msg.readNext();
 
             //Enviar a todos menos al cliente que nos acaba de informar
             var sendMsg = new TgcSocketSendMsg();
@@ -282,10 +283,8 @@ namespace Examples
         /// </summary>
         private void initClient()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(d3dDevice,
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack2\\rock_wall.jpg");
             piso = TgcBox.fromSize(new Vector3(0, -60, 0), new Vector3(5000, 5, 5000), pisoTexture);
 
@@ -303,7 +302,7 @@ namespace Examples
             {
                 //El primer mensaje es el header de nuestro protocolo del ejemplo
                 var msg = networkingMod.Client.nextReceivedMessage();
-                var msgType = (MyServerProtocol) msg.readNext();
+                var msgType = (MyServerProtocol)msg.readNext();
 
                 //Ver que tipo de mensaje es
                 switch (msgType)
@@ -352,7 +351,7 @@ namespace Examples
         private void clienteAtenderInformacionInicial(TgcSocketRecvMsg msg)
         {
             //Recibir data
-            var vehiculoData = (VehiculoData) msg.readNext();
+            var vehiculoData = (VehiculoData)msg.readNext();
 
             //Cargar mesh
             var loader = new TgcSceneLoader();
@@ -367,10 +366,10 @@ namespace Examples
             GuiController.Instance.ThirdPersonCamera.setCamera(meshPrincipal.Position, 100, 400);
 
             //Ver si ya habia mas clientes para cuando nosotros nos conectamos
-            var otrosVehiculosCant = (int) msg.readNext();
+            var otrosVehiculosCant = (int)msg.readNext();
             for (var i = 0; i < otrosVehiculosCant; i++)
             {
-                var vData = (VehiculoData) msg.readNext();
+                var vData = (VehiculoData)msg.readNext();
                 crearMeshOtroCliente(vData);
             }
         }
@@ -419,14 +418,14 @@ namespace Examples
             //Si hubo rotacion
             if (rotating)
             {
-                meshPrincipal.rotateY(Geometry.DegreeToRadian(rotate*elapsedTime));
+                meshPrincipal.rotateY(Geometry.DegreeToRadian(rotate * elapsedTime));
                 GuiController.Instance.ThirdPersonCamera.rotateY(rotate);
             }
 
             //Si hubo desplazamiento
             if (moving)
             {
-                meshPrincipal.moveOrientedY(moveForward*elapsedTime);
+                meshPrincipal.moveOrientedY(moveForward * elapsedTime);
             }
 
             //Hacer que la camara siga al personaje en su nueva posicion
@@ -454,7 +453,7 @@ namespace Examples
         private void clienteAtenderOtroClienteConectado(TgcSocketRecvMsg msg)
         {
             //Recibir data
-            var vehiculoData = (VehiculoData) msg.readNext();
+            var vehiculoData = (VehiculoData)msg.readNext();
             crearMeshOtroCliente(vehiculoData);
         }
 
@@ -479,8 +478,8 @@ namespace Examples
         /// </summary>
         private void clienteAtenderActualizarUbicaciones(TgcSocketRecvMsg msg)
         {
-            var playerId = (int) msg.readNext();
-            var nextPos = (Matrix) msg.readNext();
+            var playerId = (int)msg.readNext();
+            var nextPos = (Matrix)msg.readNext();
 
             if (otrosMeshes.ContainsKey(playerId))
             {
@@ -493,7 +492,7 @@ namespace Examples
         /// </summary>
         private void clienteAtenderOtroClienteDesconectado(TgcSocketRecvMsg msg)
         {
-            var playerId = (int) msg.readNext();
+            var playerId = (int)msg.readNext();
             otrosMeshes[playerId].dispose();
             otrosMeshes.Remove(playerId);
         }

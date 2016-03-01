@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using TgcViewer;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples
+namespace TGC.Examples.Multiplayer
 {
     /// <summary>
     ///     EjemploClient
@@ -32,8 +32,6 @@ namespace Examples
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             var ipAddress = Dns.GetHostAddresses("localhost");
             var Ipep = new IPEndPoint(ipAddress[0], 4444);
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -47,8 +45,6 @@ namespace Examples
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             if (serverSocket.Poll(0, SelectMode.SelectRead))
             {
                 var data = new byte[1024];

@@ -1,6 +1,6 @@
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.KdTree
+namespace TGC.Examples.Optimizacion.KdtTree
 {
     /// <summary>
     ///     Nodo del árbol KdTree

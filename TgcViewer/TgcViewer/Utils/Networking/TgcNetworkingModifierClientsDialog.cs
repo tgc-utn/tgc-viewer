@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     /// <summary>
     ///     Ventana para ver los clientes conectados al server
@@ -34,7 +34,7 @@ namespace TgcViewer.Utils.Networking
         {
             if (dataGridViewConnectedClients.SelectedRows.Count > 0)
             {
-                networkingControl.selectedPlayerId = (int) dataGridViewConnectedClients.SelectedRows[0].Cells[1].Value;
+                networkingControl.selectedPlayerId = (int)dataGridViewConnectedClients.SelectedRows[0].Cells[1].Value;
                 buttonDeleteClient.Enabled = true;
             }
             else
@@ -71,7 +71,7 @@ namespace TgcViewer.Utils.Networking
         {
             for (var i = 0; i < dataGridViewConnectedClients.Rows.Count; i++)
             {
-                var rowPlayerId = (int) dataGridViewConnectedClients.Rows[i].Cells[1].Value;
+                var rowPlayerId = (int)dataGridViewConnectedClients.Rows[i].Cells[1].Value;
                 if (rowPlayerId == clientInfo.PlayerId)
                 {
                     dataGridViewConnectedClients.Rows.RemoveAt(i);

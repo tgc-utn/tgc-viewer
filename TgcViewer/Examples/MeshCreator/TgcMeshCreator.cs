@@ -1,8 +1,8 @@
 using System.Drawing;
-using TgcViewer;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Ejemplo TgcMeshCreator:
@@ -36,8 +36,6 @@ namespace Examples.MeshCreator
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Configurar camara FPS
             GuiController.Instance.RotCamera.Enable = false;
 
@@ -51,8 +49,6 @@ namespace Examples.MeshCreator
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Delegar render al control
             modifier.Control.render();
         }

@@ -1,10 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
+using TGC.Viewer.Utils.Shaders;
 
-namespace TgcViewer.Utils.Terrain
+namespace TGC.Viewer.Utils.Terrain
 {
     /// <summary>
     ///     Permite crear la malla de un terreno en base a una textura de Heightmap
@@ -82,7 +83,6 @@ namespace TgcViewer.Utils.Terrain
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             //Textura
@@ -90,14 +90,14 @@ namespace TgcViewer.Utils.Terrain
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrix(effect, Matrix.Identity);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
             effect.Technique = technique;
-            d3dDevice.SetStreamSource(0, vbTerrain, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices/3);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
             effect.EndPass();
             effect.End();
         }
@@ -127,7 +127,6 @@ namespace TgcViewer.Utils.Terrain
         /// <param name="center">Centro de la malla del terreno</param>
         public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, Vector3 center)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             Center = center;
 
             //Dispose de VertexBuffer anterior, si habia
@@ -137,42 +136,43 @@ namespace TgcViewer.Utils.Terrain
             }
 
             //cargar heightmap
-            HeightmapData = loadHeightMap(d3dDevice, heightmapPath);
+            HeightmapData = loadHeightMap(D3DDevice.Instance.Device, heightmapPath);
             float width = HeightmapData.GetLength(0);
             float length = HeightmapData.GetLength(1);
 
             //Crear vertexBuffer
-            totalVertices = 2*3*(HeightmapData.GetLength(0) - 1)*(HeightmapData.GetLength(1) - 1);
-            vbTerrain = new VertexBuffer(typeof (CustomVertex.PositionTextured), totalVertices, d3dDevice,
+            totalVertices = 2 * 3 * (HeightmapData.GetLength(0) - 1) * (HeightmapData.GetLength(1) - 1);
+            vbTerrain = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices,
+                D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
 
             //Cargar vertices
             var dataIdx = 0;
             var data = new CustomVertex.PositionTextured[totalVertices];
 
-            center.X = center.X*scaleXZ - width/2*scaleXZ;
-            center.Y = center.Y*scaleY;
-            center.Z = center.Z*scaleXZ - length/2*scaleXZ;
+            center.X = center.X * scaleXZ - width / 2 * scaleXZ;
+            center.Y = center.Y * scaleY;
+            center.Z = center.Z * scaleXZ - length / 2 * scaleXZ;
 
             for (var i = 0; i < width - 1; i++)
             {
                 for (var j = 0; j < length - 1; j++)
                 {
                     //Vertices
-                    var v1 = new Vector3(center.X + i*scaleXZ, center.Y + HeightmapData[i, j]*scaleY,
-                        center.Z + j*scaleXZ);
-                    var v2 = new Vector3(center.X + i*scaleXZ, center.Y + HeightmapData[i, j + 1]*scaleY,
-                        center.Z + (j + 1)*scaleXZ);
-                    var v3 = new Vector3(center.X + (i + 1)*scaleXZ, center.Y + HeightmapData[i + 1, j]*scaleY,
-                        center.Z + j*scaleXZ);
-                    var v4 = new Vector3(center.X + (i + 1)*scaleXZ, center.Y + HeightmapData[i + 1, j + 1]*scaleY,
-                        center.Z + (j + 1)*scaleXZ);
+                    var v1 = new Vector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j] * scaleY,
+                        center.Z + j * scaleXZ);
+                    var v2 = new Vector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j + 1] * scaleY,
+                        center.Z + (j + 1) * scaleXZ);
+                    var v3 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j] * scaleY,
+                        center.Z + j * scaleXZ);
+                    var v4 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j + 1] * scaleY,
+                        center.Z + (j + 1) * scaleXZ);
 
                     //Coordendas de textura
-                    var t1 = new Vector2(i/width, j/length);
-                    var t2 = new Vector2(i/width, (j + 1)/length);
-                    var t3 = new Vector2((i + 1)/width, j/length);
-                    var t4 = new Vector2((i + 1)/width, (j + 1)/length);
+                    var t1 = new Vector2(i / width, j / length);
+                    var t2 = new Vector2(i / width, (j + 1) / length);
+                    var t3 = new Vector2((i + 1) / width, j / length);
+                    var t4 = new Vector2((i + 1) / width, (j + 1) / length);
 
                     //Cargar triangulo 1
                     data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
@@ -202,12 +202,10 @@ namespace TgcViewer.Utils.Terrain
                 terrainTexture.Dispose();
             }
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Rotar e invertir textura
-            var b = (Bitmap) Image.FromFile(path);
+            var b = (Bitmap)Image.FromFile(path);
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
-            terrainTexture = Texture.FromBitmap(d3dDevice, b, Usage.None, Pool.Managed);
+            terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.None, Pool.Managed);
         }
 
         /// <summary>
@@ -215,7 +213,7 @@ namespace TgcViewer.Utils.Terrain
         /// </summary>
         protected int[,] loadHeightMap(Device d3dDevice, string path)
         {
-            var bitmap = (Bitmap) Image.FromFile(path);
+            var bitmap = (Bitmap)Image.FromFile(path);
             var width = bitmap.Size.Width;
             var height = bitmap.Size.Height;
             var heightmap = new int[width, height];
@@ -225,8 +223,8 @@ namespace TgcViewer.Utils.Terrain
                 {
                     //(j, i) invertido para primero barrer filas y despues columnas
                     var pixel = bitmap.GetPixel(j, i);
-                    var intensity = pixel.R*0.299f + pixel.G*0.587f + pixel.B*0.114f;
-                    heightmap[i, j] = (int) intensity;
+                    var intensity = pixel.R * 0.299f + pixel.G * 0.587f + pixel.B * 0.114f;
+                    heightmap[i, j] = (int)intensity;
                 }
             }
 

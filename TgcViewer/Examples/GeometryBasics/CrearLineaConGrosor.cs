@@ -1,10 +1,10 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo Caja
@@ -35,8 +35,6 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crea línea genérica
             line = new TgcBoxLine();
 
@@ -58,12 +56,10 @@ namespace Examples.GeometryBasics
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var start = (Vector3) GuiController.Instance.Modifiers["start"];
-            var end = (Vector3) GuiController.Instance.Modifiers["end"];
-            var thickness = (float) GuiController.Instance.Modifiers["thickness"];
-            var color = (Color) GuiController.Instance.Modifiers["color"];
+            var start = (Vector3)GuiController.Instance.Modifiers["start"];
+            var end = (Vector3)GuiController.Instance.Modifiers["end"];
+            var thickness = (float)GuiController.Instance.Modifiers["thickness"];
+            var color = (Color)GuiController.Instance.Modifiers["color"];
 
             //Cargar valores de la línea
             line.PStart = start;

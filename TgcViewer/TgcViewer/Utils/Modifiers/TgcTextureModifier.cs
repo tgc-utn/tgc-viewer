@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Viewer.Utils.Modifiers
 {
     /// <summary>
     ///     Modificador para elegir una textura
@@ -10,9 +10,9 @@ namespace TgcViewer.Utils.Modifiers
     public class TgcTextureModifier : TgcModifierPanel
     {
         private readonly string defaultPath;
-        private string selectedPath;
         private readonly PictureBox textureBox;
         private readonly TgcTextureBrowser textureBrowser = new TgcTextureBrowser();
+        private string selectedPath;
 
         public TgcTextureModifier(string varName, string defaultPath)
             : base(varName)

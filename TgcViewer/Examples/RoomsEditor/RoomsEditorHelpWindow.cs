@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace Examples.RoomsEditor
+namespace TGC.Examples.RoomsEditor
 {
     public partial class RoomsEditorHelpWindow : Form
     {

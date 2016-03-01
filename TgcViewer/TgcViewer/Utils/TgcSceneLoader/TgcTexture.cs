@@ -1,10 +1,11 @@
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Microsoft.DirectX.Direct3D;
+using TGC.Core.Direct3D;
 
-namespace TgcViewer.Utils.TgcSceneLoader
+namespace TGC.Viewer.Utils.TgcSceneLoader
 {
     /// <summary>
     ///     Encapsula una textura de DirectX junto con información adicional
@@ -72,7 +73,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
         /// <returns>Aspect Ratio</returns>
         public float getAspectRatio()
         {
-            return (float) Width/Height;
+            return (float)Width / Height;
         }
 
         /// <summary>
@@ -259,7 +260,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             /// <param name="texture">Textura a configurar</param>
             public void set(int stage, TgcTexture texture)
             {
-                GuiController.Instance.D3dDevice.SetTexture(stage, texture.D3dTexture);
+                D3DDevice.Instance.Device.SetTexture(stage, texture.D3dTexture);
             }
 
             /// <summary>
@@ -278,7 +279,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             /// </summary>
             public void clear(int stage)
             {
-                GuiController.Instance.D3dDevice.SetTexture(stage, null);
+                D3DDevice.Instance.Device.SetTexture(stage, null);
             }
 
             /// <summary>
@@ -341,7 +342,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
         /// <returns>Textura creada</returns>
         public static TgcTexture createTexture(string filePath)
         {
-            return createTexture(GuiController.Instance.D3dDevice, filePath);
+            return createTexture(D3DDevice.Instance.Device, filePath);
         }
 
         /// <summary>
@@ -411,7 +412,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
         /// <returns>Textura creada</returns>
         public static TgcTexture createTextureNoPool(string filePath)
         {
-            return createTextureNoPool(GuiController.Instance.D3dDevice, filePath);
+            return createTextureNoPool(D3DDevice.Instance.Device, filePath);
         }
 
         #endregion Creacion Static

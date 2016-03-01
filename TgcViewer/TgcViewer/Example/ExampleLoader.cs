@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using TGC.Core.Example;
 
-namespace TgcViewer.Example
+namespace TGC.Viewer.Example
 {
     /// <summary>
     ///     Utilidad para cargar dinamicamente las DLL de los ejemplos
@@ -13,7 +13,7 @@ namespace TgcViewer.Example
     internal class ExampleLoader
     {
         public const string EXAMPLES_DIR = "Examples";
-        public static string[] DIR_SKIP_LISP = {"\\bin", "\\obj"};
+        public static string[] DIR_SKIP_LISP = { "\\bin", "\\obj" };
 
         private readonly Dictionary<TreeNode, TgcExample> treeExamplesDict;
 
@@ -121,10 +121,10 @@ namespace TgcViewer.Example
                         {
                         */
 
-                        if (type.BaseType.Equals(typeof (TgcExample)))
+                        if (type.BaseType.Equals(typeof(TgcExample)))
                         {
                             var obj = Activator.CreateInstance(type);
-                            var example = (TgcExample) obj;
+                            var example = (TgcExample)obj;
                             examples.Add(example);
 
                             //cargar path del ejemplo

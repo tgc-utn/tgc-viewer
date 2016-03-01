@@ -1,10 +1,10 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
-using Microsoft.DirectX;
 using TGC.Core.Geometries;
 using TGC.Core.Utils;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Utilidades para hacer detección de colisiones
@@ -139,7 +139,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var rayOrigin = toArray(ray.origin);
             var rayDir = toArray(ray.direction);
 
-            var max_t = new float[3] {-1.0f, -1.0f, -1.0f};
+            var max_t = new float[3] { -1.0f, -1.0f, -1.0f };
             var coord = new float[3];
 
             for (uint i = 0; i < 3; ++i)
@@ -151,7 +151,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
                     if (rayDir[i] != 0.0f)
                     {
-                        max_t[i] = (aabbMin[i] - rayOrigin[i])/rayDir[i];
+                        max_t[i] = (aabbMin[i] - rayOrigin[i]) / rayDir[i];
                     }
                 }
                 else if (rayOrigin[i] > aabbMax[i])
@@ -161,7 +161,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
                     if (rayDir[i] != 0.0f)
                     {
-                        max_t[i] = (aabbMax[i] - rayOrigin[i])/rayDir[i];
+                        max_t[i] = (aabbMax[i] - rayOrigin[i]) / rayDir[i];
                     }
                 }
             }
@@ -192,7 +192,7 @@ namespace TgcViewer.Utils.TgcGeometry
             {
                 if (plane != i)
                 {
-                    coord[i] = rayOrigin[i] + max_t[plane]*rayDir[i];
+                    coord[i] = rayOrigin[i] + max_t[plane] * rayDir[i];
 
                     if (coord[i] < aabbMin[i] - float.Epsilon || coord[i] > aabbMax[i] + float.Epsilon)
                     {
@@ -286,8 +286,8 @@ namespace TgcViewer.Utils.TgcGeometry
             {
                 // For each axis count any excess distance outside box extents
                 var v = pArray[i];
-                if (v < aabbMin[i]) sqDist += (aabbMin[i] - v)*(aabbMin[i] - v);
-                if (v > aabbMax[i]) sqDist += (v - aabbMax[i])*(v - aabbMax[i]);
+                if (v < aabbMin[i]) sqDist += (aabbMin[i] - v) * (aabbMin[i] - v);
+                if (v > aabbMax[i]) sqDist += (v - aabbMax[i]) * (v - aabbMax[i]);
             }
             return sqDist;
         }
@@ -315,7 +315,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var sqDist = sqDistPointAABB(sphere.center, aabb);
             //Sphere and AABB intersect if the (squared) distance
             //between them is less than the (squared) sphere radius
-            return sqDist <= sphere.radius*sphere.radius;
+            return sqDist <= sphere.radius * sphere.radius;
         }
 
         /// <summary>
@@ -446,11 +446,11 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>True si hay colisión.</returns>
         public static bool testPlaneAABB(Plane plane, TgcBoundingBox aabb)
         {
-            var c = (aabb.PMax + aabb.PMin)*0.5f; // Compute AABB center
+            var c = (aabb.PMax + aabb.PMin) * 0.5f; // Compute AABB center
             var e = aabb.PMax - c; // Compute positive extents
 
             // Compute the projection interval radius of b onto L(t) = b.c + t * p.n
-            var r = e.X*FastMath.Abs(plane.A) + e.Y*FastMath.Abs(plane.B) + e.Z*FastMath.Abs(plane.C);
+            var r = e.X * FastMath.Abs(plane.A) + e.Y * FastMath.Abs(plane.B) + e.Z * FastMath.Abs(plane.C);
             // Compute distance of box center from plane
             var s = plane.Dot(c);
             // Intersection occurs when distance s falls within [-r,+r] interval
@@ -480,7 +480,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var boxhalfsize = aabb.calculateAxisRadius();
 
             //Aux vars
-            var triverts = new Vector3[3] {vert0, vert1, vert2};
+            var triverts = new Vector3[3] { vert0, vert1, vert2 };
             float min, max, p0, p1, p2, rad, fex, fey, fez;
 
             //move everything so that the boxcenter is in (0,0,0)
@@ -502,8 +502,8 @@ namespace TgcViewer.Utils.TgcGeometry
             fez = FastMath.Abs(e0.Z);
 
             //AXISTEST_X01
-            p0 = e0.Z*v0.Y - e0.Y*v0.Z;
-            p2 = e0.Z*v2.Y - e0.Y*v2.Z;
+            p0 = e0.Z * v0.Y - e0.Y * v0.Z;
+            p2 = e0.Z * v2.Y - e0.Y * v2.Z;
             if (p0 < p2)
             {
                 min = p0;
@@ -514,12 +514,12 @@ namespace TgcViewer.Utils.TgcGeometry
                 min = p2;
                 max = p0;
             }
-            rad = fez*boxhalfsize.Y + fey*boxhalfsize.Z;
+            rad = fez * boxhalfsize.Y + fey * boxhalfsize.Z;
             if (min > rad || max < -rad) return false;
 
             //AXISTEST_Y02
-            p0 = -e0.Z*v0.X + e0.X*v0.Z;
-            p2 = -e0.Z*v2.X + e0.X*v2.Z;
+            p0 = -e0.Z * v0.X + e0.X * v0.Z;
+            p2 = -e0.Z * v2.X + e0.X * v2.Z;
             if (p0 < p2)
             {
                 min = p0;
@@ -530,12 +530,12 @@ namespace TgcViewer.Utils.TgcGeometry
                 min = p2;
                 max = p0;
             }
-            rad = fez*boxhalfsize.X + fex*boxhalfsize.Z;
+            rad = fez * boxhalfsize.X + fex * boxhalfsize.Z;
             if (min > rad || max < -rad) return false;
 
             //AXISTEST_Z12
-            p1 = e0.Y*v1.X - e0.X*v1.Y;
-            p2 = e0.Y*v2.X - e0.X*v2.Y;
+            p1 = e0.Y * v1.X - e0.X * v1.Y;
+            p2 = e0.Y * v2.X - e0.X * v2.Y;
             if (p2 < p1)
             {
                 min = p2;
@@ -546,7 +546,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 min = p1;
                 max = p2;
             }
-            rad = fey*boxhalfsize.X + fex*boxhalfsize.Y;
+            rad = fey * boxhalfsize.X + fex * boxhalfsize.Y;
             if (min > rad || max < -rad) return false;
 
             //edge 1
@@ -555,8 +555,8 @@ namespace TgcViewer.Utils.TgcGeometry
             fez = FastMath.Abs(e1.Z);
 
             //AXISTEST_X01
-            p0 = e1.Z*v0.Y - e1.Y*v0.Z;
-            p2 = e1.Z*v2.Y - e1.Y*v2.Z;
+            p0 = e1.Z * v0.Y - e1.Y * v0.Z;
+            p2 = e1.Z * v2.Y - e1.Y * v2.Z;
             if (p0 < p2)
             {
                 min = p0;
@@ -567,12 +567,12 @@ namespace TgcViewer.Utils.TgcGeometry
                 min = p2;
                 max = p0;
             }
-            rad = fez*boxhalfsize.Y + fey*boxhalfsize.Z;
+            rad = fez * boxhalfsize.Y + fey * boxhalfsize.Z;
             if (min > rad || max < -rad) return false;
 
             //AXISTEST_Y02
-            p0 = -e1.Z*v0.X + e1.X*v0.Z;
-            p2 = -e1.Z*v2.X + e1.X*v2.Z;
+            p0 = -e1.Z * v0.X + e1.X * v0.Z;
+            p2 = -e1.Z * v2.X + e1.X * v2.Z;
             if (p0 < p2)
             {
                 min = p0;
@@ -583,12 +583,12 @@ namespace TgcViewer.Utils.TgcGeometry
                 min = p2;
                 max = p0;
             }
-            rad = fez*boxhalfsize.X + fex*boxhalfsize.Z;
+            rad = fez * boxhalfsize.X + fex * boxhalfsize.Z;
             if (min > rad || max < -rad) return false;
 
             //AXISTEST_Z0
-            p0 = e1.Y*v0.X - e1.X*v0.Y;
-            p1 = e1.Y*v1.X - e1.X*v1.Y;
+            p0 = e1.Y * v0.X - e1.X * v0.Y;
+            p1 = e1.Y * v1.X - e1.X * v1.Y;
             if (p0 < p1)
             {
                 min = p0;
@@ -599,7 +599,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 min = p1;
                 max = p0;
             }
-            rad = fey*boxhalfsize.X + fex*boxhalfsize.Y;
+            rad = fey * boxhalfsize.X + fex * boxhalfsize.Y;
             if (min > rad || max < -rad) return false;
 
             //edge 2
@@ -608,8 +608,8 @@ namespace TgcViewer.Utils.TgcGeometry
             fez = FastMath.Abs(e2.Z);
 
             //AXISTEST_X2
-            p0 = e2.Z*v0.Y - e2.Y*v0.Z;
-            p1 = e2.Z*v1.Y - e2.Y*v1.Z;
+            p0 = e2.Z * v0.Y - e2.Y * v0.Z;
+            p1 = e2.Z * v1.Y - e2.Y * v1.Z;
             if (p0 < p1)
             {
                 min = p0;
@@ -620,12 +620,12 @@ namespace TgcViewer.Utils.TgcGeometry
                 min = p1;
                 max = p0;
             }
-            rad = fez*boxhalfsize.Y + fey*boxhalfsize.Z;
+            rad = fez * boxhalfsize.Y + fey * boxhalfsize.Z;
             if (min > rad || max < -rad) return false;
 
             //AXISTEST_Y1
-            p0 = -e2.Z*v0.X + e2.X*v0.Z;
-            p1 = -e2.Z*v1.X + e2.X*v1.Z;
+            p0 = -e2.Z * v0.X + e2.X * v0.Z;
+            p1 = -e2.Z * v1.X + e2.X * v1.Z;
             if (p0 < p1)
             {
                 min = p0;
@@ -636,12 +636,12 @@ namespace TgcViewer.Utils.TgcGeometry
                 min = p1;
                 max = p0;
             }
-            rad = fez*boxhalfsize.X + fex*boxhalfsize.Z;
+            rad = fez * boxhalfsize.X + fex * boxhalfsize.Z;
             if (min > rad || max < -rad) return false;
 
             //AXISTEST_Z12
-            p1 = e2.Y*v1.X - e2.X*v1.Y;
-            p2 = e2.Y*v2.X - e2.X*v2.Y;
+            p1 = e2.Y * v1.X - e2.X * v1.Y;
+            p2 = e2.Y * v2.X - e2.X * v2.Y;
             if (p2 < p1)
             {
                 min = p2;
@@ -652,7 +652,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 min = p1;
                 max = p2;
             }
-            rad = fey*boxhalfsize.X + fex*boxhalfsize.Y;
+            rad = fey * boxhalfsize.X + fex * boxhalfsize.Y;
             if (min > rad || max < -rad) return false;
 
             //Bullet 1:
@@ -736,7 +736,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var dist2 = Vector3.Dot(d, d);
             // Spheres intersect if squared distance is less than squared sum of radii
             var radiusSum = a.Radius + b.Radius;
-            return dist2 <= radiusSum*radiusSum;
+            return dist2 <= radiusSum * radiusSum;
         }
 
         /// <summary>
@@ -784,17 +784,17 @@ namespace TgcViewer.Utils.TgcGeometry
 
             var m = ray.Origin - sphere.Center;
             var b = Vector3.Dot(m, ray.Direction);
-            var c = Vector3.Dot(m, m) - sphere.Radius*sphere.Radius;
+            var c = Vector3.Dot(m, m) - sphere.Radius * sphere.Radius;
             // Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
             if (c > 0.0f && b > 0.0f) return false;
-            var discr = b*b - c;
+            var discr = b * b - c;
             // A negative discriminant corresponds to ray missing sphere
             if (discr < 0.0f) return false;
             // Ray now found to intersect sphere, compute smallest t value of intersection
             t = -b - FastMath.Sqrt(discr);
             // If t is negative, ray started inside sphere so clamp t to zero
             if (t < 0.0f) t = 0.0f;
-            q = ray.Origin + t*ray.Direction;
+            q = ray.Origin + t * ray.Direction;
             return true;
         }
 
@@ -839,13 +839,13 @@ namespace TgcViewer.Utils.TgcGeometry
         public static bool testRaySphere(TgcRay ray, TgcBoundingSphere sphere)
         {
             var m = ray.Origin - sphere.Center;
-            var c = Vector3.Dot(m, m) - sphere.Radius*sphere.Radius;
+            var c = Vector3.Dot(m, m) - sphere.Radius * sphere.Radius;
             // If there is definitely at least one real root, there must be an intersection
             if (c <= 0.0f) return true;
             var b = Vector3.Dot(m, ray.Direction);
             // Early exit if ray origin outside sphere and ray pointing away from sphere
             if (b > 0.0f) return false;
-            var disc = b*b - c;
+            var disc = b * b - c;
             // A negative discriminant corresponds to ray missing sphere
             if (disc < 0.0f) return false;
             // Now ray must hit sphere
@@ -863,7 +863,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var cp = p - sphere.Center;
             var d = cp.LengthSq();
 
-            return d <= sphere.Radius*sphere.Radius;
+            return d <= sphere.Radius * sphere.Radius;
         }
 
         /// <summary>
@@ -891,7 +891,7 @@ namespace TgcViewer.Utils.TgcGeometry
             }
             var p_n = getPlaneNormal(plane);
             var denom = Vector3.Dot(p_n, velocity);
-            if (denom*dist >= 0.0f)
+            if (denom * dist >= 0.0f)
             {
                 // No intersection as sphere moving parallel to or away from plane
                 t = -1;
@@ -901,8 +901,8 @@ namespace TgcViewer.Utils.TgcGeometry
             // Sphere is moving towards the plane
             // Use +r in computations if sphere in front of plane, else -r
             var r = dist > 0.0f ? sphere.Radius : -sphere.Radius;
-            t = (r - dist)/denom;
-            q = sphere.Center + t*velocity - r*p_n;
+            t = (r - dist) / denom;
+            q = sphere.Center + t * velocity - r * p_n;
             if (t > 1) return false;
             return true;
         }
@@ -926,7 +926,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var bdist = plane.Dot(b);
 
             // Intersects if on different sides of plane (distances have different signs)
-            if (adist*bdist < 0.0f) return true;
+            if (adist * bdist < 0.0f) return true;
 
             // Intersects if start or end position within radius from plane
             if (FastMath.Abs(adist) <= sphere.Radius || FastMath.Abs(bdist) <= sphere.Radius) return true;
@@ -952,7 +952,7 @@ namespace TgcViewer.Utils.TgcGeometry
             // Sphere and triangle intersect if the (squared) distance from sphere
             // center to point p is less than the (squared) sphere radius
             var v = p - sphere.Center;
-            return Vector3.Dot(v, v) <= sphere.Radius*sphere.Radius;
+            return Vector3.Dot(v, v) <= sphere.Radius * sphere.Radius;
         }
 
         #endregion BoundingSphere
@@ -970,8 +970,8 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             var p_n = toVector3(p);
 
-            var t = (Vector3.Dot(p_n, q) + p.D)/Vector3.Dot(p_n, p_n);
-            return q - t*p_n;
+            var t = (Vector3.Dot(p_n, q) + p.D) / Vector3.Dot(p_n, p_n);
+            return q - t * p_n;
         }
 
         /// <summary>
@@ -986,7 +986,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var p_n = toVector3(p);
 
             var t = Vector3.Dot(p_n, q) + p.D;
-            return q - t*p_n;
+            return q - t * p_n;
         }
 
         /// <summary>
@@ -1058,12 +1058,12 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             var ab = b - a;
             // Project c onto ab, computing parameterized position d(t) = a + t*(b – a)
-            t = Vector3.Dot(p - a, ab)/Vector3.Dot(ab, ab);
+            t = Vector3.Dot(p - a, ab) / Vector3.Dot(ab, ab);
             // If outside segment, clamp t (and therefore d) to the closest endpoint
             if (t < 0.0f) t = 0.0f;
             if (t > 1.0f) t = 1.0f;
             // Compute projected position from the clamped t
-            return a + t*ab;
+            return a + t * ab;
         }
 
         /// <summary>
@@ -1082,7 +1082,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var f = Vector3.Dot(ab, ab);
             if (e >= f) return Vector3.Dot(bc, bc);
             // Handle cases where c projects onto ab
-            return Vector3.Dot(ac, ac) - e*e/f;
+            return Vector3.Dot(ac, ac) - e * e / f;
         }
 
         /// <summary>
@@ -1099,11 +1099,11 @@ namespace TgcViewer.Utils.TgcGeometry
             var planeNormal = getPlaneNormal(plane);
             var numer = plane.Dot(ray.Origin);
             var denom = Vector3.Dot(planeNormal, ray.Direction);
-            t = -numer/denom;
+            t = -numer / denom;
 
             if (t > 0.0f)
             {
-                q = ray.Origin + ray.Direction*t;
+                q = ray.Origin + ray.Direction * t;
                 return true;
             }
 
@@ -1127,12 +1127,12 @@ namespace TgcViewer.Utils.TgcGeometry
 
             //t = -(n.A + d / n.(B - A))
             var ab = b - a;
-            t = -plane.Dot(a)/Vector3.Dot(planeNormal, ab);
+            t = -plane.Dot(a) / Vector3.Dot(planeNormal, ab);
 
             // If t in [0..1] compute and return intersection point
             if (t >= 0.0f && t <= 1.0f)
             {
-                q = a + t*ab;
+                q = a + t * ab;
                 return true;
             }
 
@@ -1163,11 +1163,11 @@ namespace TgcViewer.Utils.TgcGeometry
             var d4 = Vector3.Dot(ac, bp);
             if (d3 >= 0.0f && d4 <= d3) return b; // barycentric coordinates (0,1,0)
             // Check if P in edge region of AB, if so return projection of P onto AB
-            var vc = d1*d4 - d3*d2;
+            var vc = d1 * d4 - d3 * d2;
             if (vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f)
             {
-                var v = d1/(d1 - d3);
-                return a + v*ab; // barycentric coordinates (1-v,v,0)
+                var v = d1 / (d1 - d3);
+                return a + v * ab; // barycentric coordinates (1-v,v,0)
             }
             // Check if P in vertex region outside C
             var cp = p - c;
@@ -1176,24 +1176,24 @@ namespace TgcViewer.Utils.TgcGeometry
             if (d6 >= 0.0f && d5 <= d6) return c; // barycentric coordinates (0,0,1)
 
             // Check if P in edge region of AC, if so return projection of P onto AC
-            var vb = d5*d2 - d1*d6;
+            var vb = d5 * d2 - d1 * d6;
             if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f)
             {
-                var w = d2/(d2 - d6);
-                return a + w*ac; // barycentric coordinates (1-w,0,w)
+                var w = d2 / (d2 - d6);
+                return a + w * ac; // barycentric coordinates (1-w,0,w)
             }
             // Check if P in edge region of BC, if so return projection of P onto BC
-            var va = d3*d6 - d5*d4;
+            var va = d3 * d6 - d5 * d4;
             if (va <= 0.0f && d4 - d3 >= 0.0f && d5 - d6 >= 0.0f)
             {
-                var w = (d4 - d3)/(d4 - d3 + (d5 - d6));
-                return b + w*(c - b); // barycentric coordinates (0,1-w,w)
+                var w = (d4 - d3) / (d4 - d3 + (d5 - d6));
+                return b + w * (c - b); // barycentric coordinates (0,1-w,w)
             }
             // P inside face region. Compute Q through its barycentric coordinates (u,v,w)
-            var denom = 1.0f/(va + vb + vc);
-            var vFinal = vb*denom;
-            var wFinal = vc*denom;
-            return a + ab*vFinal + ac*wFinal; // = u*a + v*b + w*c, u = va * denom = 1.0f - v - w
+            var denom = 1.0f / (va + vb + vc);
+            var vFinal = vb * denom;
+            var wFinal = vc * denom;
+            return a + ab * vFinal + ac * wFinal; // = u*a + v*b + w*c, u = va * denom = 1.0f - v - w
         }
 
         /*
@@ -1244,14 +1244,14 @@ namespace TgcViewer.Utils.TgcGeometry
             if (dist >= maxdist)
                 q += ab;
             else if (dist > 0.0f)
-                q += dist/maxdist*ab;
+                q += dist / maxdist * ab;
             // Clamp p’ (projection of p to plane of r) to rectangle in the down direction
             dist = Vector3.Dot(d, ac);
             maxdist = Vector3.Dot(ac, ac);
             if (dist >= maxdist)
                 q += ac;
             else if (dist > 0.0f)
-                q += dist/maxdist*ac;
+                q += dist / maxdist * ac;
 
             return q;
         }
@@ -1829,7 +1829,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
             // Segment/ray intersects triangle. Perform delayed division and
             // compute the last barycentric coordinate component
-            var ood = 1.0f/d;
+            var ood = 1.0f / d;
             t *= ood;
             v *= ood;
             w *= ood;
@@ -1838,7 +1838,7 @@ namespace TgcViewer.Utils.TgcGeometry
             uvw.X = u;
             uvw.Y = v;
             uvw.Z = w;
-            col = p + t*(p - q);
+            col = p + t * (p - q);
             return true;
         }
 
@@ -1873,13 +1873,13 @@ namespace TgcViewer.Utils.TgcGeometry
             det = Vector3.Dot(e1, P);
             //NOT CULLING
             if (det > -float.Epsilon && det < float.Epsilon) return false;
-            inv_det = 1.0f/det;
+            inv_det = 1.0f / det;
 
             //calculate distance from V1 to ray origin
             T = ray.Origin - v1;
 
             //Calculate u parameter and test bound
-            u = Vector3.Dot(T, P)*inv_det;
+            u = Vector3.Dot(T, P) * inv_det;
             //The intersection lies outside of the triangle
             if (u < 0.0f || u > 1.0f) return false;
 
@@ -1887,16 +1887,16 @@ namespace TgcViewer.Utils.TgcGeometry
             Q = Vector3.Cross(T, e1);
 
             //Calculate V parameter and test bound
-            v = Vector3.Dot(ray.Direction, Q)*inv_det;
+            v = Vector3.Dot(ray.Direction, Q) * inv_det;
             //The intersection lies outside of the triangle
             if (v < 0.0f || u + v > 1.0f) return false;
 
-            t = Vector3.Dot(e2, Q)*inv_det;
+            t = Vector3.Dot(e2, Q) * inv_det;
 
             if (t > float.Epsilon)
             {
                 //ray intersection
-                q = ray.Origin + t*ray.Direction;
+                q = ray.Origin + t * ray.Direction;
                 return true;
             }
 
@@ -1956,7 +1956,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
             // Compute the barycentric coordinates (u, v, w) determining the
             // intersection point r, r = u*a + v*b + w*c
-            var denom = 1.0f/(u + v + w);
+            var denom = 1.0f / (u + v + w);
             u *= denom;
             v *= denom;
             w *= denom; // w = 1.0f - u - v;
@@ -1964,7 +1964,7 @@ namespace TgcViewer.Utils.TgcGeometry
             uvw.X = u;
             uvw.Y = v;
             uvw.Z = w;
-            col = p + t*pq;
+            col = p + t * pq;
             return true;
         }
 
@@ -2068,45 +2068,45 @@ namespace TgcViewer.Utils.TgcGeometry
             if (md > dd && md + nd > dd) return false; // Segment outside ’q’ side of cylinder
             var nn = Vector3.Dot(n, n);
             var mn = Vector3.Dot(m, n);
-            var a = dd*nn - nd*nd;
-            var k = Vector3.Dot(m, m) - radius*radius;
-            var c = dd*k - md*md;
+            var a = dd * nn - nd * nd;
+            var k = Vector3.Dot(m, m) - radius * radius;
+            var c = dd * k - md * md;
             if (FastMath.Abs(a) < float.Epsilon)
             {
                 // Segment runs parallel to cylinder axis
                 if (c > 0.0f) return false; // 'a' and thus the segment lie outside cylinder
                 // Now known that segment intersects cylinder; figure out how it intersects
-                if (md < 0.0f) t = -mn/nn; // Intersect segment against 'p' endcap
-                else if (md > dd) t = (nd - mn)/nn; // Intersect segment against ’q’ endcap
+                if (md < 0.0f) t = -mn / nn; // Intersect segment against 'p' endcap
+                else if (md > dd) t = (nd - mn) / nn; // Intersect segment against ’q’ endcap
                 else t = 0.0f; // ’a’ lies inside cylinder
-                q = segmentInit + t*n;
+                q = segmentInit + t * n;
                 return true;
             }
-            var b = dd*mn - nd*md;
-            var discr = b*b - a*c;
+            var b = dd * mn - nd * md;
+            var discr = b * b - a * c;
             if (discr < 0.0f) return false; // No real roots; no intersection
-            t = (-b - FastMath.Sqrt(discr))/a;
+            t = (-b - FastMath.Sqrt(discr)) / a;
             if (t < 0.0f || t > 1.0f) return false; // Intersection lies outside segment
 
-            if (md + t*nd < 0.0f)
+            if (md + t * nd < 0.0f)
             {
                 // Intersection outside cylinder on 'p' side
                 if (nd <= 0.0f) return false; // Segment pointing away from endcap
-                t = -md/nd;
+                t = -md / nd;
                 // Keep intersection if Dot(S(t) - p, S(t) - p) <= r^2
-                return k + t*(2.0f*mn + t*nn) <= 0.0f;
+                return k + t * (2.0f * mn + t * nn) <= 0.0f;
             }
-            if (md + t*nd > dd)
+            if (md + t * nd > dd)
             {
                 // Intersection outside cylinder on 'q' side
                 if (nd >= 0.0f) return false; // Segment pointing away from endcap
-                t = (dd - md)/nd;
+                t = (dd - md) / nd;
                 // Keep intersection if Dot(S(t) - q, S(t) - q) <= r^2
-                return k + dd - 2.0f*md + t*(2.0f*(mn - nd) + t*nn) <= 0.0f;
+                return k + dd - 2.0f * md + t * (2.0f * (mn - nd) + t * nn) <= 0.0f;
             }
 
             // Segment intersects cylinder between the endcaps; t is correct
-            q = segmentInit + t*n;
+            q = segmentInit + t * n;
             return true;
         }
 
@@ -2176,7 +2176,7 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             //datos del aabb
             var boxCenter = box.calculateBoxCenter();
-            var boxHalfSize = box.calculateSize()*0.5f;
+            var boxHalfSize = box.calculateSize() * 0.5f;
 
             //datos del cilindro
             var cylCenter = cylinder.Center;
@@ -2251,29 +2251,29 @@ namespace TgcViewer.Utils.TgcGeometry
             }
             else
             {
-                t1 = (-1 - y0)/yt;
-                t2 = (1 - y0)/yt;
+                t1 = (-1 - y0) / yt;
+                t2 = (1 - y0) / yt;
             }
 
-            float a = xt*xt + zt*zt,
-                b = 2*x0*xt + 2*z0*zt,
-                c = x0*x0 + z0*z0 - 1;
+            float a = xt * xt + zt * zt,
+                b = 2 * x0 * xt + 2 * z0 * zt,
+                c = x0 * x0 + z0 * z0 - 1;
 
-            var raiz = b*b - 4*a*c;
+            var raiz = b * b - 4 * a * c;
 
             if (raiz < 0) return false;
             if (raiz == 0)
             {
-                var t = -b/(2*a);
+                var t = -b / (2 * a);
                 return t >= t1 && t <= t2;
             }
             var up = -b;
-            var down = 2*a;
+            var down = 2 * a;
             var sqrt = FastMath.Sqrt(raiz);
 
             float t3, t4;
-            t3 = (up - sqrt)/down;
-            t4 = (up + sqrt)/down;
+            t3 = (up - sqrt) / down;
+            t4 = (up + sqrt) / down;
 
             if (t3 <= t1 && t4 >= t2) return true;
             if (t3 >= t1 && t3 <= t2) return true;
@@ -2316,7 +2316,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
             var distanceY = p.Y - cylCenter.Y;
             if (FastMath.Abs(distanceY) > cylHalfLength)
-                return cylCenter + new Vector3(0, cylHalfLength, 0)*Math.Sign(distanceY) + direction;
+                return cylCenter + new Vector3(0, cylHalfLength, 0) * Math.Sign(distanceY) + direction;
             return cylCenter + new Vector3(0, distanceY, 0) + direction;
         }
 
@@ -2349,7 +2349,7 @@ namespace TgcViewer.Utils.TgcGeometry
             //vemos si el punto mas cercano al centro de la esfera pertenece a esta
             centerToCenter.Normalize();
             centerToCenter *= cylRadius;
-            centerToCenter.Y = cylHalfLength*Math.Sign(sphereCenter.Y - cylCenter.Y);
+            centerToCenter.Y = cylHalfLength * Math.Sign(sphereCenter.Y - cylCenter.Y);
             centerToCenter += cylCenter;
             return (centerToCenter - sphereCenter).LengthSq() <= FastMath.Pow2(sphereRadius);
         }
@@ -2407,62 +2407,62 @@ namespace TgcViewer.Utils.TgcGeometry
             for (var i = 0; i < 3; i++)
             {
                 ra = ae[i];
-                rb = be[0]*AbsR[i, 0] + be[1]*AbsR[i, 1] + be[2]*AbsR[i, 2];
+                rb = be[0] * AbsR[i, 0] + be[1] * AbsR[i, 1] + be[2] * AbsR[i, 2];
                 if (FastMath.Abs(t[i]) > ra + rb) return false;
             }
 
             // Test axes L = B0, L = B1, L = B2
             for (var i = 0; i < 3; i++)
             {
-                ra = ae[0]*AbsR[0, i] + ae[1]*AbsR[1, i] + ae[2]*AbsR[2, i];
+                ra = ae[0] * AbsR[0, i] + ae[1] * AbsR[1, i] + ae[2] * AbsR[2, i];
                 rb = be[i];
-                if (FastMath.Abs(t[0]*R[0, i] + t[1]*R[1, i] + t[2]*R[2, i]) > ra + rb) return false;
+                if (FastMath.Abs(t[0] * R[0, i] + t[1] * R[1, i] + t[2] * R[2, i]) > ra + rb) return false;
             }
 
             // Test axis L = A0 x B0
-            ra = ae[1]*AbsR[2, 0] + ae[2]*AbsR[1, 0];
-            rb = be[1]*AbsR[0, 2] + be[2]*AbsR[0, 1];
-            if (FastMath.Abs(t[2]*R[1, 0] - t[1]*R[2, 0]) > ra + rb) return false;
+            ra = ae[1] * AbsR[2, 0] + ae[2] * AbsR[1, 0];
+            rb = be[1] * AbsR[0, 2] + be[2] * AbsR[0, 1];
+            if (FastMath.Abs(t[2] * R[1, 0] - t[1] * R[2, 0]) > ra + rb) return false;
 
             // Test axis L = A0 x B1
-            ra = ae[1]*AbsR[2, 1] + ae[2]*AbsR[1, 1];
-            rb = be[0]*AbsR[0, 2] + be[2]*AbsR[0, 0];
-            if (FastMath.Abs(t[2]*R[1, 1] - t[1]*R[2, 1]) > ra + rb) return false;
+            ra = ae[1] * AbsR[2, 1] + ae[2] * AbsR[1, 1];
+            rb = be[0] * AbsR[0, 2] + be[2] * AbsR[0, 0];
+            if (FastMath.Abs(t[2] * R[1, 1] - t[1] * R[2, 1]) > ra + rb) return false;
 
             // Test axis L = A0 x B2
-            ra = ae[1]*AbsR[2, 2] + ae[2]*AbsR[1, 2];
-            rb = be[0]*AbsR[0, 1] + be[1]*AbsR[0, 0];
-            if (FastMath.Abs(t[2]*R[1, 2] - t[1]*R[2, 2]) > ra + rb) return false;
+            ra = ae[1] * AbsR[2, 2] + ae[2] * AbsR[1, 2];
+            rb = be[0] * AbsR[0, 1] + be[1] * AbsR[0, 0];
+            if (FastMath.Abs(t[2] * R[1, 2] - t[1] * R[2, 2]) > ra + rb) return false;
 
             // Test axis L = A1 x B0
-            ra = ae[0]*AbsR[2, 0] + ae[2]*AbsR[0, 0];
-            rb = be[1]*AbsR[1, 2] + be[2]*AbsR[1, 1];
-            if (FastMath.Abs(t[0]*R[2, 0] - t[2]*R[0, 0]) > ra + rb) return false;
+            ra = ae[0] * AbsR[2, 0] + ae[2] * AbsR[0, 0];
+            rb = be[1] * AbsR[1, 2] + be[2] * AbsR[1, 1];
+            if (FastMath.Abs(t[0] * R[2, 0] - t[2] * R[0, 0]) > ra + rb) return false;
 
             // Test axis L = A1 x B1
-            ra = ae[0]*AbsR[2, 1] + ae[2]*AbsR[0, 1];
-            rb = be[0]*AbsR[1, 2] + be[2]*AbsR[1, 0];
-            if (FastMath.Abs(t[0]*R[2, 1] - t[2]*R[0, 1]) > ra + rb) return false;
+            ra = ae[0] * AbsR[2, 1] + ae[2] * AbsR[0, 1];
+            rb = be[0] * AbsR[1, 2] + be[2] * AbsR[1, 0];
+            if (FastMath.Abs(t[0] * R[2, 1] - t[2] * R[0, 1]) > ra + rb) return false;
 
             // Test axis L = A1 x B2
-            ra = ae[0]*AbsR[2, 2] + ae[2]*AbsR[0, 2];
-            rb = be[0]*AbsR[1, 1] + be[1]*AbsR[1, 0];
-            if (FastMath.Abs(t[0]*R[2, 2] - t[2]*R[0, 2]) > ra + rb) return false;
+            ra = ae[0] * AbsR[2, 2] + ae[2] * AbsR[0, 2];
+            rb = be[0] * AbsR[1, 1] + be[1] * AbsR[1, 0];
+            if (FastMath.Abs(t[0] * R[2, 2] - t[2] * R[0, 2]) > ra + rb) return false;
 
             // Test axis L = A2 x B0
-            ra = ae[0]*AbsR[1, 0] + ae[1]*AbsR[0, 0];
-            rb = be[1]*AbsR[2, 2] + be[2]*AbsR[2, 1];
-            if (FastMath.Abs(t[1]*R[0, 0] - t[0]*R[1, 0]) > ra + rb) return false;
+            ra = ae[0] * AbsR[1, 0] + ae[1] * AbsR[0, 0];
+            rb = be[1] * AbsR[2, 2] + be[2] * AbsR[2, 1];
+            if (FastMath.Abs(t[1] * R[0, 0] - t[0] * R[1, 0]) > ra + rb) return false;
 
             // Test axis L = A2 x B1
-            ra = ae[0]*AbsR[1, 1] + ae[1]*AbsR[0, 1];
-            rb = be[0]*AbsR[2, 2] + be[2]*AbsR[2, 0];
-            if (FastMath.Abs(t[1]*R[0, 1] - t[0]*R[1, 1]) > ra + rb) return false;
+            ra = ae[0] * AbsR[1, 1] + ae[1] * AbsR[0, 1];
+            rb = be[0] * AbsR[2, 2] + be[2] * AbsR[2, 0];
+            if (FastMath.Abs(t[1] * R[0, 1] - t[0] * R[1, 1]) > ra + rb) return false;
 
             // Test axis L = A2 x B2
-            ra = ae[0]*AbsR[1, 2] + ae[1]*AbsR[0, 2];
-            rb = be[0]*AbsR[2, 1] + be[1]*AbsR[2, 0];
-            if (FastMath.Abs(t[1]*R[0, 2] - t[0]*R[1, 2]) > ra + rb) return false;
+            ra = ae[0] * AbsR[1, 2] + ae[1] * AbsR[0, 2];
+            rb = be[0] * AbsR[2, 1] + be[1] * AbsR[2, 0];
+            if (FastMath.Abs(t[1] * R[0, 2] - t[0] * R[1, 2]) > ra + rb) return false;
 
             // Since no separating axis is found, the OBBs must be intersecting
             return true;
@@ -2544,7 +2544,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public static float[] toArray(Vector3 v)
         {
-            return new[] {v.X, v.Y, v.Z};
+            return new[] { v.X, v.Y, v.Z };
         }
 
         /// <summary>
@@ -2622,7 +2622,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public static float dot(float[] v1, float[] v2)
         {
-            return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
+            return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
         }
 
         /// <summary>
@@ -2631,7 +2631,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public static bool sameSign(float a, float b)
         {
-            return a*b >= 0;
+            return a * b >= 0;
         }
 
         /// <summary>

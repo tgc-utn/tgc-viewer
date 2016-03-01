@@ -1,7 +1,7 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace TgcViewer.Utils.Input
+namespace TGC.Viewer.Utils.Input
 {
     /// <summary>
     ///     Interfaz general para una cámara del Framework

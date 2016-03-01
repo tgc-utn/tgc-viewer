@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Viewer.Utils.Modifiers
 {
     /// <summary>
     ///     Ventana visualizadora de imágenes de un directorio.
@@ -22,12 +22,12 @@ namespace TgcViewer.Utils.Modifiers
         /// </summary>
         public delegate void SelectImageHandler(TgcTextureBrowser textureBrowser);
 
+        private readonly FolderBrowserDialog browseDialog;
+
         /// <summary>
         ///     Extensiones soportadas
         /// </summary>
-        private readonly string[] FILE_EXT_SEARCH = {"*.jpg", "*.jpeg", "*.gif", "*.png", "*.bmp"};
-
-        private readonly FolderBrowserDialog browseDialog;
+        private readonly string[] FILE_EXT_SEARCH = { "*.jpg", "*.jpeg", "*.gif", "*.png", "*.bmp" };
 
         private ImageControl selectedImage;
 
@@ -181,7 +181,7 @@ namespace TgcViewer.Utils.Modifiers
                 //Seleccionar primer elemento
                 if (panelImages.Controls.Count > 0)
                 {
-                    ((ImageControl) panelImages.Controls[0]).selectImage();
+                    ((ImageControl)panelImages.Controls[0]).selectImage();
                 }
             }
         }
@@ -245,11 +245,11 @@ namespace TgcViewer.Utils.Modifiers
         /// </summary>
         public class ImageControl : FlowLayoutPanel
         {
+            private readonly TgcTextureBrowser textureBrowser;
             public Label filenameLabel;
             public string filePath;
             public bool isDirectory;
             public PictureBox pictureBox;
-            private readonly TgcTextureBrowser textureBrowser;
 
             public ImageControl(string imageFile, TgcTextureBrowser textureBrowser, bool isDirectory)
             {

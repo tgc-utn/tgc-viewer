@@ -1,7 +1,7 @@
 ﻿using Microsoft.DirectX;
 using TGC.Core.Utils;
 
-namespace TgcViewer.Utils.Shaders
+namespace TGC.Viewer.Utils.Shaders
 {
     /// <summary>
     ///     Utilidades generales para shaders de post-procesado
@@ -28,11 +28,11 @@ namespace TgcViewer.Utils.Shaders
             colorWeights = new float[15];
 
             var i = 0;
-            var tu = 1.0f/textureSize;
+            var tu = 1.0f / textureSize;
             float offset;
 
             // Fill the center texel
-            var weight = multiplier*FastMath.GaussianDistribution(0, 0, deviation);
+            var weight = multiplier * FastMath.GaussianDistribution(0, 0, deviation);
             colorWeights[0] = weight;
 
             texCoordOffsets[0] = new Vector2(0, 0);
@@ -41,8 +41,8 @@ namespace TgcViewer.Utils.Shaders
             for (i = 1; i < 8; i++)
             {
                 // Get the Gaussian intensity for this offset
-                weight = multiplier*FastMath.GaussianDistribution(i, 0, deviation);
-                offset = i*tu;
+                weight = multiplier * FastMath.GaussianDistribution(i, 0, deviation);
+                offset = i * tu;
                 if (horizontal)
                 {
                     texCoordOffsets[i] = new Vector2(offset, 0);
@@ -73,8 +73,8 @@ namespace TgcViewer.Utils.Shaders
         {
             var offsets = new Vector2[16];
 
-            var tU = 1.0f/textureWidth;
-            var tV = 1.0f/textureHeight;
+            var tU = 1.0f / textureWidth;
+            var tV = 1.0f / textureHeight;
 
             // Sample from the 16 surrounding points. Since the center point will be in
             // the exact center of 16 texels, a 0.5f offset is needed to specify a texel
@@ -84,7 +84,7 @@ namespace TgcViewer.Utils.Shaders
             {
                 for (var x = 0; x < 4; x++)
                 {
-                    offsets[index] = new Vector2((x - 1.5f)*tU, (y - 1.5f)*tV);
+                    offsets[index] = new Vector2((x - 1.5f) * tU, (y - 1.5f) * tV);
                     index++;
                 }
             }

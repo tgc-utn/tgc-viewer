@@ -1,7 +1,7 @@
-﻿using Examples.MeshCreator.Primitives;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
+using TGC.Examples.MeshCreator.Primitives;
 
-namespace Examples.MeshCreator.Gizmos
+namespace TGC.Examples.MeshCreator.Gizmos
 {
     /// <summary>
     ///     Gizmo generico

@@ -1,10 +1,10 @@
 ﻿using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.MeshCreator.Primitives
+namespace TGC.Examples.MeshCreator.Primitives
 {
     /// <summary>
     ///     Primitiva de Sphere 3D
@@ -96,7 +96,7 @@ namespace Examples.MeshCreator.Primitives
                     scale = value.Z;
                 }
 
-                mesh.Radius = originalRadius*scale;
+                mesh.Radius = originalRadius * scale;
 
                 mesh.updateValues();
                 updateBB();
@@ -200,7 +200,7 @@ namespace Examples.MeshCreator.Primitives
         {
             mesh.Rotation = rotation;
             var translation = pivot - mesh.Position;
-            var m = Matrix.Translation(-translation)*Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)*
+            var m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
                     Matrix.Translation(translation);
             mesh.move(new Vector3(m.M41, m.M42, m.M43));
         }

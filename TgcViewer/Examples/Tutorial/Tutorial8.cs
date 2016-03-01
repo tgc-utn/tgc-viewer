@@ -1,11 +1,11 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Tutorial
+namespace TGC.Examples.Tutorial
 {
     /// <summary>
     ///     Tutorial 8:
@@ -38,8 +38,6 @@ namespace Examples.Tutorial
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar escena
             var loader = new TgcSceneLoader();
             scene =
@@ -61,8 +59,6 @@ namespace Examples.Tutorial
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Procesamos input de teclado para mover el objeto principal en el plano XZ
             var input = GuiController.Instance.D3dInput;
             var movement = new Vector3(0, 0, 0);
@@ -87,7 +83,7 @@ namespace Examples.Tutorial
             var originalPos = mainMesh.Position;
 
             //Aplicar movimiento
-            movement *= MOVEMENT_SPEED*elapsedTime;
+            movement *= MOVEMENT_SPEED * elapsedTime;
             mainMesh.move(movement);
 
             //Chequear si el objeto principal en su nueva posición choca con alguno de los objetos de la escena.

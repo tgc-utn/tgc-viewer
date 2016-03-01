@@ -1,14 +1,15 @@
-using System.Collections.Generic;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.DirectX
+namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo EjemploGetZBuffer:
@@ -45,8 +46,6 @@ namespace Examples.DirectX
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Activamos el renderizado customizado. De esta forma el framework nos delega control total sobre como dibujar en pantalla
             //La responsabilidad cae toda de nuestro lado
             GuiController.Instance.CustomRenderEnabled = true;
@@ -68,7 +67,8 @@ namespace Examples.DirectX
             //Crear textura para almacenar el zBuffer. Es una textura que se usa como RenderTarget y que tiene un formato de 1 solo float de 32 bits.
             //En cada pixel no vamos a guardar un color sino el valor de Z de la escena
             //La creamos con un solo nivel de mipmap (el original)
-            zBufferTexture = new Texture(d3dDevice, d3dDevice.Viewport.Width, d3dDevice.Viewport.Height, 1,
+            zBufferTexture = new Texture(D3DDevice.Instance.Device, D3DDevice.Instance.Device.Viewport.Width,
+                D3DDevice.Instance.Device.Viewport.Height, 1,
                 Usage.RenderTarget, Format.R32F, Pool.Default);
 
             //Camara en 1ra persona
@@ -80,18 +80,16 @@ namespace Examples.DirectX
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Guardar render target original
-            pOldRT = d3dDevice.GetRenderTarget(0);
+            pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
 
             // 1) Mandar a dibujar todos los mesh para que se genere la textura de ZBuffer
-            d3dDevice.BeginScene();
+            D3DDevice.Instance.Device.BeginScene();
 
             //Seteamos la textura de zBuffer como render  target (en lugar de dibujar a la pantalla)
             var zBufferSurface = zBufferTexture.GetSurfaceLevel(0);
-            d3dDevice.SetRenderTarget(0, zBufferSurface);
-            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.SetRenderTarget(0, zBufferSurface);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Render de cada mesh
             foreach (var mesh in meshes)
@@ -101,19 +99,20 @@ namespace Examples.DirectX
             }
 
             zBufferSurface.Dispose();
-            d3dDevice.EndScene();
+            D3DDevice.Instance.Device.EndScene();
 
             // 2) Volvemos a dibujar la escena y pasamos el ZBuffer al shader como una textura.
             // Para este ejemplo particular utilizamos el valor de Z para alterar el color del pixel
-            d3dDevice.BeginScene();
+            D3DDevice.Instance.Device.BeginScene();
 
             //Restaurar render target original
-            d3dDevice.SetRenderTarget(0, pOldRT);
-            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Cargar textura de zBuffer al shader
             effect.SetValue("texZBuffer", zBufferTexture);
-            effect.SetValue("screenDimensions", new float[] {d3dDevice.Viewport.Width, d3dDevice.Viewport.Height});
+            effect.SetValue("screenDimensions",
+                new float[] { D3DDevice.Instance.Device.Viewport.Width, D3DDevice.Instance.Device.Viewport.Height });
 
             //Render de cada mesh
             foreach (var mesh in meshes)
@@ -122,13 +121,13 @@ namespace Examples.DirectX
                 mesh.render();
             }
 
-            d3dDevice.EndScene();
+            D3DDevice.Instance.Device.EndScene();
 
             //Mostrar FPS
-            d3dDevice.BeginScene();
+            D3DDevice.Instance.Device.BeginScene();
             GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0,
                 Color.Yellow);
-            d3dDevice.EndScene();
+            D3DDevice.Instance.Device.EndScene();
         }
 
         public override void close()

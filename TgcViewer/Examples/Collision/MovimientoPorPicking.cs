@@ -1,13 +1,14 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo MovimientoPorPicking:
@@ -47,10 +48,8 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar suelo
-            var texture = TgcTexture.createTexture(d3dDevice,
+            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg");
             suelo = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(5000, 0.1f, 5000), texture);
 
@@ -91,8 +90,6 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
@@ -116,7 +113,7 @@ namespace Examples.Collision
                 }
             }
 
-            var speed = (float) GuiController.Instance.Modifiers["speed"];
+            var speed = (float)GuiController.Instance.Modifiers["speed"];
 
             //Interporlar movimiento, si hay que mover
             if (applyMovement)
@@ -127,7 +124,7 @@ namespace Examples.Collision
                 if (posDiffLength > float.Epsilon)
                 {
                     //Movemos el mesh interpolando por la velocidad
-                    var currentVelocity = speed*elapsedTime;
+                    var currentVelocity = speed * elapsedTime;
                     posDiff.Normalize();
                     posDiff.Multiply(currentVelocity);
 
@@ -146,7 +143,7 @@ namespace Examples.Collision
                     mesh.Position = newPos;
 
                     //Como desactivamos la transformacion automatica, tenemos que armar nosotros la matriz de transformacion
-                    mesh.Transform = meshRotationMatrix*Matrix.Translation(mesh.Position);
+                    mesh.Transform = meshRotationMatrix * Matrix.Translation(mesh.Position);
 
                     //Actualizar camara
                     GuiController.Instance.ThirdPersonCamera.Target = mesh.Position;

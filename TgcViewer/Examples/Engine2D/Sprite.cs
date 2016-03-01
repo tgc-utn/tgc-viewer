@@ -1,7 +1,7 @@
-using System.Drawing;
 using Microsoft.DirectX;
+using System.Drawing;
 
-namespace Examples.Engine2D
+namespace TGC.Examples.Engine2D
 {
     public class Sprite
     {

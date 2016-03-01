@@ -1,6 +1,6 @@
 ﻿using Microsoft.DirectX;
 
-namespace TgcViewer.Utils.Interpolation
+namespace TGC.Viewer.Utils.Interpolation
 {
     /// <summary>
     ///     Utilidad para interpolar linealmente entre dos posiciones 2D
@@ -44,7 +44,7 @@ namespace TgcViewer.Utils.Interpolation
         /// <returns>Nueva posicion</returns>
         public Vector2 update()
         {
-            var movement = Speed*GuiController.Instance.ElapsedTime;
+            var movement = Speed * GuiController.Instance.ElapsedTime;
             distanceToTravel -= movement;
             if (distanceToTravel < 0)
             {

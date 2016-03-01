@@ -1,7 +1,7 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
+using System.Drawing;
 
-namespace Examples.TerrainEditor.Brushes.Terrain
+namespace TGC.Examples.TerrainEditor.Brushes.Terrain
 {
     /// <summary>
     ///     Aplana el terreno tomando como altura la del primer vertice seleccionado.
@@ -21,7 +21,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
 
         protected override float getSpeedAdjustment()
         {
-            return Intensity/42.5f;
+            return Intensity / 42.5f;
         }
 
         /// <summary>

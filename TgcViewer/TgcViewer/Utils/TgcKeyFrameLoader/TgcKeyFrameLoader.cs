@@ -1,26 +1,25 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcKeyFrameLoader
+namespace TGC.Viewer.Utils.TgcKeyFrameLoader
 {
     /// <summary>
     ///     Herramienta para cargar una Malla con animacion por KeyFrame, segun formato TGC
     /// </summary>
     public class TgcKeyFrameLoader
     {
-        private readonly Device device;
         private readonly Dictionary<string, TgcTexture> texturesDict;
 
         public TgcKeyFrameLoader()
         {
-            device = GuiController.Instance.D3dDevice;
             texturesDict = new Dictionary<string, TgcTexture>();
         }
 
@@ -231,8 +230,8 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             TgcKeyFrameMeshData meshData)
         {
             //Crear Mesh
-            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
-                MeshFlags.Managed, DiffuseMapVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, DiffuseMapVertexElements, D3DDevice.Instance.Device);
 
             //Cargar VertexBuffer
             using (var vb = mesh.VertexBuffer)
@@ -243,7 +242,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                     var v = new DiffuseMapVertex();
 
                     //vertices
-                    var coordIdx = meshData.coordinatesIndices[j]*3;
+                    var coordIdx = meshData.coordinatesIndices[j] * 3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -251,7 +250,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                         );
 
                     //texture coordinates diffuseMap
-                    var texCoordIdx = meshData.texCoordinatesIndices[j]*2;
+                    var texCoordIdx = meshData.texCoordinatesIndices[j] * 2;
                     v.Tu = meshData.textureCoordinates[texCoordIdx];
                     v.Tv = meshData.textureCoordinates[texCoordIdx + 1];
 
@@ -270,7 +269,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                 var indices = new short[meshData.coordinatesIndices.Length];
                 for (var j = 0; j < indices.Length; j++)
                 {
-                    indices[j] = (short) j;
+                    indices[j] = (short)j;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -281,8 +280,8 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             TgcTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
-                meshMaterials = new[] {matAux.materialId};
-                meshTextures = new[] {matAux.texture};
+                meshMaterials = new[] { matAux.materialId };
+                meshTextures = new[] { matAux.texture };
             }
 
             //Configurar Material y Textura para varios SubSet
@@ -326,8 +325,8 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         private TgcKeyFrameMesh crearMeshSoloColor(TgcKeyFrameMeshData meshData)
         {
             //Crear Mesh
-            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
-                MeshFlags.Managed, VertexColorVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, VertexColorVertexElements, D3DDevice.Instance.Device);
 
             //Cargar VertexBuffer
             using (var vb = mesh.VertexBuffer)
@@ -338,7 +337,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                     var v = new VertexColorVertex();
 
                     //vertices
-                    var coordIdx = meshData.coordinatesIndices[j]*3;
+                    var coordIdx = meshData.coordinatesIndices[j] * 3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -360,7 +359,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                 var indices = new short[meshData.coordinatesIndices.Length];
                 for (var i = 0; i < indices.Length; i++)
                 {
-                    indices[i] = (short) i;
+                    indices[i] = (short)i;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -419,7 +418,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                 }
                 else
                 {
-                    texture = TgcTexture.createTexture(device, materialData.fileName,
+                    texture = TgcTexture.createTexture(D3DDevice.Instance.Device, materialData.fileName,
                         texturesPath + "\\" + materialData.fileName);
                     texturesDict[materialData.fileName] = texture;
                     //TODO usar para algo el OFFSET y el TILING

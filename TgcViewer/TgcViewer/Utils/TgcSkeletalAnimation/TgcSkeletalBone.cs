@@ -1,6 +1,6 @@
 using Microsoft.DirectX;
 
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Hueso del esqueleto
@@ -14,7 +14,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             StartPosition = startPosition;
             StartRotation = startRotation;
 
-            MatLocal = Matrix.RotationQuaternion(StartRotation)*Matrix.Translation(StartPosition);
+            MatLocal = Matrix.RotationQuaternion(StartRotation) * Matrix.Translation(StartPosition);
         }
 
         /// <summary>

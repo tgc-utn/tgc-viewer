@@ -1,15 +1,15 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.Sound;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils._2D;
+using System.Drawing;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils._2D;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.Sound;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.TerrainEditor.Brushes.Vegetation
+namespace TGC.Examples.TerrainEditor.Brushes.Vegetation
 {
     public class VegetationPicker : ITerrainEditorBrush
     {
@@ -20,12 +20,13 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
             Z
         }
 
+        private readonly TgcStaticSound sound;
+
         protected Font font;
         protected TgcText2d label;
         private Vector3 rotationAxis = new Vector3(0, 1, 0);
 
         private Vector3 scaleAxis = new Vector3(1, 1, 1);
-        private readonly TgcStaticSound sound;
 
         public VegetationPicker()
         {
@@ -69,9 +70,9 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
                     float t = 0;
                     if (q != ray.Ray.Origin)
                     {
-                        if (ray.Ray.Direction.X != 0) t = (q.X - ray.Ray.Origin.X)/ray.Ray.Direction.X;
-                        else if (ray.Ray.Direction.Y != 0) t = (q.Y - ray.Ray.Origin.Y)/ray.Ray.Direction.Y;
-                        else if (ray.Ray.Direction.Z != 0) t = (q.Z - ray.Ray.Origin.Z)/ray.Ray.Direction.Z;
+                        if (ray.Ray.Direction.X != 0) t = (q.X - ray.Ray.Origin.X) / ray.Ray.Direction.X;
+                        else if (ray.Ray.Direction.Y != 0) t = (q.Y - ray.Ray.Origin.Y) / ray.Ray.Direction.Y;
+                        else if (ray.Ray.Direction.Z != 0) t = (q.Z - ray.Ray.Origin.Z) / ray.Ray.Direction.Z;
                     }
 
                     if (minT == -1 || t < minT)
@@ -91,19 +92,19 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
         {
             if (GuiController.Instance.D3dInput.keyDown(Key.J))
             {
-                rotate(FastMath.ToRad(60*GuiController.Instance.ElapsedTime));
+                rotate(FastMath.ToRad(60 * GuiController.Instance.ElapsedTime));
             }
             else if (GuiController.Instance.D3dInput.keyDown(Key.L))
             {
-                rotate(FastMath.ToRad(-60*GuiController.Instance.ElapsedTime));
+                rotate(FastMath.ToRad(-60 * GuiController.Instance.ElapsedTime));
             }
             else if (GuiController.Instance.D3dInput.keyDown(Key.I))
             {
-                Mesh.Scale += ScaleAxis*1.5f*GuiController.Instance.ElapsedTime;
+                Mesh.Scale += ScaleAxis * 1.5f * GuiController.Instance.ElapsedTime;
             }
             else if (GuiController.Instance.D3dInput.keyDown(Key.K))
             {
-                Mesh.Scale -= ScaleAxis*1.5f*GuiController.Instance.ElapsedTime;
+                Mesh.Scale -= ScaleAxis * 1.5f * GuiController.Instance.ElapsedTime;
             }
         }
 
@@ -113,18 +114,18 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
             {
                 case RotationAxis.X:
                     // mesh.rotateX(p);
-                    Mesh.Rotation = new Vector3((Mesh.Rotation.X + p)%FastMath.TWO_PI, Mesh.Rotation.Y, Mesh.Rotation.Z);
+                    Mesh.Rotation = new Vector3((Mesh.Rotation.X + p) % FastMath.TWO_PI, Mesh.Rotation.Y, Mesh.Rotation.Z);
 
                     break;
 
                 case RotationAxis.Y:
                     //mesh.rotateY(p);
-                    Mesh.Rotation = new Vector3(Mesh.Rotation.X, (Mesh.Rotation.Y + p)%FastMath.TWO_PI, Mesh.Rotation.Z);
+                    Mesh.Rotation = new Vector3(Mesh.Rotation.X, (Mesh.Rotation.Y + p) % FastMath.TWO_PI, Mesh.Rotation.Z);
                     break;
 
                 case RotationAxis.Z:
                     //mesh.rotateZ(p);
-                    Mesh.Rotation = new Vector3(Mesh.Rotation.X, Mesh.Rotation.Y, (Mesh.Rotation.Z + p)%FastMath.TWO_PI);
+                    Mesh.Rotation = new Vector3(Mesh.Rotation.X, Mesh.Rotation.Y, (Mesh.Rotation.Z + p) % FastMath.TWO_PI);
                     break;
             }
         }
@@ -191,8 +192,8 @@ namespace Examples.TerrainEditor.Brushes.Vegetation
             }
 
             label.Size = nameSize.ToSize();
-            label.Position = new Point((int) (GuiController.Instance.D3dInput.Xpos - nameSize.Width/2),
-                (int) (GuiController.Instance.D3dInput.Ypos + nameSize.Height + 5));
+            label.Position = new Point((int)(GuiController.Instance.D3dInput.Xpos - nameSize.Width / 2),
+                (int)(GuiController.Instance.D3dInput.Ypos + nameSize.Height + 5));
         }
 
         public bool mouseLeave(TgcTerrainEditor editor)

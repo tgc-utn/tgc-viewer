@@ -1,11 +1,12 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.PortalRendering
+namespace TGC.Examples.PortalRendering
 {
     /// <summary>
     ///     Ejemplo PortalRenderingFramework
@@ -39,8 +40,6 @@ namespace Examples.PortalRendering
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar escenario con información especial exportada de PortalRendering
             var loader = new TgcSceneLoader();
             scene =
@@ -70,9 +69,7 @@ namespace Examples.PortalRendering
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var enablePortalRendering = (bool) GuiController.Instance.Modifiers["portalRendering"];
+            var enablePortalRendering = (bool)GuiController.Instance.Modifiers["portalRendering"];
             if (enablePortalRendering)
             {
                 //Actualizar visibilidad con PortalRendering
@@ -85,14 +82,14 @@ namespace Examples.PortalRendering
             }
 
             //WireFrame
-            var wireFrameEnable = (bool) GuiController.Instance.Modifiers["WireFrame"];
+            var wireFrameEnable = (bool)GuiController.Instance.Modifiers["WireFrame"];
             if (wireFrameEnable)
             {
-                d3dDevice.RenderState.FillMode = FillMode.WireFrame;
+                D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
             }
             else
             {
-                d3dDevice.RenderState.FillMode = FillMode.Solid;
+                D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;
             }
 
             var meshCount = 0;
@@ -128,7 +125,7 @@ namespace Examples.PortalRendering
             GuiController.Instance.UserVars["MeshCount"] = meshCount.ToString();
 
             //Renderizar portales
-            var showPortals = (bool) GuiController.Instance.Modifiers["showPortals"];
+            var showPortals = (bool)GuiController.Instance.Modifiers["showPortals"];
             if (showPortals)
             {
                 scene.PortalRendering.renderPortals();

@@ -1,10 +1,11 @@
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples
+namespace TGC.Examples.Otros
 {
     /// <summary>
     ///     EjemploBatchPrimitives
@@ -37,16 +38,14 @@ namespace Examples
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            box1Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice,
+            box1Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\pasto.jpg");
-            box2Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice,
+            box2Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\tierra.jpg");
-            box3Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice,
+            box3Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg");
 
-            GuiController.Instance.Modifiers.addEnum("Render Method", typeof (RenderMethod), RenderMethod.Unsorted);
+            GuiController.Instance.Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(25);
 
             GuiController.Instance.FpsCamera.Enable = true;
@@ -56,7 +55,7 @@ namespace Examples
 
         private void createMeshes(int cajasPorCuadrante)
         {
-            var cantCajasPorNivel = cajasPorCuadrante*cajasPorCuadrante;
+            var cantCajasPorNivel = cajasPorCuadrante * cajasPorCuadrante;
 
             //Crear nuevas cajas
             var boxSize = 3f;
@@ -69,11 +68,11 @@ namespace Examples
                 for (var j = 0; j < cajasPorCuadrante; j++)
                 {
                     //Crear tres niveles de caja, una abajo y otra arriba, con texturas diferentes
-                    cajasNivel1[cajas] = TgcBox.fromSize(new Vector3(i*boxSize, 0, j*boxSize*1.5f),
+                    cajasNivel1[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, 0, j * boxSize * 1.5f),
                         new Vector3(boxSize, boxSize, boxSize), box1Texture);
-                    cajasNivel2[cajas] = TgcBox.fromSize(new Vector3(i*boxSize, boxSize, j*boxSize*1.5f),
+                    cajasNivel2[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, boxSize, j * boxSize * 1.5f),
                         new Vector3(boxSize, boxSize, boxSize), box2Texture);
-                    cajasNivel3[cajas] = TgcBox.fromSize(new Vector3(i*boxSize, boxSize*2, j*boxSize*1.5f),
+                    cajasNivel3[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
                         new Vector3(boxSize, boxSize, boxSize), box3Texture);
                     cajas++;
                 }
@@ -133,9 +132,7 @@ namespace Examples
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var renderMethod = (RenderMethod) GuiController.Instance.Modifiers["Render Method"];
+            var renderMethod = (RenderMethod)GuiController.Instance.Modifiers["Render Method"];
             doRender(renderMethod);
         }
 

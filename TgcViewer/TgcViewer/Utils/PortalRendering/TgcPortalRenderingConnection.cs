@@ -1,7 +1,7 @@
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Viewer.Utils.PortalRendering
 {
     /// <summary>
     ///     Conexión unidireccional entre una celda y otra, a travez de un Portal

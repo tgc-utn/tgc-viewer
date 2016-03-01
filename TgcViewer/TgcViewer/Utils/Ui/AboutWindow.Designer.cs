@@ -1,4 +1,4 @@
-﻿namespace TgcViewer.Utils.Ui
+﻿namespace TGC.Viewer.Utils.Ui
 {
     partial class AboutWindow
     {

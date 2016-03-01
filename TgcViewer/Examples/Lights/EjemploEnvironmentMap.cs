@@ -1,15 +1,16 @@
-using System.Collections.Generic;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Lights
+namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploEnvironmentMap:
@@ -45,10 +46,8 @@ namespace Examples.Lights
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar textura de CubeMap para Environment Map
-            cubeMap = TextureLoader.FromCubeFile(d3dDevice,
+            cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Shaders\\CubeMap.dds");
 
             //Crear 3 paredes y un piso con textura comun y textura de normalMap
@@ -56,7 +55,7 @@ namespace Examples.Lights
                 TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_DiffuseMap.jpg");
             var normalMap =
                 TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_NormalMap.jpg");
-            TgcTexture[] normalMapArray = {normalMap};
+            TgcTexture[] normalMapArray = { normalMap };
 
             var paredSur = TgcBox.fromExtremes(new Vector3(-200, 0, -210), new Vector3(200, 100, -200), diffuseMap);
             var paredOeste = TgcBox.fromExtremes(new Vector3(-210, 0, -200), new Vector3(-200, 100, 200), diffuseMap);
@@ -119,10 +118,8 @@ namespace Examples.Lights
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
-
             //Actualzar posición de la luz
-            var lightPos = (Vector3) GuiController.Instance.Modifiers["lightPos"];
+            var lightPos = (Vector3)GuiController.Instance.Modifiers["lightPos"];
             lightMesh.Position = lightPos;
             var eyePosition = GuiController.Instance.FpsCamera.getPosition();
 
@@ -131,24 +128,24 @@ namespace Examples.Lights
             {
                 //Cargar variables shader de la luz
                 mesh.Effect.SetValue("lightColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["lightColor"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["lightColor"]));
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
                 mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(eyePosition));
-                mesh.Effect.SetValue("lightIntensity", (float) GuiController.Instance.Modifiers["lightIntensity"]);
-                mesh.Effect.SetValue("lightAttenuation", (float) GuiController.Instance.Modifiers["lightAttenuation"]);
-                mesh.Effect.SetValue("bumpiness", (float) GuiController.Instance.Modifiers["bumpiness"]);
-                mesh.Effect.SetValue("reflection", (float) GuiController.Instance.Modifiers["reflection"]);
+                mesh.Effect.SetValue("lightIntensity", (float)GuiController.Instance.Modifiers["lightIntensity"]);
+                mesh.Effect.SetValue("lightAttenuation", (float)GuiController.Instance.Modifiers["lightAttenuation"]);
+                mesh.Effect.SetValue("bumpiness", (float)GuiController.Instance.Modifiers["bumpiness"]);
+                mesh.Effect.SetValue("reflection", (float)GuiController.Instance.Modifiers["reflection"]);
 
                 //Material
                 mesh.Effect.SetValue("materialEmissiveColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mEmissive"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mEmissive"]));
                 mesh.Effect.SetValue("materialAmbientColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mAmbient"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mAmbient"]));
                 mesh.Effect.SetValue("materialDiffuseColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mDiffuse"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mDiffuse"]));
                 mesh.Effect.SetValue("materialSpecularColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mSpecular"]));
-                mesh.Effect.SetValue("materialSpecularExp", (float) GuiController.Instance.Modifiers["specularEx"]);
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mSpecular"]));
+                mesh.Effect.SetValue("materialSpecularExp", (float)GuiController.Instance.Modifiers["specularEx"]);
 
                 //CubeMap
                 mesh.Effect.SetValue("texCubeMap", cubeMap);

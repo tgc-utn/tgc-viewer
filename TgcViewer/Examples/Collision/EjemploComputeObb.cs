@@ -1,11 +1,11 @@
+using Microsoft.DirectX;
 using System;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploComputeObb:
@@ -40,8 +40,6 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             obb = new TgcObb();
             generateObb();
             generate = false;
@@ -56,8 +54,6 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             if (generate)
             {
                 generateObb();
@@ -88,9 +84,9 @@ namespace Examples.Collision
             points = new Vector3[COUNT];
             for (var i = 0; i < points.Length; i++)
             {
-                var x = MIN_RAND + (float) rand.NextDouble()*(MAX_RAND - MIN_RAND);
-                var y = MIN_RAND + (float) rand.NextDouble()*(MAX_RAND - MIN_RAND);
-                var z = MIN_RAND + (float) rand.NextDouble()*(MAX_RAND - MIN_RAND);
+                var x = MIN_RAND + (float)rand.NextDouble() * (MAX_RAND - MIN_RAND);
+                var y = MIN_RAND + (float)rand.NextDouble() * (MAX_RAND - MIN_RAND);
+                var z = MIN_RAND + (float)rand.NextDouble() * (MAX_RAND - MIN_RAND);
                 points[i] = new Vector3(x, y, z);
             }
 

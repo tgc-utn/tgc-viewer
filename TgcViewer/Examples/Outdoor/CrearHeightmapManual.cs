@@ -1,10 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.Outdoor
+namespace TGC.Examples.Outdoor
 {
     /// <summary>
     ///     Ejemplo CrearHeightmapManual:
@@ -45,8 +46,6 @@ namespace Examples.Outdoor
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Path de Heightmap default del terreno y Modifier para cambiarla
             currentHeightmap = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap1.jpg";
             GuiController.Instance.Modifiers.addTexture("heightmap", currentHeightmap);
@@ -56,12 +55,12 @@ namespace Examples.Outdoor
             GuiController.Instance.Modifiers.addFloat("scaleXZ", 0.1f, 100f, currentScaleXZ);
             currentScaleY = 1.3f;
             GuiController.Instance.Modifiers.addFloat("scaleY", 0.1f, 10f, currentScaleY);
-            createHeightMapMesh(d3dDevice, currentHeightmap, currentScaleXZ, currentScaleY);
+            createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, currentScaleXZ, currentScaleY);
 
             //Path de Textura default del terreno y Modifier para cambiarla
             currentTexture = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture1-256x256.jpg";
             GuiController.Instance.Modifiers.addTexture("texture", currentTexture);
-            loadTerrainTexture(d3dDevice, currentTexture);
+            loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
 
             //Configurar FPS Camara
             GuiController.Instance.FpsCamera.Enable = true;
@@ -72,7 +71,7 @@ namespace Examples.Outdoor
 
             //UserVars para cantidad de vertices
             GuiController.Instance.UserVars.addVar("Vertices", totalVertices);
-            GuiController.Instance.UserVars.addVar("Triangles", totalVertices/3);
+            GuiController.Instance.UserVars.addVar("Triangles", totalVertices / 3);
         }
 
         /// <summary>
@@ -84,8 +83,8 @@ namespace Examples.Outdoor
             var heightmap = loadHeightMap(d3dDevice, path);
 
             //Crear vertexBuffer
-            totalVertices = 2*3*(heightmap.GetLength(0) - 1)*(heightmap.GetLength(1) - 1);
-            vbTerrain = new VertexBuffer(typeof (CustomVertex.PositionTextured), totalVertices, d3dDevice,
+            totalVertices = 2 * 3 * (heightmap.GetLength(0) - 1) * (heightmap.GetLength(1) - 1);
+            vbTerrain = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices, d3dDevice,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
 
             //Crear array temporal de vertices
@@ -98,16 +97,16 @@ namespace Examples.Outdoor
                 for (var j = 0; j < heightmap.GetLength(1) - 1; j++)
                 {
                     //Crear los cuatro vertices que conforman este cuadrante, aplicando la escala correspondiente
-                    var v1 = new Vector3(i*scaleXZ, heightmap[i, j]*scaleY, j*scaleXZ);
-                    var v2 = new Vector3(i*scaleXZ, heightmap[i, j + 1]*scaleY, (j + 1)*scaleXZ);
-                    var v3 = new Vector3((i + 1)*scaleXZ, heightmap[i + 1, j]*scaleY, j*scaleXZ);
-                    var v4 = new Vector3((i + 1)*scaleXZ, heightmap[i + 1, j + 1]*scaleY, (j + 1)*scaleXZ);
+                    var v1 = new Vector3(i * scaleXZ, heightmap[i, j] * scaleY, j * scaleXZ);
+                    var v2 = new Vector3(i * scaleXZ, heightmap[i, j + 1] * scaleY, (j + 1) * scaleXZ);
+                    var v3 = new Vector3((i + 1) * scaleXZ, heightmap[i + 1, j] * scaleY, j * scaleXZ);
+                    var v4 = new Vector3((i + 1) * scaleXZ, heightmap[i + 1, j + 1] * scaleY, (j + 1) * scaleXZ);
 
                     //Crear las coordenadas de textura para los cuatro vertices del cuadrante
-                    var t1 = new Vector2(i/(float) heightmap.GetLength(0), j/(float) heightmap.GetLength(1));
-                    var t2 = new Vector2(i/(float) heightmap.GetLength(0), (j + 1)/(float) heightmap.GetLength(1));
-                    var t3 = new Vector2((i + 1)/(float) heightmap.GetLength(0), j/(float) heightmap.GetLength(1));
-                    var t4 = new Vector2((i + 1)/(float) heightmap.GetLength(0), (j + 1)/(float) heightmap.GetLength(1));
+                    var t1 = new Vector2(i / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
+                    var t2 = new Vector2(i / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
+                    var t3 = new Vector2((i + 1) / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
+                    var t4 = new Vector2((i + 1) / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
 
                     //Cargar triangulo 1
                     data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
@@ -133,7 +132,7 @@ namespace Examples.Outdoor
         private void loadTerrainTexture(Device d3dDevice, string path)
         {
             //Rotar e invertir textura
-            var b = (Bitmap) Image.FromFile(path);
+            var b = (Bitmap)Image.FromFile(path);
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
             terrainTexture = Texture.FromBitmap(d3dDevice, b, Usage.None, Pool.Managed);
         }
@@ -145,7 +144,7 @@ namespace Examples.Outdoor
         private int[,] loadHeightMap(Device d3dDevice, string path)
         {
             //Cargar bitmap desde el FileSystem
-            var bitmap = (Bitmap) Image.FromFile(path);
+            var bitmap = (Bitmap)Image.FromFile(path);
             var width = bitmap.Size.Width;
             var height = bitmap.Size.Height;
             var heightmap = new int[width, height];
@@ -159,8 +158,8 @@ namespace Examples.Outdoor
                     var pixel = bitmap.GetPixel(j, i);
 
                     //Calcular intensidad en escala de grises
-                    var intensity = pixel.R*0.299f + pixel.G*0.587f + pixel.B*0.114f;
-                    heightmap[i, j] = (int) intensity;
+                    var intensity = pixel.R * 0.299f + pixel.G * 0.587f + pixel.B * 0.114f;
+                    heightmap[i, j] = (int)intensity;
                 }
             }
 
@@ -169,39 +168,37 @@ namespace Examples.Outdoor
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si cambio el heightmap
-            var selectedHeightmap = (string) GuiController.Instance.Modifiers["heightmap"];
+            var selectedHeightmap = (string)GuiController.Instance.Modifiers["heightmap"];
             if (currentHeightmap != selectedHeightmap)
             {
                 currentHeightmap = selectedHeightmap;
-                createHeightMapMesh(d3dDevice, currentHeightmap, currentScaleXZ, currentScaleY);
+                createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, currentScaleXZ, currentScaleY);
             }
 
             //Ver si cambio alguno de los valores de escala
-            var selectedScaleXZ = (float) GuiController.Instance.Modifiers["scaleXZ"];
-            var selectedScaleY = (float) GuiController.Instance.Modifiers["scaleY"];
+            var selectedScaleXZ = (float)GuiController.Instance.Modifiers["scaleXZ"];
+            var selectedScaleY = (float)GuiController.Instance.Modifiers["scaleY"];
             if (currentScaleXZ != selectedScaleXZ || currentScaleY != selectedScaleY)
             {
                 currentScaleXZ = selectedScaleXZ;
                 currentScaleY = selectedScaleY;
-                createHeightMapMesh(d3dDevice, currentHeightmap, currentScaleXZ, currentScaleY);
+                createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, currentScaleXZ, currentScaleY);
             }
 
             //Ver si cambio la textura del terreno
-            var selectedTexture = (string) GuiController.Instance.Modifiers["texture"];
+            var selectedTexture = (string)GuiController.Instance.Modifiers["texture"];
             if (currentTexture != selectedTexture)
             {
                 currentTexture = selectedTexture;
-                loadTerrainTexture(d3dDevice, currentTexture);
+                loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
             }
 
             //Render terrain
-            d3dDevice.SetTexture(0, terrainTexture);
-            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
-            d3dDevice.SetStreamSource(0, vbTerrain, 0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices/3);
+            D3DDevice.Instance.Device.SetTexture(0, terrainTexture);
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
+            D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
         }
 
         public override void close()

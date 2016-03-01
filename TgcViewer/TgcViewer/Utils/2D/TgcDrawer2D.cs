@@ -1,20 +1,19 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using TGC.Core.Direct3D;
 
-namespace TgcViewer.Utils._2D
+namespace TGC.Viewer.Utils._2D
 {
     /// <summary>
     ///     Herramienta para dibujar Sprites 2D
     /// </summary>
     public class TgcDrawer2D
     {
-        private readonly Device d3dDevice;
         private readonly Sprite dxSprite;
 
         public TgcDrawer2D()
         {
-            d3dDevice = GuiController.Instance.D3dDevice;
-            dxSprite = new Sprite(d3dDevice);
+            dxSprite = new Sprite(D3DDevice.Instance.Device);
         }
 
         /// <summary>

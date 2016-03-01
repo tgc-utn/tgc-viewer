@@ -1,11 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Particles;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Particles;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.Particles
+namespace TGC.Examples.Particles
 {
     /// <summary>
     ///     Emisor de Particulas
@@ -36,8 +36,6 @@ namespace Examples.Particles
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Directorio de texturas
             texturePath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Particles\\";
 
@@ -74,10 +72,8 @@ namespace Examples.Particles
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cambiar cantidad de particulas, implica crear un nuevo emisor
-            var cantidad = (int) GuiController.Instance.Modifiers["cantidad"];
+            var cantidad = (int)GuiController.Instance.Modifiers["cantidad"];
             if (selectedParticleCount != cantidad)
             {
                 //Crear nuevo emisor
@@ -87,7 +83,7 @@ namespace Examples.Particles
             }
 
             //Cambiar textura
-            var textureName = (string) GuiController.Instance.Modifiers["texture"];
+            var textureName = (string)GuiController.Instance.Modifiers["texture"];
             if (selectedTextureName != textureName)
             {
                 selectedTextureName = textureName;
@@ -95,12 +91,12 @@ namespace Examples.Particles
             }
 
             //Actualizar los demás parametros
-            emitter.MinSizeParticle = (float) GuiController.Instance.Modifiers["minSize"];
-            emitter.MaxSizeParticle = (float) GuiController.Instance.Modifiers["maxSize"];
-            emitter.ParticleTimeToLive = (float) GuiController.Instance.Modifiers["timeToLive"];
-            emitter.CreationFrecuency = (float) GuiController.Instance.Modifiers["frecuencia"];
-            emitter.Dispersion = (int) GuiController.Instance.Modifiers["dispersion"];
-            emitter.Speed = (Vector3) GuiController.Instance.Modifiers["speedDir"];
+            emitter.MinSizeParticle = (float)GuiController.Instance.Modifiers["minSize"];
+            emitter.MaxSizeParticle = (float)GuiController.Instance.Modifiers["maxSize"];
+            emitter.ParticleTimeToLive = (float)GuiController.Instance.Modifiers["timeToLive"];
+            emitter.CreationFrecuency = (float)GuiController.Instance.Modifiers["frecuencia"];
+            emitter.Dispersion = (int)GuiController.Instance.Modifiers["dispersion"];
+            emitter.Speed = (Vector3)GuiController.Instance.Modifiers["speedDir"];
 
             //Render de emisor
             emitter.render();

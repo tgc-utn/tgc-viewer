@@ -1,4 +1,4 @@
-﻿namespace Examples.TerrainEditor.Brushes
+﻿namespace TGC.Examples.TerrainEditor.Brushes
 {
     public interface ITerrainEditorBrush
     {

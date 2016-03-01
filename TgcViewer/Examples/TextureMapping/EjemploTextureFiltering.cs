@@ -1,11 +1,12 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples
+namespace TGC.Examples.TextureMapping
 {
     /// <summary>
     ///     Ejemplo EjemploTextureFiltering:
@@ -37,18 +38,16 @@ namespace Examples
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             box = TgcBox.fromSize(new Vector3(300, 100, 150));
 
             lastTexture = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack2\\concrete1_4.jpg";
             GuiController.Instance.Modifiers.addTexture("Texture", lastTexture);
-            changeBoxTexure(d3dDevice, box, lastTexture);
+            changeBoxTexure(D3DDevice.Instance.Device, box, lastTexture);
 
             lastFiltering = "Linear";
             GuiController.Instance.Modifiers.addInterval("Filtering",
                 new[] { "Nearest", "Linear", "Bilinear", "Anisotropic" }, 0);
-            changeTextureFiltering(d3dDevice, lastFiltering);
+            changeTextureFiltering(D3DDevice.Instance.Device, lastFiltering);
 
             GuiController.Instance.FpsCamera.setCamera(new Vector3(-54.93998f, 2f, -1.118192f),
                 new Vector3(-53.94024f, 1.969789f, -1.140801f));
@@ -92,20 +91,18 @@ namespace Examples
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             var currentFiltering = (string)GuiController.Instance.Modifiers["Filtering"];
             if (currentFiltering != lastFiltering)
             {
                 lastFiltering = currentFiltering;
-                changeTextureFiltering(d3dDevice, currentFiltering);
+                changeTextureFiltering(D3DDevice.Instance.Device, currentFiltering);
             }
 
             var currentTexture = (string)GuiController.Instance.Modifiers["Texture"];
             if (currentTexture != lastTexture)
             {
                 lastTexture = currentTexture;
-                changeBoxTexure(d3dDevice, box, lastTexture);
+                changeBoxTexure(D3DDevice.Instance.Device, box, lastTexture);
             }
 
             box.render();

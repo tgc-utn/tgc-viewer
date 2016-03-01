@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.Octree
+namespace TGC.Examples.Optimizacion.Octree
 {
     /// <summary>
     ///     Herramienta para crear y utilizar un Octree para renderizar por Frustum Culling
@@ -98,9 +98,9 @@ namespace Examples.Optimizacion.Octree
             //recursividad sobre hijos
             else
             {
-                var midX = FastMath.Abs((boxUpperX - boxLowerX)/2);
-                var midY = FastMath.Abs((boxUpperY - boxLowerY)/2);
-                var midZ = FastMath.Abs((boxUpperZ - boxLowerZ)/2);
+                var midX = FastMath.Abs((boxUpperX - boxLowerX) / 2);
+                var midY = FastMath.Abs((boxUpperY - boxLowerY) / 2);
+                var midZ = FastMath.Abs((boxUpperZ - boxLowerZ) / 2);
 
                 //000
                 testChildVisibility(frustum, children[0], boxLowerX + midX, boxLowerY + midY, boxLowerZ + midZ,

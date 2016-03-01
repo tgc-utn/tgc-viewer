@@ -1,4 +1,4 @@
-﻿namespace Examples.RoomsEditor
+﻿namespace TGC.Examples.RoomsEditor
 {
     partial class RoomsEditorControl
     {
