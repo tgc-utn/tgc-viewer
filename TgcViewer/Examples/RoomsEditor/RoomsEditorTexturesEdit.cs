@@ -1,10 +1,10 @@
 using System;
 using System.Windows.Forms;
-using TgcViewer;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
+using TGC.Viewer.Utils.Modifiers;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.RoomsEditor
+namespace TGC.Examples.RoomsEditor
 {
     /// <summary>
     ///     Ventana que permite editar las texturas de cada pared de un Room
@@ -80,10 +80,10 @@ namespace Examples.RoomsEditor
             {
                 wall.Texture.dispose();
             }
-            wall.Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice, image.ImageLocation);
+            wall.Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, image.ImageLocation);
             wall.AutoAdjustUv = autoUv.Checked;
-            wall.UTile = (float) uTile.Value;
-            wall.VTile = (float) vTile.Value;
+            wall.UTile = (float)uTile.Value;
+            wall.VTile = (float)vTile.Value;
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace Examples.RoomsEditor
         {
             image.ImageLocation = wall.Texture.FilePath;
             autoUv.Checked = wall.AutoAdjustUv;
-            uTile.Value = (decimal) wall.UTile;
-            vTile.Value = (decimal) wall.VTile;
+            uTile.Value = (decimal)wall.UTile;
+            vTile.Value = (decimal)wall.VTile;
         }
 
         /// <summary>

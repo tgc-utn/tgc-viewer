@@ -1,10 +1,10 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
 
-namespace TgcViewer.Utils.Input
+namespace TGC.Viewer.Utils.Input
 {
     /// <summary>
     ///     Manejo de DirectInput para Keyboard y Mouse
@@ -26,8 +26,6 @@ namespace TgcViewer.Utils.Input
         private readonly Point ceroPoint = new Point(0, 0);
         private readonly bool[] currentkeyboardState;
         private readonly bool[] currentMouseButtonsState;
-
-        private Control guiControl;
         private readonly Vector2[] historyBuffer;
 
         //Keyboard
@@ -35,16 +33,20 @@ namespace TgcViewer.Utils.Input
 
         //Mouse
         private readonly Device mouseDevice;
-        private int mouseIndex;
-        private bool mouseInside;
+
         private readonly Vector2[] mouseMovement;
-        private int mouseX;
-        private int mouseY;
         private readonly Control panel3d;
 
         private readonly bool[] previouskeyboardState;
 
         private readonly bool[] previousMouseButtonsState;
+
+        private Control guiControl;
+
+        private int mouseIndex;
+        private bool mouseInside;
+        private int mouseX;
+        private int mouseY;
 
         public TgcD3dInput(Control guiControl, Control panel3d)
         {
@@ -84,11 +86,11 @@ namespace TgcViewer.Utils.Input
 
             //Inicializar ubicacion del cursor
             var ceroToScreen = this.panel3d.PointToScreen(ceroPoint);
-            Cursor.Position = new Point(ceroToScreen.X + panel3d.Width/2, ceroToScreen.Y + panel3d.Height/2);
+            Cursor.Position = new Point(ceroToScreen.X + panel3d.Width / 2, ceroToScreen.Y + panel3d.Height / 2);
             mouseInside = checkMouseInsidePanel3d();
 
             //Inicializar estados de teclas
-            var keysArray = (int[]) Enum.GetValues(typeof (Key));
+            var keysArray = (int[])Enum.GetValues(typeof(Key));
             var maxKeyValue = keysArray[keysArray.Length - 1];
             previouskeyboardState = new bool[maxKeyValue];
             currentkeyboardState = new bool[maxKeyValue];
@@ -171,7 +173,7 @@ namespace TgcViewer.Utils.Input
             //Actualizar cada tecla del estado actual
             for (var i = 0; i < currentkeyboardState.Length; i++)
             {
-                var k = (Key) (i + 1);
+                var k = (Key)(i + 1);
                 currentkeyboardState[i] = state[k];
             }
         }
@@ -185,12 +187,12 @@ namespace TgcViewer.Utils.Input
 
             //Actualizar estado de cada boton
             var mouseStateButtons = mouseState.GetMouseButtons();
-            currentMouseButtonsState[(int) MouseButtons.BUTTON_LEFT] =
-                mouseStateButtons[(int) MouseButtons.BUTTON_LEFT] != 0;
-            currentMouseButtonsState[(int) MouseButtons.BUTTON_MIDDLE] =
-                mouseStateButtons[(int) MouseButtons.BUTTON_MIDDLE] != 0;
-            currentMouseButtonsState[(int) MouseButtons.BUTTON_RIGHT] =
-                mouseStateButtons[(int) MouseButtons.BUTTON_RIGHT] != 0;
+            currentMouseButtonsState[(int)MouseButtons.BUTTON_LEFT] =
+                mouseStateButtons[(int)MouseButtons.BUTTON_LEFT] != 0;
+            currentMouseButtonsState[(int)MouseButtons.BUTTON_MIDDLE] =
+                mouseStateButtons[(int)MouseButtons.BUTTON_MIDDLE] != 0;
+            currentMouseButtonsState[(int)MouseButtons.BUTTON_RIGHT] =
+                mouseStateButtons[(int)MouseButtons.BUTTON_RIGHT] != 0;
 
             //Mouse X, Y relative
             if (EnableMouseSmooth)
@@ -242,14 +244,14 @@ namespace TgcViewer.Utils.Input
 
             for (var i = 0; i < historyBuffer.Length; i++)
             {
-                averageX += historyBuffer[i].X*currentWeight;
-                averageY += historyBuffer[i].Y*currentWeight;
-                averageTotal += 1.0f*currentWeight;
+                averageX += historyBuffer[i].X * currentWeight;
+                averageY += historyBuffer[i].Y * currentWeight;
+                averageTotal += 1.0f * currentWeight;
                 currentWeight *= WeightModifier;
             }
 
-            XposRelative = averageX/averageTotal;
-            YposRelative = averageY/averageTotal;
+            XposRelative = averageX / averageTotal;
+            YposRelative = averageY / averageTotal;
         }
 
         /// <summary>
@@ -260,8 +262,8 @@ namespace TgcViewer.Utils.Input
             mouseMovement[mouseIndex].X = x;
             mouseMovement[mouseIndex].Y = y;
 
-            XposRelative = (mouseMovement[0].X + mouseMovement[1].X)*0.05f;
-            YposRelative = (mouseMovement[0].Y + mouseMovement[1].Y)*0.05f;
+            XposRelative = (mouseMovement[0].X + mouseMovement[1].X) * 0.05f;
+            YposRelative = (mouseMovement[0].Y + mouseMovement[1].Y) * 0.05f;
 
             mouseIndex ^= 1;
             mouseMovement[mouseIndex].X = 0.0f;
@@ -275,7 +277,7 @@ namespace TgcViewer.Utils.Input
         {
             if (!mouseInside) return false;
 
-            var k = (int) key - 1;
+            var k = (int)key - 1;
             return currentkeyboardState[k];
         }
 
@@ -286,7 +288,7 @@ namespace TgcViewer.Utils.Input
         {
             if (!mouseInside) return false;
 
-            var k = (int) key - 1;
+            var k = (int)key - 1;
             return previouskeyboardState[k] && !currentkeyboardState[k];
         }
 
@@ -297,7 +299,7 @@ namespace TgcViewer.Utils.Input
         {
             if (!mouseInside) return false;
 
-            var k = (int) key - 1;
+            var k = (int)key - 1;
             return !previouskeyboardState[k] && currentkeyboardState[k];
         }
 
@@ -308,7 +310,7 @@ namespace TgcViewer.Utils.Input
         {
             if (!mouseInside) return false;
 
-            return currentMouseButtonsState[(int) button];
+            return currentMouseButtonsState[(int)button];
         }
 
         /// <summary>
@@ -318,7 +320,7 @@ namespace TgcViewer.Utils.Input
         {
             if (!mouseInside) return false;
 
-            var b = (int) button;
+            var b = (int)button;
             return previousMouseButtonsState[b] && !currentMouseButtonsState[b];
         }
 
@@ -329,7 +331,7 @@ namespace TgcViewer.Utils.Input
         {
             if (!mouseInside) return false;
 
-            var b = (int) button;
+            var b = (int)button;
             return !previousMouseButtonsState[b] && currentMouseButtonsState[b];
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Examples.Quake3Loader
+﻿namespace TGC.Examples.Quake3Loader
 {
     /// <summary>
     ///     Datos parseados de un mapa BSP

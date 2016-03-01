@@ -1,4 +1,4 @@
-namespace TgcViewer.Utils.TgcKeyFrameLoader
+namespace TGC.Viewer.Utils.TgcKeyFrameLoader
 {
     public class TgcKeyFrameAnimationData
     {
@@ -9,6 +9,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
 
         //KeyFrames de la animacion
         public TgcKeyFrameFrameData[] keyFrames;
+
         public int keyFramesCount;
         public string name;
 
@@ -16,6 +17,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
 
         //BoundingBox para esta animación
         public float[] pMin;
+
         public int startFrame;
 
         //Info general de la animacion

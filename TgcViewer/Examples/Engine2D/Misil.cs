@@ -1,7 +1,7 @@
-using System;
 using Microsoft.DirectX;
+using System;
 
-namespace Examples.Engine2D
+namespace TGC.Examples.Engine2D
 {
     public class Misil : GameObject
     {
@@ -26,8 +26,8 @@ namespace Examples.Engine2D
         {
             float speed = 500;
 
-            Position.X += speed*ElapsedTime*(float) Math.Cos(Angle);
-            Position.Y += speed*ElapsedTime*(float) Math.Sin(Angle);
+            Position.X += speed * ElapsedTime * (float)Math.Cos(Angle);
+            Position.Y += speed * ElapsedTime * (float)Math.Sin(Angle);
 
             sprite.Position = Position;
             sprite.Rotation = Angle;

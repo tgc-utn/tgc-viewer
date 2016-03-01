@@ -1,9 +1,9 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+﻿using Microsoft.DirectX;
+using System.Drawing;
+using TGC.Core.Direct3D;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.Gizmos
+namespace TGC.Examples.MeshCreator.Gizmos
 {
     /// <summary>
     ///     Mesh para renderizar un gizmo de Translate
@@ -81,9 +81,9 @@ namespace Examples.MeshCreator.Gizmos
             boxX.Position = gizmoCenter + Vector3.Multiply(boxX.Size, 0.5f) + new Vector3(SHORT_AXIS_SIZE, 0, 0);
             boxY.Position = gizmoCenter + Vector3.Multiply(boxY.Size, 0.5f) + new Vector3(0, SHORT_AXIS_SIZE, 0);
             boxZ.Position = gizmoCenter + Vector3.Multiply(boxZ.Size, 0.5f) + new Vector3(0, 0, SHORT_AXIS_SIZE);
-            boxXZ.Position = gizmoCenter + new Vector3(boxXZ.Size.X/2, 0, boxXZ.Size.Z/2);
-            boxXY.Position = gizmoCenter + new Vector3(boxXY.Size.X/2, boxXY.Size.Y/2, 0);
-            boxYZ.Position = gizmoCenter + new Vector3(0, boxYZ.Size.Y/2, boxYZ.Size.Z/2);
+            boxXZ.Position = gizmoCenter + new Vector3(boxXZ.Size.X / 2, 0, boxXZ.Size.Z / 2);
+            boxXY.Position = gizmoCenter + new Vector3(boxXY.Size.X / 2, boxXY.Size.Y / 2, 0);
+            boxYZ.Position = gizmoCenter + new Vector3(0, boxYZ.Size.Y / 2, boxYZ.Size.Z / 2);
 
             boxX.updateValues();
             boxY.updateValues();
@@ -171,7 +171,7 @@ namespace Examples.MeshCreator.Gizmos
         public void render()
         {
             //Desactivar Z-Buffer para dibujar arriba de todo el escenario
-            GuiController.Instance.D3dDevice.RenderState.ZBufferEnable = false;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = false;
 
             //Dibujar
             boxXZ.render();
@@ -187,7 +187,7 @@ namespace Examples.MeshCreator.Gizmos
                 selectedBox.BoundingBox.render();
             }
 
-            GuiController.Instance.D3dDevice.RenderState.ZBufferEnable = true;
+            D3DDevice.Instance.Device.RenderState.ZBufferEnable = true;
         }
 
         private TgcBox getAxisBox(Axis axis)

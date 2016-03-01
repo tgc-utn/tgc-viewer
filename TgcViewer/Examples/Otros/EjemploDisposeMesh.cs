@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Otros
+namespace TGC.Examples.Otros
 {
     /// <summary>
     ///     EjemploDisposeMesh
@@ -30,8 +30,6 @@ namespace Examples.Otros
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             meshes = new List<TgcMesh>();
             for (var i = 0; i < 100; i++)
             {
@@ -40,7 +38,7 @@ namespace Examples.Otros
                     loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
                                              "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
                 var mesh = scene.Meshes[0];
-                mesh.move(0, i*100, 0);
+                mesh.move(0, i * 100, 0);
                 meshes.Add(mesh);
 
                 mesh.D3dMesh.Disposing += D3dMesh_Disposing;
@@ -55,8 +53,6 @@ namespace Examples.Otros
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             foreach (var m in meshes)
             {
                 m.render();

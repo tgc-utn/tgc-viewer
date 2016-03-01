@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     public class TgcSphere : IRenderObject, ITransformObject
     {
@@ -39,13 +40,11 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <param name="meshName">Nombre de la malla que se va a crear</param>
         public TgcMesh toMesh(string meshName)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Obtener matriz para transformar vertices
             if (AutoTransformEnable)
             {
-                Transform = Matrix.Scaling(radius, radius, radius)*Matrix.Scaling(Scale)*
-                            Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)*
+                Transform = Matrix.Scaling(radius, radius, radius) * Matrix.Scaling(Scale) *
+                            Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
                             Matrix.Translation(translation);
             }
 
@@ -53,8 +52,8 @@ namespace TgcViewer.Utils.TgcGeometry
             if (Texture != null)
             {
                 //Crear Mesh
-                var d3dMesh = new Mesh(indices.Count/3, indices.Count, MeshFlags.Managed,
-                    TgcSceneLoader.TgcSceneLoader.DiffuseMapVertexElements, d3dDevice);
+                var d3dMesh = new Mesh(indices.Count / 3, indices.Count, MeshFlags.Managed,
+                    TgcSceneLoader.TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
 
                 //Cargar VertexBuffer
                 using (var vb = d3dMesh.VertexBuffer)
@@ -89,7 +88,7 @@ namespace TgcViewer.Utils.TgcGeometry
                     var vIndices = new short[indices.Count];
                     for (var j = 0; j < vIndices.Length; j++)
                     {
-                        vIndices[j] = (short) j;
+                        vIndices[j] = (short)j;
                     }
                     ib.SetData(vIndices, 0, LockFlags.None);
                 }
@@ -99,8 +98,8 @@ namespace TgcViewer.Utils.TgcGeometry
 
                 //Malla de TGC
                 var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
-                tgcMesh.DiffuseMaps = new[] {Texture.clone()};
-                tgcMesh.Materials = new[] {TgcD3dDevice.DEFAULT_MATERIAL};
+                tgcMesh.DiffuseMaps = new[] { Texture.clone() };
+                tgcMesh.Materials = new[] { TgcD3dDevice.DEFAULT_MATERIAL };
                 tgcMesh.createBoundingBox();
                 tgcMesh.Enabled = true;
                 return tgcMesh;
@@ -110,8 +109,8 @@ namespace TgcViewer.Utils.TgcGeometry
             else
             {
                 //Crear Mesh
-                var d3dMesh = new Mesh(indices.Count/3, indices.Count, MeshFlags.Managed,
-                    TgcSceneLoader.TgcSceneLoader.VertexColorVertexElements, d3dDevice);
+                var d3dMesh = new Mesh(indices.Count / 3, indices.Count, MeshFlags.Managed,
+                    TgcSceneLoader.TgcSceneLoader.VertexColorVertexElements, D3DDevice.Instance.Device);
 
                 //Cargar VertexBuffer
                 using (var vb = d3dMesh.VertexBuffer)
@@ -142,14 +141,14 @@ namespace TgcViewer.Utils.TgcGeometry
                     var vIndices = new short[indices.Count];
                     for (var j = 0; j < vIndices.Length; j++)
                     {
-                        vIndices[j] = (short) j;
+                        vIndices[j] = (short)j;
                     }
                     ib.SetData(vIndices, 0, LockFlags.None);
                 }
 
                 //Malla de TGC
                 var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.VERTEX_COLOR);
-                tgcMesh.Materials = new[] {TgcD3dDevice.DEFAULT_MATERIAL};
+                tgcMesh.Materials = new[] { TgcD3dDevice.DEFAULT_MATERIAL };
                 tgcMesh.createBoundingBox();
                 tgcMesh.Enabled = true;
                 return tgcMesh;
@@ -241,7 +240,7 @@ namespace TgcViewer.Utils.TgcGeometry
         public virtual Vector3 Scale
         {
             get { return scale; }
-            set { ; }
+            set {; }
         }
 
         private Color color;
@@ -578,10 +577,10 @@ namespace TgcViewer.Utils.TgcGeometry
             for (var i = 0; i < positions.Count; i++)
             {
                 var pos = positions[i];
-                var u = 0.5f + FastMath.Atan2(pos.Z, pos.X)/twoPi;
-                var v = 0.5f - 2*FastMath.Asin(pos.Y)/twoPi;
-                vertices.Add(new Vertex.PositionColoredTexturedNormal(pos, c, UVTiling.X*u + UVOffset.X,
-                    UVTiling.Y*v + UVOffset.Y, pos));
+                var u = 0.5f + FastMath.Atan2(pos.Z, pos.X) / twoPi;
+                var v = 0.5f - 2 * FastMath.Asin(pos.Y) / twoPi;
+                vertices.Add(new Vertex.PositionColoredTexturedNormal(pos, c, UVTiling.X * u + UVOffset.X,
+                    UVTiling.Y * v + UVOffset.Y, pos));
 
                 if (u == 1 || esPolo(vertices[i]))
                 {
@@ -594,14 +593,15 @@ namespace TgcViewer.Utils.TgcGeometry
             fixTexcoords(vertices, indices, iverticesU1, polos);
 
             verticesCount = vertices.Count;
-            triangleCount = indices.Count/3;
+            triangleCount = indices.Count / 3;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            vertexBuffer = new VertexBuffer(typeof (Vertex.PositionColoredTexturedNormal), verticesCount, d3dDevice,
+            vertexBuffer = new VertexBuffer(typeof(Vertex.PositionColoredTexturedNormal), verticesCount,
+                D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, Vertex.PositionColoredTexturedNormal.Format, Pool.Default);
             vertexBuffer.SetData(vertices.ToArray(), 0, LockFlags.None);
 
-            indexBuffer = new IndexBuffer(typeof (int), indices.Count, d3dDevice, Usage.Dynamic | Usage.WriteOnly,
+            indexBuffer = new IndexBuffer(typeof(int), indices.Count, D3DDevice.Instance.Device,
+                Usage.Dynamic | Usage.WriteOnly,
                 Pool.Default);
             indexBuffer.SetData(indices.ToArray(), 0, LockFlags.None);
 
@@ -653,7 +653,7 @@ namespace TgcViewer.Utils.TgcGeometry
             List<int> iverticesU1, int[] polos)
         {
             var duplicados = new Dictionary<int, int>();
-            var U0p5 = 0.5f*UVTiling.X + UVOffset.X;
+            var U0p5 = 0.5f * UVTiling.X + UVOffset.X;
             var U1 = UVTiling.X + UVOffset.X;
 
             //Fix compartidos
@@ -736,7 +736,7 @@ namespace TgcViewer.Utils.TgcGeometry
                         //Interpolo Tu1
                         if (basePoly.Equals(eBasePoly.ICOSAHEDRON) || noRectangulo)
 
-                            pole.Tu = minU + FastMath.Abs(u[0].Tu - u[1].Tu)/2;
+                            pole.Tu = minU + FastMath.Abs(u[0].Tu - u[1].Tu) / 2;
                         else
                             pole.Tu = zeroXZ.Tu;
 
@@ -795,14 +795,13 @@ namespace TgcViewer.Utils.TgcGeometry
             if (!enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             //transformacion
             if (AutoTransformEnable)
             {
-                Transform = Matrix.Scaling(radius, radius, radius)*Matrix.Scaling(Scale)*
-                            Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)*
+                Transform = Matrix.Scaling(radius, radius, radius) * Matrix.Scaling(Scale) *
+                            Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
                             Matrix.Translation(translation);
             }
 
@@ -818,13 +817,13 @@ namespace TgcViewer.Utils.TgcGeometry
             GuiController.Instance.Shaders.setShaderMatrix(effect, Transform);
             effect.Technique = technique;
 
-            d3dDevice.VertexDeclaration = Vertex.PositionColoredTexturedNormal_Declaration;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
-            var oldIndex = d3dDevice.Indices;
-            d3dDevice.Indices = indexBuffer;
+            D3DDevice.Instance.Device.VertexDeclaration = Vertex.PositionColoredTexturedNormal_Declaration;
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
+            var oldIndex = D3DDevice.Instance.Device.Indices;
+            D3DDevice.Instance.Device.Indices = indexBuffer;
 
             //Render con shader
-            renderWithFill(d3dDevice.RenderState.FillMode);
+            renderWithFill(D3DDevice.Instance.Device.RenderState.FillMode);
 
             if (RenderEdges)
             {
@@ -837,21 +836,21 @@ namespace TgcViewer.Utils.TgcGeometry
             //Desactivar AlphaBlend
             resetAlphaBlend();
 
-            d3dDevice.Indices = oldIndex;
+            D3DDevice.Instance.Device.Indices = oldIndex;
         }
 
         protected void renderWithFill(FillMode fillmode)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var old = d3dDevice.RenderState.FillMode;
-            d3dDevice.RenderState.FillMode = fillmode;
+            var old = D3DDevice.Instance.Device.RenderState.FillMode;
+            D3DDevice.Instance.Device.RenderState.FillMode = fillmode;
 
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, VertexCount, 0, triangleCount);
+            D3DDevice.Instance.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, VertexCount, 0,
+                triangleCount);
             effect.EndPass();
             effect.End();
-            d3dDevice.RenderState.FillMode = old;
+            D3DDevice.Instance.Device.RenderState.FillMode = old;
         }
 
         /// <summary>
@@ -859,11 +858,10 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         protected void activateAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
             if (alphaBlendEnable)
             {
-                device.RenderState.AlphaTestEnable = true;
-                device.RenderState.AlphaBlendEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
             }
         }
 
@@ -872,9 +870,8 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         protected void resetAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
-            device.RenderState.AlphaTestEnable = false;
-            device.RenderState.AlphaBlendEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>
@@ -925,8 +922,8 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
         public void moveOrientedY(float movement)
         {
-            var z = (float) Math.Cos(rotation.Y)*movement;
-            var x = (float) Math.Sin(rotation.Y)*movement;
+            var z = (float)Math.Cos(rotation.Y) * movement;
+            var x = (float)Math.Sin(rotation.Y) * movement;
 
             move(x, 0, z);
         }
@@ -998,7 +995,7 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             var midpointIndices = new Dictionary<string, int>();
 
-            var newIndices = new List<int>(indices.Count*4);
+            var newIndices = new List<int>(indices.Count * 4);
 
             for (var i = 0; i < indices.Count - 2; i += 3)
             {
@@ -1048,7 +1045,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 var v0 = vertices[i0];
                 var v1 = vertices[i1];
 
-                var midpoint = (v0 + v1)*0.5f;
+                var midpoint = (v0 + v1) * 0.5f;
 
                 if (vertices.Contains(midpoint))
                     midpointIndex = vertices.IndexOf(midpoint);
@@ -1174,7 +1171,7 @@ namespace TgcViewer.Utils.TgcGeometry
         };
 
         public static VertexDeclaration PositionColoredTexturedNormal_Declaration =
-            new VertexDeclaration(GuiController.Instance.D3dDevice, PositionColoredTexturedNormal_VertexElements);
+            new VertexDeclaration(D3DDevice.Instance.Device, PositionColoredTexturedNormal_VertexElements);
 
         public struct PositionColoredTexturedNormal
         {

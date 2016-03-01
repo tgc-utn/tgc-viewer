@@ -1,12 +1,11 @@
-﻿using System;
-using Examples.MeshCreator.EditablePolyTools;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.MeshCreator.Primitives
+namespace TGC.Examples.MeshCreator.Primitives
 {
     /// <summary>
     ///     Primitiva que representa un Mesh importado
@@ -68,7 +67,7 @@ namespace Examples.MeshCreator.Primitives
         /// <summary>
         ///     EditablePoly del mesh
         /// </summary>
-        public EditablePoly EditablePoly { get; private set; }
+        public EditablePoly.EditablePoly EditablePoly { get; private set; }
 
         public override TgcBoundingBox BoundingBox
         {
@@ -140,8 +139,8 @@ namespace Examples.MeshCreator.Primitives
             switch (mesh.RenderType)
             {
                 case TgcMesh.MeshRenderType.VERTEX_COLOR:
-                    var verts1 = (TgcSceneLoader.VertexColorVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                    var verts1 = (TgcSceneLoader.VertexColorVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts1.Length; i++)
                     {
                         verts1[i].Position = verts1[i].Position + offset;
@@ -151,8 +150,8 @@ namespace Examples.MeshCreator.Primitives
                     break;
 
                 case TgcMesh.MeshRenderType.DIFFUSE_MAP:
-                    var verts2 = (TgcSceneLoader.DiffuseMapVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                    var verts2 = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts2.Length; i++)
                     {
                         verts2[i].Position = verts2[i].Position + offset;
@@ -162,8 +161,8 @@ namespace Examples.MeshCreator.Primitives
                     break;
 
                 case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
-                    var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
+                    var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
                         mesh.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts3.Length; i++)
                     {
@@ -178,13 +177,13 @@ namespace Examples.MeshCreator.Primitives
         /// <summary>
         ///     Activar/Desactivar modo editablePoly
         /// </summary>
-        public void enableEditablePoly(bool enabled, EditablePoly.PrimitiveType primitiveType)
+        public void enableEditablePoly(bool enabled, EditablePoly.EditablePoly.PrimitiveType primitiveType)
         {
             if (enabled)
             {
                 if (EditablePoly == null)
                 {
-                    EditablePoly = new EditablePoly(Control, mesh);
+                    EditablePoly = new EditablePoly.EditablePoly(Control, mesh);
                 }
                 else
                 {
@@ -302,7 +301,7 @@ namespace Examples.MeshCreator.Primitives
         {
             mesh.Rotation = rotation;
             var translation = pivot - mesh.Position;
-            var m = Matrix.Translation(-translation)*Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)*
+            var m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
                     Matrix.Translation(translation);
             mesh.move(new Vector3(m.M41, m.M42, m.M43));
         }
@@ -341,25 +340,25 @@ namespace Examples.MeshCreator.Primitives
             switch (mesh.RenderType)
             {
                 case TgcMesh.MeshRenderType.DIFFUSE_MAP:
-                    var verts = (TgcSceneLoader.DiffuseMapVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+                    var verts = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts.Length; i++)
                     {
-                        verts[i].Tu = uvOffset.X + originalUVCoords[i].X*uvTile.X;
-                        verts[i].Tv = uvOffset.Y + originalUVCoords[i].Y*uvTile.Y;
+                        verts[i].Tu = uvOffset.X + originalUVCoords[i].X * uvTile.X;
+                        verts[i].Tv = uvOffset.Y + originalUVCoords[i].Y * uvTile.Y;
                     }
                     mesh.D3dMesh.SetVertexBufferData(verts, LockFlags.None);
                     mesh.D3dMesh.UnlockVertexBuffer();
                     break;
 
                 case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
-                    var verts2 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
+                    var verts2 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
                         mesh.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts2.Length; i++)
                     {
-                        verts2[i].Tu0 = uvOffset.X + originalUVCoords[i].X*uvTile.X;
-                        verts2[i].Tv0 = uvOffset.Y + originalUVCoords[i].Y*uvTile.Y;
+                        verts2[i].Tu0 = uvOffset.X + originalUVCoords[i].X * uvTile.X;
+                        verts2[i].Tv0 = uvOffset.Y + originalUVCoords[i].Y * uvTile.Y;
                     }
                     mesh.D3dMesh.SetVertexBufferData(verts2, LockFlags.None);
                     mesh.D3dMesh.UnlockVertexBuffer();
@@ -379,14 +378,14 @@ namespace Examples.MeshCreator.Primitives
         {
             //Transformacion actual
             var transform = Matrix.Scaling(m.Scale)
-                            *Matrix.RotationYawPitchRoll(m.Rotation.Y, m.Rotation.X, m.Rotation.Z)
-                            *Matrix.Translation(m.Position);
+                            * Matrix.RotationYawPitchRoll(m.Rotation.Y, m.Rotation.X, m.Rotation.Z)
+                            * Matrix.Translation(m.Position);
 
             switch (m.RenderType)
             {
                 case TgcMesh.MeshRenderType.VERTEX_COLOR:
-                    var verts1 = (TgcSceneLoader.VertexColorVertex[]) m.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
+                    var verts1 = (TgcSceneLoader.VertexColorVertex[])m.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts1.Length; i++)
                     {
                         verts1[i].Position = TgcVectorUtils.transform(verts1[i].Position, transform);
@@ -396,8 +395,8 @@ namespace Examples.MeshCreator.Primitives
                     break;
 
                 case TgcMesh.MeshRenderType.DIFFUSE_MAP:
-                    var verts2 = (TgcSceneLoader.DiffuseMapVertex[]) m.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
+                    var verts2 = (TgcSceneLoader.DiffuseMapVertex[])m.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, m.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts2.Length; i++)
                     {
                         verts2[i].Position = TgcVectorUtils.transform(verts2[i].Position, transform);
@@ -407,8 +406,8 @@ namespace Examples.MeshCreator.Primitives
                     break;
 
                 case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
-                    var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[]) m.D3dMesh.LockVertexBuffer(
-                        typeof (TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
+                    var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])m.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly,
                         m.D3dMesh.NumberVertices);
                     for (var i = 0; i < verts3.Length; i++)
                     {

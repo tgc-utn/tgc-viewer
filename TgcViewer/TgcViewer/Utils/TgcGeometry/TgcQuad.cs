@@ -1,11 +1,12 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Herramienta para crear un Quad 3D, o un plano con ancho y largo acotado,
@@ -15,6 +16,8 @@ namespace TgcViewer.Utils.TgcGeometry
     {
         private readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
 
+        private readonly VertexBuffer vertexBuffer;
+
         private Color color;
 
         protected Effect effect;
@@ -23,13 +26,9 @@ namespace TgcViewer.Utils.TgcGeometry
 
         protected string technique;
 
-        private readonly VertexBuffer vertexBuffer;
-
         public TgcQuad()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), 6, d3dDevice,
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 6, D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             Center = Vector3.Empty;
@@ -116,21 +115,20 @@ namespace TgcViewer.Utils.TgcGeometry
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 2);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 2);
             effect.EndPass();
             effect.End();
         }
@@ -154,8 +152,8 @@ namespace TgcViewer.Utils.TgcGeometry
             var vertices = new CustomVertex.PositionColored[6];
 
             //Crear un Quad con dos triángulos sobre XZ con normal default (0, 1, 0)
-            var min = new Vector3(-Size.X/2, 0, -Size.Y/2);
-            var max = new Vector3(Size.X/2, 0, Size.Y/2);
+            var min = new Vector3(-Size.X / 2, 0, -Size.Y / 2);
+            var max = new Vector3(Size.X / 2, 0, Size.Y / 2);
             var c = color.ToArgb();
 
             vertices[0] = new CustomVertex.PositionColored(min, c);
@@ -171,7 +169,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, normal));
             var axisRotation = Vector3.Cross(ORIGINAL_DIR, normal);
             axisRotation.Normalize();
-            var t = Matrix.RotationAxis(axisRotation, angle)*Matrix.Translation(Center);
+            var t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(Center);
 
             //Transformar todos los puntos
             for (var i = 0; i < vertices.Length; i++)

@@ -1,6 +1,6 @@
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.Quadtree
+namespace TGC.Examples.Optimizacion.Quadtree
 {
     /// <summary>
     ///     Nodo del árbol Quadtree

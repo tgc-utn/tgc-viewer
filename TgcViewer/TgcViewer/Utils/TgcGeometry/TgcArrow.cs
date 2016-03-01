@@ -1,11 +1,12 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Herramienta para dibujar una flecha 3D.
@@ -13,6 +14,8 @@ namespace TgcViewer.Utils.TgcGeometry
     public class TgcArrow : IRenderObject
     {
         private readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
+
+        private readonly VertexBuffer vertexBuffer;
 
         private Color bodyColor;
 
@@ -22,13 +25,9 @@ namespace TgcViewer.Utils.TgcGeometry
 
         protected string technique;
 
-        private readonly VertexBuffer vertexBuffer;
-
         public TgcArrow()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), 54, d3dDevice,
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 54, D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             Thickness = 0.06f;
@@ -126,21 +125,20 @@ namespace TgcViewer.Utils.TgcGeometry
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 18);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 18);
             effect.EndPass();
             effect.End();
         }
@@ -257,7 +255,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, lineVec));
             var axisRotation = Vector3.Cross(ORIGINAL_DIR, lineVec);
             axisRotation.Normalize();
-            var t = Matrix.RotationAxis(axisRotation, angle)*Matrix.Translation(PStart);
+            var t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(PStart);
 
             //Transformar todos los puntos
             for (var i = 0; i < vertices.Length; i++)

@@ -1,11 +1,12 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.Particles
+namespace TGC.Viewer.Utils.Particles
 {
     /// <summary>
     ///     Emisor de particulas para generar efectos de particulas
@@ -47,8 +48,6 @@ namespace TgcViewer.Utils.Particles
         /// <param name="particlesCount">cantidad maxima de particlas a generar</param>
         public ParticleEmitter(string texturePath, int particlesCount)
         {
-            var device = GuiController.Instance.D3dDevice;
-
             //valores default
             enabled = true;
             playing = true;
@@ -60,7 +59,7 @@ namespace TgcViewer.Utils.Particles
             dispersion = 100;
             speed = new Vector3(1, 1, 1);
             particleVertexArray = new Particle.ParticleVertex[1];
-            vertexDeclaration = new VertexDeclaration(device, Particle.ParticleVertexElements);
+            vertexDeclaration = new VertexDeclaration(D3DDevice.Instance.Device, Particle.ParticleVertexElements);
             position = new Vector3(0, 0, 0);
 
             this.particlesCount = particlesCount;
@@ -77,7 +76,7 @@ namespace TgcViewer.Utils.Particles
             }
 
             //Cargo la textura que tendra cada particula
-            texture = TgcTexture.createTexture(device, texturePath);
+            texture = TgcTexture.createTexture(D3DDevice.Instance.Device, texturePath);
         }
 
         /// <summary>
@@ -178,7 +177,7 @@ namespace TgcViewer.Utils.Particles
         public void changeTexture(string texturePath)
         {
             texture.dispose();
-            texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice, texturePath);
+            texture = TgcTexture.createTexture(D3DDevice.Instance.Device, texturePath);
         }
 
         /// <summary>
@@ -218,20 +217,19 @@ namespace TgcViewer.Utils.Particles
             //Dibujar particulas existentes
             if (particlesAlive.Count > 0)
             {
-                var device = GuiController.Instance.D3dDevice;
                 var texturesManager = GuiController.Instance.TexturesManager;
 
                 //Cargar VertexDeclaration
-                device.VertexDeclaration = vertexDeclaration;
+                D3DDevice.Instance.Device.VertexDeclaration = vertexDeclaration;
 
                 //Fijo la textura actual de la particula.
                 texturesManager.clear(0);
                 texturesManager.clear(1);
                 texturesManager.set(0, texture);
-                device.Material = TgcD3dDevice.DEFAULT_MATERIAL;
-                device.RenderState.AlphaBlendEnable = true;
-                device.RenderState.ZBufferWriteEnable = false;
-                device.Transform.World = Matrix.Identity;
+                D3DDevice.Instance.Device.Material = TgcD3dDevice.DEFAULT_MATERIAL;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
+                D3DDevice.Instance.Device.RenderState.ZBufferWriteEnable = false;
+                D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
                 // Va recorriendo la lista de particulas vivas,
                 // actualizando el tiempo de vida restante, y dibujando.
@@ -259,8 +257,8 @@ namespace TgcViewer.Utils.Particles
                 }
 
                 //Restaurar valores de RenderState
-                device.RenderState.AlphaBlendEnable = false;
-                device.RenderState.ZBufferWriteEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
+                D3DDevice.Instance.Device.RenderState.ZBufferWriteEnable = true;
             }
         }
 
@@ -287,21 +285,21 @@ namespace TgcViewer.Utils.Particles
 
                 // Según la dispersion asigno una velocidad inicial.
                 //(Si la dispersion es 0 la velocidad inicial sera (0,1,0)).
-                faux = random.Next(dispersion)/1000.0f;
-                faux *= faux*1000%2 == 0 ? 1.0f : -1.0f;
-                pSpeed.X = faux*2.0f;
+                faux = random.Next(dispersion) / 1000.0f;
+                faux *= faux * 1000 % 2 == 0 ? 1.0f : -1.0f;
+                pSpeed.X = faux * 2.0f;
 
-                faux = 1.0f - 2.0f*random.Next(dispersion)/1000.0f;
-                pSpeed.Y = faux*2.0f;
+                faux = 1.0f - 2.0f * random.Next(dispersion) / 1000.0f;
+                pSpeed.Y = faux * 2.0f;
 
-                faux = random.Next(dispersion)/1000.0f;
-                faux *= faux*1000%2 == 0 ? 1.0f : -1.0f;
-                pSpeed.Z = faux*2.0f;
+                faux = random.Next(dispersion) / 1000.0f;
+                faux *= faux * 1000 % 2 == 0 ? 1.0f : -1.0f;
+                pSpeed.Z = faux * 2.0f;
 
                 p.Speed = pSpeed;
 
                 //Modifico el tamaño de manera aleatoria.
-                var size = (float) random.NextDouble()*maxSizeParticle;
+                var size = (float)random.NextDouble() * maxSizeParticle;
                 if (size < minSizeParticle) size = minSizeParticle;
                 p.PointSize = size;
             }
@@ -325,18 +323,16 @@ namespace TgcViewer.Utils.Particles
         /// </summary>
         private void renderParticle(Particle p)
         {
-            var device = GuiController.Instance.D3dDevice;
-
             //Variamos el canal Alpha de la particula con efecto Fade-in y Fade-out (hasta 20% Alpha - Normal - desde 60% alpha)
-            var currentProgress = 1 - p.TimeToLive/p.TotalTimeToLive;
+            var currentProgress = 1 - p.TimeToLive / p.TotalTimeToLive;
             var alphaComp = 255;
             if (currentProgress < 0.2)
             {
-                alphaComp = (int) (currentProgress/0.2f*255f);
+                alphaComp = (int)(currentProgress / 0.2f * 255f);
             }
             else if (currentProgress > 0.6)
             {
-                alphaComp = (int) ((1 - (currentProgress - 0.6f)/0.4f)*255);
+                alphaComp = (int)((1 - (currentProgress - 0.6f) / 0.4f) * 255);
             }
 
             //Crear nuevo color con Alpha interpolado
@@ -344,18 +340,18 @@ namespace TgcViewer.Utils.Particles
             p.Color = Color.FromArgb(alphaComp, origColor.R, origColor.G, origColor.B).ToArgb();
 
             //Render con Moduliacion de color Alpha
-            var color = device.RenderState.TextureFactor;
+            var color = D3DDevice.Instance.Device.RenderState.TextureFactor;
 
-            device.RenderState.TextureFactor = p.Color;
-            device.TextureState[0].AlphaOperation = TextureOperation.Modulate;
-            device.TextureState[0].AlphaArgument1 = TextureArgument.TextureColor;
-            device.TextureState[0].AlphaArgument2 = TextureArgument.TFactor;
+            D3DDevice.Instance.Device.RenderState.TextureFactor = p.Color;
+            D3DDevice.Instance.Device.TextureState[0].AlphaOperation = TextureOperation.Modulate;
+            D3DDevice.Instance.Device.TextureState[0].AlphaArgument1 = TextureArgument.TextureColor;
+            D3DDevice.Instance.Device.TextureState[0].AlphaArgument2 = TextureArgument.TFactor;
 
             particleVertexArray[0] = p.PointSprite;
-            device.DrawUserPrimitives(PrimitiveType.PointList, 1, particleVertexArray);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.PointList, 1, particleVertexArray);
 
             //Restaurar valor original
-            device.RenderState.TextureFactor = color;
+            D3DDevice.Instance.Device.RenderState.TextureFactor = color;
         }
     }
 }

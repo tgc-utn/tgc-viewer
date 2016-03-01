@@ -1,6 +1,6 @@
-﻿using TgcViewer.Utils.Modifiers;
+﻿using TGC.Viewer.Utils.Modifiers;
 
-namespace Examples.TerrainEditor.Panel
+namespace TGC.Examples.TerrainEditor.Panel
 {
     public class TerrainEditorModifier : TgcModifierPanel
     {

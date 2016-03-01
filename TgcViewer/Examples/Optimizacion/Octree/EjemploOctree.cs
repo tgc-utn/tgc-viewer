@@ -1,11 +1,11 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Terrain;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.Octree
+namespace TGC.Examples.Optimizacion.Octree
 {
     /// <summary>
     ///     Ejemplo EjemploOctree
@@ -40,8 +40,6 @@ namespace Examples.Optimizacion.Octree
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear SkyBox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 500, 0);
@@ -62,7 +60,7 @@ namespace Examples.Optimizacion.Octree
 
             //Separar el Terreno del resto de los objetos
             var list1 = new List<TgcMesh>();
-            scene.separeteMeshList(new[] {"Terreno"}, out list1, out objetosIsla);
+            scene.separeteMeshList(new[] { "Terreno" }, out list1, out objetosIsla);
             terreno = list1[0];
 
             //Crear Octree
@@ -82,10 +80,8 @@ namespace Examples.Optimizacion.Octree
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var showOctree = (bool) GuiController.Instance.Modifiers["showOctree"];
-            var showTerrain = (bool) GuiController.Instance.Modifiers["showTerrain"];
+            var showOctree = (bool)GuiController.Instance.Modifiers["showOctree"];
+            var showTerrain = (bool)GuiController.Instance.Modifiers["showTerrain"];
 
             skyBox.render();
             if (showTerrain)

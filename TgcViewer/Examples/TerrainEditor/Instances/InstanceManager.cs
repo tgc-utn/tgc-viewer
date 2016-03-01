@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+﻿using Microsoft.DirectX;
+using System.Collections.Generic;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.TerrainEditor.Vegetation
+namespace TGC.Examples.TerrainEditor.Instances
 {
     public class InstancesManager
     {

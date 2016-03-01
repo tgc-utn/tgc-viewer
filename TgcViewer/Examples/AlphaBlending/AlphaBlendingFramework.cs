@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.AlphaBlending
+namespace TGC.Examples.AlphaBlending
 {
     /// <summary>
     ///     AlphaBlendingFramework
@@ -30,8 +30,6 @@ namespace Examples.AlphaBlending
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             meshes = new List<TgcMesh>();
 
             var loader = new TgcSceneLoader();
@@ -48,7 +46,7 @@ namespace Examples.AlphaBlending
             for (var i = 0; i < 5; i++)
             {
                 instanceMesh = originalMesh.createMeshInstance("Box" + (i + 1));
-                instanceMesh.Position = new Vector3(0, 0, i*50);
+                instanceMesh.Position = new Vector3(0, 0, i * 50);
                 instanceMesh.AlphaBlendEnable = true;
                 meshes.Add(instanceMesh);
             }
@@ -58,8 +56,6 @@ namespace Examples.AlphaBlending
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             foreach (var mesh in meshes)
             {
                 mesh.render();

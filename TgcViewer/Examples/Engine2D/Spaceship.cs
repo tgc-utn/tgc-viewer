@@ -1,12 +1,12 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
 
-namespace Examples.Engine2D
+namespace TGC.Examples.Engine2D
 {
     internal class Spaceship : GameObject
     {
@@ -63,7 +63,7 @@ namespace Examples.Engine2D
             {
                 newSprite = new Sprite();
                 newSprite.Bitmap = spaceshipBitmap;
-                newSprite.SrcRect = new Rectangle(i*(int) spriteSize.X, 0, (int) spriteSize.X, (int) spriteSize.Y);
+                newSprite.SrcRect = new Rectangle(i * (int)spriteSize.X, 0, (int)spriteSize.X, (int)spriteSize.Y);
                 newSprite.Scaling = new Vector2(size, size);
                 sprites.Add(newSprite);
             }
@@ -98,15 +98,15 @@ namespace Examples.Engine2D
             //Si paso el tiempo suficiente
             if (misilRateCounter > 0.10f)
             {
-                GameManager.Instance.fireMissile(centerPosition, angle - (float) Math.PI/2.0f);
+                GameManager.Instance.fireMissile(centerPosition, angle - (float)Math.PI / 2.0f);
                 misilRateCounter = 0;
             }
         }
 
         public void RestartPosition()
         {
-            Position.X = GameManager.ScreenWidth/2;
-            Position.Y = GameManager.ScreenHeight/2;
+            Position.X = GameManager.ScreenWidth / 2;
+            Position.Y = GameManager.ScreenHeight / 2;
         }
 
         public override void Update(float elapsedTime)
@@ -170,44 +170,44 @@ namespace Examples.Engine2D
             var spriteMouseVector = new Vector2();
             var mouseVector = new Vector2(GuiController.Instance.D3dInput.Xpos, GuiController.Instance.D3dInput.Ypos);
             spriteMouseVector = Vector2.Subtract(mouseVector,
-                Position + new Vector2(spriteSize.X/2*size, spriteSize.Y/2*size));
+                Position + new Vector2(spriteSize.X / 2 * size, spriteSize.Y / 2 * size));
 
             if (spriteMouseVector.Length() > 10f)
-                angleToMousePointer = (float) Math.Atan2(spriteMouseVector.Y, spriteMouseVector.X);
+                angleToMousePointer = (float)Math.Atan2(spriteMouseVector.Y, spriteMouseVector.X);
 
-            var MouseXAngle = (float) Math.Cos(angleToMousePointer);
-            var MouseYAngle = (float) Math.Sin(angleToMousePointer);
+            var MouseXAngle = (float)Math.Cos(angleToMousePointer);
+            var MouseYAngle = (float)Math.Sin(angleToMousePointer);
 
-            angle = angleToMousePointer + (float) Math.PI/2.0f;
+            angle = angleToMousePointer + (float)Math.PI / 2.0f;
 
             if (dirY == 0)
             {
-                speed.X -= Math.Sign(speed.X)*deacceleration*elapsedTime;
-                speed.Y -= Math.Sign(speed.Y)*deacceleration*elapsedTime;
+                speed.X -= Math.Sign(speed.X) * deacceleration * elapsedTime;
+                speed.Y -= Math.Sign(speed.Y) * deacceleration * elapsedTime;
             }
 
             if (dirY == -1)
             {
-                speed.X += acceleration*MouseXAngle*elapsedTime;
-                speed.Y += acceleration*MouseYAngle*elapsedTime;
+                speed.X += acceleration * MouseXAngle * elapsedTime;
+                speed.Y += acceleration * MouseYAngle * elapsedTime;
             }
 
             //Limitar la velocidad
             if (speed.Length() > maxSpeed)
             {
-                speed.X = maxSpeed*MouseXAngle;
-                speed.Y = maxSpeed*MouseYAngle;
+                speed.X = maxSpeed * MouseXAngle;
+                speed.Y = maxSpeed * MouseYAngle;
             }
 
-            Position.X += speed.X*elapsedTime;
-            Position.Y += speed.Y*elapsedTime;
+            Position.X += speed.X * elapsedTime;
+            Position.Y += speed.Y * elapsedTime;
 
-            centerPosition = Position + spriteSize*0.5f*size;
+            centerPosition = Position + spriteSize * 0.5f * size;
 
             sprites[currentSprite].Position = Position;
             sprites[currentSprite].Rotation = angle;
 
-            sprites[currentSprite].RotationCenter = new Vector2(spriteSize.X/2*size, spriteSize.Y/2*size);
+            sprites[currentSprite].RotationCenter = new Vector2(spriteSize.X / 2 * size, spriteSize.Y / 2 * size);
 
             misilRateCounter += elapsedTime;
 
@@ -231,7 +231,7 @@ namespace Examples.Engine2D
             GuiController.Instance.UserVars.setValue("PosY", Position.Y);
             GuiController.Instance.UserVars.setValue("MousePosX", GuiController.Instance.D3dInput.Xpos);
             GuiController.Instance.UserVars.setValue("MousePosY", GuiController.Instance.D3dInput.Ypos);
-            GuiController.Instance.UserVars.setValue("AngleMouse", angleToMousePointer*360/(2*Math.PI));
+            GuiController.Instance.UserVars.setValue("AngleMouse", angleToMousePointer * 360 / (2 * Math.PI));
         }
 
         public override void Render(float elapsedTime, Drawer drawer)

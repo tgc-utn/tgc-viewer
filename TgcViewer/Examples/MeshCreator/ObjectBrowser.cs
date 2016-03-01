@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Examples.MeshCreator.Primitives;
+using TGC.Examples.MeshCreator.Primitives;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     public partial class ObjectBrowser : Form
     {
@@ -88,7 +88,7 @@ namespace Examples.MeshCreator
 
         private Color getMeshNodeColor(TreeNode n)
         {
-            var p = (EditorPrimitive) n.Tag;
+            var p = (EditorPrimitive)n.Tag;
             if (p.Selected)
             {
                 return Color.Yellow;
@@ -163,7 +163,7 @@ namespace Examples.MeshCreator
                 {
                     if (childNode.Checked)
                     {
-                        var p = (EditorPrimitive) childNode.Tag;
+                        var p = (EditorPrimitive)childNode.Tag;
                         if (p.Visible)
                         {
                             control.SelectionRectangle.selectObject(p);
@@ -211,7 +211,7 @@ namespace Examples.MeshCreator
                 {
                     if (childNode.Checked)
                     {
-                        var p = (EditorPrimitive) childNode.Tag;
+                        var p = (EditorPrimitive)childNode.Tag;
                         objectsToShowHide.Add(p);
                     }
                 }
@@ -269,7 +269,7 @@ namespace Examples.MeshCreator
                 {
                     if (childNode.Checked)
                     {
-                        var p = (EditorPrimitive) childNode.Tag;
+                        var p = (EditorPrimitive)childNode.Tag;
                         objectsToDelete.Add(p);
                     }
                 }
@@ -339,7 +339,7 @@ namespace Examples.MeshCreator
                             if (childNode.Checked && node.Text != dstLayer.Text)
                             {
                                 //Cambiar layer del mesh
-                                var p = (EditorPrimitive) childNode.Tag;
+                                var p = (EditorPrimitive)childNode.Tag;
                                 p.Layer = dstLayer.Text;
 
                                 //Mover de nodo del tree
@@ -396,14 +396,14 @@ namespace Examples.MeshCreator
                         //Cambiar layer a todos sus hijos
                         foreach (TreeNode childNode in node.Nodes)
                         {
-                            var p = (EditorPrimitive) childNode.Tag;
+                            var p = (EditorPrimitive)childNode.Tag;
                             p.Layer = node.Text;
                         }
                     }
                     //Es un mesh
                     else
                     {
-                        var p = (EditorPrimitive) node.Tag;
+                        var p = (EditorPrimitive)node.Tag;
                         p.Name = inputBox.InputText;
                         node.Text = p.Name;
                     }

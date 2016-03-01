@@ -1,10 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
+using TGC.Viewer.Utils.Shaders;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Representa un polígono convexo plano en 3D de una sola cara, compuesto
@@ -63,13 +64,11 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public void updateValues()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear VertexBuffer on demand
             if (vertexBuffer == null || vertexBuffer.Disposed)
             {
-                vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), BoundingVertices.Length,
-                    d3dDevice,
+                vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), BoundingVertices.Length,
+                    D3DDevice.Instance.Device,
                     Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
                 //Shader
                 effect = GuiController.Instance.Shaders.VariosShader;
@@ -96,21 +95,20 @@ namespace TgcViewer.Utils.TgcGeometry
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //Renderizar RenderFarm
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleFan, 0, BoundingVertices.Length - 2);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleFan, 0, BoundingVertices.Length - 2);
             effect.EndPass();
             effect.End();
         }

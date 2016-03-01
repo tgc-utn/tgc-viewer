@@ -1,11 +1,12 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Transformations
+namespace TGC.Examples.Transformations
 {
     /// <summary>
     ///     Euler vs Quaternions
@@ -32,13 +33,11 @@ namespace Examples.Transformations
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var textureEuler = TgcTexture.createTexture(d3dDevice,
+            var textureEuler = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg");
             boxEuler = TgcBox.fromSize(new Vector3(-50, 0, 0), new Vector3(50, 50, 50), textureEuler);
 
-            var textureQuat = TgcTexture.createTexture(d3dDevice,
+            var textureQuat = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\paredMuyRugosa.jpg");
             boxQuaternion = TgcBox.fromSize(new Vector3(50, 0, 0), new Vector3(50, 50, 50), textureQuat);
             boxQuaternion.AutoTransformEnable = false;
@@ -55,8 +54,6 @@ namespace Examples.Transformations
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Rotación Euler
             var rotEuler = (Vector3)GuiController.Instance.Modifiers["Rot-Euler"];
             rotEuler.X = Geometry.DegreeToRadian(rotEuler.X);

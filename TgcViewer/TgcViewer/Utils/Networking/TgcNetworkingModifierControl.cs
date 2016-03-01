@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using SistPaquetesClient.core;
+using TGC.Viewer.Utils.Ui;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     /// <summary>
     ///     Control grafico de Modifier para Networking
@@ -13,9 +13,9 @@ namespace TgcViewer.Utils.Networking
     {
         private readonly TgcNetworkingModifierClientsDialog clientsDialog;
         private readonly TgcNetworkingModifier modifier;
+        private readonly TgcNetworkingModifierServersDialog serversDialog;
         internal int selectedPlayerId;
         internal int selectedServer;
-        private readonly TgcNetworkingModifierServersDialog serversDialog;
 
         public TgcNetworkingModifierControl(TgcNetworkingModifier modifier, string serverName, string clientName)
         {

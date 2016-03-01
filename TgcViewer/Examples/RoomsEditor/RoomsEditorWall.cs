@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.RoomsEditor
+namespace TGC.Examples.RoomsEditor
 {
     /// <summary>
     ///     Información lógica y visual de una pared de un Room
@@ -20,8 +20,7 @@ namespace Examples.RoomsEditor
             IntersectingRooms = new List<RoomsEditorRoom>();
 
             //cargar valores default de la pared
-            Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice,
-                room.RoomPanel.mapView.defaultTextureImage);
+            Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, room.RoomPanel.mapView.defaultTextureImage);
             AutoAdjustUv = true;
             UTile = 1f;
             VTile = 1f;

@@ -1,11 +1,12 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Representa un Orientend-BoundingBox (OBB)
@@ -111,7 +112,6 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
@@ -132,13 +132,13 @@ namespace TgcViewer.Utils.TgcGeometry
             }
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, 12, vertices);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, 12, vertices);
             effect.EndPass();
             effect.End();
         }
@@ -220,9 +220,9 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             var corners = new Vector3[8];
 
-            var eX = extents.X*orientation[0];
-            var eY = extents.Y*orientation[1];
-            var eZ = extents.Z*orientation[2];
+            var eX = extents.X * orientation[0];
+            var eY = extents.Y * orientation[1];
+            var eZ = extents.Z * orientation[2];
 
             corners[0] = Position - eX - eY - eZ;
             corners[1] = Position - eX - eY + eZ;
@@ -258,7 +258,7 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             var rotM = Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
             var currentRotM = computeRotationMatrix();
-            var newRotM = currentRotM*rotM;
+            var newRotM = currentRotM * rotM;
 
             orientation[0] = new Vector3(newRotM.M11, newRotM.M12, newRotM.M13);
             orientation[1] = new Vector3(newRotM.M21, newRotM.M22, newRotM.M23);
@@ -368,7 +368,7 @@ namespace TgcViewer.Utils.TgcGeometry
                         //Calcular volumen del AABB
                         var extents = aabb.calculateAxisRadius();
                         extents = TgcVectorUtils.abs(extents);
-                        var volume = extents.X*2*extents.Y*2*extents.Z*2;
+                        var volume = extents.X * 2 * extents.Y * 2 * extents.Z * 2;
 
                         //Buscar menor volumen
                         if (volume < minVolume)
@@ -379,7 +379,7 @@ namespace TgcViewer.Utils.TgcGeometry
 
                             //Volver centro del AABB a World-space
                             var center = aabb.calculateBoxCenter();
-                            center = center.X*orientation[0] + center.Y*orientation[1] + center.Z*orientation[2];
+                            center = center.X * orientation[0] + center.Y * orientation[1] + center.Z * orientation[2];
 
                             //Crear OBB
                             minObb.center = center;
@@ -397,7 +397,7 @@ namespace TgcViewer.Utils.TgcGeometry
             //Recursividad en mejor intervalo encontrado
             if (step > 0.01f)
             {
-                minObb = computeFromPointsRecursive(points, minInitValues, minEndValues, step/10f);
+                minObb = computeFromPointsRecursive(points, minInitValues, minEndValues, step / 10f);
             }
 
             return minObb;
@@ -421,10 +421,10 @@ namespace TgcViewer.Utils.TgcGeometry
         public static OBBStruct computeFromAABB(TgcBoundingBox.AABBStruct aabb)
         {
             var obb = new OBBStruct();
-            obb.extents = (aabb.max - aabb.min)*0.5f;
+            obb.extents = (aabb.max - aabb.min) * 0.5f;
             obb.center = aabb.min + obb.extents;
 
-            obb.orientation = new[] {new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1)};
+            obb.orientation = new[] { new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1) };
             return obb;
         }
 
@@ -447,7 +447,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>Punto convertido a World-space</returns>
         public Vector3 toWorldSpace(Vector3 p)
         {
-            return Position + p.X*orientation[0] + p.Y*orientation[1] + p.Z*orientation[2];
+            return Position + p.X * orientation[0] + p.Y * orientation[1] + p.Z * orientation[2];
         }
 
         /// <summary>
@@ -502,7 +502,7 @@ namespace TgcViewer.Utils.TgcGeometry
             /// <returns>Punto convertido a World-space</returns>
             public Vector3 toWorldSpace(Vector3 p)
             {
-                return center + p.X*orientation[0] + p.Y*orientation[1] + p.Z*orientation[2];
+                return center + p.X * orientation[0] + p.Y * orientation[1] + p.Z * orientation[2];
             }
         }
     }

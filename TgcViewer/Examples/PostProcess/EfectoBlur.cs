@@ -1,14 +1,15 @@
-using System.Collections.Generic;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.PostProcess
+namespace TGC.Examples.PostProcess
 {
     /// <summary>
     ///     Ejemplo EfectoBlur:
@@ -50,8 +51,6 @@ namespace Examples.PostProcess
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Activamos el renderizado customizado. De esta forma el framework nos delega control total sobre como dibujar en pantalla
             //La responsabilidad cae toda de nuestro lado
             GuiController.Instance.CustomRenderEnabled = true;
@@ -68,14 +67,15 @@ namespace Examples.PostProcess
                 new CustomVertex.PositionTextured(1, -1, 1, 1, 1)
             };
             //vertex buffer de los triangulos
-            screenQuadVB = new VertexBuffer(typeof (CustomVertex.PositionTextured),
-                4, d3dDevice, Usage.Dynamic | Usage.WriteOnly,
+            screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured),
+                4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
                 CustomVertex.PositionTextured.Format, Pool.Default);
             screenQuadVB.SetData(screenQuadVertices, 0, LockFlags.None);
 
             //Creamos un Render Targer sobre el cual se va a dibujar la pantalla
-            renderTarget2D = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            renderTarget2D = new Texture(D3DDevice.Instance.Device,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
+                , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
             //Cargar shader con efectos de Post-Procesado
@@ -103,17 +103,15 @@ namespace Examples.PostProcess
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargamos el Render Targer al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
             //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro Render Target.
-            pOldRT = d3dDevice.GetRenderTarget(0);
+            pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             var pSurf = renderTarget2D.GetSurfaceLevel(0);
-            d3dDevice.SetRenderTarget(0, pSurf);
-            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
-            drawSceneToRenderTarget(d3dDevice);
+            drawSceneToRenderTarget(D3DDevice.Instance.Device);
 
             //Liberar memoria de surface de Render Target
             pSurf.Dispose();
@@ -122,10 +120,10 @@ namespace Examples.PostProcess
             //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
 
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
-            d3dDevice.SetRenderTarget(0, pOldRT);
+            D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
-            drawPostProcess(d3dDevice);
+            drawPostProcess(D3DDevice.Instance.Device);
         }
 
         /// <summary>
@@ -167,7 +165,7 @@ namespace Examples.PostProcess
             d3dDevice.SetStreamSource(0, screenQuadVB, 0);
 
             //Ver si el efecto de oscurecer esta activado, configurar Technique del shader segun corresponda
-            var activar_efecto = (bool) GuiController.Instance.Modifiers["activar_efecto"];
+            var activar_efecto = (bool)GuiController.Instance.Modifiers["activar_efecto"];
             if (activar_efecto)
             {
                 effect.Technique = "BlurTechnique";
@@ -179,7 +177,7 @@ namespace Examples.PostProcess
 
             //Cargamos parametros en el shader de Post-Procesado
             effect.SetValue("render_target2D", renderTarget2D);
-            effect.SetValue("blur_intensity", (float) GuiController.Instance.Modifiers["blur_intensity"]);
+            effect.SetValue("blur_intensity", (float)GuiController.Instance.Modifiers["blur_intensity"]);
 
             //Limiamos la pantalla y ejecutamos el render del shader
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);

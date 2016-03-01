@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using Examples.MeshCreator.Primitives;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Direct3D;
 using TGC.Core.Utils;
+using TGC.Examples.MeshCreator.Primitives;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Utilidades generales
@@ -41,7 +41,7 @@ namespace Examples.MeshCreator
         public static float getMouseIncrementHeightSpeed(MeshCreatorCamera camera, TgcBoundingBox aabb, float heightY)
         {
             var dist = distanceFromCameraToObject(camera, aabb);
-            return heightY*dist/500;
+            return heightY * dist / 500;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Examples.MeshCreator
         public static Vector2 getMouseIncrementXYSpeed(MeshCreatorCamera camera, TgcBoundingBox aabb, Vector2 mouseMove)
         {
             var dist = distanceFromCameraToObject(camera, aabb);
-            mouseMove.Multiply(dist/500);
+            mouseMove.Multiply(dist / 500);
             return mouseMove;
         }
 
@@ -62,7 +62,7 @@ namespace Examples.MeshCreator
             float movement)
         {
             var dist = distanceFromCameraToObject(camera, aabb);
-            return movement*dist/50;
+            return movement * dist / 50;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Examples.MeshCreator
         public static float getMouseScaleIncrementSpeed(MeshCreatorCamera camera, TgcBoundingBox aabb, float scaling)
         {
             var dist = distanceFromCameraToObject(camera, aabb);
-            return scaling*dist/1000;
+            return scaling * dist / 1000;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Examples.MeshCreator
         /// </summary>
         public static float getTranslateGizmoSizeIncrement(MeshCreatorCamera camera, Vector3 p)
         {
-            return distanceFromCameraToPoint(camera, p)/500;
+            return distanceFromCameraToPoint(camera, p) / 500;
         }
 
         /// <summary>
@@ -114,10 +114,9 @@ namespace Examples.MeshCreator
         public static bool projectBoundingBox(TgcBoundingBox box3d, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var viewport = d3dDevice.Viewport;
-            var view = d3dDevice.Transform.View;
-            var proj = d3dDevice.Transform.Projection;
+            var viewport = D3DDevice.Instance.Device.Viewport;
+            var view = D3DDevice.Instance.Device.Transform.View;
+            var proj = D3DDevice.Instance.Device.Transform.Projection;
             var width = viewport.Width;
             var height = viewport.Height;
 
@@ -125,7 +124,7 @@ namespace Examples.MeshCreator
 
             //Proyectar los 8 puntos, sin dividir aun por W
             var corners = box3d.computeCorners();
-            var m = view*proj;
+            var m = view * proj;
             var projVertices = new Vector3[corners.Length];
             for (var i = 0; i < corners.Length; i++)
             {
@@ -174,8 +173,8 @@ namespace Examples.MeshCreator
             if (max.Y - min.Y < 1f) return false;
 
             //Cargar valores de box2D
-            box2D.Location = new Point((int) min.X, (int) min.Y);
-            box2D.Size = new Size((int) (max.X - min.X), (int) (max.Y - min.Y));
+            box2D.Location = new Point((int)min.X, (int)min.Y);
+            box2D.Size = new Size((int)(max.X - min.X), (int)(max.Y - min.Y));
             return true;
         }
 
@@ -185,13 +184,13 @@ namespace Examples.MeshCreator
         public static Vector3 toScreenSpace(Vector4 p, int width, int height)
         {
             //divido por w, (lo paso al proj. space)
-            p.X = p.X/p.W;
-            p.Y = p.Y/p.W;
-            p.Z = p.Z/p.W;
+            p.X = p.X / p.W;
+            p.Y = p.Y / p.W;
+            p.Z = p.Z / p.W;
 
             //lo paso a screen space
-            p.X = (int) (0.5f + (p.X + 1)*0.5f*width);
-            p.Y = (int) (0.5f + (1 - p.Y)*0.5f*height);
+            p.X = (int)(0.5f + (p.X + 1) * 0.5f * width);
+            p.Y = (int)(0.5f + (1 - p.Y) * 0.5f * height);
 
             return new Vector3(p.X, p.Y, p.Z);
         }
@@ -201,11 +200,10 @@ namespace Examples.MeshCreator
         /// </summary>
         public static Vector2 projectAABBScreenVec(TgcBoundingBox aabb)
         {
-            var device = GuiController.Instance.D3dDevice;
-            var viewport = device.Viewport;
-            var world = device.Transform.World;
-            var view = device.Transform.View;
-            var proj = device.Transform.Projection;
+            var viewport = D3DDevice.Instance.Device.Viewport;
+            var world = D3DDevice.Instance.Device.Transform.World;
+            var view = D3DDevice.Instance.Device.Transform.View;
+            var proj = D3DDevice.Instance.Device.Transform.Projection;
 
             //Proyectar punto minimo y maximo del AABB
             var minProj = Vector3.Project(aabb.PMin, viewport, proj, view, world);
@@ -226,13 +224,12 @@ namespace Examples.MeshCreator
         public static bool projectPoint(Vector3 p, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var viewport = d3dDevice.Viewport;
-            var view = d3dDevice.Transform.View;
-            var proj = d3dDevice.Transform.Projection;
+            var viewport = D3DDevice.Instance.Device.Viewport;
+            var view = D3DDevice.Instance.Device.Transform.View;
+            var proj = D3DDevice.Instance.Device.Transform.Projection;
             var width = viewport.Width;
             var height = viewport.Height;
-            var m = view*proj;
+            var m = view * proj;
 
             //Proyectar
             box2D = new Rectangle();
@@ -253,8 +250,8 @@ namespace Examples.MeshCreator
             if (max.Y - min.Y < 1f) return false;
 
             //Cargar valores de box2D
-            box2D.Location = new Point((int) min.X, (int) min.Y);
-            box2D.Size = new Size((int) (max.X - min.X), (int) (max.Y - min.Y));
+            box2D.Location = new Point((int)min.X, (int)min.Y);
+            box2D.Size = new Size((int)(max.X - min.X), (int)(max.Y - min.Y));
             return true;
         }
 
@@ -268,13 +265,12 @@ namespace Examples.MeshCreator
         public static bool projectSegmentToScreenRect(Vector3 a, Vector3 b, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var viewport = d3dDevice.Viewport;
-            var view = d3dDevice.Transform.View;
-            var proj = d3dDevice.Transform.Projection;
+            var viewport = D3DDevice.Instance.Device.Viewport;
+            var view = D3DDevice.Instance.Device.Transform.View;
+            var proj = D3DDevice.Instance.Device.Transform.Projection;
             var width = viewport.Width;
             var height = viewport.Height;
-            var m = view*proj;
+            var m = view * proj;
 
             //Proyectar
             box2D = new Rectangle();
@@ -298,8 +294,8 @@ namespace Examples.MeshCreator
             if (max.Y - min.Y < 1f) return false;
 
             //Cargar valores de box2D
-            box2D.Location = new Point((int) min.X, (int) min.Y);
-            box2D.Size = new Size((int) (max.X - min.X), (int) (max.Y - min.Y));
+            box2D.Location = new Point((int)min.X, (int)min.Y);
+            box2D.Size = new Size((int)(max.X - min.X), (int)(max.Y - min.Y));
             return true;
         }
 
@@ -312,17 +308,16 @@ namespace Examples.MeshCreator
         public static bool projectPolygon(Vector3[] vertices, out Rectangle box2D)
         {
             //Datos de viewport
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var viewport = d3dDevice.Viewport;
-            var view = d3dDevice.Transform.View;
-            var proj = d3dDevice.Transform.Projection;
+            var viewport = D3DDevice.Instance.Device.Viewport;
+            var view = D3DDevice.Instance.Device.Transform.View;
+            var proj = D3DDevice.Instance.Device.Transform.Projection;
             var width = viewport.Width;
             var height = viewport.Height;
 
             box2D = new Rectangle();
 
             //Proyectar todos los puntos, sin dividir aun por W
-            var m = view*proj;
+            var m = view * proj;
             var projVertices = new Vector3[vertices.Length];
             for (var i = 0; i < vertices.Length; i++)
             {
@@ -371,8 +366,8 @@ namespace Examples.MeshCreator
             if (max.Y - min.Y < 1f) return false;
 
             //Cargar valores de box2D
-            box2D.Location = new Point((int) min.X, (int) min.Y);
-            box2D.Size = new Size((int) (max.X - min.X), (int) (max.Y - min.Y));
+            box2D.Location = new Point((int)min.X, (int)min.Y);
+            box2D.Size = new Size((int)(max.X - min.X), (int)(max.Y - min.Y));
             return true;
         }
 
@@ -389,7 +384,7 @@ namespace Examples.MeshCreator
                 return selectionList[0].BoundingBox;
             }
 
-                //Hay varios objetos seleccionados
+            //Hay varios objetos seleccionados
             if (selectionList.Count > 1)
             {
                 //Crear AABB que une a todos los objetos

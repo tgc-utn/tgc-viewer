@@ -1,12 +1,13 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
@@ -61,18 +62,18 @@ namespace Examples.GeometryBasics
         public override void render(float elapsedTime)
         {
             var modifiers = GuiController.Instance.Modifiers;
-            var size = (Vector3) modifiers.getValue("size");
-            var position = (Vector3) modifiers.getValue("position");
-            var rotation = (Vector3) modifiers.getValue("rotation");
+            var size = (Vector3)modifiers.getValue("size");
+            var position = (Vector3)modifiers.getValue("position");
+            var rotation = (Vector3)modifiers.getValue("rotation");
 
-            var texturePath = (string) modifiers.getValue("texture");
+            var texturePath = (string)modifiers.getValue("texture");
             if (texturePath != currentTexture)
             {
                 currentTexture = texturePath;
-                cylinder.setTexture(TgcTexture.createTexture(GuiController.Instance.D3dDevice, currentTexture));
+                cylinder.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
-            cylinder.UseTexture = (bool) modifiers.getValue("useTexture");
+            cylinder.UseTexture = (bool)modifiers.getValue("useTexture");
 
             cylinder.Position = position;
             cylinder.Rotation = rotation;
@@ -80,13 +81,13 @@ namespace Examples.GeometryBasics
             cylinder.BottomRadius = size.Y;
             cylinder.Length = size.Z;
 
-            var alpha = (int) modifiers.getValue("alpha");
-            var color = (Color) modifiers.getValue("color");
+            var alpha = (int)modifiers.getValue("alpha");
+            var color = (Color)modifiers.getValue("color");
             cylinder.Color = Color.FromArgb(alpha, color);
 
             cylinder.updateValues();
 
-            if ((bool) modifiers.getValue("boundingCylinder"))
+            if ((bool)modifiers.getValue("boundingCylinder"))
                 cylinder.BoundingCylinder.render();
             else
                 cylinder.render();

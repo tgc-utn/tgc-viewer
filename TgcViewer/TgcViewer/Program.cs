@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace TgcViewer
+namespace TGC.Viewer
 {
     internal static class Program
     {

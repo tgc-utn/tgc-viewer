@@ -1,13 +1,14 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcKeyFrameLoader
+namespace TGC.Viewer.Utils.TgcKeyFrameLoader
 {
     /// <summary>
     ///     Malla que representa un modelo 3D con varias animaciones, animadas por KeyFrame Animation
@@ -257,14 +258,13 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             if (!Enabled)
                 return;
 
-            var device = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             //Aplicar transformaciones
             updateMeshTransform();
 
             //Cargar VertexDeclaration
-            device.VertexDeclaration = VertexDeclaration;
+            D3DDevice.Instance.Device.VertexDeclaration = VertexDeclaration;
 
             //Activar AlphaBlending si corresponde
             activateAlphaBlend();
@@ -448,8 +448,8 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
         public void moveOrientedY(float movement)
         {
-            var z = (float) Math.Cos(rotation.Y)*movement;
-            var x = (float) Math.Sin(rotation.Y)*movement;
+            var z = (float)Math.Cos(rotation.Y) * movement;
+            var x = (float)Math.Sin(rotation.Y) * movement;
 
             move(x, 0, z);
         }
@@ -619,7 +619,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             }
 
             //La duracion de la animacion.
-            animationTimeLenght = CurrentAnimation.Data.framesCount/FrameRate;
+            animationTimeLenght = CurrentAnimation.Data.framesCount / FrameRate;
         }
 
         /// <summary>
@@ -643,7 +643,6 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         /// </summary>
         public void updateAnimation()
         {
-            var device = GuiController.Instance.D3dDevice;
             var elapsedTime = GuiController.Instance.ElapsedTime;
 
             //Ver que haya transcurrido cierta cantidad de tiempo
@@ -689,14 +688,14 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                 var timeDifferenceBetweenFrames = keyFrame2.relativeTime - keyFrame1.relativeTime;
 
                 //En que posicion relativa de los dos frames actuales estamos.
-                var interpolationValue = (currentTime/animationTimeLenght - keyFrame1.relativeTime)/
+                var interpolationValue = (currentTime / animationTimeLenght - keyFrame1.relativeTime) /
                                          timeDifferenceBetweenFrames;
 
                 //Cargar array de vertices interpolados
                 var verticesFrameFinal = new float[verticesFrame1.Length];
                 for (var i = 0; i < verticesFrameFinal.Length; i++)
                 {
-                    verticesFrameFinal[i] = (verticesFrame2[i] - verticesFrame1[i])*interpolationValue +
+                    verticesFrameFinal[i] = (verticesFrame2[i] - verticesFrame1[i]) * interpolationValue +
                                             verticesFrame1[i];
                 }
 
@@ -720,7 +719,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                         var v = new TgcKeyFrameLoader.VertexColorVertex();
 
                         //vertices
-                        var coordIdx = originalData.coordinatesIndices[i]*3;
+                        var coordIdx = originalData.coordinatesIndices[i] * 3;
                         v.Position = new Vector3(
                             verticesCoordinates[coordIdx],
                             verticesCoordinates[coordIdx + 1],
@@ -743,7 +742,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                         var v = new TgcKeyFrameLoader.DiffuseMapVertex();
 
                         //vertices
-                        var coordIdx = originalData.coordinatesIndices[i]*3;
+                        var coordIdx = originalData.coordinatesIndices[i] * 3;
                         v.Position = new Vector3(
                             verticesCoordinates[coordIdx],
                             verticesCoordinates[coordIdx + 1],
@@ -751,7 +750,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                             );
 
                         //texture coordinates diffuseMap
-                        var texCoordIdx = originalData.texCoordinatesIndices[i]*2;
+                        var texCoordIdx = originalData.texCoordinatesIndices[i] * 2;
                         v.Tu = originalData.textureCoordinates[texCoordIdx];
                         v.Tv = originalData.textureCoordinates[texCoordIdx + 1];
 
@@ -772,7 +771,7 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         /// <returns></returns>
         private int getCurrentFrame()
         {
-            var position = currentTime/animationTimeLenght;
+            var position = currentTime / animationTimeLenght;
             var data = CurrentAnimation.Data;
 
             for (var i = 0; i < data.keyFrames.Length; i++)
@@ -803,9 +802,9 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             if (AutoTransformEnable)
             {
                 Transform = Matrix.Identity
-                            *Matrix.Scaling(scale)
-                            *Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            *Matrix.Translation(translation);
+                            * Matrix.Scaling(scale)
+                            * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
+                            * Matrix.Translation(translation);
             }
         }
 
@@ -814,11 +813,10 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         /// </summary>
         protected void activateAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
             if (AlphaBlendEnable)
             {
-                device.RenderState.AlphaTestEnable = true;
-                device.RenderState.AlphaBlendEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
             }
         }
 
@@ -827,9 +825,8 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
         /// </summary>
         protected void resetAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
-            device.RenderState.AlphaTestEnable = false;
-            device.RenderState.AlphaBlendEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>
@@ -855,8 +852,8 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
             switch (RenderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
-                    var verts1 = (TgcKeyFrameLoader.VertexColorVertex[]) d3dMesh.LockVertexBuffer(
-                        typeof (TgcKeyFrameLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts1 = (TgcKeyFrameLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
+                        typeof(TgcKeyFrameLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     points = new Vector3[verts1.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
@@ -866,8 +863,8 @@ namespace TgcViewer.Utils.TgcKeyFrameLoader
                     break;
 
                 case MeshRenderType.DIFFUSE_MAP:
-                    var verts2 = (TgcKeyFrameLoader.DiffuseMapVertex[]) d3dMesh.LockVertexBuffer(
-                        typeof (TgcKeyFrameLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
+                    var verts2 = (TgcKeyFrameLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
+                        typeof(TgcKeyFrameLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
                     points = new Vector3[verts2.Length];
                     for (var i = 0; i < points.Length; i++)
                     {

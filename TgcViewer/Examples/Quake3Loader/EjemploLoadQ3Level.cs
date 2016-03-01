@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Quake3Loader
+namespace TGC.Examples.Quake3Loader
 {
     /// <summary>
     ///     Ejemplo EjemploLoadQ3Level
@@ -97,8 +97,6 @@ namespace Examples.Quake3Loader
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Path de este ejemplo
             exampleDir = GuiController.Instance.ExamplesDir + "Quake3Loader\\Levels\\";
 
@@ -176,10 +174,8 @@ namespace Examples.Quake3Loader
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si cambio el nivel elegido
-            var selectedFileName = (string) GuiController.Instance.Modifiers["Level"];
+            var selectedFileName = (string)GuiController.Instance.Modifiers["Level"];
             if (selectedFileName != currentLevelFile)
             {
                 currentLevelFile = selectedFileName;
@@ -187,10 +183,10 @@ namespace Examples.Quake3Loader
             }
 
             //Actualizar valores de Modifiers
-            bspMap.CollisionManager.Camera.MovementSpeed = (float) GuiController.Instance.Modifiers.getValue("Speed");
-            bspMap.CollisionManager.Gravity = (float) GuiController.Instance.Modifiers.getValue("Gravity");
-            bspMap.CollisionManager.JumpSpeed = (float) GuiController.Instance.Modifiers.getValue("JumpSpeed");
-            bspMap.CollisionManager.NoClip = (bool) GuiController.Instance.Modifiers.getValue("NoClip");
+            bspMap.CollisionManager.Camera.MovementSpeed = (float)GuiController.Instance.Modifiers.getValue("Speed");
+            bspMap.CollisionManager.Gravity = (float)GuiController.Instance.Modifiers.getValue("Gravity");
+            bspMap.CollisionManager.JumpSpeed = (float)GuiController.Instance.Modifiers.getValue("JumpSpeed");
+            bspMap.CollisionManager.NoClip = (bool)GuiController.Instance.Modifiers.getValue("NoClip");
 
             //Actualizar estado de colsiones y renderizar con Frustum Culling utilizando matriz PVS
             var currentPosition = bspMap.CollisionManager.update();

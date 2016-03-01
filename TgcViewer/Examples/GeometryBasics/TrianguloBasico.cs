@@ -1,10 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo TrianguloBasico:
@@ -37,8 +38,6 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Definir array de vertices para el triangulo, del tipo Coordendas (X,Y,Z) + Color
             data = new CustomVertex.PositionColored[3];
 
@@ -56,12 +55,10 @@ namespace Examples.GeometryBasics
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Especificar formato de triangulo
-            d3dDevice.VertexFormat = CustomVertex.PositionColored.Format;
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
             //Dibujar 1 primitiva (nuestro triangulo)
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
         }
 
         public override void close()

@@ -1,11 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
@@ -13,14 +13,14 @@ namespace Examples.Collision
     public class EjemploFixedYCylinder : TgcExample
     {
         private const float PICKING_TIME = 0.5f;
-        private TgcFixedYBoundingCylinder collider;
-        private TgcBoundingBox collisionableAABB;
-        private TgcFixedYBoundingCylinder collisionableCylinder;
-        private TgcBoundingSphere collisionableSphere;
         private readonly Color collisionColor = Color.Red;
 
         private readonly Color noCollisionColor = Color.Yellow;
         private readonly Color pickingColor = Color.DarkGreen;
+        private TgcFixedYBoundingCylinder collider;
+        private TgcBoundingBox collisionableAABB;
+        private TgcFixedYBoundingCylinder collisionableCylinder;
+        private TgcBoundingSphere collisionableSphere;
 
         private float pickingTimeLeft;
 
@@ -58,8 +58,8 @@ namespace Examples.Collision
         public override void render(float elapsedTime)
         {
             var modifiers = GuiController.Instance.Modifiers;
-            var size = (Vector2) modifiers.getValue("size");
-            var position = (Vector3) modifiers.getValue("position");
+            var size = (Vector2)modifiers.getValue("size");
+            var position = (Vector3)modifiers.getValue("position");
 
             collider.Center = position;
             collider.Radius = size.X;

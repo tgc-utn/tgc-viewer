@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     public class TgcSocketServerInfo
     {

@@ -1,11 +1,11 @@
+using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.GrillaRegular
+namespace TGC.Examples.Optimizacion.GrillaRegular
 {
     /// <summary>
     ///     Herramienta para crear y usar la Grilla Regular
@@ -14,8 +14,10 @@ namespace Examples.Optimizacion.GrillaRegular
     {
         private readonly float CELL_HEIGHT = 400;
         private readonly float CELL_LENGTH = 400;
+
         //Tamaños de celda de la grilla
         private readonly float CELL_WIDTH = 400;
+
         private List<TgcDebugBox> debugBoxes;
         private GrillaRegularNode[,,] grid;
 
@@ -48,9 +50,9 @@ namespace Examples.Optimizacion.GrillaRegular
         {
             var sceneSize = sceneBounds.calculateSize();
 
-            var gx = (int) FastMath.Ceiling(sceneSize.X/cellDim.X) + 1;
-            var gy = (int) FastMath.Ceiling(sceneSize.Y/cellDim.Y) + 1;
-            var gz = (int) FastMath.Ceiling(sceneSize.Z/cellDim.Z) + 1;
+            var gx = (int)FastMath.Ceiling(sceneSize.X / cellDim.X) + 1;
+            var gy = (int)FastMath.Ceiling(sceneSize.Y / cellDim.Y) + 1;
+            var gz = (int)FastMath.Ceiling(sceneSize.Z / cellDim.Z) + 1;
 
             var grid = new GrillaRegularNode[gx, gy, gz];
 
@@ -65,8 +67,8 @@ namespace Examples.Optimizacion.GrillaRegular
                         var node = new GrillaRegularNode();
 
                         //Crear BoundingBox de celda
-                        var pMin = new Vector3(sceneBounds.PMin.X + x*cellDim.X, sceneBounds.PMin.Y + y*cellDim.Y,
-                            sceneBounds.PMin.Z + z*cellDim.Z);
+                        var pMin = new Vector3(sceneBounds.PMin.X + x * cellDim.X, sceneBounds.PMin.Y + y * cellDim.Y,
+                            sceneBounds.PMin.Z + z * cellDim.Z);
                         var pMax = Vector3.Add(pMin, cellDim);
                         node.BoundingBox = new TgcBoundingBox(pMin, pMax);
 

@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace TgcViewer.Utils.Sound
+namespace TGC.Viewer.Utils.Sound
 {
     public class TgcMp3Player
     {

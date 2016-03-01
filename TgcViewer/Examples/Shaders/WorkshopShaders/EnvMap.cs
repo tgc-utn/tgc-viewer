@@ -4,15 +4,16 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.Terrain;
+using TGC.Viewer.Utils.TgcSceneLoader;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.Shaders.WorkshopShaders
 {
     /// <summary>
     ///     Ejemplo EnvMap:
@@ -70,7 +71,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
             MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
 
@@ -186,7 +186,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
             var panel3d = GuiController.Instance.Panel3d;
             var aspectRatio = panel3d.Width / (float)panel3d.Height;
             if (GuiController.Instance.D3dInput.keyPressed(Key.Space))
@@ -248,13 +247,13 @@ namespace Examples.Shaders.WorkshopShaders
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
             GuiController.Instance.CurrentCamera.updateCamera();
             // --------------------------------------------------------------------
-            device.EndScene();
-            var g_pCubeMap = new CubeTexture(device, 256, 1, Usage.RenderTarget,
+            D3DDevice.Instance.Device.EndScene();
+            var g_pCubeMap = new CubeTexture(D3DDevice.Instance.Device, 256, 1, Usage.RenderTarget,
                 Format.A16B16G16R16F, Pool.Default);
-            var pOldRT = device.GetRenderTarget(0);
+            var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             // ojo: es fundamental que el fov sea de 90 grados.
             // asi que re-genero la matriz de proyeccion
-            device.Transform.Projection =
+            D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f),
                     1f, 1f, 10000f);
 
@@ -262,7 +261,7 @@ namespace Examples.Shaders.WorkshopShaders
             for (var nFace = CubeMapFace.PositiveX; nFace <= CubeMapFace.NegativeZ; ++nFace)
             {
                 var pFace = g_pCubeMap.GetCubeMapSurface(nFace, 0);
-                device.SetRenderTarget(0, pFace);
+                D3DDevice.Instance.Device.SetRenderTarget(0, pFace);
                 Vector3 Dir, VUP;
                 Color color;
                 switch (nFace)
@@ -313,31 +312,31 @@ namespace Examples.Shaders.WorkshopShaders
 
                 //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
                 var Pos = mesh.Position;
-                device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
+                D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
-                device.BeginScene();
+                D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
+                D3DDevice.Instance.Device.BeginScene();
 
                 //Renderizar
                 renderScene(elapsedTime, true);
 
-                device.EndScene();
+                D3DDevice.Instance.Device.EndScene();
                 //string fname = string.Format("face{0:D}.bmp", nFace);
                 //SurfaceLoader.Save(fname, ImageFileFormat.Bmp, pFace);
             }
             // restuaro el render target
-            device.SetRenderTarget(0, pOldRT);
+            D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
             //TextureLoader.Save("test.bmp", ImageFileFormat.Bmp, g_pCubeMap);
 
             // Restauro el estado de las transformaciones
-            GuiController.Instance.CurrentCamera.updateViewMatrix(device);
-            device.Transform.Projection =
+            GuiController.Instance.CurrentCamera.updateViewMatrix(D3DDevice.Instance.Device);
+            D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, 1f, 10000f);
 
             // dibujo pp dicho
-            device.BeginScene();
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             effect.SetValue("g_txCubeMap", g_pCubeMap);
             renderScene(elapsedTime, false);
             g_pCubeMap.Dispose();
@@ -345,7 +344,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public void renderScene(float elapsedTime, bool cubemap)
         {
-            var device = GuiController.Instance.D3dDevice;
             //Renderizar terreno
             terrain.render();
             //Renderizar SkyBox

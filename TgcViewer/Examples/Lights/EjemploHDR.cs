@@ -1,16 +1,17 @@
-using System.Collections.Generic;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Lights
+namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploHDR:
@@ -53,8 +54,6 @@ namespace Examples.Lights
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Activamos el renderizado customizado. De esta forma el framework nos delega control total sobre como dibujar en pantalla
             //La responsabilidad cae toda de nuestro lado
             GuiController.Instance.CustomRenderEnabled = true;
@@ -63,32 +62,37 @@ namespace Examples.Lights
             screenQuad = new TgcScreenQuad();
 
             //Crear RT con formato de floating point en vez del tipico formato de enteros
-            var backBufferWidth = d3dDevice.PresentationParameters.BackBufferWidth;
-            var backBufferHeight = d3dDevice.PresentationParameters.BackBufferHeight;
-            sceneRT = new Texture(d3dDevice, backBufferWidth, backBufferHeight, 1, Usage.RenderTarget,
+            var backBufferWidth = D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth;
+            var backBufferHeight = D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight;
+            sceneRT = new Texture(D3DDevice.Instance.Device, backBufferWidth, backBufferHeight, 1, Usage.RenderTarget,
                 Format.A16B16G16R16F, Pool.Default);
 
             //Crear RT para escalar sceneRT a un tamaño menor, de 1/4 x 1/4 (y divisible por 8 para facilitar los calculos de sampleo)
-            var cropWidth = (backBufferWidth - backBufferWidth%8)/4;
-            var cropHeight = (backBufferHeight - backBufferHeight%8)/4;
-            scaledSceneRT = new Texture(d3dDevice, cropWidth, cropHeight, 1, Usage.RenderTarget, Format.A16B16G16R16F,
+            var cropWidth = (backBufferWidth - backBufferWidth % 8) / 4;
+            var cropHeight = (backBufferHeight - backBufferHeight % 8) / 4;
+            scaledSceneRT = new Texture(D3DDevice.Instance.Device, cropWidth, cropHeight, 1, Usage.RenderTarget,
+                Format.A16B16G16R16F,
                 Pool.Default);
 
             //Crear RT para el bright-pass filter, de igual tamaño que scaledSceneRT (formato comun)
-            brightPassRT = new Texture(d3dDevice, cropWidth, cropHeight, 1, Usage.RenderTarget, Format.A8R8G8B8,
+            brightPassRT = new Texture(D3DDevice.Instance.Device, cropWidth, cropHeight, 1, Usage.RenderTarget,
+                Format.A8R8G8B8,
                 Pool.Default);
 
             //Crear RT para el efecto bloom (formato comun). Son dos por la doble pasada del filtro gaussiano
-            bloomRT = new Texture(d3dDevice, cropWidth, cropHeight, 1, Usage.RenderTarget, Format.A8R8G8B8, Pool.Default);
-            bloomTempRT = new Texture(d3dDevice, cropWidth, cropHeight, 1, Usage.RenderTarget, Format.A8R8G8B8,
+            bloomRT = new Texture(D3DDevice.Instance.Device, cropWidth, cropHeight, 1, Usage.RenderTarget,
+                Format.A8R8G8B8, Pool.Default);
+            bloomTempRT = new Texture(D3DDevice.Instance.Device, cropWidth, cropHeight, 1, Usage.RenderTarget,
+                Format.A8R8G8B8,
                 Pool.Default);
 
             //Crear un RT por cada paso de downsampling necesario para obtener el average luminance (un solo canal de 16 bits)
             luminanceRTs = new Texture[NUM_LUMINANCE_TEXTURES];
             for (var i = 0; i < luminanceRTs.Length; i++)
             {
-                var iSampleLen = 1 << (2*i);
-                luminanceRTs[i] = new Texture(d3dDevice, iSampleLen, iSampleLen, 1, Usage.RenderTarget, Format.R16F,
+                var iSampleLen = 1 << (2 * i);
+                luminanceRTs[i] = new Texture(D3DDevice.Instance.Device, iSampleLen, iSampleLen, 1, Usage.RenderTarget,
+                    Format.R16F,
                     Pool.Default);
             }
 
@@ -130,28 +134,26 @@ namespace Examples.Lights
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Guardar RT original
-            pOldRT = d3dDevice.GetRenderTarget(0);
+            pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
 
             //Dibujamos la escena al RT en floating point
-            drawSceneToRenderTarget(d3dDevice);
+            drawSceneToRenderTarget(D3DDevice.Instance.Device);
 
             //Generar version reducida de la imagen original de la escena
-            scaleScene(d3dDevice);
+            scaleScene(D3DDevice.Instance.Device);
 
             //Buscar luminance promedio de la escena
-            findAverageLuminance(d3dDevice);
+            findAverageLuminance(D3DDevice.Instance.Device);
 
             //Hacer bright-pass para quedarse con los pixels mas luminosos
-            brightPass(d3dDevice);
+            brightPass(D3DDevice.Instance.Device);
 
             //Hacer blur de bright-pass para generar efecto de bloom
-            bloomPass(d3dDevice);
+            bloomPass(D3DDevice.Instance.Device);
 
             //Final render
-            finalRender(d3dDevice);
+            finalRender(D3DDevice.Instance.Device);
         }
 
         /// <summary>
@@ -168,7 +170,7 @@ namespace Examples.Lights
             d3dDevice.BeginScene();
 
             //Actualzar posición de la luz
-            var lightPos = (Vector3) GuiController.Instance.Modifiers["lightPos"];
+            var lightPos = (Vector3)GuiController.Instance.Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 
             //Dibujar mesh de fuente de luz
@@ -184,7 +186,7 @@ namespace Examples.Lights
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
                 mesh.Effect.SetValue("eyePosition",
                     TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.FpsCamera.getPosition()));
-                mesh.Effect.SetValue("lightIntensity", (float) GuiController.Instance.Modifiers["lightIntensity"]);
+                mesh.Effect.SetValue("lightIntensity", (float)GuiController.Instance.Modifiers["lightIntensity"]);
 
                 //Cargar variables de shader de Material
                 mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.DarkGray));
@@ -247,8 +249,8 @@ namespace Examples.Lights
 
             //Calcular los offsets de la primera pasada de downsampling de luminance
             float tU, tV;
-            tU = 1.0f/(3.0f*surfWidth);
-            tV = 1.0f/(3.0f*surfHeight);
+            tU = 1.0f / (3.0f * surfWidth);
+            tV = 1.0f / (3.0f * surfHeight);
             int x, y;
             var index = 0;
             var sampleOffsets = new Vector2[16];
@@ -256,7 +258,7 @@ namespace Examples.Lights
             {
                 for (y = -1; y <= 1; y++)
                 {
-                    sampleOffsets[index] = new Vector2(x*tU, y*tV);
+                    sampleOffsets[index] = new Vector2(x * tU, y * tV);
                     index++;
                 }
             }
@@ -326,7 +328,7 @@ namespace Examples.Lights
         {
             d3dDevice.BeginScene();
 
-            var middleGray = (float) GuiController.Instance.Modifiers["middleGray"];
+            var middleGray = (float)GuiController.Instance.Modifiers["middleGray"];
 
             effect.Technique = "BrightPass";
             effect.SetValue("texSceneRT", scaledSceneRT);
@@ -388,12 +390,12 @@ namespace Examples.Lights
         {
             d3dDevice.BeginScene();
 
-            var toneMapping = (bool) GuiController.Instance.Modifiers["toneMapping"];
+            var toneMapping = (bool)GuiController.Instance.Modifiers["toneMapping"];
             effect.Technique = toneMapping ? "FinalRender" : "FinalRenderNoToneMapping";
             effect.SetValue("texSceneRT", sceneRT);
             effect.SetValue("texLuminanceRT", luminanceRTs[0]);
             effect.SetValue("texBloomRT", bloomRT);
-            effect.SetValue("middleGray", (float) GuiController.Instance.Modifiers["middleGray"]);
+            effect.SetValue("middleGray", (float)GuiController.Instance.Modifiers["middleGray"]);
             d3dDevice.SetRenderTarget(0, pOldRT);
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             screenQuad.render(effect);

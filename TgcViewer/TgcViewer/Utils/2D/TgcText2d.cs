@@ -1,8 +1,9 @@
-using System.Drawing;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using Font = Microsoft.DirectX.Direct3D.Font;
 
-namespace TgcViewer.Utils._2D
+namespace TGC.Viewer.Utils._2D
 {
     public class TgcText2d
     {
@@ -26,7 +27,7 @@ namespace TgcViewer.Utils._2D
             changeFont(TgcDrawText.VERDANA_10);
             Color = Color.Black;
 
-            var viewport = GuiController.Instance.D3dDevice.Viewport;
+            var viewport = D3DDevice.Instance.Device.Viewport;
             rectangle = new Rectangle(0, 0, viewport.Width, viewport.Height);
         }
 
@@ -93,7 +94,7 @@ namespace TgcViewer.Utils._2D
         public void changeFont(System.Drawing.Font font)
         {
             var sprite = GuiController.Instance.Text3d.TextSprite;
-            D3dFont = new Font(GuiController.Instance.D3dDevice, font);
+            D3dFont = new Font(D3DDevice.Instance.Device, font);
         }
 
         /// <summary>

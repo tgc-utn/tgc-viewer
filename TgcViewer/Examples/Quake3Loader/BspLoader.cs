@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Quake3Loader
+namespace TGC.Examples.Quake3Loader
 {
     /// <summary>
     ///     Herramienta para parsear un archivo BSP de Quake 3
@@ -18,8 +19,8 @@ namespace Examples.Quake3Loader
     {
         private static TgcTexture emptyTexture;
         private static TgcTexture emptyLightMap;
-        private TgcTexture[] lightMaps;
         private readonly List<QShaderData> shadersData;
+        private TgcTexture[] lightMaps;
         private QShaderData[] shaderXTextura;
         private string[] textureFullPath;
         private TgcTexture[] textures;
@@ -41,7 +42,7 @@ namespace Examples.Quake3Loader
             //algunos mesh no tienen textura o lightmap. Por compatibilidad con el exporter es conveniente que todas tengan Una textura
             //para eso creo una textura vacia de 1x1 negro como textura y una de 1x1 blanco para lightmap.
 
-            var texture = new Texture(GuiController.Instance.D3dDevice, 1, 1, 1, Usage.None, Format.A8R8G8B8,
+            var texture = new Texture(D3DDevice.Instance.Device, 1, 1, 1, Usage.None, Format.A8R8G8B8,
                 Pool.Managed);
             var graphicsStream = texture.LockRectangle(0, LockFlags.None);
             uint color = 0x00000000;
@@ -52,7 +53,7 @@ namespace Examples.Quake3Loader
 
             emptyTexture = new TgcTexture("emptyTexture.jpg", "emptyTexture.jpg", texture, false);
 
-            texture = new Texture(GuiController.Instance.D3dDevice, 1, 1, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+            texture = new Texture(D3DDevice.Instance.Device, 1, 1, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
             graphicsStream = texture.LockRectangle(0, LockFlags.None);
             color = 0x00000000;
             graphicsStream.Write(color);
@@ -101,8 +102,8 @@ namespace Examples.Quake3Loader
 
             var fp = new FileStream(file, FileMode.Open, FileAccess.Read);
 
-            var arrayByte = new byte[(int) fp.Length];
-            fp.Read(arrayByte, 0, (int) fp.Length);
+            var arrayByte = new byte[(int)fp.Length];
+            fp.Read(arrayByte, 0, (int)fp.Length);
             fp.Close();
 
             var header = new Header();
@@ -113,13 +114,13 @@ namespace Examples.Quake3Loader
             for (var i = 0; i < Header.CANT_LUMPS; i++)
             {
                 header.lumps[i] = new Lump();
-                header.lumps[i].fileofs = BitConverter.ToInt32(arrayByte, 8 + 8*i);
-                header.lumps[i].filelen = BitConverter.ToInt32(arrayByte, 12 + 8*i);
+                header.lumps[i].fileofs = BitConverter.ToInt32(arrayByte, 8 + 8 * i);
+                header.lumps[i].filelen = BitConverter.ToInt32(arrayByte, 12 + 8 * i);
             }
 
             //modelos
-            var offset = header.lumps[(int) LumpEnum.Models].fileofs;
-            var cant_t = header.lumps[(int) LumpEnum.Models].filelen/QModel.SIZE;
+            var offset = header.lumps[(int)LumpEnum.Models].fileofs;
+            var cant_t = header.lumps[(int)LumpEnum.Models].filelen / QModel.SIZE;
             bspMap.Data.models = new QModel[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -129,8 +130,8 @@ namespace Examples.Quake3Loader
             }
 
             //shaders
-            offset = header.lumps[(int) LumpEnum.Shaders].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Shaders].filelen/QShader.SIZE;
+            offset = header.lumps[(int)LumpEnum.Shaders].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Shaders].filelen / QShader.SIZE;
             bspMap.Data.shaders = new QShader[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -141,14 +142,14 @@ namespace Examples.Quake3Loader
 
             //entdata
             var enc = new ASCIIEncoding();
-            bspMap.Data.entdata = enc.GetString(arrayByte, header.lumps[(int) LumpEnum.Entities].fileofs,
-                header.lumps[(int) LumpEnum.Entities].filelen);
+            bspMap.Data.entdata = enc.GetString(arrayByte, header.lumps[(int)LumpEnum.Entities].fileofs,
+                header.lumps[(int)LumpEnum.Entities].filelen);
 
             //GuiController.Instance.Logger.log(bspMap.Data.entdata);
 
             //leafs
-            offset = header.lumps[(int) LumpEnum.Leafs].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Leafs].filelen/QLeaf.SIZE;
+            offset = header.lumps[(int)LumpEnum.Leafs].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Leafs].filelen / QLeaf.SIZE;
             bspMap.Data.leafs = new QLeaf[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -158,8 +159,8 @@ namespace Examples.Quake3Loader
             }
 
             //planes
-            offset = header.lumps[(int) LumpEnum.Planes].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Planes].filelen/QPlane.SIZE;
+            offset = header.lumps[(int)LumpEnum.Planes].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Planes].filelen / QPlane.SIZE;
             bspMap.Data.planes = new QPlane[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -169,8 +170,8 @@ namespace Examples.Quake3Loader
             }
 
             //nodes
-            offset = header.lumps[(int) LumpEnum.Nodes].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Nodes].filelen/QNode.SIZE;
+            offset = header.lumps[(int)LumpEnum.Nodes].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Nodes].filelen / QNode.SIZE;
             bspMap.Data.nodes = new QNode[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -180,8 +181,8 @@ namespace Examples.Quake3Loader
             }
 
             //leafSurfaces
-            offset = header.lumps[(int) LumpEnum.Leafsurfaces].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Leafsurfaces].filelen/4;
+            offset = header.lumps[(int)LumpEnum.Leafsurfaces].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Leafsurfaces].filelen / 4;
             bspMap.Data.leafSurfaces = new int[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -190,8 +191,8 @@ namespace Examples.Quake3Loader
             }
 
             //leafbrushes
-            offset = header.lumps[(int) LumpEnum.Leafbrushes].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Leafbrushes].filelen/4;
+            offset = header.lumps[(int)LumpEnum.Leafbrushes].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Leafbrushes].filelen / 4;
             bspMap.Data.leafbrushes = new int[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -200,8 +201,8 @@ namespace Examples.Quake3Loader
             }
 
             //brushes
-            offset = header.lumps[(int) LumpEnum.Brushes].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Brushes].filelen/QBrush.SIZE;
+            offset = header.lumps[(int)LumpEnum.Brushes].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Brushes].filelen / QBrush.SIZE;
             bspMap.Data.brushes = new QBrush[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -211,8 +212,8 @@ namespace Examples.Quake3Loader
             }
 
             //brushSides
-            offset = header.lumps[(int) LumpEnum.Brushsides].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Brushsides].filelen/QBrushSide.SIZE;
+            offset = header.lumps[(int)LumpEnum.Brushsides].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Brushsides].filelen / QBrushSide.SIZE;
             bspMap.Data.brushSides = new QBrushSide[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -222,8 +223,8 @@ namespace Examples.Quake3Loader
             }
 
             //lightBytes
-            offset = header.lumps[(int) LumpEnum.Lightmaps].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Lightmaps].filelen;
+            offset = header.lumps[(int)LumpEnum.Lightmaps].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Lightmaps].filelen;
             bspMap.Data.lightBytes = new byte[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -232,8 +233,8 @@ namespace Examples.Quake3Loader
             }
 
             //gridData
-            offset = header.lumps[(int) LumpEnum.Lightgrid].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Lightgrid].filelen;
+            offset = header.lumps[(int)LumpEnum.Lightgrid].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Lightgrid].filelen;
             bspMap.Data.gridData = new byte[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -243,8 +244,8 @@ namespace Examples.Quake3Loader
 
             //visBytes
             bspMap.Data.visData = new QVisData();
-            offset = header.lumps[(int) LumpEnum.Visibility].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Visibility].filelen;
+            offset = header.lumps[(int)LumpEnum.Visibility].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Visibility].filelen;
             bspMap.Data.visData.nVec = BitConverter.ToInt32(arrayByte, offset);
             bspMap.Data.visData.sizeVec = BitConverter.ToInt32(arrayByte, offset + 4);
             offset += 8;
@@ -261,8 +262,8 @@ namespace Examples.Quake3Loader
                 bspMap.Data.visData = null;
 
             //drawVerts
-            offset = header.lumps[(int) LumpEnum.Drawverts].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Drawverts].filelen/QDrawVert.SIZE;
+            offset = header.lumps[(int)LumpEnum.Drawverts].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Drawverts].filelen / QDrawVert.SIZE;
             bspMap.Data.drawVerts = new QDrawVert[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -272,8 +273,8 @@ namespace Examples.Quake3Loader
             }
 
             //drawIndexes
-            offset = header.lumps[(int) LumpEnum.Drawindexes].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Drawindexes].filelen/4;
+            offset = header.lumps[(int)LumpEnum.Drawindexes].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Drawindexes].filelen / 4;
             bspMap.Data.drawIndexes = new int[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -282,8 +283,8 @@ namespace Examples.Quake3Loader
             }
 
             //drawSurfaces
-            offset = header.lumps[(int) LumpEnum.Surfaces].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Surfaces].filelen/QSurface.SIZE;
+            offset = header.lumps[(int)LumpEnum.Surfaces].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Surfaces].filelen / QSurface.SIZE;
             bspMap.Data.drawSurfaces = new QSurface[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -293,8 +294,8 @@ namespace Examples.Quake3Loader
             }
 
             //fogs
-            offset = header.lumps[(int) LumpEnum.Fogs].fileofs;
-            cant_t = header.lumps[(int) LumpEnum.Fogs].filelen/QFog.SIZE;
+            offset = header.lumps[(int)LumpEnum.Fogs].fileofs;
+            cant_t = header.lumps[(int)LumpEnum.Fogs].filelen / QFog.SIZE;
             bspMap.Data.fogs = new QFog[cant_t];
             for (var i = 0; i < cant_t; i++)
             {
@@ -333,8 +334,6 @@ namespace Examples.Quake3Loader
         /// </summary>
         private void CreateMeshes(BspMap bspMap)
         {
-            var device = GuiController.Instance.D3dDevice;
-
             for (var id = 0; id < bspMap.Data.drawSurfaces.Length; id++)
             {
                 var surface = bspMap.Data.drawSurfaces[id];
@@ -369,8 +368,8 @@ namespace Examples.Quake3Loader
                     continue;
 
                 //Mesh de DirectX
-                var mesh = new Mesh(cant_indices/3, cant_vertices, MeshFlags.Managed,
-                    TgcSceneLoader.DiffuseMapAndLightmapVertexElements, device);
+                var mesh = new Mesh(cant_indices / 3, cant_vertices, MeshFlags.Managed,
+                    TgcSceneLoader.DiffuseMapAndLightmapVertexElements, D3DDevice.Instance.Device);
 
                 //Cargar vertexBuffer
                 using (var vb = mesh.VertexBuffer)
@@ -400,7 +399,7 @@ namespace Examples.Quake3Loader
                     var j = 0;
                     for (var i = surface.firstIndex; i < surface.firstIndex + surface.numIndexes; i++, j++)
                     {
-                        indices[j] = (short) bspMap.Data.drawIndexes[i];
+                        indices[j] = (short)bspMap.Data.drawIndexes[i];
                     }
                     ib.SetData(indices, 0, LockFlags.None);
                 }
@@ -461,7 +460,7 @@ namespace Examples.Quake3Loader
 
             //Crear mesh de TGC
             var tgcMesh = new TgcMesh(mesh, "mesh" + surfaceId, renderType);
-            tgcMesh.Materials = new[] {mat};
+            tgcMesh.Materials = new[] { mat };
             tgcMesh.DiffuseMaps = meshTextures;
             tgcMesh.LightMap = tgcLightMap;
             tgcMesh.Enabled = true;
@@ -506,7 +505,7 @@ namespace Examples.Quake3Loader
                 // Create a texture from the image
                 if (file.Length > 0)
                 {
-                    var tex = TextureLoader.FromFile(GuiController.Instance.D3dDevice, file);
+                    var tex = TextureLoader.FromFile(D3DDevice.Instance.Device, file);
                     textureFullPath[i] = file;
                     textures[i] = new TgcTexture(Path.GetFileName(file), file, tex, false);
                 }
@@ -663,8 +662,8 @@ namespace Examples.Quake3Loader
         /// </summary>
         private void loadLightMaps(BspMap bspMap)
         {
-            const int LIGHTMAP_SIZE = 128*128;
-            var cant_lmaps = bspMap.Data.lightBytes.Length/(LIGHTMAP_SIZE*3);
+            const int LIGHTMAP_SIZE = 128 * 128;
+            var cant_lmaps = bspMap.Data.lightBytes.Length / (LIGHTMAP_SIZE * 3);
             lightMaps = new TgcTexture[cant_lmaps];
             var lightInfo = new int[LIGHTMAP_SIZE];
 
@@ -673,13 +672,13 @@ namespace Examples.Quake3Loader
                 //transformo de RGB a XRGB agregandole un canal mas
                 for (var j = 0; j < LIGHTMAP_SIZE; j++)
                 {
-                    var offset = (i*LIGHTMAP_SIZE + j)*3;
+                    var offset = (i * LIGHTMAP_SIZE + j) * 3;
 
                     lightInfo[j] = changeGamma(bspMap.Data.lightBytes[offset + 0], bspMap.Data.lightBytes[offset + 1],
                         bspMap.Data.lightBytes[offset + 2]);
                 }
 
-                var tex = new Texture(GuiController.Instance.D3dDevice, 128, 128, 0, Usage.None,
+                var tex = new Texture(D3DDevice.Instance.Device, 128, 128, 0, Usage.None,
                     Format.X8R8G8B8, Pool.Managed);
 
                 var graphicsStream = tex.LockRectangle(0, LockFlags.None);
@@ -709,10 +708,10 @@ namespace Examples.Quake3Loader
             imax = Math.Max(ir, Math.Max(ig, ib));
             if (imax > 255)
             {
-                factor = 255.0f/imax;
-                ir = (int) (ir*factor);
-                ig = (int) (ig*factor);
-                ib = (int) (ib*factor);
+                factor = 255.0f / imax;
+                ir = (int)(ir * factor);
+                ig = (int)(ig * factor);
+                ib = (int)(ib * factor);
             }
 
             return Color.FromArgb(255, ir, ig, ib).ToArgb();
@@ -736,10 +735,10 @@ namespace Examples.Quake3Loader
             var B = new float[L + 1, 3];
 
             //Numero de patches de 3x3 en cada direccion
-            var num1 = (surface.patchHeight - 1)/2;
-            var num2 = (surface.patchWidth - 1)/2;
-            var cantVertices = (L*num1 + 1)*(L*num2 + 1);
-            var cantIndices = 2*(L*num2 + 2)*L*num1;
+            var num1 = (surface.patchHeight - 1) / 2;
+            var num2 = (surface.patchWidth - 1) / 2;
+            var cantVertices = (L * num1 + 1) * (L * num2 + 1);
+            var cantIndices = 2 * (L * num2 + 2) * L * num1;
 
             //aloco el espacio para los vertices y los indices
             var vertices = new Vector3[cantVertices];
@@ -749,7 +748,7 @@ namespace Examples.Quake3Loader
             var indices = new int[cantIndices];
             {
                 //se cargan las constantes de bezier
-                var dt = 1.0f/L;
+                var dt = 1.0f / L;
                 float t = 0;
                 for (var i = 0; i < L + 1; i++)
                 {
@@ -757,17 +756,17 @@ namespace Examples.Quake3Loader
                         t = 1.0f;
                     var mt = 1 - t;
 
-                    B[i, 0] = mt*mt;
-                    B[i, 1] = 2*mt*t;
-                    B[i, 2] = t*t;
+                    B[i, 0] = mt * mt;
+                    B[i, 1] = 2 * mt * t;
+                    B[i, 2] = t * t;
 
                     t += dt;
                 }
             }
 
             //Calculo de los bicubic bezier patch para cada strip
-            var pointsXStrip = L*num2 + 1;
-            var pointsXPatch = pointsXStrip*L;
+            var pointsXStrip = L * num2 + 1;
+            var pointsXPatch = pointsXStrip * L;
             var indexCount = 0;
             var vertexNum = 0;
             var controls = new int[3]; // subindices a los vertices de puntos de control
@@ -782,13 +781,13 @@ namespace Examples.Quake3Loader
                 {
                     for (var k = 0; k < pointsXStrip; k++)
                     {
-                        indices[indexCount++] = i*pointsXPatch + j*pointsXStrip + k;
-                        indices[indexCount++] = i*pointsXPatch + (j + 1)*pointsXStrip + k;
+                        indices[indexCount++] = i * pointsXPatch + j * pointsXStrip + k;
+                        indices[indexCount++] = i * pointsXPatch + (j + 1) * pointsXStrip + k;
                     }
 
                     //repito primer y ultimo indice
-                    indices[indexCount++] = i*pointsXPatch + (j + 2)*pointsXStrip - 1;
-                    indices[indexCount++] = i*pointsXPatch + (j + 1)*pointsXStrip;
+                    indices[indexCount++] = i * pointsXPatch + (j + 2) * pointsXStrip - 1;
+                    indices[indexCount++] = i * pointsXPatch + (j + 1) * pointsXStrip;
                 }
 
                 //Ahora van los puntos de control y los vertices
@@ -800,14 +799,14 @@ namespace Examples.Quake3Loader
                     // calculo de los puntos de control para este patch
                     // controls[fila] = indice del primer vertice de la fila de este patch
 
-                    controls[0] = offVert + i*2*(2*num2 + 1) + j*2;
-                    controls[1] = offVert + (i*2 + 1)*(2*num2 + 1) + j*2;
-                    controls[2] = offVert + (i*2 + 2)*(2*num2 + 1) + j*2;
+                    controls[0] = offVert + i * 2 * (2 * num2 + 1) + j * 2;
+                    controls[1] = offVert + (i * 2 + 1) * (2 * num2 + 1) + j * 2;
+                    controls[2] = offVert + (i * 2 + 2) * (2 * num2 + 1) + j * 2;
 
                     //por cada punto en el patch
                     for (var i2 = 0; i2 < Li; i2++)
                     {
-                        vertexNum = i*pointsXPatch + i2*pointsXStrip + j*L;
+                        vertexNum = i * pointsXPatch + i2 * pointsXStrip + j * L;
 
                         for (var j2 = 0; j2 < Lj; j2++, vertexNum++)
                         {
@@ -820,11 +819,11 @@ namespace Examples.Quake3Loader
                             {
                                 for (var j3 = 0; j3 < 3; j3++)
                                 {
-                                    var blendFactor = B[i2, i3]*B[j2, j3];
-                                    vertices[vertexNum] += bspMap.Data.drawVerts[controls[i3] + j3].xyz*blendFactor;
-                                    normals[vertexNum] += bspMap.Data.drawVerts[controls[i3] + j3].normal*blendFactor;
-                                    textCords[vertexNum] += bspMap.Data.drawVerts[controls[i3] + j3].st*blendFactor;
-                                    textCords2[vertexNum] += bspMap.Data.drawVerts[controls[i3] + j3].lightmap*
+                                    var blendFactor = B[i2, i3] * B[j2, j3];
+                                    vertices[vertexNum] += bspMap.Data.drawVerts[controls[i3] + j3].xyz * blendFactor;
+                                    normals[vertexNum] += bspMap.Data.drawVerts[controls[i3] + j3].normal * blendFactor;
+                                    textCords[vertexNum] += bspMap.Data.drawVerts[controls[i3] + j3].st * blendFactor;
+                                    textCords2[vertexNum] += bspMap.Data.drawVerts[controls[i3] + j3].lightmap *
                                                              blendFactor;
                                 }
                             }
@@ -833,29 +832,28 @@ namespace Examples.Quake3Loader
                 }
             }
 
-            var indexBuffer = new short[3*cantIndices - 6];
+            var indexBuffer = new short[3 * cantIndices - 6];
             var cant_ibuffer = 0;
 
             for (var i = 2; i < cantIndices; i++)
             {
-                if (i%2 == 0)
+                if (i % 2 == 0)
                 {
-                    indexBuffer[cant_ibuffer++] = (short) indices[i - 2];
-                    indexBuffer[cant_ibuffer++] = (short) indices[i - 1];
-                    indexBuffer[cant_ibuffer++] = (short) indices[i];
+                    indexBuffer[cant_ibuffer++] = (short)indices[i - 2];
+                    indexBuffer[cant_ibuffer++] = (short)indices[i - 1];
+                    indexBuffer[cant_ibuffer++] = (short)indices[i];
                 }
                 else
                 {
-                    indexBuffer[cant_ibuffer++] = (short) indices[i];
-                    indexBuffer[cant_ibuffer++] = (short) indices[i - 1];
-                    indexBuffer[cant_ibuffer++] = (short) indices[i - 2];
+                    indexBuffer[cant_ibuffer++] = (short)indices[i];
+                    indexBuffer[cant_ibuffer++] = (short)indices[i - 1];
+                    indexBuffer[cant_ibuffer++] = (short)indices[i - 2];
                 }
             }
 
             //Mesh de DirectX
-            var mesh = new Mesh(indexBuffer.Length/3, vertices.Length, MeshFlags.Managed,
-                TgcSceneLoader.DiffuseMapAndLightmapVertexElements,
-                GuiController.Instance.D3dDevice);
+            var mesh = new Mesh(indexBuffer.Length / 3, vertices.Length, MeshFlags.Managed,
+                TgcSceneLoader.DiffuseMapAndLightmapVertexElements, D3DDevice.Instance.Device);
 
             //Cargar vertexBuffer
             using (var vb = mesh.VertexBuffer)

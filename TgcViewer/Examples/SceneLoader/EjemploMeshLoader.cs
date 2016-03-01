@@ -1,11 +1,11 @@
 using System;
 using System.Drawing;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.SceneLoader
+namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Ejemplo EjemploMeshLoader:
@@ -42,8 +42,6 @@ namespace Examples.SceneLoader
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Malla default
             var initialMeshFile = GuiController.Instance.ExamplesMediaDir +
                                   "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml";
@@ -156,21 +154,19 @@ namespace Examples.SceneLoader
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si cambio la malla
-            var selectedPath = (string) GuiController.Instance.Modifiers["Mesh"];
+            var selectedPath = (string)GuiController.Instance.Modifiers["Mesh"];
             checkLoadMesh(selectedPath);
 
             //Ver si cambio el color
-            var color = (Color) GuiController.Instance.Modifiers["Color"];
+            var color = (Color)GuiController.Instance.Modifiers["Color"];
             changeColor(color);
 
             //Mostrar BoundingBox
-            var showBoundingBox = (bool) GuiController.Instance.Modifiers["BoundingBox"];
+            var showBoundingBox = (bool)GuiController.Instance.Modifiers["BoundingBox"];
 
             //AlphaBlending
-            var alphaBlending = (bool) GuiController.Instance.Modifiers["AlphaBlending"];
+            var alphaBlending = (bool)GuiController.Instance.Modifiers["AlphaBlending"];
             if (alphaBlending != currentAlphaBlending)
             {
                 currentAlphaBlending = alphaBlending;

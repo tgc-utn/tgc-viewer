@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Viewer.Utils.Modifiers
 {
     /// <summary>
     ///     Modificador para un intervalo discreto de valores creados con una estructura Enum
@@ -49,7 +49,7 @@ namespace TgcViewer.Utils.Modifiers
         private void comboBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
             var selectedIndex = comboBox.SelectedIndex;
-            var itemString = (string) comboBox.Items[selectedIndex];
+            var itemString = (string)comboBox.Items[selectedIndex];
             selectValue = Enum.Parse(enumType, itemString);
         }
 

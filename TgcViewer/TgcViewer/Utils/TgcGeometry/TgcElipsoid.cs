@@ -1,11 +1,12 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Representa un volumen de Elipsoide con un centro y un radio distinto para cada uno de los tres ejes
@@ -96,7 +97,6 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
@@ -117,13 +117,13 @@ namespace TgcViewer.Utils.TgcGeometry
             }
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length/2, vertices);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length / 2, vertices);
             effect.EndPass();
             effect.End();
         }
@@ -184,22 +184,22 @@ namespace TgcViewer.Utils.TgcGeometry
         {
             if (vertices == null)
             {
-                var verticesCount = (ELIPSOID_MESH_RESOLUTION*2 + 2)*3;
+                var verticesCount = (ELIPSOID_MESH_RESOLUTION * 2 + 2) * 3;
                 vertices = new CustomVertex.PositionColored[verticesCount];
             }
 
             var index = 0;
 
-            var step = FastMath.TWO_PI/ELIPSOID_MESH_RESOLUTION;
+            var step = FastMath.TWO_PI / ELIPSOID_MESH_RESOLUTION;
             // Plano XY
             for (var a = 0f; a <= FastMath.TWO_PI; a += step)
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a)*Radius.X, FastMath.Sin(a)*Radius.Y, 0f) + Center, RenderColor);
+                        new Vector3(FastMath.Cos(a) * Radius.X, FastMath.Sin(a) * Radius.Y, 0f) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a + step)*Radius.X, FastMath.Sin(a + step)*Radius.Y, 0f) + Center,
+                        new Vector3(FastMath.Cos(a + step) * Radius.X, FastMath.Sin(a + step) * Radius.Y, 0f) + Center,
                         RenderColor);
             }
 
@@ -208,10 +208,10 @@ namespace TgcViewer.Utils.TgcGeometry
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a)*Radius.X, 0f, FastMath.Sin(a)*Radius.Z) + Center, RenderColor);
+                        new Vector3(FastMath.Cos(a) * Radius.X, 0f, FastMath.Sin(a) * Radius.Z) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a + step)*Radius.X, 0f, FastMath.Sin(a + step)*Radius.Z) + Center,
+                        new Vector3(FastMath.Cos(a + step) * Radius.X, 0f, FastMath.Sin(a + step) * Radius.Z) + Center,
                         RenderColor);
             }
 
@@ -220,10 +220,10 @@ namespace TgcViewer.Utils.TgcGeometry
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(0f, FastMath.Cos(a)*Radius.Y, FastMath.Sin(a)*Radius.Z) + Center, RenderColor);
+                        new Vector3(0f, FastMath.Cos(a) * Radius.Y, FastMath.Sin(a) * Radius.Z) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(0f, FastMath.Cos(a + step)*Radius.Y, FastMath.Sin(a + step)*Radius.Z) + Center,
+                        new Vector3(0f, FastMath.Cos(a + step) * Radius.Y, FastMath.Sin(a + step) * Radius.Z) + Center,
                         RenderColor);
             }
         }

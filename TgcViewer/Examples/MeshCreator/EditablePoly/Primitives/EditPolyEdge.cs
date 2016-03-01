@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.DirectX;
+using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools.Primitives
+namespace TGC.Examples.MeshCreator.EditablePoly.Primitives
 {
     /// <summary>
     ///     Arista de EditablePoly
@@ -47,7 +47,7 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
 
         public override Vector3 computeCenter()
         {
-            return (a.position + b.position)*0.5f;
+            return (a.position + b.position) * 0.5f;
         }
 
         public override void move(Vector3 movement)

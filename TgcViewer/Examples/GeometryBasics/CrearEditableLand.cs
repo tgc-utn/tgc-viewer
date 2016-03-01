@@ -1,10 +1,10 @@
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo CrearEditableLand
@@ -35,8 +35,6 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear Land
             land = new TgcEditableLand();
             land.setTexture(
@@ -45,7 +43,7 @@ namespace Examples.GeometryBasics
 
             //Modifiers para configurar altura
             GuiController.Instance.Modifiers.addInterval("vertices",
-                new[] {"CENTER", "INTERIOR_RING", "EXTERIOR_RING", "TOP_SIDE", "LEFT_SIDE", "RIGHT_SIDE", "BOTTOM_SIDE"},
+                new[] { "CENTER", "INTERIOR_RING", "EXTERIOR_RING", "TOP_SIDE", "LEFT_SIDE", "RIGHT_SIDE", "BOTTOM_SIDE" },
                 0);
             GuiController.Instance.Modifiers.addFloat("height", -50, 50, 0);
             GuiController.Instance.Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f),
@@ -58,11 +56,9 @@ namespace Examples.GeometryBasics
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Configurar altura de los vertices seleccionados
-            var selectedVertices = (string) GuiController.Instance.Modifiers["vertices"];
-            var height = (float) GuiController.Instance.Modifiers["height"];
+            var selectedVertices = (string)GuiController.Instance.Modifiers["vertices"];
+            var height = (float)GuiController.Instance.Modifiers["height"];
             if (selectedVertices == "CENTER")
             {
                 land.setVerticesY(TgcEditableLand.SELECTION_CENTER, height);
@@ -93,8 +89,8 @@ namespace Examples.GeometryBasics
             }
 
             //Offset y Tiling de textura
-            land.UVOffset = (Vector2) GuiController.Instance.Modifiers["offset"];
-            land.UVTiling = (Vector2) GuiController.Instance.Modifiers["tiling"];
+            land.UVOffset = (Vector2)GuiController.Instance.Modifiers["offset"];
+            land.UVTiling = (Vector2)GuiController.Instance.Modifiers["tiling"];
 
             //Actualizar valores
             land.updateValues();

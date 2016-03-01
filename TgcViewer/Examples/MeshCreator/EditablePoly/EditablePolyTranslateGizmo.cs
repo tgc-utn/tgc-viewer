@@ -1,22 +1,21 @@
-﻿using Examples.MeshCreator.Gizmos;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
 using TGC.Core.Utils;
+using TGC.Examples.MeshCreator.Gizmos;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
 
-namespace Examples.MeshCreator.EditablePolyTools
+namespace TGC.Examples.MeshCreator.EditablePoly
 {
     /// <summary>
     ///     Gizmo de Translate para Editable Poly
     /// </summary>
     public class EditablePolyTranslateGizmo
     {
-        private Vector3 acumMovement;
-        private State currentState;
-
         private readonly EditablePoly editablePoly;
         private readonly TranslateGizmoMesh gizmoMesh;
+        private Vector3 acumMovement;
+        private State currentState;
         private Vector3 initMouseP3d;
 
         public EditablePolyTranslateGizmo(EditablePoly editablePoly)
@@ -239,7 +238,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                 if (absMove > cellSize)
                 {
                     //Moverse en unidades de la grilla
-                    currentMove = (int) (totalMove/cellSize)*cellSize;
+                    currentMove = (int)(totalMove / cellSize) * cellSize;
                     acumMove = 0;
                 }
                 else

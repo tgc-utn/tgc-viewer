@@ -1,13 +1,13 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using System.Drawing;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
-namespace Examples.Lights
+namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploSkeletalPointLight:
@@ -45,8 +45,6 @@ namespace Examples.Lights
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar mesh con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
             mesh = skeletalLoader.loadMeshAndAnimationsFromFile(
@@ -105,10 +103,8 @@ namespace Examples.Lights
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
-
             //Habilitar luz
-            var lightEnable = (bool) GuiController.Instance.Modifiers["lightEnable"];
+            var lightEnable = (bool)GuiController.Instance.Modifiers["lightEnable"];
             Effect currentShader;
             if (lightEnable)
             {
@@ -127,7 +123,7 @@ namespace Examples.Lights
             mesh.Technique = GuiController.Instance.Shaders.getTgcSkeletalMeshTechnique(mesh.RenderType);
 
             //Actualzar posición de la luz
-            var lightPos = (Vector3) GuiController.Instance.Modifiers["lightPos"];
+            var lightPos = (Vector3)GuiController.Instance.Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 
             //Renderizar mesh
@@ -135,23 +131,23 @@ namespace Examples.Lights
             {
                 //Cargar variables shader de la luz
                 mesh.Effect.SetValue("lightColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["lightColor"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["lightColor"]));
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
                 mesh.Effect.SetValue("eyePosition",
                     TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.FpsCamera.getPosition()));
-                mesh.Effect.SetValue("lightIntensity", (float) GuiController.Instance.Modifiers["lightIntensity"]);
-                mesh.Effect.SetValue("lightAttenuation", (float) GuiController.Instance.Modifiers["lightAttenuation"]);
+                mesh.Effect.SetValue("lightIntensity", (float)GuiController.Instance.Modifiers["lightIntensity"]);
+                mesh.Effect.SetValue("lightAttenuation", (float)GuiController.Instance.Modifiers["lightAttenuation"]);
 
                 //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
                 mesh.Effect.SetValue("materialEmissiveColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mEmissive"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mEmissive"]));
                 mesh.Effect.SetValue("materialAmbientColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mAmbient"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mAmbient"]));
                 mesh.Effect.SetValue("materialDiffuseColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mDiffuse"]));
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mDiffuse"]));
                 mesh.Effect.SetValue("materialSpecularColor",
-                    ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mSpecular"]));
-                mesh.Effect.SetValue("materialSpecularExp", (float) GuiController.Instance.Modifiers["specularEx"]);
+                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mSpecular"]));
+                mesh.Effect.SetValue("materialSpecularExp", (float)GuiController.Instance.Modifiers["specularEx"]);
             }
             mesh.animateAndRender();
 

@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils
+namespace TGC.Viewer.Utils
 {
     /// <summary>
     ///     Admnistrador de la tabla de User Vars.
@@ -11,9 +11,9 @@ namespace TgcViewer.Utils
     {
         private const string NAME_COL = "ColumnName";
         private const string VALUE_COL = "ColumnValue";
-        private readonly Color DEFAULT_VALUE_COLOR = Color.Black;
 
         private readonly DataGridView dataGrid;
+        private readonly Color DEFAULT_VALUE_COLOR = Color.Black;
 
         public TgcUserVars(DataGridView dataGrid)
         {

@@ -1,10 +1,10 @@
 using Microsoft.DirectX;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Tutorial
+namespace TGC.Examples.Tutorial
 {
     /// <summary>
     ///     Tutorial 2:
@@ -34,8 +34,6 @@ namespace Examples.Tutorial
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargamos una textura
             //Una textura es una imágen 2D que puede dibujarse arriba de un polígono 3D para darle color.
             //Es muy útil para generar efectos de relieves y superficies.
@@ -60,8 +58,6 @@ namespace Examples.Tutorial
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             box.render();
         }
 

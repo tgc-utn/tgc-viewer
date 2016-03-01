@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
+using TGC.Core.Direct3D;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
-namespace Examples.Quake3Loader
+namespace TGC.Examples.Quake3Loader
 {
     /// <summary>
     ///     Camara en primera persona personalizada para niveles de Quake 3.
@@ -17,7 +18,9 @@ namespace Examples.Quake3Loader
     public class Q3FpsCamera : TgcCamera
     {
         private const float LADO_CUBO = 1.0f;
-        private const float MEDIO_LADO_CUBO = LADO_CUBO*0.5f;
+        private const float MEDIO_LADO_CUBO = LADO_CUBO * 0.5f;
+        private readonly float STEP_ANGULO = LADO_CUBO / 90;
+        private readonly Vector3 up = new Vector3(0.0f, 1.0f, 0.0f);
         /*
          * Esta Camara es un prototipo. Esta pensada para no utilizar senos y cosenos en las rotaciones.
          * Se utiliza una camara que se desplaza sobre las caras de un cubo sin techo, ni piso.
@@ -32,18 +35,16 @@ namespace Examples.Quake3Loader
         private float longitud;
         protected Point mouseCenter;
         private Vector3 sideDirection = new Vector3();
-        private readonly float STEP_ANGULO = LADO_CUBO/90;
         private Vector3 target = new Vector3();
-        private readonly Vector3 up = new Vector3(0.0f, 1.0f, 0.0f);
         private Matrix viewMatrix = Matrix.Identity;
 
         public Q3FpsCamera()
         {
-            var focusWindows = GuiController.Instance.D3dDevice.CreationParameters.FocusWindow;
+            var focusWindows = D3DDevice.Instance.Device.CreationParameters.FocusWindow;
             mouseCenter = focusWindows.PointToScreen(
                 new Point(
-                    focusWindows.Width/2,
-                    focusWindows.Height/2)
+                    focusWindows.Width / 2,
+                    focusWindows.Height / 2)
                 );
         }
 
@@ -104,19 +105,19 @@ namespace Examples.Quake3Loader
 
         public void moveForward(float movimiento)
         {
-            var v = ForwardDirection*movimiento;
+            var v = ForwardDirection * movimiento;
             move(v);
         }
 
         public void moveSide(float movimiento)
         {
-            var v = SideDirection*movimiento;
+            var v = SideDirection * movimiento;
             move(v);
         }
 
         public void moveUp(float movimiento)
         {
-            move(up*movimiento);
+            move(up * movimiento);
         }
 
         public void rotateY(float movimiento)
@@ -159,12 +160,12 @@ namespace Examples.Quake3Loader
             {
                 if (latitud < 90)
                 {
-                    z = latitud*STEP_ANGULO;
+                    z = latitud * STEP_ANGULO;
                 }
                 else
                 {
                     z = LADO_CUBO;
-                    x = (latitud - 90)*STEP_ANGULO;
+                    x = (latitud - 90) * STEP_ANGULO;
                 }
                 z = z - MEDIO_LADO_CUBO;
                 x = MEDIO_LADO_CUBO - x;
@@ -173,18 +174,18 @@ namespace Examples.Quake3Loader
             {
                 if (latitud < 270)
                 {
-                    z = (latitud - 180)*STEP_ANGULO;
+                    z = (latitud - 180) * STEP_ANGULO;
                 }
                 else
                 {
                     z = LADO_CUBO;
-                    x = (latitud - 270)*STEP_ANGULO;
+                    x = (latitud - 270) * STEP_ANGULO;
                 }
                 z = MEDIO_LADO_CUBO - z;
                 x = x - MEDIO_LADO_CUBO;
             }
 
-            y = longitud*STEP_ANGULO - MEDIO_LADO_CUBO;
+            y = longitud * STEP_ANGULO - MEDIO_LADO_CUBO;
 
             target = eye + new Vector3(x, y, z);
 
@@ -200,11 +201,11 @@ namespace Examples.Quake3Loader
 
             //calculo el angulo correspondiente a la latitud y longitud.
             if (Math.Abs(dir.X) > 0)
-                latitud = 180*(float) Math.Atan(dir.Z/dir.X)/(float) Math.PI + 45;
+                latitud = 180 * (float)Math.Atan(dir.Z / dir.X) / (float)Math.PI + 45;
             else
                 latitud = 135;
 
-            longitud = 180*(float) Math.Atan(dir.Y/Math.Sqrt(dir.X*dir.X + dir.Z*dir.Z))/(float) Math.PI + 45;
+            longitud = 180 * (float)Math.Atan(dir.Y / Math.Sqrt(dir.X * dir.X + dir.Z * dir.Z)) / (float)Math.PI + 45;
 
             rotateY(0);
 
@@ -229,37 +230,37 @@ namespace Examples.Quake3Loader
             //Forward
             if (GuiController.Instance.D3dInput.keyDown(Key.W))
             {
-                moveForward(MovementSpeed*elapsedTime);
+                moveForward(MovementSpeed * elapsedTime);
             }
 
             //Backward
             if (GuiController.Instance.D3dInput.keyDown(Key.S))
             {
-                moveForward(-MovementSpeed*elapsedTime);
+                moveForward(-MovementSpeed * elapsedTime);
             }
 
             //Strafe right
             if (GuiController.Instance.D3dInput.keyDown(Key.D))
             {
-                moveSide(MovementSpeed*elapsedTime);
+                moveSide(MovementSpeed * elapsedTime);
             }
 
             //Strafe left
             if (GuiController.Instance.D3dInput.keyDown(Key.A))
             {
-                moveSide(-MovementSpeed*elapsedTime);
+                moveSide(-MovementSpeed * elapsedTime);
             }
 
             //Jump
             if (GuiController.Instance.D3dInput.keyDown(Key.Space))
             {
-                moveUp(JumpSpeed*elapsedTime);
+                moveUp(JumpSpeed * elapsedTime);
             }
 
             //Crouch
             if (GuiController.Instance.D3dInput.keyDown(Key.LeftControl))
             {
-                moveUp(-JumpSpeed*elapsedTime);
+                moveUp(-JumpSpeed * elapsedTime);
             }
 
             if (GuiController.Instance.D3dInput.keyPressed(Key.L))
@@ -270,8 +271,8 @@ namespace Examples.Quake3Loader
             //Solo rotar si se esta aprentando el boton izq del mouse
             if (lockCam || GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                rotate(-GuiController.Instance.D3dInput.XposRelative*RotationSpeed,
-                    -GuiController.Instance.D3dInput.YposRelative*RotationSpeed);
+                rotate(-GuiController.Instance.D3dInput.XposRelative * RotationSpeed,
+                    -GuiController.Instance.D3dInput.YposRelative * RotationSpeed);
             }
 
             if (lockCam)
@@ -279,7 +280,7 @@ namespace Examples.Quake3Loader
 
             viewMatrix = Matrix.LookAtLH(eye, target, up);
 
-            updateViewMatrix(GuiController.Instance.D3dDevice);
+            updateViewMatrix(D3DDevice.Instance.Device);
         }
 
         public void updateViewMatrix(Device d3dDevice)

@@ -1,10 +1,11 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples
+namespace TGC.Examples.Otros
 {
     /// <summary>
     ///     EjemploBatchPrimitivesDx
@@ -13,13 +14,13 @@ namespace Examples
     {
         private const float boxSize = 3f;
         private const int boxPerSquare = 50;
+        private readonly int totalBoxes = boxPerSquare * boxPerSquare;
         private TgcTexture box1Texture;
         private TgcTexture box2Texture;
         private TgcTexture box3Texture;
 
         private RenderMethod currentRenderMethod;
         private Mesh[] meshes;
-        private readonly int totalBoxes = boxPerSquare*boxPerSquare;
 
         public override string getCategory()
         {
@@ -38,17 +39,15 @@ namespace Examples
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            box1Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice,
+            box1Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\pasto.jpg");
-            box2Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice,
+            box2Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\tierra.jpg");
-            box3Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice,
+            box3Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg");
 
-            GuiController.Instance.Modifiers.addEnum("Render Method", typeof (RenderMethod), RenderMethod.Unsorted);
-            createMeshes(d3dDevice);
+            GuiController.Instance.Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
+            createMeshes(D3DDevice.Instance.Device);
 
             GuiController.Instance.FpsCamera.Enable = true;
             GuiController.Instance.FpsCamera.setCamera(new Vector3(32.1944f, 42.1327f, -68.7882f),
@@ -88,23 +87,21 @@ namespace Examples
         /// </summary>
         private void doUnsortedRender()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             for (var i = 0; i < boxPerSquare; i++)
             {
                 for (var j = 0; j < boxPerSquare; j++)
                 {
-                    d3dDevice.GetTexture(0);
+                    D3DDevice.Instance.Device.GetTexture(0);
 
                     //Forzar a proposito el cambio de textura
-                    d3dDevice.SetTexture(0, null);
-                    d3dDevice.SetTexture(0, box3Texture.D3dTexture);
-                    d3dDevice.SetTexture(0, box2Texture.D3dTexture);
-                    d3dDevice.SetTexture(0, box1Texture.D3dTexture);
+                    D3DDevice.Instance.Device.SetTexture(0, null);
+                    D3DDevice.Instance.Device.SetTexture(0, box3Texture.D3dTexture);
+                    D3DDevice.Instance.Device.SetTexture(0, box2Texture.D3dTexture);
+                    D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3dTexture);
 
-                    d3dDevice.SetTexture(0, box1Texture.D3dTexture);
+                    D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3dTexture);
 
-                    d3dDevice.Transform.World = Matrix.Translation(boxSize*2*i, 0, boxSize*2*j);
+                    D3DDevice.Instance.Device.Transform.World = Matrix.Translation(boxSize * 2 * i, 0, boxSize * 2 * j);
                     meshes[i].DrawSubset(0);
                 }
             }
@@ -115,16 +112,14 @@ namespace Examples
         /// </summary>
         private void doTextureSortRender()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Un solo texture change
-            d3dDevice.SetTexture(0, box1Texture.D3dTexture);
+            D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3dTexture);
 
             for (var i = 0; i < boxPerSquare; i++)
             {
                 for (var j = 0; j < boxPerSquare; j++)
                 {
-                    d3dDevice.Transform.World = Matrix.Translation(boxSize*2*i, 0, boxSize*2*j);
+                    D3DDevice.Instance.Device.Transform.World = Matrix.Translation(boxSize * 2 * i, 0, boxSize * 2 * j);
                     meshes[i].DrawSubset(0);
                 }
             }
@@ -132,9 +127,7 @@ namespace Examples
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var renderMethod = (RenderMethod) GuiController.Instance.Modifiers["Render Method"];
+            var renderMethod = (RenderMethod)GuiController.Instance.Modifiers["Render Method"];
             doRender(renderMethod);
         }
 

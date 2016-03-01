@@ -1,11 +1,11 @@
 using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
-namespace Examples.SkeletalAnimation
+namespace TGC.Examples.SkeletalAnimation
 {
     /// <summary>
     ///     Ejemplo EjemploSkeletalLoader:
@@ -49,8 +49,6 @@ namespace Examples.SkeletalAnimation
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Paths para archivo XML de la malla
             var pathMesh = GuiController.Instance.ExamplesMediaDir +
                            "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml";
@@ -129,8 +127,6 @@ namespace Examples.SkeletalAnimation
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si cambio la animacion
             var anim = (string)GuiController.Instance.Modifiers.getValue("animation");
             if (!anim.Equals(selectedAnim))

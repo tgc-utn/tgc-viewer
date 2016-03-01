@@ -1,14 +1,14 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Matematica
+namespace TGC.Examples.Matematica
 {
     /// <summary>
     ///     Ejemplo EjemploTriangulosYPlanos:
@@ -20,10 +20,10 @@ namespace Examples.Matematica
     /// </summary>
     public class EjemploTriangulosYPlanos : TgcExample
     {
+        private readonly Random random = new Random();
         private TgcMesh mesh;
         private List<TgcArrow> normals;
         private List<TgcQuad> planes;
-        private readonly Random random = new Random();
         private List<TgcTriangle> triangles;
 
         public override string getCategory()
@@ -44,8 +44,6 @@ namespace Examples.Matematica
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar un mesh
             var loader = new TgcSceneLoader();
             var scene =
@@ -57,16 +55,16 @@ namespace Examples.Matematica
             var vertices = mesh.getVertexPositions();
 
             //Iterar sobre todos los vertices y construir triangulos, normales y planos
-            var triCount = vertices.Length/3;
+            var triCount = vertices.Length / 3;
             triangles = new List<TgcTriangle>(triCount);
             normals = new List<TgcArrow>();
             planes = new List<TgcQuad>();
             for (var i = 0; i < triCount; i++)
             {
                 //Obtenemos los 3 vertices del triangulo
-                var a = vertices[i*3];
-                var b = vertices[i*3 + 1];
-                var c = vertices[i*3 + 2];
+                var a = vertices[i * 3];
+                var b = vertices[i * 3 + 1];
+                var c = vertices[i * 3 + 2];
 
                 //Obtener normal del triangulo. El orden influye en si obtenemos el vector normal hacia adentro o hacia afuera del mesh
                 var normal = Vector3.Cross(c - a, b - a);
@@ -77,7 +75,7 @@ namespace Examples.Matematica
 
                 //Calcular el centro del triangulo. Hay muchos tipos de centros para un triangulo (http://www.mathopenref.com/trianglecenters.html)
                 //Aca calculamos el mas simple
-                var center = Vector3.Scale(a + b + c, 1/3f);
+                var center = Vector3.Scale(a + b + c, 1 / 3f);
 
                 ///////////// Creacion de elementos para poder dibujar a pantalla (propios de este ejemplo) ///////////////
 
@@ -116,17 +114,15 @@ namespace Examples.Matematica
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Draw mesh
-            var drawMesh = (bool) GuiController.Instance.Modifiers["mesh"];
+            var drawMesh = (bool)GuiController.Instance.Modifiers["mesh"];
             if (drawMesh)
             {
                 mesh.render();
             }
 
             //Draw triangles (Ojo: renderizar triangulos asi es extremadamene lento, para algo eficiente se usa un VertexBuffer)
-            var drawTriangles = (bool) GuiController.Instance.Modifiers["triangles"];
+            var drawTriangles = (bool)GuiController.Instance.Modifiers["triangles"];
             if (drawTriangles)
             {
                 foreach (var t in triangles)
@@ -136,7 +132,7 @@ namespace Examples.Matematica
             }
 
             //Draw normals
-            var drawNormals = (bool) GuiController.Instance.Modifiers["normals"];
+            var drawNormals = (bool)GuiController.Instance.Modifiers["normals"];
             if (drawNormals)
             {
                 foreach (var a in normals)
@@ -146,7 +142,7 @@ namespace Examples.Matematica
             }
 
             //Draw planes
-            var drawPlanes = (bool) GuiController.Instance.Modifiers["planes"];
+            var drawPlanes = (bool)GuiController.Instance.Modifiers["planes"];
             if (drawPlanes)
             {
                 foreach (var p in planes)

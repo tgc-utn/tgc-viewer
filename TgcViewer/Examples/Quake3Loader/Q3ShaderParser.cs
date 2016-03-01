@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.DirectX.Direct3D;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Quake3Loader
+namespace TGC.Examples.Quake3Loader
 {
     /*
      * Clases varias para parsear los Shaders de Quake 3
@@ -18,8 +18,8 @@ namespace Examples.Quake3Loader
     /// </summary>
     public class QShaderTokenizer
     {
-        private int offset;
         private readonly List<string> tokens = new List<string>();
+        private int offset;
 
         public QShaderTokenizer(string code)
         {
@@ -103,7 +103,7 @@ namespace Examples.Quake3Loader
 
             string errores;
 
-            Fx = Effect.FromString(GuiController.Instance.D3dDevice, ShaderSrc, null, null, ShaderFlags.NotCloneable,
+            Fx = Effect.FromString(D3DDevice.Instance.Device, ShaderSrc, null, null, ShaderFlags.NotCloneable,
                 null,
                 out errores);
             //if (!errores.Equals(""))
@@ -191,7 +191,7 @@ namespace Examples.Quake3Loader
                 if (!texpath.Equals(""))
                 {
                     //solo hay un mapa de bits
-                    var tex = TextureLoader.FromFile(GuiController.Instance.D3dDevice, texpath);
+                    var tex = TextureLoader.FromFile(D3DDevice.Instance.Device, texpath);
                     Textures.Add(new TgcTexture(Path.GetFileName(texpath), texpath, tex, false));
                     AnimFreq = 0;
                 }
@@ -209,7 +209,7 @@ namespace Examples.Quake3Loader
                     if (!texpath.Equals(""))
                     {
                         //solo hay un mapa de bits
-                        var t = TextureLoader.FromFile(GuiController.Instance.D3dDevice, texpath);
+                        var t = TextureLoader.FromFile(D3DDevice.Instance.Device, texpath);
                         Textures.Add(new TgcTexture(Path.GetFileName(texpath), texpath, t, false));
                     }
                 }
@@ -575,12 +575,12 @@ namespace Examples.Quake3Loader
                         break;
 
                     case "deformvertexes":
-                        var deform = new QShaderDeform {Type = tokenizer.GetNext().ToLower()};
+                        var deform = new QShaderDeform { Type = tokenizer.GetNext().ToLower() };
 
                         switch (deform.Type)
                         {
                             case "wave":
-                                deform.Spread = 1.0f/ParserTools.ToFloat(tokenizer.GetNext());
+                                deform.Spread = 1.0f / ParserTools.ToFloat(tokenizer.GetNext());
                                 deform.WaveForm = ParseWaveform(tokenizer);
                                 break;
 
@@ -608,24 +608,31 @@ namespace Examples.Quake3Loader
                             case "portal":
                                 qsd.Sort = 1;
                                 break;
+
                             case "sky":
                                 qsd.Sort = 2;
                                 break;
+
                             case "opaque":
                                 qsd.Sort = 3;
                                 break;
+
                             case "banner":
                                 qsd.Sort = 6;
                                 break;
+
                             case "underwater":
                                 qsd.Sort = 8;
                                 break;
+
                             case "additive":
                                 qsd.Sort = 9;
                                 break;
+
                             case "nearest":
                                 qsd.Sort = 16;
                                 break;
+
                             default:
                                 qsd.Sort = int.Parse(sort);
                                 break;
@@ -926,7 +933,7 @@ namespace Examples.Quake3Loader
                 "GL_ONE", "GL_ZERO", "GL_SRC_ALPHA", "GL_ONE_MINUS_SRC_ALPHA", "GL_DST_COLOR",
                 "GL_SRC_COLOR"
             };
-            string[] dx_blend = {"One", "Zero", "SrcAlpha", "InvSrcAlpha", "DestColor", "SrcColor"};
+            string[] dx_blend = { "One", "Zero", "SrcAlpha", "InvSrcAlpha", "DestColor", "SrcColor" };
 
             for (var i = 0; i < gl_blend.Length; i++)
             {
@@ -1028,44 +1035,44 @@ namespace Examples.Quake3Loader
                 switch (deform.Type)
                 {
                     case "wave":
-                    {
-                        var name = "deform" + i;
-                        var offName = "deformOff" + i;
+                        {
+                            var name = "deform" + i;
+                            var offName = "deformOff" + i;
 
-                        VertexLines.Add(
-                            "float " + offName + " = (In.Pos.x + In.Pos.y + In.Pos.z) * " +
-                            ParserTools.ToString(deform.Spread) + ";");
+                            VertexLines.Add(
+                                "float " + offName + " = (In.Pos.x + In.Pos.y + In.Pos.z) * " +
+                                ParserTools.ToString(deform.Spread) + ";");
 
-                        /*float phase = deform.WaveForm.Phase;
-		                    //deform.WaveForm.Phase = phase.toFixed(4) + ' + ' + offName; <-----MIRAR ESTA LINEA
-		                    VertexLines.Add(CreateWaveForm(name, deform.WaveForm, "g_time"));
-		                    deform.WaveForm.Phase = phase;*/
+                            /*float phase = deform.WaveForm.Phase;
+                                    //deform.WaveForm.Phase = phase.toFixed(4) + ' + ' + offName; <-----MIRAR ESTA LINEA
+                                    VertexLines.Add(CreateWaveForm(name, deform.WaveForm, "g_time"));
+                                    deform.WaveForm.Phase = phase;*/
 
-                        //Parche temporal solo funciona con la funcion seno
-                        VertexLines.Add("float " + name + " = " + ParserTools.ToString(deform.WaveForm.Bas) + " + sin((" +
-                                        ParserTools.ToString(deform.WaveForm.Phase) + " + " +
-                                        "g_time" + " * " + ParserTools.ToString(deform.WaveForm.Freq) + " + " + offName +
-                                        ") * 6.283) * " + ParserTools.ToString(deform.WaveForm.Amp) + ";");
-                        //FIN parche
+                            //Parche temporal solo funciona con la funcion seno
+                            VertexLines.Add("float " + name + " = " + ParserTools.ToString(deform.WaveForm.Bas) + " + sin((" +
+                                            ParserTools.ToString(deform.WaveForm.Phase) + " + " +
+                                            "g_time" + " * " + ParserTools.ToString(deform.WaveForm.Freq) + " + " + offName +
+                                            ") * 6.283) * " + ParserTools.ToString(deform.WaveForm.Amp) + ";");
+                            //FIN parche
 
-                        VertexLines.Add("defPosition += float4(In.Normal * " + name + ",0);");
-                    }
+                            VertexLines.Add("defPosition += float4(In.Normal * " + name + ",0);");
+                        }
                         break;
 
                     case "bulge":
-                    {
-                        //float alpha = In.Tex0.x*bulgeWidth + g_time;
-                        //float deform = sin(alpha)*bulgeHeight;
-                        //defPosition += float4(In.Normal * deform0, 0);
+                        {
+                            //float alpha = In.Tex0.x*bulgeWidth + g_time;
+                            //float deform = sin(alpha)*bulgeHeight;
+                            //defPosition += float4(In.Normal * deform0, 0);
 
-                        var deformi = "deform" + i;
-                        var alphai = "alpha" + i;
+                            var deformi = "deform" + i;
+                            var alphai = "alpha" + i;
 
-                        VertexLines.Add("float " + alphai + " = In.Tex0.x*" + deform.BulgeWidth + " + g_time*" +
-                                        deform.BulgeSpeed + ";");
-                        VertexLines.Add("float " + deformi + " = sin(" + alphai + ")*" + deform.BulgeHeight + ";");
-                        VertexLines.Add("defPosition += float4(In.Normal * " + deformi + ",0);");
-                    }
+                            VertexLines.Add("float " + alphai + " = In.Tex0.x*" + deform.BulgeWidth + " + g_time*" +
+                                            deform.BulgeSpeed + ";");
+                            VertexLines.Add("float " + deformi + " = sin(" + alphai + ")*" + deform.BulgeHeight + ";");
+                            VertexLines.Add("defPosition += float4(In.Normal * " + deformi + ",0);");
+                        }
                         break;
 
                     default:

@@ -1,11 +1,12 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Herramienta para crear un Triangulo 3D.
@@ -14,18 +15,16 @@ namespace TgcViewer.Utils.TgcGeometry
     /// </summary>
     public class TgcTriangle : IRenderObject
     {
+        private readonly VertexBuffer vertexBuffer;
         private Color color;
 
         protected Effect effect;
 
         protected string technique;
-        private readonly VertexBuffer vertexBuffer;
 
         public TgcTriangle()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), 3, d3dDevice,
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             A = Vector3.Empty;
@@ -109,21 +108,20 @@ namespace TgcViewer.Utils.TgcGeometry
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
             effect.EndPass();
             effect.End();
         }
@@ -173,7 +171,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>Centro</returns>
         public Vector3 computeCenter()
         {
-            return Vector3.Scale(A + B + C, 1/3f);
+            return Vector3.Scale(A + B + C, 1 / 3f);
         }
 
         /// <summary>
@@ -191,11 +189,9 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <param name="meshName">Nombre de la malla que se va a crear</param>
         public TgcMesh toMesh(string meshName)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear Mesh con solo color
             var d3dMesh = new Mesh(1, 3, MeshFlags.Managed, TgcSceneLoader.TgcSceneLoader.VertexColorVertexElements,
-                d3dDevice);
+                D3DDevice.Instance.Device);
 
             //Calcular normal: left-handed
             var normal = computeNormal();
@@ -237,14 +233,14 @@ namespace TgcViewer.Utils.TgcGeometry
                 var indices = new short[3];
                 for (var j = 0; j < indices.Length; j++)
                 {
-                    indices[j] = (short) j;
+                    indices[j] = (short)j;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
 
             //Malla de TGC
             var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.VERTEX_COLOR);
-            tgcMesh.Materials = new[] {TgcD3dDevice.DEFAULT_MATERIAL};
+            tgcMesh.Materials = new[] { TgcD3dDevice.DEFAULT_MATERIAL };
             tgcMesh.createBoundingBox();
             tgcMesh.Enabled = true;
             return tgcMesh;

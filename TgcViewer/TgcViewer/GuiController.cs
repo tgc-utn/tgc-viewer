@@ -1,23 +1,23 @@
+using Microsoft.DirectX;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Example;
-using TgcViewer.Utils;
-using TgcViewer.Utils.Fog;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.Sound;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.Ui;
-using TgcViewer.Utils._2D;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer.Example;
+using TGC.Viewer.Utils;
+using TGC.Viewer.Utils._2D;
+using TGC.Viewer.Utils.Fog;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.Modifiers;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.Sound;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.Ui;
 
-namespace TgcViewer
+namespace TGC.Viewer
 {
     /// <summary>
     ///     Controlador principal de la aplicación
@@ -26,36 +26,25 @@ namespace TgcViewer
     {
         private TgcExample currentExample;
         private ExampleLoader exampleLoader;
-
         private TgcD3dDevice tgcD3dDevice;
 
         #region Singleton
 
-        private static volatile GuiController instance;
+        //private static volatile GuiController instance;
 
         /// <summary>
         ///     Permite acceder a una instancia de la clase GuiController desde cualquier parte del codigo.
         /// </summary>
-        public static GuiController Instance
-        {
-            get { return instance; }
-        }
+        public static GuiController Instance { get; } = new GuiController();
 
-        /// <summary>
-        ///     Crear nueva instancia. Solo el MainForm lo hace
-        /// </summary>
-        internal static void newInstance()
+        /// <summary> Constructor privado para poder hacer el singleton</summary>
+        private GuiController()
         {
-            instance = new GuiController();
         }
 
         #endregion Singleton
 
         #region Internal Methods
-
-        private GuiController()
-        {
-        }
 
         /// <summary>
         ///     Crea todos los modulos necesarios de la aplicacion
@@ -68,19 +57,20 @@ namespace TgcViewer
             panel3d.Focus();
 
             //Iniciar graficos
+            //FIXME hay que quitar la dependencia de TgcD3dDevice, necesita un control que es un winform para el device... por ahora se crea aca.
             tgcD3dDevice = new TgcD3dDevice(panel3d);
             TexturesManager = new TgcTexture.Manager();
-            tgcD3dDevice.OnResetDevice(tgcD3dDevice.D3dDevice, null);
+            tgcD3dDevice.OnResetDevice(D3DDevice.Instance.Device, null);
 
             //Iniciar otras herramientas
             TexturesPool = new TgcTexture.Pool();
             Logger = new Logger(mainForm.LogConsole);
-            Text3d = new TgcDrawText(tgcD3dDevice.D3dDevice);
+            Text3d = new TgcDrawText(D3DDevice.Instance.Device);
             D3dInput = new TgcD3dInput(mainForm, panel3d);
             FpsCamera = new TgcFpsCamera();
             RotCamera = new TgcRotationalCamera();
             ThirdPersonCamera = new TgcThirdPersonCamera();
-            AxisLines = new TgcAxisLines(tgcD3dDevice.D3dDevice);
+            AxisLines = new TgcAxisLines(D3DDevice.Instance.Device);
             UserVars = new TgcUserVars(mainForm.getDataGridUserVars());
             Modifiers = new TgcModifiers(mainForm.getModifiersPanel());
             ElapsedTime = -1;
@@ -106,7 +96,7 @@ namespace TgcViewer
             ExamplesMediaDir = ExamplesDir + "Media" + "\\";
             AlumnoEjemplosDir = Environment.CurrentDirectory + "\\" + "AlumnoEjemplos" + "\\";
             AlumnoEjemplosMediaDir = AlumnoEjemplosDir + "AlumnoMedia" + "\\";
-            exampleLoader.loadExamplesInGui(mainForm.TreeViewExamples, new[] {ExamplesDir, AlumnoEjemplosDir});
+            exampleLoader.loadExamplesInGui(mainForm.TreeViewExamples, new[] { ExamplesDir, AlumnoEjemplosDir });
 
             //Cargar shaders del framework
             Shaders.loadCommonShaders();
@@ -122,7 +112,7 @@ namespace TgcViewer
         /// </summary>
         internal void render()
         {
-            var d3dDevice = tgcD3dDevice.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
             ElapsedTime = HighResolutionTimer.Instance.FrameTime;
 
             tgcD3dDevice.doClear();
@@ -375,14 +365,6 @@ namespace TgcViewer
         #region Getters and Setters and Public Methods
 
         /// <summary>
-        ///     Direct3D Device
-        /// </summary>
-        public Device D3dDevice
-        {
-            get { return tgcD3dDevice.D3dDevice; }
-        }
-
-        /// <summary>
         ///     Herramienta para loggear mensajes en la consola inferior de la pantalla
         /// </summary>
         public Logger Logger { get; private set; }
@@ -494,7 +476,7 @@ namespace TgcViewer
         /// <param name="lookAt">Punto hacia el cuál se quiere ver</param>
         public void setCamera(Vector3 pos, Vector3 lookAt)
         {
-            tgcD3dDevice.D3dDevice.Transform.View = Matrix.LookAtLH(pos, lookAt, new Vector3(0, 1, 0));
+            D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(pos, lookAt, new Vector3(0, 1, 0));
 
             //Imprimir posicion
             var statusPos = "Position: [" + TgcParserUtils.printFloat(pos.X) + ", " + TgcParserUtils.printFloat(pos.Y) +

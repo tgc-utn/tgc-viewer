@@ -1,9 +1,9 @@
 ﻿using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Collision.SphereTriangleCollision
+namespace TGC.Examples.Collision.SphereTriangleCollision
 {
     /// <summary>
     ///     Colisionador a base de triangulos
@@ -28,15 +28,15 @@ namespace Examples.Collision.SphereTriangleCollision
 
             //Cargar triangulos
             var vertices = mesh.getVertexPositions();
-            var triangleCount = vertices.Length/3;
+            var triangleCount = vertices.Length / 3;
             collider.Triangles = new Triangle[triangleCount];
             for (var i = 0; i < triangleCount; i++)
             {
                 //Invertir orden de vertices para que la normal quede CounterClock-Wise
                 collider.Triangles[i] = new Triangle(
-                    vertices[i*3 + 2],
-                    vertices[i*3 + 1],
-                    vertices[i*3]
+                    vertices[i * 3 + 2],
+                    vertices[i * 3 + 1],
+                    vertices[i * 3]
                     );
             }
 
@@ -162,7 +162,7 @@ namespace Examples.Collision.SphereTriangleCollision
             //Si hubo colision, retornar la menor encontrada
             if (minT != float.MaxValue)
             {
-                collisionPoint = sphere.Center + minT*movementVector - sphereRad*planeNormal;
+                collisionPoint = sphere.Center + minT * movementVector - sphereRad * planeNormal;
                 return true;
             }
 
@@ -188,7 +188,7 @@ namespace Examples.Collision.SphereTriangleCollision
             //Si hubo colision, retornar la menor encontrada
             if (minT != float.MaxValue)
             {
-                collisionPoint = sphere.Center + minT*movementVector - sphereRad*planeNormal;
+                collisionPoint = sphere.Center + minT * movementVector - sphereRad * planeNormal;
                 return true;
             }
 
@@ -224,23 +224,23 @@ namespace Examples.Collision.SphereTriangleCollision
             if (md > dd && md + nd > dd) return false; // Segment outside ’q’ side of cylinder
             var nn = Vector3.Dot(n, n);
             var mn = Vector3.Dot(m, n);
-            var a = dd*nn - nd*nd;
-            var k = Vector3.Dot(m, m) - radius*radius;
-            var c = dd*k - md*md;
+            var a = dd * nn - nd * nd;
+            var k = Vector3.Dot(m, m) - radius * radius;
+            var c = dd * k - md * md;
             if (FastMath.Abs(a) < float.Epsilon)
             {
                 // Segment runs parallel to cylinder axis
                 if (c > 0.0f) return false; // 'a' and thus the segment lie outside cylinder
                 // Now known that segment intersects cylinder; figure out how it intersects
-                if (md < 0.0f) t = -mn/nn; // Intersect segment against 'p' endcap
-                else if (md > dd) t = (nd - mn)/nn; // Intersect segment against ’q’ endcap
+                if (md < 0.0f) t = -mn / nn; // Intersect segment against 'p' endcap
+                else if (md > dd) t = (nd - mn) / nn; // Intersect segment against ’q’ endcap
                 else t = 0.0f; // ’a’ lies inside cylinder
                 return true;
             }
-            var b = dd*mn - nd*md;
-            var discr = b*b - a*c;
+            var b = dd * mn - nd * md;
+            var discr = b * b - a * c;
             if (discr < 0.0f) return false; // No real roots; no intersection
-            t = (-b - FastMath.Sqrt(discr))/a;
+            t = (-b - FastMath.Sqrt(discr)) / a;
             if (t < 0.0f || t > 1.0f) return false; // Intersection lies outside segment
 
             /* No chequear EndCaps
@@ -279,7 +279,7 @@ namespace Examples.Collision.SphereTriangleCollision
                 B = b;
                 C = c;
                 Plane = Plane.FromPoints(a, b, c);
-                BoundingSphere = TgcBoundingSphere.computeFromPoints(new[] {a, b, c}).toClass();
+                BoundingSphere = TgcBoundingSphere.computeFromPoints(new[] { a, b, c }).toClass();
             }
 
             /// <summary>

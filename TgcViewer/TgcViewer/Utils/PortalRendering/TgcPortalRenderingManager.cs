@@ -1,11 +1,11 @@
+using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Geometries;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Viewer.Utils.PortalRendering
 {
     /// <summary>
     ///     Herramienta para optimizar la visibilidad de objetos mediante PortalRendering.

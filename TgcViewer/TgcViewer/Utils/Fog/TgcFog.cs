@@ -1,7 +1,8 @@
-using System.Drawing;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
+using TGC.Core.Direct3D;
 
-namespace TgcViewer.Utils.Fog
+namespace TGC.Viewer.Utils.Fog
 {
     /// <summary>
     ///     Herramienta para manipular el efecto de Niebla provisto por Direct3D
@@ -62,21 +63,19 @@ namespace TgcViewer.Utils.Fog
         /// </summary>
         public void updateValues()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             if (Enabled)
             {
-                d3dDevice.SetRenderState(RenderStates.FogEnable, true);
-                d3dDevice.SetRenderState(RenderStates.RangeFogEnable, true);
-                d3dDevice.SetRenderState(RenderStates.FogColor, color.ToArgb());
-                d3dDevice.SetRenderState(RenderStates.FogVertexMode, (int) FogMode.Linear);
-                d3dDevice.SetRenderState(RenderStates.FogStart, StartDistance);
-                d3dDevice.SetRenderState(RenderStates.FogEnd, EndDistance);
-                d3dDevice.SetRenderState(RenderStates.FogDensity, Density);
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.FogEnable, true);
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.RangeFogEnable, true);
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.FogColor, color.ToArgb());
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.FogVertexMode, (int)FogMode.Linear);
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.FogStart, StartDistance);
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.FogEnd, EndDistance);
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.FogDensity, Density);
             }
             else
             {
-                d3dDevice.SetRenderState(RenderStates.FogEnable, false);
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.FogEnable, false);
             }
         }
     }

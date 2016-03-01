@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Viewer.Utils.Modifiers
 {
     /// <summary>
     ///     Ventana visualizadora de TgcMesh de un directorio.
@@ -153,7 +153,7 @@ namespace TgcViewer.Utils.Modifiers
                 //Seleccionar primer elemento
                 if (panelItems.Controls.Count > 0)
                 {
-                    ((MeshItemControl) panelItems.Controls[0]).selectItem();
+                    ((MeshItemControl)panelItems.Controls[0]).selectItem();
                 }
             }
         }

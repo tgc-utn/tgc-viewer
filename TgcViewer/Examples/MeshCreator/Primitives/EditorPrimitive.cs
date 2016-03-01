@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+﻿using Microsoft.DirectX;
+using System.Collections.Generic;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.MeshCreator.Primitives
+namespace TGC.Examples.MeshCreator.Primitives
 {
     /// <summary>
     ///     Primitiva generica para construir objetos

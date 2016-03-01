@@ -1,14 +1,14 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.Sound;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils._2D;
+using System.Drawing;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils._2D;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.Sound;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.TerrainEditor.Brushes.Terrain
+namespace TGC.Examples.TerrainEditor.Brushes.Terrain
 {
     public abstract class TerrainBrush : ITerrainEditorBrush
     {
@@ -38,7 +38,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
         {
             if (Rounded) terrain.Technique = "PositionColoredTexturedWithRoundBrush";
             else terrain.Technique = "PositionColoredTexturedWithSquareBrush";
-            terrain.Effect.SetValue("brushPosition", new[] {Position.X, Position.Z});
+            terrain.Effect.SetValue("brushPosition", new[] { Position.X, Position.Z });
             terrain.Effect.SetValue("brushRadius", Radius);
             terrain.Effect.SetValue("brushHardness", Hardness);
             terrain.Effect.SetValue("brushColor1", Color1.ToArgb());
@@ -53,11 +53,11 @@ namespace Examples.TerrainEditor.Brushes.Terrain
 
         public virtual bool editTerrain()
         {
-            var speed = GuiController.Instance.ElapsedTime*getSpeedAdjustment();
+            var speed = GuiController.Instance.ElapsedTime * getSpeedAdjustment();
             if (Invert) speed *= -1;
 
-            var radius = Radius/terrain.ScaleXZ;
-            var innerRadius = radius*(Hardness/100);
+            var radius = Radius / terrain.ScaleXZ;
+            var innerRadius = radius * (Hardness / 100);
             var radius2 = FastMath.Pow2(radius);
             var innerRadius2 = FastMath.Pow2(innerRadius);
 
@@ -68,9 +68,9 @@ namespace Examples.TerrainEditor.Brushes.Terrain
             if (!terrain.xzToHeightmapCoords(Position.X, Position.Z, out coords)) return false;
 
             //Calculo un cuadrado alrededor del vertice seleccionado
-            int[] min = {(int) FastMath.Ceiling(coords.X - radius), (int) FastMath.Ceiling(coords.Y - radius)};
+            int[] min = { (int)FastMath.Ceiling(coords.X - radius), (int)FastMath.Ceiling(coords.Y - radius) };
 
-            float[] max = {coords.X + radius, coords.Y + radius};
+            float[] max = { coords.X + radius, coords.Y + radius };
 
             for (var i = 0; i < 2; i++)
             {
@@ -99,7 +99,7 @@ namespace Examples.TerrainEditor.Brushes.Terrain
                                 //Si esta entre el circulo/cuadrado interno, disminuyo la intensidad.
                                 if (Rounded)
                                 {
-                                    var outterIntensity = intensity*(1 - d2/radius2);
+                                    var outterIntensity = intensity * (1 - d2 / radius2);
 
                                     if (d2 > innerRadius2)
                                     {
@@ -107,8 +107,8 @@ namespace Examples.TerrainEditor.Brushes.Terrain
                                     }
                                     else
                                     {
-                                        var alpha = 1 - d2/innerRadius2;
-                                        intensity = outterIntensity + alpha*(intensity - outterIntensity);
+                                        var alpha = 1 - d2 / innerRadius2;
+                                        intensity = outterIntensity + alpha * (intensity - outterIntensity);
                                     }
                                 }
                                 else
@@ -116,12 +116,12 @@ namespace Examples.TerrainEditor.Brushes.Terrain
                                     var maxD = FastMath.Max(FastMath.Abs(dx), FastMath.Abs(dz));
                                     if (maxD > innerRadius)
                                     {
-                                        intensity = intensity*(1 - (maxD - innerRadius)/(radius - innerRadius));
+                                        intensity = intensity * (1 - (maxD - innerRadius) / (radius - innerRadius));
                                     }
                                 }
                             }
 
-                            var newHeight = FastMath.Max(0, FastMath.Min(heightmapData[i, j] + intensity*speed, 255));
+                            var newHeight = FastMath.Max(0, FastMath.Min(heightmapData[i, j] + intensity * speed, 255));
 
                             if (heightmapData[i, j] != newHeight)
                             {

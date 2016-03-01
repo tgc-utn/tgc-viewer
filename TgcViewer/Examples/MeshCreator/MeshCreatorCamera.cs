@@ -1,12 +1,12 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Camara rotacional customizada para el MeshCreator
@@ -50,8 +50,8 @@ namespace Examples.MeshCreator
                 mouseX = d3dInput.XposRelative;
                 mouseY = d3dInput.YposRelative;
 
-                diffX += mouseX*elapsedTime*RotationSpeed;
-                diffY += mouseY*elapsedTime*RotationSpeed;
+                diffX += mouseX * elapsedTime * RotationSpeed;
+                diffY += mouseY * elapsedTime * RotationSpeed;
             }
             else
             {
@@ -60,22 +60,22 @@ namespace Examples.MeshCreator
             }
 
             //Calcular rotacion a aplicar
-            var rotX = -diffY/FastMath.PI + BaseRotX;
-            var rotY = diffX/FastMath.PI + BaseRotY;
+            var rotX = -diffY / FastMath.PI + BaseRotX;
+            var rotY = diffX / FastMath.PI + BaseRotY;
 
             //Truncar valores de rotacion fuera de rango
-            if (rotX > FastMath.PI*2 || rotX < -FastMath.PI*2)
+            if (rotX > FastMath.PI * 2 || rotX < -FastMath.PI * 2)
             {
                 diffY = 0;
                 rotX = 0;
             }
 
             //Invertir Y de UpVector segun el angulo de rotacion
-            if (rotX < -FastMath.PI/2 && rotX > -FastMath.PI*3/2)
+            if (rotX < -FastMath.PI / 2 && rotX > -FastMath.PI * 3 / 2)
             {
                 upVector.Y = -1;
             }
-            else if (rotX > FastMath.PI/2 && rotX < FastMath.PI*3/2)
+            else if (rotX > FastMath.PI / 2 && rotX < FastMath.PI * 3 / 2)
             {
                 upVector.Y = -1;
             }
@@ -87,9 +87,9 @@ namespace Examples.MeshCreator
             //Determinar distancia de la camara o zoom segun el Mouse Wheel
             if (d3dInput.WheelPos != 0)
             {
-                diffZ += ZoomFactor*d3dInput.WheelPos*-1;
+                diffZ += ZoomFactor * d3dInput.WheelPos * -1;
             }
-            var distance = -CameraDistance*diffZ;
+            var distance = -CameraDistance * diffZ;
 
             //Limitar el zoom a 0
             if (distance > 0)
@@ -99,9 +99,9 @@ namespace Examples.MeshCreator
 
             //Realizar Transformacion: primero alejarse en Z, despues rotar en X e Y y despues ir al centro de la cmara
             var m = Matrix.Translation(0, 0, -distance)
-                    *Matrix.RotationX(rotX)
-                    *Matrix.RotationY(rotY)
-                    *Matrix.Translation(CameraCenter);
+                    * Matrix.RotationX(rotX)
+                    * Matrix.RotationY(rotY)
+                    * Matrix.Translation(CameraCenter);
 
             //Extraer la posicion final de la matriz de transformacion
             nextPos.X = m.M41;
@@ -113,7 +113,7 @@ namespace Examples.MeshCreator
             {
                 var dx = -d3dInput.XposRelative;
                 var dy = d3dInput.YposRelative;
-                var panSpeedZoom = PanSpeed*FastMath.Abs(distance);
+                var panSpeedZoom = PanSpeed * FastMath.Abs(distance);
 
                 var d = CameraCenter - nextPos;
                 d.Normalize();
@@ -122,7 +122,7 @@ namespace Examples.MeshCreator
                 n.Normalize();
 
                 var up = Vector3.Cross(n, d);
-                var desf = Vector3.Scale(up, dy*panSpeedZoom) - Vector3.Scale(n, dx*panSpeedZoom);
+                var desf = Vector3.Scale(up, dy * panSpeedZoom) - Vector3.Scale(n, dx * panSpeedZoom);
                 nextPos = nextPos + desf;
                 CameraCenter = CameraCenter + desf;
             }
@@ -183,7 +183,7 @@ namespace Examples.MeshCreator
 
             var v = pos - lookAt;
             var length = Vector3.Length(v);
-            v.Scale(1/length);
+            v.Scale(1 / length);
 
             CameraDistance = length;
             upVector = new Vector3(0, 1, 0);
@@ -224,7 +224,7 @@ namespace Examples.MeshCreator
         {
             CameraCenter = boundingBox.calculateBoxCenter();
             var r = boundingBox.calculateBoxRadius();
-            CameraDistance = 2*r;
+            CameraDistance = 2 * r;
         }
 
         #region Getters y Setters

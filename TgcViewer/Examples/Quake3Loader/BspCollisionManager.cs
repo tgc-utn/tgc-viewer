@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+using System;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.Quake3Loader
+namespace TGC.Examples.Quake3Loader
 {
     /// <summary>
     ///     Herramienta para manipular las colisiones en un escenario BSP.
@@ -15,11 +15,11 @@ namespace Examples.Quake3Loader
     /// </summary>
     public class BspCollisionManager
     {
+        private readonly BspMap bspMap;
         private Vector3 antCamPos;
 
         // Almacena si colisiono o no
         private bool bCollided;
-        private readonly BspMap bspMap;
 
         private bool bTryStep;
 
@@ -115,7 +115,6 @@ namespace Examples.Quake3Loader
         /// <returns>Nueva posicion de la camara</returns>
         public Vector3 update()
         {
-            var device = GuiController.Instance.D3dDevice;
             var elapsedTime = GuiController.Instance.ElapsedTime;
 
             Camera.updateCamera();
@@ -153,10 +152,10 @@ namespace Examples.Quake3Loader
                 var aceleracion = new Vector3(0, -Gravity, 0);
 
                 //aplico la gravedad
-                velocidad = velocidad + elapsedTime*aceleracion;
+                velocidad = velocidad + elapsedTime * aceleracion;
 
-                camPos = camPos + velocidad*elapsedTime;
-                camPos.Y -= kEpsilon*1.5f;
+                camPos = camPos + velocidad * elapsedTime;
+                camPos.Y -= kEpsilon * 1.5f;
 
                 //aplico las colisiones
                 //traceType = TYPE_SPHERE;
@@ -228,14 +227,14 @@ namespace Examples.Quake3Loader
             // point.  This is done by the cool equation below (described in detail at top of page).
 
             // Set our new position to a position that is right up to the brush we collided with
-            var vNewPosition = vStart + (vEnd - vStart)*traceRatio;
+            var vNewPosition = vStart + (vEnd - vStart) * traceRatio;
 
             //Aplico el Sliding
             var vMove = vEnd - vNewPosition;
 
             var distance = Vector3.Dot(vMove, vCollisionNormal);
 
-            var vEndPosition = vEnd - vCollisionNormal*distance;
+            var vEndPosition = vEnd - vCollisionNormal * distance;
 
             //como me movi, Hay que detectar si hubo otra colision
             vNewPosition = Trace(vNewPosition, vEndPosition);
@@ -401,9 +400,9 @@ namespace Examples.Quake3Loader
                 // value, which calls for the fabs() function (abs() for floats).
 
                 // Get the distance our AABB is from the current splitter plane
-                offset = Math.Abs(vExtents.X*pPlane.normal.X) +
-                         Math.Abs(vExtents.Y*pPlane.normal.Y) +
-                         Math.Abs(vExtents.Z*pPlane.normal.Z);
+                offset = Math.Abs(vExtents.X * pPlane.normal.X) +
+                         Math.Abs(vExtents.Y * pPlane.normal.Y) +
+                         Math.Abs(vExtents.Z * pPlane.normal.Z);
             }
 
             // Below we just do a basic traversal down the BSP tree.  If the points are in
@@ -447,9 +446,9 @@ namespace Examples.Quake3Loader
                     // We use epsilon like Quake does to compensate for float errors.  The second
                     // ratio holds a distance from the other size of the extents on the other side
                     // of the plane.  This essential splits the ray for both sides of the splitter plane.
-                    var inverseDistance = 1.0f/(startDistance - endDistance);
-                    Ratio1 = (startDistance - offset - kEpsilon)*inverseDistance;
-                    Ratio2 = (startDistance + offset + kEpsilon)*inverseDistance;
+                    var inverseDistance = 1.0f / (startDistance - endDistance);
+                    Ratio1 = (startDistance - offset - kEpsilon) * inverseDistance;
+                    Ratio2 = (startDistance + offset + kEpsilon) * inverseDistance;
                 }
                 // Check if the starting point is greater than the end point (positive)
                 else if (startDistance > endDistance)
@@ -458,9 +457,9 @@ namespace Examples.Quake3Loader
                     // We do the same thing as above and get 2 ratios for split ray.
                     // Ratio 1 and 2 are switched in contrast to the last if statement.
                     // This is because the start is starting in the front of the splitter plane.
-                    var inverseDistance = 1.0f/(startDistance - endDistance);
-                    Ratio1 = (startDistance + offset + kEpsilon)*inverseDistance;
-                    Ratio2 = (startDistance - offset - kEpsilon)*inverseDistance;
+                    var inverseDistance = 1.0f / (startDistance - endDistance);
+                    Ratio1 = (startDistance + offset + kEpsilon) * inverseDistance;
+                    Ratio2 = (startDistance - offset - kEpsilon) * inverseDistance;
                 }
 
                 // Make sure that we have valid numbers and not some weird float problems.
@@ -475,15 +474,15 @@ namespace Examples.Quake3Loader
                 // point on the ray, but instead of a point we get a middleRatio percentage.
                 // This isn't the true middle point since we are using offset's and the epsilon value.
                 // We also grab the middle point to go with the ratio.
-                middleRatio = startRatio + (endRatio - startRatio)*Ratio1;
-                vMiddle = vStart + (vEnd - vStart)*Ratio1;
+                middleRatio = startRatio + (endRatio - startRatio) * Ratio1;
+                vMiddle = vStart + (vEnd - vStart) * Ratio1;
 
                 // Now we recurse on the current side with only the first half of the ray
                 CheckNode(side, startRatio, middleRatio, vStart, vMiddle);
 
                 // Now we need to make a middle point and ratio for the other side of the node
-                middleRatio = startRatio + (endRatio - startRatio)*Ratio2;
-                vMiddle = vStart + (vEnd - vStart)*Ratio2;
+                middleRatio = startRatio + (endRatio - startRatio) * Ratio2;
+                vMiddle = vStart + (vEnd - vStart) * Ratio2;
 
                 // Depending on which side should go last, traverse the bsp with the
                 // other side of the split ray (movement vector).
@@ -576,7 +575,7 @@ namespace Examples.Quake3Loader
                 if (startDistance > endDistance)
                 {
                     // This gets a ratio from our starting point to the approximate collision spot
-                    var Ratio1 = (startDistance - kEpsilon)/(startDistance - endDistance);
+                    var Ratio1 = (startDistance - kEpsilon) / (startDistance - endDistance);
 
                     // If this is the first time coming here, then this will always be true,
                     // since startRatio starts at -1.0f.  We want to find the closest collision,
@@ -605,7 +604,7 @@ namespace Examples.Quake3Loader
                 else
                 {
                     // Get the ratio of the current brush side for the endRatio
-                    var Ratio = (startDistance + kEpsilon)/(startDistance - endDistance);
+                    var Ratio = (startDistance + kEpsilon) / (startDistance - endDistance);
 
                     // If the ratio is less than the current endRatio, assign a new endRatio.
                     // This will usually always be true when starting out.

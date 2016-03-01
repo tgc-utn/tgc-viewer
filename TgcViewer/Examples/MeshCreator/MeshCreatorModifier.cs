@@ -1,6 +1,6 @@
-using TgcViewer.Utils.Modifiers;
+using TGC.Viewer.Utils.Modifiers;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Modifier customizado que se utiliza en el MeshCreator

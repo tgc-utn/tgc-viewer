@@ -1,7 +1,7 @@
-using System;
 using Microsoft.DirectX.DirectSound;
+using System;
 
-namespace TgcViewer.Utils.Sound
+namespace TGC.Viewer.Utils.Sound
 {
     /// <summary>
     ///     Herramienta para reproducir un sonido WAV estático

@@ -1,10 +1,11 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.SceneLoader
+namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Ejemplo EjemploCustomMesh:
@@ -37,8 +38,6 @@ namespace Examples.SceneLoader
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear loader
             var loader = new TgcSceneLoader();
 
@@ -49,7 +48,7 @@ namespace Examples.SceneLoader
             var sceneOriginal =
                 loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
                                          "MeshCreator\\Meshes\\Vehiculos\\Buggy\\" + "Buggy-TgcScene.xml");
-            mesh = (MyCustomMesh) sceneOriginal.Meshes[0];
+            mesh = (MyCustomMesh)sceneOriginal.Meshes[0];
 
             //Centrar camara rotacional respecto a este mesh
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
@@ -57,8 +56,6 @@ namespace Examples.SceneLoader
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             mesh.render();
         }
 
@@ -100,16 +97,14 @@ namespace Examples.SceneLoader
         /// </summary>
         public new void render()
         {
-            var device = GuiController.Instance.D3dDevice;
-
             //Cambiamos a modo WireFrame
-            device.RenderState.FillMode = FillMode.WireFrame;
+            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
 
             //Llamamos al metodo original del padre
             base.render();
 
             //Restrablecemos modo solido
-            device.RenderState.FillMode = FillMode.Solid;
+            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;
         }
     }
 

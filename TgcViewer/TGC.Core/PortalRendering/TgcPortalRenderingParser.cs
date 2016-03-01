@@ -16,7 +16,7 @@ namespace TGC.Core.PortalRendering
             var portalRenderingData = new TgcPortalRenderingData();
             int count;
             int i;
-            char[] meshSeparator = {','};
+            char[] meshSeparator = { ',' };
 
             //Cells
             var cellsNode = portalRenderingNode.GetElementsByTagName("cells")[0];
@@ -69,7 +69,7 @@ namespace TGC.Core.PortalRendering
                 portalData.pMax = TgcParserUtils.parseFloat3Array(boundingBoxNode.Attributes["max"].InnerText);
 
                 //cellA
-                var cellAElement = (XmlElement) portalElement.GetElementsByTagName("cellA")[0];
+                var cellAElement = (XmlElement)portalElement.GetElementsByTagName("cellA")[0];
                 portalData.cellA = int.Parse(cellAElement.Attributes["id"].InnerText);
 
                 //planeA
@@ -82,7 +82,7 @@ namespace TGC.Core.PortalRendering
                 portalData.boundingVerticesA = TgcParserUtils.parseFloatStream(verticesANode.InnerText, count);
 
                 //cellB
-                var cellBElement = (XmlElement) portalElement.GetElementsByTagName("cellB")[0];
+                var cellBElement = (XmlElement)portalElement.GetElementsByTagName("cellB")[0];
                 portalData.cellB = int.Parse(cellBElement.Attributes["id"].InnerText);
 
                 //planeB

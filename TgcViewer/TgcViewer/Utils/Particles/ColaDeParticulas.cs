@@ -1,4 +1,4 @@
-namespace TgcViewer.Utils.Particles
+namespace TGC.Viewer.Utils.Particles
 {
     /// <summary>
     ///     Pila para almacenar particulas

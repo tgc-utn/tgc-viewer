@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace TgcViewer.Utils
+namespace TGC.Viewer.Utils
 {
     /// <summary>
     ///     High resolution game timer.
@@ -106,7 +106,7 @@ namespace TgcViewer.Utils
         {
             // Calc frame time.
             var endTime = Ticks;
-            FrameTime = (endTime - _startTime)/(float) Frequency;
+            FrameTime = (endTime - _startTime) / (float)Frequency;
             _startTime = endTime;
 
             // Calc fps.

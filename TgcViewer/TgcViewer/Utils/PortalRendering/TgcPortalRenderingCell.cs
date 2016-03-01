@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Geometries;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Viewer.Utils.PortalRendering
 {
     /// <summary>
     ///     Celda de PortalRendering

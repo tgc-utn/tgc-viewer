@@ -1,4 +1,4 @@
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Información de animación de un hueso para una animación particular

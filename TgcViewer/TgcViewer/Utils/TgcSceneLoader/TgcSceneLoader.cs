@@ -1,29 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Ionic.Zip;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.PortalRendering;
-using TgcViewer.Utils.TgcGeometry;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.PortalRendering;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace TgcViewer.Utils.TgcSceneLoader
+namespace TGC.Viewer.Utils.TgcSceneLoader
 {
     /// <summary>
     ///     Herramienta para cargar un archivo de escena XML con formato de TGC (tgcScene)
     /// </summary>
     public class TgcSceneLoader
     {
-        private readonly Device device;
-
         /// <summary>
         ///     Crear un nuevo Loader
         /// </summary>
         public TgcSceneLoader()
         {
-            device = GuiController.Instance.D3dDevice;
             MeshFactory = new DefaultMeshFactory();
         }
 
@@ -231,8 +229,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
             TgcSceneLoaderMaterialAux[] materialsArray, TgcMeshData meshData)
         {
             //Crear Mesh
-            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
-                MeshFlags.Managed, DiffuseMapAndLightmapVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, DiffuseMapAndLightmapVertexElements, D3DDevice.Instance.Device);
 
             //Cargar vertexBuffer
             using (var vb = mesh.VertexBuffer)
@@ -243,7 +241,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     var v = new DiffuseMapAndLightmapVertex();
 
                     //vertices
-                    var coordIdx = meshData.coordinatesIndices[j]*3;
+                    var coordIdx = meshData.coordinatesIndices[j] * 3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -263,7 +261,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     //o una normal propia por cada vertice de cada triangulo (version mejorada del exporter)
                     else
                     {
-                        var normalIdx = j*3;
+                        var normalIdx = j * 3;
                         v.Normal = new Vector3(
                             meshData.verticesNormals[normalIdx],
                             meshData.verticesNormals[normalIdx + 1],
@@ -272,12 +270,12 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     }
 
                     //texture coordinates diffuseMap
-                    var texCoordIdx = meshData.texCoordinatesIndices[j]*2;
+                    var texCoordIdx = meshData.texCoordinatesIndices[j] * 2;
                     v.Tu0 = meshData.textureCoordinates[texCoordIdx];
                     v.Tv0 = meshData.textureCoordinates[texCoordIdx + 1];
 
                     //texture coordinates LightMap
-                    var texCoordIdxLM = meshData.texCoordinatesIndicesLightMap[j]*2;
+                    var texCoordIdxLM = meshData.texCoordinatesIndicesLightMap[j] * 2;
                     v.Tu1 = meshData.textureCoordinatesLightMap[texCoordIdxLM];
                     v.Tv1 = meshData.textureCoordinatesLightMap[texCoordIdxLM + 1];
 
@@ -296,7 +294,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 var indices = new short[meshData.coordinatesIndices.Length];
                 for (var j = 0; j < indices.Length; j++)
                 {
-                    indices[j] = (short) j;
+                    indices[j] = (short)j;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -307,8 +305,9 @@ namespace TgcViewer.Utils.TgcSceneLoader
             TgcTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
-                meshMaterials = new[] {matAux.materialId};
-                meshTextures = new[] {TgcTexture.createTexture(device, matAux.textureFileName, matAux.texturePath)};
+                meshMaterials = new[] { matAux.materialId };
+                meshTextures = new[]
+                {TgcTexture.createTexture(D3DDevice.Instance.Device, matAux.textureFileName, matAux.texturePath)};
             }
 
             //Configurar Material y Textura para varios SubSet
@@ -325,13 +324,14 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 for (var m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
-                    meshTextures[m] = TgcTexture.createTexture(device, matAux.subMaterials[m].textureFileName,
+                    meshTextures[m] = TgcTexture.createTexture(D3DDevice.Instance.Device,
+                        matAux.subMaterials[m].textureFileName,
                         matAux.subMaterials[m].texturePath);
                 }
             }
 
             //Cargar lightMap
-            var lightMap = TgcTexture.createTexture(device, meshData.lightmap,
+            var lightMap = TgcTexture.createTexture(D3DDevice.Instance.Device, meshData.lightmap,
                 mediaPath + sceneData.lightmapsDir + "\\" + meshData.lightmap);
 
             //Crear mesh de TGC
@@ -349,8 +349,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
         private TgcMesh crearMeshDiffuseMap(TgcSceneLoaderMaterialAux[] materialsArray, TgcMeshData meshData)
         {
             //Crear Mesh
-            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
-                MeshFlags.Managed, DiffuseMapVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, DiffuseMapVertexElements, D3DDevice.Instance.Device);
 
             //Cargar VertexBuffer
             using (var vb = mesh.VertexBuffer)
@@ -361,7 +361,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     var v = new DiffuseMapVertex();
 
                     //vertices
-                    var coordIdx = meshData.coordinatesIndices[j]*3;
+                    var coordIdx = meshData.coordinatesIndices[j] * 3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -381,7 +381,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     //o una normal propia por cada vertice de cada triangulo (version mejorada del exporter)
                     else
                     {
-                        var normalIdx = j*3;
+                        var normalIdx = j * 3;
                         v.Normal = new Vector3(
                             meshData.verticesNormals[normalIdx],
                             meshData.verticesNormals[normalIdx + 1],
@@ -390,7 +390,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     }
 
                     //texture coordinates diffuseMap
-                    var texCoordIdx = meshData.texCoordinatesIndices[j]*2;
+                    var texCoordIdx = meshData.texCoordinatesIndices[j] * 2;
                     v.Tu = meshData.textureCoordinates[texCoordIdx];
                     v.Tv = meshData.textureCoordinates[texCoordIdx + 1];
 
@@ -409,7 +409,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 var indices = new short[meshData.coordinatesIndices.Length];
                 for (var j = 0; j < indices.Length; j++)
                 {
-                    indices[j] = (short) j;
+                    indices[j] = (short)j;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -420,8 +420,9 @@ namespace TgcViewer.Utils.TgcSceneLoader
             TgcTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
-                meshMaterials = new[] {matAux.materialId};
-                meshTextures = new[] {TgcTexture.createTexture(device, matAux.textureFileName, matAux.texturePath)};
+                meshMaterials = new[] { matAux.materialId };
+                meshTextures = new[]
+                {TgcTexture.createTexture(D3DDevice.Instance.Device, matAux.textureFileName, matAux.texturePath)};
             }
 
             //Configurar Material y Textura para varios SubSet
@@ -438,7 +439,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 for (var m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
-                    meshTextures[m] = TgcTexture.createTexture(device, matAux.subMaterials[m].textureFileName,
+                    meshTextures[m] = TgcTexture.createTexture(D3DDevice.Instance.Device,
+                        matAux.subMaterials[m].textureFileName,
                         matAux.subMaterials[m].texturePath);
                 }
             }
@@ -457,8 +459,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
         private TgcMesh crearMeshSoloColor(TgcMeshData meshData)
         {
             //Crear Mesh
-            var mesh = new Mesh(meshData.coordinatesIndices.Length/3, meshData.coordinatesIndices.Length,
-                MeshFlags.Managed, VertexColorVertexElements, device);
+            var mesh = new Mesh(meshData.coordinatesIndices.Length / 3, meshData.coordinatesIndices.Length,
+                MeshFlags.Managed, VertexColorVertexElements, D3DDevice.Instance.Device);
 
             //Cargar VertexBuffer
             using (var vb = mesh.VertexBuffer)
@@ -469,7 +471,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     var v = new VertexColorVertex();
 
                     //vertices
-                    var coordIdx = meshData.coordinatesIndices[j]*3;
+                    var coordIdx = meshData.coordinatesIndices[j] * 3;
                     v.Position = new Vector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
@@ -489,7 +491,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     //o una normal propia por cada vertice de cada triangulo (version mejorada del exporter)
                     else
                     {
-                        var normalIdx = j*3;
+                        var normalIdx = j * 3;
                         v.Normal = new Vector3(
                             meshData.verticesNormals[normalIdx],
                             meshData.verticesNormals[normalIdx + 1],
@@ -512,7 +514,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 var indices = new short[meshData.coordinatesIndices.Length];
                 for (var i = 0; i < indices.Length; i++)
                 {
-                    indices[i] = (short) i;
+                    indices[i] = (short)i;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -549,24 +551,24 @@ namespace TgcViewer.Utils.TgcSceneLoader
             var matrixGetRotation = new Vector3();
 
             //gets the x axis rotation from the matrix
-            matrixGetRotation.X = (float) Math.Asin(mat.M32);
-            var cosX = (float) Math.Cos(matrixGetRotation.X);
+            matrixGetRotation.X = (float)Math.Asin(mat.M32);
+            var cosX = (float)Math.Cos(matrixGetRotation.X);
 
             //checks for gimbal lock
             if (cosX < 0.005)
             {
                 matrixGetRotation.Z = 0;
-                matrixGetRotation.Y = Math.Sign(-mat.M21)*(float) Math.Acos(mat.M11);
+                matrixGetRotation.Y = Math.Sign(-mat.M21) * (float)Math.Acos(mat.M11);
             }
             //normal calculation
             else
             {
-                matrixGetRotation.Z = Math.Sign(mat.M12)*(float) Math.Acos(mat.M22/cosX);
-                matrixGetRotation.Y = Math.Sign(mat.M31)*(float) Math.Acos(mat.M33/cosX);
+                matrixGetRotation.Z = Math.Sign(mat.M12) * (float)Math.Acos(mat.M22 / cosX);
+                matrixGetRotation.Y = Math.Sign(mat.M31) * (float)Math.Acos(mat.M33 / cosX);
                 //converts the rotations because the x axis rotation can't be bigger than 90 and -90
                 if (Math.Sign(mat.M22) == -1 && matrixGetRotation.Z == 0)
                 {
-                    var pi = (float) Math.PI;
+                    var pi = (float)Math.PI;
                     matrixGetRotation.Z += pi;
                     matrixGetRotation.Y += pi;
                 }

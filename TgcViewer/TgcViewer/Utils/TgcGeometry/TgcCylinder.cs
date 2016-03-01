@@ -1,12 +1,13 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     public class TgcCylinder : IRenderObject, ITransformObject
     {
@@ -118,13 +119,12 @@ namespace TgcViewer.Utils.TgcGeometry
 
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             if (AlphaBlendEnable)
             {
-                d3dDevice.RenderState.AlphaBlendEnable = true;
-                d3dDevice.RenderState.AlphaTestEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
             }
 
             if (texture != null)
@@ -134,19 +134,20 @@ namespace TgcViewer.Utils.TgcGeometry
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrix(Effect, Transform);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColoredTextured;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColoredTextured;
             Effect.Technique = Technique;
 
             var capsResolution = END_CAPS_RESOLUTION;
 
             Effect.Begin(0);
             Effect.BeginPass(0);
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2*capsResolution, sideTrianglesVertices);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleStrip, 2 * capsResolution,
+                sideTrianglesVertices);
             Effect.EndPass();
             Effect.End();
 
-            d3dDevice.RenderState.AlphaTestEnable = false;
-            d3dDevice.RenderState.AlphaBlendEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
         public void dispose()
@@ -163,7 +164,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var capsResolution = END_CAPS_RESOLUTION;
 
             //cara lateral: un vertice por cada vertice de cada tapa, mas dos para cerrarla
-            sideTrianglesVertices = new CustomVertex.PositionColoredTextured[2*capsResolution + 2];
+            sideTrianglesVertices = new CustomVertex.PositionColoredTextured[2 * capsResolution + 2];
 
             useColorShader();
             updateValues();
@@ -191,13 +192,13 @@ namespace TgcViewer.Utils.TgcGeometry
             var capsResolution = END_CAPS_RESOLUTION;
 
             //matriz de rotacion del vector de dibujado
-            var angleStep = FastMath.TWO_PI/capsResolution;
+            var angleStep = FastMath.TWO_PI / capsResolution;
             var rotationMatrix = Matrix.RotationAxis(-upVector, angleStep);
             float angle = 0;
 
             //transformacion que se le aplicara a cada vertice
             var transformation = Transform;
-            var bcInverseRadius = 1/BoundingCylinder.Radius;
+            var bcInverseRadius = 1 / BoundingCylinder.Radius;
 
             //arrays donde guardamos los puntos dibujados
             var topCapDraw = new Vector3[capsResolution];
@@ -209,14 +210,14 @@ namespace TgcViewer.Utils.TgcGeometry
             for (var i = 0; i < capsResolution; i++)
             {
                 //establecemos los vertices de las tapas
-                topCapDraw[i] = upVector + n*TopRadius*bcInverseRadius;
-                bottomCapDraw[i] = -upVector + n*BottomRadius*bcInverseRadius;
+                topCapDraw[i] = upVector + n * TopRadius * bcInverseRadius;
+                bottomCapDraw[i] = -upVector + n * BottomRadius * bcInverseRadius;
 
-                u = angle/FastMath.TWO_PI;
+                u = angle / FastMath.TWO_PI;
 
                 //triangulos de la cara lateral (strip)
-                sideTrianglesVertices[2*i] = new CustomVertex.PositionColoredTextured(topCapDraw[i], color, u, 0);
-                sideTrianglesVertices[2*i + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[i], color, u, 1);
+                sideTrianglesVertices[2 * i] = new CustomVertex.PositionColoredTextured(topCapDraw[i], color, u, 0);
+                sideTrianglesVertices[2 * i + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[i], color, u, 1);
 
                 //rotamos el vector de dibujado
                 n.TransformNormal(rotationMatrix);
@@ -224,9 +225,9 @@ namespace TgcViewer.Utils.TgcGeometry
             }
 
             //cerramos la cara lateral
-            sideTrianglesVertices[2*capsResolution] = new CustomVertex.PositionColoredTextured(topCapDraw[0], color, 1,
+            sideTrianglesVertices[2 * capsResolution] = new CustomVertex.PositionColoredTextured(topCapDraw[0], color, 1,
                 0);
-            sideTrianglesVertices[2*capsResolution + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[0],
+            sideTrianglesVertices[2 * capsResolution + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[0],
                 color, 1, 1);
         }
 
@@ -280,7 +281,7 @@ namespace TgcViewer.Utils.TgcGeometry
         public Vector3 Scale
         {
             get { return new Vector3(1, 1, 1); }
-            set { ; }
+            set {; }
         }
 
         public void move(Vector3 v)
@@ -295,8 +296,8 @@ namespace TgcViewer.Utils.TgcGeometry
 
         public void moveOrientedY(float movement)
         {
-            var z = FastMath.Cos(Rotation.Y)*movement;
-            var x = FastMath.Sin(Rotation.Y)*movement;
+            var z = FastMath.Cos(Rotation.Y) * movement;
+            var x = FastMath.Sin(Rotation.Y) * movement;
             move(x, 0, z);
         }
 

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.DirectX;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools.Primitives
+namespace TGC.Examples.MeshCreator.EditablePoly.Primitives
 {
     /// <summary>
     ///     Poligono de EditablePoly
@@ -69,7 +69,7 @@ namespace Examples.MeshCreator.EditablePolyTools.Primitives
             {
                 sum += vertices[i].position;
             }
-            return Vector3.Scale(sum, 1f/vertices.Count);
+            return Vector3.Scale(sum, 1f / vertices.Count);
         }
 
         public override void move(Vector3 movement)

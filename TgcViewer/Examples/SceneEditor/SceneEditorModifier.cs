@@ -1,6 +1,6 @@
-using TgcViewer.Utils.Modifiers;
+using TGC.Viewer.Utils.Modifiers;
 
-namespace Examples.SceneEditor
+namespace TGC.Examples.SceneEditor
 {
     /// <summary>
     ///     Modifier customizado que se utiliza en el SceneEditor

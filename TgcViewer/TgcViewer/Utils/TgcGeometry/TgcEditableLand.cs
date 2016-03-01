@@ -1,12 +1,13 @@
-using System;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using System;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Herramienta para un area de terreno de 4x4 caras en la que se puede editar la altura de sus vertices
@@ -16,6 +17,10 @@ namespace TgcViewer.Utils.TgcGeometry
         private const float PATCH_SIZE = 20;
 
         private readonly EditableVertex[] editableVertices;
+
+        private readonly VertexBuffer vertexBuffer;
+
+        private readonly CustomVertex.PositionTextured[] vertices;
 
         protected Effect effect;
 
@@ -27,33 +32,28 @@ namespace TgcViewer.Utils.TgcGeometry
 
         private Vector3 translation;
 
-        private readonly VertexBuffer vertexBuffer;
-
-        private readonly CustomVertex.PositionTextured[] vertices;
-
         /// <summary>
         ///     Crea el terreno
         /// </summary>
         public TgcEditableLand()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //16 caras, 32 triangulos, 96 vertices
             vertices = new CustomVertex.PositionTextured[96];
-            vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionTextured), vertices.Length, d3dDevice,
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionTextured), vertices.Length,
+                D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
 
             //Crear los 25 vertices editables, formando una grilla de 5x5 vertices
             editableVertices = new EditableVertex[25];
-            var uvStep = 1f/4f;
+            var uvStep = 1f / 4f;
             for (var i = 0; i < 5; i++)
             {
                 for (var j = 0; j < 5; j++)
                 {
                     var v = new EditableVertex();
-                    v.Pos = new Vector3(j*PATCH_SIZE, 0, i*PATCH_SIZE);
-                    v.UV = new Vector2(j*uvStep, i*uvStep);
-                    editableVertices[i*5 + j] = v;
+                    v.Pos = new Vector3(j * PATCH_SIZE, 0, i * PATCH_SIZE);
+                    v.UV = new Vector2(j * uvStep, i * uvStep);
+                    editableVertices[i * 5 + j] = v;
                 }
             }
 
@@ -135,13 +135,12 @@ namespace TgcViewer.Utils.TgcGeometry
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             //transformacion
             if (AutoTransformEnable)
             {
-                Transform = Matrix.Scaling(scale)*Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)*
+                Transform = Matrix.Scaling(scale) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
                             Matrix.Translation(translation);
             }
 
@@ -161,14 +160,14 @@ namespace TgcViewer.Utils.TgcGeometry
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrix(effect, Transform);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
             effect.Technique = technique;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 32);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 32);
             effect.EndPass();
             effect.End();
 
@@ -270,8 +269,8 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
         public void moveOrientedY(float movement)
         {
-            var z = (float) Math.Cos(rotation.Y)*movement;
-            var x = (float) Math.Sin(rotation.Y)*movement;
+            var z = (float)Math.Cos(rotation.Y) * movement;
+            var x = (float)Math.Sin(rotation.Y) * movement;
 
             move(x, 0, z);
         }
@@ -351,48 +350,48 @@ namespace TgcViewer.Utils.TgcGeometry
                 for (var j = 0; j < 4; j++)
                 {
                     //Los 4 vertices que forman la cara
-                    var tl = editableVertices[i*5 + j];
-                    var tr = editableVertices[i*5 + j + 1];
-                    var bl = editableVertices[(i + 1)*5 + j];
-                    var br = editableVertices[(i + 1)*5 + j + 1];
+                    var tl = editableVertices[i * 5 + j];
+                    var tr = editableVertices[i * 5 + j + 1];
+                    var bl = editableVertices[(i + 1) * 5 + j];
+                    var br = editableVertices[(i + 1) * 5 + j + 1];
 
                     if (triangleSide1)
                     {
                         //Sentido 1
                         //Primer triangulo: tl - br - bl
-                        vertices[vIndex] = new CustomVertex.PositionTextured(tl.Pos, UVOffset.X + UVTiling.X*tl.UV.X,
-                            UVOffset.Y + UVTiling.Y*tl.UV.Y);
-                        vertices[vIndex + 1] = new CustomVertex.PositionTextured(br.Pos, UVOffset.X + UVTiling.X*br.UV.X,
-                            UVOffset.Y + UVTiling.Y*br.UV.Y);
-                        vertices[vIndex + 2] = new CustomVertex.PositionTextured(bl.Pos, UVOffset.X + UVTiling.X*bl.UV.X,
-                            UVOffset.Y + UVTiling.Y*bl.UV.Y);
+                        vertices[vIndex] = new CustomVertex.PositionTextured(tl.Pos, UVOffset.X + UVTiling.X * tl.UV.X,
+                            UVOffset.Y + UVTiling.Y * tl.UV.Y);
+                        vertices[vIndex + 1] = new CustomVertex.PositionTextured(br.Pos, UVOffset.X + UVTiling.X * br.UV.X,
+                            UVOffset.Y + UVTiling.Y * br.UV.Y);
+                        vertices[vIndex + 2] = new CustomVertex.PositionTextured(bl.Pos, UVOffset.X + UVTiling.X * bl.UV.X,
+                            UVOffset.Y + UVTiling.Y * bl.UV.Y);
 
                         //Segundo triangulo: tl - tr - br
-                        vertices[vIndex + 3] = new CustomVertex.PositionTextured(tl.Pos, UVOffset.X + UVTiling.X*tl.UV.X,
-                            UVOffset.Y + UVTiling.Y*tl.UV.Y);
-                        vertices[vIndex + 4] = new CustomVertex.PositionTextured(tr.Pos, UVOffset.X + UVTiling.X*tr.UV.X,
-                            UVOffset.Y + UVTiling.Y*tr.UV.Y);
-                        vertices[vIndex + 5] = new CustomVertex.PositionTextured(br.Pos, UVOffset.X + UVTiling.X*br.UV.X,
-                            UVOffset.Y + UVTiling.Y*br.UV.Y);
+                        vertices[vIndex + 3] = new CustomVertex.PositionTextured(tl.Pos, UVOffset.X + UVTiling.X * tl.UV.X,
+                            UVOffset.Y + UVTiling.Y * tl.UV.Y);
+                        vertices[vIndex + 4] = new CustomVertex.PositionTextured(tr.Pos, UVOffset.X + UVTiling.X * tr.UV.X,
+                            UVOffset.Y + UVTiling.Y * tr.UV.Y);
+                        vertices[vIndex + 5] = new CustomVertex.PositionTextured(br.Pos, UVOffset.X + UVTiling.X * br.UV.X,
+                            UVOffset.Y + UVTiling.Y * br.UV.Y);
                     }
                     else
                     {
                         //Sentido 2
                         //bl - tl - tr
-                        vertices[vIndex] = new CustomVertex.PositionTextured(bl.Pos, UVOffset.X + UVTiling.X*bl.UV.X,
-                            UVOffset.Y + UVTiling.Y*bl.UV.Y);
-                        vertices[vIndex + 1] = new CustomVertex.PositionTextured(tl.Pos, UVOffset.X + UVTiling.X*tl.UV.X,
-                            UVOffset.Y + UVTiling.Y*tl.UV.Y);
-                        vertices[vIndex + 2] = new CustomVertex.PositionTextured(tr.Pos, UVOffset.X + UVTiling.X*tr.UV.X,
-                            UVOffset.Y + UVTiling.Y*tr.UV.Y);
+                        vertices[vIndex] = new CustomVertex.PositionTextured(bl.Pos, UVOffset.X + UVTiling.X * bl.UV.X,
+                            UVOffset.Y + UVTiling.Y * bl.UV.Y);
+                        vertices[vIndex + 1] = new CustomVertex.PositionTextured(tl.Pos, UVOffset.X + UVTiling.X * tl.UV.X,
+                            UVOffset.Y + UVTiling.Y * tl.UV.Y);
+                        vertices[vIndex + 2] = new CustomVertex.PositionTextured(tr.Pos, UVOffset.X + UVTiling.X * tr.UV.X,
+                            UVOffset.Y + UVTiling.Y * tr.UV.Y);
 
                         //bl - tr - br
-                        vertices[vIndex + 3] = new CustomVertex.PositionTextured(bl.Pos, UVOffset.X + UVTiling.X*bl.UV.X,
-                            UVOffset.Y + UVTiling.Y*bl.UV.Y);
-                        vertices[vIndex + 4] = new CustomVertex.PositionTextured(tr.Pos, UVOffset.X + UVTiling.X*tr.UV.X,
-                            UVOffset.Y + UVTiling.Y*tr.UV.Y);
-                        vertices[vIndex + 5] = new CustomVertex.PositionTextured(br.Pos, UVOffset.X + UVTiling.X*br.UV.X,
-                            UVOffset.Y + UVTiling.Y*br.UV.Y);
+                        vertices[vIndex + 3] = new CustomVertex.PositionTextured(bl.Pos, UVOffset.X + UVTiling.X * bl.UV.X,
+                            UVOffset.Y + UVTiling.Y * bl.UV.Y);
+                        vertices[vIndex + 4] = new CustomVertex.PositionTextured(tr.Pos, UVOffset.X + UVTiling.X * tr.UV.X,
+                            UVOffset.Y + UVTiling.Y * tr.UV.Y);
+                        vertices[vIndex + 5] = new CustomVertex.PositionTextured(br.Pos, UVOffset.X + UVTiling.X * br.UV.X,
+                            UVOffset.Y + UVTiling.Y * br.UV.Y);
                     }
                     vIndex += 6;
 
@@ -425,11 +424,10 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         protected void activateAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
             if (AlphaBlendEnable)
             {
-                device.RenderState.AlphaTestEnable = true;
-                device.RenderState.AlphaBlendEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
             }
         }
 
@@ -438,9 +436,8 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         protected void resetAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
-            device.RenderState.AlphaTestEnable = false;
-            device.RenderState.AlphaBlendEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>
@@ -464,7 +461,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 }
             }
 
-            BoundingBox.setExtremes(new Vector3(0, minY, 0), new Vector3(PATCH_SIZE*4, maxY, PATCH_SIZE*4));
+            BoundingBox.setExtremes(new Vector3(0, minY, 0), new Vector3(PATCH_SIZE * 4, maxY, PATCH_SIZE * 4));
             BoundingBox.scaleTranslate(translation, scale);
         }
 
@@ -474,18 +471,16 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <param name="meshName">Nombre de la malla que se va a crear</param>
         public TgcMesh toMesh(string meshName)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Obtener matriz para transformar vertices
             if (AutoTransformEnable)
             {
-                Transform = Matrix.Scaling(scale)*Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)*
+                Transform = Matrix.Scaling(scale) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
                             Matrix.Translation(translation);
             }
 
             //Crear Mesh con DiffuseMap
-            var d3dMesh = new Mesh(vertices.Length/3, vertices.Length, MeshFlags.Managed,
-                TgcSceneLoader.TgcSceneLoader.DiffuseMapVertexElements, d3dDevice);
+            var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
+                TgcSceneLoader.TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
 
             //Cargar VertexBuffer
             using (var vb = d3dMesh.VertexBuffer)
@@ -517,7 +512,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 var indices = new short[vertices.Length];
                 for (var j = 0; j < indices.Length; j++)
                 {
-                    indices[j] = (short) j;
+                    indices[j] = (short)j;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -527,8 +522,8 @@ namespace TgcViewer.Utils.TgcGeometry
 
             //Malla de TGC
             var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
-            tgcMesh.DiffuseMaps = new[] {Texture};
-            tgcMesh.Materials = new[] {TgcD3dDevice.DEFAULT_MATERIAL};
+            tgcMesh.DiffuseMaps = new[] { Texture };
+            tgcMesh.Materials = new[] { TgcD3dDevice.DEFAULT_MATERIAL };
             tgcMesh.createBoundingBox();
             tgcMesh.Enabled = true;
             return tgcMesh;
@@ -600,12 +595,12 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <summary>
         ///     Seleccion de vertice central
         /// </summary>
-        public static readonly int[] SELECTION_CENTER = {12};
+        public static readonly int[] SELECTION_CENTER = { 12 };
 
         /// <summary>
         ///     Seleccion de recuadro de vertices interior que rodea al centro
         /// </summary>
-        public static readonly int[] SELECTION_INTERIOR_RING = {6, 7, 8, 11, 13, 16, 17, 18};
+        public static readonly int[] SELECTION_INTERIOR_RING = { 6, 7, 8, 11, 13, 16, 17, 18 };
 
         /// <summary>
         ///     ///
@@ -613,27 +608,27 @@ namespace TgcViewer.Utils.TgcGeometry
         ///         Seleccion de recuadro de vertices exterior que rodea al centro
         ///     </summary>
         /// </summary>
-        public static readonly int[] SELECTION_EXTERIOR_RING = {0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24};
+        public static readonly int[] SELECTION_EXTERIOR_RING = { 0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24 };
 
         /// <summary>
         ///     Seleccion de vertices del lado exterior superior
         /// </summary>
-        public static readonly int[] SELECTION_TOP_SIDE = {0, 1, 2, 3, 4};
+        public static readonly int[] SELECTION_TOP_SIDE = { 0, 1, 2, 3, 4 };
 
         /// <summary>
         ///     Seleccion de vertices del lado exterior izquierdo
         /// </summary>
-        public static readonly int[] SELECTION_LEFT_SIDE = {0, 5, 10, 15, 20};
+        public static readonly int[] SELECTION_LEFT_SIDE = { 0, 5, 10, 15, 20 };
 
         /// <summary>
         ///     Seleccion de vertices del lado exterior derecho
         /// </summary>
-        public static readonly int[] SELECTION_RIGHT_SIDE = {4, 9, 14, 19, 14};
+        public static readonly int[] SELECTION_RIGHT_SIDE = { 4, 9, 14, 19, 14 };
 
         /// <summary>
         ///     Seleccion de vertices del lado exterior inferior
         /// </summary>
-        public static readonly int[] SELECTION_BOTTOM_SIDE = {20, 21, 22, 23, 24};
+        public static readonly int[] SELECTION_BOTTOM_SIDE = { 20, 21, 22, 23, 24 };
 
         #endregion Seleccion de Vertices
     }

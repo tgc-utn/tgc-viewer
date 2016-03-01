@@ -1,11 +1,12 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
+using System.Collections.Generic;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
 
-namespace AlumnoEjemplos.MiGrupo
+namespace TGC.Group.MiGrupo
 {
     /// <summary>
     ///     Ejemplo del alumno
@@ -47,7 +48,7 @@ namespace AlumnoEjemplos.MiGrupo
             //GuiController.Instance: acceso principal a todas las herramientas del Framework
 
             //Device de DirectX para crear primitivas
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
 
             //Carpeta de archivos Media del alumno
             var alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
@@ -66,7 +67,7 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.Modifiers.addFloat("valorFloat", -50f, 200f, 0f);
 
             //Crear un modifier para un ComboBox con opciones
-            string[] opciones = {"opcion1", "opcion2", "opcion3"};
+            string[] opciones = { "opcion1", "opcion2", "opcion3" };
             GuiController.Instance.Modifiers.addInterval("valorIntervalo", opciones, 0);
 
             //Crear un modifier para modificar un vértice
@@ -123,15 +124,15 @@ namespace AlumnoEjemplos.MiGrupo
         public override void render(float elapsedTime)
         {
             //Device de DirectX para renderizar
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
 
             //Obtener valor de UserVar (hay que castear)
-            var valor = (int) GuiController.Instance.UserVars.getValue("variablePrueba");
+            var valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
 
             //Obtener valores de Modifiers
-            var valorFloat = (float) GuiController.Instance.Modifiers["valorFloat"];
-            var opcionElegida = (string) GuiController.Instance.Modifiers["valorIntervalo"];
-            var valorVertice = (Vector3) GuiController.Instance.Modifiers["valorVertice"];
+            var valorFloat = (float)GuiController.Instance.Modifiers["valorFloat"];
+            var opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
+            var valorVertice = (Vector3)GuiController.Instance.Modifiers["valorVertice"];
 
             ///////////////INPUT//////////////////
             //conviene deshabilitar ambas camaras para que no haya interferencia

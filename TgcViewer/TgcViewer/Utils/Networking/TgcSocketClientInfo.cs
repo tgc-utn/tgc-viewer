@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     public class TgcSocketClientInfo
     {
@@ -23,7 +23,7 @@ namespace TgcViewer.Utils.Networking
             Status = ClientStatus.HandshakePending;
 
             //IP Address
-            var endPoint = (IPEndPoint) clientSocket.RemoteEndPoint;
+            var endPoint = (IPEndPoint)clientSocket.RemoteEndPoint;
             Address = endPoint.Address;
         }
 

@@ -1,12 +1,12 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Otros
+namespace TGC.Examples.Otros
 {
     /// <summary>
     ///     EjemploDisposeMesh3
@@ -33,8 +33,6 @@ namespace Examples.Otros
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             var box = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
             boxMesh = box.toMesh("box");
             box.dispose();
@@ -43,21 +41,19 @@ namespace Examples.Otros
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             time += elapsedTime;
             if (time > 1f)
             {
                 var d3dMesh = new Mesh(boxMesh.NumberTriangles, boxMesh.NumberVertices, MeshFlags.Managed,
-                    TgcSceneLoader.VertexColorVertexElements, d3dDevice);
+                    TgcSceneLoader.VertexColorVertexElements, D3DDevice.Instance.Device);
 
-                var origVert = (TgcSceneLoader.VertexColorVertex[]) boxMesh.D3dMesh.LockVertexBuffer(
-                    typeof (TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, boxMesh.D3dMesh.NumberVertices);
+                var origVert = (TgcSceneLoader.VertexColorVertex[])boxMesh.D3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, boxMesh.D3dMesh.NumberVertices);
 
                 boxMesh.D3dMesh.UnlockVertexBuffer();
 
-                var newVert = (TgcSceneLoader.VertexColorVertex[]) d3dMesh.LockVertexBuffer(
-                    typeof (TgcSceneLoader.VertexColorVertex), LockFlags.None, d3dMesh.NumberVertices);
+                var newVert = (TgcSceneLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.VertexColorVertex), LockFlags.None, d3dMesh.NumberVertices);
 
                 for (var i = 0; i < origVert.Length; i++)
                 {

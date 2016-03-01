@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Examples.Otros
+namespace TGC.Examples.Otros
 {
     public partial class EjemploDefaultHelpForm : Form
     {

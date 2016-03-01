@@ -1,11 +1,11 @@
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploOBB:
@@ -37,8 +37,6 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar modelo
             var loader = new TgcSceneLoader();
             var scene = loader.loadSceneFromFile(
@@ -63,10 +61,8 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Obtener rotacion de mesh (pasar a radianes)
-            var rotation = FastMath.ToRad((float) GuiController.Instance.Modifiers["rotation"]);
+            var rotation = FastMath.ToRad((float)GuiController.Instance.Modifiers["rotation"]);
 
             //Rotar mesh y rotar OBB. A diferencia del AABB, nosotros tenemos que mantener el OBB actualizado segun cada movimiento del mesh
             var lastRot = mesh.Rotation;
@@ -75,7 +71,7 @@ namespace Examples.Collision
             obb.rotate(new Vector3(0, rotationDiff, 0));
 
             //Actualizar posicion
-            var position = (Vector3) GuiController.Instance.Modifiers["position"];
+            var position = (Vector3)GuiController.Instance.Modifiers["position"];
             var lastPos = mesh.Position;
             var posDiff = position - lastPos;
             mesh.move(posDiff);

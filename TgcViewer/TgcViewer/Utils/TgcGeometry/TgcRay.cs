@@ -1,7 +1,7 @@
 using Microsoft.DirectX;
 using TGC.Core.Utils;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Representa un Ray 3D con un origen y una direccion, de la forma: r = p + td

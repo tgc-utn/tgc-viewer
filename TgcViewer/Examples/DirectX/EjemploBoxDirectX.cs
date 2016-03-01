@@ -1,11 +1,12 @@
-using System;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
+using System;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.DirectX
+namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo EjemploBoxDirectX:
@@ -68,12 +69,6 @@ namespace Examples.DirectX
             VertexElement.VertexDeclarationEnd
         };
 
-        private float acumTime;
-        private float dir;
-        private Effect effect;
-        private IndexBuffer indexBuffer;
-        private int indexCount;
-
         /// <summary>
         ///     Formato de vertice customizado
         /// </summary>
@@ -87,6 +82,12 @@ namespace Examples.DirectX
             VertexFormats.Texture3 | //auxValue1 (se mandan como coordenadas de textura float3)
             VertexFormats.Texture4 //auxValue2 (se mandan como coordenadas de textura float3)
             ;
+
+        private float acumTime;
+        private float dir;
+        private Effect effect;
+        private IndexBuffer indexBuffer;
+        private int indexCount;
 
         private Texture texture0;
         private Texture texture1;
@@ -114,24 +115,22 @@ namespace Examples.DirectX
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Dimensiones de la caja
             var center = new Vector3(0, 0, 0);
             var size = new Vector3(10, 10, 10);
             var color1 = Color.Red.ToArgb();
             var color2 = Color.Green.ToArgb();
-            var extents = size*0.5f;
+            var extents = size * 0.5f;
             var min = center - extents;
             var max = center + extents;
 
             //Crear vertex declaration
-            vertexDeclaration = new VertexDeclaration(d3dDevice, MyCustomVertexElements);
+            vertexDeclaration = new VertexDeclaration(D3DDevice.Instance.Device, MyCustomVertexElements);
 
             //Crear un VertexBuffer con 8 vertices (los 8 extremos de la caja)
             vertexCount = 8;
             vertexData = new MyCustomVertex[vertexCount];
-            vertexBuffer = new VertexBuffer(typeof (MyCustomVertex), vertexCount, d3dDevice,
+            vertexBuffer = new VertexBuffer(typeof(MyCustomVertex), vertexCount, D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, MyCustomVertexFormat, Pool.Default);
 
             //Llenar array con los 8 vertices de la caja
@@ -161,10 +160,11 @@ namespace Examples.DirectX
 
             //Crear IndexBuffer con 36 vertices para los 12 triangulos que forman la caja (2 triangulos por cada => 6 vertices por cara => 6 caras)
             indexCount = 36;
-            triangleCount = indexCount/3;
+            triangleCount = indexCount / 3;
             var indexData = new short[indexCount];
             var iIdx = 0;
-            indexBuffer = new IndexBuffer(typeof (short), indexCount, d3dDevice, Usage.None, Pool.Default);
+            indexBuffer = new IndexBuffer(typeof(short), indexCount, D3DDevice.Instance.Device, Usage.None,
+                Pool.Default);
 
             //Diagrama de caja (con un poco de imaginacion):
             /*
@@ -235,7 +235,8 @@ namespace Examples.DirectX
             //Cargar shader customizado para este ejemplo
             var shaderPath = GuiController.Instance.ExamplesMediaDir + "Shaders\\EjemploBoxDirectX.fx";
             string compilationErrors;
-            effect = Effect.FromFile(d3dDevice, shaderPath, null, null, ShaderFlags.None, null, out compilationErrors);
+            effect = Effect.FromFile(D3DDevice.Instance.Device, shaderPath, null, null, ShaderFlags.None, null,
+                out compilationErrors);
             if (effect == null)
             {
                 throw new Exception("Error al cargar shader: " + shaderPath + ". Errores: " + compilationErrors);
@@ -245,11 +246,11 @@ namespace Examples.DirectX
             effect.Technique = "EjemploBoxDirectX";
 
             //Cargamos 3 texturas cualquiera para mandar al shader
-            texture0 = TextureLoader.FromFile(d3dDevice,
+            texture0 = TextureLoader.FromFile(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_DiffuseMap.jpg");
-            texture1 = TextureLoader.FromFile(d3dDevice,
+            texture1 = TextureLoader.FromFile(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_NormalMap.jpg");
-            texture2 = TextureLoader.FromFile(d3dDevice,
+            texture2 = TextureLoader.FromFile(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Shaders\\efecto_alarma.png");
 
             dir = 1;
@@ -260,10 +261,8 @@ namespace Examples.DirectX
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             acumTime += elapsedTime;
-            var speed = 20*elapsedTime;
+            var speed = 20 * elapsedTime;
             if (acumTime > 0.5f)
             {
                 acumTime = 0;
@@ -278,24 +277,24 @@ namespace Examples.DirectX
             for (var i = 0; i < vertexCount; i++)
             {
                 var v = vertexData[i];
-                vertexData[i].Position += new Vector3(0, dir*speed, 0);
+                vertexData[i].Position += new Vector3(0, dir * speed, 0);
             }
             vertexBuffer.SetData(vertexData, 0, LockFlags.None); //Manda la informacion actualizada a la GPU
 
             //Cargar vertex declaration
-            d3dDevice.VertexDeclaration = vertexDeclaration;
+            D3DDevice.Instance.Device.VertexDeclaration = vertexDeclaration;
 
             //Cargar vertexBuffer e indexBuffer
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
-            d3dDevice.Indices = indexBuffer;
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.Indices = indexBuffer;
 
             //Arrancar shader
             effect.Begin(0);
             effect.BeginPass(0);
 
             //Cargar matrices en shader
-            var matWorldView = d3dDevice.Transform.View;
-            var matWorldViewProj = matWorldView*d3dDevice.Transform.Projection;
+            var matWorldView = D3DDevice.Instance.Device.Transform.View;
+            var matWorldViewProj = matWorldView * D3DDevice.Instance.Device.Transform.Projection;
             effect.SetValue("matWorld", Matrix.Identity);
             effect.SetValue("matWorldView", matWorldView);
             effect.SetValue("matWorldViewProj", matWorldViewProj);
@@ -307,7 +306,8 @@ namespace Examples.DirectX
             effect.SetValue("tex2", texture2);
 
             //Dibujar los triangulos haciendo uso del indexBuffer
-            d3dDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, indexCount, 0, triangleCount);
+            D3DDevice.Instance.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, indexCount, 0,
+                triangleCount);
 
             //Finalizar shader
             effect.EndPass();

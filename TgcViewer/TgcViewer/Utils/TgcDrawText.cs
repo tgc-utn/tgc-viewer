@@ -1,8 +1,8 @@
-using System.Drawing;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 using Font = System.Drawing.Font;
 
-namespace TgcViewer.Utils
+namespace TGC.Viewer.Utils
 {
     /// <summary>
     ///     Herramienta para dibujar texto genérico del Framework

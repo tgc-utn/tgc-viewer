@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Popup para elegir un layer

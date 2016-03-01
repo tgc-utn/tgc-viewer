@@ -1,13 +1,14 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
-namespace Examples.SkeletalAnimation
+namespace TGC.Examples.SkeletalAnimation
 {
     /// <summary>
     ///     Ejemplo EjemploMeshInstance:
@@ -42,10 +43,8 @@ namespace Examples.SkeletalAnimation
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear suelo
-            var pisoTexture = TgcTexture.createTexture(d3dDevice,
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack2\\rock_floor1.jpg");
             suelo = TgcBox.fromSize(new Vector3(500, 0, 500), new Vector3(2000, 0, 2000), pisoTexture);
 
@@ -97,8 +96,6 @@ namespace Examples.SkeletalAnimation
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Renderizar suelo
             suelo.render();
 

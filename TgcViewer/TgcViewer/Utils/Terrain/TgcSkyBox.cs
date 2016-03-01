@@ -1,11 +1,12 @@
-using System;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcSceneLoader;
+using System;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.Terrain
+namespace TGC.Viewer.Utils.Terrain
 {
     /// <summary>
     ///     Herramienta para crear un SkyBox conformado por un cubo de 6 caras, cada cada con su
@@ -130,7 +131,7 @@ namespace TgcViewer.Utils.Terrain
         /// <param name="texturePath">Path de la textura</param>
         public void setFaceTexture(SkyFaces face, string texturePath)
         {
-            FaceTextures[(int) face] = texturePath;
+            FaceTextures[(int)face] = texturePath;
         }
 
         /// <summary>
@@ -138,15 +139,13 @@ namespace TgcViewer.Utils.Terrain
         /// </summary>
         public void updateValues()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear cada cara
             for (var i = 0; i < Faces.Length; i++)
             {
                 //Crear mesh de D3D
                 var m = new Mesh(2, 4, MeshFlags.Managed, TgcSceneLoader.TgcSceneLoader.DiffuseMapVertexElements,
-                    d3dDevice);
-                var skyFace = (SkyFaces) i;
+                    D3DDevice.Instance.Device);
+                var skyFace = (SkyFaces)i;
 
                 // Cargo los vértices
                 using (var vb = m.VertexBuffer)
@@ -166,15 +165,15 @@ namespace TgcViewer.Utils.Terrain
                 }
 
                 //Crear TgcMesh
-                var faceName = Enum.GetName(typeof (SkyFaces), skyFace);
+                var faceName = Enum.GetName(typeof(SkyFaces), skyFace);
                 var faceMesh = new TgcMesh(m, "SkyBox-" + faceName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
-                faceMesh.Materials = new[] {TgcD3dDevice.DEFAULT_MATERIAL};
+                faceMesh.Materials = new[] { TgcD3dDevice.DEFAULT_MATERIAL };
                 faceMesh.createBoundingBox();
                 faceMesh.Enabled = true;
 
                 //textura
-                var texture = TgcTexture.createTexture(d3dDevice, FaceTextures[i]);
-                faceMesh.DiffuseMaps = new[] {texture};
+                var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, FaceTextures[i]);
+                faceMesh.DiffuseMaps = new[] { texture };
 
                 Faces[i] = faceMesh;
             }
@@ -190,18 +189,23 @@ namespace TgcViewer.Utils.Terrain
                 case SkyFaces.Up:
                     cargarVerticesUp(data, color);
                     break;
+
                 case SkyFaces.Down:
                     cargarVerticesDown(data, color);
                     break;
+
                 case SkyFaces.Front:
                     cargarVerticesFront(data, color);
                     break;
+
                 case SkyFaces.Back:
                     cargarVerticesBack(data, color);
                     break;
+
                 case SkyFaces.Right:
                     cargarVerticesRight(data, color);
                     break;
+
                 case SkyFaces.Left:
                     cargarVerticesLeft(data, color);
                     break;
@@ -218,9 +222,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2 - SkyEpsilon,
-                Center.Y + Size.Y/2,
-                Center.Z - Size.Z/2 - SkyEpsilon
+                Center.X - Size.X / 2 - SkyEpsilon,
+                Center.Y + Size.Y / 2,
+                Center.Z - Size.Z / 2 - SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -230,9 +234,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2 - SkyEpsilon,
-                Center.Y + Size.Y/2,
-                Center.Z + Size.Z/2 + SkyEpsilon
+                Center.X - Size.X / 2 - SkyEpsilon,
+                Center.Y + Size.Y / 2,
+                Center.Z + Size.Z / 2 + SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -242,9 +246,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2 + SkyEpsilon,
-                Center.Y + Size.Y/2,
-                Center.Z + Size.Z/2 + SkyEpsilon
+                Center.X + Size.X / 2 + SkyEpsilon,
+                Center.Y + Size.Y / 2,
+                Center.Z + Size.Z / 2 + SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -254,9 +258,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2 + SkyEpsilon,
-                Center.Y + Size.Y/2,
-                Center.Z - Size.Z/2 - SkyEpsilon
+                Center.X + Size.X / 2 + SkyEpsilon,
+                Center.Y + Size.Y / 2,
+                Center.Z - Size.Z / 2 - SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -275,9 +279,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2 - SkyEpsilon,
-                Center.Y - Size.Y/2,
-                Center.Z + Size.Z/2 + SkyEpsilon
+                Center.X - Size.X / 2 - SkyEpsilon,
+                Center.Y - Size.Y / 2,
+                Center.Z + Size.Z / 2 + SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -287,9 +291,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2 - SkyEpsilon,
-                Center.Y - Size.Y/2,
-                Center.Z - Size.Z/2 - SkyEpsilon
+                Center.X - Size.X / 2 - SkyEpsilon,
+                Center.Y - Size.Y / 2,
+                Center.Z - Size.Z / 2 - SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -299,9 +303,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2 + SkyEpsilon,
-                Center.Y - Size.Y/2,
-                Center.Z - Size.Z/2 - SkyEpsilon
+                Center.X + Size.X / 2 + SkyEpsilon,
+                Center.Y - Size.Y / 2,
+                Center.Z - Size.Z / 2 - SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -311,9 +315,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2 + SkyEpsilon,
-                Center.Y - Size.Y/2,
-                Center.Z + Size.Z/2 + SkyEpsilon
+                Center.X + Size.X / 2 + SkyEpsilon,
+                Center.Y - Size.Y / 2,
+                Center.Z + Size.Z / 2 + SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -332,9 +336,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2 - SkyEpsilon,
-                Center.Y + Size.Y/2 + SkyEpsilon,
-                Center.Z + Size.Z/2
+                Center.X - Size.X / 2 - SkyEpsilon,
+                Center.Y + Size.Y / 2 + SkyEpsilon,
+                Center.Z + Size.Z / 2
                 );
             v.Normal = n;
             v.Color = color;
@@ -344,9 +348,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2 - SkyEpsilon,
-                Center.Y - Size.Y/2 - SkyEpsilon,
-                Center.Z + Size.Z/2
+                Center.X - Size.X / 2 - SkyEpsilon,
+                Center.Y - Size.Y / 2 - SkyEpsilon,
+                Center.Z + Size.Z / 2
                 );
             v.Normal = n;
             v.Color = color;
@@ -356,9 +360,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2 + SkyEpsilon,
-                Center.Y - Size.Y/2 - SkyEpsilon,
-                Center.Z + Size.Z/2
+                Center.X + Size.X / 2 + SkyEpsilon,
+                Center.Y - Size.Y / 2 - SkyEpsilon,
+                Center.Z + Size.Z / 2
                 );
             v.Normal = n;
             v.Color = color;
@@ -368,9 +372,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2 + SkyEpsilon,
-                Center.Y + Size.Y/2 + SkyEpsilon,
-                Center.Z + Size.Z/2
+                Center.X + Size.X / 2 + SkyEpsilon,
+                Center.Y + Size.Y / 2 + SkyEpsilon,
+                Center.Z + Size.Z / 2
                 );
             v.Normal = n;
             v.Color = color;
@@ -389,9 +393,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2 + SkyEpsilon,
-                Center.Y + Size.Y/2 + SkyEpsilon,
-                Center.Z - Size.Z/2
+                Center.X + Size.X / 2 + SkyEpsilon,
+                Center.Y + Size.Y / 2 + SkyEpsilon,
+                Center.Z - Size.Z / 2
                 );
             v.Normal = n;
             v.Color = color;
@@ -401,9 +405,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2 + SkyEpsilon,
-                Center.Y - Size.Y/2 - SkyEpsilon,
-                Center.Z - Size.Z/2
+                Center.X + Size.X / 2 + SkyEpsilon,
+                Center.Y - Size.Y / 2 - SkyEpsilon,
+                Center.Z - Size.Z / 2
                 );
             v.Normal = n;
             v.Color = color;
@@ -413,9 +417,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2 - SkyEpsilon,
-                Center.Y - Size.Y/2 - SkyEpsilon,
-                Center.Z - Size.Z/2
+                Center.X - Size.X / 2 - SkyEpsilon,
+                Center.Y - Size.Y / 2 - SkyEpsilon,
+                Center.Z - Size.Z / 2
                 );
             v.Normal = n;
             v.Color = color;
@@ -425,9 +429,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2 - SkyEpsilon,
-                Center.Y + Size.Y/2 + SkyEpsilon,
-                Center.Z - Size.Z/2
+                Center.X - Size.X / 2 - SkyEpsilon,
+                Center.Y + Size.Y / 2 + SkyEpsilon,
+                Center.Z - Size.Z / 2
                 );
             v.Normal = n;
             v.Color = color;
@@ -446,9 +450,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2,
-                Center.Y + Size.Y/2 + SkyEpsilon,
-                Center.Z + Size.Z/2 + SkyEpsilon
+                Center.X + Size.X / 2,
+                Center.Y + Size.Y / 2 + SkyEpsilon,
+                Center.Z + Size.Z / 2 + SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -458,9 +462,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2,
-                Center.Y - Size.Y/2 - SkyEpsilon,
-                Center.Z + Size.Z/2 + SkyEpsilon
+                Center.X + Size.X / 2,
+                Center.Y - Size.Y / 2 - SkyEpsilon,
+                Center.Z + Size.Z / 2 + SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -470,9 +474,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2,
-                Center.Y - Size.Y/2 - SkyEpsilon,
-                Center.Z - Size.Z/2 - SkyEpsilon
+                Center.X + Size.X / 2,
+                Center.Y - Size.Y / 2 - SkyEpsilon,
+                Center.Z - Size.Z / 2 - SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -482,9 +486,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X + Size.X/2,
-                Center.Y + Size.Y/2 + SkyEpsilon,
-                Center.Z - Size.Z/2 - SkyEpsilon
+                Center.X + Size.X / 2,
+                Center.Y + Size.Y / 2 + SkyEpsilon,
+                Center.Z - Size.Z / 2 - SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -503,9 +507,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2,
-                Center.Y + Size.Y/2 + SkyEpsilon,
-                Center.Z - Size.Z/2 - SkyEpsilon
+                Center.X - Size.X / 2,
+                Center.Y + Size.Y / 2 + SkyEpsilon,
+                Center.Z - Size.Z / 2 - SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -515,9 +519,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2,
-                Center.Y - Size.Y/2 - SkyEpsilon,
-                Center.Z - Size.Z/2 - SkyEpsilon
+                Center.X - Size.X / 2,
+                Center.Y - Size.Y / 2 - SkyEpsilon,
+                Center.Z - Size.Z / 2 - SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -527,9 +531,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2,
-                Center.Y - Size.Y/2 - SkyEpsilon,
-                Center.Z + Size.Z/2 + SkyEpsilon
+                Center.X - Size.X / 2,
+                Center.Y - Size.Y / 2 - SkyEpsilon,
+                Center.Z + Size.Z / 2 + SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;
@@ -539,9 +543,9 @@ namespace TgcViewer.Utils.Terrain
 
             v = new TgcSceneLoader.TgcSceneLoader.DiffuseMapVertex();
             v.Position = new Vector3(
-                Center.X - Size.X/2,
-                Center.Y + Size.Y/2 + SkyEpsilon,
-                Center.Z + Size.Z/2 + SkyEpsilon
+                Center.X - Size.X / 2,
+                Center.Y + Size.Y / 2 + SkyEpsilon,
+                Center.Z + Size.Z / 2 + SkyEpsilon
                 );
             v.Normal = n;
             v.Color = color;

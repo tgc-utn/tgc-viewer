@@ -1,10 +1,11 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     public class TgcBoundingCylinder : IRenderObject
     {
@@ -39,7 +40,7 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public Vector3 Direction
         {
-            get { return Vector3.TransformNormal(new Vector3(0, 1/HalfLength, 0), Transform); }
+            get { return Vector3.TransformNormal(new Vector3(0, 1 / HalfLength, 0), Transform); }
         }
 
         /// <summary>
@@ -52,8 +53,8 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public float Length
         {
-            get { return 2*HalfLength; }
-            set { HalfLength = value/2; }
+            get { return 2 * HalfLength; }
+            set { HalfLength = value / 2; }
         }
 
         /// <summary>
@@ -79,8 +80,8 @@ namespace TgcViewer.Utils.TgcGeometry
 
             //la matriz Transformation se usa para ubicar los vertices y calcular el vector HalfHeight
             Transform =
-                Matrix.Scaling(Radius, HalfLength, Radius)*
-                rotationMatrix*
+                Matrix.Scaling(Radius, HalfLength, Radius) *
+                rotationMatrix *
                 Matrix.Translation(center);
 
             //la matriz AntiTransformation convierte el cilindro a uno generico de radio 1 y altura 2
@@ -89,8 +90,8 @@ namespace TgcViewer.Utils.TgcGeometry
 
             //la matriz AntiRotation sirve para alinear el cilindro con los ejes
             AntiRotationMatrix =
-                Matrix.Translation(-center)*
-                Matrix.Invert(rotationMatrix)*
+                Matrix.Translation(-center) *
+                Matrix.Invert(rotationMatrix) *
                 Matrix.Translation(center);
         }
 
@@ -106,7 +107,7 @@ namespace TgcViewer.Utils.TgcGeometry
         #region Rendering
 
         private const int END_CAPS_RESOLUTION = 15;
-        private const int END_CAPS_VERTEX_COUNT = 2*END_CAPS_RESOLUTION*2;
+        private const int END_CAPS_VERTEX_COUNT = 2 * END_CAPS_RESOLUTION * 2;
         private CustomVertex.PositionColored[] vertices; //line list
         private Color color;
 
@@ -126,7 +127,7 @@ namespace TgcViewer.Utils.TgcGeometry
             var color = this.color.ToArgb();
 
             //matriz que vamos a usar para girar el vector de dibujado
-            var angle = FastMath.TWO_PI/END_CAPS_RESOLUTION;
+            var angle = FastMath.TWO_PI / END_CAPS_RESOLUTION;
             var upVector = new Vector3(0, 1, 0);
             var rotationMatrix = Matrix.RotationAxis(upVector, angle);
 
@@ -136,12 +137,12 @@ namespace TgcViewer.Utils.TgcGeometry
             //array donde guardamos los puntos dibujados
             var draw = new Vector3[vertices.Length];
 
-            for (var i = 0; i < END_CAPS_VERTEX_COUNT/2; i += 2)
+            for (var i = 0; i < END_CAPS_VERTEX_COUNT / 2; i += 2)
             {
                 //vertice inicial de la tapa superior
                 draw[i] = upVector + n;
                 //vertice inicial de la tapa inferior
-                draw[END_CAPS_VERTEX_COUNT/2 + i] = -upVector + n;
+                draw[END_CAPS_VERTEX_COUNT / 2 + i] = -upVector + n;
 
                 //rotamos el vector de dibujado
                 n.TransformNormal(rotationMatrix);
@@ -149,7 +150,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 //vertice final de la tapa superior
                 draw[i + 1] = upVector + n;
                 //vertice final de la tapa inferior
-                draw[END_CAPS_VERTEX_COUNT/2 + i + 1] = -upVector + n;
+                draw[END_CAPS_VERTEX_COUNT / 2 + i + 1] = -upVector + n;
             }
 
             //rotamos y trasladamos los puntos, y los volcamos al vector de vertices
@@ -206,15 +207,13 @@ namespace TgcViewer.Utils.TgcGeometry
 
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //actualizamos los vertices de las tapas
             updateDraw();
             //actualizamos los vertices de las lineas laterales
             updateBordersDraw();
 
             //dibujamos
-            d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length/2, vertices);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length / 2, vertices);
         }
 
         public void dispose()

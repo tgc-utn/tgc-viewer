@@ -1,6 +1,6 @@
 using TGC.Core.Example;
 
-namespace Examples.Engine2D
+namespace TGC.Examples.Engine2D
 {
     /// <summary>
     ///     Ejemplo Ejemplo2D:

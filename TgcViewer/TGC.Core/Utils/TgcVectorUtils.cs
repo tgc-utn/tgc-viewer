@@ -27,7 +27,7 @@ namespace TGC.Core.Utils
         /// <returns>Vector resultante</returns>
         public static Vector3 mul(Vector3 v1, Vector3 v2)
         {
-            return new Vector3(v1.X*v2.X, v1.Y*v2.Y, v1.Z*v2.Z);
+            return new Vector3(v1.X * v2.X, v1.Y * v2.Y, v1.Z * v2.Z);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace TGC.Core.Utils
         /// <returns>Vector resultante</returns>
         public static Vector3 div(Vector3 v1, Vector3 v2)
         {
-            return new Vector3(v1.X/v2.X, v1.Y/v2.Y, v1.Z/v2.Z);
+            return new Vector3(v1.X / v2.X, v1.Y / v2.Y, v1.Z / v2.Z);
         }
 
         /// <summary>

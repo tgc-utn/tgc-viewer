@@ -1,10 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.DirectX
+namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo EjemploTeapotConCamara:
@@ -40,13 +41,11 @@ namespace Examples.DirectX
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear mesh de Box de DirectX
-            box = Mesh.Box(d3dDevice, 5, 1, 5);
+            box = Mesh.Box(D3DDevice.Instance.Device, 5, 1, 5);
 
             //Crear mesh de Teapot de DirectX
-            teapot = Mesh.Teapot(d3dDevice);
+            teapot = Mesh.Teapot(D3DDevice.Instance.Device);
 
             //Crear Material para Teapot
             materialTeapot = new Material();
@@ -55,14 +54,14 @@ namespace Examples.DirectX
             materialTeapot.Specular = Color.Red;
 
             //Crear una fuente de Luz en la posición 0 (Cada adaptador de video soporta hasta un límite máximo de luces)
-            d3dDevice.Lights[0].Type = LightType.Directional;
-            d3dDevice.Lights[0].Diffuse = Color.Red;
-            d3dDevice.Lights[0].Position = new Vector3(0, 10, 0);
-            d3dDevice.Lights[0].Direction = new Vector3(0, -1, 0);
-            d3dDevice.Lights[0].Enabled = true;
+            D3DDevice.Instance.Device.Lights[0].Type = LightType.Directional;
+            D3DDevice.Instance.Device.Lights[0].Diffuse = Color.Red;
+            D3DDevice.Instance.Device.Lights[0].Position = new Vector3(0, 10, 0);
+            D3DDevice.Instance.Device.Lights[0].Direction = new Vector3(0, -1, 0);
+            D3DDevice.Instance.Device.Lights[0].Enabled = true;
 
             //Habilitar esquema de Iluminación Dinámica
-            d3dDevice.RenderState.Lighting = true;
+            D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
             GuiController.Instance.RotCamera.CameraCenter = new Vector3(0, 0, 0);
@@ -71,17 +70,15 @@ namespace Examples.DirectX
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Restaurar la matriz identidad, sino queda sucio del cuadro anterior
-            d3dDevice.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
             //Cargar material de Teapot y renderizar malla
-            d3dDevice.Material = materialTeapot;
+            D3DDevice.Instance.Device.Material = materialTeapot;
             teapot.DrawSubset(0);
 
             //Aplicar transformacion para dibujar el Box mas abajo
-            d3dDevice.Transform.World = Matrix.Identity*Matrix.Translation(0, -2f, 0);
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity * Matrix.Translation(0, -2f, 0);
             //Renderizar Box
             box.DrawSubset(0);
         }

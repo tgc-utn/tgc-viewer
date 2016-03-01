@@ -1,12 +1,13 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo Caja
@@ -39,8 +40,6 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear caja vacia
             box = new TgcBox();
             currentTexture = null;
@@ -69,29 +68,27 @@ namespace Examples.GeometryBasics
         /// </summary>
         private void updateBox()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cambiar textura
-            var texturePath = (string) GuiController.Instance.Modifiers["texture"];
+            var texturePath = (string)GuiController.Instance.Modifiers["texture"];
             if (texturePath != currentTexture)
             {
                 currentTexture = texturePath;
-                box.setTexture(TgcTexture.createTexture(d3dDevice, currentTexture));
+                box.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
             //Tamaño, posición y color
-            box.Size = (Vector3) GuiController.Instance.Modifiers["size"];
-            box.Position = (Vector3) GuiController.Instance.Modifiers["position"];
-            box.Color = (Color) GuiController.Instance.Modifiers["color"];
+            box.Size = (Vector3)GuiController.Instance.Modifiers["size"];
+            box.Position = (Vector3)GuiController.Instance.Modifiers["position"];
+            box.Color = (Color)GuiController.Instance.Modifiers["color"];
 
             //Rotación, converitr a radianes
-            var rotaion = (Vector3) GuiController.Instance.Modifiers["rotation"];
+            var rotaion = (Vector3)GuiController.Instance.Modifiers["rotation"];
             box.Rotation = new Vector3(Geometry.DegreeToRadian(rotaion.X), Geometry.DegreeToRadian(rotaion.Y),
                 Geometry.DegreeToRadian(rotaion.Z));
 
             //Offset y Tiling de textura
-            box.UVOffset = (Vector2) GuiController.Instance.Modifiers["offset"];
-            box.UVTiling = (Vector2) GuiController.Instance.Modifiers["tiling"];
+            box.UVOffset = (Vector2)GuiController.Instance.Modifiers["offset"];
+            box.UVTiling = (Vector2)GuiController.Instance.Modifiers["tiling"];
 
             //Actualizar valores en la caja.
             box.updateValues();
@@ -99,8 +96,6 @@ namespace Examples.GeometryBasics
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Actualizar parametros de la caja
             updateBox();
 
@@ -108,7 +103,7 @@ namespace Examples.GeometryBasics
             box.render();
 
             //Mostrar BoundingBox de la caja
-            var boundingBox = (bool) GuiController.Instance.Modifiers["boundingBox"];
+            var boundingBox = (bool)GuiController.Instance.Modifiers["boundingBox"];
             if (boundingBox)
             {
                 box.BoundingBox.render();

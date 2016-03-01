@@ -1,18 +1,18 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+﻿using Microsoft.DirectX;
+using System.Drawing;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator.EditablePolyTools
+namespace TGC.Examples.MeshCreator.EditablePoly
 {
     /// <summary>
     ///     Herramienta para renderizar las primitivas de Editable Poly
     /// </summary>
     public class PrimitiveRenderer
     {
-        private readonly Color SELECTED_POLYGON_COLOR = Color.FromArgb(120, 255, 0, 0);
         private readonly TrianglesBatchRenderer batchRenderer;
 
         private readonly EditablePoly editablePoly;
+        private readonly Color SELECTED_POLYGON_COLOR = Color.FromArgb(120, 255, 0, 0);
         private readonly TgcBox selectedVertexBox;
         private readonly TgcBox vertexBox;
 
@@ -94,7 +94,7 @@ namespace Examples.MeshCreator.EditablePolyTools
                         v1 = v2;
                     }
                      */
-                    var n = new Vector3(p.plane.A, p.plane.B, p.plane.C)*0.1f;
+                    var n = new Vector3(p.plane.A, p.plane.B, p.plane.C) * 0.1f;
                     for (var i = 0; i < p.vbTriangles.Count; i++)
                     {
                         var triIdx = p.vbTriangles[i];

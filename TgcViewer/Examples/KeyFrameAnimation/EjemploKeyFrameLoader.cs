@@ -1,10 +1,10 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcKeyFrameLoader;
+using System.Drawing;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcKeyFrameLoader;
 
-namespace Examples.KeyFrameAnimation
+namespace TGC.Examples.KeyFrameAnimation
 {
     /// <summary>
     ///     Ejemplo EjemploKeyFrameLoader:
@@ -45,8 +45,6 @@ namespace Examples.KeyFrameAnimation
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Paths para archivo XML de la malla
             var pathMesh = GuiController.Instance.ExamplesMediaDir +
                            "KeyframeAnimations\\Robot\\Robot-TgcKeyFrameMesh.xml";
@@ -103,14 +101,12 @@ namespace Examples.KeyFrameAnimation
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si cambio la animacion
-            var anim = (string) GuiController.Instance.Modifiers.getValue("animation");
+            var anim = (string)GuiController.Instance.Modifiers.getValue("animation");
             if (!anim.Equals(selectedAnim))
             {
                 //Ver si animamos con o sin loop
-                animateWithLoop = (bool) GuiController.Instance.Modifiers.getValue("loop");
+                animateWithLoop = (bool)GuiController.Instance.Modifiers.getValue("loop");
 
                 //Cargar nueva animacion elegida
                 selectedAnim = anim;
@@ -118,7 +114,7 @@ namespace Examples.KeyFrameAnimation
             }
 
             //Ver si cambio el color
-            var selectedColor = (Color) GuiController.Instance.Modifiers.getValue("Color");
+            var selectedColor = (Color)GuiController.Instance.Modifiers.getValue("Color");
             if (currentColor == null || currentColor != selectedColor)
             {
                 currentColor = selectedColor;
@@ -130,7 +126,7 @@ namespace Examples.KeyFrameAnimation
             mesh.animateAndRender();
 
             //BoundingBox
-            var showBB = (bool) GuiController.Instance.Modifiers["BoundingBox"];
+            var showBB = (bool)GuiController.Instance.Modifiers["BoundingBox"];
             if (showBB)
             {
                 mesh.BoundingBox.render();

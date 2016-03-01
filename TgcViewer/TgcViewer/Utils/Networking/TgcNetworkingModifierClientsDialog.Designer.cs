@@ -1,4 +1,4 @@
-﻿namespace TgcViewer.Utils.Networking
+﻿namespace TGC.Viewer.Utils.Networking
 {
     partial class TgcNetworkingModifierClientsDialog
     {

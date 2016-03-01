@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Viewer.Utils.Modifiers
 {
     /// <summary>
     ///     Modificador con un Boton

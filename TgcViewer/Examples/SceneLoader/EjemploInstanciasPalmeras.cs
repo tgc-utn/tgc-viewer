@@ -1,11 +1,12 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Collections.Generic;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.SceneLoader
+namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Ejemplo EjemploInstanciasPalmeras
@@ -39,10 +40,8 @@ namespace Examples.SceneLoader
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear suelo
-            var pisoTexture = TgcTexture.createTexture(d3dDevice,
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\pasto.jpg");
             suelo = TgcBox.fromSize(new Vector3(500, 0, 500), new Vector3(2000, 0, 2000), pisoTexture);
 
@@ -66,7 +65,7 @@ namespace Examples.SceneLoader
                     var instance = palmeraOriginal.createMeshInstance(palmeraOriginal.Name + i + "_" + j);
 
                     //Desplazarlo
-                    instance.move(i*offset, 70, j*offset);
+                    instance.move(i * offset, 70, j * offset);
                     instance.Scale = new Vector3(0.25f, 0.25f, 0.25f);
 
                     meshes.Add(instance);
@@ -83,8 +82,6 @@ namespace Examples.SceneLoader
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Renderizar suelo
             suelo.render();
 

@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Viewer.Utils.Modifiers
 {
     /// <summary>
     ///     Panel generico para un Modifier

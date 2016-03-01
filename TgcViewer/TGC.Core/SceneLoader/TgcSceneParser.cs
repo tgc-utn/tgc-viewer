@@ -76,7 +76,7 @@ namespace TGC.Core.SceneLoader
                     for (var j = 0; j < subMaterialsNodes.Count; j++)
                     {
                         var subMaterial = new TgcMaterialData();
-                        parseStandardMaterial(subMaterial, (XmlElement) subMaterialsNodes[j]);
+                        parseStandardMaterial(subMaterial, (XmlElement)subMaterialsNodes[j]);
                         material.subMaterials[j] = subMaterial;
                     }
                 }
@@ -203,13 +203,13 @@ namespace TGC.Core.SceneLoader
                     count = int.Parse(colorsNode.Attributes["count"].InnerText);
                     var colorsArray = TgcParserUtils.parseFloatStream(colorsNode.InnerText, count);
                     //convertir a formato DirectX
-                    meshData.verticesColors = new int[count/3];
+                    meshData.verticesColors = new int[count / 3];
                     for (var j = 0; j < meshData.verticesColors.Length; j++)
                     {
                         meshData.verticesColors[j] = Color.FromArgb(
-                            (int) colorsArray[j*3],
-                            (int) colorsArray[j*3 + 1],
-                            (int) colorsArray[j*3 + 2]).ToArgb();
+                            (int)colorsArray[j * 3],
+                            (int)colorsArray[j * 3 + 1],
+                            (int)colorsArray[j * 3 + 2]).ToArgb();
                     }
 
                     //parsear texCoordsLightMap
@@ -241,7 +241,7 @@ namespace TGC.Core.SceneLoader
                 if (userPropsNodes != null && userPropsNodes.Count == 1)
                 {
                     meshData.userProperties = new Dictionary<string, string>();
-                    var userPropsNode = (XmlElement) userPropsNodes[0];
+                    var userPropsNode = (XmlElement)userPropsNodes[0];
                     foreach (XmlElement prop in userPropsNode.ChildNodes)
                     {
                         meshData.userProperties.Add(prop.Name, prop.InnerText);
@@ -253,7 +253,7 @@ namespace TGC.Core.SceneLoader
             var portalRenderingNodes = root.GetElementsByTagName("portalRendering");
             if (portalRenderingNodes != null && portalRenderingNodes.Count == 1)
             {
-                var portalRenderingNode = (XmlElement) portalRenderingNodes[0];
+                var portalRenderingNode = (XmlElement)portalRenderingNodes[0];
                 var portalParser = new TgcPortalRenderingParser();
                 tgcSceneData.portalData = portalParser.parseFromXmlNode(portalRenderingNode);
             }
@@ -280,7 +280,7 @@ namespace TGC.Core.SceneLoader
             TgcParserUtils.divFloatArrayValues(ref material.specularColor, 255f);
 
             var opacityStr = matNode.GetElementsByTagName("opacity")[0].InnerText;
-            material.opacity = TgcParserUtils.parseFloat(opacityStr)/100f;
+            material.opacity = TgcParserUtils.parseFloat(opacityStr) / 100f;
 
             var alphaBlendEnableNode = matNode.GetElementsByTagName("alphaBlendEnable")[0];
             if (alphaBlendEnableNode != null)

@@ -1,23 +1,23 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Examples.MeshCreator.EditablePolyTools;
-using Examples.MeshCreator.Gizmos;
-using Examples.MeshCreator.Primitives;
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils._2D;
+using TGC.Core.Direct3D;
 using TGC.Core.Utils;
+using TGC.Examples.MeshCreator.Gizmos;
+using TGC.Examples.MeshCreator.Primitives;
+using TGC.Viewer;
+using TGC.Viewer.Utils._2D;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.Modifiers;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Control grafico de MeshCreator
@@ -37,27 +37,27 @@ namespace Examples.MeshCreator
             EditablePoly
         }
 
-        private TgcMeshCreator creator;
-
         private readonly string defaultMeshPath;
         private readonly string defaultTexturePath;
         private readonly SaveFileDialog exportSceneSaveDialog;
-        private bool fpsCameraEnabled;
-
-        private string lastSavePath;
 
         private readonly TgcMeshBrowser meshBrowser;
 
         private readonly ObjectBrowser objectBrowser;
         private readonly TgcText2d objectPositionText;
-
-        private int primitiveNameCounter;
-        private Vector3 rotationPivot;
         private readonly ScaleGizmo scaleGizmo;
 
         private readonly TgcTextureBrowser textureBrowser;
         private readonly TgcTextureBrowser textureBrowserEPoly;
         private readonly TranslateGizmo translateGizmo;
+
+        private TgcMeshCreator creator;
+        private bool fpsCameraEnabled;
+
+        private string lastSavePath;
+
+        private int primitiveNameCounter;
+        private Vector3 rotationPivot;
 
         public MeshCreatorControl(TgcMeshCreator creator)
         {
@@ -96,7 +96,7 @@ namespace Examples.MeshCreator
             Camera = new MeshCreatorCamera();
             Camera.Enable = true;
             Camera.setCamera(new Vector3(0, 0, 0), 500);
-            Camera.BaseRotX = -FastMath.PI/4f;
+            Camera.BaseRotX = -FastMath.PI / 4f;
             GuiController.Instance.CurrentCamera.Enable = false;
 
             //Gizmos
@@ -132,7 +132,7 @@ namespace Examples.MeshCreator
                 GuiController.Instance.Panel3d.Height - 20);
 
             //Snap to grid
-            SnapToGridCellSize = (float) numericUpDownCellSize.Value;
+            SnapToGridCellSize = (float)numericUpDownCellSize.Value;
 
             //ObjectBrowser
             objectBrowser = new ObjectBrowser(this);
@@ -561,7 +561,7 @@ namespace Examples.MeshCreator
             Camera.ZoomFactor = MeshCreatorUtils.getMouseZoomSpeed(Camera, q);
 
             Camera.updateCamera();
-            Camera.updateViewMatrix(GuiController.Instance.D3dDevice);
+            Camera.updateViewMatrix(D3DDevice.Instance.Device);
         }
 
         /// <summary>
@@ -638,7 +638,7 @@ namespace Examples.MeshCreator
         /// </summary>
         private void doEditablePoly()
         {
-            var p = (MeshPrimitive) SelectionList[0];
+            var p = (MeshPrimitive)SelectionList[0];
             p.doEditablePolyUpdate();
         }
 
@@ -761,7 +761,7 @@ namespace Examples.MeshCreator
             if (SelectionList.Count >= 1)
             {
                 var onlyOneObjectFlag = SelectionList.Count == 1;
-                var isMeshFlag = SelectionList[0].GetType().IsAssignableFrom(typeof (MeshPrimitive));
+                var isMeshFlag = SelectionList[0].GetType().IsAssignableFrom(typeof(MeshPrimitive));
 
                 //Habilitar paneles
                 groupBoxModifyGeneral.Enabled = true;
@@ -814,8 +814,8 @@ namespace Examples.MeshCreator
                 {
                     numericUpDownTextureOffsetU.Enabled = true;
                     numericUpDownTextureOffsetV.Enabled = true;
-                    numericUpDownTextureOffsetU.Value = (decimal) p.TextureOffset.X;
-                    numericUpDownTextureOffsetV.Value = (decimal) p.TextureOffset.Y;
+                    numericUpDownTextureOffsetU.Value = (decimal)p.TextureOffset.X;
+                    numericUpDownTextureOffsetV.Value = (decimal)p.TextureOffset.Y;
                 }
                 else
                 {
@@ -828,8 +828,8 @@ namespace Examples.MeshCreator
                 {
                     numericUpDownTextureTilingU.Enabled = true;
                     numericUpDownTextureTilingV.Enabled = true;
-                    numericUpDownTextureTilingU.Value = (decimal) p.TextureTiling.X;
-                    numericUpDownTextureTilingV.Value = (decimal) p.TextureTiling.Y;
+                    numericUpDownTextureTilingU.Value = (decimal)p.TextureTiling.X;
+                    numericUpDownTextureTilingV.Value = (decimal)p.TextureTiling.Y;
                 }
                 else
                 {
@@ -843,9 +843,9 @@ namespace Examples.MeshCreator
                     numericUpDownModifyPosX.Enabled = true;
                     numericUpDownModifyPosY.Enabled = true;
                     numericUpDownModifyPosZ.Enabled = true;
-                    numericUpDownModifyPosX.Value = (decimal) p.Position.X;
-                    numericUpDownModifyPosY.Value = (decimal) p.Position.Y;
-                    numericUpDownModifyPosZ.Value = (decimal) p.Position.Z;
+                    numericUpDownModifyPosX.Value = (decimal)p.Position.X;
+                    numericUpDownModifyPosY.Value = (decimal)p.Position.Y;
+                    numericUpDownModifyPosZ.Value = (decimal)p.Position.Z;
                 }
                 else
                 {
@@ -860,9 +860,9 @@ namespace Examples.MeshCreator
                     numericUpDownModifyRotX.Enabled = true;
                     numericUpDownModifyRotY.Enabled = true;
                     numericUpDownModifyRotZ.Enabled = true;
-                    numericUpDownModifyRotX.Value = (decimal) FastMath.ToDeg(p.Rotation.X);
-                    numericUpDownModifyRotY.Value = (decimal) FastMath.ToDeg(p.Rotation.Y);
-                    numericUpDownModifyRotZ.Value = (decimal) FastMath.ToDeg(p.Rotation.Z);
+                    numericUpDownModifyRotX.Value = (decimal)FastMath.ToDeg(p.Rotation.X);
+                    numericUpDownModifyRotY.Value = (decimal)FastMath.ToDeg(p.Rotation.Y);
+                    numericUpDownModifyRotZ.Value = (decimal)FastMath.ToDeg(p.Rotation.Z);
                 }
                 else
                 {
@@ -878,9 +878,9 @@ namespace Examples.MeshCreator
                     numericUpDownModifyScaleY.Enabled = true;
                     numericUpDownModifyScaleZ.Enabled = true;
                     var scale = p.Scale;
-                    numericUpDownModifyScaleX.Value = (decimal) scale.X*100;
-                    numericUpDownModifyScaleY.Value = (decimal) scale.Y*100;
-                    numericUpDownModifyScaleZ.Value = (decimal) scale.Z*100;
+                    numericUpDownModifyScaleX.Value = (decimal)scale.X * 100;
+                    numericUpDownModifyScaleY.Value = (decimal)scale.Y * 100;
+                    numericUpDownModifyScaleZ.Value = (decimal)scale.Z * 100;
                 }
                 else
                 {
@@ -988,7 +988,7 @@ namespace Examples.MeshCreator
             if (CurrentState == State.EditablePoly &&
                 tabControl.SelectedTab != tabControl.TabPages["tabPageEditablePoly"])
             {
-                setEditablePolyEnable(false, EditablePoly.PrimitiveType.None);
+                setEditablePolyEnable(false, EditablePoly.EditablePoly.PrimitiveType.None);
             }
         }
 
@@ -1104,7 +1104,7 @@ namespace Examples.MeshCreator
         /// <param name="e"></param>
         private void numericUpDownCellSize_ValueChanged(object sender, EventArgs e)
         {
-            SnapToGridCellSize = (float) numericUpDownCellSize.Value;
+            SnapToGridCellSize = (float)numericUpDownCellSize.Value;
         }
 
         /// <summary>
@@ -1222,9 +1222,9 @@ namespace Examples.MeshCreator
         private void numericUpDownFPSCameraSpeed_ValueChanged(object sender, EventArgs e)
         {
             //Multiplicar velocidad de camara
-            var speed = (float) numericUpDownFPSCameraSpeed.Value;
-            GuiController.Instance.FpsCamera.MovementSpeed = TgcFpsCamera.DEFAULT_MOVEMENT_SPEED*speed;
-            GuiController.Instance.FpsCamera.JumpSpeed = TgcFpsCamera.DEFAULT_JUMP_SPEED*speed;
+            var speed = (float)numericUpDownFPSCameraSpeed.Value;
+            GuiController.Instance.FpsCamera.MovementSpeed = TgcFpsCamera.DEFAULT_MOVEMENT_SPEED * speed;
+            GuiController.Instance.FpsCamera.JumpSpeed = TgcFpsCamera.DEFAULT_JUMP_SPEED * speed;
         }
 
         /// <summary>
@@ -1528,7 +1528,7 @@ namespace Examples.MeshCreator
         private void numericUpDownModifyTextureNumber_ValueChanged(object sender, EventArgs e)
         {
             if (IgnoreChangeEvents) return;
-            var n = (int) numericUpDownModifyTextureNumber.Value - 1;
+            var n = (int)numericUpDownModifyTextureNumber.Value - 1;
 
             //Cambiar imagen del pictureBox
             var img = MeshCreatorUtils.getImage(SelectionList[0].getTexture(n).FilePath);
@@ -1545,7 +1545,7 @@ namespace Examples.MeshCreator
         {
             PopupOpened = true;
 
-            var n = (int) numericUpDownModifyTextureNumber.Value - 1;
+            var n = (int)numericUpDownModifyTextureNumber.Value - 1;
             textureBrowser.setSelectedImage(SelectionList[0].getTexture(n).FilePath);
 
             textureBrowser.Show(this);
@@ -1559,7 +1559,7 @@ namespace Examples.MeshCreator
             if (IgnoreChangeEvents) return;
 
             //Cambiar la textura si es distinta a la que tenia el mesh
-            var n = (int) numericUpDownModifyTextureNumber.Value - 1;
+            var n = (int)numericUpDownModifyTextureNumber.Value - 1;
             if (textureBrowser.SelectedImage != SelectionList[0].getTexture(n).FilePath)
             {
                 var img = MeshCreatorUtils.getImage(textureBrowser.SelectedImage);
@@ -1602,7 +1602,7 @@ namespace Examples.MeshCreator
         {
             if (IgnoreChangeEvents) return;
 
-            var value = (float) numericUpDownTextureOffsetU.Value;
+            var value = (float)numericUpDownTextureOffsetU.Value;
             foreach (var p in SelectionList)
             {
                 p.TextureOffset = new Vector2(value, p.TextureOffset.Y);
@@ -1616,7 +1616,7 @@ namespace Examples.MeshCreator
         {
             if (IgnoreChangeEvents) return;
 
-            var value = (float) numericUpDownTextureOffsetV.Value;
+            var value = (float)numericUpDownTextureOffsetV.Value;
             foreach (var p in SelectionList)
             {
                 p.TextureOffset = new Vector2(p.TextureOffset.X, value);
@@ -1630,7 +1630,7 @@ namespace Examples.MeshCreator
         {
             if (IgnoreChangeEvents) return;
 
-            var value = (float) numericUpDownTextureTilingU.Value;
+            var value = (float)numericUpDownTextureTilingU.Value;
             foreach (var p in SelectionList)
             {
                 p.TextureTiling = new Vector2(value, p.TextureTiling.Y);
@@ -1644,7 +1644,7 @@ namespace Examples.MeshCreator
         {
             if (IgnoreChangeEvents) return;
 
-            var value = (float) numericUpDownTextureTilingV.Value;
+            var value = (float)numericUpDownTextureTilingV.Value;
             foreach (var p in SelectionList)
             {
                 p.TextureTiling = new Vector2(p.TextureTiling.X, value);
@@ -1660,7 +1660,7 @@ namespace Examples.MeshCreator
 
             var p = SelectionList[0];
             var oldPos = p.Position;
-            p.Position = new Vector3((float) numericUpDownModifyPosX.Value, oldPos.Y, oldPos.Z);
+            p.Position = new Vector3((float)numericUpDownModifyPosX.Value, oldPos.Y, oldPos.Z);
             var movement = p.Position - oldPos;
             if (CurrentGizmo != null)
             {
@@ -1681,7 +1681,7 @@ namespace Examples.MeshCreator
 
             var p = SelectionList[0];
             var oldPos = p.Position;
-            p.Position = new Vector3(oldPos.X, (float) numericUpDownModifyPosY.Value, oldPos.Z);
+            p.Position = new Vector3(oldPos.X, (float)numericUpDownModifyPosY.Value, oldPos.Z);
             var movement = p.Position - oldPos;
             if (CurrentGizmo != null)
             {
@@ -1702,7 +1702,7 @@ namespace Examples.MeshCreator
 
             var p = SelectionList[0];
             var oldPos = p.Position;
-            p.Position = new Vector3(oldPos.X, oldPos.Y, (float) numericUpDownModifyPosZ.Value);
+            p.Position = new Vector3(oldPos.X, oldPos.Y, (float)numericUpDownModifyPosZ.Value);
             var movement = p.Position - oldPos;
             if (CurrentGizmo != null)
             {
@@ -1721,7 +1721,7 @@ namespace Examples.MeshCreator
         {
             if (IgnoreChangeEvents) return;
 
-            var value = FastMath.ToRad((float) numericUpDownModifyRotX.Value);
+            var value = FastMath.ToRad((float)numericUpDownModifyRotX.Value);
             var pivot = rotationPivot /*selectionRectangle.getRotationPivot()*/;
             foreach (var p in SelectionList)
             {
@@ -1736,7 +1736,7 @@ namespace Examples.MeshCreator
         {
             if (IgnoreChangeEvents) return;
 
-            var value = FastMath.ToRad((float) numericUpDownModifyRotY.Value);
+            var value = FastMath.ToRad((float)numericUpDownModifyRotY.Value);
             var pivot = rotationPivot /*selectionRectangle.getRotationPivot()*/;
             foreach (var p in SelectionList)
             {
@@ -1751,7 +1751,7 @@ namespace Examples.MeshCreator
         {
             if (IgnoreChangeEvents) return;
 
-            var value = FastMath.ToRad((float) numericUpDownModifyRotZ.Value);
+            var value = FastMath.ToRad((float)numericUpDownModifyRotZ.Value);
             var pivot = rotationPivot /*selectionRectangle.getRotationPivot()*/;
             foreach (var p in SelectionList)
             {
@@ -1780,7 +1780,7 @@ namespace Examples.MeshCreator
 
             var p0 = SelectionList[0];
             var old = p0.Scale;
-            var value = (float) numericUpDownModifyScaleX.Value/100f;
+            var value = (float)numericUpDownModifyScaleX.Value / 100f;
             var diff = new Vector3(value, p0.Scale.Y, p0.Scale.Z) - old;
 
             foreach (var p in SelectionList)
@@ -1807,7 +1807,7 @@ namespace Examples.MeshCreator
 
             var p0 = SelectionList[0];
             var old = p0.Scale;
-            var value = (float) numericUpDownModifyScaleY.Value/100f;
+            var value = (float)numericUpDownModifyScaleY.Value / 100f;
             var diff = new Vector3(p0.Scale.X, value, p0.Scale.Z) - old;
 
             foreach (var p in SelectionList)
@@ -1834,7 +1834,7 @@ namespace Examples.MeshCreator
 
             var p0 = SelectionList[0];
             var old = p0.Scale;
-            var value = (float) numericUpDownModifyScaleZ.Value/100f;
+            var value = (float)numericUpDownModifyScaleZ.Value / 100f;
             var diff = new Vector3(p0.Scale.X, p0.Scale.Y, value) - old;
 
             foreach (var p in SelectionList)
@@ -1902,7 +1902,7 @@ namespace Examples.MeshCreator
         ///     Setear estado EditablePoly
         /// </summary>
         /// <param name="enabled"></param>
-        public void setEditablePolyEnable(bool enabled, EditablePoly.PrimitiveType primitiveType)
+        public void setEditablePolyEnable(bool enabled, EditablePoly.EditablePoly.PrimitiveType primitiveType)
         {
             if (enabled)
             {
@@ -1910,14 +1910,14 @@ namespace Examples.MeshCreator
                 groupBoxEPolyCommon.Enabled = true;
                 CreatingPrimitive = null;
                 CurrentGizmo = null;
-                var m = (MeshPrimitive) SelectionList[0];
+                var m = (MeshPrimitive)SelectionList[0];
                 m.enableEditablePoly(true, primitiveType);
             }
             else
             {
                 if (CurrentState == State.EditablePoly)
                 {
-                    var m = (MeshPrimitive) SelectionList[0];
+                    var m = (MeshPrimitive)SelectionList[0];
                     m.enableEditablePoly(false, primitiveType);
 
                     radioButtonEPolyPrimitiveVertex.Checked = false;
@@ -1944,7 +1944,7 @@ namespace Examples.MeshCreator
                 groupBoxEPolyEditVertices.Enabled = true;
                 groupBoxEPolyEditEdges.Enabled = false;
                 groupBoxEPolyEditPolygons.Enabled = false;
-                setEditablePolyEnable(true, EditablePoly.PrimitiveType.Vertex);
+                setEditablePolyEnable(true, EditablePoly.EditablePoly.PrimitiveType.Vertex);
             }
             else
             {
@@ -1963,7 +1963,7 @@ namespace Examples.MeshCreator
                 groupBoxEPolyEditVertices.Enabled = false;
                 groupBoxEPolyEditEdges.Enabled = true;
                 groupBoxEPolyEditPolygons.Enabled = false;
-                setEditablePolyEnable(true, EditablePoly.PrimitiveType.Edge);
+                setEditablePolyEnable(true, EditablePoly.EditablePoly.PrimitiveType.Edge);
             }
             else
             {
@@ -1982,7 +1982,7 @@ namespace Examples.MeshCreator
                 groupBoxEPolyEditVertices.Enabled = false;
                 groupBoxEPolyEditEdges.Enabled = false;
                 groupBoxEPolyEditPolygons.Enabled = true;
-                setEditablePolyEnable(true, EditablePoly.PrimitiveType.Polygon);
+                setEditablePolyEnable(true, EditablePoly.EditablePoly.PrimitiveType.Polygon);
             }
             else
             {
@@ -1997,7 +1997,7 @@ namespace Examples.MeshCreator
         {
             if (radioButtonEPolySelect.Checked)
             {
-                var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
+                var editablePoly = ((MeshPrimitive)SelectionList[0]).EditablePoly;
                 editablePoly.setSelectState();
             }
         }
@@ -2007,7 +2007,7 @@ namespace Examples.MeshCreator
         /// </summary>
         private void buttonEPolySelectAll_Click(object sender, EventArgs e)
         {
-            var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
+            var editablePoly = ((MeshPrimitive)SelectionList[0]).EditablePoly;
             editablePoly.selectAll();
         }
 
@@ -2018,7 +2018,7 @@ namespace Examples.MeshCreator
         {
             if (radioButtonEPolyTranslate.Checked)
             {
-                var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
+                var editablePoly = ((MeshPrimitive)SelectionList[0]).EditablePoly;
                 editablePoly.activateTranslateGizmo();
             }
         }
@@ -2028,7 +2028,7 @@ namespace Examples.MeshCreator
         /// </summary>
         private void buttonEPolyDelete_Click(object sender, EventArgs e)
         {
-            var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
+            var editablePoly = ((MeshPrimitive)SelectionList[0]).EditablePoly;
             editablePoly.deleteSelectedPrimitives();
         }
 
@@ -2038,8 +2038,8 @@ namespace Examples.MeshCreator
         private void numericUpDownEPolyTextureNumber_ValueChanged(object sender, EventArgs e)
         {
             if (IgnoreChangeEvents) return;
-            var editablePoly = ((MeshPrimitive) SelectionList[0]).EditablePoly;
-            var n = (int) numericUpDownEPolyTextureNumber.Value - 1;
+            var editablePoly = ((MeshPrimitive)SelectionList[0]).EditablePoly;
+            var n = (int)numericUpDownEPolyTextureNumber.Value - 1;
 
             //Cambiar imagen del pictureBox
             var img = MeshCreatorUtils.getImage(SelectionList[0].getTexture(n).FilePath);
@@ -2058,7 +2058,7 @@ namespace Examples.MeshCreator
         private void buttonEPolyAddTexture_Click(object sender, EventArgs e)
         {
             //Clonar la primer textura y agregarsela al mesh (al final)
-            var p = (MeshPrimitive) SelectionList[0];
+            var p = (MeshPrimitive)SelectionList[0];
             var newTexutre = p.getTexture(0).clone();
             p.addNexTexture(newTexutre);
 
@@ -2079,10 +2079,10 @@ namespace Examples.MeshCreator
         /// <param name="e"></param>
         private void buttonEPolyDeleteTexture_Click(object sender, EventArgs e)
         {
-            var p = (MeshPrimitive) SelectionList[0];
+            var p = (MeshPrimitive)SelectionList[0];
             if (p.ModifyCaps.TextureNumbers > 1)
             {
-                var n = (int) numericUpDownEPolyTextureNumber.Value - 1;
+                var n = (int)numericUpDownEPolyTextureNumber.Value - 1;
                 p.deleteTexture(n);
                 p.EditablePoly.deleteTextureId(n, 0);
                 numericUpDownEPolyTextureNumber.Maximum--;
@@ -2097,7 +2097,7 @@ namespace Examples.MeshCreator
         {
             PopupOpened = true;
 
-            var n = (int) numericUpDownEPolyTextureNumber.Value - 1;
+            var n = (int)numericUpDownEPolyTextureNumber.Value - 1;
             textureBrowserEPoly.setSelectedImage(SelectionList[0].getTexture(n).FilePath);
 
             textureBrowserEPoly.Show(this);
@@ -2112,7 +2112,7 @@ namespace Examples.MeshCreator
             var p = SelectionList[0];
 
             //Cambiar la textura si es distinta a la que tenia el mesh
-            var n = (int) numericUpDownEPolyTextureNumber.Value - 1;
+            var n = (int)numericUpDownEPolyTextureNumber.Value - 1;
             if (textureBrowserEPoly.SelectedImage != p.getTexture(n).FilePath)
             {
                 var img = MeshCreatorUtils.getImage(textureBrowserEPoly.SelectedImage);

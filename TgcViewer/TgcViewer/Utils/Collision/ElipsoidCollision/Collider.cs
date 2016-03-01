@@ -1,7 +1,7 @@
 ﻿using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace TgcViewer.Utils.Collision.ElipsoidCollision
+namespace TGC.Viewer.Utils.Collision.ElipsoidCollision
 {
     /// <summary>
     ///     Colisionador abstracto

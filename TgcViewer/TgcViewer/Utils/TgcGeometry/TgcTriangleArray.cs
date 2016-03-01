@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.DirectX;
+using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Herramienta para dibujar una lista de triangulos.
@@ -33,13 +33,13 @@ namespace TgcViewer.Utils.TgcGeometry
             var triangleArray = new TgcTriangleArray();
 
             var vertices = mesh.getVertexPositions();
-            var triCount = vertices.Length/3;
+            var triCount = vertices.Length / 3;
             var triangles = new List<TgcTriangle>(triCount);
             for (var i = 0; i < triCount; i++)
             {
-                var v1 = vertices[i*3];
-                var v2 = vertices[i*3 + 1];
-                var v3 = vertices[i*3 + 2];
+                var v1 = vertices[i * 3];
+                var v2 = vertices[i * 3 + 1];
+                var v3 = vertices[i * 3 + 2];
 
                 var t = new TgcTriangle();
                 t.A = v1;

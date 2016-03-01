@@ -1,8 +1,8 @@
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Tutorial
+namespace TGC.Examples.Tutorial
 {
     /// <summary>
     ///     Tutorial 5:
@@ -33,8 +33,6 @@ namespace Examples.Tutorial
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //El framework posee la clase TgcSceneLoader que permite cargar modelos 3D.
             //Estos modelos 3D están almacenados en un archivo XML llamado TgcScene.xml.
             //Este archivo es un formato a medida hecho para el framework. Y puede ser creado desde herramientas de
@@ -57,8 +55,6 @@ namespace Examples.Tutorial
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Dibujar el modelo 3D
             mesh.render();
         }

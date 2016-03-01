@@ -1,15 +1,15 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.Interpolation;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Interpolation;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Lights
+namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploMultiDiffuseLights:
@@ -48,8 +48,6 @@ namespace Examples.Lights
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar escenario
             var loader = new TgcSceneLoader();
             scene =
@@ -75,12 +73,12 @@ namespace Examples.Lights
             //Crear 4 mesh para representar las 4 para la luces. Las ubicamos en distintas posiciones del escenario, cada una con un color distinto.
             lightMeshes = new TgcBox[4];
             origLightPos = new Vector3[lightMeshes.Length];
-            var c = new Color[4] {Color.Red, Color.Blue, Color.Green, Color.Yellow};
+            var c = new Color[4] { Color.Red, Color.Blue, Color.Green, Color.Yellow };
             for (var i = 0; i < lightMeshes.Length; i++)
             {
-                var co = c[i%c.Length];
+                var co = c[i % c.Length];
                 lightMeshes[i] = TgcBox.fromSize(new Vector3(10, 10, 10), co);
-                origLightPos[i] = new Vector3(-40, 20 + i*20, 400);
+                origLightPos[i] = new Vector3(-40, 20 + i * 20, 400);
             }
 
             //Modifiers
@@ -102,10 +100,8 @@ namespace Examples.Lights
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
-
             //Habilitar luz
-            var lightEnable = (bool) GuiController.Instance.Modifiers["lightEnable"];
+            var lightEnable = (bool)GuiController.Instance.Modifiers["lightEnable"];
             Effect currentShader;
             string currentTechnique;
             if (lightEnable)
@@ -129,7 +125,7 @@ namespace Examples.Lights
             }
 
             //Configurar los valores de cada luz
-            var move = new Vector3(0, 0, (bool) GuiController.Instance.Modifiers["lightMove"] ? interp.update() : 0);
+            var move = new Vector3(0, 0, (bool)GuiController.Instance.Modifiers["lightMove"] ? interp.update() : 0);
             var lightColors = new ColorValue[lightMeshes.Length];
             var pointLightPositions = new Vector4[lightMeshes.Length];
             var pointLightIntensity = new float[lightMeshes.Length];
@@ -141,8 +137,8 @@ namespace Examples.Lights
 
                 lightColors[i] = ColorValue.FromColor(lightMesh.Color);
                 pointLightPositions[i] = TgcParserUtils.vector3ToVector4(lightMesh.Position);
-                pointLightIntensity[i] = (float) GuiController.Instance.Modifiers["lightIntensity"];
-                pointLightAttenuation[i] = (float) GuiController.Instance.Modifiers["lightAttenuation"];
+                pointLightIntensity[i] = (float)GuiController.Instance.Modifiers["lightIntensity"];
+                pointLightAttenuation[i] = (float)GuiController.Instance.Modifiers["lightAttenuation"];
             }
 
             //Renderizar meshes
@@ -156,9 +152,9 @@ namespace Examples.Lights
                     mesh.Effect.SetValue("lightIntensity", pointLightIntensity);
                     mesh.Effect.SetValue("lightAttenuation", pointLightAttenuation);
                     mesh.Effect.SetValue("materialEmissiveColor",
-                        ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mEmissive"]));
+                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mEmissive"]));
                     mesh.Effect.SetValue("materialDiffuseColor",
-                        ColorValue.FromColor((Color) GuiController.Instance.Modifiers["mDiffuse"]));
+                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mDiffuse"]));
                 }
 
                 //Renderizar modelo

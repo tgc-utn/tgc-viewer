@@ -1,9 +1,9 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.SceneEditor
+namespace TGC.Examples.SceneEditor
 {
     internal class SceneEditorTranslateGizmo
     {
@@ -139,17 +139,17 @@ namespace Examples.SceneEditor
             //Desplazamiento segun el mouse en X
             if (SelectedAxis == Axis.X)
             {
-                currentMove.X += (input.XposRelative - initMouseP.X)*MOVE_FACTOR;
+                currentMove.X += (input.XposRelative - initMouseP.X) * MOVE_FACTOR;
             }
             //Desplazamiento segun el mouse en Y
             else if (SelectedAxis == Axis.Y)
             {
-                currentMove.Y -= (input.YposRelative - initMouseP.Y)*MOVE_FACTOR;
+                currentMove.Y -= (input.YposRelative - initMouseP.Y) * MOVE_FACTOR;
             }
             //Desplazamiento segun el mouse en X
             else if (SelectedAxis == Axis.Z)
             {
-                currentMove.Z -= (input.YposRelative - initMouseP.Y)*MOVE_FACTOR;
+                currentMove.Z -= (input.YposRelative - initMouseP.Y) * MOVE_FACTOR;
             }
 
             //Mover mesh

@@ -1,9 +1,10 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
 
-namespace Examples.DirectX
+namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo DirectXMeshViewer:
@@ -59,11 +60,10 @@ namespace Examples.DirectX
         /// <param name="path"></param>
         private void loadMesh(string path)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             ExtendedMaterial[] mtrl;
 
             //Cargar mesh con utilidad de DirectX
-            mesh = Mesh.FromFile(path, MeshFlags.Managed, d3dDevice, out mtrl);
+            mesh = Mesh.FromFile(path, MeshFlags.Managed, D3DDevice.Instance.Device, out mtrl);
 
             //Analizar todos los subset de la malla
             if ((mtrl != null) && (mtrl.Length > 0))
@@ -82,7 +82,7 @@ namespace Examples.DirectX
                                                               string.Empty))
                     {
                         //Cargar textura con TextureLoader
-                        meshTextures[i] = TextureLoader.FromFile(d3dDevice,
+                        meshTextures[i] = TextureLoader.FromFile(D3DDevice.Instance.Device,
                             GuiController.Instance.ExamplesMediaDir + "ModelosX" + "\\" +
                             mtrl[i].TextureFilename);
                     }
@@ -104,15 +104,13 @@ namespace Examples.DirectX
             }
 
             //Alejar camara rotacional, respecto de su Bounding Sphere
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), objectRadius*4, 5f/objectRadius);
+            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), objectRadius * 4, 5f / objectRadius);
         }
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si cambio el modelo elegido por el usuario
-            var selectedPath = (string) GuiController.Instance.Modifiers["Mesh"];
+            var selectedPath = (string)GuiController.Instance.Modifiers["Mesh"];
             if (selectedPath != currentMeshFile)
             {
                 //cargar nuevo modelo
@@ -128,8 +126,8 @@ namespace Examples.DirectX
             //Hay que renderizar cada subset por separado
             for (var i = 0; i < meshMaterials.Length; i++)
             {
-                d3dDevice.Material = meshMaterials[i];
-                d3dDevice.SetTexture(0, meshTextures[i]);
+                D3DDevice.Instance.Device.Material = meshMaterials[i];
+                D3DDevice.Instance.Device.SetTexture(0, meshTextures[i]);
                 mesh.DrawSubset(i);
             }
         }

@@ -1,15 +1,16 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.RoomsEditor
+namespace TGC.Examples.RoomsEditor
 {
     /// <summary>
     ///     Control gráfico principal del Modifier TgcRoomsEditor
@@ -185,7 +186,7 @@ namespace Examples.RoomsEditor
 
                 //rooms
                 var roomsNode = root.GetElementsByTagName("rooms")[0];
-                mapView.resetRooms(roomsNode.ChildNodes.Count*2);
+                mapView.resetRooms(roomsNode.ChildNodes.Count * 2);
                 foreach (XmlNode roomNode in roomsNode.ChildNodes)
                 {
                     var roomName = roomNode.Attributes["name"].InnerText;
@@ -217,7 +218,7 @@ namespace Examples.RoomsEditor
                         {
                             wall.Texture.dispose();
                         }
-                        wall.Texture = TgcTexture.createTexture(GuiController.Instance.D3dDevice,
+                        wall.Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                             texturesDir + "\\" + textureName);
                         wall.AutoAdjustUv = autoAdjustUv;
                         wall.UTile = uTile;

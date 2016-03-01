@@ -1,4 +1,4 @@
-﻿namespace TgcViewer.Utils.Modifiers
+﻿namespace TGC.Viewer.Utils.Modifiers
 {
     partial class TgcTextureBrowser
     {

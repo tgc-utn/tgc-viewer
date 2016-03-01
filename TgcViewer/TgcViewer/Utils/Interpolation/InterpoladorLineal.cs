@@ -1,4 +1,4 @@
-﻿namespace TgcViewer.Utils.Interpolation
+﻿namespace TGC.Viewer.Utils.Interpolation
 {
     /// <summary>
     ///     Utilidad para interpolar un valor que arranca en INIT y va hasta END, a una velocidad determinada.
@@ -41,7 +41,7 @@
         /// <returns>Valor actual</returns>
         public float update()
         {
-            var n = Speed*GuiController.Instance.ElapsedTime;
+            var n = Speed * GuiController.Instance.ElapsedTime;
             Current += n;
             if (Speed > 0)
             {

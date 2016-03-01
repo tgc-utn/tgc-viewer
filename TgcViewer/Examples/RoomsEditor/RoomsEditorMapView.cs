@@ -1,13 +1,13 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.DirectX;
-using SistPaquetesClient.core;
-using TgcViewer;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Ui;
 
-namespace Examples.RoomsEditor
+namespace TGC.Examples.RoomsEditor
 {
     /// <summary>
     ///     Editor de Mapa en 2D
@@ -24,6 +24,7 @@ namespace Examples.RoomsEditor
         }
 
         private const int SNAP_TO_GRID_FACTOR = 10;
+        private readonly RoomsEditorTexturesEdit texturesEdit;
         private bool creatingRoomMouseDown;
         private Point creatingRoomOriginalPos;
         private EditMode currentMode;
@@ -35,7 +36,6 @@ namespace Examples.RoomsEditor
         private int roomsNameCounter;
 
         internal RoomsEditorRoom selectedRoom;
-        private readonly RoomsEditorTexturesEdit texturesEdit;
 
         public RoomsEditorMapView(RoomsEditorControl editorControl)
         {
@@ -50,7 +50,7 @@ namespace Examples.RoomsEditor
             texturesEdit = new RoomsEditorTexturesEdit(this);
 
             //Tamaño inicial del panel2
-            panel2d.MinimumSize = new Size((int) numericUpDownMapWidth.Value, (int) numericUpDownMapHeight.Value);
+            panel2d.MinimumSize = new Size((int)numericUpDownMapWidth.Value, (int)numericUpDownMapHeight.Value);
 
             //Estado actual
             radioButtonCreateRoom.Select();
@@ -98,9 +98,9 @@ namespace Examples.RoomsEditor
             numericUpDownMapHeight.Value = mapSize.Height;
 
             MapScale = mapScale;
-            numericUpDownMapScaleX.Value = (decimal) mapScale.X;
-            numericUpDownMapScaleY.Value = (decimal) mapScale.Y;
-            numericUpDownMapScaleZ.Value = (decimal) mapScale.Z;
+            numericUpDownMapScaleX.Value = (decimal)mapScale.X;
+            numericUpDownMapScaleY.Value = (decimal)mapScale.Y;
+            numericUpDownMapScaleZ.Value = (decimal)mapScale.Z;
         }
 
         /// <summary>
@@ -128,8 +128,8 @@ namespace Examples.RoomsEditor
         /// </summary>
         internal Point snapPointToGrid(int x, int y)
         {
-            x = x - x%SNAP_TO_GRID_FACTOR;
-            y = y - y%SNAP_TO_GRID_FACTOR;
+            x = x - x % SNAP_TO_GRID_FACTOR;
+            y = y - y % SNAP_TO_GRID_FACTOR;
             return new Point(x, y);
         }
 
@@ -213,7 +213,7 @@ namespace Examples.RoomsEditor
         private void numericUpDownMapWidth_ValueChanged(object sender, EventArgs e)
         {
             //validar minimo Width de panel2d
-            var newWidth = (int) numericUpDownMapWidth.Value;
+            var newWidth = (int)numericUpDownMapWidth.Value;
             if (newWidth < panel2d.MinimumSize.Width)
             {
                 //buscar maximo X de todos los rooms
@@ -246,7 +246,7 @@ namespace Examples.RoomsEditor
         private void numericUpDownMapHeight_ValueChanged(object sender, EventArgs e)
         {
             //validar minimo Height de panel2d
-            var newHeight = (int) numericUpDownMapHeight.Value;
+            var newHeight = (int)numericUpDownMapHeight.Value;
             if (newHeight < panel2d.MinimumSize.Height)
             {
                 //buscar maximo Y de todos los rooms
@@ -315,8 +315,8 @@ namespace Examples.RoomsEditor
             }
 
             //Escala del mapa
-            MapScale = new Vector3((float) numericUpDownMapScaleX.Value, (float) numericUpDownMapScaleY.Value,
-                (float) numericUpDownMapScaleZ.Value);
+            MapScale = new Vector3((float)numericUpDownMapScaleX.Value, (float)numericUpDownMapScaleY.Value,
+                (float)numericUpDownMapScaleZ.Value);
 
             //Construir rooms en 3D
             foreach (var room in Rooms)
@@ -634,7 +634,7 @@ namespace Examples.RoomsEditor
         private void numericUpDownRoomPosX_ValueChanged(object sender, EventArgs e)
         {
             var currentR = selectedRoom.RoomPanel.Label.Bounds;
-            var newR = new Rectangle((int) numericUpDownRoomPosX.Value, currentR.Y, currentR.Width, currentR.Height);
+            var newR = new Rectangle((int)numericUpDownRoomPosX.Value, currentR.Y, currentR.Width, currentR.Height);
             if (!selectedRoom.RoomPanel.updateLabelBounds(newR))
             {
                 numericUpDownRoomPosX.Value = currentR.X;
@@ -647,7 +647,7 @@ namespace Examples.RoomsEditor
         private void numericUpDownRoomPosY_ValueChanged(object sender, EventArgs e)
         {
             var currentR = selectedRoom.RoomPanel.Label.Bounds;
-            var newR = new Rectangle(currentR.X, (int) numericUpDownRoomPosY.Value, currentR.Width, currentR.Height);
+            var newR = new Rectangle(currentR.X, (int)numericUpDownRoomPosY.Value, currentR.Width, currentR.Height);
             selectedRoom.RoomPanel.updateLabelBounds(newR);
             if (!selectedRoom.RoomPanel.updateLabelBounds(newR))
             {
@@ -661,7 +661,7 @@ namespace Examples.RoomsEditor
         private void numericUpDownRoomWidth_ValueChanged(object sender, EventArgs e)
         {
             var currentR = selectedRoom.RoomPanel.Label.Bounds;
-            var newR = new Rectangle(currentR.X, currentR.Y, (int) numericUpDownRoomWidth.Value, currentR.Height);
+            var newR = new Rectangle(currentR.X, currentR.Y, (int)numericUpDownRoomWidth.Value, currentR.Height);
             selectedRoom.RoomPanel.updateLabelBounds(newR);
             if (!selectedRoom.RoomPanel.updateLabelBounds(newR))
             {
@@ -675,7 +675,7 @@ namespace Examples.RoomsEditor
         private void numericUpDownRoomLength_ValueChanged(object sender, EventArgs e)
         {
             var currentR = selectedRoom.RoomPanel.Label.Bounds;
-            var newR = new Rectangle(currentR.X, currentR.Y, currentR.Width, (int) numericUpDownRoomLength.Value);
+            var newR = new Rectangle(currentR.X, currentR.Y, currentR.Width, (int)numericUpDownRoomLength.Value);
             selectedRoom.RoomPanel.updateLabelBounds(newR);
             if (!selectedRoom.RoomPanel.updateLabelBounds(newR))
             {
@@ -688,7 +688,7 @@ namespace Examples.RoomsEditor
         /// </summary>
         private void numericUpDownRoomHeight_ValueChanged(object sender, EventArgs e)
         {
-            var newHeight = (int) numericUpDownRoomHeight.Value;
+            var newHeight = (int)numericUpDownRoomHeight.Value;
             selectedRoom.Height = newHeight;
         }
 
@@ -697,7 +697,7 @@ namespace Examples.RoomsEditor
         /// </summary>
         private void numericUpDownRoomFloorLevel_ValueChanged(object sender, EventArgs e)
         {
-            var newFloorLevel = (int) numericUpDownRoomFloorLevel.Value;
+            var newFloorLevel = (int)numericUpDownRoomFloorLevel.Value;
             selectedRoom.FloorLevel = newFloorLevel;
         }
 

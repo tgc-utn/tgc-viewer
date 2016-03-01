@@ -1,12 +1,13 @@
-﻿using System;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils;
-using TgcViewer.Utils.TgcSceneLoader;
+using System;
+using TGC.Core.Direct3D;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Lights
+namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Mesh para ser utilizado en efectos de BumpMapping.
@@ -69,14 +70,13 @@ namespace Examples.Lights
             if (!enabled)
                 return;
 
-            var device = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             //Aplicar transformacion de malla
             updateMeshTransform();
 
             //Cargar VertexDeclaration
-            device.VertexDeclaration = vertexDeclaration;
+            D3DDevice.Instance.Device.VertexDeclaration = vertexDeclaration;
 
             //Activar AlphaBlending
             activateAlphaBlend();
@@ -101,7 +101,7 @@ namespace Examples.Lights
                         //Dibujar cada subset con su Material y DiffuseMap correspondiente
                         for (var i = 0; i < materials.Length; i++)
                         {
-                            device.Material = materials[i];
+                            D3DDevice.Instance.Device.Material = materials[i];
 
                             //Setear textura en shader
                             texturesManager.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
@@ -147,14 +147,14 @@ namespace Examples.Lights
             }
 
             //Obtener vertexBuffer original
-            var origVertexBuffer = (TgcSceneLoader.DiffuseMapVertex[]) mesh.D3dMesh.LockVertexBuffer(
-                typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
+            var origVertexBuffer = (TgcSceneLoader.DiffuseMapVertex[])mesh.D3dMesh.LockVertexBuffer(
+                typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh.D3dMesh.NumberVertices);
             mesh.D3dMesh.UnlockVertexBuffer();
 
             //Crear nuevo Mesh de DirectX
-            var triCount = origVertexBuffer.Length/3;
+            var triCount = origVertexBuffer.Length / 3;
             var d3dMesh = new Mesh(triCount, origVertexBuffer.Length, MeshFlags.Managed, BumpMappingVertexElements,
-                GuiController.Instance.D3dDevice);
+                D3DDevice.Instance.Device);
 
             //Calcular normales recorriendo los triangulos
             var normals = new Vector3[origVertexBuffer.Length];
@@ -165,9 +165,9 @@ namespace Examples.Lights
             for (var i = 0; i < triCount; i++)
             {
                 //Los 3 vertices del triangulo
-                var v1 = origVertexBuffer[i*3];
-                var v2 = origVertexBuffer[i*3 + 1];
-                var v3 = origVertexBuffer[i*3 + 2];
+                var v1 = origVertexBuffer[i * 3];
+                var v2 = origVertexBuffer[i * 3 + 1];
+                var v3 = origVertexBuffer[i * 3 + 2];
 
                 //Face-normal (left-handend)
                 var a = v2.Position - v1.Position;
@@ -175,9 +175,9 @@ namespace Examples.Lights
                 var n = Vector3.Cross(a, b);
 
                 //Acumular normal del vertice segun todas sus Face-normal
-                normals[i*3] += n;
-                normals[i*3 + 1] += n;
-                normals[i*3 + 2] += n;
+                normals[i * 3] += n;
+                normals[i * 3 + 1] += n;
+                normals[i * 3 + 2] += n;
             }
 
             //Normalizar normales
@@ -194,9 +194,9 @@ namespace Examples.Lights
                 for (var i = 0; i < triCount; i++)
                 {
                     //Vertices originales
-                    var vOrig1 = origVertexBuffer[i*3];
-                    var vOrig2 = origVertexBuffer[i*3 + 1];
-                    var vOrig3 = origVertexBuffer[i*3 + 2];
+                    var vOrig1 = origVertexBuffer[i * 3];
+                    var vOrig2 = origVertexBuffer[i * 3 + 1];
+                    var vOrig3 = origVertexBuffer[i * 3 + 2];
 
                     //Nuevo vertice 1
                     var v1 = new BumpMappingVertex();
@@ -204,7 +204,7 @@ namespace Examples.Lights
                     v1.Color = vOrig1.Color;
                     v1.Tu = vOrig1.Tu;
                     v1.Tv = vOrig1.Tv;
-                    v1.Normal = normals[i*3];
+                    v1.Normal = normals[i * 3];
 
                     //Nuevo vertice 2
                     var v2 = new BumpMappingVertex();
@@ -212,7 +212,7 @@ namespace Examples.Lights
                     v2.Color = vOrig2.Color;
                     v2.Tu = vOrig2.Tu;
                     v2.Tv = vOrig2.Tv;
-                    v2.Normal = normals[i*3 + 1];
+                    v2.Normal = normals[i * 3 + 1];
 
                     //Nuevo vertice 3
                     var v3 = new BumpMappingVertex();
@@ -220,7 +220,7 @@ namespace Examples.Lights
                     v3.Color = vOrig3.Color;
                     v3.Tu = vOrig3.Tu;
                     v3.Tv = vOrig3.Tv;
-                    v3.Normal = normals[i*3 + 2];
+                    v3.Normal = normals[i * 3 + 2];
 
                     //Calcular tangente y binormal para todo el triangulo y cargarlas en cada vertice
                     Vector3 tangent;
@@ -248,7 +248,7 @@ namespace Examples.Lights
                 var indices = new short[origVertexBuffer.Length];
                 for (var i = 0; i < indices.Length; i++)
                 {
-                    indices[i] = (short) i;
+                    indices[i] = (short)i;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -347,7 +347,7 @@ namespace Examples.Lights
             //  bitangent = (1 / det A) * (-texEdge2.x * edge1 + texEdge1.x * edge2)
             //     normal = cross(tangent, bitangent)
 
-            var det = texEdge1.X*texEdge2.Y - texEdge1.Y*texEdge2.X;
+            var det = texEdge1.X * texEdge2.Y - texEdge1.Y * texEdge2.X;
 
             if (FastMath.Abs(det) < 0.0001f) // almost equal to zero
             {
@@ -361,16 +361,16 @@ namespace Examples.Lights
             }
             else
             {
-                det = 1.0f/det;
+                det = 1.0f / det;
 
-                tangent.X = (texEdge2.Y*edge1.X - texEdge1.Y*edge2.X)*det;
-                tangent.Y = (texEdge2.Y*edge1.Y - texEdge1.Y*edge2.Y)*det;
-                tangent.Z = (texEdge2.Y*edge1.Z - texEdge1.Y*edge2.Z)*det;
+                tangent.X = (texEdge2.Y * edge1.X - texEdge1.Y * edge2.X) * det;
+                tangent.Y = (texEdge2.Y * edge1.Y - texEdge1.Y * edge2.Y) * det;
+                tangent.Z = (texEdge2.Y * edge1.Z - texEdge1.Y * edge2.Z) * det;
                 //tangent.W = 0.0f;
 
-                binormal.X = (-texEdge2.X*edge1.X + texEdge1.X*edge2.X)*det;
-                binormal.Y = (-texEdge2.X*edge1.Y + texEdge1.X*edge2.Y)*det;
-                binormal.Z = (-texEdge2.X*edge1.Z + texEdge1.X*edge2.Z)*det;
+                binormal.X = (-texEdge2.X * edge1.X + texEdge1.X * edge2.X) * det;
+                binormal.Y = (-texEdge2.X * edge1.Y + texEdge1.X * edge2.Y) * det;
+                binormal.Z = (-texEdge2.X * edge1.Z + texEdge1.X * edge2.Z) * det;
 
                 tangent.Normalize();
                 binormal.Normalize();
@@ -384,7 +384,7 @@ namespace Examples.Lights
             // then we need to invert the cross product calculated bitangent vector.
             var b = Vector3.Cross(v1.Normal, tangent);
             var w = Vector3.Dot(b, binormal) < 0.0f ? -1.0f : 1.0f;
-            binormal = b*w;
+            binormal = b * w;
         }
 
         /// <summary>

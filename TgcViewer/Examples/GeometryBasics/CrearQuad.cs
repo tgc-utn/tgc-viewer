@@ -1,10 +1,10 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo Caja
@@ -37,8 +37,6 @@ namespace Examples.GeometryBasics
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear Quad vacio
             quad = new TgcQuad();
 
@@ -63,12 +61,10 @@ namespace Examples.GeometryBasics
         /// </summary>
         private void updateQuad(bool showNormal)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var size = (Vector2) GuiController.Instance.Modifiers["size"];
-            var normal = (Vector3) GuiController.Instance.Modifiers["normal"];
-            var center = (Vector3) GuiController.Instance.Modifiers["center"];
-            var color = (Color) GuiController.Instance.Modifiers["color"];
+            var size = (Vector2)GuiController.Instance.Modifiers["size"];
+            var normal = (Vector3)GuiController.Instance.Modifiers["normal"];
+            var center = (Vector3)GuiController.Instance.Modifiers["center"];
+            var color = (Color)GuiController.Instance.Modifiers["color"];
 
             //Cargar valores del quad.
             quad.Center = center;
@@ -83,16 +79,14 @@ namespace Examples.GeometryBasics
             if (showNormal)
             {
                 normalArrow.PStart = quad.Center;
-                normalArrow.PEnd = quad.Center + quad.Normal*10;
+                normalArrow.PEnd = quad.Center + quad.Normal * 10;
                 normalArrow.updateValues();
             }
         }
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var showNormal = (bool) GuiController.Instance.Modifiers["showNormal"];
+            var showNormal = (bool)GuiController.Instance.Modifiers["showNormal"];
 
             //Actualizar parametros de la caja
             updateQuad(showNormal);

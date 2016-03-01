@@ -1,10 +1,10 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Tutorial
+namespace TGC.Examples.Tutorial
 {
     /// <summary>
     ///     Tutorial 7:
@@ -37,8 +37,6 @@ namespace Examples.Tutorial
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //En este ejemplo primero cargamos una escena 3D entera.
             var loader = new TgcSceneLoader();
             scene =
@@ -60,8 +58,6 @@ namespace Examples.Tutorial
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Procesamos input de teclado para mover el objeto principal en el plano XZ
             var input = GuiController.Instance.D3dInput;
             var movement = new Vector3(0, 0, 0);

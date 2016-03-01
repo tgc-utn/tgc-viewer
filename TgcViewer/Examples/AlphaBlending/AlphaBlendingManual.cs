@@ -1,11 +1,12 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.AlphaBlending
+namespace TGC.Examples.AlphaBlending
 {
     /// <summary>
     ///     AlphaBlendingManual
@@ -32,16 +33,14 @@ namespace Examples.AlphaBlending
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            D3DDevice.Instance.Device.RenderState.AlphaFunction = Compare.Greater;
+            D3DDevice.Instance.Device.RenderState.BlendOperation = BlendOperation.Add;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
+            D3DDevice.Instance.Device.RenderState.SourceBlend = Blend.SourceAlpha;
+            D3DDevice.Instance.Device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
 
-            d3dDevice.RenderState.AlphaFunction = Compare.Greater;
-            d3dDevice.RenderState.BlendOperation = BlendOperation.Add;
-            d3dDevice.RenderState.AlphaBlendEnable = true;
-            d3dDevice.RenderState.AlphaTestEnable = true;
-            d3dDevice.RenderState.SourceBlend = Blend.SourceAlpha;
-            d3dDevice.RenderState.DestinationBlend = Blend.InvSourceAlpha;
-
-            var texture = TgcTexture.createTexture(d3dDevice,
+            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\BoxAlpha\\Textures\\pruebaAlpha.png");
 
             mesh1 = new TgcPlaneWall(new Vector3(0, 0, 0), new Vector3(100, 100, 0), TgcPlaneWall.Orientations.XYplane,
@@ -65,9 +64,7 @@ namespace Examples.AlphaBlending
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var invert = (bool) GuiController.Instance.Modifiers["invertRender"];
+            var invert = (bool)GuiController.Instance.Modifiers["invertRender"];
 
             if (invert)
             {
@@ -85,8 +82,6 @@ namespace Examples.AlphaBlending
         {
             mesh1.dispose();
             mesh2.dispose();
-
-            var d3dDevice = GuiController.Instance.D3dDevice;
         }
     }
 }

@@ -1,14 +1,15 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using System;
+using System.Collections.Generic;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploColisiones:
@@ -27,6 +28,7 @@ namespace Examples.Collision
     {
         //Velocidad de desplazamiento
         private const float VELOCIDAD_DESPLAZAMIENTO = 200f;
+
         private Vector3 move = new Vector3();
         private List<TgcMesh> obstaculos;
         private TgcSkeletalMesh personaje;
@@ -50,10 +52,8 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(d3dDevice,
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\pasto.jpg");
             piso = TgcBox.fromSize(new Vector3(1000, 1, 1000), pisoTexture);
 
@@ -83,7 +83,10 @@ namespace Examples.Collision
             obstaculo.move(0, 20, 100);
             //Le cambiamos la textura a este modelo particular
             obstaculo.changeDiffuseMaps(new[]
-            {TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg")});
+            {
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                    GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg")
+            });
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2: Malla estatática de Box de formato TGC
@@ -126,16 +129,14 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Ver si hay que mostrar el BoundingBox
-            var showBB = (bool) GuiController.Instance.Modifiers.getValue("showBoundingBox");
+            var showBB = (bool)GuiController.Instance.Modifiers.getValue("showBoundingBox");
 
             //Calcular proxima posicion de personaje segun Input
             var move = new Vector3(0, 0, 0);
 
             //Multiplicar la velocidad por el tiempo transcurrido, para no acoplarse al CPU
-            var speed = VELOCIDAD_DESPLAZAMIENTO*elapsedTime;
+            var speed = VELOCIDAD_DESPLAZAMIENTO * elapsedTime;
 
             var d3dInput = GuiController.Instance.D3dInput;
             var moving = false;
@@ -152,7 +153,7 @@ namespace Examples.Collision
             else if (d3dInput.keyDown(Key.S))
             {
                 move.Z = speed;
-                personaje.Rotation = new Vector3(0, (float) Math.PI, 0);
+                personaje.Rotation = new Vector3(0, (float)Math.PI, 0);
                 moving = true;
             }
 
@@ -160,7 +161,7 @@ namespace Examples.Collision
             else if (d3dInput.keyDown(Key.A))
             {
                 move.X = +speed;
-                personaje.Rotation = new Vector3(0, -(float) Math.PI/2, 0);
+                personaje.Rotation = new Vector3(0, -(float)Math.PI / 2, 0);
                 moving = true;
             }
 
@@ -168,7 +169,7 @@ namespace Examples.Collision
             else if (d3dInput.keyDown(Key.D))
             {
                 move.X = -speed;
-                personaje.Rotation = new Vector3(0, (float) Math.PI/2, 0);
+                personaje.Rotation = new Vector3(0, (float)Math.PI / 2, 0);
                 moving = true;
             }
 

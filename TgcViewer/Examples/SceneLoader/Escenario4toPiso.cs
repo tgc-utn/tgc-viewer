@@ -1,10 +1,10 @@
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples
+namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Ejemplo Escenario4toPiso:
@@ -73,7 +73,7 @@ namespace Examples
 
         public override void render(float elapsedTime)
         {
-            var frustumCullingEnabled = (bool) GuiController.Instance.Modifiers["culling"];
+            var frustumCullingEnabled = (bool)GuiController.Instance.Modifiers["culling"];
 
             //Renderizar sin ninguna optimizacion
             if (!frustumCullingEnabled)

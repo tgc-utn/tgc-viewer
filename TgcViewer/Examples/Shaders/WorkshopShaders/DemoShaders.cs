@@ -1,19 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.Terrain;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.Shaders.WorkshopShaders
 {
     /// <summary>
     ///     Ejemplo EnvMap:
@@ -27,8 +28,10 @@ namespace Examples.Shaders.WorkshopShaders
     {
         private readonly float far_plane = 10000f;
         private readonly float near_plane = 1f;
+
         // Shadow map
         private readonly int SHADOWMAP_SIZE = 512;
+
         private float alfa_sol; // pos. del sol
         private float an_tanque; // angulo actual del tanque
         private TgcArrow arrow;
@@ -63,6 +66,7 @@ namespace Examples.Shaders.WorkshopShaders
 
         // modo demo
         private float timer_preview;
+
         private int tipo_vista, ant_vista;
         private float vel_tanque;
         private Viewport View1, View2, ViewF;
@@ -86,8 +90,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear loader
             var loader = new TgcSceneLoader();
 
@@ -139,7 +141,7 @@ namespace Examples.Shaders.WorkshopShaders
             mesh.AutoTransformEnable = false;
             var size = mesh.BoundingBox.calculateSize();
             largo_tanque = Math.Abs(size.Z);
-            alto_tanque = Math.Abs(size.Y)*mesh.Scale.Y;
+            alto_tanque = Math.Abs(size.Y) * mesh.Scale.Y;
             vel_tanque = 10;
             an_tanque = 0;
             canoa.Scale = new Vector3(1f, 1f, 1f);
@@ -155,14 +157,14 @@ namespace Examples.Shaders.WorkshopShaders
             cant_palmeras = 0;
             int i;
             bosque = new List<TgcMesh>();
-            float[] r = {1850f, 2100f, 2300f, 1800f};
+            float[] r = { 1850f, 2100f, 2300f, 1800f };
             for (i = 0; i < 4; i++)
                 for (var j = 0; j < 15; j++)
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
                     instance.Scale = new Vector3(0.5f, 1.5f, 0.5f);
-                    var x = r[i]*(float) Math.Cos(Geometry.DegreeToRadian(100 + 10.0f*j));
-                    var z = r[i]*(float) Math.Sin(Geometry.DegreeToRadian(100 + 10.0f*j));
+                    var x = r[i] * (float)Math.Cos(Geometry.DegreeToRadian(100 + 10.0f * j));
+                    var z = r[i] * (float)Math.Sin(Geometry.DegreeToRadian(100 + 10.0f * j));
                     instance.Position = new Vector3(x, terrain.CalcularAltura(x, z)
                         /*+ alto_palmera / 2 * instance.Scale.Y*/, z);
                     bosque.Add(instance);
@@ -172,14 +174,14 @@ namespace Examples.Shaders.WorkshopShaders
             // segunda parte: la isla del medio
             // estas no entran en el env. map (porque se supone que el env. map esta lejos
             // del pto de vista del observador y estas palmeras estan en el medio del lago)
-            float[] r2 = {200f, 350f, 400f, 477f};
+            float[] r2 = { 200f, 350f, 400f, 477f };
             for (i = 0; i < 4; i++)
                 for (var j = 0; j < 5; j++)
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
-                    instance.Scale = new Vector3(0.5f, 1f + j/5f*0.33f, 0.5f);
-                    var x = r2[i]*(float) Math.Cos(Geometry.DegreeToRadian(25.0f*j));
-                    var z = r2[i]*(float) Math.Sin(Geometry.DegreeToRadian(25.0f*j));
+                    instance.Scale = new Vector3(0.5f, 1f + j / 5f * 0.33f, 0.5f);
+                    var x = r2[i] * (float)Math.Cos(Geometry.DegreeToRadian(25.0f * j));
+                    var z = r2[i] * (float)Math.Sin(Geometry.DegreeToRadian(25.0f * j));
                     instance.Position = new Vector3(x, terrain.CalcularAltura(x, z)
                         /*+ alto_palmera / 2 * instance.Scale.Y*/, z);
                     bosque.Add(instance);
@@ -214,14 +216,14 @@ namespace Examples.Shaders.WorkshopShaders
             // Creo el shadowmap.
             // Format.R32F
             // Format.X8R8G8B8
-            g_pShadowMap = new Texture(d3dDevice, SHADOWMAP_SIZE, SHADOWMAP_SIZE,
+            g_pShadowMap = new Texture(D3DDevice.Instance.Device, SHADOWMAP_SIZE, SHADOWMAP_SIZE,
                 1, Usage.RenderTarget, Format.R32F,
                 Pool.Default);
 
             // tengo que crear un stencilbuffer para el shadowmap manualmente
             // para asegurarme que tenga la el mismo tamaño que el shadowmap, y que no tenga
             // multisample, etc etc.
-            g_pDSShadow = d3dDevice.CreateDepthStencilSurface(SHADOWMAP_SIZE,
+            g_pDSShadow = D3DDevice.Instance.Device.CreateDepthStencilSurface(SHADOWMAP_SIZE,
                 SHADOWMAP_SIZE,
                 DepthFormat.D24S8,
                 MultiSampleType.None,
@@ -233,10 +235,10 @@ namespace Examples.Shaders.WorkshopShaders
             // de hecho, un valor mayor a 90 todavia es mejor, porque hasta con 90 grados es muy dificil
             // lograr que los objetos del borde generen sombras
             var panel3d = GuiController.Instance.Panel3d;
-            var aspectRatio = panel3d.Width/(float) panel3d.Height;
+            var aspectRatio = panel3d.Width / (float)panel3d.Height;
             g_mShadowProj = Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(130.0f),
                 aspectRatio, near_plane, far_plane);
-            d3dDevice.Transform.Projection =
+            D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, near_plane, far_plane);
 
@@ -263,25 +265,24 @@ namespace Examples.Shaders.WorkshopShaders
             View1.X = 0;
             View1.Y = 0;
             View1.Width = panel3d.Width;
-            View1.Height = panel3d.Height/2;
+            View1.Height = panel3d.Height / 2;
             View1.MinZ = 0;
             View1.MaxZ = 1;
             View2 = new Viewport();
             View2.X = 0;
             View2.Y = View1.Height;
             View2.Width = panel3d.Width;
-            View2.Height = panel3d.Height/2;
+            View2.Height = panel3d.Height / 2;
             View2.MinZ = 0;
             View2.MaxZ = 1;
 
-            ViewF = d3dDevice.Viewport;
+            ViewF = D3DDevice.Instance.Device.Viewport;
         }
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
             var panel3d = GuiController.Instance.Panel3d;
-            var aspectRatio = panel3d.Width/(float) panel3d.Height;
+            var aspectRatio = panel3d.Width / (float)panel3d.Height;
             time += elapsedTime;
 
             if (GuiController.Instance.D3dInput.keyPressed(Key.C))
@@ -323,22 +324,22 @@ namespace Examples.Shaders.WorkshopShaders
             }
 
             // animar tanque
-            an_tanque -= elapsedTime*Geometry.DegreeToRadian(vel_tanque);
+            an_tanque -= elapsedTime * Geometry.DegreeToRadian(vel_tanque);
             var alfa = an_tanque;
-            var x0 = 2000f*(float) Math.Cos(alfa);
-            var z0 = 2000f*(float) Math.Sin(alfa);
+            var x0 = 2000f * (float)Math.Cos(alfa);
+            var z0 = 2000f * (float)Math.Sin(alfa);
             float offset_rueda = 10;
-            var H = terrain.CalcularAltura(x0, z0) + alto_tanque/2 - offset_rueda;
+            var H = terrain.CalcularAltura(x0, z0) + alto_tanque / 2 - offset_rueda;
             if (H < nivel_mar)
                 H = nivel_mar;
             mesh.Position = new Vector3(x0, H, z0);
             // direccion tangente sobre el piso:
-            var dir_tanque = new Vector2(-(float) Math.Sin(alfa), (float) Math.Cos(alfa));
+            var dir_tanque = new Vector2(-(float)Math.Sin(alfa), (float)Math.Cos(alfa));
             dir_tanque.Normalize();
             // Posicion de la parte de adelante del tanque
             var pos2d = new Vector2(x0, z0);
-            pos2d = pos2d + dir_tanque*(largo_tanque/2);
-            var H_frente = terrain.CalcularAltura(pos2d.X, pos2d.Y) + alto_tanque/2 - offset_rueda;
+            pos2d = pos2d + dir_tanque * (largo_tanque / 2);
+            var H_frente = terrain.CalcularAltura(pos2d.X, pos2d.Y) + alto_tanque / 2 - offset_rueda;
             if (H_frente < nivel_mar - 15)
                 H_frente = nivel_mar - 15;
             var pos_frente = new Vector3(pos2d.X, H_frente, pos2d.Y);
@@ -347,27 +348,27 @@ namespace Examples.Shaders.WorkshopShaders
             mesh.Transform = CalcularMatriz(mesh.Position, mesh.Scale, Vel);
 
             // animo la canoa en circulos:
-            alfa = -time*Geometry.DegreeToRadian(10.0f);
-            x0 = 400f*(float) Math.Cos(alfa);
-            z0 = 400f*(float) Math.Sin(alfa);
+            alfa = -time * Geometry.DegreeToRadian(10.0f);
+            x0 = 400f * (float)Math.Cos(alfa);
+            z0 = 400f * (float)Math.Sin(alfa);
             canoa.Position = new Vector3(x0, 150, z0);
-            dir_canoa = new Vector3(-(float) Math.Sin(alfa), 0, (float) Math.Cos(alfa));
+            dir_canoa = new Vector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
             canoa.Transform = CalcularMatriz(canoa.Position, canoa.Scale, dir_canoa);
 
-            alfa_sol += elapsedTime*Geometry.DegreeToRadian(1.0f);
+            alfa_sol += elapsedTime * Geometry.DegreeToRadian(1.0f);
             if (alfa_sol > 2.5)
                 alfa_sol = 1.5f;
             // animo la posicion del sol
             //g_LightPos = new Vector3(1500f * (float)Math.Cos(alfa_sol), 1500f * (float)Math.Sin(alfa_sol), 0f);
-            g_LightPos = new Vector3(2000f*(float) Math.Cos(alfa_sol), 2000f*(float) Math.Sin(alfa_sol), 0f);
+            g_LightPos = new Vector3(2000f * (float)Math.Cos(alfa_sol), 2000f * (float)Math.Sin(alfa_sol), 0f);
             g_LightDir = -g_LightPos;
             g_LightDir.Normalize();
 
             if (timer_preview > 0)
             {
-                var an = -time*Geometry.DegreeToRadian(10.0f);
-                LookFrom.X = 1500f*(float) Math.Sin(an);
-                LookFrom.Z = 1500f*(float) Math.Cos(an);
+                var an = -time * Geometry.DegreeToRadian(10.0f);
+                LookFrom.X = 1500f * (float)Math.Sin(an);
+                LookFrom.Z = 1500f * (float)Math.Cos(an);
             }
             else
             {
@@ -386,7 +387,7 @@ namespace Examples.Shaders.WorkshopShaders
             }
 
             // --------------------------------------------------------------------
-            device.EndScene();
+            D3DDevice.Instance.Device.EndScene();
             if (g_pCubeMapAgua == null)
             {
                 // solo la primera vez crea el env map del agua
@@ -396,19 +397,19 @@ namespace Examples.Shaders.WorkshopShaders
             }
 
             // Creo el env map del tanque:
-            var g_pCubeMap = new CubeTexture(device, 256, 1, Usage.RenderTarget,
+            var g_pCubeMap = new CubeTexture(D3DDevice.Instance.Device, 256, 1, Usage.RenderTarget,
                 Format.A16B16G16R16F, Pool.Default);
-            var pOldRT = device.GetRenderTarget(0);
+            var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             // ojo: es fundamental que el fov sea de 90 grados.
             // asi que re-genero la matriz de proyeccion
-            device.Transform.Projection =
+            D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f), 1f, near_plane, far_plane);
 
             // Genero las caras del enviroment map
             for (var nFace = CubeMapFace.PositiveX; nFace <= CubeMapFace.NegativeZ; ++nFace)
             {
                 var pFace = g_pCubeMap.GetCubeMapSurface(nFace, 0);
-                device.SetRenderTarget(0, pFace);
+                D3DDevice.Instance.Device.SetRenderTarget(0, pFace);
                 Vector3 Dir, VUP;
                 Color color;
                 switch (nFace)
@@ -459,20 +460,20 @@ namespace Examples.Shaders.WorkshopShaders
 
                 //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
                 var Pos = mesh.Position;
-                device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
+                D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
-                device.BeginScene();
+                D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
+                D3DDevice.Instance.Device.BeginScene();
 
                 //Renderizar
                 renderScene(elapsedTime, true);
 
-                device.EndScene();
+                D3DDevice.Instance.Device.EndScene();
                 //string fname = string.Format("face{0:D}.bmp", nFace);
                 //SurfaceLoader.Save(fname, ImageFileFormat.Bmp, pFace);
             }
             // restuaro el render target
-            device.SetRenderTarget(0, pOldRT);
+            D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
             //TextureLoader.Save("test.bmp", ImageFileFormat.Bmp, g_pCubeMap);
 
             //Genero el shadow map
@@ -480,10 +481,10 @@ namespace Examples.Shaders.WorkshopShaders
 
             // Restauro el estado de las transformaciones
             if (timer_preview > 0)
-                device.Transform.View = Matrix.LookAtLH(LookFrom, LookAt, new Vector3(0, 1, 0));
+                D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(LookFrom, LookAt, new Vector3(0, 1, 0));
             else
-                GuiController.Instance.CurrentCamera.updateViewMatrix(device);
-            device.Transform.Projection =
+                GuiController.Instance.CurrentCamera.updateViewMatrix(D3DDevice.Instance.Device);
+            D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, near_plane, far_plane);
 
@@ -498,28 +499,28 @@ namespace Examples.Shaders.WorkshopShaders
 
             // -----------------------------------------------------
             // dibujo la escena pp dicha:
-            device.BeginScene();
+            D3DDevice.Instance.Device.BeginScene();
 
             if (tipo_vista != 1)
             {
                 // con shaders :
                 if (tipo_vista == 2)
                     // dibujo en una vista:
-                    device.Viewport = View1;
+                    D3DDevice.Instance.Device.Viewport = View1;
                 else
-                // dibujo en la pantalla completa
-                    device.Viewport = ViewF;
+                    // dibujo en la pantalla completa
+                    D3DDevice.Instance.Device.Viewport = ViewF;
 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 // 1ero sin el agua
                 renderScene(elapsedTime, false);
 
                 // Ahora dibujo el agua
-                device.RenderState.AlphaBlendEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
                 effect.SetValue("aux_Tex", terrain.terrainTexture);
                 // posicion de la canoa (divido por la escala)
-                effect.SetValue("canoa_x", x0/10.0f);
-                effect.SetValue("canoa_y", z0/10.0f);
+                effect.SetValue("canoa_x", x0 / 10.0f);
+                effect.SetValue("canoa_y", z0 / 10.0f);
                 piso.Technique = "RenderAgua";
                 piso.render();
             }
@@ -529,12 +530,12 @@ namespace Examples.Shaders.WorkshopShaders
                 // sin shaders
                 if (tipo_vista == 2)
                     // dibujo en una vista:
-                    device.Viewport = View2;
+                    D3DDevice.Instance.Device.Viewport = View2;
                 else
-                // dibujo en la pantalla completa
-                    device.Viewport = ViewF;
+                    // dibujo en la pantalla completa
+                    D3DDevice.Instance.Device.Viewport = ViewF;
 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 //Renderizar terreno
                 terrain.render();
                 //Renderizar SkyBox
@@ -547,16 +548,16 @@ namespace Examples.Shaders.WorkshopShaders
                 // tanque
                 mesh.render();
                 // agua
-                var ant_src = device.RenderState.SourceBlend;
-                var ant_dest = device.RenderState.DestinationBlend;
-                var ant_alpha = device.RenderState.AlphaBlendEnable;
-                device.RenderState.AlphaBlendEnable = true;
-                device.RenderState.SourceBlend = Blend.SourceColor;
-                device.RenderState.DestinationBlend = Blend.InvSourceColor;
+                var ant_src = D3DDevice.Instance.Device.RenderState.SourceBlend;
+                var ant_dest = D3DDevice.Instance.Device.RenderState.DestinationBlend;
+                var ant_alpha = D3DDevice.Instance.Device.RenderState.AlphaBlendEnable;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
+                D3DDevice.Instance.Device.RenderState.SourceBlend = Blend.SourceColor;
+                D3DDevice.Instance.Device.RenderState.DestinationBlend = Blend.InvSourceColor;
                 piso.render();
-                device.RenderState.SourceBlend = ant_src;
-                device.RenderState.DestinationBlend = ant_dest;
-                device.RenderState.AlphaBlendEnable = ant_alpha;
+                D3DDevice.Instance.Device.RenderState.SourceBlend = ant_src;
+                D3DDevice.Instance.Device.RenderState.DestinationBlend = ant_dest;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = ant_alpha;
             }
 
             g_pCubeMap.Dispose();
@@ -564,7 +565,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public void renderScene(float elapsedTime, bool cubemap)
         {
-            var device = GuiController.Instance.D3dDevice;
             //Renderizar terreno
             if (!cubemap)
             {
@@ -596,20 +596,19 @@ namespace Examples.Shaders.WorkshopShaders
         public void CrearEnvMapAgua()
         {
             // creo el enviroment map para el agua
-            var device = GuiController.Instance.D3dDevice;
-            g_pCubeMapAgua = new CubeTexture(device, 256, 1, Usage.RenderTarget,
+            g_pCubeMapAgua = new CubeTexture(D3DDevice.Instance.Device, 256, 1, Usage.RenderTarget,
                 Format.A16B16G16R16F, Pool.Default);
-            var pOldRT = device.GetRenderTarget(0);
+            var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             // ojo: es fundamental que el fov sea de 90 grados.
             // asi que re-genero la matriz de proyeccion
-            device.Transform.Projection =
+            D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f),
                     1f, near_plane, far_plane);
             // Genero las caras del enviroment map
             for (var nFace = CubeMapFace.PositiveX; nFace <= CubeMapFace.NegativeZ; ++nFace)
             {
                 var pFace = g_pCubeMapAgua.GetCubeMapSurface(nFace, 0);
-                device.SetRenderTarget(0, pFace);
+                D3DDevice.Instance.Device.SetRenderTarget(0, pFace);
                 Vector3 Dir, VUP;
                 Color color;
                 switch (nFace)
@@ -662,9 +661,9 @@ namespace Examples.Shaders.WorkshopShaders
                 if (nFace == CubeMapFace.NegativeY)
                     Pos.Y += 2000;
 
-                device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
-                device.BeginScene();
+                D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
+                D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
+                D3DDevice.Instance.Device.BeginScene();
                 //Renderizar: solo algunas cosas:
                 if (nFace == CubeMapFace.NegativeY)
                 {
@@ -682,15 +681,14 @@ namespace Examples.Shaders.WorkshopShaders
                 var fname = string.Format("face{0:D}.bmp", nFace);
                 //SurfaceLoader.Save(fname, ImageFileFormat.Bmp, pFace);
 
-                device.EndScene();
+                D3DDevice.Instance.Device.EndScene();
             }
             // restuaro el render target
-            device.SetRenderTarget(0, pOldRT);
+            D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
         }
 
         public void RenderShadowMap()
         {
-            var device = GuiController.Instance.D3dDevice;
             //Doy posicion a la luz
             // Calculo la matriz de view de la luz
             effect.SetValue("g_vLightPos", new Vector4(g_LightPos.X, g_LightPos.Y, g_LightPos.Z, 1));
@@ -699,17 +697,17 @@ namespace Examples.Shaders.WorkshopShaders
 
             // inicializacion standard:
             effect.SetValue("g_mProjLight", g_mShadowProj);
-            effect.SetValue("g_mViewLightProj", g_LightView*g_mShadowProj);
+            effect.SetValue("g_mViewLightProj", g_LightView * g_mShadowProj);
 
             // Primero genero el shadow map, para ello dibujo desde el pto de vista de luz
             // a una textura, con el VS y PS que generan un mapa de profundidades.
-            var pOldRT = device.GetRenderTarget(0);
+            var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             var pShadowSurf = g_pShadowMap.GetSurfaceLevel(0);
-            device.SetRenderTarget(0, pShadowSurf);
-            var pOldDS = device.DepthStencilSurface;
-            device.DepthStencilSurface = g_pDSShadow;
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.White, 1.0f, 0);
-            device.BeginScene();
+            D3DDevice.Instance.Device.SetRenderTarget(0, pShadowSurf);
+            var pOldDS = D3DDevice.Instance.Device.DepthStencilSurface;
+            D3DDevice.Instance.Device.DepthStencilSurface = g_pDSShadow;
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.White, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
 
             // Hago el render de la escena pp dicha
             // solo los objetos que proyectan sombras:
@@ -726,12 +724,12 @@ namespace Examples.Shaders.WorkshopShaders
             mesh.Technique = "RenderShadow";
             mesh.render();
             // Termino
-            device.EndScene();
+            D3DDevice.Instance.Device.EndScene();
             //TextureLoader.Save("shadowmap.bmp", ImageFileFormat.Bmp, g_pShadowMap);
 
             // restuaro el render target y el stencil
-            device.DepthStencilSurface = pOldDS;
-            device.SetRenderTarget(0, pOldRT);
+            D3DDevice.Instance.Device.DepthStencilSurface = pOldDS;
+            D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
 
             effect.SetValue("g_txShadow", g_pShadowMap);
         }
@@ -766,10 +764,10 @@ namespace Examples.Shaders.WorkshopShaders
             Orientacion.M42 = 0;
             Orientacion.M43 = 0;
             Orientacion.M44 = 1;
-            matWorld = matWorld*Orientacion;
+            matWorld = matWorld * Orientacion;
 
             // traslado
-            matWorld = matWorld*Matrix.Translation(Pos);
+            matWorld = matWorld * Matrix.Translation(Pos);
             return matWorld;
         }
 
@@ -800,10 +798,10 @@ namespace Examples.Shaders.WorkshopShaders
             Orientacion.M42 = 0;
             Orientacion.M43 = 0;
             Orientacion.M44 = 1;
-            matWorld = matWorld*Orientacion;
+            matWorld = matWorld * Orientacion;
 
             // traslado
-            matWorld = matWorld*Matrix.Translation(Pos);
+            matWorld = matWorld * Matrix.Translation(Pos);
             return matWorld;
         }
 

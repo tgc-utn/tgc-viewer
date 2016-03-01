@@ -1,9 +1,9 @@
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Terrain;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Terrain;
 
-namespace Examples.Otros
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo CrearSkyBox.
@@ -36,8 +36,6 @@ namespace Examples.Otros
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             var texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox1\\";
 
             //Crear SkyBox
@@ -66,8 +64,6 @@ namespace Examples.Otros
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Renderizar SkyBox
             skyBox.render();
         }

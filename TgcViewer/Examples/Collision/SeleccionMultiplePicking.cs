@@ -1,13 +1,14 @@
+using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo SeleccionMultiplePicking:
@@ -48,10 +49,8 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear suelo
-            var texture = TgcTexture.createTexture(d3dDevice,
+            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\quakeWall3.jpg");
             suelo = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(500, 0.1f, 500), texture);
 
@@ -93,8 +92,6 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {

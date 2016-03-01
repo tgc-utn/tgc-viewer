@@ -1,7 +1,7 @@
-using TgcViewer;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 
-namespace Examples
+namespace TGC.Examples
 {
     /// <summary>
     ///     Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
@@ -25,12 +25,12 @@ namespace Examples
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
         }
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
+            var d3dDevice = D3DDevice.Instance.Device;
         }
 
         public override void close()

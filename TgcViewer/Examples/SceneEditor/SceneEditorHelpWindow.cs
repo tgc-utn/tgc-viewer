@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace Examples.SceneEditor
+namespace TGC.Examples.SceneEditor
 {
     public partial class SceneEditorHelpWindow : Form
     {

@@ -1,8 +1,8 @@
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.SceneLoader
+namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Exportar una malla a XML
@@ -28,8 +28,6 @@ namespace Examples.SceneLoader
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             var loader = new TgcSceneLoader();
             var sceneOriginal =
                 loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Iglesia\\" +
@@ -59,8 +57,6 @@ namespace Examples.SceneLoader
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             sceneRecover.renderAll();
         }
 

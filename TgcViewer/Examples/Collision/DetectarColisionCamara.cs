@@ -1,15 +1,16 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using System.Collections.Generic;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploPicking:
@@ -44,10 +45,8 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(d3dDevice,
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesMediaDir + "Texturas\\tierra.jpg");
             piso = TgcBox.fromExtremes(new Vector3(-1000, -2, -1000), new Vector3(1000, 0, 1000), pisoTexture);
 
@@ -62,7 +61,7 @@ namespace Examples.Collision
             obstaculo = TgcBox.fromExtremes(
                 new Vector3(0, 0, 0),
                 new Vector3(wallSize, wallHeight, 10),
-                TgcTexture.createTexture(d3dDevice,
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
                     GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(obstaculo);
 
@@ -70,28 +69,32 @@ namespace Examples.Collision
             obstaculo = TgcBox.fromExtremes(
                 new Vector3(0, 0, 0),
                 new Vector3(10, wallHeight, wallSize),
-                TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                    GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
             obstaculo = TgcBox.fromExtremes(
                 new Vector3(0, 0, wallSize),
                 new Vector3(wallSize, wallHeight, wallSize + 10),
-                TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                    GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(obstaculo);
 
             //Obstaculo 4
             obstaculo = TgcBox.fromExtremes(
                 new Vector3(wallSize, 0, 0),
                 new Vector3(wallSize + 10, wallHeight, wallSize),
-                TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                    GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(obstaculo);
 
             //Obstaculo 5
             obstaculo = TgcBox.fromExtremes(
-                new Vector3(wallSize/2, 0, wallSize - 400),
+                new Vector3(wallSize / 2, 0, wallSize - 400),
                 new Vector3(wallSize + 10, wallHeight, wallSize - 400 + 10),
-                TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                    GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(obstaculo);
 
             //Cargar personaje con animaciones
@@ -128,8 +131,6 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             var velocidadCaminar = 400f;
             var velocidadRotacion = 120f;
 
@@ -172,7 +173,7 @@ namespace Examples.Collision
             if (rotating)
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
-                var rotAngle = Geometry.DegreeToRadian(rotate*elapsedTime);
+                var rotAngle = Geometry.DegreeToRadian(rotate * elapsedTime);
                 personaje.rotateY(rotAngle);
                 GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
             }
@@ -188,7 +189,7 @@ namespace Examples.Collision
 
                 //La velocidad de movimiento tiene que multiplicarse por el elapsedTime para hacerse independiente de la velocida de CPU
                 //Ver Unidad 2: Ciclo acoplado vs ciclo desacoplado
-                personaje.moveOrientedY(moveForward*elapsedTime);
+                personaje.moveOrientedY(moveForward * elapsedTime);
 
                 //Detectar colisiones
                 var collide = false;
@@ -244,9 +245,9 @@ namespace Examples.Collision
         {
             //Actualizar valores de camara segun modifiers
             var camera = GuiController.Instance.ThirdPersonCamera;
-            camera.OffsetHeight = (float) GuiController.Instance.Modifiers["offsetHeight"];
-            camera.OffsetForward = (float) GuiController.Instance.Modifiers["offsetForward"];
-            var displacement = (Vector2) GuiController.Instance.Modifiers["displacement"];
+            camera.OffsetHeight = (float)GuiController.Instance.Modifiers["offsetHeight"];
+            camera.OffsetForward = (float)GuiController.Instance.Modifiers["offsetForward"];
+            var displacement = (Vector2)GuiController.Instance.Modifiers["displacement"];
             camera.TargetDisplacement = new Vector3(displacement.X, displacement.Y, 0);
 
             //Pedirle a la camara cual va a ser su proxima posicion

@@ -1,4 +1,4 @@
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Información de animiación de un esqueleto
@@ -10,6 +10,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
 
         //Frames para cada Bone
         public TgcSkeletalAnimationBoneData[] bonesFrames;
+
         public int endFrame;
         public int frameRate;
 
@@ -20,6 +21,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
 
         //BoundingBox para esta animación
         public float[] pMin;
+
         public int startFrame;
     }
 }

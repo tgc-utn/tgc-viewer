@@ -1,6 +1,6 @@
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Optimizacion.Octree
+namespace TGC.Examples.Optimizacion.Octree
 {
     /// <summary>
     ///     Nodo del árbol Octree

@@ -1,9 +1,10 @@
 using Microsoft.DirectX.Direct3D;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
-namespace Examples.SkeletalAnimation
+namespace TGC.Examples.SkeletalAnimation
 {
     /// <summary>
     ///     Ejemplo EjemploCustomSkeletalMesh:
@@ -36,8 +37,6 @@ namespace Examples.SkeletalAnimation
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear loader
             var loader = new TgcSkeletalLoader();
 
@@ -63,8 +62,6 @@ namespace Examples.SkeletalAnimation
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             mesh.animateAndRender();
         }
 
@@ -110,16 +107,14 @@ namespace Examples.SkeletalAnimation
         /// </summary>
         public new void render()
         {
-            var device = GuiController.Instance.D3dDevice;
-
             //Cambiamos a modo WireFrame
-            device.RenderState.FillMode = FillMode.WireFrame;
+            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
 
             //Llamamos al metodo original del padre
             base.render();
 
             //Restrablecemos modo solido
-            device.RenderState.FillMode = FillMode.Solid;
+            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;
         }
     }
 

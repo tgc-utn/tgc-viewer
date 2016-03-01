@@ -1,24 +1,24 @@
-using System.Drawing;
-using System.IO;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils._2D;
+using System.Drawing;
+using System.IO;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils._2D;
+using TGC.Viewer.Utils.TgcSceneLoader;
 using Font = System.Drawing.Font;
 
-namespace Examples.Otros
+namespace TGC.Examples.Otros
 {
     /// <summary>
     ///     Ejemplo default con logo de TGC
     /// </summary>
     public class EjemploDefault : TgcExample
     {
+        private readonly float[] lightPos = { 0, 50, 300 };
         private EjemploDefaultHelpForm helpForm;
-        private readonly float[] lightPos = {0, 50, 300};
         private TgcMesh mesh;
         private TgcText2d textHelp;
 
@@ -39,8 +39,6 @@ namespace Examples.Otros
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar mesh
             var loader = new TgcSceneLoader();
             mesh =
@@ -74,8 +72,6 @@ namespace Examples.Otros
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar variables shader
             mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(Color.Gray));
             mesh.Effect.SetValue("diffuseColor", ColorValue.FromColor(Color.LightBlue));
@@ -85,7 +81,7 @@ namespace Examples.Otros
             mesh.Effect.SetValue("eyePosition",
                 TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.RotCamera.getPosition()));
 
-            mesh.rotateY(-elapsedTime/2);
+            mesh.rotateY(-elapsedTime / 2);
             mesh.render();
 
             textHelp.render();

@@ -1,10 +1,11 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
+using TGC.Viewer.Utils.Shaders;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Herramienta para dibujar una caja 3D que muestra solo sus aristas, con grosor configurable.
@@ -17,8 +18,10 @@ namespace TgcViewer.Utils.TgcGeometry
         private const int LINE_VERTICES_COUNT = 36;
 
         private const int LINES_COUNT = 12;
-        private const int VERTICES_COUNT = LINES_COUNT*LINE_VERTICES_COUNT;
-        private const int TRIANGLES_COUNT = LINES_COUNT*12;
+        private const int VERTICES_COUNT = LINES_COUNT * LINE_VERTICES_COUNT;
+        private const int TRIANGLES_COUNT = LINES_COUNT * 12;
+
+        private readonly VertexBuffer vertexBuffer;
 
         private Color color;
 
@@ -26,13 +29,10 @@ namespace TgcViewer.Utils.TgcGeometry
 
         protected string technique;
 
-        private readonly VertexBuffer vertexBuffer;
-
         public TgcDebugBox()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            vertexBuffer = new VertexBuffer(typeof (CustomVertex.PositionColored), VERTICES_COUNT, d3dDevice,
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), VERTICES_COUNT,
+                D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             Thickness = 1f;
@@ -114,21 +114,20 @@ namespace TgcViewer.Utils.TgcGeometry
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, TRIANGLES_COUNT);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, TRIANGLES_COUNT);
             effect.EndPass();
             effect.End();
         }

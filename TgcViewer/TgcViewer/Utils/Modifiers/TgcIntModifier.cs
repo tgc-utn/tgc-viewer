@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Modifiers
+namespace TGC.Viewer.Utils.Modifiers
 {
     /// <summary>
     ///     Modificador para valores Int
@@ -12,9 +12,9 @@ namespace TgcViewer.Utils.Modifiers
         private readonly int maxValue;
         private readonly int minValue;
         private readonly NumericUpDown numericUpDown;
+        private readonly TrackBar trackBar;
 
         private bool numericUpDownChange;
-        private readonly TrackBar trackBar;
         private bool trackBarChange;
 
         public TgcIntModifier(string varName, int minValue, int maxValue, int defaultValue) : base(varName)
@@ -38,8 +38,8 @@ namespace TgcViewer.Utils.Modifiers
 
             if (maxValue - minValue > 10)
             {
-                numericUpDown.Increment = (maxValue - minValue)/10;
-                trackBar.Value = defaultValue*10/maxValue;
+                numericUpDown.Increment = (maxValue - minValue) / 10;
+                trackBar.Value = defaultValue * 10 / maxValue;
                 trackBar.Maximum = 10;
             }
             else
@@ -64,11 +64,11 @@ namespace TgcViewer.Utils.Modifiers
             numericUpDownChange = true;
             if (maxValue - minValue > 10)
             {
-                trackBar.Value = (int) numericUpDown.Value*10/maxValue;
+                trackBar.Value = (int)numericUpDown.Value * 10 / maxValue;
             }
             else
             {
-                trackBar.Value = (int) numericUpDown.Value - minValue;
+                trackBar.Value = (int)numericUpDown.Value - minValue;
             }
         }
 
@@ -81,11 +81,11 @@ namespace TgcViewer.Utils.Modifiers
             }
 
             trackBarChange = true;
-            numericUpDown.Value = trackBar.Value*maxValue/10;
+            numericUpDown.Value = trackBar.Value * maxValue / 10;
 
             if (maxValue - minValue > 10)
             {
-                numericUpDown.Value = trackBar.Value*maxValue/10;
+                numericUpDown.Value = trackBar.Value * maxValue / 10;
             }
             else
             {
@@ -95,7 +95,7 @@ namespace TgcViewer.Utils.Modifiers
 
         public override object getValue()
         {
-            return (int) numericUpDown.Value;
+            return (int)numericUpDown.Value;
         }
     }
 }

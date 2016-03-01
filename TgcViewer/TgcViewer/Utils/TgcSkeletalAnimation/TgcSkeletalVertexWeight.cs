@@ -1,7 +1,7 @@
-using System.Collections.Generic;
 using Microsoft.DirectX;
+using System.Collections.Generic;
 
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Influencias de huesos sobre un vertice.

@@ -1,9 +1,9 @@
 using System.Xml;
-using TgcViewer;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
 
-namespace Examples.SceneEditor
+namespace TGC.Examples.SceneEditor
 {
     /// <summary>
     ///     Ejemplo TgcSceneEditor:
@@ -42,8 +42,6 @@ namespace Examples.SceneEditor
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             modifier = new SceneEditorModifier("SceneEditor", this);
             GuiController.Instance.Modifiers.add(modifier);
 
@@ -52,8 +50,6 @@ namespace Examples.SceneEditor
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Delegar render al control
             modifier.EditorControl.render();
         }

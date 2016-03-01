@@ -2,10 +2,11 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TgcViewer;
+using TGC.Viewer;
 
-namespace Examples.Transformations
+namespace TGC.Examples.Transformations
 {
     /// <summary>
     ///     Ejemplo EjemploTextureFiltering:
@@ -38,10 +39,8 @@ namespace Examples.Transformations
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear VertexBuffer
-            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, d3dDevice,
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             //Cargar informacion de vertices: (X,Y,Z) + Color
@@ -65,19 +64,17 @@ namespace Examples.Transformations
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Especificar formato de triangulos
-            d3dDevice.VertexFormat = CustomVertex.PositionColored.Format;
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
 
             //Configurar transformacion
-            transform(d3dDevice);
+            transform(D3DDevice.Instance.Device);
 
             //Cargar VertexBuffer a renderizar
-            d3dDevice.SetStreamSource(0, vertexBuffer, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //Dibujar 1 primitiva
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
         }
 
         /// <summary>

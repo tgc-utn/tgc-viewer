@@ -1,14 +1,15 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Collision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploBoundingBoxTests:
@@ -48,8 +49,6 @@ namespace Examples.Collision
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cuerpo principal que se controla con el teclado
             box = TgcBox.fromSize(new Vector3(0, 10, 0), new Vector3(10, 10, 10), Color.Blue);
 
@@ -77,7 +76,7 @@ namespace Examples.Collision
             obb = TgcObb.computeFromAABB(meshObb.BoundingBox);
             meshObb.dispose();
             obb.move(new Vector3(100, 0, 30));
-            obb.setRotation(new Vector3(0, FastMath.PI/4, 0));
+            obb.setRotation(new Vector3(0, FastMath.PI / 4, 0));
 
             //Configurar camara en Tercer Persona
             GuiController.Instance.ThirdPersonCamera.Enable = true;
@@ -86,9 +85,7 @@ namespace Examples.Collision
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
-            var velocidadCaminar = 50f*elapsedTime;
+            var velocidadCaminar = 50f * elapsedTime;
 
             //Calcular proxima posicion de personaje segun Input
             var d3dInput = GuiController.Instance.D3dInput;
@@ -185,9 +182,9 @@ namespace Examples.Collision
             obb.render();
 
             //triangulo
-            d3dDevice.Transform.World = Matrix.Identity;
-            d3dDevice.VertexFormat = CustomVertex.PositionColored.Format;
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 1, triangle);
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, triangle);
         }
 
         public override void close()

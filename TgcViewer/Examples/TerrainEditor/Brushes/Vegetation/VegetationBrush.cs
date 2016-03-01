@@ -1,6 +1,6 @@
-﻿using Examples.TerrainEditor.Vegetation;
+﻿using TGC.Examples.TerrainEditor.Instances;
 
-namespace Examples.TerrainEditor.Brushes.Vegetation
+namespace TGC.Examples.TerrainEditor.Brushes.Vegetation
 {
     public class VegetationBrush : VegetationPicker
     {

@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.Viewer", "TgcViewer\TGC.Viewer.csproj", "{990E714F-7FF2-4A87-86B1-E5FC8D4C2F4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{0A4E6948-AB74-48A5-99E1-6BD1C3949006}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.Examples", "Examples\TGC.Examples.csproj", "{0A4E6948-AB74-48A5-99E1-6BD1C3949006}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlumnoEjemplos", "AlumnoEjemplos\AlumnoEjemplos.csproj", "{659DA3D0-B324-45DF-83B0-7AE04280ADC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.Group", "AlumnoEjemplos\TGC.Group.csproj", "{659DA3D0-B324-45DF-83B0-7AE04280ADC1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TGC.Core", "TGC.Core\TGC.Core.csproj", "{2B8C77A8-2427-4DA0-A33E-93F877B2D7D9}"
 EndProject

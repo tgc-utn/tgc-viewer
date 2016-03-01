@@ -1,15 +1,22 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using System;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Direct3D;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils._2D
+namespace TGC.Viewer.Utils._2D
 {
     /// <summary>
     ///     Utilidad para Sprites 2D animados en forma de tile dentro de una textura
     /// </summary>
     public class TgcAnimatedSprite
     {
+        private readonly int framesPerColumn;
+        private readonly int framesPerRow;
+
+        private readonly float textureHeight;
+        private readonly float textureWidth;
+        private readonly int totalFrames;
         private float animationTimeLenght;
 
         protected int currentFrame;
@@ -19,14 +26,8 @@ namespace TgcViewer.Utils._2D
 
         protected float frameRate;
         private Size frameSize;
-        private readonly int framesPerColumn;
-        private readonly int framesPerRow;
 
         protected bool playing;
-
-        private readonly float textureHeight;
-        private readonly float textureWidth;
-        private readonly int totalFrames;
 
         /// <summary>
         ///     Crear un nuevo Sprite animado
@@ -45,8 +46,7 @@ namespace TgcViewer.Utils._2D
             playing = true;
 
             //Crear textura
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            var texture = TgcTexture.createTexture(d3dDevice, texturePath);
+            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, texturePath);
 
             //Sprite
             Sprite = new TgcSprite();
@@ -55,9 +55,9 @@ namespace TgcViewer.Utils._2D
             //Calcular valores de frames de la textura
             textureWidth = texture.Width;
             textureHeight = texture.Height;
-            framesPerColumn = (int) textureWidth/frameSize.Width;
-            framesPerRow = (int) textureHeight/frameSize.Height;
-            var realTotalFrames = framesPerRow*framesPerColumn;
+            framesPerColumn = (int)textureWidth / frameSize.Width;
+            framesPerRow = (int)textureHeight / frameSize.Height;
+            var realTotalFrames = framesPerRow * framesPerColumn;
             if (realTotalFrames > totalFrames)
             {
                 throw new Exception(
@@ -141,7 +141,7 @@ namespace TgcViewer.Utils._2D
         public void setFrameRate(float frameRate)
         {
             this.frameRate = frameRate;
-            animationTimeLenght = totalFrames/frameRate;
+            animationTimeLenght = totalFrames / frameRate;
         }
 
         /// <summary>
@@ -164,13 +164,13 @@ namespace TgcViewer.Utils._2D
             }
 
             //Obtener cuadro actual
-            currentFrame = (int) (currentTime*frameRate);
+            currentFrame = (int)(currentTime * frameRate);
 
             //Obtener rectangulo de dibujado de la textura para este frame
             var srcRect = new Rectangle();
-            srcRect.Y = frameSize.Width*(currentFrame%framesPerRow);
+            srcRect.Y = frameSize.Width * (currentFrame % framesPerRow);
             srcRect.Width = frameSize.Width;
-            srcRect.X = frameSize.Height*(currentFrame%framesPerColumn);
+            srcRect.X = frameSize.Height * (currentFrame % framesPerColumn);
             srcRect.Height = frameSize.Height;
             Sprite.SrcRect = srcRect;
         }

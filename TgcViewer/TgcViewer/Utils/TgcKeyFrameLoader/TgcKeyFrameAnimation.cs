@@ -1,6 +1,6 @@
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace TgcViewer.Utils.TgcKeyFrameLoader
+namespace TGC.Viewer.Utils.TgcKeyFrameLoader
 {
     /// <summary>
     ///     Animación de una malla animada por KeyFrames

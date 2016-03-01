@@ -1,16 +1,17 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace TgcViewer.Utils.TgcSceneLoader
+namespace TGC.Viewer.Utils.TgcSceneLoader
 {
     /// <summary>
     ///     Herramienta para exportar un conjunto de modelos TgcMesh a un archivo XML de formato TGC.
@@ -45,7 +46,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
         public ExportResult exportAndAppendSceneToXml(TgcScene scene, string saveFolderPath)
         {
             var meshExportFinal = exportAndAppendSceneData(scene);
-            MeshExport[] meshesExport = {meshExportFinal};
+            MeshExport[] meshesExport = { meshExportFinal };
             return saveSceneToXml(scene.SceneName, createSceneBoundingBox(meshesExport), meshesExport, saveFolderPath);
         }
 
@@ -197,9 +198,9 @@ namespace TgcViewer.Utils.TgcSceneLoader
                         parentInstance.Rotation.X, parentInstance.Rotation.Z);
                     meshExport.MeshData.rotation = TgcParserUtils.quaternionToFloat4Array(rotQuat - parentRotQuat);
                     var scale = new Vector3(
-                        tgcMesh.Scale.X/parentInstance.Scale.X,
-                        tgcMesh.Scale.Y/parentInstance.Scale.Y,
-                        tgcMesh.Scale.Z/parentInstance.Scale.Z
+                        tgcMesh.Scale.X / parentInstance.Scale.X,
+                        tgcMesh.Scale.Y / parentInstance.Scale.Y,
+                        tgcMesh.Scale.Z / parentInstance.Scale.Z
                         );
                     meshExport.MeshData.scale = TgcParserUtils.vector3ToFloat3Array(scale);
                 }
@@ -233,18 +234,18 @@ namespace TgcViewer.Utils.TgcSceneLoader
             //Color general
             var defaultColor = Color.White;
             var defaultColorValue = ColorValue.FromColor(defaultColor);
-            meshData.color = new[] {defaultColorValue.Red, defaultColorValue.Green, defaultColorValue.Blue};
+            meshData.color = new[] { defaultColorValue.Red, defaultColorValue.Green, defaultColorValue.Blue };
 
             //Obtener datos del VertexBuffer
-            var vbData = (TgcSceneLoader.VertexColorVertex[]) tgcMesh.D3dMesh.LockVertexBuffer(
-                typeof (TgcSceneLoader.VertexColorVertex),
+            var vbData = (TgcSceneLoader.VertexColorVertex[])tgcMesh.D3dMesh.LockVertexBuffer(
+                typeof(TgcSceneLoader.VertexColorVertex),
                 LockFlags.ReadOnly,
                 tgcMesh.D3dMesh.NumberVertices);
             tgcMesh.D3dMesh.UnlockVertexBuffer();
 
             var indices =
                 (short[])
-                    tgcMesh.D3dMesh.LockIndexBuffer(typeof (short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces*3);
+                    tgcMesh.D3dMesh.LockIndexBuffer(typeof(short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces * 3);
             tgcMesh.D3dMesh.UnlockIndexBuffer();
 
             //Armar buffer de vertices, normales y coordenadas de textura, buscando similitudes de valores
@@ -265,34 +266,34 @@ namespace TgcViewer.Utils.TgcSceneLoader
 
             //Cargar array de vertices
             meshData.coordinatesIndices = coordinatesIndices.ToArray();
-            meshData.verticesCoordinates = new float[verticesCoordinates.Count*3];
+            meshData.verticesCoordinates = new float[verticesCoordinates.Count * 3];
             for (var i = 0; i < verticesCoordinates.Count; i++)
             {
                 var v = verticesCoordinates[i];
-                meshData.verticesCoordinates[i*3] = v.X;
-                meshData.verticesCoordinates[i*3 + 1] = v.Y;
-                meshData.verticesCoordinates[i*3 + 2] = v.Z;
+                meshData.verticesCoordinates[i * 3] = v.X;
+                meshData.verticesCoordinates[i * 3 + 1] = v.Y;
+                meshData.verticesCoordinates[i * 3 + 2] = v.Z;
             }
 
             //Cargar array de normales
-            meshData.verticesNormals = new float[verticesNormals.Count*3];
+            meshData.verticesNormals = new float[verticesNormals.Count * 3];
             for (var i = 0; i < verticesNormals.Count; i++)
             {
                 var n = verticesNormals[i];
-                meshData.verticesNormals[i*3] = n.X;
-                meshData.verticesNormals[i*3 + 1] = n.Y;
-                meshData.verticesNormals[i*3 + 2] = n.Z;
+                meshData.verticesNormals[i * 3] = n.X;
+                meshData.verticesNormals[i * 3 + 1] = n.Y;
+                meshData.verticesNormals[i * 3 + 2] = n.Z;
             }
 
             //Cargar array de colores
             meshData.colorIndices = colorIndices.ToArray();
-            meshData.verticesColors = new int[verticesColors.Count*3];
+            meshData.verticesColors = new int[verticesColors.Count * 3];
             for (var i = 0; i < verticesColors.Count; i++)
             {
                 var c = Color.FromArgb(verticesColors[i]);
-                meshData.verticesColors[i*3] = c.R;
-                meshData.verticesColors[i*3 + 1] = c.G;
-                meshData.verticesColors[i*3 + 2] = c.B;
+                meshData.verticesColors[i * 3] = c.R;
+                meshData.verticesColors[i * 3 + 1] = c.G;
+                meshData.verticesColors[i * 3 + 2] = c.B;
             }
         }
 
@@ -309,18 +310,18 @@ namespace TgcViewer.Utils.TgcSceneLoader
             //Color general
             var defaultColor = Color.White;
             var defaultColorValue = ColorValue.FromColor(defaultColor);
-            meshData.color = new[] {defaultColorValue.Red, defaultColorValue.Green, defaultColorValue.Blue};
+            meshData.color = new[] { defaultColorValue.Red, defaultColorValue.Green, defaultColorValue.Blue };
 
             //Obtener datos del VertexBuffer
-            var vbData = (TgcSceneLoader.DiffuseMapVertex[]) tgcMesh.D3dMesh.LockVertexBuffer(
-                typeof (TgcSceneLoader.DiffuseMapVertex),
+            var vbData = (TgcSceneLoader.DiffuseMapVertex[])tgcMesh.D3dMesh.LockVertexBuffer(
+                typeof(TgcSceneLoader.DiffuseMapVertex),
                 LockFlags.ReadOnly,
                 tgcMesh.D3dMesh.NumberVertices);
             tgcMesh.D3dMesh.UnlockVertexBuffer();
 
             var indices =
                 (short[])
-                    tgcMesh.D3dMesh.LockIndexBuffer(typeof (short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces*3);
+                    tgcMesh.D3dMesh.LockIndexBuffer(typeof(short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces * 3);
             tgcMesh.D3dMesh.UnlockIndexBuffer();
 
             //Armar buffer de vertices, normales y coordenadas de textura, buscando similitudes de valores
@@ -346,44 +347,44 @@ namespace TgcViewer.Utils.TgcSceneLoader
 
             //Cargar array de vertices
             meshData.coordinatesIndices = coordinatesIndices.ToArray();
-            meshData.verticesCoordinates = new float[verticesCoordinates.Count*3];
+            meshData.verticesCoordinates = new float[verticesCoordinates.Count * 3];
             for (var i = 0; i < verticesCoordinates.Count; i++)
             {
                 var v = verticesCoordinates[i];
-                meshData.verticesCoordinates[i*3] = v.X;
-                meshData.verticesCoordinates[i*3 + 1] = v.Y;
-                meshData.verticesCoordinates[i*3 + 2] = v.Z;
+                meshData.verticesCoordinates[i * 3] = v.X;
+                meshData.verticesCoordinates[i * 3 + 1] = v.Y;
+                meshData.verticesCoordinates[i * 3 + 2] = v.Z;
             }
 
             //Cargar array de normales
-            meshData.verticesNormals = new float[verticesNormals.Count*3];
+            meshData.verticesNormals = new float[verticesNormals.Count * 3];
             for (var i = 0; i < verticesNormals.Count; i++)
             {
                 var n = verticesNormals[i];
-                meshData.verticesNormals[i*3] = n.X;
-                meshData.verticesNormals[i*3 + 1] = n.Y;
-                meshData.verticesNormals[i*3 + 2] = n.Z;
+                meshData.verticesNormals[i * 3] = n.X;
+                meshData.verticesNormals[i * 3 + 1] = n.Y;
+                meshData.verticesNormals[i * 3 + 2] = n.Z;
             }
 
             //Cargar array de coordenadas de textura
             meshData.texCoordinatesIndices = texCoordinatesIndices.ToArray();
-            meshData.textureCoordinates = new float[textureCoordinates.Count*2];
+            meshData.textureCoordinates = new float[textureCoordinates.Count * 2];
             for (var i = 0; i < textureCoordinates.Count; i++)
             {
                 var t = textureCoordinates[i];
-                meshData.textureCoordinates[i*2] = t.X;
-                meshData.textureCoordinates[i*2 + 1] = t.Y;
+                meshData.textureCoordinates[i * 2] = t.X;
+                meshData.textureCoordinates[i * 2 + 1] = t.Y;
             }
 
             //Cargar array de colores
             meshData.colorIndices = colorIndices.ToArray();
-            meshData.verticesColors = new int[verticesColors.Count*3];
+            meshData.verticesColors = new int[verticesColors.Count * 3];
             for (var i = 0; i < verticesColors.Count; i++)
             {
                 var c = Color.FromArgb(verticesColors[i]);
-                meshData.verticesColors[i*3] = c.R;
-                meshData.verticesColors[i*3 + 1] = c.G;
-                meshData.verticesColors[i*3 + 2] = c.B;
+                meshData.verticesColors[i * 3] = c.R;
+                meshData.verticesColors[i * 3 + 1] = c.G;
+                meshData.verticesColors[i * 3 + 2] = c.B;
             }
 
             //Exportar Materials y DiffuseMaps
@@ -396,21 +397,21 @@ namespace TgcViewer.Utils.TgcSceneLoader
         private void exportMeshDiffuseMapAndLightmap(TgcMesh tgcMesh, MeshExport meshExport, TgcMeshData meshData)
         {
             //Obtener datos del VertexBuffer
-            var vbData = (TgcSceneLoader.DiffuseMapAndLightmapVertex[]) tgcMesh.D3dMesh.LockVertexBuffer(
-                typeof (TgcSceneLoader.DiffuseMapAndLightmapVertex),
+            var vbData = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])tgcMesh.D3dMesh.LockVertexBuffer(
+                typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex),
                 LockFlags.ReadOnly,
                 tgcMesh.D3dMesh.NumberVertices);
             tgcMesh.D3dMesh.UnlockVertexBuffer();
 
             var indices =
                 (short[])
-                    tgcMesh.D3dMesh.LockIndexBuffer(typeof (short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces*3);
+                    tgcMesh.D3dMesh.LockIndexBuffer(typeof(short), LockFlags.ReadOnly, tgcMesh.D3dMesh.NumberFaces * 3);
             tgcMesh.D3dMesh.UnlockIndexBuffer();
 
             //Color general
             var defaultColor = Color.White;
             var defaultColorValue = ColorValue.FromColor(defaultColor);
-            meshData.color = new[] {defaultColorValue.Red, defaultColorValue.Green, defaultColorValue.Blue};
+            meshData.color = new[] { defaultColorValue.Red, defaultColorValue.Green, defaultColorValue.Blue };
 
             //Armar buffer de vertices, normales y coordenadas de textura, buscando similitudes de valores
             var coordinatesIndices = new List<int>();
@@ -439,54 +440,54 @@ namespace TgcViewer.Utils.TgcSceneLoader
 
             //Cargar array de vertices
             meshData.coordinatesIndices = coordinatesIndices.ToArray();
-            meshData.verticesCoordinates = new float[verticesCoordinates.Count*3];
+            meshData.verticesCoordinates = new float[verticesCoordinates.Count * 3];
             for (var i = 0; i < verticesCoordinates.Count; i++)
             {
                 var v = verticesCoordinates[i];
-                meshData.verticesCoordinates[i*3] = v.X;
-                meshData.verticesCoordinates[i*3 + 1] = v.Y;
-                meshData.verticesCoordinates[i*3 + 2] = v.Z;
+                meshData.verticesCoordinates[i * 3] = v.X;
+                meshData.verticesCoordinates[i * 3 + 1] = v.Y;
+                meshData.verticesCoordinates[i * 3 + 2] = v.Z;
             }
 
             //Cargar array de normales
-            meshData.verticesNormals = new float[verticesNormals.Count*3];
+            meshData.verticesNormals = new float[verticesNormals.Count * 3];
             for (var i = 0; i < verticesNormals.Count; i++)
             {
                 var n = verticesNormals[i];
-                meshData.verticesNormals[i*3] = n.X;
-                meshData.verticesNormals[i*3 + 1] = n.Y;
-                meshData.verticesNormals[i*3 + 2] = n.Z;
+                meshData.verticesNormals[i * 3] = n.X;
+                meshData.verticesNormals[i * 3 + 1] = n.Y;
+                meshData.verticesNormals[i * 3 + 2] = n.Z;
             }
 
             //Cargar array de coordenadas de textura
             meshData.texCoordinatesIndices = texCoordinatesIndices.ToArray();
-            meshData.textureCoordinates = new float[textureCoordinates.Count*2];
+            meshData.textureCoordinates = new float[textureCoordinates.Count * 2];
             for (var i = 0; i < textureCoordinates.Count; i++)
             {
                 var t = textureCoordinates[i];
-                meshData.textureCoordinates[i*2] = t.X;
-                meshData.textureCoordinates[i*2 + 1] = t.Y;
+                meshData.textureCoordinates[i * 2] = t.X;
+                meshData.textureCoordinates[i * 2 + 1] = t.Y;
             }
 
             //Cargar array de coordenadas de textura de Lightmap
             meshData.texCoordinatesIndicesLightMap = texCoordinatesIndicesLightMap.ToArray();
-            meshData.textureCoordinatesLightMap = new float[textureCoordinatesLightMap.Count*2];
+            meshData.textureCoordinatesLightMap = new float[textureCoordinatesLightMap.Count * 2];
             for (var i = 0; i < textureCoordinatesLightMap.Count; i++)
             {
                 var t = textureCoordinatesLightMap[i];
-                meshData.textureCoordinatesLightMap[i*2] = t.X;
-                meshData.textureCoordinatesLightMap[i*2 + 1] = t.Y;
+                meshData.textureCoordinatesLightMap[i * 2] = t.X;
+                meshData.textureCoordinatesLightMap[i * 2 + 1] = t.Y;
             }
 
             //Cargar array de colores
             meshData.colorIndices = colorIndices.ToArray();
-            meshData.verticesColors = new int[verticesColors.Count*3];
+            meshData.verticesColors = new int[verticesColors.Count * 3];
             for (var i = 0; i < verticesColors.Count; i++)
             {
                 var c = Color.FromArgb(verticesColors[i]);
-                meshData.verticesColors[i*3] = c.R;
-                meshData.verticesColors[i*3 + 1] = c.G;
-                meshData.verticesColors[i*3 + 2] = c.B;
+                meshData.verticesColors[i * 3] = c.R;
+                meshData.verticesColors[i * 3 + 1] = c.G;
+                meshData.verticesColors[i * 3 + 2] = c.B;
             }
 
             //Exportar Materials y DiffuseMaps
@@ -508,7 +509,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             if (tgcMesh.Materials.Length == 1)
             {
                 var materialData = new TgcMaterialData();
-                meshExport.MaterialsData = new[] {materialData};
+                meshExport.MaterialsData = new[] { materialData };
 
                 //Material
                 var tgcMaterial = tgcMesh.Materials[0];
@@ -543,13 +544,13 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 //Texture
                 var tgcTexture = tgcMesh.DiffuseMaps[0];
                 materialData.fileName = tgcTexture.FileName;
-                materialData.uvOffset = new[] {1f, 1f};
-                materialData.uvTiling = new[] {1f, 1f};
-                meshExport.diffuseMapsAbsolutePath = new[] {tgcTexture.FilePath};
+                materialData.uvOffset = new[] { 1f, 1f };
+                materialData.uvTiling = new[] { 1f, 1f };
+                meshExport.diffuseMapsAbsolutePath = new[] { tgcTexture.FilePath };
 
                 //Configurar mesh
                 meshData.materialId = 0;
-                meshData.materialsIds = new[] {meshData.materialId};
+                meshData.materialsIds = new[] { meshData.materialId };
             }
             //Exportar varios diffuseMaps y materials
             else
@@ -593,8 +594,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     //Texture
                     var tgcTexture = tgcMesh.DiffuseMaps[i];
                     materialData.fileName = tgcTexture.FileName;
-                    materialData.uvOffset = new[] {1f, 1f};
-                    materialData.uvTiling = new[] {1f, 1f};
+                    materialData.uvOffset = new[] { 1f, 1f };
+                    materialData.uvTiling = new[] { 1f, 1f };
                     meshExport.diffuseMapsAbsolutePath[i] = tgcTexture.FilePath;
                 }
 
@@ -803,7 +804,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 i < meshExpAppended.MeshData.coordinatesIndices.Length;
                 i++)
             {
-                meshExpAppended.MeshData.coordinatesIndices[i] += mExp1.MeshData.verticesCoordinates.Length/3;
+                meshExpAppended.MeshData.coordinatesIndices[i] += mExp1.MeshData.verticesCoordinates.Length / 3;
             }
 
             //texCoordinatesIndices
@@ -827,7 +828,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 i < meshExpAppended.MeshData.texCoordinatesIndices.Length;
                 i++)
             {
-                meshExpAppended.MeshData.texCoordinatesIndices[i] += mExp1.MeshData.textureCoordinates.Length/2;
+                meshExpAppended.MeshData.texCoordinatesIndices[i] += mExp1.MeshData.textureCoordinates.Length / 2;
             }
 
             //colorIndices
@@ -849,7 +850,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
             //Ajustar indices de verticesColors del segundo mesh
             for (var i = mExp1.MeshData.colorIndices.Length; i < meshExpAppended.MeshData.colorIndices.Length; i++)
             {
-                meshExpAppended.MeshData.colorIndices[i] += mExp1.MeshData.verticesColors.Length/3;
+                meshExpAppended.MeshData.colorIndices[i] += mExp1.MeshData.verticesColors.Length / 3;
             }
 
             //texCoordinatesIndicesLightMap
@@ -879,7 +880,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 i++)
             {
                 meshExpAppended.MeshData.texCoordinatesIndicesLightMap[i] +=
-                    mExp1.MeshData.textureCoordinatesLightMap.Length/2;
+                    mExp1.MeshData.textureCoordinatesLightMap.Length / 2;
             }
 
             //verticesNormals
@@ -904,11 +905,11 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 meshExpAppended.MeshRenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
 
                 //materialsIds: crear con la cantidad de triangulos total
-                meshExpAppended.MeshData.materialsIds = new int[meshExpAppended.MeshData.coordinatesIndices.Length/3];
+                meshExpAppended.MeshData.materialsIds = new int[meshExpAppended.MeshData.coordinatesIndices.Length / 3];
 
                 //copiar materialsIds del mesh 1, expandir si es necesario
-                var triCountMesh1 = mExp1.MeshData.coordinatesIndices.Length/3;
-                var triCountMesh2 = mExp2.MeshData.coordinatesIndices.Length/3;
+                var triCountMesh1 = mExp1.MeshData.coordinatesIndices.Length / 3;
+                var triCountMesh2 = mExp2.MeshData.coordinatesIndices.Length / 3;
                 if (mExp1.MeshData.materialsIds.Length == 1)
                 {
                     for (var i = 0; i < triCountMesh1; i++)
@@ -1058,7 +1059,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 ? TgcSceneLoader.VertexColorVertexElements
                 : TgcSceneLoader.DiffuseMapVertexElements;
             var mesh = new Mesh(triCount, vertexCount, MeshFlags.Managed, vertexElements,
-                GuiController.Instance.D3dDevice);
+                D3DDevice.Instance.Device);
 
             //VertexColor
             if (mesh1.RenderType == TgcMesh.MeshRenderType.VERTEX_COLOR)
@@ -1066,8 +1067,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 //Cargar VertexBuffer
                 var vertsData = new TgcSceneLoader.VertexColorVertex[vertexCount];
                 //Agregar los datos del mesh1
-                var verts1 = (TgcSceneLoader.VertexColorVertex[]) mesh1.D3dMesh.LockVertexBuffer(
-                    typeof (TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh1.D3dMesh.NumberVertices);
+                var verts1 = (TgcSceneLoader.VertexColorVertex[])mesh1.D3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh1.D3dMesh.NumberVertices);
                 for (var i = 0; i < verts1.Length; i++)
                 {
                     verts1[i].Position = TgcVectorUtils.transform(verts1[i].Position, mesh1.Transform);
@@ -1077,8 +1078,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 verts1 = null;
 
                 //Agregar los datos del mesh1
-                var verts2 = (TgcSceneLoader.VertexColorVertex[]) mesh2.D3dMesh.LockVertexBuffer(
-                    typeof (TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh2.D3dMesh.NumberVertices);
+                var verts2 = (TgcSceneLoader.VertexColorVertex[])mesh2.D3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh2.D3dMesh.NumberVertices);
                 for (var i = 0; i < verts2.Length; i++)
                 {
                     verts2[i].Position = TgcVectorUtils.transform(verts2[i].Position, mesh2.Transform);
@@ -1096,8 +1097,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 var vertsData = new TgcSceneLoader.DiffuseMapVertex[vertexCount];
 
                 //Agregar los datos del mesh1 (aplicarle la transformacion actual)
-                var verts1 = (TgcSceneLoader.DiffuseMapVertex[]) mesh1.D3dMesh.LockVertexBuffer(
-                    typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh1.D3dMesh.NumberVertices);
+                var verts1 = (TgcSceneLoader.DiffuseMapVertex[])mesh1.D3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh1.D3dMesh.NumberVertices);
                 for (var i = 0; i < verts1.Length; i++)
                 {
                     verts1[i].Position = TgcVectorUtils.transform(verts1[i].Position, mesh1.Transform);
@@ -1107,8 +1108,8 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 verts1 = null;
 
                 //Agregar los datos del mesh1
-                var verts2 = (TgcSceneLoader.DiffuseMapVertex[]) mesh2.D3dMesh.LockVertexBuffer(
-                    typeof (TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh2.D3dMesh.NumberVertices);
+                var verts2 = (TgcSceneLoader.DiffuseMapVertex[])mesh2.D3dMesh.LockVertexBuffer(
+                    typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh2.D3dMesh.NumberVertices);
                 for (var i = 0; i < verts2.Length; i++)
                 {
                     verts2[i].Position = TgcVectorUtils.transform(verts2[i].Position, mesh2.Transform);
@@ -1126,7 +1127,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                 var indices = new short[vertexCount];
                 for (var i = 0; i < indices.Length; i++)
                 {
-                    indices[i] = (short) i;
+                    indices[i] = (short)i;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -1379,7 +1380,7 @@ namespace TgcViewer.Utils.TgcSceneLoader
                     meshNode.SetAttribute("color",
                         meshData.color != null
                             ? TgcParserUtils.printFloat3Array(meshData.color)
-                            : TgcParserUtils.printFloat3Array(new float[] {1, 1, 1}));
+                            : TgcParserUtils.printFloat3Array(new float[] { 1, 1, 1 }));
                     meshNode.SetAttribute("visibility", meshData.alphaBlending ? "0" : "1.0");
                     meshNode.SetAttribute("lightmap", meshData.lightmap != null ? meshData.lightmap : "");
 

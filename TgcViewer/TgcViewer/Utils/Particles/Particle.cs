@@ -1,8 +1,8 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 
-namespace TgcViewer.Utils.Particles
+namespace TGC.Viewer.Utils.Particles
 {
     /// <summary>
     ///     Particula a ser emitida por el emisor de particulas

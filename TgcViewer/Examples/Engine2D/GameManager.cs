@@ -1,9 +1,10 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
-using Microsoft.DirectX;
-using TgcViewer;
+using TGC.Core.Direct3D;
+using TGC.Viewer;
 
-namespace Examples.Engine2D
+namespace TGC.Examples.Engine2D
 {
     internal class GameManager
     {
@@ -34,16 +35,15 @@ namespace Examples.Engine2D
             //Creo la lista de misiles.
             misiles = new List<Misil>();
 
-            ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
-            ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
+            ScreenWidth = D3DDevice.Instance.Device.Viewport.Width;
+            ScreenHeight = D3DDevice.Instance.Device.Viewport.Height;
             //Cargo el bitmap del spritesheet de la nave.
-            asteroidBitmap = new Bitmap(exampleDir + "Engine2D\\Media\\" + "Asteroides.png",
-                GuiController.Instance.D3dDevice);
+            asteroidBitmap = new Bitmap(exampleDir + "Engine2D\\Media\\" + "Asteroides.png", D3DDevice.Instance.Device);
 
-            spaceshipBitmap = new Bitmap(exampleDir + "Engine2D\\Media\\" + "nave.png", GuiController.Instance.D3dDevice);
+            spaceshipBitmap = new Bitmap(exampleDir + "Engine2D\\Media\\" + "nave.png", D3DDevice.Instance.Device);
 
             //Cargo el bitmap del misil que dispara la nave.
-            misilBitmap = new Bitmap(exampleDir + "Engine2D\\Media\\" + "particle.png", GuiController.Instance.D3dDevice);
+            misilBitmap = new Bitmap(exampleDir + "Engine2D\\Media\\" + "particle.png", D3DDevice.Instance.Device);
 
             //Creo la nave espacial
             spaceShip = new Spaceship();
@@ -74,11 +74,11 @@ namespace Examples.Engine2D
         private void checkMisilesRange()
         {
             misiles.RemoveAll(
-                delegate(Misil misil)
+                delegate (Misil misil)
                 {
                     if (misil.Position.X < 0 || misil.Position.Y < 0 ||
-                        misil.Position.X > GuiController.Instance.D3dDevice.Viewport.Width
-                        || misil.Position.Y > GuiController.Instance.D3dDevice.Viewport.Height)
+                        misil.Position.X > D3DDevice.Instance.Device.Viewport.Width
+                        || misil.Position.Y > D3DDevice.Instance.Device.Viewport.Height)
                         return true;
                     return false;
                 }
@@ -114,13 +114,13 @@ namespace Examples.Engine2D
 
         internal void Update(float elapsedTime)
         {
-            ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
-            ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
+            ScreenWidth = D3DDevice.Instance.Device.Viewport.Width;
+            ScreenHeight = D3DDevice.Instance.Device.Viewport.Height;
 
             spaceShip.Update(elapsedTime);
-            misiles.ForEach(delegate(Misil m) { m.Update(elapsedTime); });
+            misiles.ForEach(delegate (Misil m) { m.Update(elapsedTime); });
 
-            asteroids.ForEach(delegate(Asteroide a) { a.Update(elapsedTime); });
+            asteroids.ForEach(delegate (Asteroide a) { a.Update(elapsedTime); });
 
             checkMisilesRange();
 
@@ -134,8 +134,8 @@ namespace Examples.Engine2D
         {
             spriteDrawer.BeginDrawSprite();
 
-            misiles.ForEach(delegate(Misil m) { m.Render(elapsedTime, spriteDrawer); });
-            asteroids.ForEach(delegate(Asteroide a) { a.Render(elapsedTime, spriteDrawer); });
+            misiles.ForEach(delegate (Misil m) { m.Render(elapsedTime, spriteDrawer); });
+            asteroids.ForEach(delegate (Asteroide a) { a.Render(elapsedTime, spriteDrawer); });
             spaceShip.Render(elapsedTime, spriteDrawer);
 
             spriteDrawer.EndDrawSprite();

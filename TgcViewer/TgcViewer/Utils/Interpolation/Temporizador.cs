@@ -1,4 +1,4 @@
-﻿namespace TgcViewer.Utils.Interpolation
+﻿namespace TGC.Viewer.Utils.Interpolation
 {
     /// <summary>
     ///     Utilidad para controlar el avance del tiempo hasta un tope determinado (como una cuenta regresiva)

@@ -1,6 +1,6 @@
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace TgcViewer.Utils.PortalRendering
+namespace TGC.Viewer.Utils.PortalRendering
 {
     /// <summary>
     ///     Portal de PortalRendering que comunica dos celdas

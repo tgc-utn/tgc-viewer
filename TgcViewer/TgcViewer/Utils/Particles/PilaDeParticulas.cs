@@ -1,12 +1,12 @@
-namespace TgcViewer.Utils.Particles
+namespace TGC.Viewer.Utils.Particles
 {
     /// <summary>
     ///     Pila para almacenar particulas
     /// </summary>
     public class PilaDeParticulas
     {
-        private int i_cima;
         private readonly Particle[] pila;
+        private int i_cima;
 
         public PilaDeParticulas(int iMax)
         {

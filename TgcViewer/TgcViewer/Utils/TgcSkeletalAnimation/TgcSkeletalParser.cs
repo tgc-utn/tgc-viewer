@@ -3,7 +3,7 @@ using System.Xml;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Parser de archivos XML de formato TGC para TgcSkeletalAnimation
@@ -56,7 +56,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
                     for (var j = 0; j < subMaterialsNodes.Count; j++)
                     {
                         var subMaterial = new TgcMaterialData();
-                        parseStandardMaterial(subMaterial, (XmlElement) subMaterialsNodes[j]);
+                        parseStandardMaterial(subMaterial, (XmlElement)subMaterialsNodes[j]);
                         material.subMaterials[j] = subMaterial;
                     }
                 }
@@ -65,7 +65,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             }
 
             //Parsear Mesh
-            var meshNode = (XmlElement) root.GetElementsByTagName("mesh")[0];
+            var meshNode = (XmlElement)root.GetElementsByTagName("mesh")[0];
 
             //parser y convertir valores
             meshData.name = meshNode.Attributes["name"].InnerText;
@@ -124,13 +124,13 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             count = int.Parse(colorsNode.Attributes["count"].InnerText);
             var colorsArray = TgcParserUtils.parseFloatStream(colorsNode.InnerText, count);
             //convertir a format TV
-            meshData.verticesColors = new int[count/3];
+            meshData.verticesColors = new int[count / 3];
             for (var j = 0; j < meshData.verticesColors.Length; j++)
             {
                 meshData.verticesColors[j] = Color.FromArgb(
-                    (int) colorsArray[j*3],
-                    (int) colorsArray[j*3 + 1],
-                    (int) colorsArray[j*3 + 2]).ToArgb();
+                    (int)colorsArray[j * 3],
+                    (int)colorsArray[j * 3 + 1],
+                    (int)colorsArray[j * 3 + 2]).ToArgb();
             }
 
             //parsear normals, si hay
@@ -207,7 +207,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             TgcParserUtils.divFloatArrayValues(ref material.specularColor, 255f);
 
             var opacityStr = matNode.GetElementsByTagName("opacity")[0].InnerText;
-            material.opacity = TgcParserUtils.parseFloat(opacityStr)/100f;
+            material.opacity = TgcParserUtils.parseFloat(opacityStr) / 100f;
 
             //Valores de Bitmap
             var bitmapNode = matNode.GetElementsByTagName("bitmap")[0];
@@ -244,7 +244,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
             var animation = new TgcSkeletalAnimationData();
 
             //Parsear informacion general de animation
-            var animationNode = (XmlElement) root.GetElementsByTagName("animation")[0];
+            var animationNode = (XmlElement)root.GetElementsByTagName("animation")[0];
             animation.name = animationNode.Attributes["name"].InnerText;
             animation.bonesCount = int.Parse(animationNode.Attributes["bonesCount"].InnerText);
             animation.framesCount = int.Parse(animationNode.Attributes["framesCount"].InnerText);

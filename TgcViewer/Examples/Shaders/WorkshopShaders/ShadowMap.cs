@@ -2,13 +2,14 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.Shaders.WorkshopShaders
 {
     /// <summary>
     ///     Ejemplo ShadowMap:
@@ -20,6 +21,9 @@ namespace Examples.Shaders.WorkshopShaders
     /// </summary>
     public class ShadowMap : TgcExample
     {
+        private readonly float far_plane = 1500f;
+        private readonly float near_plane = 2f;
+
         // Shadow map
         private readonly int SHADOWMAP_SIZE = 1024;
 
@@ -28,7 +32,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         private Vector3 dir_avion;
         private Effect effect;
-        private readonly float far_plane = 1500f;
         private Vector3 g_LightDir; // direccion de la luz actual
         private Vector3 g_LightPos; // posicion de la luz actual (la que estoy analizando)
         private Matrix g_LightView; // matriz de view del light
@@ -38,7 +41,6 @@ namespace Examples.Shaders.WorkshopShaders
         private Texture g_pShadowMap; // Texture to which the shadow map is rendered
         private string MyMediaDir;
         private string MyShaderDir;
-        private readonly float near_plane = 2f;
         private TgcScene scene, scene2;
         private float time;
 
@@ -59,7 +61,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
             MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
 
@@ -100,14 +101,14 @@ namespace Examples.Shaders.WorkshopShaders
             // Creo el shadowmap.
             // Format.R32F
             // Format.X8R8G8B8
-            g_pShadowMap = new Texture(d3dDevice, SHADOWMAP_SIZE, SHADOWMAP_SIZE,
+            g_pShadowMap = new Texture(D3DDevice.Instance.Device, SHADOWMAP_SIZE, SHADOWMAP_SIZE,
                 1, Usage.RenderTarget, Format.R32F,
                 Pool.Default);
 
             // tengo que crear un stencilbuffer para el shadowmap manualmente
             // para asegurarme que tenga la el mismo tamaño que el shadowmap, y que no tenga
             // multisample, etc etc.
-            g_pDSShadow = d3dDevice.CreateDepthStencilSurface(SHADOWMAP_SIZE,
+            g_pDSShadow = D3DDevice.Instance.Device.CreateDepthStencilSurface(SHADOWMAP_SIZE,
                 SHADOWMAP_SIZE,
                 DepthFormat.D24S8,
                 MultiSampleType.None,
@@ -122,7 +123,7 @@ namespace Examples.Shaders.WorkshopShaders
             var aspectRatio = panel3d.Width / (float)panel3d.Height;
             g_mShadowProj = Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(80),
                 aspectRatio, 50, 5000);
-            d3dDevice.Transform.Projection =
+            D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, near_plane, far_plane);
 
@@ -141,7 +142,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
             var panel3d = GuiController.Instance.Panel3d;
             var aspectRatio = panel3d.Width / (float)panel3d.Height;
             time += elapsedTime;
@@ -160,20 +160,20 @@ namespace Examples.Shaders.WorkshopShaders
             arrow.PEnd = g_LightPos + g_LightDir * 20;
 
             // Shadow maps:
-            device.EndScene(); // termino el thread anterior
+            D3DDevice.Instance.Device.EndScene(); // termino el thread anterior
 
             GuiController.Instance.RotCamera.CameraCenter = new Vector3(0, 0, 0);
             GuiController.Instance.RotCamera.CameraDistance = 100;
             GuiController.Instance.RotCamera.RotationSpeed = 2f;
             GuiController.Instance.CurrentCamera.updateCamera();
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Genero el shadow map
             RenderShadowMap();
 
-            device.BeginScene();
+            D3DDevice.Instance.Device.BeginScene();
             // dibujo la escena pp dicha
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             RenderScene(false);
 
             //Cargar valores de la flecha
@@ -182,7 +182,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public void RenderShadowMap()
         {
-            var device = GuiController.Instance.D3dDevice;
             // Calculo la matriz de view de la luz
             effect.SetValue("g_vLightPos", new Vector4(g_LightPos.X, g_LightPos.Y, g_LightPos.Z, 1));
             effect.SetValue("g_vLightDir", new Vector4(g_LightDir.X, g_LightDir.Y, g_LightDir.Z, 1));
@@ -198,26 +197,26 @@ namespace Examples.Shaders.WorkshopShaders
 
             // Primero genero el shadow map, para ello dibujo desde el pto de vista de luz
             // a una textura, con el VS y PS que generan un mapa de profundidades.
-            var pOldRT = device.GetRenderTarget(0);
+            var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             var pShadowSurf = g_pShadowMap.GetSurfaceLevel(0);
-            device.SetRenderTarget(0, pShadowSurf);
-            var pOldDS = device.DepthStencilSurface;
-            device.DepthStencilSurface = g_pDSShadow;
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            device.BeginScene();
+            D3DDevice.Instance.Device.SetRenderTarget(0, pShadowSurf);
+            var pOldDS = D3DDevice.Instance.Device.DepthStencilSurface;
+            D3DDevice.Instance.Device.DepthStencilSurface = g_pDSShadow;
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
 
             // Hago el render de la escena pp dicha
             effect.SetValue("g_txShadow", g_pShadowMap);
             RenderScene(true);
 
             // Termino
-            device.EndScene();
+            D3DDevice.Instance.Device.EndScene();
 
             //TextureLoader.Save("shadowmap.bmp", ImageFileFormat.Bmp, g_pShadowMap);
 
             // restuaro el render target y el stencil
-            device.DepthStencilSurface = pOldDS;
-            device.SetRenderTarget(0, pOldRT);
+            D3DDevice.Instance.Device.DepthStencilSurface = pOldDS;
+            D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
         }
 
         public void RenderScene(bool shadow)

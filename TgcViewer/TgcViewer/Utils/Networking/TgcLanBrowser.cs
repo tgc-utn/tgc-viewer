@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace TgcViewer.Utils.Networking
+namespace TGC.Viewer.Utils.Networking
 {
     public class TgcLanBrowser
     {
@@ -27,7 +27,7 @@ namespace TgcViewer.Utils.Networking
             var entriesRead = 0;
             var totalEntries = 0;
             var resHandle = 0;
-            var sizeofINFO = Marshal.SizeOf(typeof (SERVER_INFO_100));
+            var sizeofINFO = Marshal.SizeOf(typeof(SERVER_INFO_100));
 
             try
             {
@@ -45,12 +45,12 @@ namespace TgcViewer.Utils.Networking
                     {
                         //get pointer to, Pointer to the buffer that received the data from the call to NetServerEnum.
                         //Must ensure to use correct size of STRUCTURE to ensure correct location in memory is pointed to
-                        tmpBuffer = new IntPtr((int) buffer + i*sizeofINFO);
+                        tmpBuffer = new IntPtr((int)buffer + i * sizeofINFO);
 
                         //Have now got a pointer to the list of SV_TYPE_WORKSTATION and SV_TYPE_SERVER PC's, which is unmanaged memory.
                         //Needs to Marshal data from an unmanaged block of memory to a managed object, again using
                         //STRUCTURE to ensure the correct data is marshalled
-                        var svrInfo = (SERVER_INFO_100) Marshal.PtrToStructure(tmpBuffer, typeof (SERVER_INFO_100));
+                        var svrInfo = (SERVER_INFO_100)Marshal.PtrToStructure(tmpBuffer, typeof(SERVER_INFO_100));
 
                         //add the PC names to the list
                         networkComputers.Add(svrInfo.sv100_name);
@@ -119,7 +119,8 @@ namespace TgcViewer.Utils.Networking
         {
             internal readonly int sv100_platform_id;
 
-            [MarshalAs(UnmanagedType.LPWStr)] internal readonly string sv100_name;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            internal readonly string sv100_name;
         }
 
         #endregion Dll Imports

@@ -1,13 +1,14 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.TerrainEditor
+namespace TGC.Examples.TerrainEditor
 {
     public class SmartTerrain
     {
@@ -35,12 +36,10 @@ namespace Examples.TerrainEditor
                 terrainTexture.Dispose();
             }
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Rotar e invertir textura
-            var b = (Bitmap) Image.FromFile(path);
+            var b = (Bitmap)Image.FromFile(path);
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
-            terrainTexture = Texture.FromBitmap(d3dDevice, b, Usage.None, Pool.Managed);
+            terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.None, Pool.Managed);
         }
 
         #region Private fields
@@ -125,7 +124,7 @@ namespace Examples.TerrainEditor
         /// </summary>
         protected float[,] loadHeightMap(Device d3dDevice, string path)
         {
-            var bitmap = (Bitmap) Image.FromFile(path);
+            var bitmap = (Bitmap)Image.FromFile(path);
             var width = bitmap.Size.Width;
             var length = bitmap.Size.Height;
 
@@ -136,7 +135,7 @@ namespace Examples.TerrainEditor
                 for (var j = 0; j < width; j++)
                 {
                     var pixel = bitmap.GetPixel(j, i);
-                    var intensity = pixel.R*0.299f + pixel.G*0.587f + pixel.B*0.114f;
+                    var intensity = pixel.R * 0.299f + pixel.G * 0.587f + pixel.B * 0.114f;
                     heightmap[i, j] = intensity;
                 }
             }
@@ -155,7 +154,6 @@ namespace Examples.TerrainEditor
         /// <param name="center">Centro de la malla del terreno</param>
         public void loadPlainHeightmap(int width, int length, int level, float scaleXZ, float scaleY, Vector3 center)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             this.center = center;
             ScaleXZ = scaleXZ;
             ScaleY = scaleY;
@@ -173,14 +171,15 @@ namespace Examples.TerrainEditor
             for (var i = 0; i < length; i++) for (var j = 0; j < width; j++) HeightmapData[i, j] = level;
 
             //Crear vertexBuffer
-            TotalVertices = 2*3*(length - 1)*(width - 1);
-            vbTerrain = new VertexBuffer(typeof (CustomVertex.PositionColoredTextured), TotalVertices, d3dDevice,
+            TotalVertices = 2 * 3 * (length - 1) * (width - 1);
+            vbTerrain = new VertexBuffer(typeof(CustomVertex.PositionColoredTextured), TotalVertices,
+                D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColoredTextured.Format, Pool.Default);
 
-            traslation.X = center.X - length/2;
+            traslation.X = center.X - length / 2;
             traslation.Y = center.Y - level;
             this.center.Y = traslation.Y;
-            traslation.Z = center.Z - width/2;
+            traslation.Z = center.Z - width / 2;
 
             //Cargar vertices
             loadVertices();
@@ -195,7 +194,6 @@ namespace Examples.TerrainEditor
         /// <param name="center">Centro de la malla del terreno</param>
         public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, Vector3 center)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             this.center = center;
             ScaleXZ = scaleXZ;
             ScaleY = scaleY;
@@ -207,19 +205,20 @@ namespace Examples.TerrainEditor
             }
 
             //cargar heightmap
-            HeightmapData = loadHeightMap(d3dDevice, heightmapPath);
+            HeightmapData = loadHeightMap(D3DDevice.Instance.Device, heightmapPath);
 
             //Crear vertexBuffer
-            TotalVertices = 2*3*(HeightmapData.GetLength(0) - 1)*(HeightmapData.GetLength(1) - 1);
-            vbTerrain = new VertexBuffer(typeof (CustomVertex.PositionColoredTextured), TotalVertices, d3dDevice,
+            TotalVertices = 2 * 3 * (HeightmapData.GetLength(0) - 1) * (HeightmapData.GetLength(1) - 1);
+            vbTerrain = new VertexBuffer(typeof(CustomVertex.PositionColoredTextured), TotalVertices,
+                D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColoredTextured.Format, Pool.Default);
 
             float width = HeightmapData.GetLength(0);
             float length = HeightmapData.GetLength(1);
 
-            traslation.X = center.X - width/2;
+            traslation.X = center.X - width / 2;
             traslation.Y = center.Y;
-            traslation.Z = center.Z - length/2;
+            traslation.Z = center.Z - length / 2;
 
             //Cargar vertices
             loadVertices();
@@ -252,7 +251,7 @@ namespace Examples.TerrainEditor
             for (var i = 0; i < vertices.Length; i++)
             {
                 var v = vertices[i];
-                var intensity = HeightmapData[(int) vertices[i].X, (int) vertices[i].Z];
+                var intensity = HeightmapData[(int)vertices[i].X, (int)vertices[i].Z];
                 vertices[i].Y = intensity;
                 if (intensity > maxIntensity) maxIntensity = intensity;
                 if (minIntensity == -1 || intensity < minIntensity) minIntensity = intensity;
@@ -292,10 +291,10 @@ namespace Examples.TerrainEditor
                     var v4 = new Vector3(i + 1, HeightmapData[i + 1, j + 1], j + 1);
 
                     //Coordendas de textura
-                    var t1 = new Vector2(i/width, j/length);
-                    var t2 = new Vector2(i/width, (j + 1)/length);
-                    var t3 = new Vector2((i + 1)/width, j/length);
-                    var t4 = new Vector2((i + 1)/width, (j + 1)/length);
+                    var t1 = new Vector2(i / width, j / length);
+                    var t2 = new Vector2(i / width, (j + 1) / length);
+                    var t3 = new Vector2((i + 1) / width, j / length);
+                    var t4 = new Vector2((i + 1) / width, (j + 1) / length);
 
                     //Cargar triangulo 1
                     vertices[dataIdx] = new CustomVertex.PositionColoredTextured(v1, color, t1.X, t1.Y);
@@ -328,9 +327,8 @@ namespace Examples.TerrainEditor
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
-            var transform = Matrix.Translation(traslation)*Matrix.Scaling(ScaleXZ, ScaleY, ScaleXZ);
+            var transform = Matrix.Translation(traslation) * Matrix.Scaling(ScaleXZ, ScaleY, ScaleXZ);
 
             //Textura
             effect.SetValue("texDiffuseMap", terrainTexture);
@@ -338,16 +336,16 @@ namespace Examples.TerrainEditor
             texturesManager.clear(1);
 
             GuiController.Instance.Shaders.setShaderMatrix(effect, transform);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColoredTextured;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColoredTextured;
             effect.Technique = technique;
-            d3dDevice.SetStreamSource(0, vbTerrain, 0);
+            D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
 
             //Render con shader
             var p = effect.Begin(0);
             for (var i = 0; i < p; i++)
             {
                 effect.BeginPass(i);
-                d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, TotalVertices/3);
+                D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, TotalVertices / 3);
                 effect.EndPass();
             }
             effect.End();
@@ -382,7 +380,7 @@ namespace Examples.TerrainEditor
         public bool intersectRay(TgcRay ray, out Vector3 collisionPoint)
         {
             collisionPoint = Vector3.Empty;
-            var scaleInv = Matrix.Scaling(new Vector3(1/ScaleXZ, 1/ScaleY, 1/ScaleXZ));
+            var scaleInv = Matrix.Scaling(new Vector3(1 / ScaleXZ, 1 / ScaleY, 1 / ScaleXZ));
             var a = Vector3.TransformCoordinate(ray.Origin, scaleInv) - traslation;
             var r = Vector3.TransformCoordinate(ray.Direction, scaleInv);
 
@@ -398,9 +396,9 @@ namespace Examples.TerrainEditor
             //Obtengo el T de la interseccion.
             if (q != a)
             {
-                if (r.X != 0) minT = (q.X - a.X)/r.X;
-                else if (r.Y != 0) minT = (q.Y - a.Y)/r.Y;
-                else if (r.Z != 0) minT = (q.Z - a.Z)/r.Z;
+                if (r.X != 0) minT = (q.X - a.X) / r.X;
+                else if (r.Y != 0) minT = (q.Y - a.Y) / r.Y;
+                else if (r.Z != 0) minT = (q.Z - a.Z) / r.Z;
             }
 
             //Me desplazo por el rayo hasta que su altura sea menor a la del terreno en ese punto
@@ -408,9 +406,9 @@ namespace Examples.TerrainEditor
             float t = 0;
             float step = 1;
 
-            for (t = minT;; t += step)
+            for (t = minT; ; t += step)
             {
-                collisionPoint = a + t*r;
+                collisionPoint = a + t * r;
                 float y;
 
                 if (!interpoledIntensity(collisionPoint.X, collisionPoint.Z, out y))
@@ -435,7 +433,7 @@ namespace Examples.TerrainEditor
         public bool intersectRayPlane(TgcRay ray, out Vector3 collisionPoint)
         {
             collisionPoint = Vector3.Empty;
-            var minHeight = (minIntensity + traslation.Y)*ScaleY;
+            var minHeight = (minIntensity + traslation.Y) * ScaleY;
 
             float t;
             //Me fijo si intersecta con el BB del terreno.
@@ -452,8 +450,8 @@ namespace Examples.TerrainEditor
         {
             float i, j;
 
-            i = x/ScaleXZ - traslation.X;
-            j = z/ScaleXZ - traslation.Z;
+            i = x / ScaleXZ - traslation.X;
+            j = z / ScaleXZ - traslation.Z;
 
             coords = new Vector2(i, j);
 
@@ -479,7 +477,7 @@ namespace Examples.TerrainEditor
             if (!xzToHeightmapCoords(x, z, out coords)) return false;
             interpoledIntensity(coords.X, coords.Y, out i);
 
-            y = (i + traslation.Y)*ScaleY;
+            y = (i + traslation.Y) * ScaleY;
             return true;
         }
 
@@ -501,21 +499,21 @@ namespace Examples.TerrainEditor
             int x1, x2, z1, z2;
             float s, t;
 
-            x1 = (int) FastMath.Floor(u);
+            x1 = (int)FastMath.Floor(u);
             x2 = x1 + 1;
             s = u - x1;
 
-            z1 = (int) FastMath.Floor(v);
+            z1 = (int)FastMath.Floor(v);
             z2 = z1 + 1;
             t = v - z1;
 
             if (z2 >= maxZ) z2--;
             if (x2 >= maxX) x2--;
 
-            var i1 = HeightmapData[x1, z1] + s*(HeightmapData[x2, z1] - HeightmapData[x1, z1]);
-            var i2 = HeightmapData[x1, z2] + s*(HeightmapData[x2, z2] - HeightmapData[x1, z2]);
+            var i1 = HeightmapData[x1, z1] + s * (HeightmapData[x2, z1] - HeightmapData[x1, z1]);
+            var i2 = HeightmapData[x1, z2] + s * (HeightmapData[x2, z2] - HeightmapData[x1, z2]);
 
-            i = i1 + t*(i2 - i1);
+            i = i1 + t * (i2 - i1);
             return true;
         }
 

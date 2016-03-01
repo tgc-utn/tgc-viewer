@@ -1,11 +1,12 @@
-using System;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils;
+using System;
+using System.Drawing;
+using TGC.Core.Direct3D;
+using TGC.Viewer;
+using TGC.Viewer.Utils;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.Shaders.WorkshopShaders
 {
     /// <summary>
     ///     Customizacion de SimpleTerrain para renderizado de terrenos
@@ -41,7 +42,6 @@ namespace Examples.Shaders.WorkshopShaders
             scaleXZ = pscaleXZ;
             scaleY = pscaleY;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             this.center = center;
 
             //Dispose de VertexBuffer anterior, si habia
@@ -51,81 +51,82 @@ namespace Examples.Shaders.WorkshopShaders
             }
 
             //cargar heightmap
-            heightmapData = loadHeightMap(d3dDevice, heightmapPath);
+            heightmapData = loadHeightMap(D3DDevice.Instance.Device, heightmapPath);
             float width = heightmapData.GetLength(0);
             float length = heightmapData.GetLength(1);
 
             //Crear vertexBuffer
-            totalVertices = 2*3*(heightmapData.GetLength(0) + 1)*(heightmapData.GetLength(1) + 1);
-            totalVertices *= (int) ki*(int) kj;
-            vbTerrain = new VertexBuffer(typeof (CustomVertex.PositionTextured), totalVertices, d3dDevice,
+            totalVertices = 2 * 3 * (heightmapData.GetLength(0) + 1) * (heightmapData.GetLength(1) + 1);
+            totalVertices *= (int)ki * (int)kj;
+            vbTerrain = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices,
+                D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
 
             //Cargar vertices
             var dataIdx = 0;
             var data = new CustomVertex.PositionTextured[totalVertices];
 
-            center.X = center.X*scaleXZ - width/2*scaleXZ;
-            center.Y = center.Y*scaleY;
-            center.Z = center.Z*scaleXZ - length/2*scaleXZ;
+            center.X = center.X * scaleXZ - width / 2 * scaleXZ;
+            center.Y = center.Y * scaleY;
+            center.Z = center.Z * scaleXZ - length / 2 * scaleXZ;
 
             if (torus)
             {
-                var di = width*ki;
-                var dj = length*kj;
+                var di = width * ki;
+                var dj = length * kj;
 
-                for (var i = 0; i < width*ki; i++)
+                for (var i = 0; i < width * ki; i++)
                 {
-                    for (var j = 0; j < length*kj; j++)
+                    for (var j = 0; j < length * kj; j++)
                     {
-                        var ri = i%(int) width;
-                        var rj = j%(int) length;
-                        var ri1 = (i + 1)%(int) width;
-                        var rj1 = (j + 1)%(int) length;
+                        var ri = i % (int)width;
+                        var rj = j % (int)length;
+                        var ri1 = (i + 1) % (int)width;
+                        var rj1 = (j + 1) % (int)length;
 
                         Vector3 v1, v2, v3, v4;
                         {
-                            var r = radio_2 + heightmapData[ri, rj]*scaleY;
-                            var s = 2f*(float) Math.PI*j/dj;
-                            var t = -(float) Math.PI*i/di;
-                            var x = (float) Math.Cos(s)*(radio_1 + r*(float) Math.Cos(t));
-                            var z = (float) Math.Sin(s)*(radio_1 + r*(float) Math.Cos(t));
-                            var y = r*(float) Math.Sin(t);
+                            var r = radio_2 + heightmapData[ri, rj] * scaleY;
+                            var s = 2f * (float)Math.PI * j / dj;
+                            var t = -(float)Math.PI * i / di;
+                            var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var y = r * (float)Math.Sin(t);
                             v1 = new Vector3(x, y, z);
                         }
                         {
-                            var r = radio_2 + heightmapData[ri, rj1]*scaleY;
-                            var s = 2f*(float) Math.PI*(j + 1)/dj;
-                            var t = -(float) Math.PI*i/di;
-                            var x = (float) Math.Cos(s)*(radio_1 + r*(float) Math.Cos(t));
-                            var z = (float) Math.Sin(s)*(radio_1 + r*(float) Math.Cos(t));
-                            var y = r*(float) Math.Sin(t);
+                            var r = radio_2 + heightmapData[ri, rj1] * scaleY;
+                            var s = 2f * (float)Math.PI * (j + 1) / dj;
+                            var t = -(float)Math.PI * i / di;
+                            var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var y = r * (float)Math.Sin(t);
                             v2 = new Vector3(x, y, z);
                         }
                         {
-                            var r = radio_2 + heightmapData[ri1, rj]*scaleY;
-                            var s = 2f*(float) Math.PI*j/dj;
-                            var t = -(float) Math.PI*(i + 1)/di;
-                            var x = (float) Math.Cos(s)*(radio_1 + r*(float) Math.Cos(t));
-                            var z = (float) Math.Sin(s)*(radio_1 + r*(float) Math.Cos(t));
-                            var y = r*(float) Math.Sin(t);
+                            var r = radio_2 + heightmapData[ri1, rj] * scaleY;
+                            var s = 2f * (float)Math.PI * j / dj;
+                            var t = -(float)Math.PI * (i + 1) / di;
+                            var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var y = r * (float)Math.Sin(t);
                             v3 = new Vector3(x, y, z);
                         }
                         {
-                            var r = radio_2 + heightmapData[ri1, rj1]*scaleY;
-                            var s = 2f*(float) Math.PI*(j + 1)/dj;
-                            var t = -(float) Math.PI*(i + 1)/di;
-                            var x = (float) Math.Cos(s)*(radio_1 + r*(float) Math.Cos(t));
-                            var z = (float) Math.Sin(s)*(radio_1 + r*(float) Math.Cos(t));
-                            var y = r*(float) Math.Sin(t);
+                            var r = radio_2 + heightmapData[ri1, rj1] * scaleY;
+                            var s = 2f * (float)Math.PI * (j + 1) / dj;
+                            var t = -(float)Math.PI * (i + 1) / di;
+                            var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var y = r * (float)Math.Sin(t);
                             v4 = new Vector3(x, y, z);
                         }
 
                         //Coordendas de textura
-                        var t1 = new Vector2(ftex*i/width, ftex*j/length);
-                        var t2 = new Vector2(ftex*i/width, ftex*(j + 1)/length);
-                        var t3 = new Vector2(ftex*(i + 1)/width, ftex*j/length);
-                        var t4 = new Vector2(ftex*(i + 1)/width, ftex*(j + 1)/length);
+                        var t1 = new Vector2(ftex * i / width, ftex * j / length);
+                        var t2 = new Vector2(ftex * i / width, ftex * (j + 1) / length);
+                        var t3 = new Vector2(ftex * (i + 1) / width, ftex * j / length);
+                        var t4 = new Vector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
 
                         //Cargar triangulo 1
                         data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
@@ -148,20 +149,20 @@ namespace Examples.Shaders.WorkshopShaders
                     for (var j = 0; j < length - 1; j++)
                     {
                         //Vertices
-                        var v1 = new Vector3(center.X + i*scaleXZ, center.Y + heightmapData[i, j]*scaleY,
-                            center.Z + j*scaleXZ);
-                        var v2 = new Vector3(center.X + i*scaleXZ, center.Y + heightmapData[i, j + 1]*scaleY,
-                            center.Z + (j + 1)*scaleXZ);
-                        var v3 = new Vector3(center.X + (i + 1)*scaleXZ, center.Y + heightmapData[i + 1, j]*scaleY,
-                            center.Z + j*scaleXZ);
-                        var v4 = new Vector3(center.X + (i + 1)*scaleXZ, center.Y + heightmapData[i + 1, j + 1]*scaleY,
-                            center.Z + (j + 1)*scaleXZ);
+                        var v1 = new Vector3(center.X + i * scaleXZ, center.Y + heightmapData[i, j] * scaleY,
+                            center.Z + j * scaleXZ);
+                        var v2 = new Vector3(center.X + i * scaleXZ, center.Y + heightmapData[i, j + 1] * scaleY,
+                            center.Z + (j + 1) * scaleXZ);
+                        var v3 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + heightmapData[i + 1, j] * scaleY,
+                            center.Z + j * scaleXZ);
+                        var v4 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + heightmapData[i + 1, j + 1] * scaleY,
+                            center.Z + (j + 1) * scaleXZ);
 
                         //Coordendas de textura
-                        var t1 = new Vector2(ftex*i/width, ftex*j/length);
-                        var t2 = new Vector2(ftex*i/width, ftex*(j + 1)/length);
-                        var t3 = new Vector2(ftex*(i + 1)/width, ftex*j/length);
-                        var t4 = new Vector2(ftex*(i + 1)/width, ftex*(j + 1)/length);
+                        var t1 = new Vector2(ftex * i / width, ftex * j / length);
+                        var t2 = new Vector2(ftex * i / width, ftex * (j + 1) / length);
+                        var t3 = new Vector2(ftex * (i + 1) / width, ftex * j / length);
+                        var t4 = new Vector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
 
                         //Cargar triangulo 1
                         data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
@@ -192,12 +193,10 @@ namespace Examples.Shaders.WorkshopShaders
                 terrainTexture.Dispose();
             }
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Rotar e invertir textura
-            var b = (Bitmap) Image.FromFile(path);
+            var b = (Bitmap)Image.FromFile(path);
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
-            terrainTexture = Texture.FromBitmap(d3dDevice, b, Usage.None, Pool.Managed);
+            terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.None, Pool.Managed);
         }
 
         /// <summary>
@@ -205,7 +204,7 @@ namespace Examples.Shaders.WorkshopShaders
         /// </summary>
         private int[,] loadHeightMap(Device d3dDevice, string path)
         {
-            var bitmap = (Bitmap) Image.FromFile(path);
+            var bitmap = (Bitmap)Image.FromFile(path);
             var width = bitmap.Size.Width;
             var height = bitmap.Size.Height;
             var heightmap = new int[width, height];
@@ -215,8 +214,8 @@ namespace Examples.Shaders.WorkshopShaders
                 {
                     //(j, i) invertido para primero barrer filas y despues columnas
                     var pixel = bitmap.GetPixel(j, i);
-                    var intensity = pixel.R*0.299f + pixel.G*0.587f + pixel.B*0.114f;
-                    heightmap[i, j] = (int) intensity;
+                    var intensity = pixel.R * 0.299f + pixel.G * 0.587f + pixel.B * 0.114f;
+                    heightmap[i, j] = (int)intensity;
                 }
             }
 
@@ -227,35 +226,33 @@ namespace Examples.Shaders.WorkshopShaders
         // utilizo estos metodos para el render:
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-            d3dDevice.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
             //Render terrain
-            d3dDevice.SetTexture(0, terrainTexture);
-            d3dDevice.SetTexture(1, null);
-            d3dDevice.Material = TgcD3dDevice.DEFAULT_MATERIAL;
+            D3DDevice.Instance.Device.SetTexture(0, terrainTexture);
+            D3DDevice.Instance.Device.SetTexture(1, null);
+            D3DDevice.Instance.Device.Material = TgcD3dDevice.DEFAULT_MATERIAL;
 
-            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
-            d3dDevice.SetStreamSource(0, vbTerrain, 0);
-            d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices/3);
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
+            D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
         }
 
         public void executeRender(Effect effect)
         {
-            var device = GuiController.Instance.D3dDevice;
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
 
             //Render terrain
             effect.SetValue("texDiffuseMap", terrainTexture);
 
-            device.VertexFormat = CustomVertex.PositionTextured.Format;
-            device.SetStreamSource(0, vbTerrain, 0);
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
+            D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
 
             var numPasses = effect.Begin(0);
             for (var n = 0; n < numPasses; n++)
             {
                 effect.BeginPass(n);
-                device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices/3);
+                D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
                 effect.EndPass();
             }
             effect.End();
@@ -263,13 +260,13 @@ namespace Examples.Shaders.WorkshopShaders
 
         public float CalcularAltura(float x, float z)
         {
-            var largo = scaleXZ*64;
-            var pos_i = 64f*(0.5f + x/largo);
-            var pos_j = 64f*(0.5f + z/largo);
+            var largo = scaleXZ * 64;
+            var pos_i = 64f * (0.5f + x / largo);
+            var pos_j = 64f * (0.5f + z / largo);
 
-            var pi = (int) pos_i;
+            var pi = (int)pos_i;
             var fracc_i = pos_i - pi;
-            var pj = (int) pos_j;
+            var pj = (int)pos_j;
             var fracc_j = pos_j - pj;
 
             if (pi < 0)
@@ -290,12 +287,12 @@ namespace Examples.Shaders.WorkshopShaders
                 pj1 = 63;
 
             // 2x2 percent closest filtering usual:
-            var H0 = heightmapData[pi, pj]*scaleY;
-            var H1 = heightmapData[pi1, pj]*scaleY;
-            var H2 = heightmapData[pi, pj1]*scaleY;
-            var H3 = heightmapData[pi1, pj1]*scaleY;
-            var H = (H0*(1 - fracc_i) + H1*fracc_i)*(1 - fracc_j) +
-                    (H2*(1 - fracc_i) + H3*fracc_i)*fracc_j;
+            var H0 = heightmapData[pi, pj] * scaleY;
+            var H1 = heightmapData[pi1, pj] * scaleY;
+            var H2 = heightmapData[pi, pj1] * scaleY;
+            var H3 = heightmapData[pi1, pj1] * scaleY;
+            var H = (H0 * (1 - fracc_i) + H1 * fracc_i) * (1 - fracc_j) +
+                    (H2 * (1 - fracc_i) + H3 * fracc_i) * fracc_j;
             return H;
         }
 

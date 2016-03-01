@@ -1,10 +1,10 @@
+using Microsoft.DirectX;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
 using TGC.Core.Utils;
 
-namespace TgcViewer.Utils
+namespace TGC.Viewer.Utils
 {
     /// <summary>
     ///     Loguea en diferentes modalidades el texto solicitado en el textbox configurado.

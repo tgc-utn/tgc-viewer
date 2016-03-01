@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace TgcViewer.Utils.Ui
+namespace TGC.Viewer.Utils.Ui
 {
     /// <summary>
     ///     Panel para modo FullScreen

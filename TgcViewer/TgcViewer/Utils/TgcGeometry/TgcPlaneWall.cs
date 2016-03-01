@@ -1,11 +1,12 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Pared 3D plana que solo crece en dos dimensiones.
@@ -33,11 +34,11 @@ namespace TgcViewer.Utils.TgcGeometry
             YZplane = 2
         }
 
+        private readonly CustomVertex.PositionTextured[] vertices;
+
         protected Effect effect;
 
         protected string technique;
-
-        private readonly CustomVertex.PositionTextured[] vertices;
 
         /// <summary>
         ///     Crea una pared vacia.
@@ -202,7 +203,6 @@ namespace TgcViewer.Utils.TgcGeometry
             if (!Enabled)
                 return;
 
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             activateAlphaBlend();
@@ -210,13 +210,13 @@ namespace TgcViewer.Utils.TgcGeometry
             texturesManager.shaderSet(effect, "texDiffuseMap", Texture);
             texturesManager.clear(1);
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
             effect.Technique = technique;
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, vertices);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, vertices);
             effect.EndPass();
             effect.End();
 
@@ -261,8 +261,8 @@ namespace TgcViewer.Utils.TgcGeometry
                 bRight = new Vector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
                 tRight = new Vector3(Origin.X + Size.X, Origin.Y + Size.Y, Origin.Z);
 
-                autoWidth = Size.X/Texture.Width;
-                autoHeight = Size.Y/Texture.Height;
+                autoWidth = Size.X / Texture.Width;
+                autoHeight = Size.Y / Texture.Height;
             }
             else if (Orientation == Orientations.YZplane)
             {
@@ -271,8 +271,8 @@ namespace TgcViewer.Utils.TgcGeometry
                 bRight = new Vector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
                 tRight = new Vector3(Origin.X, Origin.Y + Size.Y, Origin.Z + Size.Z);
 
-                autoWidth = Size.Y/Texture.Width;
-                autoHeight = Size.Z/Texture.Height;
+                autoWidth = Size.Y / Texture.Width;
+                autoHeight = Size.Z / Texture.Height;
             }
             else
             {
@@ -281,8 +281,8 @@ namespace TgcViewer.Utils.TgcGeometry
                 bRight = new Vector3(Origin.X, Origin.Y, Origin.Z + Size.Z);
                 tRight = new Vector3(Origin.X + Size.X, Origin.Y, Origin.Z + Size.Z);
 
-                autoWidth = Size.X/Texture.Width;
-                autoHeight = Size.Z/Texture.Height;
+                autoWidth = Size.X / Texture.Width;
+                autoHeight = Size.Z / Texture.Height;
             }
 
             //Auto ajustar UV
@@ -337,11 +337,10 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         protected void activateAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
             if (AlphaBlendEnable)
             {
-                device.RenderState.AlphaTestEnable = true;
-                device.RenderState.AlphaBlendEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
+                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
             }
         }
 
@@ -350,9 +349,8 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         protected void resetAlphaBlend()
         {
-            var device = GuiController.Instance.D3dDevice;
-            device.RenderState.AlphaTestEnable = false;
-            device.RenderState.AlphaBlendEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>
@@ -361,11 +359,9 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <param name="meshName">Nombre de la malla que se va a crear</param>
         public TgcMesh toMesh(string meshName)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear Mesh
-            var d3dMesh = new Mesh(vertices.Length/3, vertices.Length, MeshFlags.Managed,
-                TgcSceneLoader.TgcSceneLoader.DiffuseMapVertexElements, d3dDevice);
+            var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
+                TgcSceneLoader.TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
 
             //Cargar VertexBuffer
             using (var vb = d3dMesh.VertexBuffer)
@@ -402,7 +398,7 @@ namespace TgcViewer.Utils.TgcGeometry
                 var indices = new short[vertices.Length];
                 for (var j = 0; j < indices.Length; j++)
                 {
-                    indices[j] = (short) j;
+                    indices[j] = (short)j;
                 }
                 ib.SetData(indices, 0, LockFlags.None);
             }
@@ -412,8 +408,8 @@ namespace TgcViewer.Utils.TgcGeometry
 
             //Malla de TGC
             var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
-            tgcMesh.DiffuseMaps = new[] {Texture.clone()};
-            tgcMesh.Materials = new[] {TgcD3dDevice.DEFAULT_MATERIAL};
+            tgcMesh.DiffuseMaps = new[] { Texture.clone() };
+            tgcMesh.Materials = new[] { TgcD3dDevice.DEFAULT_MATERIAL };
             tgcMesh.createBoundingBox();
             tgcMesh.Enabled = true;
             return tgcMesh;

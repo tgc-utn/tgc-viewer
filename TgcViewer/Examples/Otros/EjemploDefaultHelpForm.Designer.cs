@@ -1,4 +1,4 @@
-﻿namespace Examples.Otros
+﻿namespace TGC.Examples.Otros
 {
     partial class EjemploDefaultHelpForm
     {

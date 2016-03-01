@@ -1,12 +1,13 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcGeometry;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.MeshCreator
+namespace TGC.Examples.MeshCreator
 {
     /// <summary>
     ///     Grilla del piso del escenario
@@ -42,25 +43,25 @@ namespace Examples.MeshCreator
             pickingYZAabb = new TgcBoundingBox(new Vector3(-SMALL_VAL, -BIG_VAL, -BIG_VAL),
                 new Vector3(0, BIG_VAL, BIG_VAL));
 
-            vertices = new CustomVertex.PositionColored[12*2*2];
+            vertices = new CustomVertex.PositionColored[12 * 2 * 2];
             var color = Color.FromArgb(76, 76, 76).ToArgb();
 
             //10 lineas horizontales en X
             for (var i = 0; i < 11; i++)
             {
-                vertices[i*2] = new CustomVertex.PositionColored(-GRID_RADIUS, 0, -GRID_RADIUS + LINE_SEPARATION*i,
+                vertices[i * 2] = new CustomVertex.PositionColored(-GRID_RADIUS, 0, -GRID_RADIUS + LINE_SEPARATION * i,
                     color);
-                vertices[i*2 + 1] = new CustomVertex.PositionColored(GRID_RADIUS, 0, -GRID_RADIUS + LINE_SEPARATION*i,
+                vertices[i * 2 + 1] = new CustomVertex.PositionColored(GRID_RADIUS, 0, -GRID_RADIUS + LINE_SEPARATION * i,
                     color);
             }
 
             //10 lineas horizontales en Z
             for (var i = 11; i < 22; i++)
             {
-                vertices[i*2] = new CustomVertex.PositionColored(-GRID_RADIUS*3 + LINE_SEPARATION*i - LINE_SEPARATION, 0,
+                vertices[i * 2] = new CustomVertex.PositionColored(-GRID_RADIUS * 3 + LINE_SEPARATION * i - LINE_SEPARATION, 0,
                     -GRID_RADIUS, color);
-                vertices[i*2 + 1] =
-                    new CustomVertex.PositionColored(-GRID_RADIUS*3 + LINE_SEPARATION*i - LINE_SEPARATION, 0,
+                vertices[i * 2 + 1] =
+                    new CustomVertex.PositionColored(-GRID_RADIUS * 3 + LINE_SEPARATION * i - LINE_SEPARATION, 0,
                         GRID_RADIUS, color);
             }
         }
@@ -72,7 +73,6 @@ namespace Examples.MeshCreator
 
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
@@ -81,12 +81,12 @@ namespace Examples.MeshCreator
             var effect = GuiController.Instance.Shaders.VariosShader;
             effect.Technique = TgcShaders.T_POSITION_COLORED;
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, 22, vertices);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, 22, vertices);
             effect.EndPass();
             effect.End();
         }

@@ -1,11 +1,12 @@
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Fog
+namespace TGC.Examples.Fog
 {
     /// <summary>
     ///     Ejemplo EfectoNiebla
@@ -35,11 +36,10 @@ namespace Examples.Fog
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Crear caja
             box = TgcBox.fromSize(new Vector3(100, 100, 100),
-                TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\pasto.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                    GuiController.Instance.ExamplesMediaDir + "Texturas\\pasto.jpg"));
 
             //Camara rotacional
             GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
@@ -54,14 +54,12 @@ namespace Examples.Fog
 
         public override void render(float elapsedTime)
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
-
             //Cargar valores de niebla
-            GuiController.Instance.Fog.Enabled = (bool) GuiController.Instance.Modifiers["Enabled"];
-            GuiController.Instance.Fog.StartDistance = (float) GuiController.Instance.Modifiers["startDistance"];
-            GuiController.Instance.Fog.EndDistance = (float) GuiController.Instance.Modifiers["endDistance"];
-            GuiController.Instance.Fog.Density = (float) GuiController.Instance.Modifiers["density"];
-            GuiController.Instance.Fog.Color = (Color) GuiController.Instance.Modifiers["color"];
+            GuiController.Instance.Fog.Enabled = (bool)GuiController.Instance.Modifiers["Enabled"];
+            GuiController.Instance.Fog.StartDistance = (float)GuiController.Instance.Modifiers["startDistance"];
+            GuiController.Instance.Fog.EndDistance = (float)GuiController.Instance.Modifiers["endDistance"];
+            GuiController.Instance.Fog.Density = (float)GuiController.Instance.Modifiers["density"];
+            GuiController.Instance.Fog.Color = (Color)GuiController.Instance.Modifiers["color"];
 
             //Actualizar valores
             GuiController.Instance.Fog.updateValues();

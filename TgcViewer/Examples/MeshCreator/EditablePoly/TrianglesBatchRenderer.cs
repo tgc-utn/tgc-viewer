@@ -1,11 +1,12 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
 
-namespace Examples.MeshCreator.EditablePolyTools
+namespace TGC.Examples.MeshCreator.EditablePoly
 {
     /// <summary>
     ///     Herramienta para acumular varios triangulos y dibujarlos luego todos juntos
@@ -68,7 +69,6 @@ namespace Examples.MeshCreator.EditablePolyTools
         /// </summary>
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
@@ -76,23 +76,23 @@ namespace Examples.MeshCreator.EditablePolyTools
 
             var effect = GuiController.Instance.Shaders.VariosShader;
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = TgcShaders.T_POSITION_COLORED;
 
             //Alpha blend on
-            d3dDevice.RenderState.AlphaTestEnable = true;
-            d3dDevice.RenderState.AlphaBlendEnable = true;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, idx/3, vertices);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, idx / 3, vertices);
             effect.EndPass();
             effect.End();
 
             //Alpha blend off
-            d3dDevice.RenderState.AlphaTestEnable = false;
-            d3dDevice.RenderState.AlphaBlendEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Examples.MeshCreator.EditablePolyTools
             var angle = FastMath.Acos(Vector3.Dot(BOX_LINE_ORIGINAL_DIR, lineVec));
             var axisRotation = Vector3.Cross(BOX_LINE_ORIGINAL_DIR, lineVec);
             axisRotation.Normalize();
-            var t = Matrix.RotationAxis(axisRotation, angle)*Matrix.Translation(pStart);
+            var t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(pStart);
 
             //Transformar todos los puntos
             for (var i = initIdx; i < initIdx + vertexCount; i++)

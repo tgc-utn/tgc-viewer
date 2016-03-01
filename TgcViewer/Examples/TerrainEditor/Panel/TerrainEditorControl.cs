@@ -1,28 +1,28 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
-using Examples.MeshCreator;
-using Examples.TerrainEditor.Brushes;
-using Examples.TerrainEditor.Brushes.Terrain;
-using Examples.TerrainEditor.Brushes.Vegetation;
-using Examples.TerrainEditor.Vegetation;
-using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Modifiers;
+using TGC.Examples.MeshCreator;
+using TGC.Examples.TerrainEditor.Brushes;
+using TGC.Examples.TerrainEditor.Brushes.Terrain;
+using TGC.Examples.TerrainEditor.Brushes.Vegetation;
+using TGC.Examples.TerrainEditor.Instances;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Modifiers;
 
-namespace Examples.TerrainEditor.Panel
+namespace TGC.Examples.TerrainEditor.Panel
 {
     public partial class TerrainEditorControl : UserControl
     {
-        private TgcTextureBrowser heightmapBrowser;
         private readonly Shovel shovel;
         private readonly Steamroller steamroller;
         private readonly TgcTerrainEditor terrainEditor;
         private readonly TgcTextureBrowser textureBrowser;
         private readonly VegetationBrush vegetationBrush;
         private readonly VegetationPicker vegetationPicker;
+        private TgcTextureBrowser heightmapBrowser;
 
         public TerrainEditorControl(TgcTerrainEditor terrainEditor)
         {
@@ -40,8 +40,8 @@ namespace Examples.TerrainEditor.Panel
             textureBrowser.setSelectedImage(GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" +
                                             "TerrainTexture1-256x256.jpg");
             pictureBoxModifyTexture.ImageLocation = textureBrowser.SelectedImage;
-            terrainEditor.Terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float) nudScaleXZ.Value,
-                (float) nudScaleY.Value, new Vector3(0, 0, 0));
+            terrainEditor.Terrain.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value,
+                (float)nudScaleY.Value, new Vector3(0, 0, 0));
             terrainEditor.Terrain.loadTexture(textureBrowser.SelectedImage);
 
             shovel = new Shovel();
@@ -129,8 +129,8 @@ namespace Examples.TerrainEditor.Panel
                 pictureBoxModifyHeightmap.Image = img;
                 pictureBoxModifyHeightmap.ImageLocation = heightmapBrowser.SelectedImage;
 
-                terrainEditor.loadHeightmap(heightmapBrowser.SelectedImage, (float) nudScaleXZ.Value,
-                    (float) nudScaleY.Value);
+                terrainEditor.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value,
+                    (float)nudScaleY.Value);
 
                 setInfo();
             }
@@ -152,14 +152,14 @@ namespace Examples.TerrainEditor.Panel
         {
             pictureBoxModifyHeightmap.Image = null;
             pictureBoxModifyHeightmap.Refresh();
-            terrainEditor.loadPlainHeightmap((int) nupWidth.Value, (int) nupHeight.Value, (int) nupLevel.Value,
-                (float) nudScaleXZ.Value, (float) nudScaleY.Value);
+            terrainEditor.loadPlainHeightmap((int)nupWidth.Value, (int)nupHeight.Value, (int)nupLevel.Value,
+                (float)nudScaleXZ.Value, (float)nudScaleY.Value);
             setInfo();
         }
 
         private void nudScale_ValueChanged(object sender, EventArgs e)
         {
-            terrainEditor.setScale((float) nudScaleXZ.Value, (float) nudScaleY.Value);
+            terrainEditor.setScale((float)nudScaleXZ.Value, (float)nudScaleY.Value);
             setInfo();
         }
 
@@ -187,8 +187,8 @@ namespace Examples.TerrainEditor.Panel
 
         private void bReload_Click(object sender, EventArgs e)
         {
-            terrainEditor.loadHeightmap(heightmapBrowser.SelectedImage, (float) nudScaleXZ.Value,
-                (float) nudScaleY.Value);
+            terrainEditor.loadHeightmap(heightmapBrowser.SelectedImage, (float)nudScaleXZ.Value,
+                (float)nudScaleY.Value);
         }
 
         #endregion General
@@ -304,8 +304,8 @@ namespace Examples.TerrainEditor.Panel
 
         private void tbBrush_Scroll(object sender, EventArgs e)
         {
-            var tb = (TrackBar) sender;
-            var prop = (string) tb.Tag;
+            var tb = (TrackBar)sender;
+            var prop = (string)tb.Tag;
 
             //Reflection para escribir menos :P
             shovel.GetType().GetProperty(prop).SetValue(shovel, tb.Value, null);
@@ -314,8 +314,8 @@ namespace Examples.TerrainEditor.Panel
 
         private void cbBrush_CheckedChanged(object sender, EventArgs e)
         {
-            var cb = (CheckBox) sender;
-            var prop = (string) cb.Tag;
+            var cb = (CheckBox)sender;
+            var prop = (string)cb.Tag;
 
             //Reflection para escribir menos :P
             shovel.GetType().GetProperty(prop).SetValue(shovel, cb.Checked, null);

@@ -14,6 +14,7 @@ namespace TGC.Core.SceneLoader
 
         //Color general, por si no tiene Material
         public float[] color;
+
         public int[] colorIndices;
 
         //Valores por triangulo
@@ -21,6 +22,7 @@ namespace TGC.Core.SceneLoader
 
         //Tipo de instancia
         public string instanceType;
+
         public string layerName;
 
         //Filename del LightMap
@@ -58,11 +60,13 @@ namespace TGC.Core.SceneLoader
 
         //UserProperties
         public Dictionary<string, string> userProperties;
+
         public float[] verticesBinormals;
         public int[] verticesColors;
 
         //Valores por vertice
         public float[] verticesCoordinates;
+
         public float[] verticesNormals;
         public float[] verticesTangents;
     }

@@ -1,6 +1,6 @@
+using Microsoft.DirectX;
 using System.Globalization;
 using System.Text;
-using Microsoft.DirectX;
 
 namespace TGC.Core.Utils
 {
@@ -44,7 +44,7 @@ namespace TGC.Core.Utils
         {
             var aux = text.Substring(1, text.Length - 2);
             var n = aux.Split(',');
-            return new[] {parseFloat(n[0]), parseFloat(n[1]), parseFloat(n[2])};
+            return new[] { parseFloat(n[0]), parseFloat(n[1]), parseFloat(n[2]) };
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace TGC.Core.Utils
         {
             var aux = text.Substring(1, text.Length - 2);
             var n = aux.Split(',');
-            return new[] {int.Parse(n[0]), int.Parse(n[1]), int.Parse(n[2])};
+            return new[] { int.Parse(n[0]), int.Parse(n[1]), int.Parse(n[2]) };
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace TGC.Core.Utils
         {
             var aux = text.Substring(1, text.Length - 2);
             var n = aux.Split(',');
-            return new[] {parseFloat(n[0]), parseFloat(n[1])};
+            return new[] { parseFloat(n[0]), parseFloat(n[1]) };
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace TGC.Core.Utils
         {
             var aux = text.Substring(1, text.Length - 2);
             var n = aux.Split(',');
-            return new[] {int.Parse(n[0]), int.Parse(n[1])};
+            return new[] { int.Parse(n[0]), int.Parse(n[1]) };
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace TGC.Core.Utils
         /// </summary>
         public static float[] vector3ToFloat3Array(Vector3 v)
         {
-            return new[] {v.X, v.Y, v.Z};
+            return new[] { v.X, v.Y, v.Z };
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace TGC.Core.Utils
         /// </summary>
         public static float[] vector3ToFloat4Array(Vector3 v)
         {
-            return new[] {v.X, v.Y, v.Z, 1f};
+            return new[] { v.X, v.Y, v.Z, 1f };
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace TGC.Core.Utils
         /// </summary>
         public static float[] vector2ToFloat2Array(Vector2 v)
         {
-            return new[] {v.X, v.Y};
+            return new[] { v.X, v.Y };
         }
 
         /// <summary>
@@ -409,7 +409,7 @@ namespace TGC.Core.Utils
         /// </summary>
         public static float[] quaternionToFloat4Array(Quaternion q)
         {
-            return new[] {q.X, q.Y, q.Z, q.W};
+            return new[] { q.X, q.Y, q.Z, q.W };
         }
 
         /// <summary>
@@ -441,11 +441,11 @@ namespace TGC.Core.Utils
         /// </summary>
         public static float[] vector2ArrayToFloat2Array(Vector2[] values)
         {
-            var data = new float[values.Length*2];
+            var data = new float[values.Length * 2];
             for (var i = 0; i < values.Length; i++)
             {
-                data[i*2] = values[i].X;
-                data[i*2 + 1] = values[i].Y;
+                data[i * 2] = values[i].X;
+                data[i * 2 + 1] = values[i].Y;
             }
             return data;
         }

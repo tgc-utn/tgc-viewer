@@ -1,11 +1,11 @@
 ﻿using Microsoft.DirectX;
-using TgcViewer;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Input;
+using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.MeshCreator.Primitives
+namespace TGC.Examples.MeshCreator.Primitives
 {
     /// <summary>
     ///     Primitiva de Box 3D
@@ -225,7 +225,7 @@ namespace Examples.MeshCreator.Primitives
         {
             mesh.Rotation = rotation;
             var translation = pivot - mesh.Position;
-            var m = Matrix.Translation(-translation)*Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)*
+            var m = Matrix.Translation(-translation) * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
                     Matrix.Translation(translation);
             mesh.move(new Vector3(m.M41, m.M42, m.M43));
         }

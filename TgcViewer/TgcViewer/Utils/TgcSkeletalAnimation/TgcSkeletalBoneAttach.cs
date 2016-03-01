@@ -1,7 +1,7 @@
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace TgcViewer.Utils.TgcSkeletalAnimation
+namespace TGC.Viewer.Utils.TgcSkeletalAnimation
 {
     /// <summary>
     ///     Representa un modelo que se adjunta a un hueso del esqueleto, para que se modifique
@@ -73,7 +73,7 @@ namespace TgcViewer.Utils.TgcSkeletalAnimation
         /// </summary>
         internal void updateMeshTransform(Matrix meshTransform)
         {
-            Mesh.Transform = Offset*Bone.MatFinal*meshTransform;
+            Mesh.Transform = Offset * Bone.MatFinal * meshTransform;
         }
     }
 }

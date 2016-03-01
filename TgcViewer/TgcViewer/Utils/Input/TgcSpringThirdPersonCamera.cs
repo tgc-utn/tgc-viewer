@@ -1,7 +1,7 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 
-namespace TgcViewer.Utils.Input
+namespace TGC.Viewer.Utils.Input
 {
     /// <summary>
     ///     Camara en Tercera Persona que permite seguir a un objeto que se desplaza
@@ -164,7 +164,7 @@ namespace TgcViewer.Utils.Input
             var m_yAxis = new Vector3(m_viewMatrix.M12, m_viewMatrix.M22, m_viewMatrix.M32);
             var m_zAxis = new Vector3(m_viewMatrix.M13, m_viewMatrix.M23, m_viewMatrix.M33);
 
-            Position = Target + m_zAxis*-m_offsetDistance;
+            Position = Target + m_zAxis * -m_offsetDistance;
 
             m_viewMatrix.M41 = -Vector3.Dot(m_xAxis, Position);
             m_viewMatrix.M42 = -Vector3.Dot(m_yAxis, Position);
@@ -191,12 +191,12 @@ namespace TgcViewer.Utils.Input
             //   Stone, Jonathan, "Third-Person Camera Navigation," Game Programming
             //     Gems 4, Andrew Kirmse, Editor, Charles River Media, Inc., 2004.
 
-            var idealPosition = Target + m_zAxis*-m_offsetDistance;
+            var idealPosition = Target + m_zAxis * -m_offsetDistance;
             var displacement = Position - idealPosition;
-            var springAcceleration = -Spring*displacement - Damping*m_velocity;
+            var springAcceleration = -Spring * displacement - Damping * m_velocity;
 
-            m_velocity += springAcceleration*elapsedTimeSec;
-            Position += m_velocity*elapsedTimeSec;
+            m_velocity += springAcceleration * elapsedTimeSec;
+            Position += m_velocity * elapsedTimeSec;
 
             // The view matrix is always relative to the camera's current position
             // 'm_eye'. Since a spring system is being used here 'm_eye' will be
@@ -236,7 +236,7 @@ namespace TgcViewer.Utils.Input
 
         public Vector3 calulateNextPosition(float headingDegrees, float elapsedTimeSec)
         {
-            var heading = Geometry.DegreeToRadian(-headingDegrees*elapsedTimeSec);
+            var heading = Geometry.DegreeToRadian(-headingDegrees * elapsedTimeSec);
 
             var quatOrientation = m_orientation;
             if (heading != 0.0f)
@@ -249,7 +249,7 @@ namespace TgcViewer.Utils.Input
             var viewMatrix = Matrix.RotationQuaternion(quatOrientation);
 
             var m_zAxis = new Vector3(viewMatrix.M13, viewMatrix.M23, viewMatrix.M33);
-            var idealPosition = Target + m_zAxis*-m_offsetDistance;
+            var idealPosition = Target + m_zAxis * -m_offsetDistance;
 
             return idealPosition;
         }

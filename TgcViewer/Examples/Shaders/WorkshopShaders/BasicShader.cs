@@ -1,12 +1,13 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Viewer;
+using TGC.Viewer.Utils.Shaders;
+using TGC.Viewer.Utils.TgcSceneLoader;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.Shaders.WorkshopShaders
 {
     /// <summary>
     ///     Ejemplo EnvMap:
@@ -39,7 +40,6 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             //Crear loader
             var loader = new TgcSceneLoader();
 
@@ -71,12 +71,11 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void render(float elapsedTime)
         {
-            var device = GuiController.Instance.D3dDevice;
             time += elapsedTime;
 
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
             GuiController.Instance.CurrentCamera.updateCamera();
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.
             effect.SetValue("time", time);

@@ -1,9 +1,9 @@
+using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
+using TGC.Viewer.Utils.TgcGeometry;
 
-namespace Examples.RoomsEditor
+namespace TGC.Examples.RoomsEditor
 {
     /// <summary>
     ///     Información lógica y visual de un Room
@@ -74,8 +74,8 @@ namespace Examples.RoomsEditor
             //roof
             var roof = Walls[0];
             var roofWall3d = new TgcPlaneWall(
-                new Vector3(bounds.X*sceneScale.X, (FloorLevel + Height)*sceneScale.Y, bounds.Y*sceneScale.Z),
-                new Vector3(bounds.Width*sceneScale.X, 0, bounds.Height*sceneScale.Z),
+                new Vector3(bounds.X * sceneScale.X, (FloorLevel + Height) * sceneScale.Y, bounds.Y * sceneScale.Z),
+                new Vector3(bounds.Width * sceneScale.X, 0, bounds.Height * sceneScale.Z),
                 TgcPlaneWall.Orientations.XZplane,
                 roof.Texture, roof.UTile, roof.VTile
                 );
@@ -85,8 +85,8 @@ namespace Examples.RoomsEditor
             //floor
             var floor = Walls[1];
             var floorWall3d = new TgcPlaneWall(
-                new Vector3(bounds.X*sceneScale.X, FloorLevel, bounds.Y*sceneScale.Z),
-                new Vector3(bounds.Width*sceneScale.X, 0, bounds.Height*sceneScale.Z),
+                new Vector3(bounds.X * sceneScale.X, FloorLevel, bounds.Y * sceneScale.Z),
+                new Vector3(bounds.Width * sceneScale.X, 0, bounds.Height * sceneScale.Z),
                 TgcPlaneWall.Orientations.XZplane,
                 floor.Texture, floor.UTile, floor.VTile
                 );
@@ -111,8 +111,8 @@ namespace Examples.RoomsEditor
             foreach (var seg in finalWallSegments)
             {
                 var wall3d = new TgcPlaneWall(
-                    new Vector3((bounds.X + bounds.Width)*sceneScale.X, FloorLevel*sceneScale.Y, seg.X*sceneScale.Z),
-                    new Vector3(0, Height*sceneScale.Y, (seg.Y - seg.X)*sceneScale.Z),
+                    new Vector3((bounds.X + bounds.Width) * sceneScale.X, FloorLevel * sceneScale.Y, seg.X * sceneScale.Z),
+                    new Vector3(0, Height * sceneScale.Y, (seg.Y - seg.X) * sceneScale.Z),
                     TgcPlaneWall.Orientations.YZplane,
                     eastWall.Texture, eastWall.UTile, eastWall.VTile
                     );
@@ -135,8 +135,8 @@ namespace Examples.RoomsEditor
             foreach (var seg in finalWallSegments)
             {
                 var wall3d = new TgcPlaneWall(
-                    new Vector3(bounds.X*sceneScale.X, FloorLevel*sceneScale.Y, seg.X*sceneScale.Z),
-                    new Vector3(0, Height*sceneScale.Y, (seg.Y - seg.X)*sceneScale.Z),
+                    new Vector3(bounds.X * sceneScale.X, FloorLevel * sceneScale.Y, seg.X * sceneScale.Z),
+                    new Vector3(0, Height * sceneScale.Y, (seg.Y - seg.X) * sceneScale.Z),
                     TgcPlaneWall.Orientations.YZplane,
                     westWall.Texture, westWall.UTile, westWall.VTile
                     );
@@ -158,8 +158,8 @@ namespace Examples.RoomsEditor
             foreach (var seg in finalWallSegments)
             {
                 var wall3d = new TgcPlaneWall(
-                    new Vector3(seg.X*sceneScale.X, FloorLevel*sceneScale.Y, bounds.Y*sceneScale.Z),
-                    new Vector3((seg.Y - seg.X)*sceneScale.X, Height*sceneScale.Y, 0),
+                    new Vector3(seg.X * sceneScale.X, FloorLevel * sceneScale.Y, bounds.Y * sceneScale.Z),
+                    new Vector3((seg.Y - seg.X) * sceneScale.X, Height * sceneScale.Y, 0),
                     TgcPlaneWall.Orientations.XYplane,
                     northWall.Texture, northWall.UTile, northWall.VTile
                     );
@@ -181,8 +181,8 @@ namespace Examples.RoomsEditor
             foreach (var seg in finalWallSegments)
             {
                 var wall3d = new TgcPlaneWall(
-                    new Vector3(seg.X*sceneScale.X, FloorLevel*sceneScale.Y, (bounds.Y + bounds.Height)*sceneScale.Z),
-                    new Vector3((seg.Y - seg.X)*sceneScale.X, Height*sceneScale.Y, 0),
+                    new Vector3(seg.X * sceneScale.X, FloorLevel * sceneScale.Y, (bounds.Y + bounds.Height) * sceneScale.Z),
+                    new Vector3((seg.Y - seg.X) * sceneScale.X, Height * sceneScale.Y, 0),
                     TgcPlaneWall.Orientations.XYplane,
                     southWall.Texture, southWall.UTile, southWall.VTile
                     );
@@ -214,10 +214,10 @@ namespace Examples.RoomsEditor
                 if (supSeg.X != 0 || supSeg.Y != 0)
                 {
                     var wall3d = new TgcPlaneWall(
-                        new Vector3((bounds.X + bounds.Width)*sceneScale.X, supSeg.X*sceneScale.Y,
-                            intersecLine.X*sceneScale.Z),
-                        new Vector3(0, (supSeg.Y - supSeg.X)*sceneScale.Y,
-                            (intersecLine.Y - intersecLine.X)*sceneScale.Z),
+                        new Vector3((bounds.X + bounds.Width) * sceneScale.X, supSeg.X * sceneScale.Y,
+                            intersecLine.X * sceneScale.Z),
+                        new Vector3(0, (supSeg.Y - supSeg.X) * sceneScale.Y,
+                            (intersecLine.Y - intersecLine.X) * sceneScale.Z),
                         TgcPlaneWall.Orientations.YZplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
@@ -229,10 +229,10 @@ namespace Examples.RoomsEditor
                 if (infSeg.X != 0 || infSeg.Y != 0)
                 {
                     var wall3d = new TgcPlaneWall(
-                        new Vector3((bounds.X + bounds.Width)*sceneScale.X, infSeg.X*sceneScale.Y,
-                            intersecLine.X*sceneScale.Z),
-                        new Vector3(0, (infSeg.Y - infSeg.X)*sceneScale.Y,
-                            (intersecLine.Y - intersecLine.X)*sceneScale.Z),
+                        new Vector3((bounds.X + bounds.Width) * sceneScale.X, infSeg.X * sceneScale.Y,
+                            intersecLine.X * sceneScale.Z),
+                        new Vector3(0, (infSeg.Y - infSeg.X) * sceneScale.Y,
+                            (intersecLine.Y - intersecLine.X) * sceneScale.Z),
                         TgcPlaneWall.Orientations.YZplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
@@ -263,9 +263,9 @@ namespace Examples.RoomsEditor
                 if (supSeg.X != 0 || supSeg.Y != 0)
                 {
                     var wall3d = new TgcPlaneWall(
-                        new Vector3(bounds.X*sceneScale.X, supSeg.X*sceneScale.Y, intersecLine.X*sceneScale.Z),
-                        new Vector3(0, (supSeg.Y - supSeg.X)*sceneScale.Y,
-                            (intersecLine.Y - intersecLine.X)*sceneScale.Z),
+                        new Vector3(bounds.X * sceneScale.X, supSeg.X * sceneScale.Y, intersecLine.X * sceneScale.Z),
+                        new Vector3(0, (supSeg.Y - supSeg.X) * sceneScale.Y,
+                            (intersecLine.Y - intersecLine.X) * sceneScale.Z),
                         TgcPlaneWall.Orientations.YZplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
@@ -277,9 +277,9 @@ namespace Examples.RoomsEditor
                 if (infSeg.X != 0 || infSeg.Y != 0)
                 {
                     var wall3d = new TgcPlaneWall(
-                        new Vector3(bounds.X*sceneScale.X, infSeg.X*sceneScale.Y, intersecLine.X*sceneScale.Z),
-                        new Vector3(0, (infSeg.Y - infSeg.X)*sceneScale.Y,
-                            (intersecLine.Y - intersecLine.X)*sceneScale.Z),
+                        new Vector3(bounds.X * sceneScale.X, infSeg.X * sceneScale.Y, intersecLine.X * sceneScale.Z),
+                        new Vector3(0, (infSeg.Y - infSeg.X) * sceneScale.Y,
+                            (intersecLine.Y - intersecLine.X) * sceneScale.Z),
                         TgcPlaneWall.Orientations.YZplane,
                         wall.Texture, wall.UTile, wall.VTile
                         );
@@ -310,8 +310,8 @@ namespace Examples.RoomsEditor
                 if (supSeg.X != 0 || supSeg.Y != 0)
                 {
                     var wall3d = new TgcPlaneWall(
-                        new Vector3(intersecLine.X*sceneScale.X, supSeg.X*sceneScale.Y, bounds.Y*sceneScale.Z),
-                        new Vector3((intersecLine.Y - intersecLine.X)*sceneScale.X, (supSeg.Y - supSeg.X)*sceneScale.Y,
+                        new Vector3(intersecLine.X * sceneScale.X, supSeg.X * sceneScale.Y, bounds.Y * sceneScale.Z),
+                        new Vector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (supSeg.Y - supSeg.X) * sceneScale.Y,
                             0),
                         TgcPlaneWall.Orientations.XYplane,
                         wall.Texture, wall.UTile, wall.VTile
@@ -324,8 +324,8 @@ namespace Examples.RoomsEditor
                 if (infSeg.X != 0 || infSeg.Y != 0)
                 {
                     var wall3d = new TgcPlaneWall(
-                        new Vector3(intersecLine.X*sceneScale.X, infSeg.X*sceneScale.Y, bounds.Y*sceneScale.Z),
-                        new Vector3((intersecLine.Y - intersecLine.X)*sceneScale.X, (infSeg.Y - infSeg.X)*sceneScale.Y,
+                        new Vector3(intersecLine.X * sceneScale.X, infSeg.X * sceneScale.Y, bounds.Y * sceneScale.Z),
+                        new Vector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (infSeg.Y - infSeg.X) * sceneScale.Y,
                             0),
                         TgcPlaneWall.Orientations.XYplane,
                         wall.Texture, wall.UTile, wall.VTile
@@ -357,9 +357,9 @@ namespace Examples.RoomsEditor
                 if (supSeg.X != 0 || supSeg.Y != 0)
                 {
                     var wall3d = new TgcPlaneWall(
-                        new Vector3(intersecLine.X*sceneScale.X, supSeg.X*sceneScale.Y,
-                            (bounds.Y + bounds.Height)*sceneScale.Z),
-                        new Vector3((intersecLine.Y - intersecLine.X)*sceneScale.X, (supSeg.Y - supSeg.X)*sceneScale.Y,
+                        new Vector3(intersecLine.X * sceneScale.X, supSeg.X * sceneScale.Y,
+                            (bounds.Y + bounds.Height) * sceneScale.Z),
+                        new Vector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (supSeg.Y - supSeg.X) * sceneScale.Y,
                             0),
                         TgcPlaneWall.Orientations.XYplane,
                         wall.Texture, wall.UTile, wall.VTile
@@ -372,9 +372,9 @@ namespace Examples.RoomsEditor
                 if (infSeg.X != 0 || infSeg.Y != 0)
                 {
                     var wall3d = new TgcPlaneWall(
-                        new Vector3(intersecLine.X*sceneScale.X, infSeg.X*sceneScale.Y,
-                            (bounds.Y + bounds.Height)*sceneScale.Z),
-                        new Vector3((intersecLine.Y - intersecLine.X)*sceneScale.X, (infSeg.Y - infSeg.X)*sceneScale.Y,
+                        new Vector3(intersecLine.X * sceneScale.X, infSeg.X * sceneScale.Y,
+                            (bounds.Y + bounds.Height) * sceneScale.Z),
+                        new Vector3((intersecLine.Y - intersecLine.X) * sceneScale.X, (infSeg.Y - infSeg.X) * sceneScale.Y,
                             0),
                         TgcPlaneWall.Orientations.XYplane,
                         wall.Texture, wall.UTile, wall.VTile

@@ -1,12 +1,13 @@
-using System.Collections.Generic;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.Shaders;
+using System.Collections.Generic;
+using System.Drawing;
+using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
+using TGC.Viewer.Utils.Shaders;
 
-namespace TgcViewer.Utils.TgcGeometry
+namespace TGC.Viewer.Utils.TgcGeometry
 {
     /// <summary>
     ///     Representa un BoundingBox
@@ -64,13 +65,13 @@ namespace TgcViewer.Utils.TgcGeometry
             this.pMax = pMax;
 
             //Almaceno los extremos sin transformar para aplicar las futuras transformaciones sobre los puntos originales.
-            pMinOriginal.X = (pMin.X - position.X)/scale.X;
-            pMinOriginal.Y = (pMin.Y - position.Y)/scale.Y;
-            pMinOriginal.Z = (pMin.Z - position.Z)/scale.Z;
+            pMinOriginal.X = (pMin.X - position.X) / scale.X;
+            pMinOriginal.Y = (pMin.Y - position.Y) / scale.Y;
+            pMinOriginal.Z = (pMin.Z - position.Z) / scale.Z;
 
-            pMaxOriginal.X = (pMax.X - position.X)/scale.X;
-            pMaxOriginal.Y = (pMax.Y - position.Y)/scale.Y;
-            pMaxOriginal.Z = (pMax.Z - position.Z)/scale.Z;
+            pMaxOriginal.X = (pMax.X - position.X) / scale.X;
+            pMaxOriginal.Y = (pMax.Y - position.Y) / scale.Y;
+            pMaxOriginal.Z = (pMax.Z - position.Z) / scale.Z;
         }
 
         /// <summary>
@@ -132,7 +133,6 @@ namespace TgcViewer.Utils.TgcGeometry
         /// </summary>
         public void render()
         {
-            var d3dDevice = GuiController.Instance.D3dDevice;
             var texturesManager = GuiController.Instance.TexturesManager;
 
             texturesManager.clear(0);
@@ -153,13 +153,13 @@ namespace TgcViewer.Utils.TgcGeometry
             }
 
             GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
             effect.Technique = technique;
 
             //Render con shader
             effect.Begin(0);
             effect.BeginPass(0);
-            d3dDevice.DrawUserPrimitives(PrimitiveType.LineList, 12, vertices);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, 12, vertices);
             effect.EndPass();
             effect.End();
         }
@@ -261,13 +261,13 @@ namespace TgcViewer.Utils.TgcGeometry
         public void scaleTranslate(Vector3 position, Vector3 scale)
         {
             //actualizar puntos extremos
-            pMin.X = pMinOriginal.X*scale.X + position.X;
-            pMin.Y = pMinOriginal.Y*scale.Y + position.Y;
-            pMin.Z = pMinOriginal.Z*scale.Z + position.Z;
+            pMin.X = pMinOriginal.X * scale.X + position.X;
+            pMin.Y = pMinOriginal.Y * scale.Y + position.Y;
+            pMin.Z = pMinOriginal.Z * scale.Z + position.Z;
 
-            pMax.X = pMaxOriginal.X*scale.X + position.X;
-            pMax.Y = pMaxOriginal.Y*scale.Y + position.Y;
-            pMax.Z = pMaxOriginal.Z*scale.Z + position.Z;
+            pMax.X = pMaxOriginal.X * scale.X + position.X;
+            pMax.Y = pMaxOriginal.Y * scale.Y + position.Y;
+            pMax.Z = pMaxOriginal.Z * scale.Z + position.Z;
 
             dirtyValues = true;
         }
@@ -499,11 +499,10 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>Rectangulo 2D con proyeccion en screen space</returns>
         public Rectangle projectToScreen()
         {
-            var device = GuiController.Instance.D3dDevice;
-            var viewport = device.Viewport;
-            var world = device.Transform.World;
-            var view = device.Transform.View;
-            var proj = device.Transform.Projection;
+            var viewport = D3DDevice.Instance.Device.Viewport;
+            var world = D3DDevice.Instance.Device.Transform.World;
+            var view = D3DDevice.Instance.Device.Transform.View;
+            var proj = D3DDevice.Instance.Device.Transform.Projection;
 
             //Proyectar los 8 corners del BoundingBox
             var projVertices = computeCorners();
@@ -534,7 +533,7 @@ namespace TgcViewer.Utils.TgcGeometry
                     max.Y = v.Y;
                 }
             }
-            return new Rectangle((int) min.X, (int) min.Y, (int) (max.X - min.X), (int) (max.Y - min.Y));
+            return new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
         }
 
         /// <summary>
@@ -595,11 +594,11 @@ namespace TgcViewer.Utils.TgcGeometry
         /// <returns>BoundingBox creado</returns>
         public static TgcBoundingBox computeFromBoundingBoxes(List<TgcBoundingBox> boundingBoxes)
         {
-            var points = new Vector3[boundingBoxes.Count*2];
+            var points = new Vector3[boundingBoxes.Count * 2];
             for (var i = 0; i < boundingBoxes.Count; i++)
             {
-                points[i*2] = boundingBoxes[i].pMin;
-                points[i*2 + 1] = boundingBoxes[i].pMax;
+                points[i * 2] = boundingBoxes[i].pMin;
+                points[i * 2 + 1] = boundingBoxes[i].pMax;
             }
             return computeFromPoints(points);
         }
