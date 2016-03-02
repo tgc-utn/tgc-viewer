@@ -20,7 +20,6 @@ namespace TGC.Examples.DirectX
         private float angleX;
         private float angleY;
         private float angleZ;
-        private Device d3dDevice;
         private Mesh lightBulb;
         private Vector3 lightVectorToCenter;
         private CustomVertex.PositionColored[] lightVectorVB;
@@ -53,15 +52,15 @@ namespace TGC.Examples.DirectX
             material = new Material();
 
             //Crear una fuente de luz direccional en la posición 0.
-            d3dDevice.Lights[0].Type = LightType.Directional;
-            d3dDevice.Lights[0].Diffuse = Color.White;
-            d3dDevice.Lights[0].Ambient = Color.White;
-            d3dDevice.Lights[0].Specular = Color.White;
-            d3dDevice.Lights[0].Range = 1000;
-            d3dDevice.Lights[0].Enabled = true;
+            D3DDevice.Instance.Device.Lights[0].Type = LightType.Directional;
+            D3DDevice.Instance.Device.Lights[0].Diffuse = Color.White;
+            D3DDevice.Instance.Device.Lights[0].Ambient = Color.White;
+            D3DDevice.Instance.Device.Lights[0].Specular = Color.White;
+            D3DDevice.Instance.Device.Lights[0].Range = 1000;
+            D3DDevice.Instance.Device.Lights[0].Enabled = true;
 
             //Habilitar esquema de Iluminación Dinámica
-            d3dDevice.RenderState.Lighting = true;
+            D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
             GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), 10f);
@@ -117,11 +116,11 @@ namespace TGC.Examples.DirectX
             var LightRotationMatrix = Matrix.Identity;
             LightRotationMatrix *= Matrix.Translation(lightDistance, 0, 0);
             LightRotationMatrix *= Matrix.RotationYawPitchRoll(angleX, angleY, angleZ);
-            d3dDevice.Lights[0].Position = Vector3.TransformCoordinate(new Vector3(0, 0, 0), LightRotationMatrix);
-            lightVectorToCenter = d3dDevice.Lights[0].Position;
-            d3dDevice.Lights[0].Direction = -d3dDevice.Lights[0].Position;
-            d3dDevice.Lights[0].Direction.Normalize();
-            d3dDevice.Lights[0].Update();
+            D3DDevice.Instance.Device.Lights[0].Position = Vector3.TransformCoordinate(new Vector3(0, 0, 0), LightRotationMatrix);
+            lightVectorToCenter = D3DDevice.Instance.Device.Lights[0].Position;
+            D3DDevice.Instance.Device.Lights[0].Direction = -D3DDevice.Instance.Device.Lights[0].Position;
+            D3DDevice.Instance.Device.Lights[0].Direction.Normalize();
+            D3DDevice.Instance.Device.Lights[0].Update();
 
             //Poner el vertex buffer de la linea que muestra la direccion de la luz.
             lightVectorVB[0].Position = lightVectorToCenter;
@@ -136,31 +135,31 @@ namespace TGC.Examples.DirectX
 
             material.SpecularSharpness = (float)GuiController.Instance.Modifiers["SpecularSharpness"];
 
-            d3dDevice.Material = material;
+            D3DDevice.Instance.Device.Material = material;
 
             switch ((string)GuiController.Instance.Modifiers["ShaderMode"])
             {
                 case "Gouraud":
-                    d3dDevice.RenderState.ShadeMode = ShadeMode.Gouraud;
+                    D3DDevice.Instance.Device.RenderState.ShadeMode = ShadeMode.Gouraud;
                     break;
 
                 case "Flat":
-                    d3dDevice.RenderState.ShadeMode = ShadeMode.Flat;
+                    D3DDevice.Instance.Device.RenderState.ShadeMode = ShadeMode.Flat;
                     break;
             }
 
-            d3dDevice.RenderState.SpecularEnable = (bool)GuiController.Instance.Modifiers["SpecularEnabled"];
+            D3DDevice.Instance.Device.RenderState.SpecularEnable = (bool)GuiController.Instance.Modifiers["SpecularEnabled"];
 
-            d3dDevice.RenderState.ColorVertex = true;
+            D3DDevice.Instance.Device.RenderState.ColorVertex = true;
 
             //Habilito o deshabilito el backface culling.
             if ((bool)GuiController.Instance.Modifiers["BackFaceCull"])
             {
-                d3dDevice.RenderState.CullMode = Cull.CounterClockwise;
+                D3DDevice.Instance.Device.RenderState.CullMode = Cull.CounterClockwise;
             }
             else
             {
-                d3dDevice.RenderState.CullMode = Cull.None;
+                D3DDevice.Instance.Device.RenderState.CullMode = Cull.None;
             }
 
             //Selecciono el mesh y el vertex buffer del modelo.
@@ -177,8 +176,8 @@ namespace TGC.Examples.DirectX
                     break;
             }
 
-            d3dDevice.RenderState.Lighting = true;
-            d3dDevice.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.RenderState.Lighting = true;
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
             //Renderizar malla
             SelectedMesh.DrawSubset(0);
@@ -186,48 +185,48 @@ namespace TGC.Examples.DirectX
             //Para dibujar el wireframe se desabilita la luz y se pone el fill mode en modo wireframe.
             if ((bool)GuiController.Instance.Modifiers["Wireframe"])
             {
-                d3dDevice.RenderState.FillMode = FillMode.WireFrame;
-                d3dDevice.RenderState.Lighting = false;
+                D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
+                D3DDevice.Instance.Device.RenderState.Lighting = false;
 
                 SelectedMesh.DrawSubset(0);
 
-                d3dDevice.RenderState.FillMode = FillMode.Solid;
-                d3dDevice.RenderState.Lighting = true;
+                D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;
+                D3DDevice.Instance.Device.RenderState.Lighting = true;
             }
 
-            d3dDevice.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
-            d3dDevice.RenderState.Lighting = false;
+            D3DDevice.Instance.Device.RenderState.Lighting = false;
 
             //Dibujo la linea que va desde la luz al centro.
-            d3dDevice.VertexFormat = CustomVertex.PositionColored.Format;
+            D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
 
-            d3dDevice.DrawUserPrimitives(PrimitiveType.LineList,
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList,
                 1,
                 lightVectorVB);
 
-            d3dDevice.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
             //Dibujo las normales si estan habilitadas y si es la tetera.
             if (selectedNormalVB != null && (bool)GuiController.Instance.Modifiers["Normales"])
-                d3dDevice.DrawUserPrimitives(PrimitiveType.LineList,
+                D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList,
                     selectedNormalVB.Length / 2,
                     selectedNormalVB);
 
             //Traslado y renderizo la esfera que hace de lampara.
-            d3dDevice.Transform.World *= Matrix.Translation(lightVectorToCenter);
+            D3DDevice.Instance.Device.Transform.World *= Matrix.Translation(lightVectorToCenter);
             lightBulb.DrawSubset(0);
         }
 
         private void createMeshes()
         {
             //Crear Teapot
-            teapotMesh = Mesh.Teapot(d3dDevice);
+            teapotMesh = Mesh.Teapot(D3DDevice.Instance.Device);
             teapotMesh.ComputeNormals();
 
             //Cargar cara
             faceMesh = Mesh.FromFile(GuiController.Instance.ExamplesMediaDir + "ModelosX" + "\\" + "Cara.x",
-                MeshFlags.Managed, d3dDevice);
+                MeshFlags.Managed, D3DDevice.Instance.Device);
             faceMesh.ComputeNormals();
 
             //El vertex buffer con la linea que apunta a la direccion de la luz.
@@ -257,7 +256,7 @@ namespace TGC.Examples.DirectX
             teapotMesh.VertexBuffer.Unlock();
 
             //Creo el mesh que representa el foco de luz.
-            lightBulb = Mesh.Sphere(d3dDevice, 0.5f, 10, 10);
+            lightBulb = Mesh.Sphere(D3DDevice.Instance.Device, 0.5f, 10, 10);
         }
 
         public override void close()

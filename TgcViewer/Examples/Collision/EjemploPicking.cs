@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Viewer;
 using TGC.Viewer.Utils.Input;
 using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Collision
 {

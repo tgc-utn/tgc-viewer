@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.Input;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
+using TGC.Core.Terrain;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.Terrain;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.Shaders.WorkshopShaders
@@ -375,7 +376,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
                 if (camara_rot)
                 {
                     GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
-                    GuiController.Instance.CurrentCamera.updateCamera();
+                    CamaraManager.Instance.CurrentCamera.updateCamera(elapsedTime);
                 }
                 else
                 {
@@ -483,7 +484,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
             if (timer_preview > 0)
                 D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(LookFrom, LookAt, new Vector3(0, 1, 0));
             else
-                GuiController.Instance.CurrentCamera.updateViewMatrix(D3DDevice.Instance.Device);
+                CamaraManager.Instance.CurrentCamera.updateViewMatrix(D3DDevice.Instance.Device);
             D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, near_plane, far_plane);

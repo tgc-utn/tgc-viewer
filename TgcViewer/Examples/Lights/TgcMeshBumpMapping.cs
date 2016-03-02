@@ -2,10 +2,9 @@
 using Microsoft.DirectX.Direct3D;
 using System;
 using TGC.Core.Direct3D;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Viewer;
-using TGC.Viewer.Utils;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Lights
 {
@@ -70,8 +69,6 @@ namespace TGC.Examples.Lights
             if (!enabled)
                 return;
 
-            var texturesManager = GuiController.Instance.TexturesManager;
-
             //Aplicar transformacion de malla
             updateMeshTransform();
 
@@ -104,10 +101,10 @@ namespace TGC.Examples.Lights
                             D3DDevice.Instance.Device.Material = materials[i];
 
                             //Setear textura en shader
-                            texturesManager.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
+                            TexturesManager.Instance.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
 
                             //Setear normalMap en shader
-                            texturesManager.shaderSet(effect, "texNormalMap", NormalMaps[i]);
+                            TexturesManager.Instance.shaderSet(effect, "texNormalMap", NormalMaps[i]);
 
                             //Iniciar pasada de shader
                             // guarda: Todos los SetValue tienen que ir ANTES del beginPass.
@@ -259,7 +256,7 @@ namespace TGC.Examples.Lights
             for (var i = 0; i < mesh.DiffuseMaps.Length; i++)
             {
                 diffuseMaps[i] = mesh.DiffuseMaps[i].clone();
-                materials[i] = TgcD3dDevice.DEFAULT_MATERIAL;
+                materials[i] = D3DDevice.DEFAULT_MATERIAL;
             }
 
             //Cargar attributeBuffer

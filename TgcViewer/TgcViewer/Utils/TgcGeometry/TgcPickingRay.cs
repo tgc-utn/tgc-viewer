@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using TGC.Core.Direct3D;
+using TGC.Core.Geometries;
 
 namespace TGC.Viewer.Utils.TgcGeometry
 {

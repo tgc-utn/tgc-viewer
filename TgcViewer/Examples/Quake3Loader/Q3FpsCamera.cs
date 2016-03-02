@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Input;
 using TGC.Viewer;
 using TGC.Viewer.Utils.Input;
 using Device = Microsoft.DirectX.Direct3D.Device;
@@ -224,9 +225,8 @@ namespace TGC.Examples.Quake3Loader
             return target;
         }
 
-        public void updateCamera()
+        public void updateCamera(float elapsedTime)
         {
-            var elapsedTime = GuiController.Instance.ElapsedTime;
             //Forward
             if (GuiController.Instance.D3dInput.keyDown(Key.W))
             {

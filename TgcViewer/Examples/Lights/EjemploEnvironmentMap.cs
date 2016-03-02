@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.Shaders;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Lights
 {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SkeletalAnimation;
+using TGC.Core.Textures;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
-using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
 namespace TGC.Examples.SkeletalAnimation
 {
@@ -100,10 +100,10 @@ namespace TGC.Examples.SkeletalAnimation
             suelo.render();
 
             //Renderizar original e instancias
-            original.animateAndRender();
+            original.animateAndRender(elapsedTime);
             foreach (var instance in instances)
             {
-                instance.animateAndRender();
+                instance.animateAndRender(elapsedTime);
             }
         }
 

@@ -4,10 +4,10 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SkeletalAnimation;
+using TGC.Core.Textures;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
-using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
 namespace TGC.Examples.Collision
 {
@@ -233,7 +233,7 @@ namespace TGC.Examples.Collision
             }
 
             //Render personaje
-            personaje.animateAndRender();
+            personaje.animateAndRender(elapsedTime);
             if (showBB)
             {
                 personaje.BoundingBox.render();

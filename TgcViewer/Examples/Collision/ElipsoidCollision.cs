@@ -4,13 +4,13 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
+using TGC.Core.SkeletalAnimation;
+using TGC.Core.Terrain;
 using TGC.Core.Utils;
 using TGC.Viewer;
 using TGC.Viewer.Utils.Collision.ElipsoidCollision;
-using TGC.Viewer.Utils.Terrain;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
-using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
 namespace TGC.Examples.Collision
 {
@@ -352,7 +352,7 @@ namespace TGC.Examples.Collision
             }
 
             //Render personaje
-            personaje.animateAndRender();
+            personaje.animateAndRender(elapsedTime);
             if (showBB)
             {
                 characterElipsoid.render();

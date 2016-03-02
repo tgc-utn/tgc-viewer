@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
+using TGC.Core.Terrain;
 using TGC.Viewer;
 using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.Terrain;
 using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 using TGC.Viewer.Utils.Ui;
 
 namespace TGC.Examples.SceneEditor
@@ -249,10 +249,9 @@ namespace TGC.Examples.SceneEditor
         /// </summary>
         private void doFrustumCulling()
         {
-            var frustum = GuiController.Instance.Frustum;
             foreach (var meshObj in MeshObjects)
             {
-                var r = TgcCollisionUtils.classifyFrustumAABB(frustum, meshObj.mesh.BoundingBox);
+                var r = TgcCollisionUtils.classifyFrustumAABB(TgcFrustum.Instance, meshObj.mesh.BoundingBox);
                 if (r == TgcCollisionUtils.FrustumResult.OUTSIDE)
                 {
                     meshObj.visible = false;

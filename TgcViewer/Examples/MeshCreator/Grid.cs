@@ -2,10 +2,10 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Geometries;
+using TGC.Core.Shaders;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.TgcGeometry;
 
 namespace TGC.Examples.MeshCreator
 {
@@ -73,15 +73,13 @@ namespace TGC.Examples.MeshCreator
 
         public void render()
         {
-            var texturesManager = GuiController.Instance.TexturesManager;
+            TexturesManager.Instance.clear(0);
+            TexturesManager.Instance.clear(1);
 
-            texturesManager.clear(0);
-            texturesManager.clear(1);
-
-            var effect = GuiController.Instance.Shaders.VariosShader;
+            var effect = TgcShaders.Instance.VariosShader;
             effect.Technique = TgcShaders.T_POSITION_COLORED;
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
 
             //Render con shader
             effect.Begin(0);

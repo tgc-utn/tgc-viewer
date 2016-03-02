@@ -2,9 +2,10 @@
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -87,15 +88,14 @@ namespace TGC.Examples.Quake3Loader
                 }
             }
 
-            //Actualizar volumen del Frustum con nuevos valores de camara
-            var frustum = GuiController.Instance.Frustum;
-            frustum.updateVolume(D3DDevice.Instance.Device.Transform.View,
+            //Actualizar volumen del Frustum con nuevos valores de camara;
+            TgcFrustum.Instance.updateVolume(D3DDevice.Instance.Device.Transform.View,
                 D3DDevice.Instance.Device.Transform.Projection);
 
             foreach (var nleaf in clusterVis)
             {
                 //Frustum Culling con el AABB del cluster
-                var result = TgcCollisionUtils.classifyFrustumAABB(frustum, Data.leafs[nleaf].boundingBox);
+                var result = TgcCollisionUtils.classifyFrustumAABB(TgcFrustum.Instance, Data.leafs[nleaf].boundingBox);
                 if (result == TgcCollisionUtils.FrustumResult.OUTSIDE)
                     continue;
 

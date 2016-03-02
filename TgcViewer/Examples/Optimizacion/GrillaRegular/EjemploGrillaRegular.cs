@@ -1,9 +1,10 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
+using TGC.Core.Terrain;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Terrain;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Optimizacion.GrillaRegular
 {
@@ -88,7 +89,7 @@ namespace TGC.Examples.Optimizacion.GrillaRegular
             {
                 terreno.render();
             }
-            grilla.render(GuiController.Instance.Frustum, showGrid);
+            grilla.render(TgcFrustum.Instance, showGrid);
         }
 
         public override void close()

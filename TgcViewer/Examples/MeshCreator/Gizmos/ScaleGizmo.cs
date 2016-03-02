@@ -2,10 +2,10 @@
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Geometries;
 using TGC.Examples.MeshCreator.Primitives;
 using TGC.Viewer;
 using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.TgcGeometry;
 
 namespace TGC.Examples.MeshCreator.Gizmos
 {

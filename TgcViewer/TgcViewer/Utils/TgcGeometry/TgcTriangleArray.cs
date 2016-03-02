@@ -1,7 +1,8 @@
 ﻿using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
 
 namespace TGC.Viewer.Utils.TgcGeometry
 {

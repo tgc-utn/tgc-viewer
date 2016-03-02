@@ -3,9 +3,10 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Input;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Shaders.WorkshopShaders
 {
@@ -74,7 +75,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
             time += elapsedTime;
 
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
-            GuiController.Instance.CurrentCamera.updateCamera();
+            CamaraManager.Instance.CurrentCamera.updateCamera(elapsedTime);
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.

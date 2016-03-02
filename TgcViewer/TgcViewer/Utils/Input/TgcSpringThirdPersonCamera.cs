@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using TGC.Core.Input;
 
 namespace TGC.Viewer.Utils.Input
 {
@@ -33,19 +34,18 @@ namespace TGC.Viewer.Utils.Input
         /// <summary>
         ///     Actualiza los valores de la camara
         /// </summary>
-        public void updateCamera()
+        public void updateCamera(float elapsedTime)
         {
             if (!enable)
             {
                 return;
             }
 
-            var elapsedTimeSec = GuiController.Instance.ElapsedTime;
-            updateOrientation(elapsedTimeSec);
+            updateOrientation(elapsedTime);
 
             if (EnableSpringSystem)
             {
-                updateViewMatrix(elapsedTimeSec);
+                updateViewMatrix(elapsedTime);
             }
             else
             {
@@ -287,7 +287,7 @@ namespace TGC.Viewer.Utils.Input
                 //Si se habilito la camara, cargar como la cámara actual
                 if (value)
                 {
-                    GuiController.Instance.CurrentCamera = this;
+                    CamaraManager.Instance.CurrentCamera = this;
                 }
             }
         }

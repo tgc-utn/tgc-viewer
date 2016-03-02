@@ -1,9 +1,10 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
+using TGC.Core.Terrain;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Terrain;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Optimizacion.Octree
 {
@@ -88,7 +89,7 @@ namespace TGC.Examples.Optimizacion.Octree
             {
                 terreno.render();
             }
-            octree.render(GuiController.Instance.Frustum, showOctree);
+            octree.render(TgcFrustum.Instance, showOctree);
         }
 
         public override void close()

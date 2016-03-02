@@ -1,8 +1,8 @@
 using Microsoft.DirectX;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.SceneLoader
 {
@@ -86,7 +86,6 @@ namespace TGC.Examples.SceneLoader
             else
             {
                 //Analizar cada malla contra el Frustum - con fuerza bruta
-                var frustum = GuiController.Instance.Frustum;
                 var totalMeshes = 0;
                 foreach (var mesh in tgcScene.Meshes)
                 {
@@ -94,7 +93,7 @@ namespace TGC.Examples.SceneLoader
                     if (mesh.Enabled)
                     {
                         //Solo mostrar la malla si colisiona contra el Frustum
-                        var r = TgcCollisionUtils.classifyFrustumAABB(frustum, mesh.BoundingBox);
+                        var r = TgcCollisionUtils.classifyFrustumAABB(TgcFrustum.Instance, mesh.BoundingBox);
                         if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
                         {
                             mesh.render();

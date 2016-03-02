@@ -1,9 +1,10 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using TGC.Core.Geometries;
+using TGC.Core.Input;
 using TGC.Core.Utils;
 using TGC.Viewer;
 using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.TgcGeometry;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Examples.MeshCreator
@@ -32,7 +33,7 @@ namespace TGC.Examples.MeshCreator
         /// <summary>
         ///     Actualiza los valores de la camara
         /// </summary>
-        public void updateCamera()
+        public void updateCamera(float elapsedTime)
         {
             if (!Enable)
             {
@@ -40,7 +41,6 @@ namespace TGC.Examples.MeshCreator
             }
 
             var d3dInput = GuiController.Instance.D3dInput;
-            var elapsedTime = GuiController.Instance.ElapsedTime;
 
             //Obtener variacion XY del mouse
             var mouseX = 0f;

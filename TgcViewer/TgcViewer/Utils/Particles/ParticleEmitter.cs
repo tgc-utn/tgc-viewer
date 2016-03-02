@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
-using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Core.Textures;
 
 namespace TGC.Viewer.Utils.Particles
 {
@@ -217,16 +217,14 @@ namespace TGC.Viewer.Utils.Particles
             //Dibujar particulas existentes
             if (particlesAlive.Count > 0)
             {
-                var texturesManager = GuiController.Instance.TexturesManager;
-
                 //Cargar VertexDeclaration
                 D3DDevice.Instance.Device.VertexDeclaration = vertexDeclaration;
 
                 //Fijo la textura actual de la particula.
-                texturesManager.clear(0);
-                texturesManager.clear(1);
-                texturesManager.set(0, texture);
-                D3DDevice.Instance.Device.Material = TgcD3dDevice.DEFAULT_MATERIAL;
+                TexturesManager.Instance.clear(0);
+                TexturesManager.Instance.clear(1);
+                TexturesManager.Instance.set(0, texture);
+                D3DDevice.Instance.Device.Material = D3DDevice.DEFAULT_MATERIAL;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
                 D3DDevice.Instance.Device.RenderState.ZBufferWriteEnable = false;
                 D3DDevice.Instance.Device.Transform.World = Matrix.Identity;

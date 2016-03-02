@@ -1,8 +1,8 @@
 using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Example;
+using TGC.Core.KeyFrameLoader;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcKeyFrameLoader;
 
 namespace TGC.Examples.KeyFrameAnimation
 {
@@ -123,7 +123,7 @@ namespace TGC.Examples.KeyFrameAnimation
 
             //Animar y Renderizar.
             //Este metodo actualiza la animacion actual segun el tiempo transcurrido y renderiza la malla resultante
-            mesh.animateAndRender();
+            mesh.animateAndRender(elapsedTime);
 
             //BoundingBox
             var showBB = (bool)GuiController.Instance.Modifiers["BoundingBox"];

@@ -1,7 +1,8 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using TGC.Core.Geometries;
+using TGC.Core.Input;
 using TGC.Core.Utils;
-using TGC.Viewer.Utils.TgcGeometry;
 
 namespace TGC.Viewer.Utils.Input
 {
@@ -29,7 +30,7 @@ namespace TGC.Viewer.Utils.Input
         /// <summary>
         ///     Actualiza los valores de la camara
         /// </summary>
-        public void updateCamera()
+        public void updateCamera(float elapsedTime)
         {
             if (!enable)
             {
@@ -37,7 +38,6 @@ namespace TGC.Viewer.Utils.Input
             }
 
             var d3dInput = GuiController.Instance.D3dInput;
-            var elapsedTime = GuiController.Instance.ElapsedTime;
 
             //Obtener variacion XY del mouse
             var mouseX = 0f;
@@ -197,7 +197,7 @@ namespace TGC.Viewer.Utils.Input
                 //Si se habilito la camara, cargar como la cámara actual
                 if (value)
                 {
-                    GuiController.Instance.CurrentCamera = this;
+                    CamaraManager.Instance.CurrentCamera = this;
                 }
             }
         }

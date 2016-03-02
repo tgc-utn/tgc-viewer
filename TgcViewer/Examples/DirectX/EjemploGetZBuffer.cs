@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
 using TGC.Viewer;
 using TGC.Viewer.Utils;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.DirectX
 {

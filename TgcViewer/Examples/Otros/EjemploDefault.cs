@@ -4,10 +4,11 @@ using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
 using TGC.Core.Example;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
 using TGC.Core.Utils;
 using TGC.Viewer;
 using TGC.Viewer.Utils._2D;
-using TGC.Viewer.Utils.TgcSceneLoader;
 using Font = System.Drawing.Font;
 
 namespace TGC.Examples.Otros
@@ -46,8 +47,8 @@ namespace TGC.Examples.Otros
                                          "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
 
             //Cargar Shader de PhongShading
-            mesh.Effect = GuiController.Instance.Shaders.TgcMeshPhongShader;
-            mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
+            mesh.Effect = TgcShaders.Instance.TgcMeshPhongShader;
+            mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
 
             //Texto help
             textHelp = new TgcText2d();

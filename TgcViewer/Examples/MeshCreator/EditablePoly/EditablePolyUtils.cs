@@ -1,8 +1,8 @@
 ﻿using Microsoft.DirectX;
 using System.Collections.Generic;
+using TGC.Core.Geometries;
 using TGC.Core.Utils;
 using TGC.Examples.MeshCreator.EditablePoly.Primitives;
-using TGC.Viewer.Utils.TgcGeometry;
 
 namespace TGC.Examples.MeshCreator.EditablePoly
 {

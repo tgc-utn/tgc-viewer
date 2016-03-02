@@ -1,9 +1,9 @@
 using System;
 using System.Drawing;
 using TGC.Core.Example;
+using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.SceneLoader
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.DirectX;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Viewer.Utils.Collision.ElipsoidCollision
 {

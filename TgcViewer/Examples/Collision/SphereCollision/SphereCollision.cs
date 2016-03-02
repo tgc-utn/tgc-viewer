@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
+using TGC.Core.SkeletalAnimation;
+using TGC.Core.Terrain;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Terrain;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
-using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
 namespace TGC.Examples.Collision.SphereCollision
 {
@@ -286,7 +287,7 @@ namespace TGC.Examples.Collision.SphereCollision
             }
 
             //Render personaje
-            personaje.animateAndRender();
+            personaje.animateAndRender(elapsedTime);
             if (showBB)
             {
                 characterSphere.render();

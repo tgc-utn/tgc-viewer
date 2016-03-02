@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using TGC.Core.Direct3D;
-using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Core.Textures;
 
 namespace TGC.Examples.Quake3Loader
 {

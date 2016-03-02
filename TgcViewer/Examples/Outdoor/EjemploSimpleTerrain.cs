@@ -1,7 +1,7 @@
 using Microsoft.DirectX;
 using TGC.Core.Example;
+using TGC.Core.Terrain;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Terrain;
 
 namespace TGC.Examples.Outdoor
 {

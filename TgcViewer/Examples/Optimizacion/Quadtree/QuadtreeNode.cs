@@ -1,4 +1,4 @@
-using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Core.SceneLoader;
 
 namespace TGC.Examples.Optimizacion.Quadtree
 {

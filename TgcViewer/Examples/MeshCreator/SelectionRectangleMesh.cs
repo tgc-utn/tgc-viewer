@@ -2,8 +2,7 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
-using TGC.Viewer;
-using TGC.Viewer.Utils;
+using TGC.Core.Textures;
 
 namespace TGC.Examples.MeshCreator
 {
@@ -48,11 +47,9 @@ namespace TGC.Examples.MeshCreator
         /// </summary>
         public void render()
         {
-            var texturesManager = GuiController.Instance.TexturesManager;
-
-            texturesManager.clear(0);
-            texturesManager.clear(1);
-            D3DDevice.Instance.Device.Material = TgcD3dDevice.DEFAULT_MATERIAL;
+            TexturesManager.Instance.clear(0);
+            TexturesManager.Instance.clear(1);
+            D3DDevice.Instance.Device.Material = D3DDevice.DEFAULT_MATERIAL;
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.TransformedColored.Format;

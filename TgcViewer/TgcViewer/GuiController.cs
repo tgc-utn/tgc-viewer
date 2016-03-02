@@ -4,6 +4,10 @@ using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.Input;
+using TGC.Core.Shaders;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
 using TGC.Viewer.Example;
 using TGC.Viewer.Utils;
@@ -11,10 +15,7 @@ using TGC.Viewer.Utils._2D;
 using TGC.Viewer.Utils.Fog;
 using TGC.Viewer.Utils.Input;
 using TGC.Viewer.Utils.Modifiers;
-using TGC.Viewer.Utils.Shaders;
 using TGC.Viewer.Utils.Sound;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 using TGC.Viewer.Utils.Ui;
 
 namespace TGC.Viewer
@@ -29,8 +30,6 @@ namespace TGC.Viewer
         private TgcD3dDevice tgcD3dDevice;
 
         #region Singleton
-
-        //private static volatile GuiController instance;
 
         /// <summary>
         ///     Permite acceder a una instancia de la clase GuiController desde cualquier parte del codigo.
@@ -59,11 +58,9 @@ namespace TGC.Viewer
             //Iniciar graficos
             //FIXME hay que quitar la dependencia de TgcD3dDevice, necesita un control que es un winform para el device... por ahora se crea aca.
             tgcD3dDevice = new TgcD3dDevice(panel3d);
-            TexturesManager = new TgcTexture.Manager();
             tgcD3dDevice.OnResetDevice(D3DDevice.Instance.Device, null);
 
             //Iniciar otras herramientas
-            TexturesPool = new TgcTexture.Pool();
             Logger = new Logger(mainForm.LogConsole);
             Text3d = new TgcDrawText(D3DDevice.Instance.Device);
             D3dInput = new TgcD3dInput(mainForm, panel3d);
@@ -74,14 +71,12 @@ namespace TGC.Viewer
             UserVars = new TgcUserVars(mainForm.getDataGridUserVars());
             Modifiers = new TgcModifiers(mainForm.getModifiersPanel());
             ElapsedTime = -1;
-            Frustum = new TgcFrustum();
             Mp3Player = new TgcMp3Player();
             DirectSound = new TgcDirectSound();
             Fog = new TgcFog();
-            CurrentCamera = RotCamera;
+            CamaraManager.Instance.CurrentCamera = RotCamera;
             CustomRenderEnabled = false;
             Drawer2D = new TgcDrawer2D();
-            Shaders = new TgcShaders();
 
             //toogles
             RotCamera.Enable = true;
@@ -99,7 +94,7 @@ namespace TGC.Viewer
             exampleLoader.loadExamplesInGui(mainForm.TreeViewExamples, new[] { ExamplesDir, AlumnoEjemplosDir });
 
             //Cargar shaders del framework
-            Shaders.loadCommonShaders();
+            TgcShaders.Instance.loadCommonShaders(GuiController.Instance.ExamplesMediaDir + "Shaders\\TgcViewer\\");
 
             //Cargar ejemplo default
             var defaultExample = exampleLoader.getExampleByName(mainForm.Config.defaultExampleName,
@@ -121,20 +116,20 @@ namespace TGC.Viewer
             D3dInput.update();
 
             //Actualizar camaras (solo una va a estar activada a la vez)
-            if (CurrentCamera.Enable)
+            if (CamaraManager.Instance.CurrentCamera.Enable)
             {
-                CurrentCamera.updateCamera();
-                CurrentCamera.updateViewMatrix(d3dDevice);
+                CamaraManager.Instance.CurrentCamera.updateCamera(ElapsedTime);
+                CamaraManager.Instance.CurrentCamera.updateViewMatrix(d3dDevice);
             }
 
             //actualizar posicion de pantalla en barra de estado de UI
             setStatusPosition();
 
             //actualizar el Frustum
-            Frustum.updateVolume(d3dDevice.Transform.View, d3dDevice.Transform.Projection);
+            TgcFrustum.Instance.updateVolume(d3dDevice.Transform.View, d3dDevice.Transform.Projection);
 
             //limpiar texturas
-            TexturesManager.clearAll();
+            TexturesManager.Instance.clearAll();
 
             //actualizar Listener3D
             DirectSound.updateListener3d();
@@ -270,7 +265,7 @@ namespace TGC.Viewer
                 currentExample.close();
             }
             tgcD3dDevice.shutDown();
-            TexturesPool.clearAll();
+            TexturesPool.Instance.clearAll();
         }
 
         /// <summary>
@@ -295,10 +290,10 @@ namespace TGC.Viewer
             AxisLines.Enable = true;
             FpsCamera.Enable = false;
             RotCamera.Enable = true;
-            CurrentCamera = RotCamera;
+            CamaraManager.Instance.CurrentCamera = RotCamera;
             ThirdPersonCamera.Enable = false;
             FpsCounterEnable = true;
-            tgcD3dDevice.setDefaultValues();
+            D3DDevice.Instance.setDefaultValues();
             Mp3Player.closeFile();
             Fog.resetValues();
             CustomRenderEnabled = false;
@@ -349,8 +344,8 @@ namespace TGC.Viewer
             //Actualizar el textbox en todos los cuadros reduce los FPS en algunas PC
             if (MainForm.MostrarPosicionDeCamaraEnable)
             {
-                var pos = CurrentCamera.getPosition();
-                var lookAt = CurrentCamera.getLookAt();
+                var pos = CamaraManager.Instance.CurrentCamera.getPosition();
+                var lookAt = CamaraManager.Instance.CurrentCamera.getLookAt();
                 var statusPosition = "Position: [" + TgcParserUtils.printFloat(pos.X) + ", " +
                                      TgcParserUtils.printFloat(pos.Y) + ", " + TgcParserUtils.printFloat(pos.Z) + "] " +
                                      "- LookAt: [" + TgcParserUtils.printFloat(lookAt.X) + ", " +
@@ -454,22 +449,6 @@ namespace TGC.Viewer
         public Control Panel3d { get; private set; }
 
         /// <summary>
-        ///     Frustum que representa el volumen de vision actual
-        ///     Solo puede ser invocado cuando se esta ejecutando un bloque de render() de un TgcExample
-        /// </summary>
-        public TgcFrustum Frustum { get; private set; }
-
-        /// <summary>
-        ///     Pool de texturas
-        /// </summary>
-        public TgcTexture.Pool TexturesPool { get; private set; }
-
-        /// <summary>
-        ///     Herramienta para configurar texturas en el Device
-        /// </summary>
-        public TgcTexture.Manager TexturesManager { get; private set; }
-
-        /// <summary>
         ///     Configura la posicion de la cámara
         /// </summary>
         /// <param name="pos">Posición de la cámara</param>
@@ -520,14 +499,9 @@ namespace TGC.Viewer
         /// </summary>
         public Color BackgroundColor
         {
-            get { return tgcD3dDevice.ClearColor; }
-            set { tgcD3dDevice.ClearColor = value; }
+            get { return D3DDevice.Instance.ClearColor; }
+            set { D3DDevice.Instance.ClearColor = value; }
         }
-
-        /// <summary>
-        ///     Cámara actual que utiliza el framework
-        /// </summary>
-        public TgcCamera CurrentCamera { get; set; }
 
         /// <summary>
         ///     Activa o desactiva el renderizado personalizado.
@@ -540,11 +514,6 @@ namespace TGC.Viewer
         ///     Utilidad para renderizar Sprites 2D
         /// </summary>
         public TgcDrawer2D Drawer2D { get; private set; }
-
-        /// <summary>
-        ///     Utilidad para manejo de shaders
-        /// </summary>
-        public TgcShaders Shaders { get; private set; }
 
         #endregion Getters and Setters and Public Methods
     }

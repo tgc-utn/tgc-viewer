@@ -3,8 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
-using TGC.Viewer;
-using TGC.Viewer.Utils;
+using TGC.Core.Shaders;
 
 namespace TGC.Examples.Shaders.WorkshopShaders
 {
@@ -231,7 +230,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
             //Render terrain
             D3DDevice.Instance.Device.SetTexture(0, terrainTexture);
             D3DDevice.Instance.Device.SetTexture(1, null);
-            D3DDevice.Instance.Device.Material = TgcD3dDevice.DEFAULT_MATERIAL;
+            D3DDevice.Instance.Device.Material = D3DDevice.DEFAULT_MATERIAL;
 
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
             D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
@@ -240,7 +239,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
 
         public void executeRender(Effect effect)
         {
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
+            TgcShaders.Instance.setShaderMatrixIdentity(effect);
 
             //Render terrain
             effect.SetValue("texDiffuseMap", terrainTexture);

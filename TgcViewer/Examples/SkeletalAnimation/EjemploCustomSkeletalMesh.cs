@@ -1,8 +1,8 @@
 using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.SkeletalAnimation;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
 namespace TGC.Examples.SkeletalAnimation
 {
@@ -62,7 +62,7 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void render(float elapsedTime)
         {
-            mesh.animateAndRender();
+            mesh.animateAndRender(elapsedTime);
         }
 
         public override void close()
@@ -92,12 +92,12 @@ namespace TGC.Examples.SkeletalAnimation
         /// <summary>
         ///     Se redefine tal cual, para que llame a nuestro render
         /// </summary>
-        public new void animateAndRender()
+        public new void animateAndRender(float elapsedTime)
         {
             if (!enabled)
                 return;
 
-            updateAnimation();
+            updateAnimation(elapsedTime);
             render();
         }
 
