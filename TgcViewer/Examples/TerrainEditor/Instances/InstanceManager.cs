@@ -1,8 +1,8 @@
 ﻿using Microsoft.DirectX;
 using System.Collections.Generic;
+using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.TerrainEditor.Instances
 {

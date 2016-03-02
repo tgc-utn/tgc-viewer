@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
 
 namespace TGC.Examples.Optimizacion.KdtTree
 {

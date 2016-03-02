@@ -1,9 +1,10 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.MeshCreator.Primitives
 {

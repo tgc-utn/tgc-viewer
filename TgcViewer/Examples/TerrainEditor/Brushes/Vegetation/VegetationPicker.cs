@@ -1,13 +1,14 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 using TGC.Viewer;
 using TGC.Viewer.Utils._2D;
 using TGC.Viewer.Utils.Input;
 using TGC.Viewer.Utils.Sound;
 using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.TerrainEditor.Brushes.Vegetation
 {

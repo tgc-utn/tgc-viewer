@@ -1,8 +1,8 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System;
+using TGC.Core.Geometries;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcGeometry;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -117,7 +117,7 @@ namespace TGC.Examples.Quake3Loader
         {
             var elapsedTime = GuiController.Instance.ElapsedTime;
 
-            Camera.updateCamera();
+            Camera.updateCamera(elapsedTime);
 
             //Capturar eventos de algunas teclas
 

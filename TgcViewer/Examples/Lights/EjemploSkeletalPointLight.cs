@@ -2,10 +2,11 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.Shaders;
+using TGC.Core.SkeletalAnimation;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
 namespace TGC.Examples.Lights
 {
@@ -109,18 +110,18 @@ namespace TGC.Examples.Lights
             if (lightEnable)
             {
                 //Con luz: Cambiar el shader actual por el shader default que trae el framework para iluminacion dinamica con PointLight para Skeletal Mesh
-                currentShader = GuiController.Instance.Shaders.TgcSkeletalMeshPointLightShader;
+                currentShader = TgcShaders.Instance.TgcSkeletalMeshPointLightShader;
             }
             else
             {
                 //Sin luz: Restaurar shader default
-                currentShader = GuiController.Instance.Shaders.TgcSkeletalMeshShader;
+                currentShader = TgcShaders.Instance.TgcSkeletalMeshShader;
             }
 
             //Aplicar al mesh el shader actual
             mesh.Effect = currentShader;
             //El Technique depende del tipo RenderType del mesh
-            mesh.Technique = GuiController.Instance.Shaders.getTgcSkeletalMeshTechnique(mesh.RenderType);
+            mesh.Technique = TgcShaders.Instance.getTgcSkeletalMeshTechnique(mesh.RenderType);
 
             //Actualzar posición de la luz
             var lightPos = (Vector3)GuiController.Instance.Modifiers["lightPos"];
@@ -149,7 +150,7 @@ namespace TGC.Examples.Lights
                     ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mSpecular"]));
                 mesh.Effect.SetValue("materialSpecularExp", (float)GuiController.Instance.Modifiers["specularEx"]);
             }
-            mesh.animateAndRender();
+            mesh.animateAndRender(elapsedTime);
 
             //Renderizar mesh de luz
             lightMesh.render();

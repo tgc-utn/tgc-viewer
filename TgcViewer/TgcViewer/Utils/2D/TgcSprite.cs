@@ -1,6 +1,6 @@
 ﻿using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Core.Textures;
 
 namespace TGC.Viewer.Utils._2D
 {

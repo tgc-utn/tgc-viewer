@@ -4,10 +4,11 @@ using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.Input;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Shaders.WorkshopShaders
 {
@@ -165,7 +166,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
             GuiController.Instance.RotCamera.CameraCenter = new Vector3(0, 0, 0);
             GuiController.Instance.RotCamera.CameraDistance = 100;
             GuiController.Instance.RotCamera.RotationSpeed = 2f;
-            GuiController.Instance.CurrentCamera.updateCamera();
+            CamaraManager.Instance.CurrentCamera.updateCamera(elapsedTime);
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Genero el shadow map

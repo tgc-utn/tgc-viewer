@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using TGC.Core.Example;
+using TGC.Core.SceneLoader;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Quake3Loader
 {

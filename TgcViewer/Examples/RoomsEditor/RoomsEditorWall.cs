@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Core.Geometries;
+using TGC.Core.Textures;
 
 namespace TGC.Examples.RoomsEditor
 {

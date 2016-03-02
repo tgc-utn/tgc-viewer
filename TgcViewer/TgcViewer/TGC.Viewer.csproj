@@ -60,11 +60,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ionic.Zip, Version=1.9.1.2, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Ionic.Zip.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
@@ -185,7 +180,6 @@
     <Compile Include="Utils\Collision\ElipsoidCollision\TriangleMeshCollider.cs" />
     <Compile Include="Utils\Fog\TgcFog.cs" />
     <Compile Include="Utils\Input\TgcThirdPersonCamera.cs" />
-    <Compile Include="Utils\Input\TgcCamera.cs" />
     <Compile Include="Utils\Input\TgcSpringThirdPersonCamera.cs" />
     <Compile Include="Utils\Interpolation\InterpoladorLineal.cs" />
     <Compile Include="Utils\Interpolation\InterpoladorVaiven.cs" />
@@ -234,32 +228,12 @@
     <Compile Include="Utils\Particles\Particle.cs" />
     <Compile Include="Utils\Particles\ParticleEmitter.cs" />
     <Compile Include="Utils\Particles\PilaDeParticulas.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingCell.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingConnection.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingLoader.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingManager.cs" />
-    <Compile Include="Utils\PortalRendering\TgcPortalRenderingPortal.cs" />
     <Compile Include="Utils\Shaders\TgcPostProcessingUtils.cs" />
     <Compile Include="Utils\Shaders\TgcScreenQuad.cs" />
-    <Compile Include="Utils\Shaders\TgcShaders.cs" />
     <Compile Include="Utils\Sound\Tgc3dSound.cs" />
     <Compile Include="Utils\Sound\TgcMp3Player.cs" />
     <Compile Include="Utils\Sound\TgcDirectSound.cs" />
     <Compile Include="Utils\Sound\TgcStaticSound.cs" />
-    <Compile Include="Utils\Terrain\TgcSkyBox.cs" />
-    <Compile Include="Utils\Terrain\TgcSimpleTerrain.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBoundingCylinder.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcCylinder.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcElipsoid.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcEditableLand.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcFixedYBoundingCylinder.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcObb.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcQuad.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcConvexPolygon.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcDebugBox.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcArrow.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBoxLine.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBoundingBox.cs" />
     <Compile Include="Utils\Input\TgcFpsCamera.cs" />
     <Compile Include="Utils\Input\TgcD3dInput.cs" />
     <Compile Include="Utils\Input\TgcRotationalCamera.cs" />
@@ -279,42 +253,8 @@
     <Compile Include="Utils\TgcD3dDevice.cs" />
     <Compile Include="Utils\HighResolutionTimer.cs" />
     <Compile Include="Utils\TgcDrawText.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBoundingSphere.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcBox.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcCollisionUtils.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcFrustum.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcLine.cs" />
     <Compile Include="Utils\TgcGeometry\TgcPickingRay.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcPlaneWall.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcRay.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcSphere.cs" />
-    <Compile Include="Utils\TgcGeometry\TgcTriangle.cs" />
     <Compile Include="Utils\TgcGeometry\TgcTriangleArray.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameAnimation.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameAnimationData.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameFrameData.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameLoader.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameMesh.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameMeshData.cs" />
-    <Compile Include="Utils\TgcKeyFrameLoader\TgcKeyFrameParser.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcMesh.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcScene.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcSceneExporter.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcSceneLoader.cs" />
-    <Compile Include="Utils\TgcSceneLoader\TgcTexture.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimation.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimationFrame.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalBoneAttach.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalLoader.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimationBoneData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimationBoneFrameData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalAnimationData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalBone.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalMeshData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalParser.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalBoneData.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalVertexWeight.cs" />
-    <Compile Include="Utils\TgcSkeletalAnimation\TgcSkeletalMesh.cs" />
     <Compile Include="Utils\TgcUserVars.cs" />
     <Compile Include="Utils\Ui\AboutWindow.cs">
       <SubType>Form</SubType>

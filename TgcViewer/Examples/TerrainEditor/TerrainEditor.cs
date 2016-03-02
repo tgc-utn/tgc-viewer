@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using TGC.Core.Example;
+using TGC.Core.SceneLoader;
 using TGC.Examples.TerrainEditor.Brushes;
 using TGC.Examples.TerrainEditor.Instances;
 using TGC.Examples.TerrainEditor.Panel;
@@ -14,7 +15,6 @@ using TGC.Viewer;
 using TGC.Viewer.Utils._2D;
 using TGC.Viewer.Utils.Input;
 using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 using Font = System.Drawing.Font;
 
 namespace TGC.Examples.TerrainEditor
@@ -126,7 +126,7 @@ Mostar AABBs: B";
 
             updateVegetationScale(scaleRatioXZ);
             updateVegetationY();
-            Camera.updateCamera();
+            Camera.updateCamera(GuiController.Instance.ElapsedTime);
         }
 
         /// <summary>

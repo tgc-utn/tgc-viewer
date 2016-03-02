@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using TGC.Core.Example;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Otros
 {
@@ -68,7 +69,7 @@ namespace TGC.Examples.Otros
             meshes.Clear();
             meshes = null;
 
-            GuiController.Instance.TexturesPool.clearAll();
+            TexturesPool.Instance.clearAll();
 
             GC.Collect();
         }

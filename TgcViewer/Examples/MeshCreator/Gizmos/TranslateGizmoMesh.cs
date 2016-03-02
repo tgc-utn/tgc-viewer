@@ -1,7 +1,7 @@
 ﻿using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Direct3D;
-using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Core.Geometries;
 
 namespace TGC.Examples.MeshCreator.Gizmos
 {

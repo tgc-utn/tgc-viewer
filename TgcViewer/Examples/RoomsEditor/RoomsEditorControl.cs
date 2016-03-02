@@ -6,9 +6,10 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using TGC.Core.Direct3D;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.RoomsEditor
 {

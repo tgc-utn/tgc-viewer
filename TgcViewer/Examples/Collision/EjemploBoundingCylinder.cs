@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
 using TGC.Core.Utils;
 using TGC.Viewer;
 using TGC.Viewer.Utils.Input;

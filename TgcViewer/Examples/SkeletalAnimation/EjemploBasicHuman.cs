@@ -2,9 +2,9 @@ using Microsoft.DirectX;
 using System.Drawing;
 using System.IO;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SkeletalAnimation;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSkeletalAnimation;
 
 namespace TGC.Examples.SkeletalAnimation
 {
@@ -193,7 +193,7 @@ namespace TGC.Examples.SkeletalAnimation
             }
 
             //Actualizar animacion
-            mesh.updateAnimation();
+            mesh.updateAnimation(elapsedTime);
 
             //Solo malla o esqueleto, depende lo seleccionado
             mesh.RenderSkeleton = renderSkeleton;

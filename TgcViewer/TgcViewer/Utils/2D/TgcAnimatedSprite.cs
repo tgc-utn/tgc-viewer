@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
-using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Core.Textures;
 
 namespace TGC.Viewer.Utils._2D
 {

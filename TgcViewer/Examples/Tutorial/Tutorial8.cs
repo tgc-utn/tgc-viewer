@@ -1,9 +1,9 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Tutorial
 {

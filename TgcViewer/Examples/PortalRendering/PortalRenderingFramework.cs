@@ -3,8 +3,9 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Input;
+using TGC.Core.SceneLoader;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.PortalRendering
 {
@@ -73,7 +74,7 @@ namespace TGC.Examples.PortalRendering
             if (enablePortalRendering)
             {
                 //Actualizar visibilidad con PortalRendering
-                scene.PortalRendering.updateVisibility(GuiController.Instance.CurrentCamera.getPosition());
+                scene.PortalRendering.updateVisibility(CamaraManager.Instance.CurrentCamera.getPosition());
             }
             else
             {

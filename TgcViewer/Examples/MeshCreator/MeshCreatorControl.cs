@@ -7,6 +7,9 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Input;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
 using TGC.Examples.MeshCreator.Gizmos;
 using TGC.Examples.MeshCreator.Primitives;
@@ -15,7 +18,6 @@ using TGC.Viewer.Utils._2D;
 using TGC.Viewer.Utils.Input;
 using TGC.Viewer.Utils.Modifiers;
 using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.MeshCreator
 {
@@ -97,7 +99,7 @@ namespace TGC.Examples.MeshCreator
             Camera.Enable = true;
             Camera.setCamera(new Vector3(0, 0, 0), 500);
             Camera.BaseRotX = -FastMath.PI / 4f;
-            GuiController.Instance.CurrentCamera.Enable = false;
+            CamaraManager.Instance.CurrentCamera.Enable = false;
 
             //Gizmos
             translateGizmo = new TranslateGizmo(this);
@@ -559,8 +561,8 @@ namespace TGC.Examples.MeshCreator
                 q = Vector3.Empty;
             }
             Camera.ZoomFactor = MeshCreatorUtils.getMouseZoomSpeed(Camera, q);
-
-            Camera.updateCamera();
+            var elapsedTime = GuiController.Instance.ElapsedTime;
+            Camera.updateCamera(elapsedTime);
             Camera.updateViewMatrix(D3DDevice.Instance.Device);
         }
 
@@ -935,7 +937,7 @@ namespace TGC.Examples.MeshCreator
             scaleGizmo.dipose();
             textureBrowser.Close();
             textureBrowserEPoly.Close();
-            GuiController.Instance.CurrentCamera.Enable = true;
+            CamaraManager.Instance.CurrentCamera.Enable = true;
         }
 
         #region Eventos generales

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
 
 namespace TGC.Examples.Optimizacion.GrillaRegular
 {

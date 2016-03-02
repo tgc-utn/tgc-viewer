@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Textures;
 
 namespace TGC.Viewer.Utils
 {
@@ -54,8 +55,6 @@ namespace TGC.Viewer.Utils
         /// </summary>
         public void render()
         {
-            var texturesManager = GuiController.Instance.TexturesManager;
-
             //Obtener World coordinate de la esquina inferior de la pantalla
             var w = D3DDevice.Instance.Device.Viewport.Width;
             var h = D3DDevice.Instance.Device.Viewport.Height;
@@ -79,9 +78,9 @@ namespace TGC.Viewer.Utils
             var worldCoordPos = rayOrig + AXIS_POS_DISTANCE * rayDir;
 
             //Renderizar
-            texturesManager.clear(0);
-            texturesManager.clear(1);
-            D3DDevice.Instance.Device.Material = TgcD3dDevice.DEFAULT_MATERIAL;
+            TexturesManager.Instance.clear(0);
+            TexturesManager.Instance.clear(1);
+            D3DDevice.Instance.Device.Material = D3DDevice.DEFAULT_MATERIAL;
             D3DDevice.Instance.Device.Transform.World = Matrix.Translation(worldCoordPos);
 
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;

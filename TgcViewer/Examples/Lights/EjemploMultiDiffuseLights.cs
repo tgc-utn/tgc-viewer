@@ -2,12 +2,12 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
 using TGC.Core.Utils;
 using TGC.Viewer;
 using TGC.Viewer.Utils.Interpolation;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Lights
 {
@@ -113,8 +113,8 @@ namespace TGC.Examples.Lights
             else
             {
                 //Sin luz: Restaurar shader default
-                currentShader = GuiController.Instance.Shaders.TgcMeshShader;
-                currentTechnique = GuiController.Instance.Shaders.getTgcMeshTechnique(TgcMesh.MeshRenderType.DIFFUSE_MAP);
+                currentShader = TgcShaders.Instance.TgcMeshShader;
+                currentTechnique = TgcShaders.Instance.getTgcMeshTechnique(TgcMesh.MeshRenderType.DIFFUSE_MAP);
             }
 
             //Aplicar a cada mesh el shader actual

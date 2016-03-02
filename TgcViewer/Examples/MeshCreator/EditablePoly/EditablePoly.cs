@@ -4,10 +4,10 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.SceneLoader;
 using TGC.Examples.MeshCreator.EditablePoly.Primitives;
 using TGC.Viewer;
 using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.MeshCreator.EditablePoly
 {

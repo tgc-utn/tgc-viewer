@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
+using TGC.Core.Input;
 using TGC.Core.Utils;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
@@ -61,7 +62,7 @@ namespace TGC.Viewer.Utils.Input
         /// <summary>
         ///     Actualiza los valores de la camara
         /// </summary>
-        public void updateCamera()
+        public void updateCamera(float elapsedTime)
         {
             //Si la camara no está habilitada, no procesar el resto del input
             if (!enable)
@@ -69,7 +70,6 @@ namespace TGC.Viewer.Utils.Input
                 return;
             }
 
-            var elapsedTimeSec = GuiController.Instance.ElapsedTime;
             var d3dInput = GuiController.Instance.D3dInput;
 
             //Imprimir por consola la posicion actual de la camara
@@ -94,7 +94,7 @@ namespace TGC.Viewer.Utils.Input
                 rotate(heading, pitch, 0.0f);
             }
 
-            updatePosition(direction, elapsedTimeSec);
+            updatePosition(direction, elapsedTime);
         }
 
         /// <summary>
@@ -657,7 +657,7 @@ namespace TGC.Viewer.Utils.Input
                 //Si se habilito la camara, cargar como la cámara actual
                 if (value)
                 {
-                    GuiController.Instance.CurrentCamera = this;
+                    CamaraManager.Instance.CurrentCamera = this;
                 }
             }
         }

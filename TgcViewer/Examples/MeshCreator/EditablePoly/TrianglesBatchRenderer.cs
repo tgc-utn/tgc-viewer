@@ -2,9 +2,9 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Shaders;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Shaders;
 
 namespace TGC.Examples.MeshCreator.EditablePoly
 {
@@ -69,14 +69,12 @@ namespace TGC.Examples.MeshCreator.EditablePoly
         /// </summary>
         public void render()
         {
-            var texturesManager = GuiController.Instance.TexturesManager;
+            TexturesManager.Instance.clear(0);
+            TexturesManager.Instance.clear(1);
 
-            texturesManager.clear(0);
-            texturesManager.clear(1);
-
-            var effect = GuiController.Instance.Shaders.VariosShader;
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
-            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColored;
+            var effect = TgcShaders.Instance.VariosShader;
+            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
             effect.Technique = TgcShaders.T_POSITION_COLORED;
 
             //Alpha blend on

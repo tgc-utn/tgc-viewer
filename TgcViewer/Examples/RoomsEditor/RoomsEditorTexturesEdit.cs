@@ -1,8 +1,8 @@
 using System;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Textures;
 using TGC.Viewer.Utils.Modifiers;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.RoomsEditor
 {

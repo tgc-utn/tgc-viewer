@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Input;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
+using TGC.Core.Terrain;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.Terrain;
-using TGC.Viewer.Utils.TgcSceneLoader;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.Shaders.WorkshopShaders
@@ -245,7 +246,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
-            GuiController.Instance.CurrentCamera.updateCamera();
+            CamaraManager.Instance.CurrentCamera.updateCamera(elapsedTime);
             // --------------------------------------------------------------------
             D3DDevice.Instance.Device.EndScene();
             var g_pCubeMap = new CubeTexture(D3DDevice.Instance.Device, 256, 1, Usage.RenderTarget,
@@ -329,7 +330,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
             //TextureLoader.Save("test.bmp", ImageFileFormat.Bmp, g_pCubeMap);
 
             // Restauro el estado de las transformaciones
-            GuiController.Instance.CurrentCamera.updateViewMatrix(D3DDevice.Instance.Device);
+            CamaraManager.Instance.CurrentCamera.updateViewMatrix(D3DDevice.Instance.Device);
             D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, 1f, 10000f);

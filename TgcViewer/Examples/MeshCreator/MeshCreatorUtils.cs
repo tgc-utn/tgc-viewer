@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using TGC.Core.Direct3D;
+using TGC.Core.Geometries;
 using TGC.Core.Utils;
 using TGC.Examples.MeshCreator.Primitives;
-using TGC.Viewer.Utils.TgcGeometry;
 
 namespace TGC.Examples.MeshCreator
 {

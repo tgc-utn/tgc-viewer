@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using TGC.Core.Example;
+using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Lights
 {
@@ -115,12 +115,12 @@ namespace TGC.Examples.Lights
             if (lightEnable)
             {
                 //Con luz: Cambiar el shader actual por el shader default que trae el framework para iluminacion dinamica con PointLight
-                currentShader = GuiController.Instance.Shaders.TgcMeshPointLightShader;
+                currentShader = TgcShaders.Instance.TgcMeshPointLightShader;
             }
             else
             {
                 //Sin luz: Restaurar shader default
-                currentShader = GuiController.Instance.Shaders.TgcMeshShader;
+                currentShader = TgcShaders.Instance.TgcMeshShader;
             }
 
             //Aplicar a cada mesh el shader actual
@@ -128,7 +128,7 @@ namespace TGC.Examples.Lights
             {
                 mesh.Effect = currentShader;
                 //El Technique depende del tipo RenderType del mesh
-                mesh.Technique = GuiController.Instance.Shaders.getTgcMeshTechnique(mesh.RenderType);
+                mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
             }
 
             //Renderizar meshes

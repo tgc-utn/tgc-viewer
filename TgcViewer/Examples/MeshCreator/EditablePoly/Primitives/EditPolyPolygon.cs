@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Core.Geometries;
 
 namespace TGC.Examples.MeshCreator.EditablePoly.Primitives
 {

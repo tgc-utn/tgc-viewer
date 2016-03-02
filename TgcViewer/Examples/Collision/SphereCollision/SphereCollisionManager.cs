@@ -1,6 +1,6 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
-using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Core.Geometries;
 
 namespace TGC.Examples.Collision.SphereCollision
 {

@@ -1,8 +1,8 @@
 using System;
 using TGC.Core.Example;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.TgcSceneLoader;
 
 namespace TGC.Examples.Shaders
 {

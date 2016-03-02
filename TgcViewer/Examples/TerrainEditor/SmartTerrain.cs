@@ -2,11 +2,12 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
+using TGC.Core.Textures;
 using TGC.Core.Utils;
 using TGC.Viewer;
-using TGC.Viewer.Utils.Shaders;
-using TGC.Viewer.Utils.TgcGeometry;
 
 namespace TGC.Examples.TerrainEditor
 {
@@ -327,16 +328,15 @@ namespace TGC.Examples.TerrainEditor
             if (!Enabled)
                 return;
 
-            var texturesManager = GuiController.Instance.TexturesManager;
             var transform = Matrix.Translation(traslation) * Matrix.Scaling(ScaleXZ, ScaleY, ScaleXZ);
 
             //Textura
             effect.SetValue("texDiffuseMap", terrainTexture);
 
-            texturesManager.clear(1);
+            TexturesManager.Instance.clear(1);
 
-            GuiController.Instance.Shaders.setShaderMatrix(effect, transform);
-            D3DDevice.Instance.Device.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionColoredTextured;
+            TgcShaders.Instance.setShaderMatrix(effect, transform);
+            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColoredTextured;
             effect.Technique = technique;
             D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
 

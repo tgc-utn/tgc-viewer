@@ -41,8 +41,6 @@ namespace TGC.Viewer.Utils.Input
 
         private readonly bool[] previousMouseButtonsState;
 
-        private Control guiControl;
-
         private int mouseIndex;
         private bool mouseInside;
         private int mouseX;
@@ -50,7 +48,6 @@ namespace TGC.Viewer.Utils.Input
 
         public TgcD3dInput(Control guiControl, Control panel3d)
         {
-            this.guiControl = guiControl;
             this.panel3d = panel3d;
 
             //keyboard
