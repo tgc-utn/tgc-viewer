@@ -9,7 +9,7 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
 * [Managed DirectX 9](https://en.wikipedia.org/wiki/Managed_DirectX)
 * [Detección de colisiones](https://en.wikipedia.org/wiki/Collision_detection)
 * [Skeletal animation](https://en.wikipedia.org/wiki/Skeletal_animation)
-* [HLSL shaders](https://msdn.microsoft.com/en-us/library/windows/desktop/bb509561%28v=vs.85%29.asp)
+* [HLSL shaders](https://msdn.microsoft.com/en-us/library/windows/desktop/bb509561%28v=vs.85%29.aspx)
 * [Mesh creator](https://github.com/leonematias/MeshCreator)
 * Level editor
 * ~~Plugins para exportación de modelos desde 3Ds MAX~~
