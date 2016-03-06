@@ -2,7 +2,7 @@
 
 Es un motor de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA).
 
-[Técnicas de Gráficos por Computadora](https://www.tgcutn.com.ar)
+[Técnicas de Gráficos por Computadora](http://www.tgcutn.com.ar)
 
 ## Características
 * [Lenguaje C#](https://msdn.microsoft.com/es-ar/library/kx37x362.aspx)
