@@ -136,7 +136,8 @@ namespace TgcViewer
             examplesDir = System.Environment.CurrentDirectory + "\\" + ExampleLoader.EXAMPLES_DIR + "\\";
             examplesMediaDir = examplesDir + "Media" + "\\";
             alumnoEjemplosDir = System.Environment.CurrentDirectory + "\\" + "AlumnoEjemplos" + "\\";
-            alumnoEjemplosMediaDir = alumnoEjemplosDir + "AlumnoMedia" + "\\";
+            alumnoEjemplosMediaDir = alumnoEjemplosDir;
+            //alumnoEjemplosMediaDir = alumnoEjemplosDir + "AlumnoMedia" + "\\";
             exampleLoader.loadExamplesInGui(mainForm.TreeViewExamples, new string[] { examplesDir, alumnoEjemplosDir });
 
             //Cargar shaders del framework
