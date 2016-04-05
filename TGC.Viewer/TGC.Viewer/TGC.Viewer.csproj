@@ -97,9 +97,11 @@
     </Reference>
     <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Example\ExampleLoader.cs" />
@@ -159,10 +161,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Utils\MaxPlugins\TgcKeyFrameExporter.ms" />
-    <None Include="Utils\MaxPlugins\MaxScriptUtils.ms" />
-    <None Include="Utils\MaxPlugins\TgcSceneExporter.ms" />
-    <None Include="Utils\MaxPlugins\TgcSkeletalAnimationExporter.ms" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -248,9 +246,6 @@
     </Compile>
     <Compile Include="Utils\Ui\TgcViewerConfig.cs" />
     <Compile Include="Utils\Ui\ValidationUtils.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\pictureBox1.Image.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="IconoTgc.ico" />
