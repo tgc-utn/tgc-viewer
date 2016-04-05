@@ -88,7 +88,8 @@ namespace TGC.Viewer
             ExamplesDir = Environment.CurrentDirectory + "\\" + ExampleLoader.EXAMPLES_DIR + "\\";
             ExamplesMediaDir = ExamplesDir + "Media" + "\\";
             AlumnoEjemplosDir = Environment.CurrentDirectory + "\\" + "TGC.Group" + "\\";
-            AlumnoEjemplosMediaDir = AlumnoEjemplosDir + "AlumnoMedia" + "\\";
+            // AlumnoEjemplosMediaDir = AlumnoEjemplosDir + "AlumnoMedia" + "\\";
+            AlumnoEjemplosMediaDir = AlumnoEjemplosDir;
             exampleLoader.loadExamplesInGui(mainForm.TreeViewExamples, new[] { ExamplesDir, AlumnoEjemplosDir });
 
             //Cargar shaders del framework

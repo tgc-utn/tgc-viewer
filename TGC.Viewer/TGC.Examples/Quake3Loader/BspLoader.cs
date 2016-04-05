@@ -50,7 +50,7 @@ namespace TGC.Examples.Quake3Loader
             graphicsStream.Write(color);
             texture.UnlockRectangle(0);
 
-            TextureLoader.Save("emptyTexture.jpg", ImageFileFormat.Jpg, texture);
+            // TextureLoader.Save("emptyTexture.jpg", ImageFileFormat.Jpg, texture);
 
             emptyTexture = new TgcTexture("emptyTexture.jpg", "emptyTexture.jpg", texture, false);
 
@@ -60,7 +60,7 @@ namespace TGC.Examples.Quake3Loader
             graphicsStream.Write(color);
             texture.UnlockRectangle(0);
 
-            TextureLoader.Save("emptyLightMap.jpg", ImageFileFormat.Jpg, texture);
+            // TextureLoader.Save("emptyLightMap.jpg", ImageFileFormat.Jpg, texture);
 
             emptyLightMap = new TgcTexture("emptyLightMap.jpg", "emptyLightMap.jpg", texture, false);
         }
@@ -687,7 +687,7 @@ namespace TGC.Examples.Quake3Loader
                 tex.UnlockRectangle(0);
 
                 var filename = "qlight" + i + ".jpg";
-                TextureLoader.Save(filename, ImageFileFormat.Jpg, tex);
+                //TextureLoader.Save(filename, ImageFileFormat.Jpg, tex);
 
                 lightMaps[i] = new TgcTexture(filename, filename, tex, false);
             }

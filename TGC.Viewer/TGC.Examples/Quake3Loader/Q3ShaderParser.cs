@@ -111,7 +111,7 @@ namespace TGC.Examples.Quake3Loader
 
             //grabo el source del shader a un texto
             var erroresline = "Lista de errores:\n" + errores + "\nFin Errores\n\n";
-            File.WriteAllText("shad" + Name.Replace('/', '-') + ".txt", erroresline + ShaderSrc);
+            //File.WriteAllText("shad" + Name.Replace('/', '-') + ".txt", erroresline + ShaderSrc);
 
             builded = true;
         }
