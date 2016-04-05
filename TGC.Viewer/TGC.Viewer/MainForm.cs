@@ -47,12 +47,15 @@ namespace TGC.Viewer
         /// <summary>
         ///     Consola de Log
         /// </summary>
-        public RichTextBox LogConsole { get; private set; }
+        public RichTextBox LogConsole { get { return this.logConsole; } }
 
         /// <summary>
         ///     TreeView de ejemplos
         /// </summary>
-        public TreeView TreeViewExamples { get; private set; }
+        public TreeView TreeViewExamples
+        {
+            get { return this.treeViewExamples; }
+        }
 
         /// <summary>
         ///     Modo FullScreen
@@ -296,6 +299,11 @@ namespace TGC.Viewer
                 if (form.ContainsFocus) return true;
             }
             return false;
+        }
+
+        private void salirToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
