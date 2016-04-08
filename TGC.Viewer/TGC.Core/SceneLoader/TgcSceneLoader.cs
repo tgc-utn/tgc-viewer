@@ -1,9 +1,9 @@
-using Ionic.Zip;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometries;
 using TGC.Core.PortalRendering;
@@ -66,13 +66,16 @@ namespace TGC.Core.SceneLoader
         public TgcScene loadSceneFromZipFile(string sceneFileName, string zipFilePath, string extractDir)
         {
             //extraer archivo pisando archivos existentes
-            using (var zip = ZipFile.Read(zipFilePath))
+            var zip = ZipFile.OpenRead(zipFilePath);
+            zip.ExtractToDirectory(extractDir);
+
+            /*using (var zip = ZipFile.Read(zipFilePath))
             {
                 foreach (var e in zip)
                 {
                     e.Extract(extractDir, ExtractExistingFileAction.OverwriteSilently);
                 }
-            }
+            }*/
 
             return loadSceneFromFile(extractDir + sceneFileName, extractDir);
         }
