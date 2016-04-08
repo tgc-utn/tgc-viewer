@@ -1,0 +1,19 @@
+<tgcScene>
+	<name>Caja</name>
+	<texturesExport enabled='false' dir='Textures'/>
+	<lightmapExport enabled='false' dir='LightMaps'/>
+	<materials count='0'>
+	</materials>
+	<meshes count='1' >
+		<mesh name='Box01' pos='[0,0,0]' matId='-1' color='[143.0,225.0,87.0]' visibility='1.0' lightmap=''>
+			<coordinatesIdx count='36'>0 2 3 3 1 0 4 5 7 7 6 4 0 1 5 5 4 0 1 3 7 7 5 1 3 2 6 6 7 3 2 0 4 4 6 2 </coordinatesIdx>
+			<textCoordsIdx count='36'>9 11 10 10 8 9 8 9 11 11 10 8 4 5 7 7 6 4 0 1 3 3 2 0 4 5 7 7 6 4 0 1 3 3 2 0 </textCoordsIdx>
+			<colorsIdx count='36'>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </colorsIdx>
+			<matIds count='-1'>0</matIds>
+			<vertices count='24'>-31.0682 0.0 -26.2529 31.0682 0.0 -26.2529 -31.0682 0.0 26.2529 31.0682 0.0 26.2529 -31.0682 42.0727 -26.2529 31.0682 42.0727 -26.2529 -31.0682 42.0727 26.2529 31.0682 42.0727 26.2529 </vertices>
+			<normals count='24'>0.0 0.0 -1.5708 0.0 0.0 -1.5708 0.0 0.0 -1.5708 0.0 0.0 -1.5708 0.0 0.0 1.5708 0.0 0.0 1.5708 0.0 0.0 1.5708 0.0 0.0 1.5708 </normals>
+			<texCoords count='24'>0.0 0.0 1.0 0.0 0.0 -1.0 1.0 -1.0 0.0 0.0 1.0 0.0 0.0 -1.0 1.0 -1.0 0.0 0.0 1.0 0.0 0.0 -1.0 1.0 -1.0 </texCoords>
+			<colors count='3'>143.0 225.0 87.0 </colors>
+		</mesh>
+	</meshes>
+</tgcScene>

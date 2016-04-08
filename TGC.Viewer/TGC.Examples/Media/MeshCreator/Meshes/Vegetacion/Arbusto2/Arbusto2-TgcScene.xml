@@ -1,0 +1,29 @@
+<tgcScene>
+	<name>Arbusto2</name>
+	<texturesExport enabled='true' dir='Textures'/>
+	<lightmapExport enabled='false' dir='LightMaps'/>
+	<sceneBoundingBox min='[-15,0.0374966,-15.0099]' max='[15,58.308,14.9901]'/>
+	<materials count='1'>
+		<m name='Material #25' type='Standardmaterial'>
+			<ambient>[149.94,149.94,149.94,255.0]</ambient>
+			<diffuse>[149.94,149.94,149.94,255.0]</diffuse>
+			<specular>[229.5,229.5,229.5,255.0]</specular>
+			<opacity>100.0</opacity>
+			<alphaBlendEnable>true</alphaBlendEnable>
+			<bitmap uvTiling='[1.0,1.0]' uvOffset='[0.0,0.0]'>Arbusto2.png</bitmap>
+		</m>
+	</materials>
+	<meshes count='1' >
+		<mesh name='Arbusto2' layer='0' type='Original' matId='0' color='[225.0,88.0,199.0]' visibility='0' lightmap=''>
+			<boundingBox min='[-15,0.0374966,-15.0099]' max='[15,58.308,14.9901]'/>
+			<coordinatesIdx count='12'>3 2 0 4 6 7 7 5 4 0 1 3 </coordinatesIdx>
+			<textCoordsIdx count='12'>3 2 0 4 6 7 7 5 4 0 1 3 </textCoordsIdx>
+			<colorsIdx count='12'>0 0 0 0 0 0 0 0 0 0 0 0 </colorsIdx>
+			<matIds count='1'>0</matIds>
+			<vertices count='24'>-15.0 0.0374966 -0.152039 15.0 0.0374966 -0.152039 -15.0 58.308 -0.152041 15.0 58.308 -0.152041 0.142098 0.0374966 14.9901 0.142092 0.0374966 -15.0099 0.142098 58.308 14.9901 0.142092 58.308 -15.0099 </vertices>
+			<normals count='36'>0.0 0.0 -1.0 0.0 0.0 -1.0 0.0 0.0 -1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 -1.0 0.0 0.0 -1.0 0.0 0.0 -1.0 </normals>
+			<texCoords count='16'>0.0 1.0 1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0 1.0 1.0 0.0 0.0 1.0 0.0 </texCoords>
+			<colors count='3'>255 255 255 </colors>
+		</mesh>
+	</meshes>
+</tgcScene>
