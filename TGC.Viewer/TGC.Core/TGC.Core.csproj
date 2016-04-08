@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2B8C77A8-2427-4DA0-A33E-93F877B2D7D9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TGC.Core</RootNamespace>
+    <AssemblyName>TGC.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.Direct3D.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2909.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualC" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="2D\TgcAnimatedSprite.cs" />
+    <Compile Include="2D\TgcDrawer2D.cs" />
+    <Compile Include="2D\TgcDrawText.cs" />
+    <Compile Include="2D\TgcSprite.cs" />
+    <Compile Include="2D\TgcText2d.cs" />
+    <Compile Include="Collision\ElipsoidCollision\BoundingBoxCollider.cs" />
+    <Compile Include="Collision\ElipsoidCollision\Collider.cs" />
+    <Compile Include="Collision\ElipsoidCollision\ElipsoidCollisionManager.cs" />
+    <Compile Include="Collision\ElipsoidCollision\TriangleMeshCollider.cs" />
+    <Compile Include="Direct3D\D3DDevice.cs" />
+    <Compile Include="Example\TgcExample.cs" />
+    <Compile Include="Fog\TgcFog.cs" />
+    <Compile Include="Geometries\TgcArrow.cs" />
+    <Compile Include="Geometries\TgcBoundingBox.cs" />
+    <Compile Include="Geometries\TgcBoundingCylinder.cs" />
+    <Compile Include="Geometries\TgcBoundingSphere.cs" />
+    <Compile Include="Geometries\TgcBox.cs" />
+    <Compile Include="Geometries\TgcBoxLine.cs" />
+    <Compile Include="Geometries\TgcCollisionUtils.cs" />
+    <Compile Include="Geometries\TgcConvexPolygon.cs" />
+    <Compile Include="Geometries\TgcConvexPolyhedron.cs" />
+    <Compile Include="Geometries\TgcCylinder.cs" />
+    <Compile Include="Geometries\TgcDebugBox.cs" />
+    <Compile Include="Geometries\TgcEditableLand.cs" />
+    <Compile Include="Geometries\TgcElipsoid.cs" />
+    <Compile Include="Geometries\TgcFixedYBoundingCylinder.cs" />
+    <Compile Include="Geometries\TgcFrustum.cs" />
+    <Compile Include="Geometries\TgcLine.cs" />
+    <Compile Include="Geometries\TgcObb.cs" />
+    <Compile Include="Geometries\TgcPlaneWall.cs" />
+    <Compile Include="Geometries\TgcQuad.cs" />
+    <Compile Include="Geometries\TgcRay.cs" />
+    <Compile Include="Geometries\TgcSphere.cs" />
+    <Compile Include="Geometries\TgcTriangle.cs" />
+    <Compile Include="Input\CamaraManager.cs" />
+    <Compile Include="Input\TgcCamera.cs" />
+    <Compile Include="Interpolation\InterpoladorLineal.cs" />
+    <Compile Include="Interpolation\InterpoladorVaiven.cs" />
+    <Compile Include="Interpolation\Position2dInterpolator.cs" />
+    <Compile Include="Interpolation\Temporizador.cs" />
+    <Compile Include="KeyFrameLoader\OriginalData.cs" />
+    <Compile Include="KeyFrameLoader\TgcKeyFrameAnimation.cs" />
+    <Compile Include="KeyFrameLoader\TgcKeyFrameAnimationData.cs" />
+    <Compile Include="KeyFrameLoader\TgcKeyFrameFrameData.cs" />
+    <Compile Include="KeyFrameLoader\TgcKeyFrameLoader.cs" />
+    <Compile Include="KeyFrameLoader\TgcKeyFrameMesh.cs" />
+    <Compile Include="KeyFrameLoader\TgcKeyFrameMeshData.cs" />
+    <Compile Include="KeyFrameLoader\TgcKeyFrameParser.cs" />
+    <Compile Include="Particles\ColaDeParticulas.cs" />
+    <Compile Include="Particles\Particle.cs" />
+    <Compile Include="Particles\ParticleEmitter.cs" />
+    <Compile Include="Particles\PilaDeParticulas.cs" />
+    <Compile Include="PortalRendering\TgcPortalRenderingCell.cs" />
+    <Compile Include="PortalRendering\TgcPortalRenderingCellData.cs" />
+    <Compile Include="PortalRendering\TgcPortalRenderingConnection.cs" />
+    <Compile Include="PortalRendering\TgcPortalRenderingData.cs" />
+    <Compile Include="PortalRendering\TgcPortalRenderingLoader.cs" />
+    <Compile Include="PortalRendering\TgcPortalRenderingManager.cs" />
+    <Compile Include="PortalRendering\TgcPortalRenderingParser.cs" />
+    <Compile Include="PortalRendering\TgcPortalRenderingPortal.cs" />
+    <Compile Include="PortalRendering\TgcPortalRenderingPortalData.cs" />
+    <Compile Include="SceneLoader\IRenderObject.cs" />
+    <Compile Include="SceneLoader\ITransformObject.cs" />
+    <Compile Include="SceneLoader\TgcMaterialData.cs" />
+    <Compile Include="SceneLoader\TgcMesh.cs" />
+    <Compile Include="SceneLoader\TgcMeshData.cs" />
+    <Compile Include="SceneLoader\TgcScene.cs" />
+    <Compile Include="SceneLoader\TgcSceneData.cs" />
+    <Compile Include="SceneLoader\TgcSceneExporter.cs" />
+    <Compile Include="SceneLoader\TgcSceneLoader.cs" />
+    <Compile Include="SceneLoader\TgcSceneParser.cs" />
+    <Compile Include="Shaders\TgcPostProcessingUtils.cs" />
+    <Compile Include="Shaders\TgcScreenQuad.cs" />
+    <Compile Include="Shaders\TgcShaders.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalAnimation.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalAnimationBoneData.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalAnimationBoneFrameData.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalAnimationData.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalAnimationFrame.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalBone.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalBoneAttach.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalBoneData.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalLoader.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalMesh.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalMeshData.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalParser.cs" />
+    <Compile Include="SkeletalAnimation\TgcSkeletalVertexWeight.cs" />
+    <Compile Include="Terrain\TgcSimpleTerrain.cs" />
+    <Compile Include="Terrain\TgcSkyBox.cs" />
+    <Compile Include="Textures\TexturesManager.cs" />
+    <Compile Include="Textures\TexturesPool.cs" />
+    <Compile Include="Textures\TgcTexture.cs" />
+    <Compile Include="Utils\FastMath.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\TgcParserUtils.cs" />
+    <Compile Include="Utils\TgcVectorUtils.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
