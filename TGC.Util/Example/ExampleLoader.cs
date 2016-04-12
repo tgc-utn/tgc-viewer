@@ -12,9 +12,6 @@ namespace TGC.Util.Example
     /// </summary>
     public class ExampleLoader
     {
-        public const string EXAMPLES_DIR = "TGC.Examples";
-        public static string[] DIR_SKIP_LISP = { "\\bin", "\\obj" };
-
         private readonly Dictionary<TreeNode, TgcExample> treeExamplesDict;
 
         public ExampleLoader()
@@ -31,15 +28,9 @@ namespace TGC.Util.Example
         ///     Carga los ejemplos dinámicamente en el TreeView de Ejemplo
         /// </summary>
         public void loadExamplesInGui(TreeView treeView)
-        //public void loadExamplesInGui(TreeView treeView, string[] exampleDirs)
         {
             //Cargar ejemplos dinamicamente
             CurrentExamples = new List<TgcExample>();
-
-            /*foreach (var exampleDir in exampleDirs)
-            {
-                CurrentExamples.AddRange(loadExamples(exampleDir));
-            }*/
 
             var exampleDir = Environment.CurrentDirectory;
             CurrentExamples.AddRange(loadExamples(exampleDir));
@@ -107,8 +98,6 @@ namespace TGC.Util.Example
         public List<TgcExample> loadExamples(string exampleDir)
         {
             //Buscar todas las dll que esten en el directorio de ejemplos, evitando las creadas de DEBUG Y BIN por parte del IDE
-            //var exampleFiles = getExampleFiles(exampleDir, DIR_SKIP_LISP);
-
             var exampleFiles = getExampleFiles(exampleDir);
 
             var examples = new List<TgcExample>();
@@ -121,12 +110,6 @@ namespace TGC.Util.Example
                     {
                         if (!type.IsClass || type.IsNotPublic || type.IsAbstract)
                             continue;
-
-                        /*
-                        Type[] interfaces = type.GetInterfaces();
-                        if (((IList)interfaces).Contains(typeof(TgcExample)))
-                        {
-                        */
 
                         if (type.BaseType.Equals(typeof(TgcExample)))
                         {
@@ -149,41 +132,19 @@ namespace TGC.Util.Example
         }
 
         /// <summary>
-        ///     Busca recursivamente en un directorio todos los archivos .DLL, evitando los directorios
-        ///     especificados en la skipList
+        ///     Busca recursivamente en un directorio todos los archivos .DLL
         /// </summary>
-
-        //public List<string> getExampleFiles(string rootDir, string[] skipList)
         public List<string> getExampleFiles(string rootDir)
         {
             var exampleFiles = new List<string>();
             var dllArray = Directory.GetFiles(rootDir, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (var dll in dllArray)
             {
-                //if (!isInSkipList(dll, skipList))
-                {
-                    exampleFiles.Add(dll);
-                }
+                exampleFiles.Add(dll);
             }
 
             return exampleFiles;
         }
-
-        /*
-        /// <summary>
-        ///     Informa si un directorio es parte de la skipList
-        /// </summary>
-        public bool isInSkipList(string dir, string[] skipList)
-        {
-            foreach (var skipDir in skipList)
-            {
-                if (dir.IndexOf(skipDir) > 0)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }*/
 
         /// <summary>
         ///     Devuelve el primer TgcExample con el name y category especificados (de los metodos getName y getCategory)
