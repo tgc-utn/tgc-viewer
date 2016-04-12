@@ -9,8 +9,7 @@ using TGC.Core.Interpolation;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Viewer;
-using TGC.Viewer.Utils;
+using TGC.Util;
 
 namespace TGC.Examples.PostProcess
 {

@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using TGC.Core.Example;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Multiplayer
 {

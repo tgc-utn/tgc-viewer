@@ -4,8 +4,8 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using TGC.Core.Input;
 using TGC.Core.Utils;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
+using TGC.Util;
+using TGC.Util.Input;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Examples.TerrainEditor

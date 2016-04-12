@@ -4,7 +4,7 @@ using TGC.Core.Example;
 using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Optimizacion.Quadtree
 {

@@ -12,9 +12,9 @@ using TGC.Core.SceneLoader;
 using TGC.Examples.TerrainEditor.Brushes;
 using TGC.Examples.TerrainEditor.Instances;
 using TGC.Examples.TerrainEditor.Panel;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Util;
+using TGC.Util.Input;
+using TGC.Util.TgcGeometry;
 using Font = System.Drawing.Font;
 
 namespace TGC.Examples.TerrainEditor

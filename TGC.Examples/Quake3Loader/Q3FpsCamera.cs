@@ -5,8 +5,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
+using TGC.Util;
+using TGC.Util.Input;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Examples.Quake3Loader

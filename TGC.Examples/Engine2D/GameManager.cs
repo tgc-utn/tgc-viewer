@@ -2,7 +2,7 @@ using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Engine2D
 {

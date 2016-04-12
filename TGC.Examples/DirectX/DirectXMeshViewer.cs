@@ -2,7 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.DirectX
 {

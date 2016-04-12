@@ -8,8 +8,7 @@ using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Utils;
-using TGC.Viewer;
-using TGC.Viewer.Utils;
+using TGC.Util;
 
 namespace TGC.Examples.PostProcess
 {

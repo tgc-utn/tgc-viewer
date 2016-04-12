@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D77D6E0-0EF1-4AF9-BB7C-AEE6CEAF0F34}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TGC.Util</RootNamespace>
+    <AssemblyName>TGC.Util</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.Direct3D.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2909.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectInput.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.DirectX.DirectSound, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectSound.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualC" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Example\ExampleLoader.cs" />
+    <Compile Include="GuiController.cs" />
+    <Compile Include="HighResolutionTimer.cs" />
+    <Compile Include="Input\TgcD3dInput.cs" />
+    <Compile Include="Input\TgcFpsCamera.cs" />
+    <Compile Include="Input\TgcRotationalCamera.cs" />
+    <Compile Include="Input\TgcSpringThirdPersonCamera.cs" />
+    <Compile Include="Input\TgcThirdPersonCamera.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modifiers\TgcBooleanModifier.cs" />
+    <Compile Include="Modifiers\TgcButtonModifier.cs" />
+    <Compile Include="Modifiers\TgcColorModifier.cs" />
+    <Compile Include="Modifiers\TgcEnumModifier.cs" />
+    <Compile Include="Modifiers\TgcFileModifier.cs" />
+    <Compile Include="Modifiers\TgcFloatModifier.cs" />
+    <Compile Include="Modifiers\TgcIntervalModifier.cs" />
+    <Compile Include="Modifiers\TgcIntModifier.cs" />
+    <Compile Include="Modifiers\TgcMeshBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modifiers\TgcMeshBrowser.Designer.cs">
+      <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modifiers\TgcModifierPanel.cs" />
+    <Compile Include="Modifiers\TgcModifiers.cs" />
+    <Compile Include="Modifiers\TgcTextureBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modifiers\TgcTextureBrowser.Designer.cs">
+      <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modifiers\TgcTextureModifier.cs" />
+    <Compile Include="Modifiers\TgcVertex2fModifier.cs" />
+    <Compile Include="Modifiers\TgcVertex3fModifier.cs" />
+    <Compile Include="Networking\TgcLanBrowser.cs" />
+    <Compile Include="Networking\TgcNetworkingModifier.cs" />
+    <Compile Include="Networking\TgcNetworkingModifierClientsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Networking\TgcNetworkingModifierClientsDialog.Designer.cs">
+      <DependentUpon>TgcNetworkingModifierClientsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Networking\TgcNetworkingModifierControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Networking\TgcNetworkingModifierControl.Designer.cs">
+      <DependentUpon>TgcNetworkingModifierControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Networking\TgcNetworkingModifierServersDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Networking\TgcNetworkingModifierServersDialog.Designer.cs">
+      <DependentUpon>TgcNetworkingModifierServersDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Networking\TgcSocketClient.cs" />
+    <Compile Include="Networking\TgcSocketClientInfo.cs" />
+    <Compile Include="Networking\TgcSocketMessages.cs" />
+    <Compile Include="Networking\TgcSocketServer.cs" />
+    <Compile Include="Networking\TgcSocketServerInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sound\Tgc3dSound.cs" />
+    <Compile Include="Sound\TgcDirectSound.cs" />
+    <Compile Include="Sound\TgcMp3Player.cs" />
+    <Compile Include="Sound\TgcStaticSound.cs" />
+    <Compile Include="TgcAxisLines.cs" />
+    <Compile Include="TgcD3dDevice.cs" />
+    <Compile Include="TgcGeometry\TgcPickingRay.cs" />
+    <Compile Include="TgcGeometry\TgcTriangleArray.cs" />
+    <Compile Include="TgcUserVars.cs" />
+    <Compile Include="Ui\AboutWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ui\AboutWindow.Designer.cs">
+      <DependentUpon>AboutWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ui\FullScreenPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Ui\FullScreenPanel.Designer.cs">
+      <DependentUpon>FullScreenPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ui\TgcViewerConfig.cs" />
+    <Compile Include="ValidationUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">
+      <Project>{2b8c77a8-2427-4da0-a33e-93f877b2d7d9}</Project>
+      <Name>TGC.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modifiers\TgcMeshBrowser.resx">
+      <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modifiers\TgcTextureBrowser.resx">
+      <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Networking\TgcNetworkingModifierClientsDialog.resx">
+      <DependentUpon>TgcNetworkingModifierClientsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Networking\TgcNetworkingModifierControl.resx">
+      <DependentUpon>TgcNetworkingModifierControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Networking\TgcNetworkingModifierServersDialog.resx">
+      <DependentUpon>TgcNetworkingModifierServersDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ui\AboutWindow.resx">
+      <DependentUpon>AboutWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Ui\FullScreenPanel.resx">
+      <DependentUpon>FullScreenPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

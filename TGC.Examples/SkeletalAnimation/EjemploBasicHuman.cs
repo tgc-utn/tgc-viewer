@@ -4,7 +4,7 @@ using System.IO;
 using TGC.Core.Example;
 using TGC.Core.Geometries;
 using TGC.Core.SkeletalAnimation;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.SkeletalAnimation
 {
