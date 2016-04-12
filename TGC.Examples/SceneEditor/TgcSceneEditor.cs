@@ -1,7 +1,7 @@
 using System.Xml;
 using TGC.Core.Example;
 using TGC.Core.Utils;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.SceneEditor
 {

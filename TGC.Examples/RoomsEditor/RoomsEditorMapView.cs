@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Ui;
+using TGC.Util;
 
 namespace TGC.Examples.RoomsEditor
 {

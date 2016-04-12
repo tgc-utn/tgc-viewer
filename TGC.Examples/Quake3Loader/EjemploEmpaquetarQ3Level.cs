@@ -1,7 +1,7 @@
 using System.IO;
 using System.Windows.Forms;
 using TGC.Core.Example;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Quake3Loader
 {

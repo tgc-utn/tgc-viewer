@@ -8,7 +8,7 @@ using TGC.Core.Geometries;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Shaders.WorkshopShaders
 {

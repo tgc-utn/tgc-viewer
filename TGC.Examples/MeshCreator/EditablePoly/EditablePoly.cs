@@ -6,8 +6,8 @@ using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Examples.MeshCreator.EditablePoly.Primitives;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
+using TGC.Util;
+using TGC.Util.Input;
 
 namespace TGC.Examples.MeshCreator.EditablePoly
 {

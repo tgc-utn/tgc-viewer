@@ -2,9 +2,9 @@ using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Example;
 using TGC.Core.Geometries;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Util;
+using TGC.Util.Input;
+using TGC.Util.TgcGeometry;
 
 namespace TGC.Examples.Collision
 {

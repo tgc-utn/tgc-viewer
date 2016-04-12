@@ -3,8 +3,8 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
+using TGC.Util;
+using TGC.Util.Input;
 
 namespace TGC.Group.MiGrupo
 {

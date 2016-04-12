@@ -2,7 +2,7 @@
 using Microsoft.DirectX.DirectInput;
 using System;
 using TGC.Core.Geometries;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Quake3Loader
 {

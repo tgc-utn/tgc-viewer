@@ -8,7 +8,7 @@ using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Utils;
-using TGC.Viewer;
+using TGC.Util;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.Shaders.WorkshopShaders

@@ -6,7 +6,7 @@ using TGC.Core.Geometries;
 using TGC.Core.Shaders;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Utils;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Lights
 {

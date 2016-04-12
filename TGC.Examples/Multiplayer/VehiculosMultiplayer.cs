@@ -8,8 +8,8 @@ using TGC.Core.Example;
 using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Networking;
+using TGC.Util;
+using TGC.Util.Networking;
 
 namespace TGC.Examples.Multiplayer
 {
