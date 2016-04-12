@@ -59,6 +59,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
@@ -163,7 +166,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF NOT EXIST "Media\" START XCOPY "$(SolutionDir)TGC.Examples\Media" "Media\" /D /Y /S</PostBuildEvent>
+    <PostBuildEvent>IF NOT EXIST "Media\" START XCOPY "$(SolutionDir)TGC.Examples\Media" "Media\" /Y /S
+START XCOPY "$(SolutionDir)TGC.Group\AlumnoMedia" "AlumnoMedia\" /D /Y /S</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

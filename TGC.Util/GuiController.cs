@@ -84,17 +84,12 @@ namespace TGC.Util
 
             //Cargar algoritmos
             exampleLoader = new ExampleLoader();
-            //ExamplesDir = Environment.CurrentDirectory + "\\" + ExampleLoader.EXAMPLES_DIR + "\\";
-            //ExamplesMediaDir = ExamplesDir + "Media" + "\\";
             ExamplesMediaDir = "Media\\";
-            //AlumnoEjemplosDir = Environment.CurrentDirectory + "\\" + "TGC.Group" + "\\";
-            // AlumnoEjemplosMediaDir = AlumnoEjemplosDir + "AlumnoMedia" + "\\";
-            AlumnoEjemplosMediaDir = "AlumnoMedia\\";
-            //exampleLoader.loadExamplesInGui(mainForm.TreeViewExamples, new[] { ExamplesDir, AlumnoEjemplosDir });
+            AlumnoMediaDir = "AlumnoMedia\\";
             exampleLoader.loadExamplesInGui(mainForm.TreeViewExamples);
 
             //Cargar shaders del framework
-            TgcShaders.Instance.loadCommonShaders(Instance.ExamplesMediaDir + "Shaders\\TgcViewer\\");
+            TgcShaders.Instance.loadCommonShaders(ExamplesMediaDir + "Shaders\\TgcViewer\\");
 
             //Cargar ejemplo default
             var defaultExample = exampleLoader.getExampleByName(mainForm.Config.defaultExampleName,
@@ -400,7 +395,7 @@ namespace TGC.Util
         ///     Path absoluto de la carpeta AlumnoMedia que contiene todo el contenido visual de los
         ///     ejemplos del alumno
         /// </summary>
-        public string AlumnoEjemplosMediaDir { get; private set; }
+        public string AlumnoMediaDir { get; private set; }
 
         /// <summary>
         ///     Habilita o desactiva el contador de FPS
