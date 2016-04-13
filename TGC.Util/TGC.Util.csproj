@@ -67,12 +67,6 @@
     <Compile Include="Input\TgcSpringThirdPersonCamera.cs" />
     <Compile Include="Input\TgcThirdPersonCamera.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Modifiers\TgcBooleanModifier.cs" />
     <Compile Include="Modifiers\TgcButtonModifier.cs" />
     <Compile Include="Modifiers\TgcColorModifier.cs" />
@@ -155,10 +149,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Modifiers\TgcMeshBrowser.resx">
       <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
       <SubType>Designer</SubType>

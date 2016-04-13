@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectSound;
+using System.Windows.Forms;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Util.Sound
@@ -11,11 +12,11 @@ namespace TGC.Util.Sound
     {
         private readonly Buffer primaryBuffer;
 
-        public TgcDirectSound()
+        public TgcDirectSound(Control control)
         {
             //Crear device de DirectSound
             DsDevice = new Device();
-            DsDevice.SetCooperativeLevel(GuiController.Instance.MainForm, CooperativeLevel.Normal);
+            DsDevice.SetCooperativeLevel(control, CooperativeLevel.Normal);
 
             //Crear Listener3D
             var primaryBufferDesc = new BufferDescription();
