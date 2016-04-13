@@ -57,7 +57,9 @@ namespace TGC.Util
         /// </summary>
         public void OnResetDevice(object sender, EventArgs e)
         {
-            GuiController.Instance.onResetDevice();
+            //TODO antes hacia esto que no entiendo porque GuiController.Instance.onResetDevice();
+            //ese metodo volo a mainform, pero solo detenia el ejemplo ejecutaba doresetdevice y lo volvia a cargar...
+            this.doResetDevice();
         }
 
         /// <summary>

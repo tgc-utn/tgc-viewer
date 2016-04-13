@@ -144,7 +144,7 @@ namespace TGC.Util.Input
                 //Terminar ejemplo
                 if (keyPressed(Key.Escape))
                 {
-                    GuiController.Instance.stopCurrentExample();
+                    //GuiController.Instance.stopCurrentExample();
                 }
             }
         }

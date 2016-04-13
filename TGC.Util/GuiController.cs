@@ -47,9 +47,8 @@ namespace TGC.Util
         /// <summary>
         ///     Crea todos los modulos necesarios de la aplicacion
         /// </summary>
-        public void initGraphics(MainForm mainForm, Control panel3d)
+        public void initGraphics(Form mainForm, Panel panel3d, RichTextBox logConsole, DataGridView dataGridUserVars, Panel modifiersPanel, TreeView treeViewExamples)
         {
-            MainForm = mainForm;
             Panel3d = panel3d;
             FullScreenPanel = new FullScreenPanel();
             panel3d.Focus();
@@ -60,17 +59,17 @@ namespace TGC.Util
             tgcD3dDevice.OnResetDevice(D3DDevice.Instance.Device, null);
 
             //Iniciar otras herramientas
-            Logger = new Logger(mainForm.LogConsole);
+            Logger = new Logger(logConsole);
             D3dInput = new TgcD3dInput(mainForm, panel3d);
             FpsCamera = new TgcFpsCamera();
             RotCamera = new TgcRotationalCamera();
             ThirdPersonCamera = new TgcThirdPersonCamera();
             AxisLines = new TgcAxisLines(D3DDevice.Instance.Device);
-            UserVars = new TgcUserVars(mainForm.getDataGridUserVars());
-            Modifiers = new TgcModifiers(mainForm.getModifiersPanel());
+            UserVars = new TgcUserVars(dataGridUserVars);
+            Modifiers = new TgcModifiers(modifiersPanel);
             ElapsedTime = -1;
             Mp3Player = new TgcMp3Player();
-            DirectSound = new TgcDirectSound();
+            DirectSound = new TgcDirectSound(mainForm);
             Fog = new TgcFog();
             CamaraManager.Instance.CurrentCamera = RotCamera;
             CustomRenderEnabled = false;
@@ -86,15 +85,10 @@ namespace TGC.Util
             exampleLoader = new ExampleLoader();
             ExamplesMediaDir = "Media\\";
             AlumnoMediaDir = "AlumnoMedia\\";
-            exampleLoader.loadExamplesInGui(mainForm.TreeViewExamples);
+            exampleLoader.loadExamplesInGui(treeViewExamples);
 
             //Cargar shaders del framework
             TgcShaders.Instance.loadCommonShaders(ExamplesMediaDir + "Shaders\\TgcViewer\\");
-
-            //Cargar ejemplo default
-            var defaultExample = exampleLoader.getExampleByName(mainForm.Config.defaultExampleName,
-                mainForm.Config.defaultExampleCategory);
-            executeExample(defaultExample);
         }
 
         /// <summary>
@@ -116,9 +110,6 @@ namespace TGC.Util
                 CamaraManager.Instance.CurrentCamera.updateCamera(ElapsedTime);
                 CamaraManager.Instance.CurrentCamera.updateViewMatrix(d3dDevice);
             }
-
-            //actualizar posicion de pantalla en barra de estado de UI
-            setStatusPosition();
 
             //actualizar el Frustum
             TgcFrustum.Instance.updateVolume(d3dDevice.Transform.View, d3dDevice.Transform.Projection);
@@ -173,85 +164,6 @@ namespace TGC.Util
         }
 
         /// <summary>
-        ///     Cuando se selecciona un ejemplo para ejecutar del TreeNode
-        /// </summary>
-        public void executeSelectedExample(TreeNode treeNode, bool fullScreenEnable)
-        {
-            var example = exampleLoader.getExampleByTreeNode(treeNode);
-            executeExample(example);
-        }
-
-        /// <summary>
-        ///     Arranca a ejecutar un ejemplo.
-        ///     Para el ejemplo anterior, si hay alguno.
-        /// </summary>
-        /// <param name="example"></param>
-        internal void executeExample(TgcExample example)
-        {
-            stopCurrentExample();
-            UserVars.clearVars();
-            Modifiers.clear();
-            resetDefaultConfig();
-            FpsCamera.resetValues();
-            RotCamera.resetValues();
-            ThirdPersonCamera.resetValues();
-
-            //Ejecutar init
-            try
-            {
-                example.init();
-
-                //Ver si abrimos una ventana para modo FullScreen
-                if (FullScreenEnable)
-                {
-                    MainForm.removePanel3dFromMainForm();
-                    FullScreenPanel.Controls.Add(Panel3d);
-                    FullScreenPanel.Show(MainForm);
-                }
-
-                currentExample = example;
-                Panel3d.Focus();
-                MainForm.setCurrentExampleStatus("Ejemplo actual: " + example.getName());
-                Logger.log("Ejecutando ejemplo: " + example.getName(), Color.Blue);
-            }
-            catch (Exception e)
-            {
-                Logger.logError("Error en init() de ejemplo: " + example.getName(), e);
-            }
-        }
-
-        /// <summary>
-        ///     Deja de ejecutar el ejemplo actual
-        /// </summary>
-        internal void stopCurrentExample()
-        {
-            if (currentExample != null)
-            {
-                currentExample.close();
-                tgcD3dDevice.resetWorldTransofrm();
-                Logger.log("Ejemplo " + currentExample.getName() + " terminado");
-                currentExample = null;
-                ElapsedTime = -1;
-
-                if (FullScreenEnable && FullScreenPanel.Visible)
-                {
-                    closeFullScreenPanel();
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Cuando se cierra la ventana de FullScreen
-        /// </summary>
-        internal void closeFullScreenPanel()
-        {
-            FullScreenPanel.Controls.Remove(Panel3d);
-            MainForm.addPanel3dToMainForm();
-            FullScreenPanel.Hide();
-            Panel3d.Focus();
-        }
-
-        /// <summary>
         ///     Finaliza la ejecución de la aplicacion
         /// </summary>
         internal void shutDown()
@@ -265,24 +177,10 @@ namespace TGC.Util
         }
 
         /// <summary>
-        ///     Termina y vuelve a empezar el ejemplo actual, si hay alguno ejecutando.
-        /// </summary>
-        internal void resetCurrentExample()
-        {
-            if (currentExample != null)
-            {
-                var exampleBackup = currentExample;
-                stopCurrentExample();
-                executeExample(exampleBackup);
-            }
-        }
-
-        /// <summary>
         ///     Vuelve la configuracion de render y otras cosas a la configuracion inicial
         /// </summary>
         public void resetDefaultConfig()
         {
-            MainForm.resetMenuOptions();
             AxisLines.Enable = true;
             FpsCamera.Enable = false;
             RotCamera.Enable = true;
@@ -293,24 +191,6 @@ namespace TGC.Util
             Mp3Player.closeFile();
             Fog.resetValues();
             CustomRenderEnabled = false;
-        }
-
-        /// <summary>
-        ///     Cuando el Direct3D Device se resetea.
-        ///     Se reinica el ejemplo actual, si hay alguno.
-        /// </summary>
-        internal void onResetDevice()
-        {
-            var exampleBackup = currentExample;
-            if (exampleBackup != null)
-            {
-                stopCurrentExample();
-            }
-            tgcD3dDevice.doResetDevice();
-            if (exampleBackup != null)
-            {
-                executeExample(exampleBackup);
-            }
         }
 
         /// <summary>
@@ -330,25 +210,6 @@ namespace TGC.Util
         internal void focus3dPanel()
         {
             Panel3d.Focus();
-        }
-
-        /// <summary>
-        ///     Actualiza en la pantalla principal la posicion actual de la camara
-        /// </summary>
-        private void setStatusPosition()
-        {
-            //Actualizar el textbox en todos los cuadros reduce los FPS en algunas PC
-            if (MainForm.MostrarPosicionDeCamaraEnable)
-            {
-                var pos = CamaraManager.Instance.CurrentCamera.getPosition();
-                var lookAt = CamaraManager.Instance.CurrentCamera.getLookAt();
-                var statusPosition = "Position: [" + TgcParserUtils.printFloat(pos.X) + ", " +
-                                     TgcParserUtils.printFloat(pos.Y) + ", " + TgcParserUtils.printFloat(pos.Z) + "] " +
-                                     "- LookAt: [" + TgcParserUtils.printFloat(lookAt.X) + ", " +
-                                     TgcParserUtils.printFloat(lookAt.Y) + ", " + TgcParserUtils.printFloat(lookAt.Z) +
-                                     "]";
-                MainForm.setStatusPosition(statusPosition);
-            }
         }
 
         #endregion Internal Methods
@@ -426,12 +287,12 @@ namespace TGC.Util
         ///     Tiempo en segundos transcurridos desde el último frame.
         ///     Solo puede ser invocado cuando se esta ejecutando un bloque de render() de un TgcExample
         /// </summary>
-        public float ElapsedTime { get; private set; }
+        public float ElapsedTime { get; set; }
 
         /// <summary>
         ///     Ventana principal de la aplicacion
         /// </summary>
-        public MainForm MainForm { get; private set; }
+        public Form MainForm { get; private set; }
 
         /// <summary>
         ///     Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el
@@ -447,13 +308,6 @@ namespace TGC.Util
         public void setCamera(Vector3 pos, Vector3 lookAt)
         {
             D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(pos, lookAt, new Vector3(0, 1, 0));
-
-            //Imprimir posicion
-            var statusPos = "Position: [" + TgcParserUtils.printFloat(pos.X) + ", " + TgcParserUtils.printFloat(pos.Y) +
-                            ", " + TgcParserUtils.printFloat(pos.Z) + "] " +
-                            "- LookAt: [" + TgcParserUtils.printFloat(lookAt.X) + ", " +
-                            TgcParserUtils.printFloat(lookAt.Y) + ", " + TgcParserUtils.printFloat(lookAt.Z) + "]";
-            MainForm.setStatusPosition(statusPos);
         }
 
         /// <summary>
@@ -470,15 +324,6 @@ namespace TGC.Util
         ///     Panel que se utiliza para ejecutar un ejemplo en modo FullScreen
         /// </summary>
         public FullScreenPanel FullScreenPanel { get; private set; }
-
-        /// <summary>
-        ///     Indica o configura el modo FullScreen para ejecutar ejemplos.
-        /// </summary>
-        public bool FullScreenEnable
-        {
-            get { return MainForm.FullScreenEnable; }
-            set { MainForm.FullScreenEnable = value; }
-        }
 
         /// <summary>
         ///     Herramienta para manipular el efecto de niebla
@@ -500,6 +345,24 @@ namespace TGC.Util
         ///     el BeginScene y EndScene, y tampoco se dibuja el contador de FPS y Axis.
         /// </summary>
         public bool CustomRenderEnabled { get; set; }
+
+        public ExampleLoader ExampleLoader
+        {
+            get { return exampleLoader; }
+            set { exampleLoader = value; }
+        }
+
+        public TgcExample CurrentExample
+        {
+            get { return currentExample; }
+            set { currentExample = value; }
+        }
+
+        public TgcD3dDevice TgcD3DDevice
+        {
+            get { return tgcD3dDevice; }
+            set { tgcD3dDevice = value; }
+        }
 
         #endregion Getters and Setters and Public Methods
     }

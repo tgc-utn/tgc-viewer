@@ -1,4 +1,4 @@
-﻿namespace TGC.Util
+﻿namespace TGC.Viewer
 {
     partial class MainForm
     {
@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wireframeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.camaraPrimeraPersonaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,7 +45,6 @@
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusCurrentExample = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusPosition = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainerConsole = new System.Windows.Forms.SplitContainer();
             this.splitContainerExamples = new System.Windows.Forms.SplitContainer();
             this.splitContainerDescripcionExample = new System.Windows.Forms.SplitContainer();
@@ -62,7 +62,6 @@
             this.ColumnValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxConsole = new System.Windows.Forms.GroupBox();
             this.logConsole = new System.Windows.Forms.RichTextBox();
-            this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerConsole)).BeginInit();
@@ -111,6 +110,13 @@
             this.archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
             this.archivoToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.archivoToolStripMenuItem.Text = "Archivo";
+            // 
+            // salirToolStripMenuItem
+            // 
+            this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.salirToolStripMenuItem.Text = "Salir";
+            this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
             // verToolStripMenuItem
             // 
@@ -206,8 +212,7 @@
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusCurrentExample,
-            this.toolStripStatusPosition});
+            this.toolStripStatusCurrentExample});
             this.statusStrip.Location = new System.Drawing.Point(0, 539);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(784, 22);
@@ -219,11 +224,6 @@
             this.toolStripStatusCurrentExample.BackColor = System.Drawing.Color.GreenYellow;
             this.toolStripStatusCurrentExample.Name = "toolStripStatusCurrentExample";
             this.toolStripStatusCurrentExample.Size = new System.Drawing.Size(0, 17);
-            // 
-            // toolStripStatusPosition
-            // 
-            this.toolStripStatusPosition.Name = "toolStripStatusPosition";
-            this.toolStripStatusPosition.Size = new System.Drawing.Size(0, 17);
             // 
             // splitContainerConsole
             // 
@@ -453,13 +453,6 @@
             this.logConsole.TabIndex = 0;
             this.logConsole.Text = "";
             // 
-            // salirToolStripMenuItem
-            // 
-            this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.salirToolStripMenuItem.Text = "Salir";
-            this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -528,7 +521,6 @@
         private System.Windows.Forms.SplitContainer splitContainerUserVars;
         private System.Windows.Forms.GroupBox groupBoxUserVars;
         private System.Windows.Forms.Panel panel3d;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusPosition;
         private System.Windows.Forms.ToolStripMenuItem verToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wireframeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem camaraPrimeraPersonaToolStripMenuItem;

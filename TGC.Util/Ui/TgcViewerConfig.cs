@@ -5,6 +5,8 @@
     /// </summary>
     public class TgcViewerConfig
     {
+        public static TgcViewerConfig Instance { get; } = new TgcViewerConfig();
+
         /// <summary>
         ///     Categoria del primer ejemplo a ejecutar
         /// </summary>
@@ -38,7 +40,7 @@
         /// <summary>
         ///     Crear con configuracion default
         /// </summary>
-        public TgcViewerConfig()
+        private TgcViewerConfig()
         {
             fullScreenMode = false;
             defaultExampleName = "Logo de TGC";
