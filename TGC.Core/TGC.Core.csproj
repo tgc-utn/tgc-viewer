@@ -88,6 +88,7 @@
     <Compile Include="Geometries\TgcRay.cs" />
     <Compile Include="Geometries\TgcSphere.cs" />
     <Compile Include="Geometries\TgcTriangle.cs" />
+    <Compile Include="HighResolutionTimer.cs" />
     <Compile Include="Input\CamaraManager.cs" />
     <Compile Include="Input\TgcCamera.cs" />
     <Compile Include="Interpolation\InterpoladorLineal.cs" />

@@ -50,8 +50,8 @@ namespace TGC.Examples.Lights
         public override void init()
         {
             //Cargar escenario, pero inicialmente solo hacemos el parser, para separar los objetos que son solo luces y no meshes
-            var scenePath = GuiController.Instance.ExamplesDir + "Lights\\Escenario\\EscenarioLuces-TgcScene.xml";
-            var mediaPath = GuiController.Instance.ExamplesDir + "Lights\\Escenario\\";
+            var scenePath = GuiController.Instance.ExamplesMediaDir + "Escenario\\EscenarioLuces-TgcScene.xml";
+            var mediaPath = GuiController.Instance.ExamplesMediaDir + "Escenario\\";
             var parser = new TgcSceneParser();
             var sceneData = parser.parseSceneFromString(File.ReadAllText(scenePath));
 

@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace TGC.Util
+namespace TGC.Core
 {
     /// <summary>
     ///     High resolution game timer.
@@ -8,7 +8,6 @@ namespace TGC.Util
     public class HighResolutionTimer
     {
         // Static Members
-
         private int _fps;
         private int _frameCount;
         private float _frameSecond;

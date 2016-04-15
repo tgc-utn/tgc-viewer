@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Windows.Forms;
+using TGC.Core;
 using TGC.Core.Direct3D;
 
 namespace TGC.Util
@@ -71,26 +72,6 @@ namespace TGC.Util
 
             //Reset Timer
             HighResolutionTimer.Instance.Reset();
-        }
-
-        public void doClear()
-        {
-            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, D3DDevice.Instance.ClearColor, 1.0f,
-                0);
-            HighResolutionTimer.Instance.Set();
-        }
-
-        public void resetWorldTransofrm()
-        {
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
-        }
-
-        /// <summary>
-        ///     Liberar Device al finalizar la aplicacion
-        /// </summary>
-        public void shutDown()
-        {
-            D3DDevice.Instance.Device.Dispose();
         }
     }
 }

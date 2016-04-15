@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core;
 using TGC.Core._2D;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
