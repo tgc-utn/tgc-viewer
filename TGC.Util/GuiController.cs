@@ -1,7 +1,9 @@
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using TGC.Core;
 using TGC.Core._2D;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
@@ -99,7 +101,8 @@ namespace TGC.Util
             var d3dDevice = D3DDevice.Instance.Device;
             ElapsedTime = HighResolutionTimer.Instance.FrameTime;
 
-            tgcD3dDevice.doClear();
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, D3DDevice.Instance.ClearColor, 1.0f, 0);
+            HighResolutionTimer.Instance.Set();
 
             //Acutalizar input
             D3dInput.update();
@@ -172,7 +175,8 @@ namespace TGC.Util
             {
                 currentExample.close();
             }
-            tgcD3dDevice.shutDown();
+            //Liberar Device al finalizar la aplicacion
+            D3DDevice.Instance.Device.Dispose();
             TexturesPool.Instance.clearAll();
         }
 

@@ -58,8 +58,8 @@ namespace TGC.Examples.Lights
                 TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\EnvironmentMap_Integrador2.fx");
 
             //Cargar escenario, pero inicialmente solo hacemos el parser, para separar los objetos que son solo luces y no meshes
-            var scenePath = GuiController.Instance.ExamplesDir + "Lights\\NormalMapRoom\\NormalMapRoom-TgcScene.xml";
-            var mediaPath = GuiController.Instance.ExamplesDir + "Lights\\NormalMapRoom\\";
+            var scenePath = GuiController.Instance.ExamplesMediaDir + "NormalMapRoom\\NormalMapRoom-TgcScene.xml";
+            var mediaPath = GuiController.Instance.ExamplesMediaDir + "NormalMapRoom\\";
             var parser = new TgcSceneParser();
             var sceneData = parser.parseSceneFromString(File.ReadAllText(scenePath));
 

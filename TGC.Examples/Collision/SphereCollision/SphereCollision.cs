@@ -62,8 +62,8 @@ namespace TGC.Examples.Collision.SphereCollision
             //Cargar escenario específico para este ejemplo
             var loader = new TgcSceneLoader();
             escenario =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesDir +
-                                         "\\Collision\\SphereCollision\\PatioDeJuegos\\PatioDeJuegos-TgcScene.xml");
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
+                                         "PatioDeJuegos\\PatioDeJuegos-TgcScene.xml");
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();

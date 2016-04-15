@@ -8,6 +8,7 @@ using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Util;
 using TGC.Util.Ui;
+using Microsoft.DirectX;
 
 namespace TGC.Viewer
 {
@@ -327,7 +328,7 @@ namespace TGC.Viewer
             if (GuiController.Instance.CurrentExample != null)
             {
                 GuiController.Instance.CurrentExample.close();
-                GuiController.Instance.TgcD3DDevice.resetWorldTransofrm();
+                D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
                 GuiController.Instance.Logger.log("Ejemplo " + GuiController.Instance.CurrentExample.getName() + " terminado");
                 GuiController.Instance.CurrentExample = null;
                 GuiController.Instance.ElapsedTime = -1;

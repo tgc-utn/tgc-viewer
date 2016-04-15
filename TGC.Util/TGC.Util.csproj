@@ -60,7 +60,6 @@
   <ItemGroup>
     <Compile Include="Example\ExampleLoader.cs" />
     <Compile Include="GuiController.cs" />
-    <Compile Include="HighResolutionTimer.cs" />
     <Compile Include="Input\TgcD3dInput.cs" />
     <Compile Include="Input\TgcFpsCamera.cs" />
     <Compile Include="Input\TgcRotationalCamera.cs" />
