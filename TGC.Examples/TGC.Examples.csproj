@@ -460,7 +460,6 @@
     <None Include="Shaders\WorkshopShaders\Shaders\PhongShading.fx" />
     <None Include="Shaders\WorkshopShaders\Shaders\ShadowMap.fx" />
     <None Include="Shaders\WorkshopShaders\Shaders\ToonShading.fx" />
-    <None Include="TerrainEditor\Shaders\EditableTerrain.fx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

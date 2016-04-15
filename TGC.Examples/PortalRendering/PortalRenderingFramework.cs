@@ -44,8 +44,8 @@ namespace TGC.Examples.PortalRendering
             //Cargar escenario con información especial exportada de PortalRendering
             var loader = new TgcSceneLoader();
             scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesDir +
-                                         "PortalRendering\\EscenarioPortal\\EscenarioPortal-TgcScene.xml");
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
+                                         "EscenarioPortal\\EscenarioPortal-TgcScene.xml");
 
             //Descactivar inicialmente a todos los modelos
             scene.setMeshesEnabled(false);

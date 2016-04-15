@@ -57,7 +57,7 @@ namespace TGC.Examples.Optimizacion.Octree
             //Cargar escenario de Isla
             var loader = new TgcSceneLoader();
             var scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesDir + "Optimizacion\\Isla\\Isla-TgcScene.xml");
+                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "Isla\\Isla-TgcScene.xml");
 
             //Separar el Terreno del resto de los objetos
             var list1 = new List<TgcMesh>();

@@ -41,7 +41,7 @@ namespace TGC.Examples.SceneLoader
             //TgcScene sceneOriginal = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml");
             //TgcScene sceneOriginal2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml");
 
-            var destFolder = GuiController.Instance.ExamplesDir + "\\" + "PruebaExporter";
+            var destFolder = GuiController.Instance.ExamplesMediaDir + "PruebaExporter";
             var unifiedScene = new TgcScene("PruebaExporter", destFolder);
             unifiedScene.Meshes.AddRange(sceneOriginal.Meshes);
             unifiedScene.Meshes.AddRange(sceneOriginal2.Meshes);
