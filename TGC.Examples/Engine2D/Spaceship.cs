@@ -49,7 +49,7 @@ namespace TGC.Examples.Engine2D
         //El estado de la nave.
         private StateEnum state;
 
-        public void Load(string exampleDir, Bitmap bitmap)
+        public void Load(Bitmap bitmap)
         {
             spaceshipBitmap = bitmap;
 

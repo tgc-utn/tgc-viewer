@@ -14,7 +14,7 @@ namespace TGC.Examples.Engine2D
         private float speed;
         private Sprite sprite;
 
-        public void Load(string exampleDir, Bitmap spriteBitmap)
+        public void Load(Bitmap spriteBitmap)
         {
             misilBitmap = spriteBitmap;
 
