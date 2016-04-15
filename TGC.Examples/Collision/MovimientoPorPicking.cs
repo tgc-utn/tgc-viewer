@@ -6,9 +6,9 @@ using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Util;
+using TGC.Util.Input;
+using TGC.Util.TgcGeometry;
 
 namespace TGC.Examples.Collision
 {

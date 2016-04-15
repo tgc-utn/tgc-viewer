@@ -2,7 +2,7 @@ using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Example;
 using TGC.Core.KeyFrameLoader;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.KeyFrameAnimation
 {

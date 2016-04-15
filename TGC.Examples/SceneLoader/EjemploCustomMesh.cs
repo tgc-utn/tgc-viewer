@@ -3,7 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.SceneLoader
 {

@@ -371,9 +371,9 @@
       <Project>{2b8c77a8-2427-4da0-a33e-93f877b2d7d9}</Project>
       <Name>TGC.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TGC.Viewer\TGC.Viewer.csproj">
-      <Project>{990e714f-7ff2-4a87-86b1-e5fc8d4c2f4c}</Project>
-      <Name>TGC.Viewer</Name>
+    <ProjectReference Include="..\TGC.Util\TGC.Util.csproj">
+      <Project>{1d77d6e0-0ef1-4af9-bb7c-aee6ceaf0f34}</Project>
+      <Name>TGC.Util</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -462,14 +462,12 @@
     <None Include="Shaders\WorkshopShaders\Shaders\ToonShading.fx" />
     <None Include="TerrainEditor\Shaders\EditableTerrain.fx" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\steamroller.gif" />
-    <None Include="Resources\shovel.gif" />
-    <Content Include="TerrainEditor\Panel\Icons\shovel.gif" />
-    <Content Include="TerrainEditor\Panel\Icons\steamroller.gif" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

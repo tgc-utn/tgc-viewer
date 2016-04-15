@@ -1,6 +1,6 @@
 using System.Drawing;
 using TGC.Core.Example;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.MeshCreator
 {

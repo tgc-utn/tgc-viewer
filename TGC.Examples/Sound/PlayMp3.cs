@@ -3,8 +3,8 @@ using System.Drawing;
 using System.IO;
 using TGC.Core._2D;
 using TGC.Core.Example;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Sound;
+using TGC.Util;
+using TGC.Util.Sound;
 
 namespace TGC.Examples.Sound
 {

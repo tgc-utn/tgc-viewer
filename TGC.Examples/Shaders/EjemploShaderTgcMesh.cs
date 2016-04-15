@@ -2,7 +2,7 @@ using System;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Shaders
 {

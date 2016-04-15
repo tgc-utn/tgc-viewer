@@ -7,10 +7,9 @@ using System.Windows.Forms;
 using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.TgcGeometry;
-using TGC.Viewer.Utils.Ui;
+using TGC.Util;
+using TGC.Util.Input;
+using TGC.Util.TgcGeometry;
 
 namespace TGC.Examples.SceneEditor
 {

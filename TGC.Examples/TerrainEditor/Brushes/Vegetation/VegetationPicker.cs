@@ -5,10 +5,10 @@ using TGC.Core._2D;
 using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.Sound;
-using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Util;
+using TGC.Util.Input;
+using TGC.Util.Sound;
+using TGC.Util.TgcGeometry;
 
 namespace TGC.Examples.TerrainEditor.Brushes.Vegetation
 {

@@ -3,8 +3,8 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
+using TGC.Util;
+using TGC.Util.Input;
 
 namespace TGC.Examples.Engine2D
 {

@@ -4,7 +4,7 @@ using TGC.Core._2D;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Utils;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Matematica
 {

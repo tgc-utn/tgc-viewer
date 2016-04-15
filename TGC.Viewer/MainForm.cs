@@ -1,10 +1,13 @@
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
+using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
-using TGC.Viewer.Utils.Ui;
+using TGC.Core.Example;
+using TGC.Util;
+using TGC.Util.Ui;
 
 namespace TGC.Viewer
 {
@@ -14,35 +17,21 @@ namespace TGC.Viewer
     public partial class MainForm : Form
     {
         /// <summary>
-        ///     Ventana de About
-        /// </summary>
-        private readonly AboutWindow aboutWindow;
-
-        /// <summary>
         ///     Constructor principal de la aplicacion
         /// </summary>
         /// <param name="args">Argumentos de consola</param>
         public MainForm(string[] args)
         {
-            //Cargar configuracion de arranque
-            Config = new TgcViewerConfig();
-            Config.parseCommandLineArgs(args);
+            TgcViewerConfig.Instance.parseCommandLineArgs(args);
 
             InitializeComponent();
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.Opaque, true);
-
-            aboutWindow = new AboutWindow();
         }
 
         /// <summary>
         ///     Obtener o parar el estado del RenderLoop.
         /// </summary>
         public static bool ApplicationRunning { get; set; }
-
-        /// <summary>
-        ///     Configuracion de arranque de la aplicacion
-        /// </summary>
-        public TgcViewerConfig Config { get; }
 
         /// <summary>
         ///     Consola de Log
@@ -60,7 +49,7 @@ namespace TGC.Viewer
         /// <summary>
         ///     Modo FullScreen
         /// </summary>
-        internal bool FullScreenEnable
+        public bool FullScreenEnable
         {
             get { return ejecutarEnFullScreenToolStripMenuItem.Checked; }
             set { ejecutarEnFullScreenToolStripMenuItem.Checked = value; }
@@ -69,7 +58,7 @@ namespace TGC.Viewer
         /// <summary>
         ///     Mostrar posicion de camara
         /// </summary>
-        internal bool MostrarPosicionDeCamaraEnable
+        public bool MostrarPosicionDeCamaraEnable
         {
             get { return mostrarPosiciónDeCámaraToolStripMenuItem.Checked; }
             set { mostrarPosiciónDeCámaraToolStripMenuItem.Checked = value; }
@@ -78,15 +67,16 @@ namespace TGC.Viewer
         private void MainForm_Load(object sender, EventArgs e)
         {
             //Configuracion de ventana principal
-            Text = Config.title;
-            if (!Config.showTitleBar)
+            Text = TgcViewerConfig.Instance.title;
+
+            if (!TgcViewerConfig.Instance.showTitleBar)
             {
                 ControlBox = false;
                 Text = null;
             }
 
             //Modo fullscreen
-            if (Config.fullScreenMode)
+            if (TgcViewerConfig.Instance.fullScreenMode)
             {
                 //Quitar todos los paneles que no queremos que se vean
                 Controls.Clear();
@@ -94,7 +84,7 @@ namespace TGC.Viewer
                 splitContainerModifiers.Panel1.Controls.Remove(groupBoxModifiers);
 
                 //Acomodar paneles para fullscreen
-                if (Config.showModifiersPanel)
+                if (TgcViewerConfig.Instance.showModifiersPanel)
                 {
                     var sp = new SplitContainer();
                     sp.Orientation = Orientation.Vertical;
@@ -116,8 +106,13 @@ namespace TGC.Viewer
             panel3d.Focus();
 
             ApplicationRunning = true;
-            var guiController = GuiController.Instance;
-            guiController.initGraphics(this, panel3d);
+
+            GuiController.Instance.initGraphics(this, this.panel3d, this.logConsole, this.dataGridUserVars, this.flowLayoutPanelModifiers, this.treeViewExamples);
+            //Cargar ejemplo default
+            var defaultExample = GuiController.Instance.ExampleLoader.getExampleByName(TgcViewerConfig.Instance.defaultExampleName,
+               TgcViewerConfig.Instance.defaultExampleCategory);
+            this.executeExample(defaultExample);
+
             resetMenuOptions();
 
             while (ApplicationRunning)
@@ -125,12 +120,12 @@ namespace TGC.Viewer
                 //Solo renderizamos si la aplicacion tiene foco, para no consumir recursos innecesarios
                 if (applicationActive())
                 {
-                    guiController.render();
+                    GuiController.Instance.render();
                 }
                 //Contemplar también la ventana del modo FullScreen
-                else if (FullScreenEnable && guiController.FullScreenPanel.ContainsFocus)
+                else if (FullScreenEnable && GuiController.Instance.FullScreenPanel.ContainsFocus)
                 {
-                    guiController.render();
+                    GuiController.Instance.render();
                 }
                 else
                 {
@@ -168,14 +163,6 @@ namespace TGC.Viewer
         }
 
         /// <summary>
-        ///     Texto de ToolStripStatusPosition
-        /// </summary>
-        public void setStatusPosition(string text)
-        {
-            toolStripStatusPosition.Text = text;
-        }
-
-        /// <summary>
         ///     Texto de ToolStripStatusCurrentExample
         /// </summary>
         /// <param name="text"></param>
@@ -191,15 +178,6 @@ namespace TGC.Viewer
         public DataGridView getDataGridUserVars()
         {
             return dataGridUserVars;
-        }
-
-        /// <summary>
-        ///     Panel de Modifiers
-        /// </summary>
-        /// <returns></returns>
-        internal Panel getModifiersPanel()
-        {
-            return flowLayoutPanelModifiers;
         }
 
         private void wireframeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -235,13 +213,12 @@ namespace TGC.Viewer
 
         private void treeViewExamples_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (TreeViewExamples.SelectedNode != null)
+            var selectedNode = TreeViewExamples.SelectedNode;
+
+            if (selectedNode != null && selectedNode.Nodes.Count == 0)
             {
-                var selectedNode = TreeViewExamples.SelectedNode;
-                if (selectedNode.Nodes.Count == 0)
-                {
-                    GuiController.Instance.executeSelectedExample(selectedNode, FullScreenEnable);
-                }
+                var example = GuiController.Instance.ExampleLoader.getExampleByTreeNode(selectedNode);
+                this.executeExample(example);
             }
         }
 
@@ -253,7 +230,7 @@ namespace TGC.Viewer
         /// <summary>
         ///     Setea los valores default de las opciones del menu
         /// </summary>
-        internal void resetMenuOptions()
+        public void resetMenuOptions()
         {
             camaraPrimeraPersonaToolStripMenuItem.Checked = false;
             wireframeToolStripMenuItem.Checked = false;
@@ -276,15 +253,12 @@ namespace TGC.Viewer
         /// </summary>
         private void acercaDeTgcViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            aboutWindow.ShowDialog(this);
+            new AboutWindow().ShowDialog(this);
         }
 
         private void mostrarPosiciónDeCámaraToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!mostrarPosiciónDeCámaraToolStripMenuItem.Checked)
-            {
-                toolStripStatusPosition.Text = "";
-            }
+            //TODO ya no se muestra mas la posicion de la camara... si se quiere hay que implementarlo mejor que antes
         }
 
         /// <summary>
@@ -304,6 +278,97 @@ namespace TGC.Viewer
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        /// <summary>
+        ///     Arranca a ejecutar un ejemplo.
+        ///     Para el ejemplo anterior, si hay alguno.
+        /// </summary>
+        /// <param name="example"></param>
+        public void executeExample(TgcExample example)
+        {
+            this.stopCurrentExample();
+            GuiController.Instance.UserVars.clearVars();
+            GuiController.Instance.Modifiers.clear();
+            GuiController.Instance.resetDefaultConfig();
+            GuiController.Instance.FpsCamera.resetValues();
+            GuiController.Instance.RotCamera.resetValues();
+            GuiController.Instance.ThirdPersonCamera.resetValues();
+
+            //Ejecutar init
+            try
+            {
+                example.init();
+
+                //Ver si abrimos una ventana para modo FullScreen
+                if (TgcViewerConfig.Instance.fullScreenMode)
+                {
+                    this.removePanel3dFromMainForm();
+                    GuiController.Instance.FullScreenPanel.Controls.Add(GuiController.Instance.Panel3d);
+                    GuiController.Instance.FullScreenPanel.Show(this);
+                }
+
+                GuiController.Instance.CurrentExample = example;
+                GuiController.Instance.Panel3d.Focus();
+                this.setCurrentExampleStatus("Ejemplo actual: " + example.getName());
+                GuiController.Instance.Logger.log("Ejecutando ejemplo: " + example.getName(), Color.Blue);
+            }
+            catch (Exception e)
+            {
+                GuiController.Instance.Logger.logError("Error en init() de ejemplo: " + example.getName(), e);
+            }
+        }
+
+        /// <summary>
+        ///     Deja de ejecutar el ejemplo actual
+        /// </summary>
+        public void stopCurrentExample()
+        {
+            if (GuiController.Instance.CurrentExample != null)
+            {
+                GuiController.Instance.CurrentExample.close();
+                GuiController.Instance.TgcD3DDevice.resetWorldTransofrm();
+                GuiController.Instance.Logger.log("Ejemplo " + GuiController.Instance.CurrentExample.getName() + " terminado");
+                GuiController.Instance.CurrentExample = null;
+                GuiController.Instance.ElapsedTime = -1;
+
+                if (TgcViewerConfig.Instance.fullScreenMode && GuiController.Instance.FullScreenPanel.Visible)
+                {
+                    closeFullScreenPanel();
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Cuando se cierra la ventana de FullScreen
+        /// </summary>
+        public void closeFullScreenPanel()
+        {
+            GuiController.Instance.FullScreenPanel.Controls.Remove(GuiController.Instance.Panel3d);
+            this.addPanel3dToMainForm();
+            GuiController.Instance.FullScreenPanel.Hide();
+            GuiController.Instance.Panel3d.Focus();
+        }
+
+        /// <summary>
+        ///     Cuando el Direct3D Device se resetea.
+        ///     Se reinica el ejemplo actual, si hay alguno.
+        /// </summary>
+        public void onResetDevice()
+        {
+            var exampleBackup = GuiController.Instance.CurrentExample;
+
+            if (exampleBackup != null)
+            {
+                stopCurrentExample();
+            }
+
+            GuiController.Instance.TgcD3DDevice.doResetDevice();
+
+            if (exampleBackup != null)
+            {
+                executeExample(exampleBackup);
+            }
         }
     }
 }

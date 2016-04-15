@@ -2,7 +2,7 @@ using System;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Textures;
-using TGC.Viewer.Utils.Modifiers;
+using TGC.Util.Modifiers;
 
 namespace TGC.Examples.RoomsEditor
 {

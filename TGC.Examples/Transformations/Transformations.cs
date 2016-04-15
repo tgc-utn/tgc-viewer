@@ -4,7 +4,7 @@ using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Transformations
 {

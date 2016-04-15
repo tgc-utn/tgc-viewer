@@ -14,10 +14,10 @@ using TGC.Core.Textures;
 using TGC.Core.Utils;
 using TGC.Examples.MeshCreator.Gizmos;
 using TGC.Examples.MeshCreator.Primitives;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.Modifiers;
-using TGC.Viewer.Utils.TgcGeometry;
+using TGC.Util;
+using TGC.Util.Input;
+using TGC.Util.Modifiers;
+using TGC.Util.TgcGeometry;
 
 namespace TGC.Examples.MeshCreator
 {
