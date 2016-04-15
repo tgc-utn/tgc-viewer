@@ -3,8 +3,10 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
+using TGC.Core.Geometries;
+using TGC.Core.Textures;
+using TGC.Util;
+using TGC.Util.Input;
 
 namespace TGC.Group.MiGrupo
 {
@@ -13,6 +15,9 @@ namespace TGC.Group.MiGrupo
     /// </summary>
     public class EjemploAlumno : TgcExample
     {
+        //Caja que se muestra en el ejemplo
+        private TgcBox box;
+
         /// <summary>
         ///     Categoría a la que pertenece el ejemplo.
         ///     Influye en donde se va a haber en el árbol de la derecha de la pantalla.
@@ -51,7 +56,7 @@ namespace TGC.Group.MiGrupo
             var d3dDevice = D3DDevice.Instance.Device;
 
             //Carpeta de archivos Media del alumno
-            var alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
+            var alumnoMediaFolder = GuiController.Instance.AlumnoMediaDir;
 
             ///////////////USER VARS//////////////////
 
@@ -113,6 +118,14 @@ namespace TGC.Group.MiGrupo
             {
                 var element = lista[i];
             }
+
+            //Cargamos una textura
+            var texture = TgcTexture.createTexture(GuiController.Instance.AlumnoMediaDir + "cajaMadera4.jpg");
+
+            //Creamos una caja 3D ubicada en (0, -3, 0), dimensiones (5, 10, 5) y la textura como color.
+            var center = new Vector3(0, -3, 0);
+            var size = new Vector3(5, 10, 5);
+            box = TgcBox.fromSize(center, size, texture);
         }
 
         /// <summary>
@@ -148,6 +161,9 @@ namespace TGC.Group.MiGrupo
             {
                 //Boton izq apretado
             }
+
+            //Render de la caja
+            box.render();
         }
 
         /// <summary>
@@ -156,6 +172,8 @@ namespace TGC.Group.MiGrupo
         /// </summary>
         public override void close()
         {
+            //Dispose de la caja
+            box.dispose();
         }
     }
 }

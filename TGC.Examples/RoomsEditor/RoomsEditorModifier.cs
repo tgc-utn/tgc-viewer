@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using TGC.Viewer.Utils.Modifiers;
+using TGC.Util.Modifiers;
 
 namespace TGC.Examples.RoomsEditor
 {

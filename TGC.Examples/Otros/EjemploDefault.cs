@@ -8,7 +8,7 @@ using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Utils;
-using TGC.Viewer;
+using TGC.Util;
 using Font = System.Drawing.Font;
 
 namespace TGC.Examples.Otros

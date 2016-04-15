@@ -4,9 +4,9 @@ using System.Drawing;
 using TGC.Core._2D;
 using TGC.Core.Geometries;
 using TGC.Core.Utils;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
-using TGC.Viewer.Utils.Sound;
+using TGC.Util;
+using TGC.Util.Input;
+using TGC.Util.Sound;
 
 namespace TGC.Examples.TerrainEditor.Brushes.Terrain
 {

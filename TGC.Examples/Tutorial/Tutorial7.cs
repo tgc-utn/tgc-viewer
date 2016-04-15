@@ -2,7 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Tutorial
 {

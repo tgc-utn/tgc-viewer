@@ -7,8 +7,8 @@ using TGC.Core.Example;
 using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Sound;
+using TGC.Util;
+using TGC.Util.Sound;
 
 namespace TGC.Examples.Sound
 {

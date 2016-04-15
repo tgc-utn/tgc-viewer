@@ -10,7 +10,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Terrain;
 using TGC.Core.Utils;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Collision
 {

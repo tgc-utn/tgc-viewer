@@ -8,7 +8,7 @@ using TGC.Core.Geometries;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Collision
 {

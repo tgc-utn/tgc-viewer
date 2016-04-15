@@ -2,7 +2,7 @@ using System.Drawing;
 using TGC.Core._2D;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.Otros
 {

@@ -2,7 +2,7 @@ using Microsoft.DirectX;
 using System.Collections.Generic;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Viewer;
+using TGC.Util;
 
 namespace TGC.Examples.AlphaBlending
 {

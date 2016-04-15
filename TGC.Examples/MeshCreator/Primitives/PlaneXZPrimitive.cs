@@ -3,8 +3,8 @@ using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
+using TGC.Util;
+using TGC.Util.Input;
 
 namespace TGC.Examples.MeshCreator.Primitives
 {

@@ -5,8 +5,8 @@ using System.Drawing;
 using TGC.Core.Geometries;
 using TGC.Core.Utils;
 using TGC.Examples.MeshCreator.Primitives;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Input;
+using TGC.Util;
+using TGC.Util.Input;
 
 namespace TGC.Examples.MeshCreator
 {

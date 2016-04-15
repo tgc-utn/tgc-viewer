@@ -9,8 +9,8 @@ using TGC.Examples.TerrainEditor.Brushes;
 using TGC.Examples.TerrainEditor.Brushes.Terrain;
 using TGC.Examples.TerrainEditor.Brushes.Vegetation;
 using TGC.Examples.TerrainEditor.Instances;
-using TGC.Viewer;
-using TGC.Viewer.Utils.Modifiers;
+using TGC.Util;
+using TGC.Util.Modifiers;
 
 namespace TGC.Examples.TerrainEditor.Panel
 {
