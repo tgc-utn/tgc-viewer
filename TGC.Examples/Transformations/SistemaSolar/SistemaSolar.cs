@@ -66,21 +66,21 @@ namespace TGC.Examples.Transformations.SistemaSolar
             sun.changeDiffuseMaps(new[]
             {
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesDir + "Transformations\\SistemaSolar\\SunTexture.jpg")
+                    GuiController.Instance.ExamplesMediaDir + "SistemaSolar\\SunTexture.jpg")
             });
 
             earth = loader.loadSceneFromFile(sphere).Meshes[0];
             earth.changeDiffuseMaps(new[]
             {
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesDir + "Transformations\\SistemaSolar\\EarthTexture.jpg")
+                    GuiController.Instance.ExamplesMediaDir + "SistemaSolar\\EarthTexture.jpg")
             });
 
             moon = loader.loadSceneFromFile(sphere).Meshes[0];
             moon.changeDiffuseMaps(new[]
             {
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesDir + "Transformations\\SistemaSolar\\MoonTexture.jpg")
+                    GuiController.Instance.ExamplesMediaDir + "SistemaSolar\\MoonTexture.jpg")
             });
 
             //Deshabilitamos el manejo automático de Transformaciones de TgcMesh, para poder manipularlas en forma customizada

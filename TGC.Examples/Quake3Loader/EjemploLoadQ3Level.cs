@@ -98,7 +98,7 @@ namespace TGC.Examples.Quake3Loader
         public override void init()
         {
             //Path de este ejemplo
-            exampleDir = GuiController.Instance.ExamplesDir + "Quake3Loader\\Levels\\";
+            exampleDir = GuiController.Instance.ExamplesMediaDir + "Quake3Levels\\";
 
             //Cargar nivel inicial
             currentLevelFile = exampleDir + "q3dm1\\maps\\q3dm1.bsp";
