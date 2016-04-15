@@ -16,7 +16,6 @@ namespace TGC.Examples.Engine2D
         private Bitmap asteroidBitmap, spaceshipBitmap, misilBitmap;
         private List<Asteroide> asteroids;
 
-        private string exampleDir;
         private List<Misil> misiles;
         private Spaceship spaceShip;
 
@@ -24,8 +23,6 @@ namespace TGC.Examples.Engine2D
 
         internal void Init(string exampleDir)
         {
-            this.exampleDir = exampleDir;
-
             //Creo el sprite drawer
             spriteDrawer = new Drawer();
 
@@ -38,16 +35,16 @@ namespace TGC.Examples.Engine2D
             ScreenWidth = D3DDevice.Instance.Device.Viewport.Width;
             ScreenHeight = D3DDevice.Instance.Device.Viewport.Height;
             //Cargo el bitmap del spritesheet de la nave.
-            asteroidBitmap = new Bitmap(exampleDir + "Engine2D\\Media\\" + "Asteroides.png", D3DDevice.Instance.Device);
+            asteroidBitmap = new Bitmap(exampleDir + "Asteroides.png", D3DDevice.Instance.Device);
 
-            spaceshipBitmap = new Bitmap(exampleDir + "Engine2D\\Media\\" + "nave.png", D3DDevice.Instance.Device);
+            spaceshipBitmap = new Bitmap(exampleDir + "nave.png", D3DDevice.Instance.Device);
 
             //Cargo el bitmap del misil que dispara la nave.
-            misilBitmap = new Bitmap(exampleDir + "Engine2D\\Media\\" + "particle.png", D3DDevice.Instance.Device);
+            misilBitmap = new Bitmap(exampleDir + "particle.png", D3DDevice.Instance.Device);
 
             //Creo la nave espacial
             spaceShip = new Spaceship();
-            spaceShip.Load(exampleDir, spaceshipBitmap);
+            spaceShip.Load(spaceshipBitmap);
 
             //Creo la cantidad de asteroides simultaneos.
             for (var i = 0; i < AsteroidCount; i++)
@@ -66,7 +63,7 @@ namespace TGC.Examples.Engine2D
             //Disparo un misil desde la posicion indicada
             newMisil.Position = position;
             newMisil.Angle = angle;
-            newMisil.Load(exampleDir, misilBitmap);
+            newMisil.Load(misilBitmap);
             misiles.Add(newMisil);
         }
 

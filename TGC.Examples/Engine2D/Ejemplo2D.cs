@@ -34,7 +34,7 @@ namespace TGC.Examples.Engine2D
         {
             gameManager = GameManager.Instance;
 
-            gameManager.Init(ExampleDir);
+            gameManager.Init(ExampleDir + "Media\\Engine2D\\");
         }
 
         public override void close()
