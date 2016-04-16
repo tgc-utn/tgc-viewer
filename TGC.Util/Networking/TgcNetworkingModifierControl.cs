@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using TGC.Core.Utils;
 
 namespace TGC.Util.Networking
 {

@@ -12,12 +12,9 @@ using TGC.Core.Geometries;
 using TGC.Core.Input;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
-using TGC.Util.Example;
 using TGC.Util.Input;
 using TGC.Util.Modifiers;
 using TGC.Util.Sound;
-using TGC.Util.Ui;
 
 namespace TGC.Util
 {
@@ -27,8 +24,6 @@ namespace TGC.Util
     public class GuiController
     {
         private TgcExample currentExample;
-        private ExampleLoader exampleLoader;
-        private TgcD3dDevice tgcD3dDevice;
 
         #region Singleton
 
@@ -49,16 +44,13 @@ namespace TGC.Util
         /// <summary>
         ///     Crea todos los modulos necesarios de la aplicacion
         /// </summary>
-        public void initGraphics(Form mainForm, Panel panel3d, RichTextBox logConsole, DataGridView dataGridUserVars, Panel modifiersPanel, TreeView treeViewExamples)
+        public void initGraphics(Form mainForm, Panel panel3d, RichTextBox logConsole, DataGridView dataGridUserVars, Panel modifiersPanel)
         {
             Panel3d = panel3d;
-            FullScreenPanel = new FullScreenPanel();
-            panel3d.Focus();
 
             //Iniciar graficos
-            //FIXME hay que quitar la dependencia de TgcD3dDevice, necesita un control que es un winform para el device... por ahora se crea aca.
-            tgcD3dDevice = new TgcD3dDevice(panel3d);
-            tgcD3dDevice.OnResetDevice(D3DDevice.Instance.Device, null);
+            this.InitializeD3DDevice(panel3d);
+            this.OnResetDevice(D3DDevice.Instance.Device, null);
 
             //Iniciar otras herramientas
             Logger = new Logger(logConsole);
@@ -84,13 +76,76 @@ namespace TGC.Util
             AxisLines.Enable = true;
 
             //Cargar algoritmos
-            exampleLoader = new ExampleLoader();
             ExamplesMediaDir = "Media\\";
             AlumnoMediaDir = "AlumnoMedia\\";
-            exampleLoader.loadExamplesInGui(treeViewExamples);
 
             //Cargar shaders del framework
             TgcShaders.Instance.loadCommonShaders(ExamplesMediaDir + "Shaders\\TgcViewer\\");
+        }
+
+        public void InitializeD3DDevice(Panel panel)
+        {
+            D3DDevice.Instance.AspectRatio = (float)panel.Width / panel.Height;
+
+            var caps = Manager.GetDeviceCaps(Manager.Adapters.Default.Adapter, DeviceType.Hardware);
+            Console.WriteLine("Max primitive count:" + caps.MaxPrimitiveCount);
+
+            CreateFlags flags;
+            if (caps.DeviceCaps.SupportsHardwareTransformAndLight)
+                flags = CreateFlags.HardwareVertexProcessing;
+            else
+                flags = CreateFlags.SoftwareVertexProcessing;
+
+            var d3dpp = new PresentParameters();
+
+            d3dpp.BackBufferFormat = Format.Unknown;
+            d3dpp.SwapEffect = SwapEffect.Discard;
+            d3dpp.Windowed = true;
+            d3dpp.EnableAutoDepthStencil = true;
+            d3dpp.AutoDepthStencilFormat = DepthFormat.D24S8;
+            d3dpp.PresentationInterval = PresentInterval.Immediate;
+
+            //Antialiasing
+            if (Manager.CheckDeviceMultiSampleType(Manager.Adapters.Default.Adapter, DeviceType.Hardware,
+                Manager.Adapters.Default.CurrentDisplayMode.Format, true, MultiSampleType.NonMaskable))
+            {
+                d3dpp.MultiSample = MultiSampleType.NonMaskable;
+                d3dpp.MultiSampleQuality = 0;
+            }
+            else
+            {
+                d3dpp.MultiSample = MultiSampleType.None;
+            }
+
+            //Crear Graphics Device
+            Device.IsUsingEventHandlers = false;
+            var d3DDevice = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
+            d3DDevice.DeviceReset += OnResetDevice;
+
+            D3DDevice.Instance.Device = d3DDevice;
+        }
+
+        /// <summary>
+        ///     This event-handler is a good place to create and initialize any
+        ///     Direct3D related objects, which may become invalid during a
+        ///     device reset.
+        /// </summary>
+        public void OnResetDevice(object sender, EventArgs e)
+        {
+            //TODO antes hacia esto que no entiendo porque GuiController.Instance.onResetDevice();
+            //ese metodo se movio a mainform, pero solo detenia el ejemplo ejecutaba doresetdevice y lo volvia a cargar...
+            this.doResetDevice();
+        }
+
+        /// <summary>
+        ///     Hace las operaciones de Reset del device
+        /// </summary>
+        public void doResetDevice()
+        {
+            D3DDevice.Instance.setDefaultValues();
+
+            //Reset Timer
+            HighResolutionTimer.Instance.Reset();
         }
 
         /// <summary>
@@ -167,7 +222,7 @@ namespace TGC.Util
         }
 
         /// <summary>
-        ///     Finaliza la ejecución de la aplicacion
+        ///     Finaliza la ejecucion de la aplicacion
         /// </summary>
         internal void shutDown()
         {
@@ -236,7 +291,7 @@ namespace TGC.Util
         public TgcRotationalCamera RotCamera { get; private set; }
 
         /// <summary>
-        ///     Utilidad de camara en tercera persona que sigue a un objeto que se mueve desde atrás
+        ///     Utilidad de camara en tercera persona que sigue a un objeto que se mueve desde atras
         /// </summary>
         public TgcThirdPersonCamera ThirdPersonCamera { get; private set; }
 
@@ -268,12 +323,12 @@ namespace TGC.Util
         public bool FpsCounterEnable { get; set; }
 
         /// <summary>
-        ///     Utilidad para administrar las variables de usuario visibles en el panel derecho de la aplicación.
+        ///     Utilidad para administrar las variables de usuario visibles en el panel derecho de la aplicacion.
         /// </summary>
         public TgcUserVars UserVars { get; private set; }
 
         /// <summary>
-        ///     Utilidad para crear modificadores de variables de usuario, que son mostradas en el panel derecho de la aplicación.
+        ///     Utilidad para crear modificadores de variables de usuario, que son mostradas en el panel derecho de la aplicacion.
         /// </summary>
         public TgcModifiers Modifiers { get; private set; }
 
@@ -288,7 +343,7 @@ namespace TGC.Util
         public TgcD3dInput D3dInput { get; private set; }
 
         /// <summary>
-        ///     Tiempo en segundos transcurridos desde el último frame.
+        ///     Tiempo en segundos transcurridos desde el ultimo frame.
         ///     Solo puede ser invocado cuando se esta ejecutando un bloque de render() de un TgcExample
         /// </summary>
         public float ElapsedTime { get; set; }
@@ -299,16 +354,16 @@ namespace TGC.Util
         public Form MainForm { get; private set; }
 
         /// <summary>
-        ///     Control gráfico de .NET utilizado para el panel3D sobre el cual renderiza el
+        ///     Control grafico de .NET utilizado para el panel3D sobre el cual renderiza el
         ///     Device de Direct3D
         /// </summary>
         public Control Panel3d { get; private set; }
 
         /// <summary>
-        ///     Configura la posicion de la cámara
+        ///     Configura la posicion de la camara
         /// </summary>
-        /// <param name="pos">Posición de la cámara</param>
-        /// <param name="lookAt">Punto hacia el cuál se quiere ver</param>
+        /// <param name="pos">Posicion de la camara</param>
+        /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
         public void setCamera(Vector3 pos, Vector3 lookAt)
         {
             D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(pos, lookAt, new Vector3(0, 1, 0));
@@ -323,11 +378,6 @@ namespace TGC.Util
         ///     Herramienta para manipular DirectSound
         /// </summary>
         public TgcDirectSound DirectSound { get; private set; }
-
-        /// <summary>
-        ///     Panel que se utiliza para ejecutar un ejemplo en modo FullScreen
-        /// </summary>
-        public FullScreenPanel FullScreenPanel { get; private set; }
 
         /// <summary>
         ///     Herramienta para manipular el efecto de niebla
@@ -350,22 +400,10 @@ namespace TGC.Util
         /// </summary>
         public bool CustomRenderEnabled { get; set; }
 
-        public ExampleLoader ExampleLoader
-        {
-            get { return exampleLoader; }
-            set { exampleLoader = value; }
-        }
-
         public TgcExample CurrentExample
         {
             get { return currentExample; }
             set { currentExample = value; }
-        }
-
-        public TgcD3dDevice TgcD3DDevice
-        {
-            get { return tgcD3dDevice; }
-            set { tgcD3dDevice = value; }
         }
 
         #endregion Getters and Setters and Public Methods

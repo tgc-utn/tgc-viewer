@@ -4,8 +4,9 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using TGC.Core.Example;
+using TGC.Util;
 
-namespace TGC.Util.Example
+namespace TGC.Viewer.Model
 {
     /// <summary>
     ///     Utilidad para cargar dinamicamente las DLL de los ejemplos
@@ -25,7 +26,7 @@ namespace TGC.Util.Example
         public List<TgcExample> CurrentExamples { get; private set; }
 
         /// <summary>
-        ///     Carga los ejemplos dinámicamente en el TreeView de Ejemplo
+        ///     Carga los ejemplos dinamicamente en el TreeView de Ejemplo
         /// </summary>
         public void loadExamplesInGui(TreeView treeView)
         {

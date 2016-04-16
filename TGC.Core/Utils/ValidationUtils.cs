@@ -1,6 +1,6 @@
 using System;
 
-namespace TGC.Util
+namespace TGC.Core.Utils
 {
     /// <summary>
     ///     Herramientas de validacion valores

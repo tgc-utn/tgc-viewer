@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -58,7 +58,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Example\ExampleLoader.cs" />
     <Compile Include="GuiController.cs" />
     <Compile Include="Input\TgcD3dInput.cs" />
     <Compile Include="Input\TgcFpsCamera.cs" />
@@ -122,28 +121,13 @@
     <Compile Include="Sound\TgcMp3Player.cs" />
     <Compile Include="Sound\TgcStaticSound.cs" />
     <Compile Include="TgcAxisLines.cs" />
-    <Compile Include="TgcD3dDevice.cs" />
     <Compile Include="TgcGeometry\TgcPickingRay.cs" />
     <Compile Include="TgcGeometry\TgcTriangleArray.cs" />
     <Compile Include="TgcUserVars.cs" />
-    <Compile Include="Ui\AboutWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Ui\AboutWindow.Designer.cs">
-      <DependentUpon>AboutWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Ui\FullScreenPanel.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Ui\FullScreenPanel.Designer.cs">
-      <DependentUpon>FullScreenPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Ui\TgcViewerConfig.cs" />
-    <Compile Include="ValidationUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">
-      <Project>{2b8c77a8-2427-4da0-a33e-93f877b2d7d9}</Project>
+      <Project>{2B8C77A8-2427-4DA0-A33E-93F877B2D7D9}</Project>
       <Name>TGC.Core</Name>
     </ProjectReference>
   </ItemGroup>
@@ -166,14 +150,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Networking\TgcNetworkingModifierServersDialog.resx">
       <DependentUpon>TgcNetworkingModifierServersDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Ui\AboutWindow.resx">
-      <DependentUpon>AboutWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Ui\FullScreenPanel.resx">
-      <DependentUpon>FullScreenPanel.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

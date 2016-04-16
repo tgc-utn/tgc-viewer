@@ -15,12 +15,12 @@ namespace TGC.Util.TgcGeometry
         }
 
         /// <summary>
-        ///     Ray que representa la acción de Picking
+        ///     Ray que representa la accion de Picking
         /// </summary>
         public TgcRay Ray { get; }
 
         /// <summary>
-        ///     Actualiza el Ray de colisión en base a la posición del mouse en la pantalla
+        ///     Actualiza el Ray de colision en base a la posicion del mouse en la pantalla
         /// </summary>
         public void updateRay()
         {

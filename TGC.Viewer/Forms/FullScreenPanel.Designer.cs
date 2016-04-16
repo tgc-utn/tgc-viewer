@@ -1,4 +1,4 @@
-﻿namespace TGC.Util.Ui
+﻿namespace TGC.Viewer.Forms
 {
     partial class FullScreenPanel
     {
@@ -43,7 +43,8 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "TgcViewer - Full Screen mode (press ESCAPE to exit)";
+            this.Text = "TGC.Viewer - Full Screen mode";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FullScreenPanel_FormClosed);
             this.ResumeLayout(false);
 
         }

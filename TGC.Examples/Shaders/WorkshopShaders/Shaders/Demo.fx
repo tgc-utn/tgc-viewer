@@ -188,7 +188,7 @@ void VSCubeMap(float4 Pos : POSITION,
 	out float3 EnvTex3 : TEXCOORD5,
 	out float3 wPos : TEXCOORD6,
 	out float  Fresnel : COLOR
-	)
+)
 {
 	wPos = mul(Pos, matWorld);
 	float3 vEyeR = normalize(wPos - fvEyePosition);
@@ -223,7 +223,7 @@ float4 PSCubeMap(float3 EnvTex: TEXCOORD0,
 	float3 Tex3 : TEXCOORD5,
 	float Fresnel : COLOR,
 	float3 wPos : TEXCOORD6
-	) : COLOR0
+) : COLOR0
 {
 	float ld = 0;		// luz difusa
 	float le = 0;		// luz specular
@@ -287,7 +287,7 @@ void VSAgua(float4 Pos : POSITION,
 	out float3 wsPos : TEXCOORD3,
 	out float4 vPosLight : TEXCOORD4
 
-	)
+)
 {
 	float4 VertexPositionWS = mul(Pos, matWorld);
 
@@ -331,7 +331,7 @@ float4 PSAgua(float3 Pos: POSITION,
 	float3 wsPos : TEXCOORD3,		// pos. en world space
 	float4 vPosLight : TEXCOORD4		// pos. en Esp. Proyeccion de la luz
 
-	) : COLOR0
+) : COLOR0
 {
 	//vortice.x = canoa_y;
 	//vortice.y = canoa_x;
@@ -495,7 +495,7 @@ void VertSceneShadows(float4 iPos : POSITION,
 	out float4 vPos : TEXCOORD1,
 	out float3 vNormal : TEXCOORD2,
 	out float4 vPosLight : TEXCOORD3
-	)
+)
 {
 	// transformo al screen space
 	oPos = mul(iPos, matWorldViewProj);
@@ -519,7 +519,7 @@ float4 PixSceneShadows(float2 Tex : TEXCOORD0,
 	float4 vPos : TEXCOORD1,
 	float3 vNormal : TEXCOORD2,
 	float4 vPosLight : TEXCOORD3
-	) :COLOR
+) :COLOR
 {
 	float3 vLight = normalize(float3(vPos - g_vLightPos));
 	float cono = dot(vLight, g_vLightDir);
