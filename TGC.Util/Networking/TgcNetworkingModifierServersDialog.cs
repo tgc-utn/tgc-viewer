@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Windows.Forms;
+using TGC.Core.Utils;
 
 namespace TGC.Util.Networking
 {

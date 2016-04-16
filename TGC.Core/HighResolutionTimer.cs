@@ -9,6 +9,7 @@ namespace TGC.Core
     {
         // Static Members
         private int _fps;
+
         private int _frameCount;
         private float _frameSecond;
 
