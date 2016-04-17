@@ -16,8 +16,13 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
 * Plugins para la exportación de modelos desde [3Ds MAX](http://www.autodesk.com/education/free-software/3ds-max) (outdate)
 
 ## Requisitos
-* [DirectX 9 SDK](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=6812)
-* [Visual Studio Community Edition](https://www.visualstudio.com/es-ar/products/visual-studio-community-vs)
+* API gráfica
+    * [DirectX 9 SDK](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=6812)
+* IDEs compatibles
+    * [Visual Studio Community Edition](https://www.visualstudio.com/es-ar/products/visual-studio-community-vs)
+    * [MonoDevelop](http://www.monodevelop.com) (instalar despúes de las siguientes dependencias)
+        * [Microsoft .NET Framework 4.5.2](https://www.microsoft.com/es-ES/download/details.aspx?id=42643) (instalar primero)
+        * [GTK# for .NET](http://download.xamarin.com/GTKforWindows/Windows/gtk-sharp-2.12.30.msi) (instalar segundo)
 
 ### Colaboradores
 * [Leandro Barbagallo](https://github.com/lebarba)

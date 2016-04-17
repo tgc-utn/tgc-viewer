@@ -102,7 +102,7 @@ void VertScene(float4 iPos : POSITION,
 	out float4 vPos : TEXCOORD1,
 	out float3 vNormal : TEXCOORD2,
 	out float4 vPosLight : TEXCOORD3
-	)
+)
 {
 	// transformo al screen space
 	oPos = mul(iPos, matWorldViewProj);
@@ -126,7 +126,7 @@ float4 PixScene(float2 Tex : TEXCOORD0,
 	float4 vPos : TEXCOORD1,
 	float3 vNormal : TEXCOORD2,
 	float4 vPosLight : TEXCOORD3
-	) :COLOR
+) :COLOR
 {
 	float3 vLight = normalize(float3(vPos - g_vLightPos));
 	float cono = dot(vLight, g_vLightDir);

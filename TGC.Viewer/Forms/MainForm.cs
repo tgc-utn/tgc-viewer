@@ -1,29 +1,34 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Util;
-using TGC.Util.Ui;
-using Microsoft.DirectX;
+using TGC.Viewer.Model;
 
-namespace TGC.Viewer
+namespace TGC.Viewer.Forms
 {
     /// <summary>
     ///     Formulario principal de la aplicación
     /// </summary>
     public partial class MainForm : Form
     {
+        // Panel que se utiliza para ejecutar un ejemplo en modo FullScreen
+        private FullScreenPanel fullScreenPanel;
+
+        private ExampleLoader exampleLoader;
+
         /// <summary>
         ///     Constructor principal de la aplicacion
         /// </summary>
         /// <param name="args">Argumentos de consola</param>
         public MainForm(string[] args)
         {
-            TgcViewerConfig.Instance.parseCommandLineArgs(args);
+            Configuration.Instance.parseCommandLineArgs(args);
 
             InitializeComponent();
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.Opaque, true);
@@ -68,16 +73,16 @@ namespace TGC.Viewer
         private void MainForm_Load(object sender, EventArgs e)
         {
             //Configuracion de ventana principal
-            Text = TgcViewerConfig.Instance.title;
+            Text = Configuration.Instance.title;
 
-            if (!TgcViewerConfig.Instance.showTitleBar)
+            if (!Configuration.Instance.showTitleBar)
             {
                 ControlBox = false;
                 Text = null;
             }
 
             //Modo fullscreen
-            if (TgcViewerConfig.Instance.fullScreenMode)
+            if (Configuration.Instance.fullScreenMode)
             {
                 //Quitar todos los paneles que no queremos que se vean
                 Controls.Clear();
@@ -85,7 +90,7 @@ namespace TGC.Viewer
                 splitContainerModifiers.Panel1.Controls.Remove(groupBoxModifiers);
 
                 //Acomodar paneles para fullscreen
-                if (TgcViewerConfig.Instance.showModifiersPanel)
+                if (Configuration.Instance.showModifiersPanel)
                 {
                     var sp = new SplitContainer();
                     sp.Orientation = Orientation.Vertical;
@@ -104,14 +109,20 @@ namespace TGC.Viewer
 
             //Show the App before we init
             Show();
-            panel3d.Focus();
-
             ApplicationRunning = true;
 
-            GuiController.Instance.initGraphics(this, this.panel3d, this.logConsole, this.dataGridUserVars, this.flowLayoutPanelModifiers, this.treeViewExamples);
+            fullScreenPanel = new FullScreenPanel();
+            panel3d.Focus();
+
+            GuiController.Instance.initGraphics(this, this.panel3d, this.logConsole, this.dataGridUserVars, this.flowLayoutPanelModifiers);
+
+            //Cargo los ejemplos en el arbol
+            exampleLoader = new ExampleLoader();
+            exampleLoader.loadExamplesInGui(treeViewExamples);
+
             //Cargar ejemplo default
-            var defaultExample = GuiController.Instance.ExampleLoader.getExampleByName(TgcViewerConfig.Instance.defaultExampleName,
-               TgcViewerConfig.Instance.defaultExampleCategory);
+            var defaultExample = exampleLoader.getExampleByName(Configuration.Instance.defaultExampleName,
+               Configuration.Instance.defaultExampleCategory);
             this.executeExample(defaultExample);
 
             resetMenuOptions();
@@ -124,7 +135,7 @@ namespace TGC.Viewer
                     GuiController.Instance.render();
                 }
                 //Contemplar también la ventana del modo FullScreen
-                else if (FullScreenEnable && GuiController.Instance.FullScreenPanel.ContainsFocus)
+                else if (FullScreenEnable && this.fullScreenPanel.ContainsFocus)
                 {
                     GuiController.Instance.render();
                 }
@@ -218,7 +229,15 @@ namespace TGC.Viewer
 
             if (selectedNode != null && selectedNode.Nodes.Count == 0)
             {
-                var example = GuiController.Instance.ExampleLoader.getExampleByTreeNode(selectedNode);
+                var example = exampleLoader.getExampleByTreeNode(selectedNode);
+
+                if (this.FullScreenEnable)
+                {
+                    this.removePanel3dFromMainForm();
+                    fullScreenPanel.Controls.Add(panel3d);
+                    fullScreenPanel.Show(this);
+                }
+
                 this.executeExample(example);
             }
         }
@@ -302,11 +321,11 @@ namespace TGC.Viewer
                 example.init();
 
                 //Ver si abrimos una ventana para modo FullScreen
-                if (TgcViewerConfig.Instance.fullScreenMode)
+                if (Configuration.Instance.fullScreenMode)
                 {
                     this.removePanel3dFromMainForm();
-                    GuiController.Instance.FullScreenPanel.Controls.Add(GuiController.Instance.Panel3d);
-                    GuiController.Instance.FullScreenPanel.Show(this);
+                    this.fullScreenPanel.Controls.Add(GuiController.Instance.Panel3d);
+                    this.fullScreenPanel.Show(this);
                 }
 
                 GuiController.Instance.CurrentExample = example;
@@ -333,7 +352,7 @@ namespace TGC.Viewer
                 GuiController.Instance.CurrentExample = null;
                 GuiController.Instance.ElapsedTime = -1;
 
-                if (TgcViewerConfig.Instance.fullScreenMode && GuiController.Instance.FullScreenPanel.Visible)
+                if (Configuration.Instance.fullScreenMode && this.fullScreenPanel.Visible)
                 {
                     closeFullScreenPanel();
                 }
@@ -345,9 +364,9 @@ namespace TGC.Viewer
         /// </summary>
         public void closeFullScreenPanel()
         {
-            GuiController.Instance.FullScreenPanel.Controls.Remove(GuiController.Instance.Panel3d);
+            this.fullScreenPanel.Controls.Remove(GuiController.Instance.Panel3d);
             this.addPanel3dToMainForm();
-            GuiController.Instance.FullScreenPanel.Hide();
+            this.fullScreenPanel.Hide();
             GuiController.Instance.Panel3d.Focus();
         }
 
@@ -364,7 +383,7 @@ namespace TGC.Viewer
                 stopCurrentExample();
             }
 
-            GuiController.Instance.TgcD3DDevice.doResetDevice();
+            GuiController.Instance.doResetDevice();
 
             if (exampleBackup != null)
             {

@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace TGC.Util.Ui
+namespace TGC.Viewer.Forms
 {
     /// <summary>
     ///     Panel para modo FullScreen
@@ -17,6 +17,12 @@ namespace TGC.Util.Ui
             Location = screenRect.Location;
             MaximumSize = fullScreenSize;
             MinimumSize = fullScreenSize;
+        }
+
+        private void FullScreenPanel_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //FIXME esto no deberia ser asi pero como no esta escuchando esc para cerrar cuando se cierra esta ventana el Viewer muere jeje
+            Application.Exit();
         }
     }
 }

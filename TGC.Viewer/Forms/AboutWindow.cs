@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace TGC.Util.Ui
+namespace TGC.Viewer.Forms
 {
     public partial class AboutWindow : Form
     {
