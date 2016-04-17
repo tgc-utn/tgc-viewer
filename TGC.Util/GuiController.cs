@@ -79,12 +79,7 @@ namespace TGC.Util
             ExamplesMediaDir = "Media\\";
             //FIXME esta variable deberia volar.
             AlumnoMediaDir = "AlumnoMedia\\";
-<<<<<<< HEAD
             ShadersDir = "Shaders\\";
-            exampleLoader.loadExamplesInGui(treeViewExamples);
-=======
->>>>>>> origin/master
-
             //Cargar shaders del framework
             TgcShaders.Instance.loadCommonShaders(ShadersDir+ "TgcViewer\\");
         }
