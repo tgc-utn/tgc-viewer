@@ -150,7 +150,7 @@ void VSCubeMap(float4 Pos : POSITION,
 	out float3 EnvTex3 : TEXCOORD5,
 	out float3 wPos : TEXCOORD6,
 	out float  Fresnel : COLOR
-	)
+)
 {
 	wPos = mul(Pos, matWorld);
 	float3 vEyeR = normalize(wPos - fvEyePosition);
@@ -186,7 +186,7 @@ float4 PSCubeMap(float3 EnvTex: TEXCOORD0,
 	float3 Tex3 : TEXCOORD5,
 	float Fresnel : COLOR,
 	float3 wPos : TEXCOORD6
-	) : COLOR0
+) : COLOR0
 {
 	float ld = 0;		// luz difusa
 	float le = 0;		// luz specular

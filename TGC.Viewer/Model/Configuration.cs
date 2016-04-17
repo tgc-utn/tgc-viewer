@@ -1,11 +1,11 @@
-﻿namespace TGC.Util.Ui
+﻿namespace TGC.Viewer.Model
 {
     /// <summary>
-    ///     Configuracion de arranque de TgcViewer
+    ///     Configuracion de arranque del Viewer
     /// </summary>
-    public class TgcViewerConfig
+    public class Configuration
     {
-        public static TgcViewerConfig Instance { get; } = new TgcViewerConfig();
+        public static Configuration Instance { get; } = new Configuration();
 
         /// <summary>
         ///     Categoria del primer ejemplo a ejecutar
@@ -40,7 +40,7 @@
         /// <summary>
         ///     Crear con configuracion default
         /// </summary>
-        private TgcViewerConfig()
+        private Configuration()
         {
             fullScreenMode = false;
             defaultExampleName = "Logo de TGC";

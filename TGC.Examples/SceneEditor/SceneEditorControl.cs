@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using TGC.Core.Geometries;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
+using TGC.Core.Utils;
 using TGC.Util;
 using TGC.Util.Input;
 using TGC.Util.TgcGeometry;
