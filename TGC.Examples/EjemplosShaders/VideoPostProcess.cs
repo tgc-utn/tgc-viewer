@@ -1,20 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
+using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.Input;
+using TGC.Core.Direct3D;
+using TGC.Core.Example;
+using TGC.Util;
 
 namespace Examples.Shaders
 {
-   
+
     public class EjemploVideoPostProcess: TgcExample
     {
         string MyMediaDir;
@@ -55,7 +49,7 @@ namespace Examples.Shaders
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             GuiController.Instance.CustomRenderEnabled = true;
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
             MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
@@ -141,7 +135,7 @@ namespace Examples.Shaders
 
         public override void render(float elapsedTime)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
 
             time += elapsedTime;
             int ant_frame = cur_frame;

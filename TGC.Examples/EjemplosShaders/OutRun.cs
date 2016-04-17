@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using TgcViewer.Example;
-using TgcViewer;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
-using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using System.Windows.Forms;
+using TGC.Core._2D;
+using TGC.Core.Direct3D;
+using TGC.Core.Example;
+using TGC.Core.SceneLoader;
+using TGC.Core.Terrain;
+using TGC.Util;
+using TGC.Util.Input;
 
 namespace Examples.Shaders.WorkshopShaders
 {
 
-  
+
     public class OutRun : TgcExample
     {
         string MyMediaDir;
@@ -65,7 +61,7 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             GuiController.Instance.CustomRenderEnabled = true;
 
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
@@ -100,7 +96,7 @@ namespace Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(GuiController.Instance.D3dDevice,MyShaderDir + "OutRun.fx",
+            effect = Effect.FromFile(D3DDevice.Instance.Device,MyShaderDir + "OutRun.fx",
                 null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
             {
@@ -118,7 +114,7 @@ namespace Examples.Shaders.WorkshopShaders
             reset_pos();
 
             // para capturar el mouse
-            Control focusWindows = GuiController.Instance.D3dDevice.CreationParameters.FocusWindow;
+            Control focusWindows = D3DDevice.Instance.Device.CreationParameters.FocusWindow;
             mouseCenter = focusWindows.PointToScreen(new Point(focusWindows.Width / 2,focusWindows.Height / 2));
             mouseCaptured = true;
             Cursor.Hide();
@@ -233,7 +229,7 @@ namespace Examples.Shaders.WorkshopShaders
             // actualizo la camara
             GuiController.Instance.FpsCamera.setCamera(pos - dir * dist_cam  + desf, pos + desf);
             //GuiController.Instance.FpsCamera.setCamera(new Vector3(500, 4000, 500), new Vector3(0, 0, 0));
-            GuiController.Instance.FpsCamera.updateCamera();
+            GuiController.Instance.FpsCamera.updateCamera(elapsedTime);
 
         }
 
@@ -241,7 +237,7 @@ namespace Examples.Shaders.WorkshopShaders
         {
             update(elapsedTime);
 
-            Device device = GuiController.Instance.D3dDevice;
+            Device device = D3DDevice.Instance.Device;
             effect.Technique = "DefaultTechnique";
 
             // guardo el Render target anterior y seteo la textura como render target
@@ -292,15 +288,15 @@ namespace Examples.Shaders.WorkshopShaders
             effect.End();
 
 
-            //GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
-            //GuiController.Instance.Text3d.drawText("Pos: " + GuiController.Instance.CurrentCamera.getPosition(), 0, 0, Color.Yellow);
-            //GuiController.Instance.Text3d.drawText("Look At: " + GuiController.Instance.CurrentCamera.getLookAt(), 500, 0, Color.Yellow);
+            //TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+            //TgcDrawText.Instance.drawText("Pos: " + CamaraManager.Instance.CurrentCamera.getPosition(), 0, 0, Color.Yellow);
+            //TgcDrawText.Instance.drawText("Look At: " + CamaraManager.Instance.CurrentCamera.getLookAt(), 500, 0, Color.Yellow);
 
             if(circuito.en_ruta)
-                GuiController.Instance.Text3d.drawText("Tramo:" + circuito.pos_en_ruta, 0, 0, Color.Yellow);
+                TgcDrawText.Instance.drawText("Tramo:" + circuito.pos_en_ruta, 0, 0, Color.Yellow);
 
-            //GuiController.Instance.Text3d.drawText("dist_cam:" + dist_cam + "defY" + desf.Y, 0, 0, Color.Yellow);
-            //GuiController.Instance.Text3d.drawText("vel:" + vel, 0, 0, Color.Yellow);
+            //TgcDrawText.Instance.drawText("dist_cam:" + dist_cam + "defY" + desf.Y, 0, 0, Color.Yellow);
+            //TgcDrawText.Instance.drawText("vel:" + vel, 0, 0, Color.Yellow);
             device.EndScene();
 
 

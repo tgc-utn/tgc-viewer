@@ -107,6 +107,14 @@
     <Compile Include="Collision\EjemploComputeObb.cs" />
     <Compile Include="DirectX\EjemploGetZBuffer.cs" />
     <Compile Include="DirectX\EjemploBoxDirectX.cs" />
+    <Compile Include="EjemplosShaders\F1Circuit.cs" />
+    <Compile Include="EjemplosShaders\FullQuad.cs" />
+    <Compile Include="EjemplosShaders\GaussianBlur.cs" />
+    <Compile Include="EjemplosShaders\MotionBlur.cs" />
+    <Compile Include="EjemplosShaders\NightVision.cs" />
+    <Compile Include="EjemplosShaders\OutRun.cs" />
+    <Compile Include="EjemplosShaders\ParallaxOcclusion.cs" />
+    <Compile Include="EjemplosShaders\VideoPostProcess.cs" />
     <Compile Include="GeometryBasics\Cilindro.cs" />
     <Compile Include="GeometryBasics\CrearEditableLand.cs" />
     <Compile Include="GeometryBasics\EjemploSphere.cs" />
@@ -281,15 +289,15 @@
     <Compile Include="SceneLoader\EjemploInstanciasPalmeras.cs" />
     <Compile Include="SceneLoader\EjemploMeshInstance.cs" />
     <Compile Include="SceneLoader\EjemploExportarMesh.cs" />
-    <Compile Include="Shaders\EjemploPhongShading.cs" />
-    <Compile Include="Shaders\EjemploShaderTgcMesh.cs" />
-    <Compile Include="Shaders\WorkshopShaders\BasicShader.cs" />
-    <Compile Include="Shaders\WorkshopShaders\DemoShaders.cs" />
-    <Compile Include="Shaders\WorkshopShaders\EnvMap.cs" />
-    <Compile Include="Shaders\WorkshopShaders\MySimpleTerrain.cs" />
-    <Compile Include="Shaders\WorkshopShaders\PhongShading.cs" />
-    <Compile Include="Shaders\WorkshopShaders\ShadowMap.cs" />
-    <Compile Include="Shaders\WorkshopShaders\ToonShading.cs" />
+    <Compile Include="EjemplosShaders\EjemploPhongShading.cs" />
+    <Compile Include="EjemplosShaders\EjemploShaderTgcMesh.cs" />
+    <Compile Include="EjemplosShaders\BasicShader.cs" />
+    <Compile Include="EjemplosShaders\DemoShaders.cs" />
+    <Compile Include="EjemplosShaders\EnvMap.cs" />
+    <Compile Include="EjemplosShaders\MySimpleTerrain.cs" />
+    <Compile Include="EjemplosShaders\PhongShading.cs" />
+    <Compile Include="EjemplosShaders\ShadowMap.cs" />
+    <Compile Include="EjemplosShaders\ToonShading.cs" />
     <Compile Include="SkeletalAnimation\EjemploCustomSkeletalMesh.cs" />
     <Compile Include="SkeletalAnimation\EjemploBasicHuman.cs" />
     <Compile Include="SkeletalAnimation\EjemploMeshInstance.cs" />
@@ -452,14 +460,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\WorkshopShaders\Shaders\BasicShader.fx" />
-    <None Include="Shaders\WorkshopShaders\Shaders\Demo.fx" />
-    <None Include="Shaders\WorkshopShaders\Shaders\EnvMap.fx" />
-    <None Include="Shaders\WorkshopShaders\Shaders\PhongShading.fx" />
-    <None Include="Shaders\WorkshopShaders\Shaders\ShadowMap.fx" />
-    <None Include="Shaders\WorkshopShaders\Shaders\ToonShading.fx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

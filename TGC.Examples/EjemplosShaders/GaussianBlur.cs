@@ -1,18 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
-using TgcViewer.Example;
-using TgcViewer;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils;
+using TGC.Core.Example;
+using TGC.Core.SceneLoader;
+using TGC.Util;
+using TGC.Core.Direct3D;
+using TGC.Core;
+using TGC.Core._2D;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -47,7 +44,7 @@ namespace Examples.Shaders.WorkshopShaders
         {
             GuiController.Instance.CustomRenderEnabled = true;
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
             MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
 
@@ -58,7 +55,7 @@ namespace Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(GuiController.Instance.D3dDevice,
+            effect = Effect.FromFile(d3dDevice,
                 GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\GaussianBlur.fx",
                 null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
@@ -120,7 +117,7 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void render(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
+            Device device = D3DDevice.Instance.Device;
             Control panel3d = GuiController.Instance.Panel3d;
             float aspectRatio = (float)panel3d.Width / (float)panel3d.Height;
 
@@ -260,7 +257,7 @@ namespace Examples.Shaders.WorkshopShaders
                     effect.EndPass();
                     effect.End();
                 }
-                GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+                TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
                 device.EndScene();
             }
 

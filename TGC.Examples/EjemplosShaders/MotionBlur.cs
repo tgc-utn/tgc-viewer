@@ -1,24 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using TgcViewer.Example;
-using TgcViewer;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
+using TGC.Core.Example;
+using TGC.Util;
+using TGC.Core.SceneLoader;
+using TGC.Core.Direct3D;
 
 namespace Examples.Shaders.WorkshopShaders
 {
 
-  
+
     public class MotionBlur : TgcExample
     {
         string MyMediaDir;
@@ -50,7 +42,7 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             GuiController.Instance.CustomRenderEnabled = true;
 
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
@@ -62,7 +54,7 @@ namespace Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(GuiController.Instance.D3dDevice,MyShaderDir + "MotionBlur.fx",
+            effect = Effect.FromFile(D3DDevice.Instance.Device,MyShaderDir + "MotionBlur.fx",
                 null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
             {
@@ -142,7 +134,7 @@ namespace Examples.Shaders.WorkshopShaders
         public override void render(float elapsedTime)
         {
             update(elapsedTime);
-            Device device = GuiController.Instance.D3dDevice;
+            Device device = D3DDevice.Instance.Device;
 
             // guardo el Render target anterior y seteo la textura como render target
             Surface pOldRT = device.GetRenderTarget(0);

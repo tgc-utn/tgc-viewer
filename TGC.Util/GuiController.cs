@@ -86,11 +86,13 @@ namespace TGC.Util
             //Cargar algoritmos
             exampleLoader = new ExampleLoader();
             ExamplesMediaDir = "Media\\";
+            //FIXME esta variable deberia volar.
             AlumnoMediaDir = "AlumnoMedia\\";
+            ShadersDir = "Shaders\\";
             exampleLoader.loadExamplesInGui(treeViewExamples);
 
             //Cargar shaders del framework
-            TgcShaders.Instance.loadCommonShaders(ExamplesMediaDir + "Shaders\\TgcViewer\\");
+            TgcShaders.Instance.loadCommonShaders(ShadersDir+ "TgcViewer\\");
         }
 
         /// <summary>
@@ -261,6 +263,11 @@ namespace TGC.Util
         ///     ejemplos del alumno
         /// </summary>
         public string AlumnoMediaDir { get; private set; }
+
+        /// <summary>
+        ///     Path absoluto de la carpeta Shaders que contiene todo los shaders genericos
+        /// </summary>
+        public string ShadersDir { get; private set; }
 
         /// <summary>
         ///     Habilita o desactiva el contador de FPS

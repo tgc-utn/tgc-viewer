@@ -1,16 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
+using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.Input;
+using System.Windows.Forms;
+using TGC.Core._2D;
+using TGC.Core.Direct3D;
+using TGC.Core.Example;
+using TGC.Core.SceneLoader;
+using TGC.Core.Utils;
+using TGC.Util;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -51,7 +49,7 @@ namespace Examples.Shaders.WorkshopShaders
         public override void init()
         {
             time = 0f;
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
             MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
 
@@ -110,7 +108,7 @@ namespace Examples.Shaders.WorkshopShaders
 
         public override void render(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
+            Device device = D3DDevice.Instance.Device;
             Control panel3d = GuiController.Instance.Panel3d;
             float aspectRatio = (float)panel3d.Width / (float)panel3d.Height;
             time += elapsedTime;
@@ -159,7 +157,7 @@ namespace Examples.Shaders.WorkshopShaders
             mesh.render();
             
 
-            GuiController.Instance.Text3d.drawText((pom ? "ParallaxOcclusion" : "BumpMap") +
+            TgcDrawText.Instance.drawText((pom ? "ParallaxOcclusion" : "BumpMap") +
                 "  "+ (phong?"Phong Lighting":"Iluminación estática")
                         , 0, 0, Color.Yellow);
 
