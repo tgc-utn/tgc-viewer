@@ -1,19 +1,18 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX;
-using TgcViewer.Utils.TgcSceneLoader;
 using System.Drawing;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.Terrain;
-using TgcViewer.Utils.Input;
-using TgcViewer.Utils.Shaders;
-using TgcViewer.Utils;
-using TgcViewer.Utils.TgcSkeletalAnimation;
+using System.Windows.Forms;
+using TGC.Core;
+using TGC.Core._2D;
+using TGC.Core.Direct3D;
+using TGC.Core.Example;
+using TGC.Core.Geometries;
+using TGC.Core.Input;
+using TGC.Core.SceneLoader;
+using TGC.Core.SkeletalAnimation;
+using TGC.Util;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -62,7 +61,7 @@ namespace Examples.Shaders.WorkshopShaders
         {
             GuiController.Instance.CustomRenderEnabled = true;
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
             MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
 
@@ -107,7 +106,7 @@ namespace Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(GuiController.Instance.D3dDevice,
+            effect = Effect.FromFile(D3DDevice.Instance.Device,
                 GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\GaussianBlur.fx",
                 null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
@@ -183,7 +182,7 @@ namespace Examples.Shaders.WorkshopShaders
 
         public void update(float elapsedTime)
         {
-            Vector3 pos = GuiController.Instance.CurrentCamera.getPosition();
+            Vector3 pos = CamaraManager.Instance.CurrentCamera.getPosition();
             if (pos.X < -2000 || pos.Z < -2000 || pos.X >0 || pos.Z >0)
             {
                 // reset
@@ -272,7 +271,7 @@ namespace Examples.Shaders.WorkshopShaders
                         break;
 
                 }
-                m.updateAnimation();
+                m.updateAnimation(elapsedTime);
                 ++t;
             }
 
@@ -285,7 +284,7 @@ namespace Examples.Shaders.WorkshopShaders
                 {
                     timer_firing[i] += total_timer_firing;
                     pos_bala[i] = pos + new Vector3(rnd.Next(-10, 10), rnd.Next(-10, 10), rnd.Next(-10, 10));
-                    dir_bala[i] = GuiController.Instance.CurrentCamera.getLookAt() - pos;
+                    dir_bala[i] = CamaraManager.Instance.CurrentCamera.getLookAt() - pos;
                     dir_bala[i].Normalize();
                 }
                 else
@@ -308,7 +307,7 @@ namespace Examples.Shaders.WorkshopShaders
 
         public void renderSinEfectos(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
+            Device device = D3DDevice.Instance.Device;
             Control panel3d = GuiController.Instance.Panel3d;
             float aspectRatio = (float)panel3d.Width / (float)panel3d.Height;
 
@@ -322,7 +321,7 @@ namespace Examples.Shaders.WorkshopShaders
             foreach (TgcSkeletalMesh m in enemigos)
                 m.render();
 
-            GuiController.Instance.Text3d.drawText("Pos: " + GuiController.Instance.CurrentCamera.getPosition(), 0, 0, Color.Yellow);
+            TgcDrawText.Instance.drawText("Pos: " + CamaraManager.Instance.CurrentCamera.getPosition(), 0, 0, Color.Yellow);
 
 
             device.EndScene();
@@ -331,7 +330,7 @@ namespace Examples.Shaders.WorkshopShaders
 
         public void renderConEfectos(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
+            Device device = D3DDevice.Instance.Device;
             Control panel3d = GuiController.Instance.Panel3d;
             float aspectRatio = (float)panel3d.Width / (float)panel3d.Height;
 
@@ -477,7 +476,7 @@ namespace Examples.Shaders.WorkshopShaders
             effect.EndPass();
             effect.End();
 
-            GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+            TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
             device.EndScene();
         }
 

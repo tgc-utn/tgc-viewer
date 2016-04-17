@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer;
-using TgcViewer.Utils;
+using TGC.Core.SceneLoader;
+using TGC.Util;
+using TGC.Core.Direct3D;
+using TGC.Core.Shaders;
 
 namespace Examples.Shaders.WorkshopShaders
 {
@@ -89,9 +87,7 @@ namespace Examples.Shaders.WorkshopShaders
 
         public void CrearRuta()
         {
-        
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-
+           
             //Dispose de VertexBuffer anterior, si habia
             if (vb != null && !vb.Disposed)
             {
@@ -108,7 +104,7 @@ namespace Examples.Shaders.WorkshopShaders
 
             //Crear vertexBuffer
             totalVertices = cant_ptos_ruta * 6 + cant_carteles*4;
-            vb = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
+            vb = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
 
             //Cargar vertices
             int dataIdx = 0;
@@ -201,7 +197,7 @@ namespace Examples.Shaders.WorkshopShaders
                 textura_piso.Dispose();
             }
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
 
             String MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
             textura_piso = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MyMediaDir + "f1\\piso2.png"), Usage.None, Pool.Managed);
@@ -212,8 +208,8 @@ namespace Examples.Shaders.WorkshopShaders
 
         public void render(Effect effect)
         {
-            Device device = GuiController.Instance.D3dDevice;
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
+            Device device = D3DDevice.Instance.Device;
+            TgcShaders.Instance.setShaderMatrixIdentity(effect);
             device.VertexFormat = CustomVertex.PositionTextured.Format;
             device.SetStreamSource(0, vb, 0);
 
@@ -274,7 +270,7 @@ namespace Examples.Shaders.WorkshopShaders
             // Ahora los objetos transparentes (el guarda rail, y los carteles)
             // guarda rail
             device.RenderState.AlphaBlendEnable = true;
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
+            TgcShaders.Instance.setShaderMatrixIdentity(effect);
             device.VertexFormat = CustomVertex.PositionTextured.Format;
             device.SetStreamSource(0, vb, 0);
             effect.SetValue("texDiffuseMap", textura_guardrail);

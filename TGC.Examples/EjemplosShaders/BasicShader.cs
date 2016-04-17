@@ -54,8 +54,8 @@ namespace TGC.Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             effect =
-                TgcShaders.loadEffect(GuiController.Instance.ExamplesDir +
-                                      "Shaders\\WorkshopShaders\\Shaders\\BasicShader.fx");
+                TgcShaders.loadEffect(GuiController.Instance.ShadersDir +
+                                      "WorkshopShaders\\BasicShader.fx");
 
             // le asigno el efecto a la malla
             mesh.Effect = effect;
