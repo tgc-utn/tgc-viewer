@@ -10,7 +10,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 using TGC.Util;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace Examples.EjemplosShaders
 {
     public class ParallaxOcclusion : TgcExample
     {
@@ -50,29 +50,28 @@ namespace Examples.Shaders.WorkshopShaders
         {
             time = 0f;
             Device d3dDevice = D3DDevice.Instance.Device;
-            MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
-            MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
+            MyMediaDir = GuiController.Instance.ExamplesMediaDir;
+            MyShaderDir = GuiController.Instance.ShadersDir+"WorkshopShaders\\";
 
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
 
             // parallax oclussion
-            scene = loader.loadSceneFromFile(MyMediaDir +"Piso\\Piso-TgcScene.xml");
+            scene = loader.loadSceneFromFile(MyMediaDir + "ModelosTgc\\Piso\\Piso-Custom-TgcScene.xml");
 
-            g_pBaseTexture  = TextureLoader.FromFile(d3dDevice, MyMediaDir 
-                    + "Piso\\Textures\\wood.bmp");
+            g_pBaseTexture  = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Texturas\\wood.bmp");
             g_pHeightmap = TextureLoader.FromFile(d3dDevice, MyMediaDir 
-                    + "Piso\\Textures\\four_NM_height.tga");
+                    + "Texturas\\NM_four_height.tga");
 
             g_pBaseTexture2 = TextureLoader.FromFile(d3dDevice, MyMediaDir
-                    + "Piso\\Textures\\stones.bmp");
+                    + "Texturas\\stones.bmp");
             g_pHeightmap2 = TextureLoader.FromFile(d3dDevice, MyMediaDir
-                    + "Piso\\Textures\\stones_NM_height.tga");
+                    + "Texturas\\NM_height_stones.tga");
 
             g_pBaseTexture3 = TextureLoader.FromFile(d3dDevice, MyMediaDir
-                    + "Piso\\Textures\\rocks.jpg");
+                    + "Texturas\\rocks.jpg");
             g_pHeightmap3 = TextureLoader.FromFile(d3dDevice, MyMediaDir
-                    + "Piso\\Textures\\rocks_NM_height.tga");
+                    + "Texturas\\NM_height_rocks.tga");
 
             mesh = scene.Meshes[0];
             int[] adj = new int[mesh.D3dMesh.NumberFaces * 3];

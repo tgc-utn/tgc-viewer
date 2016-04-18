@@ -20,7 +20,7 @@ namespace TGC.Examples.TerrainEditor
 
             //Shader
             Effect =
-                TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\TerrainEditor\\EditableTerrain.fx");
+                TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "TerrainEditor\\EditableTerrain.fx");
             Technique = "PositionColoredTextured";
 
             aabb = new TgcBoundingBox();

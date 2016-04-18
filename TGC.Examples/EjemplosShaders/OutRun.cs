@@ -11,7 +11,7 @@ using TGC.Core.Terrain;
 using TGC.Util;
 using TGC.Util.Input;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace Examples.EjemplosShaders
 {
 
 
@@ -64,8 +64,8 @@ namespace Examples.Shaders.WorkshopShaders
             Device d3dDevice = D3DDevice.Instance.Device;
             GuiController.Instance.CustomRenderEnabled = true;
 
-            MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
-            MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
+            MyMediaDir = GuiController.Instance.ExamplesMediaDir;
+            MyShaderDir = GuiController.Instance.ShadersDir + "WorkshopShaders\\";
 
             circuito = new F1Circuit();
 

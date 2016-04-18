@@ -98,7 +98,7 @@ namespace TGC.Examples.Lights
             }
 
             //Cargar shader con efectos de Post-Procesado
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\HDR.fx");
+            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "HDR.fx");
 
             //Cargamos un escenario
             var loader = new TgcSceneLoader();
@@ -274,7 +274,7 @@ namespace TGC.Examples.Lights
             curTexture--;
 
             //DEBUG
-            //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\luminance_" + (curTexture+1) + ".bmp", ImageFileFormat.Bmp, luminanceRTs[curTexture + 1]);
+            //TextureLoader.Save(GuiController.Instance.ShadersDir + "luminance_" + (curTexture+1) + ".bmp", ImageFileFormat.Bmp, luminanceRTs[curTexture + 1]);
 
             //Hacer pasadas de downsampling intermedio
             while (curTexture > 0)
@@ -294,7 +294,7 @@ namespace TGC.Examples.Lights
                 curTexture--;
 
                 //DEBUG
-                //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\luminance_" + (curTexture+1) + ".bmp", ImageFileFormat.Bmp, luminanceRTs[curTexture + 1]);
+                //TextureLoader.Save(GuiController.Instance.ShadersDir + "luminance_" + (curTexture+1) + ".bmp", ImageFileFormat.Bmp, luminanceRTs[curTexture + 1]);
             }
 
             //Hacer downsampling final de 1x1
@@ -311,7 +311,7 @@ namespace TGC.Examples.Lights
             screenQuad.render(effect);
 
             //DEBUG
-            //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\luminance_" + 0 + ".bmp", ImageFileFormat.Bmp, luminanceRTs[0]);
+            //TextureLoader.Save(GuiController.Instance.ShadersDir + "luminance_" + 0 + ".bmp", ImageFileFormat.Bmp, luminanceRTs[0]);
 
             //Liberar todos los surfaces usados
             for (var i = 0; i < luminanceSurfaces.Length; i++)
@@ -341,7 +341,7 @@ namespace TGC.Examples.Lights
             screenQuad.render(effect);
 
             //DEBUG
-            //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\brightPass.bmp", ImageFileFormat.Bmp, brightPassRT);
+            //TextureLoader.Save(GuiController.Instance.ShadersDir + "brightPass.bmp", ImageFileFormat.Bmp, brightPassRT);
 
             brightPassS.Dispose();
             d3dDevice.EndScene();

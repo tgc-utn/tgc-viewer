@@ -14,7 +14,7 @@ using TGC.Core.Utils;
 using TGC.Util;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
-namespace TGC.Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.EjemplosShaders
 {
     /// <summary>
     ///     Ejemplo EnvMap:
@@ -34,7 +34,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
         private string currentTexture;
         private Vector3 dir_avion;
         private Effect effect;
-        private bool fresnel = true; // combinar kx y kc s/ factor de fresnel
+        //private bool fresnel = true; // combinar kx y kc s/ factor de fresnel
         private float kc; // coef. de refraccion
         private float kx; // coef. de reflexion
         private float largo_tanque, alto_tanque;
@@ -72,8 +72,8 @@ namespace TGC.Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
-            MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
+            MyMediaDir = GuiController.Instance.ExamplesMediaDir;
+            MyShaderDir = GuiController.Instance.ShadersDir + "WorkshopShaders\\";
 
             //Crear loader
             var loader = new TgcSceneLoader();
@@ -167,8 +167,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             effect =
-                TgcShaders.loadEffect(GuiController.Instance.ExamplesDir +
-                                      "Shaders\\WorkshopShaders\\Shaders\\EnvMap.fx");
+                TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "WorkshopShaders\\EnvMap.fx");
 
             // le asigno el efecto a la malla
             mesh.Effect = effect;

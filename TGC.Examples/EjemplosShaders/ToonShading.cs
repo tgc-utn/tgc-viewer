@@ -11,7 +11,7 @@ using TGC.Core.Utils;
 using TGC.Util;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
-namespace TGC.Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.EjemplosShader
 {
     /// <summary>
     ///     Ejemplo ShadowMap:
@@ -52,8 +52,8 @@ namespace TGC.Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
-            MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
+            MyMediaDir = GuiController.Instance.ExamplesMediaDir;
+            MyShaderDir = GuiController.Instance.ShadersDir+"WorkshopShaders\\";
 
             //Crear loader
             var loader = new TgcSceneLoader();
@@ -73,8 +73,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             effect =
-                TgcShaders.loadEffect(GuiController.Instance.ExamplesDir +
-                                      "Shaders\\WorkshopShaders\\Shaders\\ToonShading.fx");
+                TgcShaders.loadEffect(MyShaderDir+ "ToonShading.fx");
 
             // le asigno el efecto a la malla
             mesh.Effect = effect;

@@ -83,14 +83,14 @@ namespace TGC.Examples.PostProcess
                 Format.X8R8G8B8, Pool.Default);
 
             //Cargar shader con efectos de Post-Procesado
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\PostProcess.fx");
+            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "PostProcess.fx");
 
             //Configurar Technique dentro del shader
             effect.Technique = "AlarmaTechnique";
 
             //Cargar textura que se va a dibujar arriba de la escena del Render Target
             alarmTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Shaders\\efecto_alarma.png");
+                GuiController.Instance.ExamplesMediaDir + "Texturas\\efecto_alarma.png");
 
             //Interpolador para efecto de variar la intensidad de la textura de alarma
             intVaivenAlarm = new InterpoladorVaiven();
@@ -131,7 +131,7 @@ namespace TGC.Examples.PostProcess
             pSurf.Dispose();
 
             //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
-            //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
+            //TextureLoader.Save(GuiController.Instance.ShadersDir + "render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
 
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);

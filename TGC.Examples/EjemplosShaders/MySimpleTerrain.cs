@@ -5,7 +5,7 @@ using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Shaders;
 
-namespace TGC.Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.EjemplosShaders
 {
     /// <summary>
     ///     Customizacion de SimpleTerrain para renderizado de terrenos

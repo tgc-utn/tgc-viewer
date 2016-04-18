@@ -8,7 +8,7 @@ using TGC.Core.Shaders;
 using TGC.Core.Utils;
 using TGC.Util;
 
-namespace TGC.Examples.Shaders
+namespace TGC.Examples.EjemplosShaders
 {
     /// <summary>
     ///     Ejemplo EjemploPhongShading:

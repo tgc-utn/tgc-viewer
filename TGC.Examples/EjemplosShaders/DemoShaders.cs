@@ -15,7 +15,7 @@ using TGC.Core.Utils;
 using TGC.Util;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
-namespace TGC.Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.EjemplosShaders
 {
     /// <summary>
     ///     Ejemplo EnvMap:
@@ -97,11 +97,9 @@ namespace TGC.Examples.Shaders.WorkshopShaders
             // ------------------------------------------------------------
             // Creo el Heightmap para el terreno:
             terrain = new MySimpleTerrain();
-            terrain.loadHeightmap(GuiController.Instance.ExamplesDir
-                                  + "Shaders\\WorkshopShaders\\Media\\Heighmaps\\" + "Heightmap3.jpg", 100f, 1f,
+            terrain.loadHeightmap(GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap3.jpg", 100f, 1f,
                 new Vector3(0, 0, 0));
-            terrain.loadTexture(GuiController.Instance.ExamplesDir
-                                + "Shaders\\WorkshopShaders\\Media\\Heighmaps\\" + "TerrainTexture3.jpg");
+            terrain.loadTexture(GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture3.jpg");
 
             // ------------------------------------------------------------
             // Crear SkyBox:
@@ -133,8 +131,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
                                               + "MeshCreator\\Meshes\\Vehiculos\\Canoa\\Canoa-TgcScene.xml");
             canoa = scene3.Meshes[0];
 
-            scene4 = loader.loadSceneFromFile(GuiController.Instance.ExamplesDir
-                                              + "Shaders\\WorkshopShaders\\Media\\Piso\\Agua-TgcScene.xml");
+            scene4 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Piso\\Agua-TgcScene.xml");
             piso = scene4.Meshes[0];
 
             mesh.Scale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -201,7 +198,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             effect =
-                TgcShaders.loadEffect(GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\Demo.fx");
+                TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "WorkshopShaders\\Shaders\\Demo.fx");
 
             // le asigno el efecto a las mallas
             mesh.Effect = effect;

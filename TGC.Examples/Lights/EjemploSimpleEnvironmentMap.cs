@@ -48,13 +48,13 @@ namespace TGC.Examples.Lights
         {
             //Cargar textura de CubeMap para Environment Map
             cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Shaders\\CubeMap.dds");
+                GuiController.Instance.ShadersDir + "CubeMap.dds");
 
             //Crear 3 paredes y un piso con textura comun y textura de normalMap
             var diffuseMap =
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_DiffuseMap.jpg");
+                 TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Texturas//BM_DiffuseMap_pared.jpg");
             var normalMap =
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_NormalMap.jpg");
+                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Texturas//BM_NormalMap.jpg");
             TgcTexture[] normalMapArray = { normalMap };
 
             var paredSur = TgcBox.fromExtremes(new Vector3(-200, 0, -210), new Vector3(200, 100, -200), diffuseMap);
@@ -90,7 +90,7 @@ namespace TGC.Examples.Lights
             GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 50, 100), new Vector3(0, 50, -1));
 
             //Cargar Shader de DynamicLights
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\EnvironmentMap.fx");
+            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "EnvironmentMap.fx");
             effect.Technique = "SimpleEnvironmentMapTechnique";
 
             //Cargar shader en meshes

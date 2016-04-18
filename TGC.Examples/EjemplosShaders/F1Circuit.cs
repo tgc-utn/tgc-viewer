@@ -7,7 +7,7 @@ using TGC.Util;
 using TGC.Core.Direct3D;
 using TGC.Core.Shaders;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace Examples.EjemplosShaders
 {
     public class F1Circuit
     {
@@ -68,7 +68,7 @@ namespace Examples.Shaders.WorkshopShaders
 	        double t = 0;
 	        double hasta = 2*M_PI;
 	        int cant = 0;
-            float dw = 10000;
+            //float dw = 10000;
 	        while(t<hasta+0.1)
 	        {
 
@@ -199,10 +199,10 @@ namespace Examples.Shaders.WorkshopShaders
 
             Device d3dDevice = D3DDevice.Instance.Device;
 
-            String MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
-            textura_piso = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MyMediaDir + "f1\\piso2.png"), Usage.None, Pool.Managed);
-            textura_guardrail = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MyMediaDir + "f1\\guardrail.png"), Usage.None, Pool.Managed);
-            textura_cartel = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MyMediaDir + "f1\\cartel1.png"), Usage.None, Pool.Managed);
+            String MyMediaDir = GuiController.Instance.ExamplesMediaDir + "Texturas\\f1\\";
+            textura_piso = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MyMediaDir + "f1piso2.png"), Usage.None, Pool.Managed);
+            textura_guardrail = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MyMediaDir + "guardrail.png"), Usage.None, Pool.Managed);
+            textura_cartel = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MyMediaDir + "cartel1.png"), Usage.None, Pool.Managed);
         }
 
 
@@ -379,7 +379,7 @@ namespace Examples.Shaders.WorkshopShaders
             float mdist = 10000000000f;
             int aux_tramo = -1;
             float dr = ancho_ruta / 2;
-            float H = 0;
+            //float H = 0;
             Vector2 p = new Vector2(x, z);
             for (int i = 0; i < cant_ptos_ruta; ++i)
             {

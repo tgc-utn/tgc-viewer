@@ -113,19 +113,19 @@ namespace TGC.Examples.Engine2D
         {
             this.elapsedTime = elapsedTime;
 
-            float dirX = 0;
+            //float dirX = 0;
             float dirY = 0;
 
             state = StateEnum.Idle;
             if (GuiController.Instance.D3dInput.keyDown(Key.A))
             {
-                dirX = -1;
-                state = StateEnum.Moving;
+              //  dirX = -1;
+               // state = StateEnum.Moving;
             }
             if (GuiController.Instance.D3dInput.keyDown(Key.D))
             {
-                dirX = 1;
-                state = StateEnum.Moving;
+               // dirX = 1;
+               // state = StateEnum.Moving;
             }
             if (GuiController.Instance.D3dInput.keyDown(Key.W))
             {
@@ -165,7 +165,7 @@ namespace TGC.Examples.Engine2D
             const float maxSpeed = 400.0f;
             const float acceleration = 300.0f;
             const float deacceleration = 300.0f;
-            const float Epsilon = 0.2f;
+            //const float Epsilon = 0.2f;
 
             var spriteMouseVector = new Vector2();
             var mouseVector = new Vector2(GuiController.Instance.D3dInput.Xpos, GuiController.Instance.D3dInput.Ypos);

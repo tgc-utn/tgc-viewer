@@ -75,7 +75,7 @@ namespace TGC.Examples.PostProcess
                 Pool.Default);
 
             //Cargar shader con efectos de Post-Procesado
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\GaussianBlur.fx");
+            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "GaussianBlur.fx");
             //Configurar Technique dentro del shader
             effect.Technique = "GaussianBlurPass";
 
@@ -113,7 +113,7 @@ namespace TGC.Examples.PostProcess
             pSurf.Dispose();
 
             //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
-            //TextureLoader.Save(GuiController.Instance.ExamplesMediaDir + "Shaders\\render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
+            //TextureLoader.Save(GuiController.Instance.ShadersDir + "render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcess(D3DDevice.Instance.Device);
