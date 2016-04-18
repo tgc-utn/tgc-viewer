@@ -45,7 +45,7 @@ namespace TGC.Util.Modifiers
             else
             {
                 numericUpDown.Increment = 1;
-                trackBar.Value = defaultValue;
+                trackBar.Value = defaultValue - minValue;
                 trackBar.Maximum = maxValue - minValue;
             }
 
@@ -81,7 +81,6 @@ namespace TGC.Util.Modifiers
             }
 
             trackBarChange = true;
-            numericUpDown.Value = trackBar.Value * maxValue / 10;
 
             if (maxValue - minValue > 10)
             {

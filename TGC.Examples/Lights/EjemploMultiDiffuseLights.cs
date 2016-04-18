@@ -68,7 +68,7 @@ namespace TGC.Examples.Lights
              * El shader toma 4 luces a la vez para iluminar un mesh.
              * Pero como hacer 4 veces los calculos en el shader es costoso, de cada luz solo calcula el componente Diffuse.
              */
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\MultiDiffuseLights.fx");
+            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "MultiDiffuseLights.fx");
 
             //Crear 4 mesh para representar las 4 para la luces. Las ubicamos en distintas posiciones del escenario, cada una con un color distinto.
             lightMeshes = new TgcBox[4];

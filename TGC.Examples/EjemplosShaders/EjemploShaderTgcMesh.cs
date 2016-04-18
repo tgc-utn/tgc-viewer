@@ -4,7 +4,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Util;
 
-namespace TGC.Examples.Shaders
+namespace TGC.Examples.EjemplosShaders
 {
     /// <summary>
     ///     Ejemplo EjemploShaderTgcMesh:
@@ -47,7 +47,7 @@ namespace TGC.Examples.Shaders
             mesh = scene.Meshes[0];
 
             //Cargar Shader personalizado
-            mesh.Effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\Ejemplo1.fx");
+            mesh.Effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir+"Ejemplo1.fx");
 
             //Modifier para Technique de shader
             GuiController.Instance.Modifiers.addInterval("Technique", new[]

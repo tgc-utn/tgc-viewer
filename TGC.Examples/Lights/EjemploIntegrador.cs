@@ -60,10 +60,10 @@ namespace TGC.Examples.Lights
         {
             //Cargar textura de CubeMap para Environment Map, fijo para todos los meshes
             cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Shaders\\CubeMap.dds");
+                GuiController.Instance.ShadersDir + "CubeMap.dds");
 
             //Cargar Shader personalizado de EnvironmentMap
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\EnvironmentMap.fx");
+            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "EnvironmentMap.fx");
 
             //Cargar escenario, pero inicialmente solo hacemos el parser, para separar los objetos que son solo luces y no meshes
             var scenePath = GuiController.Instance.ExamplesMediaDir + "NormalMapRoom\\NormalMapRoom-TgcScene.xml";

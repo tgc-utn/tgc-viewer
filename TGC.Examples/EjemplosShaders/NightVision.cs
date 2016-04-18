@@ -14,7 +14,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Util;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace Examples.EjemplosShaders
 {
 
     public class NightVision: TgcExample
@@ -62,8 +62,8 @@ namespace Examples.Shaders.WorkshopShaders
             GuiController.Instance.CustomRenderEnabled = true;
 
             Device d3dDevice = D3DDevice.Instance.Device;
-            MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
-            MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
+            MyMediaDir = GuiController.Instance.ExamplesMediaDir;
+            MyShaderDir = GuiController.Instance.ShadersDir + "WorkshopShaders\\";
 
             //Cargamos un escenario
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -106,8 +106,7 @@ namespace Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\GaussianBlur.fx",
+            effect = Effect.FromFile(D3DDevice.Instance.Device, MyShaderDir + "GaussianBlur.fx",
                 null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
             {

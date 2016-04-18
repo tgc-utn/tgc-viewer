@@ -10,7 +10,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Util;
 
-namespace TGC.Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.EjemplosShaders
 {
     /// <summary>
     ///     Ejemplo ShadowMap:
@@ -62,8 +62,8 @@ namespace TGC.Examples.Shaders.WorkshopShaders
 
         public override void init()
         {
-            MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
-            MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
+            MyMediaDir = GuiController.Instance.ExamplesMediaDir + "WorkshopShaders\\";
+            MyShaderDir = GuiController.Instance.ShadersDir + "WorkshopShaders\\";
 
             //Crear loader
             var loader = new TgcSceneLoader();
@@ -87,8 +87,7 @@ namespace TGC.Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             effect =
-                TgcShaders.loadEffect(GuiController.Instance.ExamplesDir +
-                                      "Shaders\\WorkshopShaders\\Shaders\\ShadowMap.fx");
+                TgcShaders.loadEffect(MyShaderDir + "ShadowMap.fx");
 
             // le asigno el efecto a las mallas
             foreach (var T in scene.Meshes)

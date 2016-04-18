@@ -54,14 +54,14 @@ namespace TGC.Examples.Lights
         public override void init()
         {
             //DEBUG: para probar codigo que genera un NormalMap automaticamente. Queda bastante peor que el NormalMap que ya viene hecho
-            //createNormalMap(GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_DiffuseMap.jpg", GuiController.Instance.ExamplesMediaDir + "Shaders\\NormalMap_Prueba.jpg");
-            //TgcTexture normalMap = TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Shaders\\NormalMap_Prueba2.jpg");
+            //createNormalMap(GuiController.Instance.ShadersDir+"BumpMapping_DiffuseMap.jpg", GuiController.Instance.ShadersDir+"NormalMap_Prueba.jpg");
+            //TgcTexture normalMap = TgcTexture.createTexture(GuiController.Instance.ShadersDir+"NormalMap_Prueba2.jpg");
 
             //Crear 3 paredes y un piso con textura comun y textura de normalMap
             var diffuseMap =
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_DiffuseMap.jpg");
+                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Texturas//BM_DiffuseMap_pared.jpg");
             var normalMap =
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_NormalMap.jpg");
+                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Texturas//BM_NormalMap.jpg");
             TgcTexture[] normalMapArray = { normalMap };
 
             var paredSur = TgcBox.fromExtremes(new Vector3(-200, 0, -210), new Vector3(200, 100, -200), diffuseMap);
@@ -106,7 +106,7 @@ namespace TGC.Examples.Lights
             GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 50, 100), new Vector3(0, 50, -1));
 
             //Cargar Shader de personalizado de BumpMapping. Solo soporta meshes de tipo DiffuseMap
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping.fx");
+            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "BumpMapping.fx");
 
             //Cargar shader en meshes
             foreach (var m in meshes)

@@ -28,9 +28,7 @@ namespace TGC.Core.Terrain
             Right = 4,
             Left = 5
         }
-
-        private bool alphaBlendEnable;
-
+        
         private Color color;
 
         /// <summary>
@@ -44,7 +42,6 @@ namespace TGC.Core.Terrain
             color = Color.White;
             Center = new Vector3(0, 0, 0);
             Size = new Vector3(1000, 1000, 1000);
-            alphaBlendEnable = false;
         }
 
         /// <summary>

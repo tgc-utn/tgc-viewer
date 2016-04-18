@@ -114,7 +114,6 @@ namespace TGC.Core.Geometries
         /// <returns>True si hay colisión</returns>
         public static bool intersectRayAABB(TgcRay ray, TgcBoundingBox aabb, out Vector3 q)
         {
-            float t;
             return intersectRayAABB(ray.toStruct(), aabb.toStruct(), out q);
         }
 

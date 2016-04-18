@@ -11,7 +11,7 @@ using TGC.Core.Direct3D;
 using TGC.Core;
 using TGC.Core._2D;
 
-namespace Examples.Shaders.WorkshopShaders
+namespace Examples.EjemplosShaders
 {
 
     public class FullScreenQuad : TgcExample
@@ -47,8 +47,8 @@ namespace Examples.Shaders.WorkshopShaders
             time = 0;
 
             Device d3dDevice = D3DDevice.Instance.Device;
-            MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
-            MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
+            MyMediaDir = GuiController.Instance.ExamplesMediaDir;
+            MyShaderDir = GuiController.Instance.ShadersDir + "WorkshopShaders\\";
 
             //Cargamos un escenario
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -57,8 +57,7 @@ namespace Examples.Shaders.WorkshopShaders
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(d3dDevice,
-                GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\FullQuad.fx",
+            effect = Effect.FromFile(d3dDevice, MyShaderDir + "FullQuad.fx",
                 null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
             {

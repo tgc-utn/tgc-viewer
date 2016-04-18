@@ -233,7 +233,7 @@ namespace TGC.Examples.DirectX
             indexBuffer.SetData(indexData, 0, LockFlags.None);
 
             //Cargar shader customizado para este ejemplo
-            var shaderPath = GuiController.Instance.ExamplesMediaDir + "Shaders\\EjemploBoxDirectX.fx";
+            var shaderPath = GuiController.Instance.ShadersDir+"EjemploBoxDirectX.fx";
             string compilationErrors;
             effect = Effect.FromFile(D3DDevice.Instance.Device, shaderPath, null, null, ShaderFlags.None, null,
                 out compilationErrors);
@@ -247,11 +247,11 @@ namespace TGC.Examples.DirectX
 
             //Cargamos 3 texturas cualquiera para mandar al shader
             texture0 = TextureLoader.FromFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_DiffuseMap.jpg");
+                GuiController.Instance.ExamplesMediaDir+ "Texturas\\BM_DiffuseMap_pared.jpg");
             texture1 = TextureLoader.FromFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Shaders\\BumpMapping_NormalMap.jpg");
+                GuiController.Instance.ExamplesMediaDir + "Texturas\\BM_NormalMap.jpg");
             texture2 = TextureLoader.FromFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Shaders\\efecto_alarma.png");
+                GuiController.Instance.ExamplesMediaDir + "Texturas\\efecto_alarma.png");
 
             dir = 1;
 

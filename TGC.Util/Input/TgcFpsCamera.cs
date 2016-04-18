@@ -638,8 +638,7 @@ namespace TGC.Util.Input
                    TgcParserUtils.printFloat(eye.Z) + "f), new Vector3(" +
                    TgcParserUtils.printFloat(lookAt.X) + "f, " + TgcParserUtils.printFloat(lookAt.Y) + "f, " +
                    TgcParserUtils.printFloat(lookAt.Z) + "f));";
-
-            return "";
+            
         }
 
         #region Getters y Setters

@@ -6,7 +6,7 @@ using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Util;
 
-namespace Examples.Shaders
+namespace TGC.Examples.EjemplosShaders
 {
 
     public class EjemploVideoPostProcess: TgcExample
@@ -29,7 +29,7 @@ namespace Examples.Shaders
         Texture g_pRenderTarget_B;
         Texture g_pRenderTarget_C;
         private Surface pOldRT;
-        private Surface pOldDS;
+        //private Surface pOldDS;
         private Surface pSurf;
 
         public override string getCategory()
@@ -51,8 +51,8 @@ namespace Examples.Shaders
         {
             Device d3dDevice = D3DDevice.Instance.Device;
             GuiController.Instance.CustomRenderEnabled = true;
-            MyMediaDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\";
-            MyShaderDir = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Shaders\\";
+            MyMediaDir = GuiController.Instance.ExamplesMediaDir+"WorkshopShaders\\";
+            MyShaderDir = GuiController.Instance.ShadersDir+"WorkshopShaders\\";
 
             cur_frame = 0;
             time = 0;

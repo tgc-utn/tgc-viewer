@@ -1571,7 +1571,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn largeChangeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn autoSizeDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Value;
+#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
         private System.Windows.Forms.DataGridViewTextBoxColumn Tag;
+        //FIXME
+#pragma warning restore CS0108 // Member hides inherited member; missing new keyword
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.TabPage pageExport;
         private System.Windows.Forms.SaveFileDialog saveFileHeightmap;

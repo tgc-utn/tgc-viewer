@@ -8,7 +8,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Util;
 
-namespace TGC.Examples.Shaders.WorkshopShaders
+namespace TGC.Examples.EjemplosShaders
 {
     /// <summary>
     ///     Ejemplo EnvMap:

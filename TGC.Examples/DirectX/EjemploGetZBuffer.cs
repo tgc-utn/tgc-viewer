@@ -52,7 +52,7 @@ namespace TGC.Examples.DirectX
             GuiController.Instance.CustomRenderEnabled = true;
 
             //Cargar shader de este ejemplo
-            effect = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\EjemploGetZBuffer.fx");
+            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir+"EjemploGetZBuffer.fx");
 
             //Cargamos un escenario
             var loader = new TgcSceneLoader();
