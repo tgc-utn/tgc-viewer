@@ -51,7 +51,7 @@ namespace TGC.Examples.GeometryBasics
             GuiController.Instance.Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4),
                 new Vector2(1, 1));
 
-            GuiController.Instance.RotCamera.targetObject(land.BoundingBox);
+            GuiController.Instance.RotCamera.setCamera(new Vector3(40f, 40f, 40f), 150f);
         }
 
         public override void render(float elapsedTime)

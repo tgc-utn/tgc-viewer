@@ -68,6 +68,8 @@ namespace TGC.Examples.Particles
             emitter.Position = new Vector3(0, 0, 0);
 
             box = TgcBox.fromSize(new Vector3(0, -30, 0), new Vector3(10, 10, 10), Color.Blue);
+
+            GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
         }
 
         public override void render(float elapsedTime)

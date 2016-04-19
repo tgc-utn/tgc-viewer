@@ -52,6 +52,7 @@ namespace TGC.Examples.AlphaBlending
             }
 
             GuiController.Instance.FpsCamera.Enable = true;
+            GuiController.Instance.FpsCamera.setCamera(new Vector3(-100.0f, 0.0f, -50.0f), new Vector3(0.0f, 0.0f, 50.0f));
         }
 
         public override void render(float elapsedTime)

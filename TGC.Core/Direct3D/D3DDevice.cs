@@ -64,7 +64,7 @@ namespace TGC.Core.Direct3D
             //Alpha Blending
             Device.RenderState.AlphaBlendEnable = false;
             Device.RenderState.AlphaTestEnable = false;
-            Device.RenderState.ReferenceAlpha = 100;
+            Device.RenderState.ReferenceAlpha = 50;//verificar un valor optimo.
             Device.RenderState.AlphaFunction = Compare.Greater;
             Device.RenderState.BlendOperation = BlendOperation.Add;
             Device.RenderState.SourceBlend = Blend.SourceAlpha;

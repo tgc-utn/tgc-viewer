@@ -1,5 +1,7 @@
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using TGC.Core._2D;
 using TGC.Core.Example;
 using TGC.Util;
 
@@ -70,6 +72,11 @@ namespace TGC.Examples.Quake3Loader
                 MessageBox.Show(GuiController.Instance.MainForm, "Empaquetado almacenado en: " + outputDir,
                     "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
+            TgcDrawText.Instance.drawText(
+                "Este ejemplo no posee salida gráfica. verificar código y sus comentarios.", 5, 50,
+                Color.Yellow);
+            
         }
 
         public override void close()
