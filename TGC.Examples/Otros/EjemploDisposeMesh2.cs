@@ -1,3 +1,4 @@
+using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core._2D;
 using TGC.Core.Example;
@@ -43,6 +44,8 @@ namespace TGC.Examples.Otros
             scene1 =
                 loader1.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
                                           "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
+
+            GuiController.Instance.RotCamera.setCamera(new Vector3(0f, 300f, 0f), 1500f);
         }
 
         public override void render(float elapsedTime)

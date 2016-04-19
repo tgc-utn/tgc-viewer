@@ -1,3 +1,4 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using TGC.Core.Example;
@@ -44,6 +45,8 @@ namespace TGC.Examples.Otros
 
                 mesh.D3dMesh.Disposing += D3dMesh_Disposing;
             }
+
+            GuiController.Instance.RotCamera.setCamera(new Vector3(0f, 300f, 0f), 1500f);
         }
 
         private void D3dMesh_Disposing(object sender, EventArgs e)

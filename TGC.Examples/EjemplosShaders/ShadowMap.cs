@@ -82,8 +82,8 @@ namespace TGC.Examples.EjemplosShaders
             avion.AutoTransformEnable = false;
             dir_avion = new Vector3(0, 0, 1);
 
-            GuiController.Instance.RotCamera.CameraDistance = 600;
-            GuiController.Instance.RotCamera.RotationSpeed = 1.5f;
+            //GuiController.Instance.RotCamera.CameraDistance = 600;
+            //GuiController.Instance.RotCamera.RotationSpeed = 1.5f;
 
             //Cargar Shader personalizado
             effect =
@@ -132,12 +132,18 @@ namespace TGC.Examples.EjemplosShaders
             arrow.HeadSize = new Vector2(2f, 2f);
             arrow.BodyColor = Color.Blue;
 
-            GuiController.Instance.RotCamera.targetObject(scene.Meshes[0].BoundingBox);
+            
             float K = 300;
             GuiController.Instance.Modifiers.addVertex3f("LightLookFrom", new Vector3(-K, -K, -K), new Vector3(K, K, K),
                 new Vector3(80, 120, 0));
             GuiController.Instance.Modifiers.addVertex3f("LightLookAt", new Vector3(-K, -K, -K), new Vector3(K, K, K),
                 new Vector3(0, 0, 0));
+
+            GuiController.Instance.RotCamera.targetObject(scene.Meshes[0].BoundingBox);
+            GuiController.Instance.RotCamera.CameraCenter = GuiController.Instance.RotCamera.CameraCenter + new Vector3(0, 50f, 0);
+            //GuiController.Instance.RotCamera.CameraCenter = new Vector3(0, 150f, 0);
+            GuiController.Instance.RotCamera.CameraDistance = 300;
+            GuiController.Instance.RotCamera.RotationSpeed = 50f;
         }
 
         public override void render(float elapsedTime)
@@ -162,9 +168,6 @@ namespace TGC.Examples.EjemplosShaders
             // Shadow maps:
             D3DDevice.Instance.Device.EndScene(); // termino el thread anterior
 
-            GuiController.Instance.RotCamera.CameraCenter = new Vector3(0, 0, 0);
-            GuiController.Instance.RotCamera.CameraDistance = 100;
-            GuiController.Instance.RotCamera.RotationSpeed = 2f;
             CamaraManager.Instance.CurrentCamera.updateCamera(elapsedTime);
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 

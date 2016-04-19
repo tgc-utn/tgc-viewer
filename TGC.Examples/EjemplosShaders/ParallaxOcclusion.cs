@@ -93,9 +93,9 @@ namespace Examples.EjemplosShaders
 
             //Centrar camara rotacional respecto a este mesh
             GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
-            GuiController.Instance.RotCamera.CameraCenter = new Vector3(0, 0, 0);
-            GuiController.Instance.RotCamera.CameraDistance = 100;
-            GuiController.Instance.RotCamera.RotationSpeed = 1000f;
+            GuiController.Instance.RotCamera.CameraCenter = GuiController.Instance.RotCamera.CameraCenter + new Vector3(0, 20f, 0);
+            GuiController.Instance.RotCamera.CameraDistance = 75;
+            GuiController.Instance.RotCamera.RotationSpeed = 50f;
 
  
 

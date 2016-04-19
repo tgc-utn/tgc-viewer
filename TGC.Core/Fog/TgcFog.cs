@@ -68,7 +68,7 @@ namespace TGC.Core.Fog
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.FogEnable, true);
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.RangeFogEnable, true);
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.FogColor, color.ToArgb());
-                D3DDevice.Instance.Device.SetRenderState(RenderStates.FogVertexMode, (int)FogMode.Linear);
+                D3DDevice.Instance.Device.SetRenderState(RenderStates.FogVertexMode, (int)FogMode.Exp);
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.FogStart, StartDistance);
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.FogEnd, EndDistance);
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.FogDensity, Density);
