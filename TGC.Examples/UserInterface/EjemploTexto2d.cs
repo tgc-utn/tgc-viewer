@@ -1,6 +1,10 @@
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core._2D;
 using TGC.Core.Example;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.UserInterface
 {
@@ -17,22 +21,14 @@ namespace TGC.Examples.UserInterface
         private TgcText2d text2;
         private TgcText2d text3;
 
-        public override string getCategory()
+        public EjemploTexto2d(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "UserInterface";
+            this.Category = "UserInterface";
+            this.Name = "Texto 2D";
+            this.Description = "Muestra como crear texto 2D con DirectX.";
         }
 
-        public override string getName()
-        {
-            return "Texto 2D";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear texto 2D con DirectX.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear texto 1, básico
             text1 = new TgcText2d();
@@ -56,16 +52,25 @@ namespace TGC.Examples.UserInterface
             text3.Color = Color.Gold;
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
             //Renderizar los tres textoss
             text1.render();
             text2.render();
             text3.render();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             text1.dispose();
             text2.dispose();
             text3.dispose();

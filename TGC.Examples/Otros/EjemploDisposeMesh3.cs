@@ -1,11 +1,14 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Otros
 {
@@ -17,33 +20,32 @@ namespace TGC.Examples.Otros
         private TgcMesh boxMesh;
         private float time;
 
-        public override string getCategory()
+        public EjemploDisposeMesh3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Otros";
+            this.Category = "Otros";
+            this.Name = "Dispose Mesh 3";
+            this.Description = "Dispose Mesh 3";
         }
 
-        public override string getName()
-        {
-            return "Dispose Mesh 3";
-        }
-
-        public override string getDescription()
-        {
-            return "Dispose Mesh 3";
-        }
-
-        public override void init()
+        public override void Init()
         {
             var box = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
             boxMesh = box.toMesh("box");
             box.dispose();
             time = 0;
 
-            GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
+            ((TgcRotationalCamera)this.Camara).targetObject(box.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
             time += elapsedTime;
             if (time > 1f)
             {
@@ -74,8 +76,10 @@ namespace TGC.Examples.Otros
             boxMesh.render();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             boxMesh.dispose();
         }
     }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.PortalRendering;
 using TGC.Core.Textures;
 using TGC.Core.Utils;

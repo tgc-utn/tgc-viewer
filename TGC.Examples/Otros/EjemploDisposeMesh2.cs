@@ -1,9 +1,12 @@
-using Microsoft.DirectX;
 using System.Drawing;
+using Microsoft.DirectX;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core._2D;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Otros
 {
@@ -14,48 +17,45 @@ namespace TGC.Examples.Otros
     {
         private TgcScene scene1;
 
-        public override string getCategory()
+        public EjemploDisposeMesh2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Otros";
+            this.Category = "Otros";
+            this.Name = "Dispose Mesh 2";
+            this.Description = "Dispose Mesh 2";
         }
 
-        public override string getName()
-        {
-            return "Dispose Mesh 2";
-        }
-
-        public override string getDescription()
-        {
-            return "Dispose Mesh 2";
-        }
-
-        public override void init()
+        public override void Init()
         {
             for (var i = 0; i < 100; i++)
             {
                 var loader = new TgcSceneLoader();
-                var scene =
-                    loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                             "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
+                var scene = loader.loadSceneFromFile(this.MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
                 scene.disposeAll();
             }
 
             var loader1 = new TgcSceneLoader();
-            scene1 =
-                loader1.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                          "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
+            scene1 = loader1.loadSceneFromFile(this.MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
 
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0f, 300f, 0f), 1500f);
+            ((TgcRotationalCamera)this.Camara).setCamera(new Vector3(0f, 300f, 0f), 1500f);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+            
             TgcDrawText.Instance.drawText("ok", 100, 100, Color.Red);
             scene1.renderAll();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             scene1.disposeAll();
         }
     }

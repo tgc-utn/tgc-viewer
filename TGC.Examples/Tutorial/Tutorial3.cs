@@ -1,9 +1,12 @@
 using Microsoft.DirectX;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
+using TgcUserVars = TGC.Core.UserControls.TgcUserVars;
 
 namespace TGC.Examples.Tutorial
 {
@@ -18,44 +21,39 @@ namespace TGC.Examples.Tutorial
     {
         //Constantes para velocidades de movimiento
         private const float ROTATION_SPEED = 1f;
-
         private const float MOVEMENT_SPEED = 5f;
-
         private TgcBox box;
-
         //Variable direccion de movimiento
         private float currentMoveDir = 1f;
 
-        public override string getCategory()
+        public Tutorial3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Tutorial";
+            this.Category = "Tutorial";
+            this.Name = "Tutorial 3";
+            this.Description = "Muestra como crear una caja 3D con textura que se traslada y rota en cada cuadro.";
         }
 
-        public override string getName()
-        {
-            return "Tutorial 3";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear una caja 3D con textura que se traslada y rota en cada cuadro.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Creamos una caja 3D con textura
             var center = new Vector3(0, -3, 0);
             var size = new Vector3(5, 5, 5);
-            var texture =
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Textures\\Metal\\cajaMetal.jpg");
+            var texture = TgcTexture.createTexture(this.MediaDir + "MeshCreator\\Textures\\Metal\\cajaMetal.jpg");
             box = TgcBox.fromSize(center, size, texture);
 
-            GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
+            //Hacemos que la cámara esté centrada sobre el box.
+            ((TgcRotationalCamera)this.Camara).targetObject(box.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
             //En cada cuadro de render rotamos la caja con cierta velocidad (en radianes)
             //Siempre tenemos que multiplicar las velocidades por el elapsedTime.
             //De esta forma la velocidad de rotacion es independiente de la potencia del CPU.
@@ -75,8 +73,10 @@ namespace TGC.Examples.Tutorial
             box.render();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             box.dispose();
         }
     }

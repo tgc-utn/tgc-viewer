@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
@@ -177,7 +177,7 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
-        ///     Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
         public string Technique
         {
@@ -306,7 +306,7 @@ namespace TGC.Core.SceneLoader
             //Cargar matrices para el shader
             setShaderMatrix();
 
-            //Renderizar segun el tipo de render de la malla
+            //Renderizar segun el tipo de Render de la malla
             effect.Technique = technique;
             var numPasses = effect.Begin(0);
             switch (renderType)

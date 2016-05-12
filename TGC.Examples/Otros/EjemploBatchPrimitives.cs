@@ -1,9 +1,12 @@
 using Microsoft.DirectX;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Otros
 {
@@ -21,36 +24,24 @@ namespace TGC.Examples.Otros
 
         private RenderMethod currentRenderMethod;
 
-        public override string getCategory()
+        public EjemploBatchPrimitives(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Otros";
+            this.Category = "Otros";
+            this.Name = "BatchPrimitives";
+            this.Description = "BatchPrimitives";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "BatchPrimitives";
-        }
+            box1Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, this.MediaDir + "Texturas\\pasto.jpg");
+            box2Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, this.MediaDir + "Texturas\\tierra.jpg");
+            box3Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, this.MediaDir + "Texturas\\madera.jpg");
 
-        public override string getDescription()
-        {
-            return "BatchPrimitives";
-        }
-
-        public override void init()
-        {
-            box1Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\pasto.jpg");
-            box2Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\tierra.jpg");
-            box3Texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg");
-
-            GuiController.Instance.Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
+            this.Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(25);
 
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(32.1944f, 42.1327f, -68.7882f),
-                new Vector3(265.5333f, -258.1551f, 856.0794f));
+            this.Camara = new TgcFpsCamera();
+            this.Camara.setCamera(new Vector3(32.1944f, 42.1327f, -68.7882f), new Vector3(265.5333f, -258.1551f, 856.0794f));
         }
 
         private void createMeshes(int cajasPorCuadrante)
@@ -130,14 +121,23 @@ namespace TGC.Examples.Otros
             }
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
-            var renderMethod = (RenderMethod)GuiController.Instance.Modifiers["Render Method"];
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
+            var renderMethod = (RenderMethod)this.Modifiers["Render Method"];
             doRender(renderMethod);
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             currentRenderMethod = RenderMethod.Unsorted;
             disposeCajas();
         }

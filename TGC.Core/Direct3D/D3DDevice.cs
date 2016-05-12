@@ -1,8 +1,11 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Textures;
 using TGC.Core.Utils;
+using System;
+using System.Diagnostics;
+using System.Windows.Forms;
+using TGC.Core.Textures;
 
 namespace TGC.Core.Direct3D
 {
@@ -15,9 +18,7 @@ namespace TGC.Core.Direct3D
         /// <summary>
         ///     Constructor privado para poder hacer el singleton
         /// </summary>
-        private D3DDevice()
-        {
-        }
+        private D3DDevice() { }
 
         /// <summary>
         ///     Device de DirectX 3D para crear primitivas
@@ -28,6 +29,8 @@ namespace TGC.Core.Direct3D
         public float FieldOfViewY { get; } = FastMath.ToRad(45.0f);
 
         public float AspectRatio { get; set; } = -1f;
+        private int width;
+        private int height;
 
         public float ZFarPlaneDistance { get; } = 10000f;
         public float ZNearPlaneDistance { get; } = 1f;
@@ -39,13 +42,25 @@ namespace TGC.Core.Direct3D
         /// </summary>
         public Color ClearColor { get; set; }
 
+        public int Width
+        {
+            get { return width; }
+            set { width = value; }
+        }
+
+        public int Height
+        {
+            get { return height; }
+            set { height = value; }
+        }
+
         /// <summary>
         ///     Valores default del Direct3d Device
         /// </summary>
-        public void setDefaultValues()
+        public void DefaultValues()
         {
             //Frustum values
-            Device.Transform.Projection = Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), AspectRatio,
+            Device.Transform.Projection = Matrix.PerspectiveFovLH(FastMath.ToRad(45.0f), AspectRatio,
                 ZNearPlaneDistance, ZFarPlaneDistance);
 
             //Render state
@@ -104,6 +119,64 @@ namespace TGC.Core.Direct3D
             this.Device.RenderState.PointScaleB = 1.0f;
             this.Device.RenderState.PointScaleC = 0.0f;
              */
+        }
+
+        public void InitializeD3DDevice(Panel panel)
+        {
+            this.AspectRatio = (float)panel.Width / panel.Height;
+            this.Width = panel.Width;
+            this.Height = panel.Height;
+
+            var caps = Manager.GetDeviceCaps(Manager.Adapters.Default.Adapter, DeviceType.Hardware);
+            Debug.WriteLine("Max primitive count:" + caps.MaxPrimitiveCount);
+
+            CreateFlags flags;
+            if (caps.DeviceCaps.SupportsHardwareTransformAndLight)
+                flags = CreateFlags.HardwareVertexProcessing;
+            else
+                flags = CreateFlags.SoftwareVertexProcessing;
+
+            var d3dpp = new PresentParameters();
+
+            d3dpp.BackBufferFormat = Format.Unknown;
+            d3dpp.SwapEffect = SwapEffect.Discard;
+            d3dpp.Windowed = true;
+            d3dpp.EnableAutoDepthStencil = true;
+            d3dpp.AutoDepthStencilFormat = DepthFormat.D24S8;
+            d3dpp.PresentationInterval = PresentInterval.Immediate;
+
+            //Antialiasing
+            if (Manager.CheckDeviceMultiSampleType(Manager.Adapters.Default.Adapter, DeviceType.Hardware,
+                Manager.Adapters.Default.CurrentDisplayMode.Format, true, MultiSampleType.NonMaskable))
+            {
+                d3dpp.MultiSample = MultiSampleType.NonMaskable;
+                d3dpp.MultiSampleQuality = 0;
+            }
+            else
+            {
+                d3dpp.MultiSample = MultiSampleType.None;
+            }
+
+            //Crear Graphics Device
+            Device.IsUsingEventHandlers = false;
+            var d3DDevice = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
+
+            this.Device = d3DDevice;
+        }
+
+        public void FillModeWireFrame()
+        {
+            this.Device.RenderState.FillMode = FillMode.WireFrame;
+        }
+
+        public void FillModeWireSolid()
+        {
+            this.Device.RenderState.FillMode = FillMode.Solid;
+        }
+
+        public void Clear()
+        {
+            this.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, D3DDevice.Instance.ClearColor, 1.0f, 0);
         }
     }
 }
