@@ -1,12 +1,16 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
+using System.Diagnostics;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.Textures;
-using TGC.Util;
-using TGC.Util.Input;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Group.MiGrupo
 {
@@ -18,29 +22,11 @@ namespace TGC.Group.MiGrupo
         //Caja que se muestra en el ejemplo
         private TgcBox box;
 
-        /// <summary>
-        ///     Categoría a la que pertenece el ejemplo.
-        ///     Influye en donde se va a haber en el árbol de la derecha de la pantalla.
-        /// </summary>
-        public override string getCategory()
+        public EjemploAlumno(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "AlumnoEjemplos";
-        }
-
-        /// <summary>
-        ///     Completar nombre del grupo en formato Grupo NN
-        /// </summary>
-        public override string getName()
-        {
-            return "Grupo 99";
-        }
-
-        /// <summary>
-        ///     Completar con la descripción del TP
-        /// </summary>
-        public override string getDescription()
-        {
-            return "MiIdea - Descripcion de la idea";
+            this.Category = "Alumnos";
+            this.Name = "Grupo 99";
+            this.Description = "Mi idea - Descripcion de la idea";
         }
 
         /// <summary>
@@ -48,52 +34,51 @@ namespace TGC.Group.MiGrupo
         ///     Escribir aquí todo el código de inicialización: cargar modelos, texturas, modifiers, uservars, etc.
         ///     Borrar todo lo que no haga falta
         /// </summary>
-        public override void init()
+        public override void Init()
         {
-            //GuiController.Instance: acceso principal a todas las herramientas del Framework
-
             //Device de DirectX para crear primitivas
             var d3dDevice = D3DDevice.Instance.Device;
 
             //Carpeta de archivos Media del alumno
-            var alumnoMediaFolder = GuiController.Instance.AlumnoMediaDir;
+            var alumnoMediaFolder = this.MediaDir;
 
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
-            GuiController.Instance.UserVars.addVar("variablePrueba");
+            this.UserVars.addVar("variablePrueba");
 
             //Cargar valor en UserVar
-            GuiController.Instance.UserVars.setValue("variablePrueba", 5451);
+            this.UserVars.setValue("variablePrueba", 5451);
 
             ///////////////MODIFIERS//////////////////
 
             //Crear un modifier para un valor FLOAT
-            GuiController.Instance.Modifiers.addFloat("valorFloat", -50f, 200f, 0f);
+            this.Modifiers.addFloat("valorFloat", -50f, 200f, 0f);
 
             //Crear un modifier para un ComboBox con opciones
             string[] opciones = { "opcion1", "opcion2", "opcion3" };
-            GuiController.Instance.Modifiers.addInterval("valorIntervalo", opciones, 0);
+            this.Modifiers.addInterval("valorIntervalo", opciones, 0);
 
             //Crear un modifier para modificar un vértice
-            GuiController.Instance.Modifiers.addVertex3f("valorVertice", new Vector3(-100, -100, -100),
-                new Vector3(50, 50, 50), new Vector3(0, 0, 0));
+            this.Modifiers.addVertex3f("valorVertice", new Vector3(-100, -100, -100), new Vector3(50, 50, 50), new Vector3(0, 0, 0));
 
             ///////////////CONFIGURAR CAMARA ROTACIONAL//////////////////
             //Es la camara que viene por default, asi que no hace falta hacerlo siempre
-            GuiController.Instance.RotCamera.Enable = true;
             //Configurar centro al que se mira y distancia desde la que se mira
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), 100);
+            this.Camara.setCamera(new Vector3(100, 100, 100), new Vector3(0, 0, 0));
 
             /*
             ///////////////CONFIGURAR CAMARA PRIMERA PERSONA//////////////////
             //Camara en primera persona, tipo videojuego FPS
             //Solo puede haber una camara habilitada a la vez. Al habilitar la camara FPS se deshabilita la camara rotacional
             //Por default la camara FPS viene desactivada
-            GuiController.Instance.FpsCamera.Enable = true;
+            this.Camara = new TgcFpsCamera();
+            CamaraManager.Instance.CurrentCamera = camara;
+            camara.Enable = true;
             //Configurar posicion y hacia donde se mira
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 0, -20), new Vector3(0, 0, 0));
+            camara.setCamera(new Vector3(0, 0, -20), new Vector3(0, 0, 0));
             */
+
 
             ///////////////LISTAS EN C#//////////////////
             //crear
@@ -109,8 +94,7 @@ namespace TGC.Group.MiGrupo
             //bucle foreach
             foreach (var elemento in lista)
             {
-                //Loggear por consola del Framework
-                GuiController.Instance.Logger.log(elemento);
+                Debug.WriteLine(elemento);
             }
 
             //bucle for
@@ -120,12 +104,17 @@ namespace TGC.Group.MiGrupo
             }
 
             //Cargamos una textura
-            var texture = TgcTexture.createTexture(GuiController.Instance.AlumnoMediaDir + "cajaMadera4.jpg");
+            var texture = TgcTexture.createTexture(this.MediaDir + "Texturas\\baldosaFacultad.jpg");
 
             //Creamos una caja 3D ubicada en (0, -3, 0), dimensiones (5, 10, 5) y la textura como color.
             var center = new Vector3(0, -3, 0);
             var size = new Vector3(5, 10, 5);
             box = TgcBox.fromSize(center, size, texture);
+        }
+
+        public override void Update(float elapsedTime)
+        {
+            //TODO aca debe ir toda la logica de calculos de lo que fue pasando....
         }
 
         /// <summary>
@@ -134,30 +123,33 @@ namespace TGC.Group.MiGrupo
         ///     Borrar todo lo que no haga falta
         /// </summary>
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
-        public override void render(float elapsedTime)
+        public override void Render(float elapsedTime)
         {
+            //Ejecuto el render de la super clase
+            base.Render(elapsedTime);
+
             //Device de DirectX para renderizar
             var d3dDevice = D3DDevice.Instance.Device;
 
             //Obtener valor de UserVar (hay que castear)
-            var valor = (int)GuiController.Instance.UserVars.getValue("variablePrueba");
+            var valor = (int)this.UserVars.getValue("variablePrueba");
 
             //Obtener valores de Modifiers
-            var valorFloat = (float)GuiController.Instance.Modifiers["valorFloat"];
-            var opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
-            var valorVertice = (Vector3)GuiController.Instance.Modifiers["valorVertice"];
+            var valorFloat = (float)this.Modifiers["valorFloat"];
+            var opcionElegida = (string)this.Modifiers["valorIntervalo"];
+            var valorVertice = (Vector3)this.Modifiers["valorVertice"];
 
             ///////////////INPUT//////////////////
             //conviene deshabilitar ambas camaras para que no haya interferencia
 
             //Capturar Input teclado
-            if (GuiController.Instance.D3dInput.keyPressed(Key.F))
+            if (TgcD3dInput.Instance.keyPressed(Key.F))
             {
                 //Tecla F apretada
             }
 
             //Capturar Input Mouse
-            if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Boton izq apretado
             }
@@ -170,8 +162,10 @@ namespace TGC.Group.MiGrupo
         ///     Método que se llama cuando termina la ejecución del ejemplo.
         ///     Hacer dispose() de todos los objetos creados.
         /// </summary>
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //Dispose de la caja
             box.dispose();
         }

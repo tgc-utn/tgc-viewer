@@ -1,10 +1,13 @@
 using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Otros
 {
@@ -14,31 +17,21 @@ namespace TGC.Examples.Otros
     public class EjemploDisposeMesh : TgcExample
     {
         private List<TgcMesh> meshes;
-
-        public override string getCategory()
+        
+        public EjemploDisposeMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Otros";
+            this.Category = "Otros";
+            this.Name = "Dispose Mesh";
+            this.Description = "Dispose Mesh";
         }
 
-        public override string getName()
-        {
-            return "Dispose Mesh";
-        }
-
-        public override string getDescription()
-        {
-            return "Dispose Mesh";
-        }
-
-        public override void init()
+        public override void Init()
         {
             meshes = new List<TgcMesh>();
             for (var i = 0; i < 100; i++)
             {
                 var loader = new TgcSceneLoader();
-                var scene =
-                    loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                             "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
+                var scene = loader.loadSceneFromFile(this.MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
                 var mesh = scene.Meshes[0];
                 mesh.move(0, i * 100, 0);
                 meshes.Add(mesh);
@@ -46,7 +39,7 @@ namespace TGC.Examples.Otros
                 mesh.D3dMesh.Disposing += D3dMesh_Disposing;
             }
 
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0f, 300f, 0f), 1500f);
+           ((TgcRotationalCamera)this.Camara).setCamera(new Vector3(0f, 300f, 0f), 1500f);
         }
 
         private void D3dMesh_Disposing(object sender, EventArgs e)
@@ -55,16 +48,25 @@ namespace TGC.Examples.Otros
             a++;
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
             foreach (var m in meshes)
             {
                 m.render();
             }
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             foreach (var m in meshes)
             {
                 m.dispose();

@@ -1,7 +1,7 @@
-﻿using Microsoft.DirectX.Direct3D;
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
+using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
 
 namespace TGC.Core.Textures
@@ -14,7 +14,7 @@ namespace TGC.Core.Textures
         /// <summary>
         ///     Crear textura de TGC
         /// </summary>
-        public TgcTexture(string fileName, string filePath, Texture d3dTexture, bool inPool)
+        public TgcTexture(string fileName, string filePath, Microsoft.DirectX.Direct3D.Texture d3dTexture, bool inPool)
         {
             FileName = fileName;
             FilePath = filePath;
@@ -35,7 +35,7 @@ namespace TGC.Core.Textures
         /// <summary>
         ///     Textura de DirectX
         /// </summary>
-        public Texture D3dTexture { get; private set; }
+        public Microsoft.DirectX.Direct3D.Texture D3dTexture { get; private set; }
 
         /// <summary>
         ///     Indica si la textura fue creada dentro del TexturesPool de texturas del framework
@@ -186,7 +186,7 @@ namespace TGC.Core.Textures
         /// <param name="filePath">Ruta completa de la textura. Ejemplo: C:\Texturas\miTextura.jpg</param>
         /// <param name="d3dTexture">Textura de DirectX ya cargada por el usuario</param>
         /// <returns>Textura creada</returns>
-        public static TgcTexture createTexture(Device d3dDevice, string fileName, string filePath, Texture d3dTexture)
+        public static TgcTexture createTexture(Device d3dDevice, string fileName, string filePath, Microsoft.DirectX.Direct3D.Texture d3dTexture)
         {
             try
             {

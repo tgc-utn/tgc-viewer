@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 
 namespace TGC.Core.SkeletalAnimation
 {

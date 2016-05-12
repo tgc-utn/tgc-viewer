@@ -56,7 +56,7 @@ namespace TGC.Core.Terrain
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
-        ///     Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
         public string Technique
         {

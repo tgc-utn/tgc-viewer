@@ -1,8 +1,11 @@
 using Microsoft.DirectX;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls.Modifier;
+using TgcUserVars = TGC.Core.UserControls.TgcUserVars;
 
 namespace TGC.Examples.Tutorial
 {
@@ -17,22 +20,14 @@ namespace TGC.Examples.Tutorial
     {
         private TgcBox box;
 
-        public override string getCategory()
+        public Tutorial2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Tutorial";
+            this.Category = "Tutorial";
+            this.Name = "Tutorial 2";
+            this.Description = "Muestra como crear una caja 3D con una imagen 2D como textura para darle color.";
         }
 
-        public override string getName()
-        {
-            return "Tutorial 2";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear una caja 3D con una imagen 2D como textura para darle color.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Cargamos una textura
             //Una textura es una imágen 2D que puede dibujarse arriba de un polígono 3D para darle color.
@@ -44,25 +39,33 @@ namespace TGC.Examples.Tutorial
             //  TgcViewer\Examples\Media\MeshCreator\Textures
             //Podemos acceder al path de la carpeta "Media" utilizando la variable "GuiController.Instance.ExamplesMediaDir".
             //Esto evita que tengamos que hardcodear el path de instalación del framework.
-            var texture =
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Textures\\Madera\\cajaMadera3.jpg");
+            var texture = TgcTexture.createTexture(this.MediaDir + "MeshCreator\\Textures\\Madera\\cajaMadera3.jpg");
 
             //Creamos una caja 3D ubicada en (0, -3, 0), dimensiones (5, 10, 5) y la textura como color.
             var center = new Vector3(0, -3, 0);
             var size = new Vector3(5, 10, 5);
             box = TgcBox.fromSize(center, size, texture);
 
-            GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
+            //Hacemos que la cámara esté centrada el box.
+            ((TgcRotationalCamera)this.Camara).targetObject(box.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
             box.render();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             box.dispose();
         }
     }

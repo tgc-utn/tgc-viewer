@@ -3,12 +3,17 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
+using TGC.Core;
+using TGC.Core.Camara;
+using TGC.Core.Direct3D;
 using TGC.Core._2D;
 using TGC.Core.Example;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 using Font = System.Drawing.Font;
 
 namespace TGC.Examples.Otros
@@ -23,28 +28,18 @@ namespace TGC.Examples.Otros
         private TgcMesh mesh;
         private TgcText2d textHelp;
 
-        public override string getCategory()
+        public EjemploDefault(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Otros";
+            this.Category = "Otros";
+            this.Name = "Logo de TGC";
+            this.Description = "Logo de TGC";
         }
 
-        public override string getName()
-        {
-            return "Logo de TGC";
-        }
-
-        public override string getDescription()
-        {
-            return "Logo de TGC";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Cargar mesh
             var loader = new TgcSceneLoader();
-            mesh =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
+            mesh = loader.loadSceneFromFile(this.MediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
 
             //Cargar Shader de PhongShading
             mesh.Effect = TgcShaders.Instance.TgcMeshPhongShader;
@@ -60,19 +55,26 @@ namespace TGC.Examples.Otros
             textHelp.Text = "¿Por dónde empezar? Presionar \"H\"";
 
             //Help form
-            var helpRtf = File.ReadAllText(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\LogoTGC\\help.rtf");
+            var helpRtf = File.ReadAllText(this.MediaDir + "ModelosTgc\\LogoTGC\\help.rtf");
             helpForm = new EjemploDefaultHelpForm(helpRtf);
 
             //Camara
-            GuiController.Instance.RotCamera.Enable = true;
-            GuiController.Instance.RotCamera.CameraCenter = new Vector3(0, 0, 0);
-            GuiController.Instance.RotCamera.CameraDistance = 150;
+            ((TgcRotationalCamera)this.Camara).CameraCenter = new Vector3(0, 0, 0);
+            ((TgcRotationalCamera)this.Camara).CameraDistance = 150;
 
-            GuiController.Instance.BackgroundColor = Color.Black;
+            //BackgroundColor
+            D3DDevice.Instance.ClearColor = Color.Black;
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
             //Cargar variables shader
             mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(Color.Gray));
             mesh.Effect.SetValue("diffuseColor", ColorValue.FromColor(Color.LightBlue));
@@ -80,7 +82,7 @@ namespace TGC.Examples.Otros
             mesh.Effect.SetValue("specularExp", 10f);
             mesh.Effect.SetValue("lightPosition", lightPos);
             mesh.Effect.SetValue("eyePosition",
-                TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.RotCamera.getPosition()));
+                TgcParserUtils.vector3ToFloat4Array(this.Camara.getPosition()));
 
             mesh.rotateY(-elapsedTime / 2);
             mesh.render();
@@ -88,14 +90,16 @@ namespace TGC.Examples.Otros
             textHelp.render();
 
             //Help
-            if (GuiController.Instance.D3dInput.keyPressed(Key.H))
+            if (TgcD3dInput.Instance.keyPressed(Key.H))
             {
-                helpForm.ShowDialog(GuiController.Instance.MainForm);
+                helpForm.ShowDialog();
             }
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             mesh.dispose();
             textHelp.dispose();
             helpForm.Dispose();

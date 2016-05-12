@@ -1,6 +1,9 @@
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls.Modifier;
+using TgcUserVars = TGC.Core.UserControls.TgcUserVars;
 
 namespace TGC.Examples.Tutorial
 {
@@ -16,22 +19,14 @@ namespace TGC.Examples.Tutorial
         //Variable para el modelo 3D
         private TgcMesh mesh;
 
-        public override string getCategory()
+        public Tutorial5(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Tutorial";
+            this.Category = "Tutorial";
+            this.Name = "Tutorial 5";
+            this.Description = "Muestra como cargar un modelo 3D.";
         }
 
-        public override string getName()
-        {
-            return "Tutorial 5";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como cargar un modelo 3D.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //El framework posee la clase TgcSceneLoader que permite cargar modelos 3D.
             //Estos modelos 3D están almacenados en un archivo XML llamado TgcScene.xml.
@@ -42,25 +37,32 @@ namespace TGC.Examples.Tutorial
             //modelos 3D. Cada modelo se representa con la clase TgcMesh.
             //En este ejemplo vamos a cargar una escena con un único modelo.
             var loader = new TgcSceneLoader();
-            var scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
+            var scene = loader.loadSceneFromFile(this.MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
 
             //De toda la escena solo nos interesa guardarnos el primer modelo (el único que hay en este caso).
             mesh = scene.Meshes[0];
 
-            //Hacemos que la cámara esté centrada sobre este modelo.
-            GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
+            //Hacemos que la cámara esté centrada sobre el mesh.
+            ((TgcRotationalCamera)this.Camara).targetObject(mesh.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
             //Dibujar el modelo 3D
             mesh.render();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //Liberar memoria del modelo 3D
             mesh.dispose();
         }

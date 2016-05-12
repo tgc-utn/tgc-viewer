@@ -4,7 +4,7 @@ using TGC.Viewer.Forms;
 
 namespace TGC.Viewer
 {
-    internal static class Program
+    public static class Program
     {
         /// <summary>
         ///     Punto de entrada principal para la aplicación.

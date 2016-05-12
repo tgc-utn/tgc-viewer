@@ -1,5 +1,5 @@
 ﻿using Microsoft.DirectX;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 
 namespace TGC.Core.Collision.ElipsoidCollision
 {
