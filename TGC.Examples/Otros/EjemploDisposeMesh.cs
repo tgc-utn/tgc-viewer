@@ -48,19 +48,22 @@ namespace TGC.Examples.Otros
             a++;
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new NotImplementedException();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            this.IniciarEscena();
+            base.Render();
 
             foreach (var m in meshes)
             {
                 m.render();
             }
+
+            this.FinalizarEscena();
         }
 
         public override void Close()

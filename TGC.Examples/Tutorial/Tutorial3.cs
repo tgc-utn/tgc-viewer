@@ -45,32 +45,35 @@ namespace TGC.Examples.Tutorial
             ((TgcRotationalCamera)this.Camara).targetObject(box.BoundingBox);
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            this.IniciarEscena();
+            base.Render();
 
             //En cada cuadro de render rotamos la caja con cierta velocidad (en radianes)
             //Siempre tenemos que multiplicar las velocidades por el elapsedTime.
             //De esta forma la velocidad de rotacion es independiente de la potencia del CPU.
             //Sino en computadoras con CPU más rápido la caja giraría mas rápido que en computadoras mas lentas.
-            box.rotateY(ROTATION_SPEED * elapsedTime);
+            box.rotateY(ROTATION_SPEED * this.ElapsedTime);
 
             //Tambien aplicamos una traslación en Y. Hacemos que la caja se mueva en forma intermitente en el
             //intervalo [0, 3] de Y. Cuando llega a uno de los límites del intervalo invertimos la dirección
             //del movimiento.
             //Tambien tenemos que multiplicar la velocidad por el elapsedTime
-            box.move(0, MOVEMENT_SPEED * currentMoveDir * elapsedTime, 0);
+            box.move(0, MOVEMENT_SPEED * currentMoveDir * this.ElapsedTime, 0);
             if (FastMath.Abs(box.Position.Y) > 3f)
             {
                 currentMoveDir *= -1;
             }
 
             box.render();
+
+            this.FinalizarEscena();
         }
 
         public override void Close()

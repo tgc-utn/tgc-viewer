@@ -46,17 +46,20 @@ namespace TGC.Examples.Tutorial
             ((TgcRotationalCamera)this.Camara).targetObject(mesh.BoundingBox);
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            this.IniciarEscena();
+            base.Render();
 
             //Dibujar el modelo 3D
             mesh.render();
+
+            this.FinalizarEscena();
         }
 
         public override void Close()

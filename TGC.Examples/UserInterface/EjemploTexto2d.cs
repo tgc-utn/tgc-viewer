@@ -52,19 +52,22 @@ namespace TGC.Examples.UserInterface
             text3.Color = Color.Gold;
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            this.IniciarEscena();
+            base.Render();
 
             //Renderizar los tres textoss
             text1.render();
             text2.render();
             text3.render();
+
+            this.FinalizarEscena();
         }
 
         public override void Close()

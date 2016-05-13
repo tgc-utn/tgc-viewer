@@ -47,14 +47,15 @@ namespace TGC.Examples.Tutorial
             ((TgcThirdPersonCamera)this.Camara).setCamera(mainMesh.Position, 200, 300);
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            this.IniciarEscena();
+            base.Render();
 
             //Procesamos input de teclado para mover el objeto principal en el plano XZ
             var input = TgcD3dInput.Instance;
@@ -77,7 +78,7 @@ namespace TGC.Examples.Tutorial
             }
 
             //Aplicar movimiento
-            movement *= MOVEMENT_SPEED * elapsedTime;
+            movement *= MOVEMENT_SPEED * this.ElapsedTime;
             mainMesh.move(movement);
 
             //Hacer que la cámara en 3ra persona se ajuste a la nueva posición del objeto
@@ -89,6 +90,8 @@ namespace TGC.Examples.Tutorial
 
             //Dibujamos la escena
             scene.renderAll();
+
+            this.FinalizarEscena();
         }
 
         public override void Close()

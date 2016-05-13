@@ -15,6 +15,11 @@ namespace TGC.Core.Example
     public abstract class TgcExample
     {
         /// <summary>
+        ///     Tiempo en segundos transcurridos desde el ultimo frame.
+        /// </summary>
+        public float ElapsedTime { get; set; }
+
+        /// <summary>
         ///     Activa o desactiva el contador de frames por segundo.
         /// </summary>
         public bool FPS { get; set; }
@@ -75,6 +80,7 @@ namespace TGC.Core.Example
             this.AxisLines.Enable = true;
             this.Camara = camara;
             this.FPS = true;
+            this.ElapsedTime = -1;
 
             this.Category = "Otros";
             this.Name = "Ejemplo en Blanco";
@@ -91,19 +97,23 @@ namespace TGC.Core.Example
         /// Update de mi modelo
         /// </summary>
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
-        public abstract void Update(float elapsedTime);
+        public abstract void Update();
 
         /// <summary>
         ///     Se llama para renderizar cada cuadro del ejemplo.
         /// </summary>
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
-        public virtual void Render(float elapsedTime)
+        public virtual void Render()
         {
+            this.ElapsedTime = HighResolutionTimer.Instance.FrameTime;
+            D3DDevice.Instance.Clear();
+            HighResolutionTimer.Instance.Set();
+
             //Acutalizar input
             TgcD3dInput.Instance.update();
 
             //Actualizar la camara
-            this.Camara.updateCamera(elapsedTime);
+            this.Camara.updateCamera(ElapsedTime);
             this.Camara.updateViewMatrix(D3DDevice.Instance.Device);
 
             //actualizar el Frustum
@@ -137,6 +147,32 @@ namespace TGC.Core.Example
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
             this.UserVars.ClearVars();
             this.Modifiers.Clear();
+            this.ElapsedTime = -1;
+        }
+
+        /// <summary>
+        /// Iniciar escena 3D
+        /// </summary>
+        public void IniciarEscena()
+        {
+            D3DDevice.Instance.Device.BeginScene();
+        }
+
+        /// <summary>
+        /// Finalizar escena 3D
+        /// </summary>
+        public void FinalizarEscena()
+        {
+            D3DDevice.Instance.Device.EndScene();
+            D3DDevice.Instance.Device.Present();
+        }
+
+        /// <summary>
+        ///     Vuelve la configuracion de Render y otras cosas a la configuracion inicial
+        /// </summary>
+        public void ResetDefaultConfig()
+        {
+            D3DDevice.Instance.DefaultValues();
         }
     }
 }
