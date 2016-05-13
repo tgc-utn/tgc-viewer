@@ -39,17 +39,20 @@ namespace TGC.Examples.Otros
             ((TgcRotationalCamera)this.Camara).setCamera(new Vector3(0f, 300f, 0f), 1500f);
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            this.IniciarEscena();
+            base.Render();
             
             TgcDrawText.Instance.drawText("ok", 100, 100, Color.Red);
             scene1.renderAll();
+
+            this.FinalizarEscena();
         }
 
         public override void Close()

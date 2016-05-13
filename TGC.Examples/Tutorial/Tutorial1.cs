@@ -54,7 +54,7 @@ namespace TGC.Examples.Tutorial
             ((TgcRotationalCamera)this.Camara).targetObject(box.BoundingBox);
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new System.NotImplementedException();
         }
@@ -67,12 +67,18 @@ namespace TGC.Examples.Tutorial
         ///     La variable elapsedTime indica la cantidad de segundos que pasaron entre esta invocación
         ///     y la anterior de render(). Es útil para animar e interpolar valores.
         /// </summary>
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            //Iniciamoss la escena
+            this.IniciarEscena();
+            //Render de la super clase
+            base.Render();
 
             //Dibujar la caja en pantalla
             box.render();
+
+            //Finalizamos el renderizado de la escena
+            this.FinalizarEscena();
         }
 
         /// <summary>

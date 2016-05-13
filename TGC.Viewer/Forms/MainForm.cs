@@ -30,18 +30,6 @@ namespace TGC.Viewer.Forms
         private ExampleLoader exampleLoader;
 
         /// <summary>
-        ///     Tiempo en segundos transcurridos desde el ultimo frame.
-        ///     Solo puede ser invocado cuando se esta ejecutando un bloque de Render() de un TgcExample
-        /// </summary>
-        public float elapsedTime;
-
-        /// <summary>
-        ///     Activa o desactiva el renderizado personalizado.
-        ///     Si esta activo, el ejemplo tiene la responsabilidad de hacer el BeginScene y EndScene.
-        /// </summary>
-        public bool customRenderEnabled;
-
-        /// <summary>
         ///     Indica si la aplicacion arranca en modo full screen
         /// </summary>
         public bool fullScreenMode;
@@ -114,9 +102,7 @@ namespace TGC.Viewer.Forms
 
             //Iniciar otras herramientas
             TgcD3dInput.Instance.Initialize(this, this.panel3d);
-            this.elapsedTime = -1;
             TgcDirectSound.Instance.InitializeD3DDevice(this);
-            this.customRenderEnabled = false;
 
             //Directorio actual de ejecucion
             string currentDirectory = Environment.CurrentDirectory + "\\";
@@ -229,7 +215,7 @@ namespace TGC.Viewer.Forms
 
         private void acercaDeTgcViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AboutWindow().ShowDialog(this);
+            new AboutForm().ShowDialog(this);
         }
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -318,11 +304,11 @@ namespace TGC.Viewer.Forms
         public void ExecuteExample(TgcExample example)
         {
             this.StopCurrentExample();
-            this.ResetDefaultConfig();
 
             //Ejecutar Init
             try
             {
+                example.ResetDefaultConfig();
                 example.Init();
 
                 //Ver si abrimos una ventana para modo FullScreen
@@ -353,7 +339,6 @@ namespace TGC.Viewer.Forms
                 this.exampleLoader.CurrentExample.Close();
                 this.toolStripStatusCurrentExample.Text = "Ejemplo actual terminado." + this.exampleLoader.CurrentExample.Name + " terminado";
                 this.exampleLoader.CurrentExample = null;
-                this.elapsedTime = -1;
 
                 if (this.fullScreenMode && this.fullScreenPanel.Visible)
                 {
@@ -399,37 +384,11 @@ namespace TGC.Viewer.Forms
         /// </summary>
         public void Render()
         {
-            this.elapsedTime = HighResolutionTimer.Instance.FrameTime;
-            D3DDevice.Instance.Clear();
-            HighResolutionTimer.Instance.Set();
-
-            //Hacer Render delegando control total al ejemplo
-            if (this.customRenderEnabled)
+            //Ejecutar Render del ejemplo
+            if (this.exampleLoader.CurrentExample != null)
             {
-                //Ejecutar Render del ejemplo
-                if (this.exampleLoader.CurrentExample != null)
-                {
-                    this.exampleLoader.CurrentExample.Render(this.elapsedTime);
-                }
+                this.exampleLoader.CurrentExample.Render();
             }
-            //Hacer Render asistido (mas sencillo para el ejemplo)
-            else
-            {
-                //Iniciar escena 3D
-                D3DDevice.Instance.Device.BeginScene();
-
-                //Ejecutar Render del ejemplo
-                if (this.exampleLoader.CurrentExample != null)
-                {
-                    this.exampleLoader.CurrentExample.Render(this.elapsedTime);
-                }
-
-                //Finalizar escena 3D
-                D3DDevice.Instance.Device.EndScene();
-            }
-
-            D3DDevice.Instance.Device.Present();
-            //this.Invalidate();
         }
 
         /// <summary>
@@ -453,15 +412,6 @@ namespace TGC.Viewer.Forms
 
             //Reset Timer
             HighResolutionTimer.Instance.Reset();
-        }
-
-        /// <summary>
-        ///     Vuelve la configuracion de Render y otras cosas a la configuracion inicial
-        /// </summary>
-        public void ResetDefaultConfig()
-        {
-            D3DDevice.Instance.DefaultValues();
-            this.customRenderEnabled = false;
         }
 
         /// <summary>

@@ -112,7 +112,7 @@ namespace TGC.Group.MiGrupo
             box = TgcBox.fromSize(center, size, texture);
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             //TODO aca debe ir toda la logica de calculos de lo que fue pasando....
         }
@@ -123,10 +123,11 @@ namespace TGC.Group.MiGrupo
         ///     Borrar todo lo que no haga falta
         /// </summary>
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
+            this.IniciarEscena();
             //Ejecuto el render de la super clase
-            base.Render(elapsedTime);
+            base.Render();
 
             //Device de DirectX para renderizar
             var d3dDevice = D3DDevice.Instance.Device;
@@ -156,6 +157,8 @@ namespace TGC.Group.MiGrupo
 
             //Render de la caja
             box.render();
+
+            this.FinalizarEscena();
         }
 
         /// <summary>

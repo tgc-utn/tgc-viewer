@@ -66,14 +66,15 @@ namespace TGC.Examples.Otros
             D3DDevice.Instance.ClearColor = Color.Black;
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            this.IniciarEscena();
+            base.Render();
 
             //Cargar variables shader
             mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(Color.Gray));
@@ -84,7 +85,7 @@ namespace TGC.Examples.Otros
             mesh.Effect.SetValue("eyePosition",
                 TgcParserUtils.vector3ToFloat4Array(this.Camara.getPosition()));
 
-            mesh.rotateY(-elapsedTime / 2);
+            mesh.rotateY(-this.ElapsedTime / 2);
             mesh.render();
 
             textHelp.render();
@@ -94,6 +95,8 @@ namespace TGC.Examples.Otros
             {
                 helpForm.ShowDialog();
             }
+
+            this.FinalizarEscena();
         }
 
         public override void Close()

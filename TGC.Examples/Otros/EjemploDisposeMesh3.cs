@@ -37,16 +37,17 @@ namespace TGC.Examples.Otros
             ((TgcRotationalCamera)this.Camara).targetObject(box.BoundingBox);
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            this.IniciarEscena();
+            base.Render();
 
-            time += elapsedTime;
+            time += this.ElapsedTime;
             if (time > 1f)
             {
                 var d3dMesh = new Mesh(boxMesh.NumberTriangles, boxMesh.NumberVertices, MeshFlags.Managed,
@@ -65,7 +66,6 @@ namespace TGC.Examples.Otros
                     newVert[i] = origVert[i];
                 }
 
-                //d3dMesh.SetVertexBufferData(newVert, LockFlags.None);
                 d3dMesh.UnlockVertexBuffer();
 
                 boxMesh.changeD3dMesh(d3dMesh);
@@ -74,6 +74,8 @@ namespace TGC.Examples.Otros
             }
 
             boxMesh.render();
+
+            this.FinalizarEscena();
         }
 
         public override void Close()

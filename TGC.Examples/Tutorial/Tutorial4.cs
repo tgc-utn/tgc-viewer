@@ -42,14 +42,15 @@ namespace TGC.Examples.Tutorial
             ((TgcRotationalCamera)this.Camara).targetObject(box.BoundingBox);
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            this.IniciarEscena();
+            base.Render();
 
             //Obtenemos acceso al objeto que maneja input de mouse y teclado del framework
             var input = TgcD3dInput.Instance;
@@ -92,12 +93,14 @@ namespace TGC.Examples.Tutorial
             }
 
             //Multiplicar movimiento por velocidad y elapsedTime
-            movement *= MOVEMENT_SPEED * elapsedTime;
+            movement *= MOVEMENT_SPEED * this.ElapsedTime;
 
             //Aplicar movimiento
             box.move(movement);
 
             box.render();
+
+            this.FinalizarEscena();
         }
 
         public override void Close()
