@@ -94,5 +94,17 @@ namespace TGC.Viewer.Properties {
                 this["CommonShaders"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ModifiersPanel {
+            get {
+                return ((bool)(this["ModifiersPanel"]));
+            }
+            set {
+                this["ModifiersPanel"] = value;
+            }
+        }
     }
 }

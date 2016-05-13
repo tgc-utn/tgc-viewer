@@ -1,6 +1,6 @@
 ﻿namespace TGC.Viewer.Forms
 {
-    partial class MainForm
+    partial class ViewerForm
     {
         /// <summary>
         /// Variable del diseñador requerida.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewerForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -164,7 +164,7 @@
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusCurrentExample});
-            this.statusStrip.Location = new System.Drawing.Point(0, 664);
+            this.statusStrip.Location = new System.Drawing.Point(0, 539);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(784, 22);
             this.statusStrip.TabIndex = 2;
@@ -190,8 +190,8 @@
             // splitContainerDerecha.Panel2
             // 
             this.splitContainerDerecha.Panel2.Controls.Add(this.groupBoxUserVars);
-            this.splitContainerDerecha.Size = new System.Drawing.Size(250, 640);
-            this.splitContainerDerecha.SplitterDistance = 231;
+            this.splitContainerDerecha.Size = new System.Drawing.Size(250, 515);
+            this.splitContainerDerecha.SplitterDistance = 185;
             this.splitContainerDerecha.TabIndex = 8;
             // 
             // groupBoxModifiers
@@ -201,7 +201,7 @@
             this.groupBoxModifiers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxModifiers.Location = new System.Drawing.Point(0, 0);
             this.groupBoxModifiers.Name = "groupBoxModifiers";
-            this.groupBoxModifiers.Size = new System.Drawing.Size(250, 231);
+            this.groupBoxModifiers.Size = new System.Drawing.Size(250, 185);
             this.groupBoxModifiers.TabIndex = 0;
             this.groupBoxModifiers.TabStop = false;
             this.groupBoxModifiers.Text = "Modifiers";
@@ -214,7 +214,7 @@
             this.flowLayoutPanelModifiers.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelModifiers.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanelModifiers.Name = "flowLayoutPanelModifiers";
-            this.flowLayoutPanelModifiers.Size = new System.Drawing.Size(244, 212);
+            this.flowLayoutPanelModifiers.Size = new System.Drawing.Size(244, 166);
             this.flowLayoutPanelModifiers.TabIndex = 0;
             this.flowLayoutPanelModifiers.WrapContents = false;
             // 
@@ -225,7 +225,7 @@
             this.groupBoxUserVars.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxUserVars.Location = new System.Drawing.Point(0, 0);
             this.groupBoxUserVars.Name = "groupBoxUserVars";
-            this.groupBoxUserVars.Size = new System.Drawing.Size(250, 405);
+            this.groupBoxUserVars.Size = new System.Drawing.Size(250, 326);
             this.groupBoxUserVars.TabIndex = 0;
             this.groupBoxUserVars.TabStop = false;
             this.groupBoxUserVars.Text = "User variables";
@@ -246,7 +246,7 @@
             this.dataGridUserVars.ReadOnly = true;
             this.dataGridUserVars.RowHeadersWidth = 10;
             this.dataGridUserVars.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridUserVars.Size = new System.Drawing.Size(244, 386);
+            this.dataGridUserVars.Size = new System.Drawing.Size(244, 307);
             this.dataGridUserVars.TabIndex = 0;
             // 
             // ColumnName
@@ -282,8 +282,8 @@
             // splitContainerIzquierda.Panel2
             // 
             this.splitContainerIzquierda.Panel2.Controls.Add(this.textBoxExampleDescription);
-            this.splitContainerIzquierda.Size = new System.Drawing.Size(180, 640);
-            this.splitContainerIzquierda.SplitterDistance = 370;
+            this.splitContainerIzquierda.Size = new System.Drawing.Size(180, 515);
+            this.splitContainerIzquierda.SplitterDistance = 297;
             this.splitContainerIzquierda.TabIndex = 6;
             // 
             // groupBoxExamples
@@ -293,7 +293,7 @@
             this.groupBoxExamples.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxExamples.Location = new System.Drawing.Point(0, 0);
             this.groupBoxExamples.Name = "groupBoxExamples";
-            this.groupBoxExamples.Size = new System.Drawing.Size(180, 370);
+            this.groupBoxExamples.Size = new System.Drawing.Size(180, 297);
             this.groupBoxExamples.TabIndex = 0;
             this.groupBoxExamples.TabStop = false;
             this.groupBoxExamples.Text = "Ejemplos";
@@ -303,7 +303,7 @@
             this.treeViewExamples.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeViewExamples.Location = new System.Drawing.Point(3, 16);
             this.treeViewExamples.Name = "treeViewExamples";
-            this.treeViewExamples.Size = new System.Drawing.Size(174, 351);
+            this.treeViewExamples.Size = new System.Drawing.Size(174, 278);
             this.treeViewExamples.TabIndex = 4;
             this.treeViewExamples.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewExamples_AfterSelect);
             this.treeViewExamples.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeViewExamples_MouseDoubleClick);
@@ -315,7 +315,7 @@
             this.textBoxExampleDescription.Multiline = true;
             this.textBoxExampleDescription.Name = "textBoxExampleDescription";
             this.textBoxExampleDescription.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxExampleDescription.Size = new System.Drawing.Size(180, 266);
+            this.textBoxExampleDescription.Size = new System.Drawing.Size(180, 214);
             this.textBoxExampleDescription.TabIndex = 0;
             // 
             // panel3d
@@ -324,7 +324,7 @@
             this.panel3d.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3d.Location = new System.Drawing.Point(180, 24);
             this.panel3d.Name = "panel3d";
-            this.panel3d.Size = new System.Drawing.Size(354, 640);
+            this.panel3d.Size = new System.Drawing.Size(354, 515);
             this.panel3d.TabIndex = 9;
             // 
             // MainForm
@@ -332,7 +332,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(784, 686);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.panel3d);
             this.Controls.Add(this.splitContainerDerecha);
             this.Controls.Add(this.splitContainerIzquierda);
@@ -340,7 +340,7 @@
             this.Controls.Add(this.menuStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
-            this.MinimumSize = new System.Drawing.Size(800, 725);
+            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
