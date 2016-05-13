@@ -20,5 +20,8 @@
     <Setting Name="CommonShaders" Type="System.String" Scope="User">
       <Value Profile="(Default)">TgcViewer\</Value>
     </Setting>
+    <Setting Name="ModifiersPanel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
