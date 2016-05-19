@@ -1,5 +1,6 @@
 using System.Drawing;
 using TGC.Core.Example;
+using TGC.Core.Input;
 using TGC.Util;
 
 namespace TGC.Examples.MeshCreator
@@ -37,7 +38,8 @@ namespace TGC.Examples.MeshCreator
         public override void init()
         {
             //Configurar camara FPS
-            GuiController.Instance.RotCamera.Enable = false;
+            // TODO antes hacia esto... GuiController.Instance.RotCamera.Enable = false;
+            CamaraManager.Instance.CurrentCamera.Enable = false;
 
             //Color de fondo
             GuiController.Instance.BackgroundColor = Color.FromArgb(38, 38, 38);

@@ -1,11 +1,16 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
 using TGC.Core._2D;
+using TGC.Core.Camara;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Sprites2D
 {
@@ -26,60 +31,58 @@ namespace TGC.Examples.Sprites2D
         private TgcAnimatedSprite animatedSprite;
         private TgcBox box;
 
-        public override string getCategory()
+        public EjemploAnimatedSprite(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Sprite 2D";
+            Category = "Sprite 2D";
+            Name = "Sprite Animado";
+            Description = "Muestra como dibujar un Sprite Animado en 2D.";
         }
 
-        public override string getName()
-        {
-            return "Sprite Animado";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como dibujar un Sprite Animado en 2D";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear Sprite animado
-            animatedSprite = new TgcAnimatedSprite(
-                GuiController.Instance.ExamplesMediaDir + "\\Texturas\\Sprites\\Explosion.png", //Textura de 256x256
+            animatedSprite = new TgcAnimatedSprite(MediaDir + "\\Texturas\\Sprites\\Explosion.png", //Textura de 256x256
                 new Size(64, 64), //Tamaño de un frame (64x64px en este caso)
                 16, //Cantidad de frames, (son 16 de 64x64px)
                 10 //Velocidad de animacion, en cuadros x segundo
                 );
 
             //Ubicarlo centrado en la pantalla
-            var screenSize = GuiController.Instance.Panel3d.Size;
             var textureSize = animatedSprite.Sprite.Texture.Size;
-            animatedSprite.Position = new Vector2(screenSize.Width / 2 - textureSize.Width / 2,
-                screenSize.Height / 2 - textureSize.Height / 2);
+            animatedSprite.Position = new Vector2(D3DDevice.Instance.Width / 2 - textureSize.Width / 2,
+                D3DDevice.Instance.Height / 2 - textureSize.Height / 2);
 
             //Modifiers para variar parametros del sprite
-            GuiController.Instance.Modifiers.addFloat("frameRate", 1, 30, 10);
-            GuiController.Instance.Modifiers.addVertex2f("position", new Vector2(0, 0),
-                new Vector2(screenSize.Width, screenSize.Height), animatedSprite.Position);
-            GuiController.Instance.Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4),
-                animatedSprite.Scaling);
-            GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);
+            Modifiers.addFloat("frameRate", 1, 30, 10);
+            Modifiers.addVertex2f("position", new Vector2(0, 0),
+                new Vector2(D3DDevice.Instance.Width, D3DDevice.Instance.Height), animatedSprite.Position);
+            Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4), animatedSprite.Scaling);
+            Modifiers.addFloat("rotation", 0, 360, 0);
 
             //Creamos un Box3D para que se vea como el Sprite es en 2D y se dibuja siempre arriba de la escena 3D
-            box = TgcBox.fromSize(new Vector3(10, 10, 10),
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "\\Texturas\\pasto.jpg"));
+            box = TgcBox.fromSize(new Vector3(10, 10, 10), TgcTexture.createTexture(MediaDir + "\\Texturas\\pasto.jpg"));
 
             //Hacer que la camara se centre en el box3D
-            GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Actualizar valores cargados en modifiers
-            animatedSprite.setFrameRate((float)GuiController.Instance.Modifiers["frameRate"]);
-            animatedSprite.Position = (Vector2)GuiController.Instance.Modifiers["position"];
-            animatedSprite.Scaling = (Vector2)GuiController.Instance.Modifiers["scaling"];
-            animatedSprite.Rotation = FastMath.ToRad((float)GuiController.Instance.Modifiers["rotation"]);
+            animatedSprite.setFrameRate((float)Modifiers["frameRate"]);
+            animatedSprite.Position = (Vector2)Modifiers["position"];
+            animatedSprite.Scaling = (Vector2)Modifiers["scaling"];
+            animatedSprite.Rotation = FastMath.ToRad((float)Modifiers["rotation"]);
 
             //Dibujar box3D. Se deben dibujar primero todos los objetos 3D. Recien al final dibujar los Sprites
             box.render();
@@ -89,14 +92,18 @@ namespace TGC.Examples.Sprites2D
 
             //Dibujar sprite (si hubiese mas, deberian ir todos aquí)
             //Actualizamos el estado de la animacion y renderizamos
-            animatedSprite.updateAndRender(elapsedTime);
+            animatedSprite.updateAndRender(ElapsedTime);
 
             //Finalizar el dibujado de Sprites
             TgcDrawer2D.Instance.endDrawSprite();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             animatedSprite.dispose();
             box.dispose();
         }

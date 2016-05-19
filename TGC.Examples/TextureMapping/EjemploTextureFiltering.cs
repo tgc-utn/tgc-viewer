@@ -1,10 +1,14 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.TextureMapping
 {
@@ -21,38 +25,35 @@ namespace TGC.Examples.TextureMapping
         private string lastFiltering;
         private string lastTexture;
 
-        public override string getCategory()
+        public EjemploTextureFiltering(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "TextureMapping";
+            Category = "TextureMapping";
+            Name = "TextureFiltering";
+            Description = "Muestra los distintos modos de Texture Filtering que se puede elegir en DirectX.";
         }
 
-        public override string getName()
-        {
-            return "TextureFiltering";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra los distintos modos de Texture Filtering que se puede elegir en DirectX.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             box = TgcBox.fromSize(new Vector3(300, 100, 150));
 
-            lastTexture = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack2\\concrete1_4.jpg";
-            GuiController.Instance.Modifiers.addTexture("Texture", lastTexture);
+            lastTexture = MediaDir + "Texturas\\Quake\\TexturePack2\\concrete1_4.jpg";
+            Modifiers.addTexture("Texture", lastTexture);
             changeBoxTexure(D3DDevice.Instance.Device, box, lastTexture);
 
             lastFiltering = "Linear";
-            GuiController.Instance.Modifiers.addInterval("Filtering",
-                new[] { "Nearest", "Linear", "Bilinear", "Anisotropic" }, 0);
+            Modifiers.addInterval("Filtering", new[] { "Nearest", "Linear", "Bilinear", "Anisotropic" }, 0);
             changeTextureFiltering(D3DDevice.Instance.Device, lastFiltering);
 
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(-54.93998f, 2f, -1.118192f),
-                new Vector3(-53.94024f, 1.969789f, -1.140801f));
-            GuiController.Instance.FpsCamera.MovementSpeed = 150f;
-            GuiController.Instance.FpsCamera.Enable = true;
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(-54.93998f, 2f, -1.118192f), new Vector3(-53.94024f, 1.969789f, -1.140801f));
+            ((TgcFpsCamera)Camara).MovementSpeed = 150f;
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         private void changeBoxTexure(Device d3dDevice, TgcBox box, string texturePath)
@@ -89,16 +90,19 @@ namespace TGC.Examples.TextureMapping
             }
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
-            var currentFiltering = (string)GuiController.Instance.Modifiers["Filtering"];
+            IniciarEscena();
+            base.Render();
+
+            var currentFiltering = (string)Modifiers["Filtering"];
             if (currentFiltering != lastFiltering)
             {
                 lastFiltering = currentFiltering;
                 changeTextureFiltering(D3DDevice.Instance.Device, currentFiltering);
             }
 
-            var currentTexture = (string)GuiController.Instance.Modifiers["Texture"];
+            var currentTexture = (string)Modifiers["Texture"];
             if (currentTexture != lastTexture)
             {
                 lastTexture = currentTexture;
@@ -106,10 +110,14 @@ namespace TGC.Examples.TextureMapping
             }
 
             box.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             box.dispose();
         }
     }

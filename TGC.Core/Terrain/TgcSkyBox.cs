@@ -28,7 +28,7 @@ namespace TGC.Core.Terrain
             Right = 4,
             Left = 5
         }
-        
+
         private Color color;
 
         /// <summary>

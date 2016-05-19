@@ -3,10 +3,9 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Geometries;
+using TGC.Core.Input;
 using TGC.Core.Utils;
 using TGC.Examples.MeshCreator.Primitives;
-using TGC.Util;
-using TGC.Util.Input;
 
 namespace TGC.Examples.MeshCreator
 {
@@ -42,7 +41,7 @@ namespace TGC.Examples.MeshCreator
         /// </summary>
         public void doSelectObject()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
 
             //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
             if ((input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl))
@@ -66,7 +65,7 @@ namespace TGC.Examples.MeshCreator
         /// </summary>
         public void render()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
 
             //Mantiene el mouse apretado
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))

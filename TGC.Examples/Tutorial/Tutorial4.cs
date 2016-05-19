@@ -1,13 +1,14 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Textures;
+using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TgcUserVars = TGC.Core.UserControls.TgcUserVars;
 
 namespace TGC.Examples.Tutorial
 {
@@ -23,11 +24,13 @@ namespace TGC.Examples.Tutorial
         private const float MOVEMENT_SPEED = 10f;
         private TgcBox box;
 
-        public Tutorial4(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial4(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            this.Category = "Tutorial";
-            this.Name = "Tutorial 4";
-            this.Description = "Muestra como crear una caja 3D que se mueve cuando las flechas del teclado.";
+            Category = "Tutorial";
+            Name = "Tutorial 4";
+            Description = "Muestra como crear una caja 3D que se mueve cuando las flechas del teclado.";
         }
 
         public override void Init()
@@ -35,21 +38,21 @@ namespace TGC.Examples.Tutorial
             //Creamos una caja 3D con textura
             var center = new Vector3(0, -3, 0);
             var size = new Vector3(5, 5, 5);
-            var texture = TgcTexture.createTexture(this.MediaDir + "MeshCreator\\Textures\\Ladrillo\\streetbricks.jpg");
+            var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Ladrillo\\streetbricks.jpg");
             box = TgcBox.fromSize(center, size, texture);
 
             //Hacemos que la cámara esté centrada el box.
-            ((TgcRotationalCamera)this.Camara).targetObject(box.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
         }
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void Render()
         {
-            this.IniciarEscena();
+            IniciarEscena();
             base.Render();
 
             //Obtenemos acceso al objeto que maneja input de mouse y teclado del framework
@@ -93,14 +96,14 @@ namespace TGC.Examples.Tutorial
             }
 
             //Multiplicar movimiento por velocidad y elapsedTime
-            movement *= MOVEMENT_SPEED * this.ElapsedTime;
+            movement *= MOVEMENT_SPEED * ElapsedTime;
 
             //Aplicar movimiento
             box.move(movement);
 
             box.render();
 
-            this.FinalizarEscena();
+            FinalizarEscena();
         }
 
         public override void Close()

@@ -1,16 +1,20 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Lights
 {
@@ -32,34 +36,26 @@ namespace TGC.Examples.Lights
         private List<LightData> lights;
         private List<MeshLightData> meshesWithLight;
 
-        public override string getCategory()
+        public EjemploIntegrador2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Lights";
+            Category = "Lights";
+            Name = "Integrador 2";
+            Description = "Ejemplo que muestra un escenario con BumpMapping, EnvironmentMap y varias Point Lights.";
         }
 
-        public override string getName()
-        {
-            return "Integrador 2";
-        }
-
-        public override string getDescription()
-        {
-            return "Ejemplo que muestra un escenario con BumpMapping, EnvironmentMap y varias Point Lights";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Cargar textura de CubeMap para Environment Map, fijo para todos los meshes
-            cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ShadersDir + "CubeMap.dds");
+            cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device, ShadersDir + "CubeMap.dds");
 
             //Cargar Shader personalizado de EnvironmentMap
-            effect =
-                TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "EnvironmentMap_Integrador2.fx");
+            effect = TgcShaders.loadEffect(ShadersDir + "EnvironmentMap_Integrador2.fx");
 
             //Cargar escenario, pero inicialmente solo hacemos el parser, para separar los objetos que son solo luces y no meshes
-            var scenePath = GuiController.Instance.ExamplesMediaDir + "NormalMapRoom\\NormalMapRoom-TgcScene.xml";
-            var mediaPath = GuiController.Instance.ExamplesMediaDir + "NormalMapRoom\\";
+            var scenePath = MediaDir + "NormalMapRoom\\NormalMapRoom-TgcScene.xml";
+            var mediaPath = MediaDir + "NormalMapRoom\\";
             var parser = new TgcSceneParser();
             var sceneData = parser.parseSceneFromString(File.ReadAllText(scenePath));
 
@@ -141,27 +137,35 @@ namespace TGC.Examples.Lights
             }
 
             //Camara en 1ra persona
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 50, 100), new Vector3(0, 50, -1));
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(0, 50, 100), new Vector3(0, 50, -1));
 
             //Modifiers
-            GuiController.Instance.Modifiers.addBoolean("lightEnable", "lightEnable", true);
-            GuiController.Instance.Modifiers.addFloat("reflection", 0, 1, 0.2f);
-            GuiController.Instance.Modifiers.addFloat("bumpiness", 0, 2, 1f);
-            GuiController.Instance.Modifiers.addFloat("lightIntensity", 0, 150, 20);
-            GuiController.Instance.Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
-            GuiController.Instance.Modifiers.addFloat("specularEx", 0, 20, 9f);
+            Modifiers.addBoolean("lightEnable", "lightEnable", true);
+            Modifiers.addFloat("reflection", 0, 1, 0.2f);
+            Modifiers.addFloat("bumpiness", 0, 2, 1f);
+            Modifiers.addFloat("lightIntensity", 0, 150, 20);
+            Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
+            Modifiers.addFloat("specularEx", 0, 20, 9f);
 
-            GuiController.Instance.Modifiers.addColor("mEmissive", Color.Black);
-            GuiController.Instance.Modifiers.addColor("mAmbient", Color.White);
-            GuiController.Instance.Modifiers.addColor("mDiffuse", Color.White);
-            GuiController.Instance.Modifiers.addColor("mSpecular", Color.White);
+            Modifiers.addColor("mEmissive", Color.Black);
+            Modifiers.addColor("mAmbient", Color.White);
+            Modifiers.addColor("mDiffuse", Color.White);
+            Modifiers.addColor("mSpecular", Color.White);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Habilitar luz
-            var lightEnable = (bool)GuiController.Instance.Modifiers["lightEnable"];
+            var lightEnable = (bool)Modifiers["lightEnable"];
             Effect currentShader;
             string currentTechnique;
             if (lightEnable)
@@ -184,7 +188,7 @@ namespace TGC.Examples.Lights
                 meshData.mesh.Technique = currentTechnique;
             }
 
-            var eyePosition = GuiController.Instance.FpsCamera.getPosition();
+            var eyePosition = Camara.getPosition();
 
             //Renderizar meshes con BumpMapping
             foreach (var meshData in meshesWithLight)
@@ -194,27 +198,27 @@ namespace TGC.Examples.Lights
                 if (lightEnable)
                 {
                     mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(eyePosition));
-                    mesh.Effect.SetValue("bumpiness", (float)GuiController.Instance.Modifiers["bumpiness"]);
-                    mesh.Effect.SetValue("reflection", (float)GuiController.Instance.Modifiers["reflection"]);
+                    mesh.Effect.SetValue("bumpiness", (float)Modifiers["bumpiness"]);
+                    mesh.Effect.SetValue("reflection", (float)Modifiers["reflection"]);
 
                     //Cargar variables de shader del Material
                     mesh.Effect.SetValue("materialEmissiveColor",
-                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mEmissive"]));
+                        ColorValue.FromColor((Color)Modifiers["mEmissive"]));
                     mesh.Effect.SetValue("materialAmbientColor",
-                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mAmbient"]));
+                        ColorValue.FromColor((Color)Modifiers["mAmbient"]));
                     mesh.Effect.SetValue("materialDiffuseColor",
-                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mDiffuse"]));
+                        ColorValue.FromColor((Color)Modifiers["mDiffuse"]));
                     mesh.Effect.SetValue("materialSpecularColor",
-                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mSpecular"]));
-                    mesh.Effect.SetValue("materialSpecularExp", (float)GuiController.Instance.Modifiers["specularEx"]);
+                        ColorValue.FromColor((Color)Modifiers["mSpecular"]));
+                    mesh.Effect.SetValue("materialSpecularExp", (float)Modifiers["specularEx"]);
 
                     //CubeMap
                     mesh.Effect.SetValue("texCubeMap", cubeMap);
 
                     //Cargar variables de shader de las 3 luces
                     //Intensidad y atenuacion deberian ser atributos propios de cada luz
-                    var lightIntensity = (float)GuiController.Instance.Modifiers["lightIntensity"];
-                    var lightAttenuation = (float)GuiController.Instance.Modifiers["lightAttenuation"];
+                    var lightIntensity = (float)Modifiers["lightIntensity"];
+                    var lightAttenuation = (float)Modifiers["lightAttenuation"];
                     mesh.Effect.SetValue("lightIntensity", new[] { lightIntensity, lightIntensity, lightIntensity });
                     mesh.Effect.SetValue("lightAttenuation",
                         new[] { lightAttenuation, lightAttenuation, lightAttenuation });
@@ -244,6 +248,8 @@ namespace TGC.Examples.Lights
             {
                 mesh.render();
             }
+
+            FinalizarEscena();
         }
 
         /// <summary>
@@ -273,8 +279,10 @@ namespace TGC.Examples.Lights
             return minLight;
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             effect.Dispose();
             foreach (var meshData in meshesWithLight)
             {

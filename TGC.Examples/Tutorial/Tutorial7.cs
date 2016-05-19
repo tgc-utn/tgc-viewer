@@ -1,12 +1,13 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
+using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TgcUserVars = TGC.Core.UserControls.TgcUserVars;
 
 namespace TGC.Examples.Tutorial
 {
@@ -23,38 +24,41 @@ namespace TGC.Examples.Tutorial
         private TgcMesh mainMesh;
         private TgcScene scene;
 
-        public Tutorial7(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial7(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            this.Category = "Tutorial";
-            this.Name = "Tutorial 7";
-            this.Description = "Muestra como cargar una escena 3D y como mover un modelo dentra de ella con el teclado.";
+            Category = "Tutorial";
+            Name = "Tutorial 7";
+            Description = "Muestra como cargar una escena 3D y como mover un modelo dentra de ella con el teclado.";
         }
 
         public override void Init()
         {
             //En este ejemplo primero cargamos una escena 3D entera.
             var loader = new TgcSceneLoader();
-            scene = loader.loadSceneFromFile(this.MediaDir + "MeshCreator\\Scenes\\Ciudad\\Ciudad-TgcScene.xml");
+            scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Ciudad\\Ciudad-TgcScene.xml");
 
             //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
-            var scene2 = loader.loadSceneFromFile(this.MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
+            var scene2 =
+                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
             mainMesh = scene2.Meshes[0];
 
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
-            this.Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)this.Camara).setCamera(mainMesh.Position, 200, 300);
+            Camara = new TgcThirdPersonCamera();
+            ((TgcThirdPersonCamera)Camara).setCamera(mainMesh.Position, 200, 300);
         }
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void Render()
         {
-            this.IniciarEscena();
+            IniciarEscena();
             base.Render();
 
             //Procesamos input de teclado para mover el objeto principal en el plano XZ
@@ -78,11 +82,11 @@ namespace TGC.Examples.Tutorial
             }
 
             //Aplicar movimiento
-            movement *= MOVEMENT_SPEED * this.ElapsedTime;
+            movement *= MOVEMENT_SPEED * ElapsedTime;
             mainMesh.move(movement);
 
             //Hacer que la cámara en 3ra persona se ajuste a la nueva posición del objeto
-            ((TgcThirdPersonCamera)this.Camara).Target = mainMesh.Position;
+            ((TgcThirdPersonCamera)Camara).Target = mainMesh.Position;
 
             //Dibujar objeto principal
             //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
@@ -91,7 +95,7 @@ namespace TGC.Examples.Tutorial
             //Dibujamos la escena
             scene.renderAll();
 
-            this.FinalizarEscena();
+            FinalizarEscena();
         }
 
         public override void Close()

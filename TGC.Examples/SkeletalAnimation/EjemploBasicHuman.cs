@@ -1,10 +1,14 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
 using System.IO;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SkeletalAnimation;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.SkeletalAnimation
 {
@@ -29,26 +33,20 @@ namespace TGC.Examples.SkeletalAnimation
         private string selectedMesh;
         private bool showAttachment;
 
-        public override string getCategory()
+        public BasicHuman(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "SkeletalAnimation";
+            Category = "SkeletalAnimation";
+            Name = "BasicHuman";
+            Description =
+                "Utiliza el esqueleto genérico BasicHuman provisto por la cátedra para animar varios modelos distintos mediante animación esquelética.";
         }
 
-        public override string getName()
-        {
-            return "BasicHuman";
-        }
-
-        public override string getDescription()
-        {
-            return
-                "Utiliza el esqueleto genérico BasicHuman provisto por la cátedra para animar varios modelos distintos mediante animación esquelética";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Path para carpeta de texturas de la malla
-            mediaPath = GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\";
+            mediaPath = MediaDir + "SkeletalAnimations\\BasicHuman\\";
 
             //Cargar dinamicamente todos los Mesh animados que haya en el directorio
             var dir = new DirectoryInfo(mediaPath);
@@ -77,32 +75,37 @@ namespace TGC.Examples.SkeletalAnimation
             changeMesh(meshList[0]);
 
             //Modifier para elegir modelo
-            GuiController.Instance.Modifiers.addInterval("mesh", meshList, 0);
+            Modifiers.addInterval("mesh", meshList, 0);
 
             //Agregar combo para elegir animacion
-            GuiController.Instance.Modifiers.addInterval("animation", animationList, 0);
+            Modifiers.addInterval("animation", animationList, 0);
 
             //Modifier para especificar si la animación se anima con loop
             var animateWithLoop = true;
-            GuiController.Instance.Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
+            Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
 
             //Modifier para renderizar el esqueleto
             var renderSkeleton = false;
-            GuiController.Instance.Modifiers.addBoolean("renderSkeleton", "Show skeleton:", renderSkeleton);
+            Modifiers.addBoolean("renderSkeleton", "Show skeleton:", renderSkeleton);
 
             //Modifier para FrameRate
-            GuiController.Instance.Modifiers.addFloat("frameRate", 0, 100, 30);
+            Modifiers.addFloat("frameRate", 0, 100, 30);
 
             //Modifier para color
             currentColor = Color.White;
-            GuiController.Instance.Modifiers.addColor("Color", currentColor);
+            Modifiers.addColor("Color", currentColor);
 
             //Modifier para BoundingBox
-            GuiController.Instance.Modifiers.addBoolean("BoundingBox", "BoundingBox:", false);
+            Modifiers.addBoolean("BoundingBox", "BoundingBox:", false);
 
             //Modifier para habilitar attachment
             showAttachment = false;
-            GuiController.Instance.Modifiers.addBoolean("Attachment", "Attachment:", showAttachment);
+            Modifiers.addBoolean("Attachment", "Attachment:", showAttachment);
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -140,7 +143,7 @@ namespace TGC.Examples.SkeletalAnimation
                 attachment.updateValues();
 
                 //Configurar camara
-                GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
+                ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
             }
         }
 
@@ -153,21 +156,24 @@ namespace TGC.Examples.SkeletalAnimation
             }
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
             //Ver si cambio la malla
-            var meshPath = (string)GuiController.Instance.Modifiers.getValue("mesh");
+            var meshPath = (string)Modifiers.getValue("mesh");
             changeMesh(meshPath);
 
             //Ver si cambio la animacion
-            var anim = (string)GuiController.Instance.Modifiers.getValue("animation");
+            var anim = (string)Modifiers.getValue("animation");
             changeAnimation(anim);
 
             //Ver si rendeizamos el esqueleto
-            var renderSkeleton = (bool)GuiController.Instance.Modifiers.getValue("renderSkeleton");
+            var renderSkeleton = (bool)Modifiers.getValue("renderSkeleton");
 
             //Ver si cambio el color
-            var selectedColor = (Color)GuiController.Instance.Modifiers.getValue("Color");
+            var selectedColor = (Color)Modifiers.getValue("Color");
             if (currentColor == null || currentColor != selectedColor)
             {
                 currentColor = selectedColor;
@@ -175,7 +181,7 @@ namespace TGC.Examples.SkeletalAnimation
             }
 
             //Agregar o quitar Attachment
-            var showAttachmentFlag = (bool)GuiController.Instance.Modifiers["Attachment"];
+            var showAttachmentFlag = (bool)Modifiers["Attachment"];
             if (showAttachment != showAttachmentFlag)
             {
                 showAttachment = showAttachmentFlag;
@@ -193,7 +199,7 @@ namespace TGC.Examples.SkeletalAnimation
             }
 
             //Actualizar animacion
-            mesh.updateAnimation(elapsedTime);
+            mesh.updateAnimation(ElapsedTime);
 
             //Solo malla o esqueleto, depende lo seleccionado
             mesh.RenderSkeleton = renderSkeleton;
@@ -203,15 +209,19 @@ namespace TGC.Examples.SkeletalAnimation
             //mesh.animateAndRender();
 
             //BoundingBox
-            var showBB = (bool)GuiController.Instance.Modifiers["BoundingBox"];
+            var showBB = (bool)Modifiers["BoundingBox"];
             if (showBB)
             {
                 mesh.BoundingBox.render();
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //La malla también hace dispose del attachment
             mesh.dispose();
             mesh = null;

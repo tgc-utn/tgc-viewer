@@ -59,23 +59,19 @@
   <ItemGroup>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.Direct3D.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.Direct3D.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2909.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectInput.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectInput.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
@@ -85,284 +81,154 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlphaBlending\AlphaBlendingManual.cs" />
     <Compile Include="AlphaBlending\AlphaBlendingFramework.cs" />
+    <Compile Include="AlphaBlending\AlphaBlendingManual.cs" />
     <Compile Include="AlphaBlending\EjemploModeloAlpha.cs" />
+    <Compile Include="Collision\DetectarColisionCamara.cs" />
+    <Compile Include="Collision\EjemploBoundingBox.cs" />
+    <Compile Include="Collision\EjemploBoundingBoxTests.cs" />
     <Compile Include="Collision\EjemploBoundingCylinder.cs" />
+    <Compile Include="Collision\EjemploColisiones.cs" />
+    <Compile Include="Collision\EjemploColisionesThirdPerson.cs" />
+    <Compile Include="Collision\EjemploComputeObb.cs" />
     <Compile Include="Collision\EjemploFixedYCylinder.cs" />
     <Compile Include="Collision\EjemploOBB.cs" />
-    <Compile Include="Collision\EjemploBoundingBoxTests.cs" />
+    <Compile Include="Collision\EjemploPicking.cs" />
     <Compile Include="Collision\ElipsoidCollision.cs" />
-    <Compile Include="Collision\SeleccionMultiplePicking.cs" />
     <Compile Include="Collision\MovimientoPorPicking.cs" />
+    <Compile Include="Collision\SeleccionMultiplePicking.cs" />
+    <Compile Include="Collision\SphereCollision\SphereCollision.cs" />
+    <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
     <Compile Include="Collision\SphereTriangleCollision\BoundingBoxCollider.cs" />
     <Compile Include="Collision\SphereTriangleCollision\Collider.cs" />
-    <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
-    <Compile Include="Collision\SphereCollision\SphereCollision.cs" />
-    <Compile Include="Collision\DetectarColisionCamara.cs" />
-    <Compile Include="Collision\EjemploPicking.cs" />
     <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollision.cs" />
     <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollisionManager.cs" />
     <Compile Include="Collision\SphereTriangleCollision\TriangleMeshCollider.cs" />
-    <Compile Include="Collision\EjemploComputeObb.cs" />
-    <Compile Include="DirectX\EjemploGetZBuffer.cs" />
+    <Compile Include="DirectX\DirectXMeshViewer.cs" />
     <Compile Include="DirectX\EjemploBoxDirectX.cs" />
-    <Compile Include="EjemplosShaders\F1Circuit.cs" />
-    <Compile Include="EjemplosShaders\FullQuad.cs" />
-    <Compile Include="EjemplosShaders\GaussianBlur.cs" />
-    <Compile Include="EjemplosShaders\MotionBlur.cs" />
-    <Compile Include="EjemplosShaders\NightVision.cs" />
-    <Compile Include="EjemplosShaders\OutRun.cs" />
-    <Compile Include="EjemplosShaders\ParallaxOcclusion.cs" />
-    <Compile Include="EjemplosShaders\VideoPostProcess.cs" />
-    <Compile Include="GeometryBasics\Cilindro.cs" />
-    <Compile Include="GeometryBasics\CrearEditableLand.cs" />
-    <Compile Include="GeometryBasics\EjemploSphere.cs" />
-    <Compile Include="Lights\EjemploHDR.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lights\EjemploIntegrador2.cs" />
-    <Compile Include="Lights\EjemploSkeletalPointLight.cs" />
-    <Compile Include="Lights\EjemploIntegrador.cs" />
-    <Compile Include="Lights\EjemploSimpleEnvironmentMap.cs" />
-    <Compile Include="Lights\EjemploEnvironmentMap.cs" />
-    <Compile Include="Lights\EjemploBumpMapping.cs" />
-    <Compile Include="Lights\EjemploSpotLight.cs" />
-    <Compile Include="Lights\EjemploMultipleLights.cs" />
-    <Compile Include="Lights\EjemploMultiDiffuseLights.cs" />
-    <Compile Include="Lights\EjemploPointLight.cs" />
-    <Compile Include="Lights\TgcMeshBumpMapping.cs" />
-    <Compile Include="Matematica\EjemploTriangulosYPlanos.cs" />
-    <Compile Include="Matematica\EjemploTransformaciones.cs" />
-    <Compile Include="Matematica\EjemploMatematicaVarios.cs" />
-    <Compile Include="MeshCreator\EditablePoly\EditablePoly.cs" />
-    <Compile Include="MeshCreator\EditablePoly\EditablePolyTranslateGizmo.cs" />
-    <Compile Include="MeshCreator\EditablePoly\EditablePolyUtils.cs" />
-    <Compile Include="MeshCreator\EditablePoly\Primitives\EditPolyEdge.cs" />
-    <Compile Include="MeshCreator\EditablePoly\Primitives\EditPolyPolygon.cs" />
-    <Compile Include="MeshCreator\EditablePoly\Primitives\EditPolyPrimitive.cs" />
-    <Compile Include="MeshCreator\EditablePoly\Primitives\EditPolyVertex.cs" />
-    <Compile Include="MeshCreator\EditablePoly\PrimitiveRenderer.cs" />
-    <Compile Include="MeshCreator\EditablePoly\TrianglesBatchRenderer.cs" />
-    <Compile Include="MeshCreator\Gizmos\TranslateGizmoMesh.cs" />
-    <Compile Include="MeshCreator\InputMessageBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MeshCreator\InputMessageBox.Designer.cs">
-      <DependentUpon>InputMessageBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MeshCreator\ObjectBrowser.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MeshCreator\ObjectBrowser.Designer.cs">
-      <DependentUpon>ObjectBrowser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MeshCreator\ObjectBrowserSelectLayer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MeshCreator\ObjectBrowserSelectLayer.Designer.cs">
-      <DependentUpon>ObjectBrowserSelectLayer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MeshCreator\Primitives\SpherePrimitive.cs" />
-    <Compile Include="MeshCreator\SelectionRectangleMesh.cs" />
-    <Compile Include="Otros\EjemploDisposeMesh3.cs" />
-    <Compile Include="Otros\EjemploDisposeMesh2.cs" />
-    <Compile Include="Otros\EjemploDefault.cs" />
+    <Compile Include="DirectX\EjemploCrearTeapot.cs" />
+    <Compile Include="DirectX\EjemploGetZBuffer.cs" />
+    <Compile Include="DirectX\EjemploTeapotConCamara.cs" />
+    <Compile Include="DirectX\Lighting.cs" />
+    <Compile Include="ShadersExamples\BasicShader.cs" />
+    <Compile Include="ShadersExamples\DemoShaders.cs" />
+    <Compile Include="ShadersExamples\EjemploPhongShading.cs" />
+    <Compile Include="ShadersExamples\EjemploShaderTgcMesh.cs" />
+    <Compile Include="ShadersExamples\EnvMap.cs" />
+    <Compile Include="ShadersExamples\F1Circuit.cs" />
+    <Compile Include="ShadersExamples\FullQuad.cs" />
+    <Compile Include="ShadersExamples\GaussianBlur.cs" />
+    <Compile Include="ShadersExamples\MotionBlur.cs" />
+    <Compile Include="ShadersExamples\MySimpleTerrain.cs" />
+    <Compile Include="ShadersExamples\NightVision.cs" />
+    <Compile Include="ShadersExamples\OutRun.cs" />
+    <Compile Include="ShadersExamples\ParallaxOcclusion.cs" />
+    <Compile Include="ShadersExamples\PhongShading.cs" />
+    <Compile Include="ShadersExamples\ShadowMap.cs" />
+    <Compile Include="ShadersExamples\ToonShading.cs" />
+    <Compile Include="ShadersExamples\VideoPostProcess.cs" />
+    <Compile Include="Engine2D\Asteroide.cs" />
+    <Compile Include="Engine2D\Bitmap.cs" />
+    <Compile Include="Engine2D\Drawer.cs" />
+    <Compile Include="Engine2D\Ejemplo2D.cs" />
+    <Compile Include="Engine2D\GameManager.cs" />
+    <Compile Include="Engine2D\GameObject.cs" />
+    <Compile Include="Engine2D\Misil.cs" />
+    <Compile Include="Engine2D\Spaceship.cs" />
+    <Compile Include="Engine2D\Sprite.cs" />
     <Compile Include="Fog\EfectoNiebla.cs" />
     <Compile Include="GeometryBasics\Caja.cs" />
     <Compile Include="GeometryBasics\CajaDebug.cs" />
-    <Compile Include="GeometryBasics\CrearQuad.cs" />
+    <Compile Include="GeometryBasics\Cilindro.cs" />
+    <Compile Include="GeometryBasics\CrearEditableLand.cs" />
     <Compile Include="GeometryBasics\CrearFlecha.cs" />
     <Compile Include="GeometryBasics\CrearLineaConGrosor.cs" />
-    <Compile Include="GeometryBasics\EjemploPlaneWall.cs" />
-    <Compile Include="MeshCreator\Gizmos\ScaleGizmo.cs" />
-    <Compile Include="MeshCreator\Gizmos\EditorGizmo.cs" />
-    <Compile Include="MeshCreator\Gizmos\TranslateGizmo.cs" />
-    <Compile Include="MeshCreator\Grid.cs" />
-    <Compile Include="MeshCreator\MeshCreatorUtils.cs" />
-    <Compile Include="MeshCreator\Primitives\BoxPrimitive.cs" />
-    <Compile Include="MeshCreator\Primitives\PlaneYZPrimitive.cs" />
-    <Compile Include="MeshCreator\Primitives\PlaneXYPrimitive.cs" />
-    <Compile Include="MeshCreator\Primitives\EditorPrimitive.cs" />
-    <Compile Include="MeshCreator\MeshCreatorControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MeshCreator\MeshCreatorControl.Designer.cs">
-      <DependentUpon>MeshCreatorControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MeshCreator\MeshCreatorModifier.cs" />
-    <Compile Include="MeshCreator\Primitives\MeshPrimitive.cs" />
-    <Compile Include="MeshCreator\Primitives\PlaneXZPrimitive.cs" />
-    <Compile Include="MeshCreator\SelectionRectangle.cs" />
-    <Compile Include="MeshCreator\TgcMeshCreator.cs" />
-    <Compile Include="MeshCreator\MeshCreatorCamera.cs" />
-    <Compile Include="Multiplayer\VehiculosMultiplayer.cs" />
-    <Compile Include="Multiplayer\EjemploNetworkingModifier.cs" />
-    <Compile Include="Multiplayer\EjemploServer.cs" />
-    <Compile Include="Multiplayer\EjemploClient.cs" />
-    <Compile Include="Optimizacion\GrillaRegular\EjemploGrillaRegular.cs" />
-    <Compile Include="Optimizacion\GrillaRegular\GrillaRegular.cs" />
-    <Compile Include="Optimizacion\GrillaRegular\GrillaRegularNode.cs" />
-    <Compile Include="Optimizacion\KdtTree\EjemploKdTree.cs" />
-    <Compile Include="Optimizacion\KdtTree\KdTree.cs" />
-    <Compile Include="Optimizacion\KdtTree\KdTreeBuilder.cs" />
-    <Compile Include="Optimizacion\KdtTree\KdTreeNode.cs" />
-    <Compile Include="Optimizacion\Octree\EjemploOctree.cs" />
-    <Compile Include="Optimizacion\Octree\OctreeBuilder.cs" />
-    <Compile Include="Optimizacion\Octree\OctreeNode.cs" />
-    <Compile Include="Optimizacion\Octree\Octree.cs" />
-    <Compile Include="Optimizacion\Quadtree\EjemploQuadtree.cs" />
-    <Compile Include="Optimizacion\Quadtree\Quadtree.cs" />
-    <Compile Include="Optimizacion\Quadtree\QuadtreeBuilder.cs" />
-    <Compile Include="Optimizacion\Quadtree\QuadtreeNode.cs" />
-    <Compile Include="Otros\EjemploBatchPrimitivesDx.cs" />
-    <Compile Include="Otros\EjemploBatchPrimitives.cs" />
+    <Compile Include="GeometryBasics\CrearQuad.cs" />
     <Compile Include="GeometryBasics\CrearSkyBox.cs" />
-    <Compile Include="Otros\EjemploDefaultHelpForm.cs">
+    <Compile Include="GeometryBasics\EjemploPlaneWall.cs" />
+    <Compile Include="GeometryBasics\EjemploSphere.cs" />
+    <Compile Include="GeometryBasics\EjemploVerticalWall.cs" />
+    <Compile Include="GeometryBasics\TrianguloBasico.cs" />
+    <Compile Include="GeometryBasics\TrianguloEditable.cs" />
+    <Compile Include="GeometryBasics\TrianguloVertexBuffer.cs" />
+    <Compile Include="KeyFrameAnimation\EjemploKeyFrameLoader.cs" />
+    <Compile Include="Lights\BilateralFiltering.cs" />
+    <Compile Include="Lights\EjemploBumpMapping.cs" />
+    <Compile Include="Lights\EjemploEnvironmentMap.cs" />
+    <Compile Include="Lights\EjemploHDR.cs" />
+    <Compile Include="Lights\EjemploIntegrador.cs" />
+    <Compile Include="Lights\EjemploIntegrador2.cs" />
+    <Compile Include="Lights\EjemploMultiDiffuseLights.cs" />
+    <Compile Include="Lights\EjemploMultipleLights.cs" />
+    <Compile Include="Lights\EjemploPointLight.cs" />
+    <Compile Include="Lights\EjemploSimpleEnvironmentMap.cs" />
+    <Compile Include="Lights\EjemploSkeletalPointLight.cs" />
+    <Compile Include="Lights\EjemploSpotLight.cs" />
+    <Compile Include="Lights\TgcMeshBumpMapping.cs" />
+    <Compile Include="MathExamples\EjemploMatematicaVarios.cs" />
+    <Compile Include="MathExamples\EjemploTransformaciones.cs" />
+    <Compile Include="MathExamples\EjemploTriangulosYPlanos.cs" />
+    <Compile Include="Optimization\GrillaRegular\EjemploGrillaRegular.cs" />
+    <Compile Include="Optimization\GrillaRegular\GrillaRegular.cs" />
+    <Compile Include="Optimization\GrillaRegular\GrillaRegularNode.cs" />
+    <Compile Include="Optimization\KdtTree\EjemploKdTree.cs" />
+    <Compile Include="Optimization\KdtTree\KdTree.cs" />
+    <Compile Include="Optimization\KdtTree\KdTreeBuilder.cs" />
+    <Compile Include="Optimization\KdtTree\KdTreeNode.cs" />
+    <Compile Include="Optimization\Octree\EjemploOctree.cs" />
+    <Compile Include="Optimization\Octree\Octree.cs" />
+    <Compile Include="Optimization\Octree\OctreeBuilder.cs" />
+    <Compile Include="Optimization\Octree\OctreeNode.cs" />
+    <Compile Include="Optimization\Quadtree\EjemploQuadtree.cs" />
+    <Compile Include="Optimization\Quadtree\Quadtree.cs" />
+    <Compile Include="Optimization\Quadtree\QuadtreeBuilder.cs" />
+    <Compile Include="Optimization\Quadtree\QuadtreeNode.cs" />
+    <Compile Include="Others\EjemploBatchPrimitives.cs" />
+    <Compile Include="Others\EjemploBatchPrimitivesDx.cs" />
+    <Compile Include="Others\EjemploDefault.cs" />
+    <Compile Include="Others\EjemploDefaultHelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Otros\EjemploDefaultHelpForm.Designer.cs">
+    <Compile Include="Others\EjemploDefaultHelpForm.Designer.cs">
       <DependentUpon>EjemploDefaultHelpForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Otros\EjemploDisposeMesh.cs" />
-    <Compile Include="Otros\EjemploPanView.cs" />
+    <Compile Include="Others\EjemploDisposeMesh.cs" />
+    <Compile Include="Others\EjemploDisposeMesh2.cs" />
+    <Compile Include="Others\EjemploDisposeMesh3.cs" />
+    <Compile Include="Others\EjemploPanView.cs" />
+    <Compile Include="Outdoor\CrearHeightmapManual.cs" />
+    <Compile Include="Outdoor\EjemploSimpleTerrain.cs" />
     <Compile Include="Particles\EmisorDeParticulas.cs" />
     <Compile Include="PortalRendering\PortalRenderingFramework.cs" />
+    <Compile Include="PostProcess\EfectoAlarma.cs" />
     <Compile Include="PostProcess\EfectoBlur.cs" />
-    <Compile Include="PostProcess\EfectoGaussianBlur.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="PostProcess\EfectoGaussianBlur.cs" />
     <Compile Include="PostProcess\EfectoOndas.cs" />
     <Compile Include="PostProcess\EfectoOscurecer.cs" />
-    <Compile Include="PostProcess\EfectoAlarma.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Quake3Loader\BspCollisionManager.cs" />
-    <Compile Include="Quake3Loader\BspLoader.cs" />
-    <Compile Include="Quake3Loader\BspMap.cs" />
-    <Compile Include="Quake3Loader\BspMapData.cs" />
-    <Compile Include="Quake3Loader\BspStructs.cs" />
-    <Compile Include="Quake3Loader\EjemploEmpaquetarQ3Level.cs" />
-    <Compile Include="Quake3Loader\EjemploLoadQ3Level.cs" />
-    <Compile Include="Quake3Loader\Q3FpsCamera.cs" />
-    <Compile Include="Quake3Loader\Q3ShaderParser.cs" />
-    <Compile Include="RoomsEditor\RoomsEditorControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorControl.Designer.cs">
-      <DependentUpon>RoomsEditorControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorHelpWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorHelpWindow.Designer.cs">
-      <DependentUpon>RoomsEditorHelpWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorMapView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorMapView.Designer.cs">
-      <DependentUpon>RoomsEditorMapView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorModifier.cs" />
-    <Compile Include="RoomsEditor\RoomsEditorRoom.cs" />
-    <Compile Include="RoomsEditor\RoomsEditorTexturesEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorTexturesEdit.Designer.cs">
-      <DependentUpon>RoomsEditorTexturesEdit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RoomsEditor\RoomsEditorWall.cs" />
-    <Compile Include="RoomsEditor\TgcRoomsEditor.cs" />
-    <Compile Include="SceneEditor\SceneEditorHelpWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SceneEditor\SceneEditorHelpWindow.Designer.cs">
-      <DependentUpon>SceneEditorHelpWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SceneEditor\SceneEditorMeshObject.cs" />
-    <Compile Include="SceneEditor\SceneEditorTranslateGizmo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SceneLoader\EjemploCustomMesh.cs" />
+    <Compile Include="SceneLoader\EjemploExportarMesh.cs" />
     <Compile Include="SceneLoader\EjemploInstanciasPalmeras.cs" />
     <Compile Include="SceneLoader\EjemploMeshInstance.cs" />
-    <Compile Include="SceneLoader\EjemploExportarMesh.cs" />
-    <Compile Include="EjemplosShaders\EjemploPhongShading.cs" />
-    <Compile Include="EjemplosShaders\EjemploShaderTgcMesh.cs" />
-    <Compile Include="EjemplosShaders\BasicShader.cs" />
-    <Compile Include="EjemplosShaders\DemoShaders.cs" />
-    <Compile Include="EjemplosShaders\EnvMap.cs" />
-    <Compile Include="EjemplosShaders\MySimpleTerrain.cs" />
-    <Compile Include="EjemplosShaders\PhongShading.cs" />
-    <Compile Include="EjemplosShaders\ShadowMap.cs" />
-    <Compile Include="EjemplosShaders\ToonShading.cs" />
-    <Compile Include="SkeletalAnimation\EjemploCustomSkeletalMesh.cs" />
-    <Compile Include="SkeletalAnimation\EjemploBasicHuman.cs" />
-    <Compile Include="SkeletalAnimation\EjemploMeshInstance.cs" />
-    <Compile Include="SkeletalAnimation\EjemploSkeletalLoader.cs" />
-    <Compile Include="Engine2D\Asteroide.cs" />
-    <Compile Include="Collision\EjemploColisionesThirdPerson.cs" />
-    <Compile Include="Collision\EjemploColisiones.cs" />
-    <Compile Include="Collision\EjemploBoundingBox.cs" />
-    <Compile Include="EjemploEnBlanco.cs" />
-    <Compile Include="Engine2D\GameManager.cs" />
-    <Compile Include="DirectX\Lighting.cs" />
-    <Compile Include="Outdoor\EjemploSimpleTerrain.cs" />
     <Compile Include="SceneLoader\EjemploMeshLoader.cs" />
     <Compile Include="SceneLoader\Escenario4toPiso.cs" />
-    <Compile Include="DirectX\EjemploTeapotConCamara.cs" />
-    <Compile Include="Engine2D\Bitmap.cs" />
-    <Compile Include="Engine2D\Drawer.cs" />
-    <Compile Include="Engine2D\Ejemplo2D.cs" />
-    <Compile Include="Engine2D\GameObject.cs" />
-    <Compile Include="Engine2D\Misil.cs" />
-    <Compile Include="Engine2D\Spaceship.cs" />
-    <Compile Include="Engine2D\Sprite.cs" />
-    <Compile Include="GeometryBasics\TrianguloBasico.cs" />
-    <Compile Include="GeometryBasics\TrianguloVertexBuffer.cs" />
-    <Compile Include="GeometryBasics\TrianguloEditable.cs" />
-    <Compile Include="DirectX\EjemploCrearTeapot.cs" />
-    <Compile Include="KeyFrameAnimation\EjemploKeyFrameLoader.cs" />
-    <Compile Include="Outdoor\CrearHeightmapManual.cs" />
-    <Compile Include="DirectX\DirectXMeshViewer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SceneEditor\TgcSceneEditor.cs" />
-    <Compile Include="SceneEditor\SceneEditorControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SceneEditor\SceneEditorControl.Designer.cs">
-      <DependentUpon>SceneEditorControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SceneEditor\SceneEditorModifier.cs" />
+    <Compile Include="SkeletalAnimation\EjemploBasicHuman.cs" />
+    <Compile Include="SkeletalAnimation\EjemploCustomSkeletalMesh.cs" />
+    <Compile Include="SkeletalAnimation\EjemploMeshInstance.cs" />
+    <Compile Include="SkeletalAnimation\EjemploSkeletalLoader.cs" />
+    <Compile Include="Sound\PlayMp3.cs" />
     <Compile Include="Sound\PlaySound3D.cs" />
     <Compile Include="Sound\PlayStaticSound.cs" />
-    <Compile Include="Sound\PlayMp3.cs" />
     <Compile Include="Sprites2D\EjemploAnimatedSprite.cs" />
     <Compile Include="Sprites2D\EjemploSprite2D.cs" />
-    <Compile Include="TerrainEditor\Brushes\ITerrainEditorBrush.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TerrainEditor\Brushes\Terrain\Shovel.cs" />
-    <Compile Include="TerrainEditor\Brushes\Terrain\Steamroller.cs" />
-    <Compile Include="TerrainEditor\Brushes\Terrain\TerrainBrush.cs" />
-    <Compile Include="TerrainEditor\Brushes\Vegetation\VegetationBrush.cs" />
-    <Compile Include="TerrainEditor\Brushes\Vegetation\VegetationPicker.cs" />
-    <Compile Include="TerrainEditor\SmartTerrain.cs" />
-    <Compile Include="TerrainEditor\TerrainFPSCamera.cs" />
-    <Compile Include="TerrainEditor\Panel\TerrainEditorControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="TerrainEditor\Panel\TerrainEditorControl.Designer.cs">
-      <DependentUpon>TerrainEditorControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TerrainEditor\Panel\TerrainEditorModifier.cs" />
-    <Compile Include="TerrainEditor\TerrainEditor.cs" />
-    <Compile Include="TerrainEditor\Instances\InstanceManager.cs" />
     <Compile Include="TextureMapping\EjemploTextureFiltering.cs" />
-    <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
+    <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
     <Compile Include="Transformations\Transformations.cs" />
     <Compile Include="Tutorial\Tutorial8.cs" />
     <Compile Include="Tutorial\Tutorial7.cs" />
@@ -379,59 +245,15 @@
       <Project>{2b8c77a8-2427-4da0-a33e-93f877b2d7d9}</Project>
       <Name>TGC.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TGC.Util\TGC.Util.csproj">
-      <Project>{1d77d6e0-0ef1-4af9-bb7c-aee6ceaf0f34}</Project>
-      <Name>TGC.Util</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MeshCreator\InputMessageBox.resx">
-      <DependentUpon>InputMessageBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MeshCreator\MeshCreatorControl.resx">
-      <DependentUpon>MeshCreatorControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MeshCreator\ObjectBrowser.resx">
-      <DependentUpon>ObjectBrowser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MeshCreator\ObjectBrowserSelectLayer.resx">
-      <DependentUpon>ObjectBrowserSelectLayer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Otros\EjemploDefaultHelpForm.resx">
+    <EmbeddedResource Include="Others\EjemploDefaultHelpForm.resx">
       <DependentUpon>EjemploDefaultHelpForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RoomsEditor\RoomsEditorControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>RoomsEditorControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RoomsEditor\RoomsEditorHelpWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>RoomsEditorHelpWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RoomsEditor\RoomsEditorMapView.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>RoomsEditorMapView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RoomsEditor\RoomsEditorTexturesEdit.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>RoomsEditorTexturesEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SceneEditor\SceneEditorControl.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>SceneEditorControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SceneEditor\SceneEditorHelpWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>SceneEditorHelpWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TerrainEditor\Panel\TerrainEditorControl.resx">
-      <DependentUpon>TerrainEditorControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -461,13 +283,52 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Shaders\BumpMapping.fx" />
+    <Content Include="Shaders\BumpMappingNoTangent.fx" />
+    <Content Include="Shaders\Cel.fx" />
+    <Content Include="Shaders\CubeMap.dds" />
+    <Content Include="Shaders\DynamicLights.fx" />
+    <Content Include="Shaders\Ejemplo1.fx" />
+    <Content Include="Shaders\EjemploBoxDirectX.fx" />
+    <Content Include="Shaders\EjemploGetZBuffer.fx" />
+    <Content Include="Shaders\EnvironmentMap.fx" />
+    <Content Include="Shaders\EnvironmentMap_Integrador2.fx" />
+    <Content Include="Shaders\GaussianBlur.fx" />
+    <Content Include="Shaders\HDR.fx" />
+    <Content Include="Shaders\MultiDiffuseLights.fx" />
+    <Content Include="Shaders\PostProcess.fx" />
+    <Content Include="Shaders\TerrainEditor\EditableTerrain.fx" />
+    <Content Include="Shaders\TgcViewer\TgcKeyFrameMeshShader.fx" />
+    <Content Include="Shaders\TgcViewer\TgcMeshPhongShader.fx" />
+    <Content Include="Shaders\TgcViewer\TgcMeshPointLightShader.fx" />
+    <Content Include="Shaders\TgcViewer\TgcMeshShader.fx" />
+    <Content Include="Shaders\TgcViewer\TgcMeshSpotLightShader.fx" />
+    <Content Include="Shaders\TgcViewer\TgcSkeletalMeshPointLightShader.fx" />
+    <Content Include="Shaders\TgcViewer\TgcSkeletalMeshShader.fx" />
+    <Content Include="Shaders\TgcViewer\Varios.fx" />
+    <Content Include="Shaders\WorkshopShaders\BasicShader.fx" />
+    <Content Include="Shaders\WorkshopShaders\Demo.fx" />
+    <Content Include="Shaders\WorkshopShaders\EnvMap.fx" />
+    <Content Include="Shaders\WorkshopShaders\FullQuad.fx" />
+    <Content Include="Shaders\WorkshopShaders\GaussianBlur.fx" />
+    <Content Include="Shaders\WorkshopShaders\GPUAttack.fx" />
+    <Content Include="Shaders\WorkshopShaders\GPUcompute.fx" />
+    <Content Include="Shaders\WorkshopShaders\ImageProccesing.fx" />
+    <Content Include="Shaders\WorkshopShaders\MotionBlur.fx" />
+    <Content Include="Shaders\WorkshopShaders\OutRun.fx" />
+    <Content Include="Shaders\WorkshopShaders\Parallax.fx" />
+    <Content Include="Shaders\WorkshopShaders\PhongShading.fx" />
+    <Content Include="Shaders\WorkshopShaders\ShadowMap.fx" />
+    <Content Include="Shaders\WorkshopShaders\ToonShading.fx" />
+    <Content Include="Shaders\WorkshopShaders\VolRender.fx" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

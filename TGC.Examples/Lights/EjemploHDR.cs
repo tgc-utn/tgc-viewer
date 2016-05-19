@@ -1,16 +1,18 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
-using TGC.Core._2D;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Lights
 {
@@ -38,27 +40,17 @@ namespace TGC.Examples.Lights
 
         private TgcScreenQuad screenQuad;
 
-        public override string getCategory()
+        public EfectoGaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Lights";
+            Category = "Lights";
+            Name = "HDR";
+            Description = "HDR";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "HDR";
-        }
-
-        public override string getDescription()
-        {
-            return "HDR";
-        }
-
-        public override void init()
-        {
-            //Activamos el renderizado customizado. De esta forma el framework nos delega control total sobre como dibujar en pantalla
-            //La responsabilidad cae toda de nuestro lado
-            GuiController.Instance.CustomRenderEnabled = true;
-
             //Creamos un FullScreen Quad
             screenQuad = new TgcScreenQuad();
 
@@ -98,12 +90,12 @@ namespace TGC.Examples.Lights
             }
 
             //Cargar shader con efectos de Post-Procesado
-            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "HDR.fx");
+            effect = TgcShaders.loadEffect(ShadersDir + "HDR.fx");
 
             //Cargamos un escenario
             var loader = new TgcSceneLoader();
             var scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
+                loader.loadSceneFromFile(MediaDir +
                                          "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
             meshes = scene.Meshes;
 
@@ -120,21 +112,28 @@ namespace TGC.Examples.Lights
             lightMesh.Technique = "DrawLightSource";
 
             //Camara en 1ra persona
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.MovementSpeed = 400f;
-            GuiController.Instance.FpsCamera.JumpSpeed = 300f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(-20, 80, 450), new Vector3(0, 80, 1));
+            Camara = new TgcFpsCamera();
+            ((TgcFpsCamera)Camara).MovementSpeed = 400f;
+            ((TgcFpsCamera)Camara).JumpSpeed = 300f;
+            Camara.setCamera(new Vector3(-20, 80, 450), new Vector3(0, 80, 1));
 
             //Modifiers de la luz
-            GuiController.Instance.Modifiers.addBoolean("toneMapping", "toneMapping", true);
-            GuiController.Instance.Modifiers.addFloat("lightIntensity", 0, 100, 5);
-            GuiController.Instance.Modifiers.addFloat("middleGray", 0.1f, 1, 0.72f);
-            GuiController.Instance.Modifiers.addVertex3f("lightPos", new Vector3(-400, -200, -400),
-                new Vector3(400, 300, 500), new Vector3(60, 35, 250));
+            Modifiers.addBoolean("toneMapping", "toneMapping", true);
+            Modifiers.addFloat("lightIntensity", 0, 100, 5);
+            Modifiers.addFloat("middleGray", 0.1f, 1, 0.72f);
+            Modifiers.addVertex3f("lightPos", new Vector3(-400, -200, -400), new Vector3(400, 300, 500),
+                new Vector3(60, 35, 250));
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            base.Render();
+
             //Guardar RT original
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
 
@@ -168,10 +167,10 @@ namespace TGC.Examples.Lights
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Arrancamos el renderizado
-            d3dDevice.BeginScene();
+            IniciarEscena();
 
             //Actualzar posición de la luz
-            var lightPos = (Vector3)GuiController.Instance.Modifiers["lightPos"];
+            var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 
             //Dibujar mesh de fuente de luz
@@ -185,9 +184,8 @@ namespace TGC.Examples.Lights
 
                 //Cargar variables shader de la luz
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
-                mesh.Effect.SetValue("eyePosition",
-                    TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.FpsCamera.getPosition()));
-                mesh.Effect.SetValue("lightIntensity", (float)GuiController.Instance.Modifiers["lightIntensity"]);
+                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.getPosition()));
+                mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
 
                 //Cargar variables de shader de Material
                 mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.DarkGray));
@@ -200,7 +198,7 @@ namespace TGC.Examples.Lights
             //Renderizar mesh de luz
             lightMesh.render();
 
-            d3dDevice.EndScene();
+            FinalizarEscena();
             pSurf.Dispose();
         }
 
@@ -211,7 +209,7 @@ namespace TGC.Examples.Lights
         /// </summary>
         private void scaleScene(Device d3dDevice)
         {
-            d3dDevice.BeginScene();
+            IniciarEscena();
 
             var backBufferWidth = d3dDevice.PresentationParameters.BackBufferWidth;
             var backBufferHeight = d3dDevice.PresentationParameters.BackBufferHeight;
@@ -225,7 +223,7 @@ namespace TGC.Examples.Lights
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             screenQuad.render(effect);
 
-            d3dDevice.EndScene();
+            FinalizarEscena();
             scaledSceneS.Dispose();
         }
 
@@ -235,7 +233,7 @@ namespace TGC.Examples.Lights
         /// </summary>
         private void findAverageLuminance(Device d3dDevice)
         {
-            d3dDevice.BeginScene();
+            IniciarEscena();
 
             //Obtener surfaces de todos los luminanceRTs
             var luminanceSurfaces = new Surface[luminanceRTs.Length];
@@ -274,7 +272,7 @@ namespace TGC.Examples.Lights
             curTexture--;
 
             //DEBUG
-            //TextureLoader.Save(GuiController.Instance.ShadersDir + "luminance_" + (curTexture+1) + ".bmp", ImageFileFormat.Bmp, luminanceRTs[curTexture + 1]);
+            //TextureLoader.Save(this.ShadersDir + "luminance_" + (curTexture+1) + ".bmp", ImageFileFormat.Bmp, luminanceRTs[curTexture + 1]);
 
             //Hacer pasadas de downsampling intermedio
             while (curTexture > 0)
@@ -294,7 +292,7 @@ namespace TGC.Examples.Lights
                 curTexture--;
 
                 //DEBUG
-                //TextureLoader.Save(GuiController.Instance.ShadersDir + "luminance_" + (curTexture+1) + ".bmp", ImageFileFormat.Bmp, luminanceRTs[curTexture + 1]);
+                //TextureLoader.Save(this.ShadersDir + "luminance_" + (curTexture+1) + ".bmp", ImageFileFormat.Bmp, luminanceRTs[curTexture + 1]);
             }
 
             //Hacer downsampling final de 1x1
@@ -311,7 +309,7 @@ namespace TGC.Examples.Lights
             screenQuad.render(effect);
 
             //DEBUG
-            //TextureLoader.Save(GuiController.Instance.ShadersDir + "luminance_" + 0 + ".bmp", ImageFileFormat.Bmp, luminanceRTs[0]);
+            //TextureLoader.Save(this.ShadersDir + "luminance_" + 0 + ".bmp", ImageFileFormat.Bmp, luminanceRTs[0]);
 
             //Liberar todos los surfaces usados
             for (var i = 0; i < luminanceSurfaces.Length; i++)
@@ -319,7 +317,7 @@ namespace TGC.Examples.Lights
                 luminanceSurfaces[i].Dispose();
             }
 
-            d3dDevice.EndScene();
+            FinalizarEscena();
         }
 
         /// <summary>
@@ -327,9 +325,9 @@ namespace TGC.Examples.Lights
         /// </summary>
         private void brightPass(Device d3dDevice)
         {
-            d3dDevice.BeginScene();
+            IniciarEscena();
 
-            var middleGray = (float)GuiController.Instance.Modifiers["middleGray"];
+            var middleGray = (float)Modifiers["middleGray"];
 
             effect.Technique = "BrightPass";
             effect.SetValue("texSceneRT", scaledSceneRT);
@@ -341,10 +339,10 @@ namespace TGC.Examples.Lights
             screenQuad.render(effect);
 
             //DEBUG
-            //TextureLoader.Save(GuiController.Instance.ShadersDir + "brightPass.bmp", ImageFileFormat.Bmp, brightPassRT);
+            //TextureLoader.Save(this.ShadersDir + "brightPass.bmp", ImageFileFormat.Bmp, brightPassRT);
 
             brightPassS.Dispose();
-            d3dDevice.EndScene();
+            FinalizarEscena();
         }
 
         /// <summary>
@@ -353,7 +351,7 @@ namespace TGC.Examples.Lights
         /// <param name="d3dDevice"></param>
         private void bloomPass(Device d3dDevice)
         {
-            d3dDevice.BeginScene();
+            IniciarEscena();
 
             //Gaussian blur horizontal
             Vector2[] texCoordOffsets;
@@ -381,7 +379,8 @@ namespace TGC.Examples.Lights
 
             bloomTempS.Dispose();
             bloomS.Dispose();
-            d3dDevice.EndScene();
+
+            FinalizarEscena();
         }
 
         /// <summary>
@@ -389,27 +388,25 @@ namespace TGC.Examples.Lights
         /// </summary>
         private void finalRender(Device d3dDevice)
         {
-            d3dDevice.BeginScene();
+            IniciarEscena();
 
-            var toneMapping = (bool)GuiController.Instance.Modifiers["toneMapping"];
+            var toneMapping = (bool)Modifiers["toneMapping"];
             effect.Technique = toneMapping ? "FinalRender" : "FinalRenderNoToneMapping";
             effect.SetValue("texSceneRT", sceneRT);
             effect.SetValue("texLuminanceRT", luminanceRTs[0]);
             effect.SetValue("texBloomRT", bloomRT);
-            effect.SetValue("middleGray", (float)GuiController.Instance.Modifiers["middleGray"]);
+            effect.SetValue("middleGray", (float)Modifiers["middleGray"]);
             d3dDevice.SetRenderTarget(0, pOldRT);
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             screenQuad.render(effect);
 
-            //Mostrar FPS
-            TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0,
-                Color.Yellow);
-
-            d3dDevice.EndScene();
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             foreach (var m in meshes)
             {
                 m.dispose();

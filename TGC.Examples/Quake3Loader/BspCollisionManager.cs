@@ -1,8 +1,8 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System;
-using TGC.Core.Geometries;
-using TGC.Util;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -113,16 +113,14 @@ namespace TGC.Examples.Quake3Loader
         ///     Actualizar colisiones y camara
         /// </summary>
         /// <returns>Nueva posicion de la camara</returns>
-        public Vector3 update()
+        public Vector3 update(float elapsedTime)
         {
-            var elapsedTime = GuiController.Instance.ElapsedTime;
-
             Camera.updateCamera(elapsedTime);
 
             //Capturar eventos de algunas teclas
 
             //Jump
-            if (GuiController.Instance.D3dInput.keyPressed(Key.Space))
+            if (TgcD3dInput.Instance.keyPressed(Key.Space))
             {
                 //Salta si esta en el piso
                 if (OnGround)

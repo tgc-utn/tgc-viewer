@@ -26,35 +26,6 @@ namespace TGC.Core.Camara
         private Vector3 m_velocity;
         private Matrix m_viewMatrix;
 
-        #region Getters y Setters
-
-        /// <summary>
-        ///     Habilitar desplazamiento de la camara con delay
-        /// </summary>
-        public bool EnableSpringSystem { get; set; }
-
-        /// <summary>
-        ///     Objetivo al cual la camara tiene que apuntar
-        /// </summary>
-        public Vector3 Target { get; set; }
-
-        /// <summary>
-        ///     Valor de Spring para el delay de la camara
-        /// </summary>
-        public float Spring { get; set; }
-
-        /// <summary>
-        ///     Valor de Damping para el delay de la camara
-        /// </summary>
-        public float Damping { get; set; }
-
-        /// <summary>
-        ///     Posicion del ojo de la camara que apunta hacia el Target
-        /// </summary>
-        public Vector3 Position { get; set; }
-
-        #endregion Getters y Setters
-
         public TgcSpringThirdPersonCamera()
         {
             resetValues();
@@ -288,5 +259,34 @@ namespace TGC.Core.Camara
         {
             m_offsetDistance = offset;
         }
+
+        #region Getters y Setters
+
+        /// <summary>
+        ///     Habilitar desplazamiento de la camara con delay
+        /// </summary>
+        public bool EnableSpringSystem { get; set; }
+
+        /// <summary>
+        ///     Objetivo al cual la camara tiene que apuntar
+        /// </summary>
+        public Vector3 Target { get; set; }
+
+        /// <summary>
+        ///     Valor de Spring para el delay de la camara
+        /// </summary>
+        public float Spring { get; set; }
+
+        /// <summary>
+        ///     Valor de Damping para el delay de la camara
+        /// </summary>
+        public float Damping { get; set; }
+
+        /// <summary>
+        ///     Posicion del ojo de la camara que apunta hacia el Target
+        /// </summary>
+        public Vector3 Position { get; set; }
+
+        #endregion Getters y Setters
     }
 }

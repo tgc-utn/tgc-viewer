@@ -16,54 +16,58 @@ namespace TGC.Viewer.Model
 {
     public class ViewerModel
     {
+        private ViewerForm form;
+        private Panel panel3D;
+        private ToolStripStatusLabel toolStripStatus;
+
         /// <summary>
         ///     Obtener o parar el estado del RenderLoop.
         /// </summary>
         public bool ApplicationRunning { get; set; }
 
         /// <summary>
-        /// Cargador de ejemplos
+        ///     Cargador de ejemplos
         /// </summary>
         public ExampleLoader ExampleLoader { get; private set; }
 
-        private ViewerForm form;
-        private Panel panel3D;
-        private ToolStripStatusLabel toolStripStatus;
-
-        public void InitGraphics(ViewerForm form, TreeView treeViewExamples, Panel panel3D, FlowLayoutPanel flowLayoutPanelModifiers, DataGridView dataGridUserVars, ToolStripStatusLabel toolStripStatusCurrentExample)
+        public void InitGraphics(ViewerForm form, TreeView treeViewExamples, Panel panel3D,
+            FlowLayoutPanel flowLayoutPanelModifiers, DataGridView dataGridUserVars,
+            ToolStripStatusLabel toolStripStatusCurrentExample)
         {
-            this.ApplicationRunning = true;
+            ApplicationRunning = true;
 
             this.form = form;
             this.panel3D = panel3D;
-            this.toolStripStatus = toolStripStatusCurrentExample;
+            toolStripStatus = toolStripStatusCurrentExample;
 
             //Configuracion
-            Settings settings = Settings.Default;
+            var settings = Settings.Default;
 
             D3DDevice.Instance.InitializeD3DDevice(this.panel3D);
-            D3DDevice.Instance.Device.DeviceReset += this.OnResetDevice;
-            this.OnResetDevice(D3DDevice.Instance.Device, null);
+            D3DDevice.Instance.Device.DeviceReset += OnResetDevice;
+            OnResetDevice(D3DDevice.Instance.Device, null);
 
             //Iniciar otras herramientas
             TgcD3dInput.Instance.Initialize(this.form, this.panel3D);
             TgcDirectSound.Instance.InitializeD3DDevice(this.form);
 
             //Directorio actual de ejecucion
-            string currentDirectory = Environment.CurrentDirectory + "\\";
+            var currentDirectory = Environment.CurrentDirectory + "\\";
 
             //Cargar shaders del framework
             TgcShaders.Instance.loadCommonShaders(currentDirectory + settings.ShadersDirectory + settings.CommonShaders);
 
             //Cargo los ejemplos en el arbol
-            this.ExampleLoader = new ExampleLoader(currentDirectory + settings.MediaDirectory, currentDirectory + settings.ShadersDirectory, dataGridUserVars, flowLayoutPanelModifiers);
-            this.ExampleLoader.LoadExamplesInGui(treeViewExamples, currentDirectory);
+            ExampleLoader = new ExampleLoader(currentDirectory + settings.MediaDirectory,
+                currentDirectory + settings.ShadersDirectory, dataGridUserVars, flowLayoutPanelModifiers);
+            ExampleLoader.LoadExamplesInGui(treeViewExamples, currentDirectory);
 
             //Cargar ejemplo default
             try
             {
-                var defaultExample = this.ExampleLoader.GetExampleByName(settings.DefaultExampleName, settings.DefaultExampleCategory);
-                this.ExecuteExample(defaultExample);
+                var defaultExample = ExampleLoader.GetExampleByName(settings.DefaultExampleName,
+                    settings.DefaultExampleCategory);
+                ExecuteExample(defaultExample);
             }
             catch (Exception ex)
             {
@@ -73,15 +77,15 @@ namespace TGC.Viewer.Model
 
         public void InitRenderLoop()
         {
-            while (this.ApplicationRunning)
+            while (ApplicationRunning)
             {
                 //Renderizo si es que hay un ejemplo activo
-                if (this.ExampleLoader.CurrentExample != null)
+                if (ExampleLoader.CurrentExample != null)
                 {
                     //Solo renderizamos si la aplicacion tiene foco, para no consumir recursos innecesarios
-                    if (this.form.ApplicationActive())
+                    if (form.ApplicationActive())
                     {
-                        this.ExampleLoader.CurrentExample.Render();
+                        ExampleLoader.CurrentExample.Render();
                     }
                     else
                     {
@@ -108,18 +112,17 @@ namespace TGC.Viewer.Model
 
         public void ContadorFPS(bool state)
         {
-            this.ExampleLoader.CurrentExample.FPS = state;
-
+            ExampleLoader.CurrentExample.FPS = state;
         }
 
         public void AxisLines(bool state)
         {
-            this.ExampleLoader.CurrentExample.AxisLines.Enable = state;
+            ExampleLoader.CurrentExample.AxisLines.Enable = state;
         }
 
         public void ExecuteExample(TreeNode selectedNode)
         {
-            this.ExecuteExample(ExampleLoader.GetExampleByTreeNode(selectedNode));
+            ExecuteExample(ExampleLoader.GetExampleByTreeNode(selectedNode));
         }
 
         /// <summary>
@@ -131,7 +134,7 @@ namespace TGC.Viewer.Model
         {
             //TODO antes hacia esto que no entiendo porque GuiController.Instance.onResetDevice();
             //ese metodo se movio a mainform, pero solo detenia el ejemplo ejecutaba doresetdevice y lo volvia a cargar...
-            this.doResetDevice();
+            doResetDevice();
         }
 
         /// <summary>
@@ -152,20 +155,21 @@ namespace TGC.Viewer.Model
         /// <param name="example"></param>
         public void ExecuteExample(TgcExample example)
         {
-            this.StopCurrentExample();
+            StopCurrentExample();
 
             //Ejecutar Init
             try
             {
                 example.ResetDefaultConfig();
                 example.Init();
-                this.ExampleLoader.CurrentExample = example;
-                this.toolStripStatus.Text = "Ejemplo actual: " + example.Name;
-                this.panel3D.Focus();
+                ExampleLoader.CurrentExample = example;
+                toolStripStatus.Text = "Ejemplo actual: " + example.Name;
+                panel3D.Focus();
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Error en Init() de ejemplo: " + example.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, "Error en Init() de ejemplo: " + example.Name, MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -174,11 +178,11 @@ namespace TGC.Viewer.Model
         /// </summary>
         public void StopCurrentExample()
         {
-            if (this.ExampleLoader.CurrentExample != null)
+            if (ExampleLoader.CurrentExample != null)
             {
-                this.ExampleLoader.CurrentExample.Close();
-                this.toolStripStatus.Text = "Ejemplo actual terminado." + this.ExampleLoader.CurrentExample.Name + " terminado";
-                this.ExampleLoader.CurrentExample = null;
+                ExampleLoader.CurrentExample.Close();
+                toolStripStatus.Text = "Ejemplo actual terminado." + ExampleLoader.CurrentExample.Name + " terminado";
+                ExampleLoader.CurrentExample = null;
             }
         }
 
@@ -187,11 +191,11 @@ namespace TGC.Viewer.Model
         /// </summary>
         public void ShutDown()
         {
-            this.ApplicationRunning = false;
+            ApplicationRunning = false;
 
-            if (this.ExampleLoader.CurrentExample != null)
+            if (ExampleLoader.CurrentExample != null)
             {
-                this.ExampleLoader.CurrentExample.Close();
+                ExampleLoader.CurrentExample.Close();
             }
 
             //Liberar Device al finalizar la aplicacion
@@ -204,21 +208,21 @@ namespace TGC.Viewer.Model
             var currentProcess = Process.GetCurrentProcess();
             currentProcess.Kill();
         }
-        
+
         /// <summary>
         ///     Cuando el Direct3D Device se resetea.
         ///     Se reinica el ejemplo actual, si hay alguno.
         /// </summary>
         public void OnResetDevice()
         {
-            var exampleBackup = this.ExampleLoader.CurrentExample;
+            var exampleBackup = ExampleLoader.CurrentExample;
 
             if (exampleBackup != null)
             {
                 StopCurrentExample();
             }
 
-            this.doResetDevice();
+            doResetDevice();
 
             if (exampleBackup != null)
             {

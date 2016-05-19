@@ -1,11 +1,10 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System.Drawing;
-using TGC.Core.Utils;
-using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Textures;
+using TGC.Core.Utils;
 
 namespace TGC.Core.Direct3D
 {
@@ -18,7 +17,9 @@ namespace TGC.Core.Direct3D
         /// <summary>
         ///     Constructor privado para poder hacer el singleton
         /// </summary>
-        private D3DDevice() { }
+        private D3DDevice()
+        {
+        }
 
         /// <summary>
         ///     Device de DirectX 3D para crear primitivas
@@ -29,8 +30,6 @@ namespace TGC.Core.Direct3D
         public float FieldOfViewY { get; } = FastMath.ToRad(45.0f);
 
         public float AspectRatio { get; set; } = -1f;
-        private int width;
-        private int height;
 
         public float ZFarPlaneDistance { get; } = 10000f;
         public float ZNearPlaneDistance { get; } = 1f;
@@ -42,17 +41,9 @@ namespace TGC.Core.Direct3D
         /// </summary>
         public Color ClearColor { get; set; }
 
-        public int Width
-        {
-            get { return width; }
-            set { width = value; }
-        }
+        public int Width { get; set; }
 
-        public int Height
-        {
-            get { return height; }
-            set { height = value; }
-        }
+        public int Height { get; set; }
 
         /// <summary>
         ///     Valores default del Direct3d Device
@@ -79,7 +70,7 @@ namespace TGC.Core.Direct3D
             //Alpha Blending
             Device.RenderState.AlphaBlendEnable = false;
             Device.RenderState.AlphaTestEnable = false;
-            Device.RenderState.ReferenceAlpha = 50;//verificar un valor optimo.
+            Device.RenderState.ReferenceAlpha = 50; //verificar un valor optimo.
             Device.RenderState.AlphaFunction = Compare.Greater;
             Device.RenderState.BlendOperation = BlendOperation.Add;
             Device.RenderState.SourceBlend = Blend.SourceAlpha;
@@ -123,9 +114,9 @@ namespace TGC.Core.Direct3D
 
         public void InitializeD3DDevice(Panel panel)
         {
-            this.AspectRatio = (float)panel.Width / panel.Height;
-            this.Width = panel.Width;
-            this.Height = panel.Height;
+            AspectRatio = (float)panel.Width / panel.Height;
+            Width = panel.Width;
+            Height = panel.Height;
 
             var caps = Manager.GetDeviceCaps(Manager.Adapters.Default.Adapter, DeviceType.Hardware);
             Debug.WriteLine("Max primitive count:" + caps.MaxPrimitiveCount);
@@ -161,22 +152,22 @@ namespace TGC.Core.Direct3D
             Device.IsUsingEventHandlers = false;
             var d3DDevice = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
 
-            this.Device = d3DDevice;
+            Device = d3DDevice;
         }
 
         public void FillModeWireFrame()
         {
-            this.Device.RenderState.FillMode = FillMode.WireFrame;
+            Device.RenderState.FillMode = FillMode.WireFrame;
         }
 
         public void FillModeWireSolid()
         {
-            this.Device.RenderState.FillMode = FillMode.Solid;
+            Device.RenderState.FillMode = FillMode.Solid;
         }
 
         public void Clear()
         {
-            this.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, D3DDevice.Instance.ClearColor, 1.0f, 0);
+            Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Instance.ClearColor, 1.0f, 0);
         }
     }
 }

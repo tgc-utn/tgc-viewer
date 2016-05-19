@@ -1,7 +1,8 @@
+using System;
 using System.Drawing;
 using TGC.Core;
-using TGC.Core.Camara;
 using TGC.Core._2D;
+using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -21,11 +22,13 @@ namespace TGC.Examples.UserInterface
         private TgcText2d text2;
         private TgcText2d text3;
 
-        public EjemploTexto2d(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploTexto2d(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            this.Category = "UserInterface";
-            this.Name = "Texto 2D";
-            this.Description = "Muestra como crear texto 2D con DirectX.";
+            Category = "UserInterface";
+            Name = "Texto 2D";
+            Description = "Muestra como crear texto 2D con DirectX.";
         }
 
         public override void Init()
@@ -54,12 +57,12 @@ namespace TGC.Examples.UserInterface
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void Render()
         {
-            this.IniciarEscena();
+            IniciarEscena();
             base.Render();
 
             //Renderizar los tres textoss
@@ -67,7 +70,7 @@ namespace TGC.Examples.UserInterface
             text2.render();
             text3.render();
 
-            this.FinalizarEscena();
+            FinalizarEscena();
         }
 
         public override void Close()

@@ -14,8 +14,6 @@ namespace TGC.Core.UserControls.Networking
         private readonly TgcNetworkingModifierClientsDialog clientsDialog;
         private readonly TgcNetworkingModifier modifier;
         private readonly TgcNetworkingModifierServersDialog serversDialog;
-        private int selectedPlayerId;
-        private int selectedServer;
 
         public TgcNetworkingModifierControl(TgcNetworkingModifier modifier, string serverName, string clientName)
         {
@@ -23,7 +21,7 @@ namespace TGC.Core.UserControls.Networking
 
             this.modifier = modifier;
             textBoxServerName.Text = serverName;
-            selectedPlayerId = -1;
+            SelectedPlayerId = -1;
 
             buttonCloseServer.Enabled = false;
             buttonConnectedClients.Enabled = false;
@@ -45,17 +43,9 @@ namespace TGC.Core.UserControls.Networking
             get { return modifier.AvaliableServers; }
         }
 
-        public int SelectedPlayerId
-        {
-            get { return selectedPlayerId; }
-            set { selectedPlayerId = value; }
-        }
+        public int SelectedPlayerId { get; set; }
 
-        public int SelectedServer
-        {
-            get { return selectedServer; }
-            set { selectedServer = value; }
-        }
+        public int SelectedServer { get; set; }
 
         /// <summary>
         ///     Crear nuevo server

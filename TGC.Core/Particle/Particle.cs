@@ -1,6 +1,6 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 
 namespace TGC.Core.Particle
 {

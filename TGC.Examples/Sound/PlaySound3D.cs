@@ -1,14 +1,19 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Collections.Generic;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
+using TGC.Core.Sound;
 using TGC.Core.Textures;
-using TGC.Util;
-using TGC.Util.Sound;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Sound
 {
@@ -36,26 +41,19 @@ namespace TGC.Examples.Sound
         private TgcBox piso;
         private List<Tgc3dSound> sonidos;
 
-        public override string getCategory()
+        public PlaySound3D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Sound";
+            Category = "Sound";
+            Name = "Play Sound3D";
+            Description = "Muestra como reproducir un archivo de sonido 3D en formato WAV.";
         }
 
-        public override string getName()
-        {
-            return "Play Sound3D";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como reproducir un archivo de sonido 3D en formato WAV.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\tierra.jpg");
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             piso = TgcBox.fromSize(new Vector3(0, -60, 0), new Vector3(5000, 5, 5000), pisoTexture);
 
             //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
@@ -68,15 +66,13 @@ namespace TGC.Examples.Sound
             obstaculo = TgcBox.fromSize(
                 new Vector3(-200, 0, 0),
                 new Vector3(80, 150, 80),
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack3\\goo2.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack3\\goo2.jpg"));
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 1
             //OJO, solo funcionan sonidos WAV Mono (No stereo). Hacer boton der => Propiedades sobre el archivo
             //y tiene que decir "1 Channel".
-            sound = new Tgc3dSound(GuiController.Instance.ExamplesMediaDir + "Sound\\armonía, continuo.wav",
-                obstaculo.Position);
+            sound = new Tgc3dSound(MediaDir + "Sound\\armonía, continuo.wav", obstaculo.Position);
             //Hay que configurar la mínima distancia a partir de la cual se empieza a atenuar el sonido 3D
             sound.MinDistance = 50f;
             sonidos.Add(sound);
@@ -86,12 +82,11 @@ namespace TGC.Examples.Sound
                 new Vector3(200, 0, 800),
                 new Vector3(80, 300, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack3\\lun_dirt.jpg"));
+                    MediaDir + "Texturas\\Quake\\TexturePack3\\lun_dirt.jpg"));
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 2
-            sound = new Tgc3dSound(GuiController.Instance.ExamplesMediaDir + "Sound\\viento helado.wav",
-                obstaculo.Position);
+            sound = new Tgc3dSound(MediaDir + "Sound\\viento helado.wav", obstaculo.Position);
             sound.MinDistance = 50f;
             sonidos.Add(sound);
 
@@ -100,30 +95,27 @@ namespace TGC.Examples.Sound
                 new Vector3(600, 0, 400),
                 new Vector3(80, 100, 150),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack3\\Metal2_1.jpg"));
+                    MediaDir + "Texturas\\Quake\\TexturePack3\\Metal2_1.jpg"));
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 3
-            sound = new Tgc3dSound(GuiController.Instance.ExamplesMediaDir + "Sound\\risa de maníaco.wav",
-                obstaculo.Position);
+            sound = new Tgc3dSound(MediaDir + "Sound\\risa de maníaco.wav", obstaculo.Position);
             sound.MinDistance = 50f;
             sonidos.Add(sound);
 
             //Cargar personaje principal
             var loader = new TgcSceneLoader();
             var scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
+                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
             personaje = scene.Meshes[0];
             personaje.Position = new Vector3(0, -50, 0);
 
             //Hacer que el Listener del sonido 3D siga al personaje
-            GuiController.Instance.DirectSound.ListenerTracking = personaje;
+            TgcDirectSound.Instance.ListenerTracking = personaje;
 
             //Configurar camara en Tercer Persona
-            GuiController.Instance.ThirdPersonCamera.Enable = true;
-            GuiController.Instance.ThirdPersonCamera.setCamera(personaje.Position, 200, 300);
-            GuiController.Instance.ThirdPersonCamera.TargetDisplacement = new Vector3(0, 100, 0);
+            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 200, 300);
+            ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(0, 100, 0);
 
             //Ejecutar en loop los sonidos
             foreach (var s in sonidos)
@@ -132,12 +124,20 @@ namespace TGC.Examples.Sound
             }
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
-            var d3dInput = GuiController.Instance.D3dInput;
+            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
             var rotating = false;
 
@@ -173,9 +173,9 @@ namespace TGC.Examples.Sound
             if (rotating)
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
-                var rotAngle = Geometry.DegreeToRadian(rotate * elapsedTime);
+                var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
                 personaje.rotateY(rotAngle);
-                GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
+                ((TgcThirdPersonCamera)Camara).rotateY(rotAngle);
             }
 
             //Si hubo desplazamiento
@@ -183,7 +183,7 @@ namespace TGC.Examples.Sound
             {
                 //Aplicar movimiento hacia adelante o atras segun la orientacion actual del Mesh
                 var lastPos = personaje.Position;
-                personaje.moveOrientedY(moveForward * elapsedTime);
+                personaje.moveOrientedY(moveForward * ElapsedTime);
 
                 //Detectar colisiones
                 var collide = false;
@@ -206,7 +206,8 @@ namespace TGC.Examples.Sound
             }
 
             //Hacer que la camara siga al personaje en su nueva posicion
-            GuiController.Instance.ThirdPersonCamera.Target = personaje.Position;
+            Camara = new TgcThirdPersonCamera();
+            ((TgcThirdPersonCamera)Camara).Target = personaje.Position;
 
             //Render piso
             piso.render();
@@ -219,10 +220,14 @@ namespace TGC.Examples.Sound
 
             //Render personaje
             personaje.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             piso.dispose();
             foreach (var obstaculo in obstaculos)
             {

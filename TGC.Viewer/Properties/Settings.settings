@@ -9,7 +9,7 @@
       <Value Profile="(Default)">Media\</Value>
     </Setting>
     <Setting Name="DefaultExampleCategory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Otros</Value>
+      <Value Profile="(Default)">Others</Value>
     </Setting>
     <Setting Name="DefaultExampleName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Logo de TGC</Value>

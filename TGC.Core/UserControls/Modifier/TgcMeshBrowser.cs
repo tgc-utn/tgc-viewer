@@ -26,7 +26,7 @@ namespace TGC.Core.UserControls.Modifier
             browseDialog.Filter = "-TgcScene.xml |*-TgcScene.xml";
             browseDialog.Multiselect = false;
             HomeDirPath = homeDirPath;
-            //TODO llamar al modifier con esto GuiController.Instance.ExamplesMediaDir + "MeshCreator";
+            //TODO llamar al modifier con esto this.MediaDir + "MeshCreator";
         }
 
         /// <summary>

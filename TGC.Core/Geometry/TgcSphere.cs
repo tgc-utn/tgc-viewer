@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -240,7 +241,7 @@ namespace TGC.Core.Geometry
         public virtual Vector3 Scale
         {
             get { return scale; }
-            set {; }
+            set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
         }
 
         private Color color;

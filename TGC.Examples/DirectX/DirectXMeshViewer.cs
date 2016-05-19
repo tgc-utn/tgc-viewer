@@ -1,8 +1,12 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.DirectX
 {
@@ -22,34 +26,34 @@ namespace TGC.Examples.DirectX
         private Material[] meshMaterials;
         private Texture[] meshTextures;
 
-        public override string getCategory()
+        public DirectXMeshViewer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "DirectX";
+            Category = "DirectX";
+            Name = "Mesh Viewer";
+            Description =
+                "Visualizador de modelo con formato .X. Permite cargar distintos modelos .X desde el FileSystem.";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "Mesh Viewer";
-        }
-
-        public override string getDescription()
-        {
-            return "Visualizador de modelo con formato .X. Permite cargar distintos modelos .X desde el FileSystem.";
-        }
-
-        public override void init()
-        {
-            currentMeshFile = GuiController.Instance.ExamplesMediaDir + "ModelosX" + "\\" + "shampoo.x";
+            currentMeshFile = MediaDir + "ModelosX" + "\\" + "shampoo.x";
 
             //cargar mesh
             loadMesh(currentMeshFile);
 
             //User Vars
-            GuiController.Instance.UserVars.addVar("Vertices", mesh.NumberVertices);
-            GuiController.Instance.UserVars.addVar("Triangles", mesh.NumberFaces);
+            UserVars.addVar("Vertices", mesh.NumberVertices);
+            UserVars.addVar("Triangles", mesh.NumberFaces);
 
             //Modifiers
-            GuiController.Instance.Modifiers.addFile("Mesh", currentMeshFile, ".X files|*.x");
+            Modifiers.addFile("Mesh", currentMeshFile, ".X files|*.x");
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -83,7 +87,7 @@ namespace TGC.Examples.DirectX
                     {
                         //Cargar textura con TextureLoader
                         meshTextures[i] = TextureLoader.FromFile(D3DDevice.Instance.Device,
-                            GuiController.Instance.ExamplesMediaDir + "ModelosX" + "\\" +
+                            MediaDir + "ModelosX" + "\\" +
                             mtrl[i].TextureFilename);
                     }
                 }
@@ -104,13 +108,16 @@ namespace TGC.Examples.DirectX
             }
 
             //Alejar camara rotacional, respecto de su Bounding Sphere
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), objectRadius * 4, 5f / objectRadius);
+            ((TgcRotationalCamera)Camara).setCamera(new Vector3(0, 0, 0), objectRadius * 4, 5f / objectRadius);
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
             //Ver si cambio el modelo elegido por el usuario
-            var selectedPath = (string)GuiController.Instance.Modifiers["Mesh"];
+            var selectedPath = (string)Modifiers["Mesh"];
             if (selectedPath != currentMeshFile)
             {
                 //cargar nuevo modelo
@@ -118,8 +125,8 @@ namespace TGC.Examples.DirectX
                 loadMesh(currentMeshFile);
 
                 //Actualizar contadores de triangulos y vertices
-                GuiController.Instance.UserVars.setValue("Vertices", mesh.NumberVertices);
-                GuiController.Instance.UserVars.setValue("Triangles", mesh.NumberFaces);
+                UserVars.setValue("Vertices", mesh.NumberVertices);
+                UserVars.setValue("Triangles", mesh.NumberFaces);
             }
 
             //Renderizar la malla.
@@ -130,10 +137,14 @@ namespace TGC.Examples.DirectX
                 D3DDevice.Instance.Device.SetTexture(0, meshTextures[i]);
                 mesh.DrawSubset(i);
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //Liberar recursos de la malla
             mesh.Dispose();
         }

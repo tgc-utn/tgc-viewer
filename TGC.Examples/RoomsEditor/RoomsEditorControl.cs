@@ -9,7 +9,6 @@ using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.RoomsEditor
 {
@@ -234,7 +233,7 @@ namespace TGC.Examples.RoomsEditor
             }
             catch (Exception ex)
             {
-                GuiController.Instance.Logger.logError("Cannot open RoomsEditor Map file", ex);
+                MessageBox.Show(ex.Message, "openMap: Cannot open RoomsEditor Map file", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

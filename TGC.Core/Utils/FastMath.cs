@@ -1,5 +1,5 @@
-using D3DGeometry = Microsoft.DirectX.Direct3D;
 using System;
+using D3DGeometry = Microsoft.DirectX.Direct3D;
 
 namespace TGC.Core.Utils
 {

@@ -10,7 +10,7 @@ namespace TGC.Examples.Engine2D
         public float Angle;
 
         public Vector2 Position;
-        
+
         private Sprite sprite;
 
         public void Load(Bitmap spriteBitmap)

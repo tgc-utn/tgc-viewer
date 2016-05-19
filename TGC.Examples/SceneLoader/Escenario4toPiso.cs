@@ -1,8 +1,12 @@
 using Microsoft.DirectX;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.SceneLoader
 {
@@ -24,62 +28,62 @@ namespace TGC.Examples.SceneLoader
     {
         private TgcScene tgcScene;
 
-        public override string getCategory()
+        public Escenario4toPiso(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "SceneLoader";
-        }
-
-        public override string getName()
-        {
-            return "4toPiso";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "SceneLoader";
+            Name = "4toPiso";
+            Description =
                 "Utiliza la herramienta TgcSceneLoader para cargar el 4to Piso de la facultado modelado en formato TGC. " +
                 "Muestra como utilizar FrustumCulling con fuerza bruta para acelerar la performance de renderizado.";
         }
 
-        public override void init()
+        public override void Init()
         {
             //FPS Camara
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(-140f, 40f, -50f), new Vector3(-140f, 40f, -120f));
-            GuiController.Instance.FpsCamera.MovementSpeed = 200f;
-            GuiController.Instance.FpsCamera.JumpSpeed = 200f;
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(-140f, 40f, -50f), new Vector3(-140f, 40f, -120f));
+            ((TgcFpsCamera)Camara).MovementSpeed = 200f;
+            ((TgcFpsCamera)Camara).JumpSpeed = 200f;
 
             //Cargar escena desde archivo ZIP
             var loader = new TgcSceneLoader();
-            tgcScene = loader.loadSceneFromZipFile(
-                "4toPiso-TgcScene.xml",
-                GuiController.Instance.ExamplesMediaDir + "4toPiso\\4toPiso.zip",
-                GuiController.Instance.ExamplesMediaDir + "4toPiso\\Extract\\");
+            tgcScene = loader.loadSceneFromZipFile("4toPiso-TgcScene.xml", MediaDir + "4toPiso\\4toPiso.zip",
+                MediaDir + "4toPiso\\Extract\\");
 
             /*
             //Version para cargar escena desde carpeta descomprimida
             TgcSceneLoader loader = new TgcSceneLoader();
             tgcScene = loader.loadSceneFromFile(
-                GuiController.Instance.ExamplesMediaDir + "4toPiso\\Extract\\4toPiso-TgcScene.xml",
-                GuiController.Instance.ExamplesMediaDir + "4toPiso\\Extract\\");
+                this.MediaDir + "4toPiso\\Extract\\4toPiso-TgcScene.xml",
+                this.MediaDir + "4toPiso\\Extract\\");
             */
 
             //Modifier para habilitar o deshabilitar FrustumCulling
-            GuiController.Instance.Modifiers.addBoolean("culling", "Frustum culling", true);
+            Modifiers.addBoolean("culling", "Frustum culling", true);
 
             //UserVar para contar la cantidad de meshes que se renderizan
-            GuiController.Instance.UserVars.addVar("Meshes renderizadas");
+            UserVars.addVar("Meshes renderizadas");
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
-            var frustumCullingEnabled = (bool)GuiController.Instance.Modifiers["culling"];
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
+            var frustumCullingEnabled = (bool)Modifiers["culling"];
 
             //Renderizar sin ninguna optimizacion
             if (!frustumCullingEnabled)
             {
                 tgcScene.renderAll();
-                GuiController.Instance.UserVars.setValue("Meshes renderizadas", tgcScene.Meshes.Count);
+                UserVars.setValue("Meshes renderizadas", tgcScene.Meshes.Count);
             }
 
             //Renderizar con Frustum Culling
@@ -102,12 +106,16 @@ namespace TGC.Examples.SceneLoader
                     }
                 }
                 //Actualizar cantidad de meshes dibujadas
-                GuiController.Instance.UserVars.setValue("Meshes renderizadas", totalMeshes);
+                UserVars.setValue("Meshes renderizadas", totalMeshes);
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             tgcScene.disposeAll();
         }
     }

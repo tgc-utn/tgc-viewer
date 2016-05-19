@@ -1,7 +1,11 @@
 using Microsoft.DirectX;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.Terrain;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -18,26 +22,18 @@ namespace TGC.Examples.GeometryBasics
     {
         private TgcSkyBox skyBox;
 
-        public override string getCategory()
+        public CrearSkyBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "GeometryBasics";
-        }
-
-        public override string getName()
-        {
-            return "SkyBox";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "GeometryBasics";
+            Name = "SkyBox";
+            Description =
                 "Muestra como utilizar la herramienta TgcSkyBox para crear un cielo envolvente en la escena. Movimiento con mouse.";
         }
 
-        public override void init()
+        public override void Init()
         {
-            var texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox1\\";
-
             //Crear SkyBox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
@@ -45,6 +41,8 @@ namespace TGC.Examples.GeometryBasics
 
             //Configurar color
             //skyBox.Color = Color.OrangeRed;
+
+            var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox1\\";
 
             //Configurar las texturas para cada una de las 6 caras
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
@@ -59,17 +57,29 @@ namespace TGC.Examples.GeometryBasics
             //Actualizar todos los valores para crear el SkyBox
             skyBox.updateValues();
 
-            GuiController.Instance.FpsCamera.Enable = true;
+            Camara = new TgcFpsCamera();
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Renderizar SkyBox
             skyBox.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //Liberar recursos del SkyBox
             skyBox.dispose();
         }

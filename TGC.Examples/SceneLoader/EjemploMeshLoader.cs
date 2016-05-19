@@ -1,9 +1,12 @@
 using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.SceneLoader
 {
@@ -25,51 +28,49 @@ namespace TGC.Examples.SceneLoader
         private string currentPath;
         private TgcScene currentScene;
 
-        public override string getCategory()
+        public EjemploMeshLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "SceneLoader";
+            Category = "SceneLoader";
+            Name = "MeshLoader";
+            Description = "Ejemplo de como cargar una Malla estática en formato TGC.";
         }
 
-        public override string getName()
-        {
-            return "MeshLoader";
-        }
-
-        public override string getDescription()
-        {
-            return "Ejemplo de como cargar una Malla estática en formato TGC";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Malla default
-            var initialMeshFile = GuiController.Instance.ExamplesMediaDir +
-                                  "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml";
+            var initialMeshFile = MediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\CamionDeAgua-TgcScene.xml";
 
             //Modifiers
             currentScene = null;
             currentPath = null;
-            GuiController.Instance.Modifiers.addFile("Mesh", initialMeshFile, "-TgcScene.xml |*-TgcScene.xml");
+            Modifiers.addFile("Mesh", initialMeshFile, "-TgcScene.xml |*-TgcScene.xml");
 
-            GuiController.Instance.Modifiers.addButton("Reload", "Reload", Reload_ButtonClick);
+            Modifiers.addButton("Reload", "Reload", Reload_ButtonClick);
 
             currentColor = Color.White;
-            GuiController.Instance.Modifiers.addColor("Color", currentColor);
+            Modifiers.addColor("Color", currentColor);
 
-            GuiController.Instance.Modifiers.addBoolean("BoundingBox", "BoundingBox", false);
+            Modifiers.addBoolean("BoundingBox", "BoundingBox", false);
 
             currentAlphaBlending = false;
-            GuiController.Instance.Modifiers.addBoolean("AlphaBlending", "AlphaBlending", currentAlphaBlending);
+            Modifiers.addBoolean("AlphaBlending", "AlphaBlending", currentAlphaBlending);
 
             //UserVars
-            GuiController.Instance.UserVars.addVar("Name");
-            GuiController.Instance.UserVars.addVar("Meshes");
-            GuiController.Instance.UserVars.addVar("Textures");
-            GuiController.Instance.UserVars.addVar("Triangles");
-            GuiController.Instance.UserVars.addVar("Vertices");
-            GuiController.Instance.UserVars.addVar("SizeX");
-            GuiController.Instance.UserVars.addVar("SizeY");
-            GuiController.Instance.UserVars.addVar("SizeZ");
+            UserVars.addVar("Name");
+            UserVars.addVar("Meshes");
+            UserVars.addVar("Textures");
+            UserVars.addVar("Triangles");
+            UserVars.addVar("Vertices");
+            UserVars.addVar("SizeX");
+            UserVars.addVar("SizeY");
+            UserVars.addVar("SizeZ");
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace TGC.Examples.SceneLoader
             currentScene = loader.loadSceneFromFile(path);
 
             //Ajustar camara en base al tamaño del objeto
-            GuiController.Instance.RotCamera.targetObject(currentScene.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(currentScene.BoundingBox);
 
             //Calcular cantidad de triangulos y texturas
             var triangleCount = 0;
@@ -115,15 +116,15 @@ namespace TGC.Examples.SceneLoader
             }
 
             //UserVars
-            GuiController.Instance.UserVars.setValue("Name", currentScene.SceneName);
-            GuiController.Instance.UserVars.setValue("Meshes", currentScene.Meshes.Count);
-            GuiController.Instance.UserVars.setValue("Textures", texturesCount);
-            GuiController.Instance.UserVars.setValue("Triangles", triangleCount);
-            GuiController.Instance.UserVars.setValue("Vertices", verticesCount);
+            UserVars.setValue("Name", currentScene.SceneName);
+            UserVars.setValue("Meshes", currentScene.Meshes.Count);
+            UserVars.setValue("Textures", texturesCount);
+            UserVars.setValue("Triangles", triangleCount);
+            UserVars.setValue("Vertices", verticesCount);
             var size = currentScene.BoundingBox.calculateSize();
-            GuiController.Instance.UserVars.setValue("SizeX", TgcParserUtils.printFloat(size.X));
-            GuiController.Instance.UserVars.setValue("SizeY", TgcParserUtils.printFloat(size.Y));
-            GuiController.Instance.UserVars.setValue("SizeZ", TgcParserUtils.printFloat(size.Z));
+            UserVars.setValue("SizeX", TgcParserUtils.printFloat(size.X));
+            UserVars.setValue("SizeY", TgcParserUtils.printFloat(size.Y));
+            UserVars.setValue("SizeZ", TgcParserUtils.printFloat(size.Z));
         }
 
         /// <summary>
@@ -152,21 +153,24 @@ namespace TGC.Examples.SceneLoader
             loadMesh(currentPath);
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
             //Ver si cambio la malla
-            var selectedPath = (string)GuiController.Instance.Modifiers["Mesh"];
+            var selectedPath = (string)Modifiers["Mesh"];
             checkLoadMesh(selectedPath);
 
             //Ver si cambio el color
-            var color = (Color)GuiController.Instance.Modifiers["Color"];
+            var color = (Color)Modifiers["Color"];
             changeColor(color);
 
             //Mostrar BoundingBox
-            var showBoundingBox = (bool)GuiController.Instance.Modifiers["BoundingBox"];
+            var showBoundingBox = (bool)Modifiers["BoundingBox"];
 
             //AlphaBlending
-            var alphaBlending = (bool)GuiController.Instance.Modifiers["AlphaBlending"];
+            var alphaBlending = (bool)Modifiers["AlphaBlending"];
             if (alphaBlending != currentAlphaBlending)
             {
                 currentAlphaBlending = alphaBlending;
@@ -178,10 +182,14 @@ namespace TGC.Examples.SceneLoader
 
             //Renderizar escena entera
             currentScene.renderAll(showBoundingBox);
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             currentScene.disposeAll();
         }
     }

@@ -1,5 +1,5 @@
-using System;
 using Microsoft.DirectX.DirectSound;
+using System;
 
 namespace TGC.Core.Sound
 {

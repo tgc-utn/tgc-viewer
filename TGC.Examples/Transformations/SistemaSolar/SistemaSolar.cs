@@ -1,10 +1,14 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Transformations.SistemaSolar
 {
@@ -40,24 +44,19 @@ namespace TGC.Examples.Transformations.SistemaSolar
 
         private TgcMesh sun;
 
-        public override string getCategory()
+        public SistemaSolar(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Transformations";
+            Category = "Transformations";
+            Name = "Sistema Solar";
+            Description =
+                "Muestra como concatenar transformaciones para generar movimientos de planetas del sistema solar.";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "Sistema Solar";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como concatenar transformaciones para generar movimientos de planetas del sistema solar.";
-        }
-
-        public override void init()
-        {
-            var sphere = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml";
+            var sphere = MediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml";
 
             var loader = new TgcSceneLoader();
 
@@ -65,22 +64,19 @@ namespace TGC.Examples.Transformations.SistemaSolar
             sun = loader.loadSceneFromFile(sphere).Meshes[0];
             sun.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "SistemaSolar\\SunTexture.jpg")
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\SunTexture.jpg")
             });
 
             earth = loader.loadSceneFromFile(sphere).Meshes[0];
             earth.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "SistemaSolar\\EarthTexture.jpg")
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\EarthTexture.jpg")
             });
 
             moon = loader.loadSceneFromFile(sphere).Meshes[0];
             moon.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "SistemaSolar\\MoonTexture.jpg")
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\MoonTexture.jpg")
             });
 
             //Deshabilitamos el manejo automático de Transformaciones de TgcMesh, para poder manipularlas en forma customizada
@@ -89,35 +85,44 @@ namespace TGC.Examples.Transformations.SistemaSolar
             moon.AutoTransformEnable = false;
 
             //Color de fondo
-            GuiController.Instance.BackgroundColor = Color.Black;
+            D3DDevice.Instance.ClearColor = Color.Black;
 
             //Camara en primera persona
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(705.2938f, 305.347f, -888.1567f),
-                new Vector3(183.6915f, 19.6596f, -84.2204f));
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(705.2938f, 305.347f, -888.1567f), new Vector3(183.6915f, 19.6596f, -84.2204f));
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Actualizar transformacion y renderizar el sol
-            sun.Transform = getSunTransform(elapsedTime);
+            sun.Transform = getSunTransform(ElapsedTime);
             sun.render();
 
             //Actualizar transformacion y renderizar la tierra
-            earth.Transform = getEarthTransform(elapsedTime);
+            earth.Transform = getEarthTransform(ElapsedTime);
             earth.render();
 
             //Actualizar transformacion y renderizar la luna
-            moon.Transform = getMoonTransform(elapsedTime, earth.Transform);
+            moon.Transform = getMoonTransform(ElapsedTime, earth.Transform);
             moon.render();
 
-            axisRotation += AXIS_ROTATION_SPEED * elapsedTime;
-            earthAxisRotation += EARTH_AXIS_ROTATION_SPEED * elapsedTime;
-            earthOrbitRotation += EARTH_ORBIT_SPEED * elapsedTime;
-            moonOrbitRotation += MOON_ORBIT_SPEED * elapsedTime;
+            axisRotation += AXIS_ROTATION_SPEED * ElapsedTime;
+            earthAxisRotation += EARTH_AXIS_ROTATION_SPEED * ElapsedTime;
+            earthOrbitRotation += EARTH_ORBIT_SPEED * ElapsedTime;
+            moonOrbitRotation += MOON_ORBIT_SPEED * ElapsedTime;
 
             //Limpiamos todas las transformaciones con la Matrix identidad
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+
+            FinalizarEscena();
         }
 
         private Matrix getSunTransform(float elapsedTime)
@@ -148,8 +153,10 @@ namespace TGC.Examples.Transformations.SistemaSolar
             return scale * yRot * earthOffset * moonOrbit * earthTransform;
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             sun.dispose();
             moon.dispose();
             earth.dispose();

@@ -1,6 +1,6 @@
-using System;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectSound;
+using System;
 
 namespace TGC.Core.Sound
 {
@@ -81,7 +81,7 @@ namespace TGC.Core.Sound
                 }
 
                 SoundBuffer = new SecondaryBuffer(soundPath, bufferDescription,
-                   TgcDirectSound.Instance.DsDevice);
+                    TgcDirectSound.Instance.DsDevice);
                 Buffer3d = new Buffer3D(SoundBuffer);
                 Buffer3d.MinDistance = 50;
 

@@ -1,8 +1,12 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
-using TGC.Util;
+using TGC.Core.Geometry;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -19,41 +23,37 @@ namespace TGC.Examples.GeometryBasics
         private TgcArrow normalArrow;
         private TgcQuad quad;
 
-        public override string getCategory()
+        public CrearQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "GeometryBasics";
-        }
-
-        public override string getName()
-        {
-            return "Crear Quad";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "GeometryBasics";
+            Name = "Crear Quad";
+            Description =
                 "Muestra como crear una cara rectanglar 3D (Quad) orientable en base a un vector normal. Movimiento con mouse.";
         }
 
-        public override void init()
+        public override void Init()
         {
             //Crear Quad vacio
             quad = new TgcQuad();
 
             //Modifiers para vararia sus parametros
-            GuiController.Instance.Modifiers.addVertex2f("size", new Vector2(0, 0), new Vector2(100, 100),
-                new Vector2(20, 20));
-            GuiController.Instance.Modifiers.addVertex3f("normal", new Vector3(-10, -10, -10), new Vector3(10, 10, 10),
-                new Vector3(0, 1, 1));
-            GuiController.Instance.Modifiers.addVertex3f("center", new Vector3(-10, -10, -10), new Vector3(10, 10, 10),
-                new Vector3(0, 0, 0));
-            GuiController.Instance.Modifiers.addColor("color", Color.Coral);
+            Modifiers.addVertex2f("size", new Vector2(0, 0), new Vector2(100, 100), new Vector2(20, 20));
+            Modifiers.addVertex3f("normal", new Vector3(-10, -10, -10), new Vector3(10, 10, 10), new Vector3(0, 1, 1));
+            Modifiers.addVertex3f("center", new Vector3(-10, -10, -10), new Vector3(10, 10, 10), new Vector3(0, 0, 0));
+            Modifiers.addColor("color", Color.Coral);
 
             //Flecha para mostrar el sentido del vector normal
             normalArrow = new TgcArrow();
-            GuiController.Instance.Modifiers.addBoolean("showNormal", "Show normal", true);
+            Modifiers.addBoolean("showNormal", "Show normal", true);
 
-            GuiController.Instance.RotCamera.CameraDistance = 50;
+            ((TgcRotationalCamera)Camara).CameraDistance = 50;
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -61,10 +61,10 @@ namespace TGC.Examples.GeometryBasics
         /// </summary>
         private void updateQuad(bool showNormal)
         {
-            var size = (Vector2)GuiController.Instance.Modifiers["size"];
-            var normal = (Vector3)GuiController.Instance.Modifiers["normal"];
-            var center = (Vector3)GuiController.Instance.Modifiers["center"];
-            var color = (Color)GuiController.Instance.Modifiers["color"];
+            var size = (Vector2)Modifiers["size"];
+            var normal = (Vector3)Modifiers["normal"];
+            var center = (Vector3)Modifiers["center"];
+            var color = (Color)Modifiers["color"];
 
             //Cargar valores del quad.
             quad.Center = center;
@@ -84,9 +84,12 @@ namespace TGC.Examples.GeometryBasics
             }
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
-            var showNormal = (bool)GuiController.Instance.Modifiers["showNormal"];
+            IniciarEscena();
+            base.Render();
+
+            var showNormal = (bool)Modifiers["showNormal"];
 
             //Actualizar parametros de la caja
             updateQuad(showNormal);
@@ -97,10 +100,14 @@ namespace TGC.Examples.GeometryBasics
             {
                 normalArrow.render();
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             quad.dispose();
             normalArrow.dispose();
         }

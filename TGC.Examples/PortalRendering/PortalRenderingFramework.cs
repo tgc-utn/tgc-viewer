@@ -1,11 +1,14 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Input;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.PortalRendering
 {
@@ -24,57 +27,58 @@ namespace TGC.Examples.PortalRendering
     {
         private TgcScene scene;
 
-        public override string getCategory()
+        public PortalRenderingFramework(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "PortalRendering";
+            Category = "PortalRendering";
+            Name = "PortalRendering Framework";
+            Description =
+                "Muestra como utilizar la técnica Portal Rendering para optimizar el renderizado de un escenario.";
         }
 
-        public override string getName()
-        {
-            return "PortalRendering Framework";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como utilizar la técnica Portal Rendering para optimizar el renderizado de un escenario.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Cargar escenario con información especial exportada de PortalRendering
             var loader = new TgcSceneLoader();
-            scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "EscenarioPortal\\EscenarioPortal-TgcScene.xml");
+            scene = loader.loadSceneFromFile(MediaDir + "EscenarioPortal\\EscenarioPortal-TgcScene.xml");
 
             //Descactivar inicialmente a todos los modelos
             scene.setMeshesEnabled(false);
 
             //Camara en 1ra persona
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.MovementSpeed = 800f;
-            GuiController.Instance.FpsCamera.JumpSpeed = 600f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+            Camara = new TgcFpsCamera();
+            ((TgcFpsCamera)Camara).MovementSpeed = 800f;
+            ((TgcFpsCamera)Camara).JumpSpeed = 600f;
+            Camara.setCamera(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
 
             //Modifiers
-            GuiController.Instance.Modifiers.addBoolean("portalRendering", "PortalRendering", true);
-            GuiController.Instance.Modifiers.addBoolean("WireFrame", "WireFrame", false);
-            GuiController.Instance.Modifiers.addBoolean("showPortals", "Show Portals", false);
+            Modifiers.addBoolean("portalRendering", "PortalRendering", true);
+            Modifiers.addBoolean("WireFrame", "WireFrame", false);
+            Modifiers.addBoolean("showPortals", "Show Portals", false);
 
             //UserVars
-            GuiController.Instance.UserVars.addVar("MeshCount");
+            UserVars.addVar("MeshCount");
 
             //Crear portales debug
             scene.PortalRendering.createDebugPortals(Color.Purple);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
-            var enablePortalRendering = (bool)GuiController.Instance.Modifiers["portalRendering"];
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
+            var enablePortalRendering = (bool)Modifiers["portalRendering"];
             if (enablePortalRendering)
             {
                 //Actualizar visibilidad con PortalRendering
-                scene.PortalRendering.updateVisibility(CamaraManager.Instance.CurrentCamera.getPosition());
+                scene.PortalRendering.updateVisibility(Camara.getPosition());
             }
             else
             {
@@ -83,7 +87,7 @@ namespace TGC.Examples.PortalRendering
             }
 
             //WireFrame
-            var wireFrameEnable = (bool)GuiController.Instance.Modifiers["WireFrame"];
+            var wireFrameEnable = (bool)Modifiers["WireFrame"];
             if (wireFrameEnable)
             {
                 D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
@@ -123,18 +127,22 @@ namespace TGC.Examples.PortalRendering
             }
 
             //Contador de modelos visibles
-            GuiController.Instance.UserVars["MeshCount"] = meshCount.ToString();
+            UserVars["MeshCount"] = meshCount.ToString();
 
             //Renderizar portales
-            var showPortals = (bool)GuiController.Instance.Modifiers["showPortals"];
+            var showPortals = (bool)Modifiers["showPortals"];
             if (showPortals)
             {
                 scene.PortalRendering.renderPortals();
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             scene.disposeAll();
         }
     }

@@ -1,5 +1,6 @@
-using System.Drawing;
 using Microsoft.DirectX;
+using System.Drawing;
+using TGC.Core._2D;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -8,12 +9,29 @@ using TGC.Core.Sound;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core._2D;
 
 namespace TGC.Core.Example
 {
     public abstract class TgcExample
     {
+        public TgcExample(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+        {
+            MediaDir = mediaDir;
+            ShadersDir = shadersDir;
+            UserVars = userVars;
+            Modifiers = modifiers;
+            AxisLines = axisLines;
+            AxisLines.Enable = true;
+            Camara = camara;
+            FPS = true;
+            ElapsedTime = -1;
+
+            Category = "Others";
+            Name = "Ejemplo en Blanco";
+            Description = "Ejemplo en Blanco. Es hora de empezar a hacer tu propio ejemplo :)";
+        }
+
         /// <summary>
         ///     Tiempo en segundos transcurridos desde el ultimo frame.
         /// </summary>
@@ -70,23 +88,6 @@ namespace TGC.Core.Example
         /// </summary>
         public TgcModifiers Modifiers { get; set; }
 
-        public TgcExample(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
-        {
-            this.MediaDir = mediaDir;
-            this.ShadersDir = shadersDir;
-            this.UserVars = userVars;
-            this.Modifiers = modifiers;
-            this.AxisLines = axisLines;
-            this.AxisLines.Enable = true;
-            this.Camara = camara;
-            this.FPS = true;
-            this.ElapsedTime = -1;
-
-            this.Category = "Otros";
-            this.Name = "Ejemplo en Blanco";
-            this.Description = "Ejemplo en Blanco. Es hora de empezar a hacer tu propio ejemplo :)";
-        }
-
         /// <summary>
         ///     Se llama cuando el ejemplo es elegido para ejecutar.
         ///     Inicializar todos los recursos y configuraciones que se van a utilizar.
@@ -94,7 +95,7 @@ namespace TGC.Core.Example
         public abstract void Init();
 
         /// <summary>
-        /// Update de mi modelo
+        ///     Update de mi modelo
         /// </summary>
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
         public abstract void Update();
@@ -105,7 +106,7 @@ namespace TGC.Core.Example
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
         public virtual void Render()
         {
-            this.ElapsedTime = HighResolutionTimer.Instance.FrameTime;
+            ElapsedTime = HighResolutionTimer.Instance.FrameTime;
             D3DDevice.Instance.Clear();
             HighResolutionTimer.Instance.Set();
 
@@ -113,11 +114,12 @@ namespace TGC.Core.Example
             TgcD3dInput.Instance.update();
 
             //Actualizar la camara
-            this.Camara.updateCamera(ElapsedTime);
-            this.Camara.updateViewMatrix(D3DDevice.Instance.Device);
+            Camara.updateCamera(ElapsedTime);
+            Camara.updateViewMatrix(D3DDevice.Instance.Device);
 
             //actualizar el Frustum
-            TgcFrustum.Instance.updateVolume(D3DDevice.Instance.Device.Transform.View, D3DDevice.Instance.Device.Transform.Projection);
+            TgcFrustum.Instance.updateVolume(D3DDevice.Instance.Device.Transform.View,
+                D3DDevice.Instance.Device.Transform.Projection);
 
             //limpiar texturas
             TexturesManager.Instance.clearAll();
@@ -126,16 +128,21 @@ namespace TGC.Core.Example
             TgcDirectSound.Instance.updateListener3d();
 
             //Actualizar contador de FPS si esta activo
-            if (this.FPS)
+            if (FPS)
             {
-                TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+                DrawFPS();
             }
 
             //Hay que dibujar el indicador de los ejes cartesianos
-            if (this.AxisLines.Enable)
+            if (AxisLines.Enable)
             {
-                this.AxisLines.render();
+                AxisLines.render();
             }
+        }
+
+        private void DrawFPS()
+        {
+            TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
         }
 
         /// <summary>
@@ -145,13 +152,13 @@ namespace TGC.Core.Example
         public virtual void Close()
         {
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
-            this.UserVars.ClearVars();
-            this.Modifiers.Clear();
-            this.ElapsedTime = -1;
+            UserVars.ClearVars();
+            Modifiers.Clear();
+            ElapsedTime = -1;
         }
 
         /// <summary>
-        /// Iniciar escena 3D
+        ///     Iniciar escena 3D
         /// </summary>
         public void IniciarEscena()
         {
@@ -159,7 +166,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Finalizar escena 3D
+        ///     Finalizar escena 3D
         /// </summary>
         public void FinalizarEscena()
         {

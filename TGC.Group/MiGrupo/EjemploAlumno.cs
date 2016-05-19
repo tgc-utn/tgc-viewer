@@ -20,13 +20,15 @@ namespace TGC.Group.MiGrupo
     public class EjemploAlumno : TgcExample
     {
         //Caja que se muestra en el ejemplo
-        private TgcBox box;
+        public TgcBox Box { get; set; }
 
-        public EjemploAlumno(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploAlumno(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            this.Category = "Alumnos";
-            this.Name = "Grupo 99";
-            this.Description = "Mi idea - Descripcion de la idea";
+            Category = "Alumnos";
+            Name = "Grupo 99";
+            Description = "Mi idea - Descripcion de la idea";
         }
 
         /// <summary>
@@ -39,33 +41,31 @@ namespace TGC.Group.MiGrupo
             //Device de DirectX para crear primitivas
             var d3dDevice = D3DDevice.Instance.Device;
 
-            //Carpeta de archivos Media del alumno
-            var alumnoMediaFolder = this.MediaDir;
-
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
-            this.UserVars.addVar("variablePrueba");
+            UserVars.addVar("variablePrueba");
 
             //Cargar valor en UserVar
-            this.UserVars.setValue("variablePrueba", 5451);
+            UserVars.setValue("variablePrueba", 5451);
 
             ///////////////MODIFIERS//////////////////
 
             //Crear un modifier para un valor FLOAT
-            this.Modifiers.addFloat("valorFloat", -50f, 200f, 0f);
+            Modifiers.addFloat("valorFloat", -50f, 200f, 0f);
 
             //Crear un modifier para un ComboBox con opciones
             string[] opciones = { "opcion1", "opcion2", "opcion3" };
-            this.Modifiers.addInterval("valorIntervalo", opciones, 0);
+            Modifiers.addInterval("valorIntervalo", opciones, 0);
 
             //Crear un modifier para modificar un vértice
-            this.Modifiers.addVertex3f("valorVertice", new Vector3(-100, -100, -100), new Vector3(50, 50, 50), new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("valorVertice", new Vector3(-100, -100, -100), new Vector3(50, 50, 50),
+                new Vector3(0, 0, 0));
 
             ///////////////CONFIGURAR CAMARA ROTACIONAL//////////////////
             //Es la camara que viene por default, asi que no hace falta hacerlo siempre
             //Configurar centro al que se mira y distancia desde la que se mira
-            this.Camara.setCamera(new Vector3(100, 100, 100), new Vector3(0, 0, 0));
+            Camara.setCamera(new Vector3(100, 100, 100), new Vector3(0, 0, 0));
 
             /*
             ///////////////CONFIGURAR CAMARA PRIMERA PERSONA//////////////////
@@ -73,12 +73,9 @@ namespace TGC.Group.MiGrupo
             //Solo puede haber una camara habilitada a la vez. Al habilitar la camara FPS se deshabilita la camara rotacional
             //Por default la camara FPS viene desactivada
             this.Camara = new TgcFpsCamera();
-            CamaraManager.Instance.CurrentCamera = camara;
-            camara.Enable = true;
             //Configurar posicion y hacia donde se mira
-            camara.setCamera(new Vector3(0, 0, -20), new Vector3(0, 0, 0));
+            this.Camara.setCamera(new Vector3(0, 0, -20), new Vector3(0, 0, 0));
             */
-
 
             ///////////////LISTAS EN C#//////////////////
             //crear
@@ -103,13 +100,16 @@ namespace TGC.Group.MiGrupo
                 var element = lista[i];
             }
 
+            //Textura de la carperta Media
+            var mediaFolder = MediaDir + "cajaMadera4.jpg";
+
             //Cargamos una textura
-            var texture = TgcTexture.createTexture(this.MediaDir + "Texturas\\baldosaFacultad.jpg");
+            var texture = TgcTexture.createTexture(mediaFolder);
 
             //Creamos una caja 3D ubicada en (0, -3, 0), dimensiones (5, 10, 5) y la textura como color.
             var center = new Vector3(0, -3, 0);
             var size = new Vector3(5, 10, 5);
-            box = TgcBox.fromSize(center, size, texture);
+            Box = TgcBox.fromSize(center, size, texture);
         }
 
         public override void Update()
@@ -125,20 +125,19 @@ namespace TGC.Group.MiGrupo
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
         public override void Render()
         {
-            this.IniciarEscena();
-            //Ejecuto el render de la super clase
-            base.Render();
+            //Inicio el render de la escena
+            IniciarEscena();
 
             //Device de DirectX para renderizar
             var d3dDevice = D3DDevice.Instance.Device;
 
             //Obtener valor de UserVar (hay que castear)
-            var valor = (int)this.UserVars.getValue("variablePrueba");
+            var valor = (int)UserVars.getValue("variablePrueba");
 
             //Obtener valores de Modifiers
-            var valorFloat = (float)this.Modifiers["valorFloat"];
-            var opcionElegida = (string)this.Modifiers["valorIntervalo"];
-            var valorVertice = (Vector3)this.Modifiers["valorVertice"];
+            var valorFloat = (float)Modifiers["valorFloat"];
+            var opcionElegida = (string)Modifiers["valorIntervalo"];
+            var valorVertice = (Vector3)Modifiers["valorVertice"];
 
             ///////////////INPUT//////////////////
             //conviene deshabilitar ambas camaras para que no haya interferencia
@@ -156,9 +155,13 @@ namespace TGC.Group.MiGrupo
             }
 
             //Render de la caja
-            box.render();
+            Box.render();
 
-            this.FinalizarEscena();
+            //Ejecuto el render de la super clase
+            base.Render();
+
+            //Finaliza el render
+            FinalizarEscena();
         }
 
         /// <summary>
@@ -167,10 +170,11 @@ namespace TGC.Group.MiGrupo
         /// </summary>
         public override void Close()
         {
+            //Elimino los recursos de la super clase
             base.Close();
 
             //Dispose de la caja
-            box.dispose();
+            Box.dispose();
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
@@ -11,15 +10,16 @@ namespace TGC.Core.Geometry
 {
     public class TgcBoundingCylinder : IRenderObject
     {
+        private readonly TgcCamera camara;
         private Vector3 center;
         private Vector3 rotation;
-        private TgcCamera camara;
 
         public TgcBoundingCylinder(Vector3 center, float radius, float halfLength, TgcCamera camara)
         {
+            //FIXME puede pasar efecto de lado si el ejemplo cambia de camara el cilindro no se entera...
             this.center = center;
-            this.Radius = radius;
-            this.HalfLength = halfLength;
+            Radius = radius;
+            HalfLength = halfLength;
             this.camara = camara;
             rotation = new Vector3(0, 0, 0);
             updateValues();
@@ -178,7 +178,7 @@ namespace TGC.Core.Geometry
             var cylCenter = Vector3.TransformCoordinate(new Vector3(0, 0, 0), transformation);
 
             //obtenemos el vector direccion de vision, y su perpendicular
-            var cameraSeen = this.camara.getPosition() - cylCenter;
+            var cameraSeen = camara.getPosition() - cylCenter;
             var transversalALaCamara = Vector3.Cross(cameraSeen, cylHalfHeight);
 
             //destransformamos la perpendicular para hallar el radio en esa direccion

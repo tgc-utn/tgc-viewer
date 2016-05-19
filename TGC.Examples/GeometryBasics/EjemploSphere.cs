@@ -1,11 +1,15 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -23,54 +27,49 @@ namespace TGC.Examples.GeometryBasics
         private TgcSphere sphere;
         private bool useTexture;
 
-        public override string getCategory()
+        public Esfera(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "GeometryBasics";
+            Category = "GeometryBasics";
+            Name = "Crear Esfera 3D";
+            Description =
+                "Muestra como crear una  esfera 3D con la herramienta TgcSphere, cuyos parámetros pueden ser modificados. Movimiento con mouse.";
         }
 
-        public override string getName()
-        {
-            return "Crear Esfera 3D";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear una  esfera 3D con la herramienta TgcSphere, cuyos parámetros " +
-                   "pueden ser modificados. Movimiento con mouse.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear esfera
             sphere = new TgcSphere();
             currentTexture = null;
 
             //Modifiers para vararis sus parametros
-            GuiController.Instance.Modifiers.addEnum("base", typeof(TgcSphere.eBasePoly),
-                TgcSphere.eBasePoly.ICOSAHEDRON);
-            GuiController.Instance.Modifiers.addBoolean("inflate", "yes", true);
-            GuiController.Instance.Modifiers.addInterval("level of detail", new object[] { 0, 1, 2, 3, 4 }, 2);
-            GuiController.Instance.Modifiers.addBoolean("edges", "show", false);
-            GuiController.Instance.Modifiers.addFloat("radius", 0, 100, 10);
-            GuiController.Instance.Modifiers.addVertex3f("position", new Vector3(-100, -100, -100),
-                new Vector3(100, 100, 100), new Vector3(0, 0, 0));
-            GuiController.Instance.Modifiers.addVertex3f("rotation", new Vector3(-180, -180, -180),
-                new Vector3(180, 180, 180), new Vector3(0, 0, 0));
-            GuiController.Instance.Modifiers.addBoolean("Use texture", "yes", true);
-            GuiController.Instance.Modifiers.addTexture("texture",
-                GuiController.Instance.ExamplesMediaDir + "\\Texturas\\madera.jpg");
-            GuiController.Instance.Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f),
-                new Vector2(0, 0));
-            GuiController.Instance.Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4),
-                new Vector2(1, 1));
+            Modifiers.addEnum("base", typeof(TgcSphere.eBasePoly), TgcSphere.eBasePoly.ICOSAHEDRON);
+            Modifiers.addBoolean("inflate", "yes", true);
+            Modifiers.addInterval("level of detail", new object[] { 0, 1, 2, 3, 4 }, 2);
+            Modifiers.addBoolean("edges", "show", false);
+            Modifiers.addFloat("radius", 0, 100, 10);
+            Modifiers.addVertex3f("position", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
+                new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("rotation", new Vector3(-180, -180, -180), new Vector3(180, 180, 180),
+                new Vector3(0, 0, 0));
+            Modifiers.addBoolean("Use texture", "yes", true);
+            Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
+            Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f), new Vector2(0, 0));
+            Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4), new Vector2(1, 1));
 
-            GuiController.Instance.Modifiers.addColor("color", Color.White);
-            GuiController.Instance.Modifiers.addBoolean("boundingsphere", "show", false);
+            Modifiers.addColor("color", Color.White);
+            Modifiers.addBoolean("boundingsphere", "show", false);
 
-            GuiController.Instance.UserVars.addVar("Vertices");
-            GuiController.Instance.UserVars.addVar("Triangulos");
+            UserVars.addVar("Vertices");
+            UserVars.addVar("Triangulos");
 
-            GuiController.Instance.RotCamera.CameraDistance = 50;
+            ((TgcRotationalCamera)Camara).CameraDistance = 50;
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -78,16 +77,16 @@ namespace TGC.Examples.GeometryBasics
         /// </summary>
         private void updateSphere()
         {
-            var bTexture = (bool)GuiController.Instance.Modifiers["Use texture"];
-            var color = (Color)GuiController.Instance.Modifiers["color"];
-            sphere.RenderEdges = (bool)GuiController.Instance.Modifiers["edges"];
-            sphere.Inflate = (bool)GuiController.Instance.Modifiers["inflate"];
-            sphere.BasePoly = (TgcSphere.eBasePoly)GuiController.Instance.Modifiers.getValue("base");
+            var bTexture = (bool)Modifiers["Use texture"];
+            var color = (Color)Modifiers["color"];
+            sphere.RenderEdges = (bool)Modifiers["edges"];
+            sphere.Inflate = (bool)Modifiers["inflate"];
+            sphere.BasePoly = (TgcSphere.eBasePoly)Modifiers.getValue("base");
 
             if (bTexture)
             {
                 //Cambiar textura
-                var texturePath = (string)GuiController.Instance.Modifiers["texture"];
+                var texturePath = (string)Modifiers["texture"];
                 if (texturePath != currentTexture || !useTexture || (sphere.RenderEdges && sphere.Color != color))
                 {
                     currentTexture = texturePath;
@@ -100,45 +99,52 @@ namespace TGC.Examples.GeometryBasics
             useTexture = bTexture;
 
             //Radio, posición y color
-            sphere.Radius = (float)GuiController.Instance.Modifiers["radius"];
-            sphere.Position = (Vector3)GuiController.Instance.Modifiers["position"];
-            sphere.LevelOfDetail = (int)GuiController.Instance.Modifiers["level of detail"];
+            sphere.Radius = (float)Modifiers["radius"];
+            sphere.Position = (Vector3)Modifiers["position"];
+            sphere.LevelOfDetail = (int)Modifiers["level of detail"];
 
             //Rotación, converitr a radianes
-            var rotation = (Vector3)GuiController.Instance.Modifiers["rotation"];
+            var rotation = (Vector3)Modifiers["rotation"];
             sphere.Rotation = new Vector3(Geometry.DegreeToRadian(rotation.X), Geometry.DegreeToRadian(rotation.Y),
                 Geometry.DegreeToRadian(rotation.Z));
 
             //Offset de textura
-            sphere.UVOffset = (Vector2)GuiController.Instance.Modifiers["offset"];
+            sphere.UVOffset = (Vector2)Modifiers["offset"];
 
             //Tiling de textura
-            sphere.UVTiling = (Vector2)GuiController.Instance.Modifiers["tiling"];
+            sphere.UVTiling = (Vector2)Modifiers["tiling"];
 
             //Actualizar valores en la caja.
             sphere.updateValues();
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
             //Actualizar parametros de la caja
             updateSphere();
 
-            GuiController.Instance.UserVars.setValue("Vertices", sphere.VertexCount);
-            GuiController.Instance.UserVars.setValue("Triangulos", sphere.TriangleCount);
+            UserVars.setValue("Vertices", sphere.VertexCount);
+            UserVars.setValue("Triangulos", sphere.TriangleCount);
             //Renderizar caja
             sphere.render();
 
             //Mostrar Boundingsphere de la caja
-            var boundingsphere = (bool)GuiController.Instance.Modifiers["boundingsphere"];
+            var boundingsphere = (bool)Modifiers["boundingsphere"];
             if (boundingsphere)
             {
                 sphere.BoundingSphere.render();
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             sphere.dispose();
         }
     }

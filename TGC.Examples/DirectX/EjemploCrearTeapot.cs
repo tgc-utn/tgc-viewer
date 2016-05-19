@@ -2,9 +2,12 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.DirectX
 {
@@ -28,22 +31,16 @@ namespace TGC.Examples.DirectX
         private Material material;
         private Mesh mesh;
 
-        public override string getCategory()
+        public EjemploCrearTeapot(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "DirectX";
+            Category = "DirectX";
+            Name = "Teapot + Light";
+            Description = "Crea un Teapot de DirectX con iluminación dinámica que gira sobre los tres ejes.";
         }
 
-        public override string getName()
-        {
-            return "Teapot + Light";
-        }
-
-        public override string getDescription()
-        {
-            return "Crea un Teapot de DirectX con iluminación dinámica que gira sobre los tres ejes";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear Teapot
             mesh = Mesh.Teapot(D3DDevice.Instance.Device);
@@ -65,26 +62,34 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), 10f);
+            ((TgcRotationalCamera)Camara).setCamera(new Vector3(0, 0, 0), 10f);
 
             //Modifiers para ángulos de rotación
-            GuiController.Instance.Modifiers.addFloat("angleX", 0, 10, 0);
-            GuiController.Instance.Modifiers.addFloat("angleY", 0, 10, 1);
-            GuiController.Instance.Modifiers.addFloat("angleZ", 0, 10, 0);
+            Modifiers.addFloat("angleX", 0, 10, 0);
+            Modifiers.addFloat("angleY", 0, 10, 1);
+            Modifiers.addFloat("angleZ", 0, 10, 0);
 
             //Modifiers para cambiar de rotacion de Euler a Quaternion
-            GuiController.Instance.Modifiers.addBoolean("quaternion", "Use Quaternion?", false);
+            Modifiers.addBoolean("quaternion", "Use Quaternion?", false);
 
             //Modifier para color de Teapot
-            GuiController.Instance.Modifiers.addColor("color", Color.Green);
+            Modifiers.addColor("color", Color.Green);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Obtener valores de Modifiers
-            var vAngleX = (float)GuiController.Instance.Modifiers["angleX"];
-            var vAngleY = (float)GuiController.Instance.Modifiers["angleY"];
-            var vAngleZ = (float)GuiController.Instance.Modifiers["angleZ"];
+            var vAngleX = (float)Modifiers["angleX"];
+            var vAngleY = (float)Modifiers["angleY"];
+            var vAngleZ = (float)Modifiers["angleZ"];
 
             //Convertir a radianes
             vAngleX = Geometry.DegreeToRadian(vAngleX);
@@ -98,7 +103,7 @@ namespace TGC.Examples.DirectX
             angleZ = (angleZ + vAngleZ) % doublePI;
 
             //Ver si hay que usar Quaternions
-            var useQuat = (bool)GuiController.Instance.Modifiers["quaternion"];
+            var useQuat = (bool)Modifiers["quaternion"];
 
             //Rotación Euler
             if (!useQuat)
@@ -113,15 +118,19 @@ namespace TGC.Examples.DirectX
             }
 
             //Variar el color de Diffuse del Material
-            material.Diffuse = (Color)GuiController.Instance.Modifiers["color"];
+            material.Diffuse = (Color)Modifiers["color"];
             D3DDevice.Instance.Device.Material = material;
 
             //Renderizar malla
             mesh.DrawSubset(0);
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             mesh.Dispose();
         }
     }

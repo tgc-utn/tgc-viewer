@@ -39,7 +39,7 @@ namespace TGC.Core.UserControls.Modifier
             browseDialog.Description = "Select folder";
             browseDialog.ShowNewFolderButton = false;
             ShowFolders = true;
-            //HomeDirPath = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Textures";
+            //HomeDirPath = this.MediaDir + "MeshCreator\\Textures";
             AsyncModeEnable = false;
             OnSelectImage = null;
             OnClose = null;

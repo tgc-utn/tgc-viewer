@@ -1,8 +1,8 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
 
 namespace TGC.Core.UserControls.Modifier
 {
@@ -185,7 +185,7 @@ namespace TGC.Core.UserControls.Modifier
             add(m);
             return m;
         }
-        
+
         /// <summary>
         ///     Modifier para Networking.
         ///     Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
@@ -203,6 +203,7 @@ namespace TGC.Core.UserControls.Modifier
             return m;
         }
         */
+
         /// <summary>
         ///     Modificador que agrega un Boton
         /// </summary>

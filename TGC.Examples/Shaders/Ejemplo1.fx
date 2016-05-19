@@ -38,7 +38,7 @@ struct VS_OUTPUT
 	float2 TexCoord : TEXCOORD0;
 };
 
-VS_OUTPUT VS_main (
+VS_OUTPUT VS_main(
 	float4 Position : POSITION,
 	float3 Normal : NORMAL,
 	float4 Color : COLOR,
@@ -50,11 +50,11 @@ VS_OUTPUT VS_main (
 	Out.Position = mul(Position, matWorldViewProj);
 	Out.Color = Color;
 	Out.TexCoord = TexCoord;
-	
+
 	return Out;
 }
 
-VS_OUTPUT VS_randomTexCoord (
+VS_OUTPUT VS_randomTexCoord(
 	float4 Position : POSITION,
 	float3 Normal : NORMAL,
 	float4 Color : COLOR,
@@ -66,11 +66,11 @@ VS_OUTPUT VS_randomTexCoord (
 	Out.Position = mul(Position, matWorldViewProj);
 	Out.Color = Color;
 	Out.TexCoord = TexCoord + random;
-	
+
 	return Out;
 }
 
-VS_OUTPUT VS_randomColor (
+VS_OUTPUT VS_randomColor(
 	float4 Position : POSITION,
 	float3 Normal : NORMAL,
 	float4 Color : COLOR,
@@ -82,11 +82,11 @@ VS_OUTPUT VS_randomColor (
 	Out.Position = mul(Position, matWorldViewProj);
 	Out.Color = random;
 	Out.TexCoord = TexCoord;
-	
+
 	return Out;
 }
 
-VS_OUTPUT VS_textureOffset (
+VS_OUTPUT VS_textureOffset(
 	float4 Position : POSITION,
 	float3 Normal : NORMAL,
 	float4 Color : COLOR,
@@ -99,48 +99,45 @@ VS_OUTPUT VS_textureOffset (
 	Out.Color = random;
 	Out.TexCoord = TexCoord;
 	Out.TexCoord[0] += textureOffset;
-	
+
 	return Out;
 }
 
-
 /*********************************************** Pixel Shaders ***************************************************/
 
-
-float4 PS_onlyColor(VS_OUTPUT In): COLOR
+float4 PS_onlyColor(VS_OUTPUT In) : COLOR
 {
 	return In.Color;
 }
 
-float4 PS_onlyTexture(VS_OUTPUT In): COLOR
+float4 PS_onlyTexture(VS_OUTPUT In) : COLOR
 {
 	return tex2D(diffuseMap, In.TexCoord);
 }
 
-float4 PS_darkening(VS_OUTPUT In): COLOR
+float4 PS_darkening(VS_OUTPUT In) : COLOR
 {
-	return darkFactor * tex2D(diffuseMap, In.TexCoord); 
+	return darkFactor * tex2D(diffuseMap, In.TexCoord);
 }
 
-float4 PS_complementing(VS_OUTPUT In): COLOR
+float4 PS_complementing(VS_OUTPUT In) : COLOR
 {
-	return 1 - tex2D(diffuseMap, In.TexCoord); 
+	return 1 - tex2D(diffuseMap, In.TexCoord);
 }
 
-float4 PS_maskRedOut(VS_OUTPUT In): COLOR
+float4 PS_maskRedOut(VS_OUTPUT In) : COLOR
 {
-	float4 outColor = tex2D(diffuseMap, In.TexCoord); 
+	float4 outColor = tex2D(diffuseMap, In.TexCoord);
 	outColor.r = 0.0f;
 	return outColor;
 }
 
-float4 PS_redOnly(VS_OUTPUT In): COLOR
+float4 PS_redOnly(VS_OUTPUT In) : COLOR
 {
-	float4 outColor = tex2D(diffuseMap, In.TexCoord); 
+	float4 outColor = tex2D(diffuseMap, In.TexCoord);
 	outColor.bga = 0.0f;
 	return outColor;
 }
-
 
 /*********************************************** Techniques ***************************************************/
 
@@ -206,4 +203,3 @@ technique TextureOffset {
 		PixelShader = compile ps_2_0 PS_onlyTexture();
 	}
 }
-
