@@ -1,9 +1,9 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Diagnostics;
+using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -281,7 +281,7 @@ namespace TGC.Core.Geometry
         public Vector3 Scale
         {
             get { return new Vector3(1, 1, 1); }
-            set {; }
+            set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
         }
 
         public void move(Vector3 v)

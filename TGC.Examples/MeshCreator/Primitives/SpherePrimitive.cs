@@ -1,9 +1,8 @@
 ﻿using Microsoft.DirectX;
 using TGC.Core.Geometries;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Util;
-using TGC.Util.Input;
 
 namespace TGC.Examples.MeshCreator.Primitives
 {
@@ -144,7 +143,7 @@ namespace TGC.Examples.MeshCreator.Primitives
         /// </summary>
         public override void doCreation()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))

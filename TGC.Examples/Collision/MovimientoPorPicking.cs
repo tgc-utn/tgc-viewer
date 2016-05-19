@@ -1,14 +1,17 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
-using TGC.Util.Input;
-using TGC.Util.TgcGeometry;
 
 namespace TGC.Examples.Collision
 {
@@ -33,26 +36,20 @@ namespace TGC.Examples.Collision
         private TgcPickingRay pickingRay;
         private TgcBox suelo;
 
-        public override string getCategory()
+        public MovimientoPorPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
+            Category = "Collision";
+            Name = "Movimiento por Picking";
+            Description =
+                "Desplazamiento de un objeto por medio de Picking. Hacer clic sobre el suelo para desplazar la nave.";
         }
 
-        public override string getName()
-        {
-            return "Movimiento por Picking";
-        }
-
-        public override string getDescription()
-        {
-            return "Desplazamiento de un objeto por medio de Picking. Hacer clic sobre el suelo para desplazar la nave.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Cargar suelo
-            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg");
+            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg");
             suelo = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(5000, 0.1f, 5000), texture);
 
             //Iniciarlizar PickingRay
@@ -61,7 +58,7 @@ namespace TGC.Examples.Collision
             //Cargar nave
             var loader = new TgcSceneLoader();
             var scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
+                loader.loadSceneFromFile(MediaDir +
                                          "MeshCreator\\Meshes\\Vehiculos\\NaveEspacial\\NaveEspacial-TgcScene.xml");
             mesh = scene.Meshes[0];
 
@@ -84,16 +81,24 @@ namespace TGC.Examples.Collision
             directionArrow.HeadSize = new Vector2(10, 10);
 
             //Camara en tercera persona
-            GuiController.Instance.ThirdPersonCamera.Enable = true;
-            GuiController.Instance.ThirdPersonCamera.setCamera(mesh.Position, 800, 1500);
+            Camara = new TgcThirdPersonCamera();
+            ((TgcThirdPersonCamera)Camara).setCamera(mesh.Position, 800, 1500);
 
-            GuiController.Instance.Modifiers.addFloat("speed", 1000, 5000, 2500);
+            Modifiers.addFloat("speed", 1000, 5000, 2500);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Si hacen clic con el mouse, ver si hay colision con el suelo
-            if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Actualizar Ray de colisión en base a posición del mouse
                 pickingRay.updateRay();
@@ -115,7 +120,7 @@ namespace TGC.Examples.Collision
                 }
             }
 
-            var speed = (float)GuiController.Instance.Modifiers["speed"];
+            var speed = (float)Modifiers["speed"];
 
             //Interporlar movimiento, si hay que mover
             if (applyMovement)
@@ -126,7 +131,7 @@ namespace TGC.Examples.Collision
                 if (posDiffLength > float.Epsilon)
                 {
                     //Movemos el mesh interpolando por la velocidad
-                    var currentVelocity = speed * elapsedTime;
+                    var currentVelocity = speed * ElapsedTime;
                     posDiff.Normalize();
                     posDiff.Multiply(currentVelocity);
 
@@ -148,7 +153,7 @@ namespace TGC.Examples.Collision
                     mesh.Transform = meshRotationMatrix * Matrix.Translation(mesh.Position);
 
                     //Actualizar camara
-                    GuiController.Instance.ThirdPersonCamera.Target = mesh.Position;
+                    ((TgcThirdPersonCamera)Camara).Target = mesh.Position;
                 }
                 //Se acabo el movimiento
                 else
@@ -166,10 +171,14 @@ namespace TGC.Examples.Collision
 
             suelo.render();
             mesh.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             suelo.dispose();
             mesh.dispose();
             collisionPointMesh.dispose();

@@ -1,8 +1,7 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core.Geometries;
-using TGC.Util;
-using TGC.Util.TgcGeometry;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 
 namespace TGC.Examples.SceneEditor
 {
@@ -124,7 +123,7 @@ namespace TGC.Examples.SceneEditor
             //Desplazamiento inicial
             if (SelectedAxis != Axis.None)
             {
-                var input = GuiController.Instance.D3dInput;
+                var input = TgcD3dInput.Instance;
                 initMouseP = new Vector2(input.XposRelative, input.YposRelative);
             }
         }
@@ -134,7 +133,7 @@ namespace TGC.Examples.SceneEditor
         /// </summary>
         public void updateMove()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
             var currentMove = new Vector3(0, 0, 0);
 
             //Desplazamiento segun el mouse en X

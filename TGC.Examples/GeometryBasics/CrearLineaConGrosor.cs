@@ -1,8 +1,12 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
-using TGC.Util;
+using TGC.Core.Geometry;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -17,49 +21,48 @@ namespace TGC.Examples.GeometryBasics
     {
         private TgcBoxLine line;
 
-        public override string getCategory()
+        public CrearLineaConGrosor(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "GeometryBasics";
-        }
-
-        public override string getName()
-        {
-            return "Linea con Grosor";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "GeometryBasics";
+            Name = "Linea con Grosor";
+            Description =
                 "Muestra como crear una linea 3D con grosor configurable, utilizando la herramienta TgcBoxLine. Movimiento con mouse.";
         }
 
-        public override void init()
+        public override void Init()
         {
             //Crea línea genérica
             line = new TgcBoxLine();
 
             //Crear modifiers
-            GuiController.Instance.Modifiers.addVertex3f("start", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
-                new Vector3(0, 0, 0));
-            GuiController.Instance.Modifiers.addVertex3f("end", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
-                new Vector3(0, 10, 0));
-            GuiController.Instance.Modifiers.addFloat("thickness", 0.1f, 5, 0.2f);
-            GuiController.Instance.Modifiers.addColor("color", Color.Red);
+            Modifiers.addVertex3f("start", new Vector3(-50, -50, -50), new Vector3(50, 50, 50), new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("end", new Vector3(-50, -50, -50), new Vector3(50, 50, 50), new Vector3(0, 10, 0));
+            Modifiers.addFloat("thickness", 0.1f, 5, 0.2f);
+            Modifiers.addColor("color", Color.Red);
 
             //Camara FPS
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0.0302f, 5.842f, -18.97f),
-                new Vector3(27.9348f, -29.0575f, 980.0311f));
-            GuiController.Instance.FpsCamera.MovementSpeed = 10f;
-            GuiController.Instance.FpsCamera.JumpSpeed = 10f;
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(0.0302f, 5.842f, -18.97f), new Vector3(27.9348f, -29.0575f, 980.0311f));
+            ((TgcFpsCamera)Camara).MovementSpeed = 10f;
+            ((TgcFpsCamera)Camara).JumpSpeed = 10f;
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
-            var start = (Vector3)GuiController.Instance.Modifiers["start"];
-            var end = (Vector3)GuiController.Instance.Modifiers["end"];
-            var thickness = (float)GuiController.Instance.Modifiers["thickness"];
-            var color = (Color)GuiController.Instance.Modifiers["color"];
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
+            var start = (Vector3)Modifiers["start"];
+            var end = (Vector3)Modifiers["end"];
+            var thickness = (float)Modifiers["thickness"];
+            var color = (Color)Modifiers["color"];
 
             //Cargar valores de la línea
             line.PStart = start;
@@ -72,10 +75,14 @@ namespace TGC.Examples.GeometryBasics
 
             //Render
             line.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             line.dispose();
         }
     }

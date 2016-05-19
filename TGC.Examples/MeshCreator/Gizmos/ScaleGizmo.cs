@@ -3,9 +3,8 @@ using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometries;
+using TGC.Core.Input;
 using TGC.Examples.MeshCreator.Primitives;
-using TGC.Util;
-using TGC.Util.Input;
 
 namespace TGC.Examples.MeshCreator.Gizmos
 {
@@ -76,7 +75,7 @@ namespace TGC.Examples.MeshCreator.Gizmos
 
         public override void update()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
 
             switch (currentState)
             {

@@ -1,9 +1,10 @@
+using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
+using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TgcUserVars = TGC.Core.UserControls.TgcUserVars;
 
 namespace TGC.Examples.Tutorial
 {
@@ -19,11 +20,13 @@ namespace TGC.Examples.Tutorial
         //Variable para el modelo 3D
         private TgcMesh mesh;
 
-        public Tutorial5(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial5(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            this.Category = "Tutorial";
-            this.Name = "Tutorial 5";
-            this.Description = "Muestra como cargar un modelo 3D.";
+            Category = "Tutorial";
+            Name = "Tutorial 5";
+            Description = "Muestra como cargar un modelo 3D.";
         }
 
         public override void Init()
@@ -37,29 +40,30 @@ namespace TGC.Examples.Tutorial
             //modelos 3D. Cada modelo se representa con la clase TgcMesh.
             //En este ejemplo vamos a cargar una escena con un único modelo.
             var loader = new TgcSceneLoader();
-            var scene = loader.loadSceneFromFile(this.MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
+            var scene =
+                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
 
             //De toda la escena solo nos interesa guardarnos el primer modelo (el único que hay en este caso).
             mesh = scene.Meshes[0];
 
             //Hacemos que la cámara esté centrada sobre el mesh.
-            ((TgcRotationalCamera)this.Camara).targetObject(mesh.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
         }
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void Render()
         {
-            this.IniciarEscena();
+            IniciarEscena();
             base.Render();
 
             //Dibujar el modelo 3D
             mesh.render();
 
-            this.FinalizarEscena();
+            FinalizarEscena();
         }
 
         public override void Close()

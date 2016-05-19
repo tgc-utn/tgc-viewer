@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.DirectX;
+using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.Geometry

@@ -4,13 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using TGC.Core.Geometries;
+using TGC.Core.Camara;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Core.Utils;
-using TGC.Util;
-using TGC.Util.Input;
-using TGC.Util.TgcGeometry;
 
 namespace TGC.Examples.SceneEditor
 {
@@ -96,7 +95,10 @@ namespace TGC.Examples.SceneEditor
             tabControl.SelectedTab = tabControl.TabPages["tabPageCreate"];
 
             //Camara inicial
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(50.406f, 185.5353f, -143.7283f),
+            var camara = new TgcFpsCamera();
+            CamaraManager.Instance.CurrentCamera = camara;
+            camara.Enable = true;
+            camara.setCamera(new Vector3(50.406f, 185.5353f, -143.7283f),
                 new Vector3(-92.5515f, -567.6361f, 498.3744f));
         }
 
@@ -157,12 +159,14 @@ namespace TGC.Examples.SceneEditor
             {
                 unselectAllModes(radioButtonCameraMode);
                 currentState = GuiState.CameraMode;
-                GuiController.Instance.FpsCamera.Enable = true;
+                var camara = new TgcFpsCamera();
+                CamaraManager.Instance.CurrentCamera = camara;
+                camara.Enable = true;
                 cameraSpeed.Enabled = true;
             }
             else
             {
-                GuiController.Instance.FpsCamera.Enable = false;
+                CamaraManager.Instance.CurrentCamera.Enable = false;
                 cameraSpeed.Enabled = false;
             }
         }
@@ -284,7 +288,7 @@ namespace TGC.Examples.SceneEditor
         /// </summary>
         private void handleInput()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
 
             //Seleccionar modelo
             if (currentState == GuiState.SelectionMode)
@@ -396,7 +400,6 @@ namespace TGC.Examples.SceneEditor
             {
                 MessageBox.Show("Hubo un error al cargar el archivo " + fileName.Text, "Error al cargar Mesh",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                GuiController.Instance.Logger.logError("Error al cargar Mesh de TGC", ex);
             }
         }
 
@@ -430,8 +433,11 @@ namespace TGC.Examples.SceneEditor
         /// </summary>
         private void cameraSpeed_ValueChanged(object sender, EventArgs e)
         {
-            GuiController.Instance.FpsCamera.MovementSpeed = (float)cameraSpeed.Value;
-            GuiController.Instance.FpsCamera.JumpSpeed = (float)cameraSpeed.Value;
+            var camara = new TgcFpsCamera();
+            CamaraManager.Instance.CurrentCamera = camara;
+            camara.Enable = true;
+            camara.MovementSpeed = (float)cameraSpeed.Value;
+            camara.JumpSpeed = (float)cameraSpeed.Value;
         }
 
         /// <summary>
@@ -1078,7 +1084,6 @@ namespace TGC.Examples.SceneEditor
             {
                 MessageBox.Show("Hubo un error al crea un terreno desde el Heightmap " + heighmap.Text,
                     "Error al cargar Heightmap", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                GuiController.Instance.Logger.logError("Error al cargar Heightmap", ex);
             }
         }
 

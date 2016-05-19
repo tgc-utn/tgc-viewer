@@ -1,81 +1,77 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TgcViewer.Example;
-using TgcViewer;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using Microsoft.DirectX;
-using TgcViewer.Utils.Modifiers;
-using TgcViewer.Utils.TgcGeometry;
-using TgcViewer.Utils.TgcSceneLoader;
-using EjemploDirectX.TgcViewer.Utils.TgcSceneLoader;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
+using TGC.Core.Direct3D;
+using TGC.Core.Example;
+using TGC.Core.Geometry;
+using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
-namespace Examples.GeometryBasics
+namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
-    /// EjemploVerticalWall.
+    ///     EjemploVerticalWall.
     /// </summary>
     public class EjemploVerticalWall : TgcExample
     {
-        TgcPlaneWall wall;
-        TgcMesh mesh;
-        TgcTexture currentTexture;
+        private TgcTexture currentTexture;
+        private TgcMesh mesh;
+        private TgcPlaneWall wall;
 
-        public override string getName()
+        public EjemploVerticalWall(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "EjemploVerticalWall";
+            Category = "GeometryBasics";
+            Name = "EjemploVerticalWall";
+            Description = "EjemploVerticalWall";
         }
 
-        public override string getDescription()
+        public override void Init()
         {
-            return "EjemploVerticalWall.";
-        }
+            var d3dDevice = D3DDevice.Instance.Device;
 
-        
-
-        public override void init()
-        {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            
-
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadSceneFromFile(
-                    GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml",
-                    GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\");
+            var loader = new TgcSceneLoader();
+            var scene = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml",
+                MediaDir + "ModelosTgc\\Box\\");
             mesh = scene.Meshes[0];
             mesh.Scale = new Vector3(0.25f, 0.25f, 0.25f);
 
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(7.9711f, 11.7f, -32.5475f), new Vector3(7.972f, 11.4178f, -31.5475f));
 
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(7.9711f, 11.7f, -32.5475f), new Vector3(7.972f, 11.4178f, -31.5475f));
+            Modifiers.addVertex3f("origin", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
+                new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("dimension", new Vector3(-100, -100, -100), new Vector3(1000, 1000, 100),
+                new Vector3(10, 10, 10));
+            Modifiers.addInterval("orientation", new[] { "XY", "XZ", "YZ" }, 0);
+            Modifiers.addVertex2f("tiling", new Vector2(0, 0), new Vector2(10, 10), new Vector2(1, 1));
 
-
-            GuiController.Instance.Modifiers.addVertex3f("origin", new Vector3(-100, -100, -100), new Vector3(100, 100, 100), new Vector3(0, 0, 0));
-            GuiController.Instance.Modifiers.addVertex3f("dimension", new Vector3(-100, -100, -100), new Vector3(1000, 1000, 100), new Vector3(10, 10, 10));
-            GuiController.Instance.Modifiers.addInterval("orientation", new string[] { "XY", "XZ", "YZ" }, 0);
-            GuiController.Instance.Modifiers.addVertex2f("tiling", new Vector2(0,0), new Vector2(10,10),new Vector2(1,1));
-
-            string texturePath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack2\\brick1_1.jpg";
+            var texturePath = MediaDir + "Texturas\\Quake\\TexturePack2\\brick1_1.jpg";
             currentTexture = TgcTexture.createTexture(d3dDevice, texturePath);
-            GuiController.Instance.Modifiers.addTexture("texture", currentTexture.FilePath);
-
-
+            Modifiers.addTexture("texture", currentTexture.FilePath);
 
             updateWall();
-        
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         private void updateWall()
         {
-            Vector3 origin = (Vector3)GuiController.Instance.Modifiers["origin"];
-            Vector3 dimension = (Vector3)GuiController.Instance.Modifiers["dimension"];
-            Vector2 tiling = (Vector2)GuiController.Instance.Modifiers["tiling"];
+            var origin = (Vector3)Modifiers["origin"];
+            var dimension = (Vector3)Modifiers["dimension"];
+            var tiling = (Vector2)Modifiers["tiling"];
 
-            string orientation = (string)GuiController.Instance.Modifiers["orientation"];
+            var orientation = (string)Modifiers["orientation"];
             TgcPlaneWall.Orientations or;
-            if(orientation == "XY") or = TgcPlaneWall.Orientations.XYplane;
-            else if(orientation == "XZ") or = TgcPlaneWall.Orientations.XZplane;
+            if (orientation == "XY") or = TgcPlaneWall.Orientations.XYplane;
+            else if (orientation == "XZ") or = TgcPlaneWall.Orientations.XZplane;
             else or = TgcPlaneWall.Orientations.YZplane;
 
             if (wall == null)
@@ -84,18 +80,21 @@ namespace Examples.GeometryBasics
             }
             else
             {
-                wall.updateValues(origin, dimension, or, tiling.X, tiling.Y);
+                //wall.updateValues(origin, dimension, or, tiling.X, tiling.Y);
+                wall.updateValues();
             }
-            
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            IniciarEscena();
+            base.Render();
+
+            var d3dDevice = D3DDevice.Instance.Device;
 
             updateWall();
 
-            string text = (string)GuiController.Instance.Modifiers["texture"];
+            var text = (string)Modifiers["texture"];
             if (text != currentTexture.FilePath)
             {
                 currentTexture = TgcTexture.createTexture(d3dDevice, text);
@@ -104,12 +103,15 @@ namespace Examples.GeometryBasics
 
             wall.render();
             mesh.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             wall.dispose();
         }
-
     }
 }

@@ -1,6 +1,10 @@
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.AlphaBlending
 {
@@ -18,42 +22,46 @@ namespace TGC.Examples.AlphaBlending
     {
         private TgcScene scene;
 
-        public override string getCategory()
+        public EjemploModeloAlpha(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "AlphaBlending";
+            Category = "AlphaBlending";
+            Name = "Modelo con Alpha";
+            Description = "Carga modelos que poseen texturas PNG-32 con transparencia.";
         }
 
-        public override string getName()
-        {
-            return "Modelo con Alpha";
-        }
-
-        public override string getDescription()
-        {
-            return "Carga modelos que poseen texturas PNG-32 con transparencia.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             /* Cargar ecena que tiene un modelo configurado con AlphaBlending
              * Los modelos fueron exportados en 3Ds MAX con el mapa "Opacity" cargado en el "Material Editor"
              * Entonces el TgcSceneLoader automáticamente hace mesh.AlphaBlendEnable(true);
              */
             var loader = new TgcSceneLoader();
-            scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Meshes\\Vegetacion\\Pino\\Pino-TgcScene.xml");
+            scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pino\\Pino-TgcScene.xml");
 
-            GuiController.Instance.RotCamera.targetObject(scene.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(scene.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             scene.renderAll();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             scene.disposeAll();
         }
     }

@@ -1,8 +1,8 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
 
 namespace TGC.Core.Input
 {
@@ -11,15 +11,6 @@ namespace TGC.Core.Input
     /// </summary>
     public class TgcD3dInput
     {
-        /// <summary>
-        ///     Constructor privado para poder hacer el singleton
-        /// </summary>
-        private TgcD3dInput()
-        {
-        }
-
-        public static TgcD3dInput Instance { get; } = new TgcD3dInput();
-
         /// <summary>
         ///     Botones del mouse para DirectInput
         /// </summary>
@@ -43,17 +34,26 @@ namespace TGC.Core.Input
         //Mouse
         private Device mouseDevice;
 
+        private int mouseIndex;
+        private bool mouseInside;
+
         private Vector2[] mouseMovement;
+        private int mouseX;
+        private int mouseY;
         private Control panel3d;
 
         private bool[] previouskeyboardState;
 
         private bool[] previousMouseButtonsState;
 
-        private int mouseIndex;
-        private bool mouseInside;
-        private int mouseX;
-        private int mouseY;
+        /// <summary>
+        ///     Constructor privado para poder hacer el singleton
+        /// </summary>
+        private TgcD3dInput()
+        {
+        }
+
+        public static TgcD3dInput Instance { get; } = new TgcD3dInput();
 
         public void Initialize(Control guiControl, Control panel3d)
         {

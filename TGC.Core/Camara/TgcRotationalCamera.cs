@@ -22,55 +22,6 @@ namespace TGC.Core.Camara
         private Vector3 upVector;
         private Matrix viewMatrix;
 
-        #region Getters y Setters
-
-        /// <summary>
-        ///     Centro de la camara sobre la cual se rota
-        /// </summary>
-        public Vector3 CameraCenter { get; set; }
-
-        /// <summary>
-        ///     Distance entre la camara y el centro
-        /// </summary>
-        public float CameraDistance { get; set; }
-
-        /// <summary>
-        ///     Velocidad con la que se hace Zoom
-        /// </summary>
-        public float ZoomFactor { get; set; }
-
-        /// <summary>
-        ///     Velocidad de rotacion de la camara
-        /// </summary>
-        public float RotationSpeed { get; set; }
-
-        /// <summary>
-        ///     Velocidad de paneo
-        /// </summary>
-        public float PanSpeed { get; set; }
-
-        /// <summary>
-        ///     Configura el centro de la camara, la distancia y la velocidad de zoom
-        /// </summary>
-        public void setCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor)
-        {
-            CameraCenter = cameraCenter;
-            CameraDistance = cameraDistance;
-            ZoomFactor = zoomFactor;
-        }
-
-        /// <summary>
-        ///     Configura el centro de la camara, la distancia
-        /// </summary>
-        public void setCamera(Vector3 cameraCenter, float cameraDistance)
-        {
-            CameraCenter = cameraCenter;
-            CameraDistance = cameraDistance;
-            ZoomFactor = DEFAULT_ZOOM_FACTOR;
-        }
-
-        #endregion Getters y Setters
-
         public TgcRotationalCamera()
         {
             resetValues();
@@ -218,5 +169,54 @@ namespace TGC.Core.Camara
             var r = boundingBox.calculateBoxRadius();
             CameraDistance = 2 * r;
         }
+
+        #region Getters y Setters
+
+        /// <summary>
+        ///     Centro de la camara sobre la cual se rota
+        /// </summary>
+        public Vector3 CameraCenter { get; set; }
+
+        /// <summary>
+        ///     Distance entre la camara y el centro
+        /// </summary>
+        public float CameraDistance { get; set; }
+
+        /// <summary>
+        ///     Velocidad con la que se hace Zoom
+        /// </summary>
+        public float ZoomFactor { get; set; }
+
+        /// <summary>
+        ///     Velocidad de rotacion de la camara
+        /// </summary>
+        public float RotationSpeed { get; set; }
+
+        /// <summary>
+        ///     Velocidad de paneo
+        /// </summary>
+        public float PanSpeed { get; set; }
+
+        /// <summary>
+        ///     Configura el centro de la camara, la distancia y la velocidad de zoom
+        /// </summary>
+        public void setCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor)
+        {
+            CameraCenter = cameraCenter;
+            CameraDistance = cameraDistance;
+            ZoomFactor = zoomFactor;
+        }
+
+        /// <summary>
+        ///     Configura el centro de la camara, la distancia
+        /// </summary>
+        public void setCamera(Vector3 cameraCenter, float cameraDistance)
+        {
+            CameraCenter = cameraCenter;
+            CameraDistance = cameraDistance;
+            ZoomFactor = DEFAULT_ZOOM_FACTOR;
+        }
+
+        #endregion Getters y Setters
     }
 }

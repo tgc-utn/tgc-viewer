@@ -49,7 +49,7 @@ namespace TGC.Viewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Otros")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Others")]
         public string DefaultExampleCategory {
             get {
                 return ((string)(this["DefaultExampleCategory"]));

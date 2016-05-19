@@ -17,24 +17,25 @@ namespace TGC.Viewer.Model
     /// </summary>
     public class ExampleLoader
     {
-        private Dictionary<TreeNode, TgcExample> treeExamplesDict;
-        private string mediaDirectory;
-        private string shadersDirectory;
-        private TgcUserVars userVars;
-        private TgcModifiers modifiers;
-        private TgcAxisLines axisLines;
-        private TgcCamera camara;
+        private readonly TgcAxisLines axisLines;
+        private readonly TgcCamera camara;
+        private readonly string mediaDirectory;
+        private readonly TgcModifiers modifiers;
+        private readonly string shadersDirectory;
+        private readonly Dictionary<TreeNode, TgcExample> treeExamplesDict;
+        private readonly TgcUserVars userVars;
 
-        public ExampleLoader(string mediaDirectory, string shadersDirectory, DataGridView dataGridUserVars, FlowLayoutPanel flowLayoutPanelModifiers)
+        public ExampleLoader(string mediaDirectory, string shadersDirectory, DataGridView dataGridUserVars,
+            FlowLayoutPanel flowLayoutPanelModifiers)
         {
-            this.treeExamplesDict = new Dictionary<TreeNode, TgcExample>();
+            treeExamplesDict = new Dictionary<TreeNode, TgcExample>();
             this.mediaDirectory = mediaDirectory;
             this.shadersDirectory = shadersDirectory;
-            this.userVars = new TgcUserVars(dataGridUserVars);
-            this.modifiers = new TgcModifiers(flowLayoutPanelModifiers);
-            this.axisLines = new TgcAxisLines(D3DDevice.Instance.Device);
+            userVars = new TgcUserVars(dataGridUserVars);
+            modifiers = new TgcModifiers(flowLayoutPanelModifiers);
+            axisLines = new TgcAxisLines(D3DDevice.Instance.Device);
             //Es la camara que ponemos por default
-            this.camara = new TgcRotationalCamera();
+            camara = new TgcRotationalCamera();
         }
 
         /// <summary>
@@ -139,7 +140,8 @@ namespace TGC.Viewer.Model
 
                         if (type.BaseType.Equals(typeof(TgcExample)))
                         {
-                            var obj = Activator.CreateInstance(type, this.mediaDirectory, this.shadersDirectory, this.userVars, this.modifiers, this.axisLines, this.camara);
+                            var obj = Activator.CreateInstance(type, mediaDirectory, shadersDirectory, userVars,
+                                modifiers, axisLines, camara);
                             var example = (TgcExample)obj;
                             examples.Add(example);
                         }
@@ -147,7 +149,8 @@ namespace TGC.Viewer.Model
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.Message, "No se pudo cargar la dll: " + file, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(e.Message, "No se pudo cargar la dll: " + file, MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                 }
             }
 

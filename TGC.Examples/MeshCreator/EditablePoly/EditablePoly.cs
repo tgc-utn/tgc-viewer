@@ -4,10 +4,9 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Examples.MeshCreator.EditablePoly.Primitives;
-using TGC.Util;
-using TGC.Util.Input;
 
 namespace TGC.Examples.MeshCreator.EditablePoly
 {
@@ -162,7 +161,7 @@ namespace TGC.Examples.MeshCreator.EditablePoly
         /// </summary>
         private void processShortcuts()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
 
             //Select
             if (input.keyPressed(Key.Q))
@@ -313,7 +312,7 @@ namespace TGC.Examples.MeshCreator.EditablePoly
         /// </summary>
         private void doSelectObject()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
 
             //Si mantiene control y clic con el mouse, iniciar cuadro de seleccion para agregar/quitar a la seleccion actual
             if ((input.keyDown(Key.LeftControl) || input.keyDown(Key.RightControl))
@@ -337,7 +336,7 @@ namespace TGC.Examples.MeshCreator.EditablePoly
         /// </summary>
         private void doSelectingObject()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
 
             //Mantiene el mouse apretado
             if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))

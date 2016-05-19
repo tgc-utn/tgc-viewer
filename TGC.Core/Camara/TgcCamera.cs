@@ -9,12 +9,12 @@ namespace TGC.Core.Camara
     /// </summary>
     public abstract class TgcCamera
     {
-		private readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
+        private readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
 
-		/// <summary>
-		///     Posicion de la camara
-		/// </summary>
-		public abstract Vector3 getPosition();
+        /// <summary>
+        ///     Posicion de la camara
+        /// </summary>
+        public abstract Vector3 getPosition();
 
         /// <summary>
         ///     Posición del punto al que mira la cámara

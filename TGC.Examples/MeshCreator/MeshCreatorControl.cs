@@ -15,7 +15,6 @@ using TGC.Core.Utils;
 using TGC.Examples.MeshCreator.Gizmos;
 using TGC.Examples.MeshCreator.Primitives;
 using TGC.Util;
-using TGC.Util.Input;
 using TGC.Util.Modifiers;
 using TGC.Util.TgcGeometry;
 
@@ -129,9 +128,7 @@ namespace TGC.Examples.MeshCreator
             objectPositionText.Align = TgcText2d.TextAlign.LEFT;
             objectPositionText.Color = Color.Yellow;
             objectPositionText.Size = new Size(500, 12);
-            objectPositionText.Position = new Point(
-                GuiController.Instance.Panel3d.Width - objectPositionText.Size.Width,
-                GuiController.Instance.Panel3d.Height - 20);
+            objectPositionText.Position = new Point(D3DDevice.Instance.Width - objectPositionText.Size.Width, D3DDevice.Instance.Height - 20);
 
             //Snap to grid
             SnapToGridCellSize = (float)numericUpDownCellSize.Value;
@@ -364,7 +361,7 @@ namespace TGC.Examples.MeshCreator
             if (CurrentState == State.SelectObject || CurrentState == State.CreatePrimitiveSelected
                 || CurrentState == State.GizmoActivated || CurrentState == State.EditablePoly)
             {
-                var input = GuiController.Instance.D3dInput;
+                var input = TgcD3dInput.Instance;
 
                 //Acciones que no se pueden hacer si estamos en modo EditablePoly
                 if (CurrentState != State.EditablePoly)
@@ -574,7 +571,7 @@ namespace TGC.Examples.MeshCreator
             //No hay actualizar la camara FPS, la actualiza GuiController
 
             //Detectar si hay que salor de este modo
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
             if (input.keyPressed(Key.F))
             {
                 radioButtonFPSCamera.Checked = false;
@@ -602,7 +599,7 @@ namespace TGC.Examples.MeshCreator
         /// </summary>
         private void doCreatePrimitiveSelected()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
 
             //Quitar gizmo actual
             CurrentGizmo = null;
@@ -1202,18 +1199,18 @@ namespace TGC.Examples.MeshCreator
                 CurrentState = State.SelectObject;
 
                 //Activar modo FPS
-                fpsCameraEnabled = true;
-                GuiController.Instance.FpsCamera.Enable = true;
-                GuiController.Instance.FpsCamera.setCamera(Camera.getPosition(), Camera.getLookAt());
+                var camara = new TgcFpsCamera();
+                CamaraManager.Instance.CurrentCamera = camara;
+                camara.Enable = true;
+                camara.setCamera(Camera.getPosition(), Camera.getLookAt());
             }
             else
             {
                 //Volver al modo normal
-                fpsCameraEnabled = false;
-                GuiController.Instance.FpsCamera.Enable = false;
+                CamaraManager.Instance.CurrentCamera.Enable = false;
 
                 //Acomodar camara de editor para centrar donde quedo la camara FPS
-                Camera.CameraCenter = GuiController.Instance.FpsCamera.getPosition();
+                Camera.CameraCenter = CamaraManager.Instance.CurrentCamera.getPosition();
                 //camera.CameraDistance = 10;
             }
         }
@@ -1225,8 +1222,9 @@ namespace TGC.Examples.MeshCreator
         {
             //Multiplicar velocidad de camara
             var speed = (float)numericUpDownFPSCameraSpeed.Value;
-            GuiController.Instance.FpsCamera.MovementSpeed = TgcFpsCamera.DEFAULT_MOVEMENT_SPEED * speed;
-            GuiController.Instance.FpsCamera.JumpSpeed = TgcFpsCamera.DEFAULT_JUMP_SPEED * speed;
+            // FIXME hay que pensar como manejar bien las camaras
+            ((TgcFpsCamera)CamaraManager.Instance.CurrentCamera).MovementSpeed = TgcFpsCamera.DEFAULT_MOVEMENT_SPEED * speed;
+            ((TgcFpsCamera)CamaraManager.Instance.CurrentCamera).JumpSpeed = TgcFpsCamera.DEFAULT_JUMP_SPEED * speed;
         }
 
         /// <summary>
@@ -1452,7 +1450,8 @@ namespace TGC.Examples.MeshCreator
         private void buttonHelp_Click(object sender, EventArgs e)
         {
             //Abrir PDF
-            Process.Start(GuiController.Instance.ExamplesDir + "\\MeshCreator\\Guia MeshCreator.pdf");
+            // FIXME
+            //Process.Start(GuiController.Instance.ExamplesDir + "\\MeshCreator\\Guia MeshCreator.pdf");
         }
 
         #endregion Eventos generales

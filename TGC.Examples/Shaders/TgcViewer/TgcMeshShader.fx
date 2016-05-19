@@ -35,14 +35,12 @@ sampler2D lightMap = sampler_state
 	Texture = (texLightMap);
 };
 
-
-
 /**************************************************************************************/
 /* VERTEX_COLOR */
 /**************************************************************************************/
 
 //Input del Vertex Shader
-struct VS_INPUT_VERTEX_COLOR 
+struct VS_INPUT_VERTEX_COLOR
 {
 	float4 Position : POSITION0;
 	float3 Normal : NORMAL0;
@@ -56,7 +54,6 @@ struct VS_OUTPUT_VERTEX_COLOR
 	float4 Color : COLOR;
 };
 
-
 //Vertex Shader
 VS_OUTPUT_VERTEX_COLOR vs_VertexColor(VS_INPUT_VERTEX_COLOR input)
 {
@@ -67,19 +64,19 @@ VS_OUTPUT_VERTEX_COLOR vs_VertexColor(VS_INPUT_VERTEX_COLOR input)
 
 	//Enviar color directamente
 	output.Color = input.Color;
-	  
+
 	return output;
 }
 
 //Input del Pixel Shader
-struct PS_INPUT_VERTEX_COLOR 
+struct PS_INPUT_VERTEX_COLOR
 {
-	float4 Color : COLOR0; 
+	float4 Color : COLOR0;
 };
 
 //Pixel Shader
 float4 ps_VertexColor(PS_INPUT_VERTEX_COLOR input) : COLOR0
-{      
+{
 	return input.Color;
 }
 
@@ -88,13 +85,12 @@ float4 ps_VertexColor(PS_INPUT_VERTEX_COLOR input) : COLOR0
 */
 technique VERTEX_COLOR
 {
-   pass Pass_0
-   {
+	pass Pass_0
+	{
 		VertexShader = compile vs_2_0 vs_VertexColor();
 		PixelShader = compile ps_2_0 ps_VertexColor();
-   }
+	}
 }
-
 
 /**************************************************************************************/
 /* DIFFUSE_MAP */
@@ -117,7 +113,6 @@ struct VS_OUTPUT_DIFFUSE_MAP
 	float2 Texcoord : TEXCOORD0;
 };
 
-
 //Vertex Shader
 VS_OUTPUT_DIFFUSE_MAP vs_DiffuseMap(VS_INPUT_DIFFUSE_MAP input)
 {
@@ -128,13 +123,12 @@ VS_OUTPUT_DIFFUSE_MAP vs_DiffuseMap(VS_INPUT_DIFFUSE_MAP input)
 
 	//Enviar color directamente
 	output.Color = input.Color;
-	
+
 	//Enviar Texcoord directamente
 	output.Texcoord = input.Texcoord;
-	  
+
 	return output;
 }
-
 
 //Input del Pixel Shader
 struct PS_DIFFUSE_MAP
@@ -145,26 +139,22 @@ struct PS_DIFFUSE_MAP
 
 //Pixel Shader
 float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
-{      
+{
 	//Modular color de la textura por color del mesh
 	return tex2D(diffuseMap, input.Texcoord) * input.Color;
 }
-
-
 
 /*
 * Technique DIFFUSE_MAP
 */
 technique DIFFUSE_MAP
 {
-   pass Pass_0
-   {
-	  VertexShader = compile vs_2_0 vs_DiffuseMap();
-	  PixelShader = compile ps_2_0 ps_DiffuseMap();
-   }
+	pass Pass_0
+	{
+		VertexShader = compile vs_2_0 vs_DiffuseMap();
+		PixelShader = compile ps_2_0 ps_DiffuseMap();
+	}
 }
-
-
 
 /**************************************************************************************/
 /* DIFFUSE_MAP_AND_LIGHTMAP */
@@ -199,15 +189,13 @@ VS_OUTPUT_DIFFUSE_MAP_AND_LIGHTMAP vs_diffuseMapAndLightmap(VS_INPUT_DIFFUSE_MAP
 
 	//Enviar color directamente
 	output.Color = input.Color;
-	
+
 	//Enviar Texcoord directamente
 	output.Texcoord = input.Texcoord;
 	output.TexcoordLightmap = input.TexcoordLightmap;
 
 	return output;
 }
-
-
 
 //Input del Pixel Shader
 struct PS_INPUT_DIFFUSE_MAP_AND_LIGHTMAP
@@ -219,7 +207,7 @@ struct PS_INPUT_DIFFUSE_MAP_AND_LIGHTMAP
 
 //Pixel Shader
 float4 ps_diffuseMapAndLightmap(PS_INPUT_DIFFUSE_MAP_AND_LIGHTMAP input) : COLOR0
-{      
+{
 	//Obtener color de diffuseMap y de Lightmap
 	float4 albedo = tex2D(diffuseMap, input.Texcoord);
 	float4 lightmapColor = tex2D(lightMap, input.TexcoordLightmap);
@@ -228,15 +216,12 @@ float4 ps_diffuseMapAndLightmap(PS_INPUT_DIFFUSE_MAP_AND_LIGHTMAP input) : COLOR
 	return albedo * lightmapColor * input.Color;
 }
 
-
 //technique DIFFUSE_MAP_AND_LIGHTMAP
 technique DIFFUSE_MAP_AND_LIGHTMAP
 {
-   pass Pass_0
-   {
-	  VertexShader = compile vs_2_0 vs_diffuseMapAndLightmap();
-	  PixelShader = compile ps_2_0 ps_diffuseMapAndLightmap();
-   }
+	pass Pass_0
+	{
+		VertexShader = compile vs_2_0 vs_diffuseMapAndLightmap();
+		PixelShader = compile ps_2_0 ps_diffuseMapAndLightmap();
+	}
 }
-
-

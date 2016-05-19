@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
+using System.Collections.Generic;
 
 namespace TGC.Core.Textures
 {
@@ -24,7 +24,7 @@ namespace TGC.Core.Textures
         ///     Agrega una textura al pool.
         ///     Si no existe la crea. Sino reutiliza una existente.
         /// </summary>
-        public Microsoft.DirectX.Direct3D.Texture createTexture(Device d3dDevice, string filePath)
+        public Texture createTexture(Device d3dDevice, string filePath)
         {
             return createTexture(d3dDevice, filePath, null);
         }
@@ -33,7 +33,7 @@ namespace TGC.Core.Textures
         ///     Agrega una textura al pool.
         ///     Si no existe la crea. Sino reutiliza una existente.
         /// </summary>
-        public Microsoft.DirectX.Direct3D.Texture createTexture(Device d3dDevice, string filePath, Microsoft.DirectX.Direct3D.Texture d3dTexture)
+        public Texture createTexture(Device d3dDevice, string filePath, Texture d3dTexture)
         {
             //Si no existe, crear textura
             if (!texturesPool.ContainsKey(filePath))
@@ -107,7 +107,7 @@ namespace TGC.Core.Textures
         {
             public string FilePath;
             public int References;
-            public Microsoft.DirectX.Direct3D.Texture Texture;
+            public Texture Texture;
 
             public override string ToString()
             {

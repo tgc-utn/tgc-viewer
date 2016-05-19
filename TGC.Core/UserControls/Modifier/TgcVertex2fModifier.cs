@@ -1,7 +1,7 @@
+using Microsoft.DirectX;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
 
 namespace TGC.Core.UserControls.Modifier
 {

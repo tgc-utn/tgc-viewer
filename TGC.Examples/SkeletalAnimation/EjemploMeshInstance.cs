@@ -1,12 +1,16 @@
 using Microsoft.DirectX;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.SkeletalAnimation
 {
@@ -26,33 +30,26 @@ namespace TGC.Examples.SkeletalAnimation
         private TgcSkeletalMesh original;
         private TgcBox suelo;
 
-        public override string getCategory()
+        public EjemploMeshInstance(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "SkeletalAnimation";
+            Category = "SkeletalAnimation";
+            Name = "MeshInstance";
+            Description = "Muestra como crear instancias de modelos animados con Skeletal Animation.";
         }
 
-        public override string getName()
-        {
-            return "MeshInstance";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear instancias de modelos animados con Skeletal Animation.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear suelo
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack2\\rock_floor1.jpg");
+                MediaDir + "Texturas\\Quake\\TexturePack2\\rock_floor1.jpg");
             suelo = TgcBox.fromSize(new Vector3(500, 0, 500), new Vector3(2000, 0, 2000), pisoTexture);
 
             //Cargar malla original
             var loader = new TgcSkeletalLoader();
-            var pathMesh = GuiController.Instance.ExamplesMediaDir +
-                           "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml";
-            var mediaPath = GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\";
+            var pathMesh = MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml";
+            var mediaPath = MediaDir + "SkeletalAnimations\\Robot\\";
             original = loader.loadMeshFromFile(pathMesh, mediaPath);
 
             //Agregar animación a original
@@ -87,28 +84,40 @@ namespace TGC.Examples.SkeletalAnimation
             }
 
             //Camara en primera persona
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.MovementSpeed = 400;
-            GuiController.Instance.FpsCamera.JumpSpeed = 400;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(293.201f, 291.0797f, -604.6647f),
+            Camara = new TgcFpsCamera();
+            ((TgcFpsCamera)Camara).MovementSpeed = 400;
+            ((TgcFpsCamera)Camara).JumpSpeed = 400;
+            Camara.setCamera(new Vector3(293.201f, 291.0797f, -604.6647f),
                 new Vector3(299.1028f, -63.9185f, 330.1836f));
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Renderizar suelo
             suelo.render();
 
             //Renderizar original e instancias
-            original.animateAndRender(elapsedTime);
+            original.animateAndRender(ElapsedTime);
             foreach (var instance in instances)
             {
-                instance.animateAndRender(elapsedTime);
+                instance.animateAndRender(ElapsedTime);
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             suelo.dispose();
 
             //Al hacer dispose del original, se hace dispose automáticamente de todas las instancias

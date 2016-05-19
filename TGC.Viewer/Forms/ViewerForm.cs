@@ -23,55 +23,56 @@ namespace TGC.Viewer.Forms
         private void MainForm_Load(object sender, EventArgs e)
         {
             //Titulo de la ventana principal
-            this.Text = Settings.Default.Title;
+            Text = Settings.Default.Title;
 
-            this.modelo = new ViewerModel();
+            modelo = new ViewerModel();
 
             //Iniciar graficos
-            this.modelo.InitGraphics(this, this.treeViewExamples, this.panel3d, this.flowLayoutPanelModifiers, this.dataGridUserVars, this.toolStripStatusCurrentExample);
-            this.modelo.InitRenderLoop();
+            modelo.InitGraphics(this, treeViewExamples, panel3d, flowLayoutPanelModifiers, dataGridUserVars,
+                toolStripStatusCurrentExample);
+            modelo.InitRenderLoop();
 
             //Focus panel3D
-            this.panel3d.Focus();
+            panel3d.Focus();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.modelo.ShutDown();
+            modelo.ShutDown();
         }
 
         private void wireframeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.modelo.WireFrame(wireframeToolStripMenuItem.Checked);
+            modelo.WireFrame(wireframeToolStripMenuItem.Checked);
         }
 
         private void treeViewExamples_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (this.treeViewExamples.SelectedNode != null)
+            if (treeViewExamples.SelectedNode != null)
             {
-                var selectedNode = this.treeViewExamples.SelectedNode;
+                var selectedNode = treeViewExamples.SelectedNode;
                 textBoxExampleDescription.Text = selectedNode.ToolTipText;
             }
         }
 
         private void treeViewExamples_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            var selectedNode = this.treeViewExamples.SelectedNode;
+            var selectedNode = treeViewExamples.SelectedNode;
 
             if (selectedNode != null && selectedNode.Nodes.Count == 0)
             {
-                this.modelo.ExecuteExample(selectedNode);
+                modelo.ExecuteExample(selectedNode);
             }
         }
 
         private void contadorFPSToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.modelo.ContadorFPS(this.contadorFPSToolStripMenuItem.Checked);
+            modelo.ContadorFPS(contadorFPSToolStripMenuItem.Checked);
         }
 
         private void ejesCartesianosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.modelo.AxisLines(this.ejesCartesianosToolStripMenuItem.Checked);
+            modelo.AxisLines(ejesCartesianosToolStripMenuItem.Checked);
         }
 
         private void acercaDeTgcViewerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -81,7 +82,7 @@ namespace TGC.Viewer.Forms
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         /// <summary>
@@ -89,13 +90,13 @@ namespace TGC.Viewer.Forms
         /// </summary>
         public void ResetMenuOptions()
         {
-            this.wireframeToolStripMenuItem.Checked = false;
-            this.contadorFPSToolStripMenuItem.Checked = true;
-            this.ejesCartesianosToolStripMenuItem.Checked = true;
+            wireframeToolStripMenuItem.Checked = false;
+            contadorFPSToolStripMenuItem.Checked = true;
+            ejesCartesianosToolStripMenuItem.Checked = true;
 
-            this.modelo.WireFrame(this.wireframeToolStripMenuItem.Checked);
-            this.modelo.ContadorFPS(this.contadorFPSToolStripMenuItem.Checked);
-            this.modelo.AxisLines(this.ejesCartesianosToolStripMenuItem.Checked);
+            modelo.WireFrame(wireframeToolStripMenuItem.Checked);
+            modelo.ContadorFPS(contadorFPSToolStripMenuItem.Checked);
+            modelo.AxisLines(ejesCartesianosToolStripMenuItem.Checked);
         }
 
         /// <summary>

@@ -1,8 +1,12 @@
 using Microsoft.DirectX.Direct3D;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.SkeletalAnimation;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.SkeletalAnimation
 {
@@ -19,23 +23,17 @@ namespace TGC.Examples.SkeletalAnimation
     {
         private MyCustomMesh mesh;
 
-        public override string getCategory()
+        public EjemploCustomSkeletalMesh(string mediaDir, string shadersDir, TgcUserVars userVars,
+            TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "SkeletalAnimation";
+            Category = "SkeletalAnimation";
+            Name = "CustomMesh";
+            Description =
+                "Muestra como extender la clase TgcSkeletalMesh para agregarle comportamiento personalizado. En este ejemplo se renderiza en Wireframe.";
         }
 
-        public override string getName()
-        {
-            return "CustomMesh";
-        }
-
-        public override string getDescription()
-        {
-            return
-                "Muestra como extender la clase TgcSkeletalMesh para agregarle comportamiento personalizado. En este ejemplo se renderiza en Wireframe";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear loader
             var loader = new TgcSkeletalLoader();
@@ -44,12 +42,10 @@ namespace TGC.Examples.SkeletalAnimation
             loader.MeshFactory = new MyCustomMeshFactory();
 
             //Cargar modelo con una animación
-            var pathMesh = GuiController.Instance.ExamplesMediaDir +
-                           "SkeletalAnimations\\BasicHuman\\WomanJeans-TgcSkeletalMesh.xml";
+            var pathMesh = MediaDir + "SkeletalAnimations\\BasicHuman\\WomanJeans-TgcSkeletalMesh.xml";
             string[] animationsPath =
             {
-                GuiController.Instance.ExamplesMediaDir +
-                "SkeletalAnimations\\BasicHuman\\Animations\\Push-TgcSkeletalAnim.xml"
+                MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\Push-TgcSkeletalAnim.xml"
             };
             mesh = (MyCustomMesh)loader.loadMeshAndAnimationsFromFile(pathMesh, animationsPath);
 
@@ -57,16 +53,28 @@ namespace TGC.Examples.SkeletalAnimation
             mesh.playAnimation("Push");
 
             //Centrar camara rotacional respecto a este mesh
-            GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
-            mesh.animateAndRender(elapsedTime);
+            throw new NotImplementedException();
         }
 
-        public override void close()
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
+            mesh.animateAndRender(ElapsedTime);
+
+            FinalizarEscena();
+        }
+
+        public override void Close()
+        {
+            base.Close();
+
             mesh.dispose();
         }
     }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Drawing;
 using TGC.Core.Example;
 using TGC.Util;
@@ -61,7 +62,7 @@ namespace TGC.Examples.Multiplayer
                     var strMsg = (string)msg.Msg.readNext();
 
                     //Mostrar mensaje recibido en consola
-                    GuiController.Instance.Logger.log(strMsg, Color.Green);
+                    Debug.WriteLine(strMsg, Color.Green);
                 }
             }
 

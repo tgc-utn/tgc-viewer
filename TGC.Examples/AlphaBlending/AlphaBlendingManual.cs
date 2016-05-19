@@ -1,11 +1,14 @@
-using System;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.AlphaBlending
 {
@@ -17,22 +20,16 @@ namespace TGC.Examples.AlphaBlending
         private TgcPlaneWall mesh1;
         private TgcPlaneWall mesh2;
 
-        public override string getCategory()
+        public AlphaBlendingManual(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "AlphaBlending";
+            Category = "AlphaBlending";
+            Name = "AlphaBlending Manual";
+            Description = "AlphaBlending Manual";
         }
 
-        public override string getName()
-        {
-            return "AlphaBlending Manual";
-        }
-
-        public override string getDescription()
-        {
-            return "AlphaBlending Manual";
-        }
-
-        public override void init()
+        public override void Init()
         {
             D3DDevice.Instance.Device.RenderState.AlphaFunction = Compare.Greater;
             D3DDevice.Instance.Device.RenderState.BlendOperation = BlendOperation.Add;
@@ -40,7 +37,7 @@ namespace TGC.Examples.AlphaBlending
             D3DDevice.Instance.Device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
 
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\BoxAlpha\\Textures\\pruebaAlpha.png");
+                MediaDir + "ModelosTgc\\BoxAlpha\\Textures\\pruebaAlpha.png");
 
             mesh1 = new TgcPlaneWall(new Vector3(0, 0, -50), new Vector3(50, 50, 50), TgcPlaneWall.Orientations.XYplane,
                 texture);
@@ -56,32 +53,38 @@ namespace TGC.Examples.AlphaBlending
             mesh2.VTile = 1;
             mesh2.updateValues();
 
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(50.0f, 50.0f, 150.0f), new Vector3());
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(50.0f, 50.0f, 150.0f), new Vector3());
 
-            GuiController.Instance.Modifiers.addBoolean("invertRender", "Invert Order Render", false);
+            Modifiers.addBoolean("invertRender", "Invert Render", false);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
-            var invert = (bool)GuiController.Instance.Modifiers["invertRender"];
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
+            var invert = (bool)Modifiers["invertRender"];
 
             //el tgcmesh hace reset de alpha lo que hace que los ejemplos de blending manual no funcionen.
             //setAlphaEnable();
             if (invert)
             {
                 setAlphaEnable();
-                mesh2.render();
-                setAlphaEnable();
                 mesh1.render();
             }
             else
             {
                 setAlphaEnable();
-                mesh1.render();
-                setAlphaEnable();
                 mesh2.render();
             }
+
+            FinalizarEscena();
         }
 
         private void setAlphaEnable()
@@ -90,8 +93,10 @@ namespace TGC.Examples.AlphaBlending
             D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             mesh1.dispose();
             mesh2.dispose();
         }

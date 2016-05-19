@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using TGC.Core.Example;
-using TGC.Util;
 
 namespace TGC.Examples.Multiplayer
 {
@@ -70,7 +70,7 @@ namespace TGC.Examples.Multiplayer
                         if (recv > 0)
                         {
                             var msg = Encoding.ASCII.GetString(data, 0, recv);
-                            GuiController.Instance.Logger.log(msg);
+                            Debug.WriteLine(msg);
 
                             var msgRta = "Recibido" + recibido++;
                             clientSocket.Send(Encoding.ASCII.GetBytes(msgRta));

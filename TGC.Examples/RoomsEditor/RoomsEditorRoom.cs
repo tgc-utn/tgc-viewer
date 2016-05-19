@@ -1,7 +1,7 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 
 namespace TGC.Examples.RoomsEditor
 {

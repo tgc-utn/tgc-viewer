@@ -13,6 +13,14 @@ namespace TGC.Core.Camara
         private Vector3 position;
 
         /// <summary>
+        ///     Crear una nueva camara
+        /// </summary>
+        public TgcThirdPersonCamera()
+        {
+            resetValues();
+        }
+
+        /// <summary>
         ///     Posicion del ojo de la camara
         /// </summary>
         public Vector3 Position
@@ -49,14 +57,6 @@ namespace TGC.Core.Camara
         ///     Objetivo al cual la camara tiene que apuntar
         /// </summary>
         public Vector3 Target { get; set; }
-
-        /// <summary>
-        ///     Crear una nueva camara
-        /// </summary>
-        public TgcThirdPersonCamera()
-        {
-            resetValues();
-        }
 
         public override void updateCamera(float elapsedTime)
         {

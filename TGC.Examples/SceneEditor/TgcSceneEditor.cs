@@ -1,7 +1,9 @@
 using System.Xml;
+using TGC.Core;
 using TGC.Core.Example;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.SceneEditor
 {
@@ -24,38 +26,37 @@ namespace TGC.Examples.SceneEditor
     {
         private SceneEditorModifier modifier;
 
-        public override string getCategory()
+        public TgcSceneEditor(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines) : base(mediaDir, shadersDir, userVars, modifiers, axisLines)
         {
-            return "Utils";
-        }
-
-        public override string getName()
-        {
-            return "SceneEditor";
-        }
-
-        public override string getDescription()
-        {
-            return "Editor de escena. Permite abrir modelos en formato TGC y posicionarlos dentro de un escenario." +
+            this.Category = "Utils";
+            this.Name = "SceneEditor";
+            this.Description = "Editor de escena. Permite abrir modelos en formato TGC y posicionarlos dentro de un escenario." +
                    "Luego esa información se puede exportar a un archivo XML para su posterior uso.";
         }
 
-        public override void init()
+        public override void Init()
         {
             modifier = new SceneEditorModifier("SceneEditor", this);
-            GuiController.Instance.Modifiers.add(modifier);
-
-            GuiController.Instance.RotCamera.Enable = false;
+            this.Modifiers.add(modifier);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
             //Delegar render al control
             modifier.EditorControl.render();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //Delegar al control
             modifier.EditorControl.close();
         }

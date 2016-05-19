@@ -1,17 +1,22 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Terrain;
 using TGC.Core.Textures;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Collision.SphereTriangleCollision
 {
@@ -43,48 +48,39 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
 
-        public override string getCategory()
+        public SphereTriangleCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
-        }
-
-        public override string getName()
-        {
-            return "Colision Esfera-Triangulos";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "Collision";
+            Name = "Colision Esfera-Triangulos";
+            Description =
                 "Estrategia integral de colisión: BoundingSphere contra triángulos + Gravedad + Sliding + Jump. Movimiento con W, A, S, D, Space.";
         }
 
-        public override void init()
+        public override void Init()
         {
             //Cargar escenario específico para este ejemplo
             var loader = new TgcSceneLoader();
-            escenario =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "\\MeshCreator\\Scenes\\Mountains\\Mountains-TgcScene.xml");
+            escenario = loader.loadSceneFromFile(MediaDir + "\\MeshCreator\\Scenes\\Mountains\\Mountains-TgcScene.xml");
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
-            personaje = skeletalLoader.loadMeshAndAnimationsFromFile(
-                GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Robot-TgcSkeletalMesh.xml",
-                GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\",
-                new[]
-                {
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" +
-                    "Caminando-TgcSkeletalAnim.xml",
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" +
-                    "Parado-TgcSkeletalAnim.xml"
-                });
+            personaje =
+                skeletalLoader.loadMeshAndAnimationsFromFile(
+                    MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml",
+                    MediaDir + "SkeletalAnimations\\Robot\\",
+                    new[]
+                    {
+                        MediaDir + "SkeletalAnimations\\Robot\\Caminando-TgcSkeletalAnim.xml",
+                        MediaDir + "SkeletalAnimations\\Robot\\Parado-TgcSkeletalAnim.xml"
+                    });
 
             //Le cambiamos la textura para diferenciarlo un poco
             personaje.changeDiffuseMaps(new[]
             {
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\Textures\\" + "uvwGreen.jpg")
+                    MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
             });
 
             //Configurar animacion inicial
@@ -138,15 +134,15 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             collisionManager.GravityEnabled = true;
 
             //Configurar camara en Tercer Persona
-            GuiController.Instance.ThirdPersonCamera.Enable = true;
-            GuiController.Instance.ThirdPersonCamera.setCamera(personaje.Position, 100, -400);
-            GuiController.Instance.ThirdPersonCamera.TargetDisplacement = new Vector3(0, 100, 0);
+            Camara = new TgcThirdPersonCamera();
+            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 100, -400);
+            ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(0, 100, 0);
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
             skyBox.Size = new Vector3(10000, 10000, 10000);
-            var texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox3\\";
+            var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox3\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "Up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "Down.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "Left.jpg");
@@ -156,39 +152,47 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             skyBox.updateValues();
 
             //Modifier para ver BoundingBox
-            GuiController.Instance.Modifiers.addBoolean("Collisions", "Collisions", true);
-            GuiController.Instance.Modifiers.addBoolean("showBoundingBox", "Bouding Box", true);
+            Modifiers.addBoolean("Collisions", "Collisions", true);
+            Modifiers.addBoolean("showBoundingBox", "Bouding Box", true);
 
             //Modifiers para desplazamiento del personaje
-            GuiController.Instance.Modifiers.addFloat("VelocidadCaminar", 0, 50, 10);
-            GuiController.Instance.Modifiers.addFloat("VelocidadRotacion", 1f, 360f, 150f);
-            GuiController.Instance.Modifiers.addBoolean("HabilitarGravedad", "Habilitar Gravedad", true);
-            GuiController.Instance.Modifiers.addVertex3f("Gravedad", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
+            Modifiers.addFloat("VelocidadCaminar", 0, 50, 10);
+            Modifiers.addFloat("VelocidadRotacion", 1f, 360f, 150f);
+            Modifiers.addBoolean("HabilitarGravedad", "Habilitar Gravedad", true);
+            Modifiers.addVertex3f("Gravedad", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
                 new Vector3(0, -24, 0));
-            GuiController.Instance.Modifiers.addFloat("SlideFactor", 0f, 2f, 1f);
-            GuiController.Instance.Modifiers.addFloat("Pendiente", 0f, 1f, 0.7f);
-            GuiController.Instance.Modifiers.addFloat("VelocidadSalto", 0f, 100f, 20f);
-            GuiController.Instance.Modifiers.addFloat("TiempoSalto", 0f, 2f, 0.5f);
+            Modifiers.addFloat("SlideFactor", 0f, 2f, 1f);
+            Modifiers.addFloat("Pendiente", 0f, 1f, 0.7f);
+            Modifiers.addFloat("VelocidadSalto", 0f, 100f, 20f);
+            Modifiers.addFloat("TiempoSalto", 0f, 2f, 0.5f);
 
-            GuiController.Instance.UserVars.addVar("Movement");
-            GuiController.Instance.UserVars.addVar("ySign");
+            UserVars.addVar("Movement");
+            UserVars.addVar("ySign");
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Obtener boolean para saber si hay que mostrar Bounding Box
-            var showBB = (bool)GuiController.Instance.Modifiers.getValue("showBoundingBox");
+            var showBB = (bool)Modifiers.getValue("showBoundingBox");
 
             //obtener velocidades de Modifiers
-            var velocidadCaminar = (float)GuiController.Instance.Modifiers.getValue("VelocidadCaminar");
-            var velocidadRotacion = (float)GuiController.Instance.Modifiers.getValue("VelocidadRotacion");
-            var velocidadSalto = (float)GuiController.Instance.Modifiers.getValue("VelocidadSalto");
-            var tiempoSalto = (float)GuiController.Instance.Modifiers.getValue("TiempoSalto");
+            var velocidadCaminar = (float)Modifiers.getValue("VelocidadCaminar");
+            var velocidadRotacion = (float)Modifiers.getValue("VelocidadRotacion");
+            var velocidadSalto = (float)Modifiers.getValue("VelocidadSalto");
+            var tiempoSalto = (float)Modifiers.getValue("TiempoSalto");
 
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
-            var d3dInput = GuiController.Instance.D3dInput;
+            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
             var rotating = false;
             float jump = 0;
@@ -236,9 +240,9 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             if (rotating)
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
-                var rotAngle = Geometry.DegreeToRadian(rotate * elapsedTime);
+                var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
                 personaje.rotateY(rotAngle);
-                GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
+                ((TgcThirdPersonCamera)Camara).rotateY(rotAngle);
             }
 
             //Si hubo desplazamiento
@@ -257,7 +261,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             //Actualizar salto
             if (jumping)
             {
-                jumpingElapsedTime += elapsedTime;
+                jumpingElapsedTime += ElapsedTime;
                 if (jumpingElapsedTime > tiempoSalto)
                 {
                     jumping = false;
@@ -282,10 +286,10 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             }
 
             //Actualizar valores de gravedad
-            collisionManager.GravityEnabled = (bool)GuiController.Instance.Modifiers["HabilitarGravedad"];
-            collisionManager.GravityForce = (Vector3)GuiController.Instance.Modifiers["Gravedad"] /** elapsedTime*/;
-            collisionManager.SlideFactor = (float)GuiController.Instance.Modifiers["SlideFactor"];
-            collisionManager.OnGroundMinDotValue = (float)GuiController.Instance.Modifiers["Pendiente"];
+            collisionManager.GravityEnabled = (bool)Modifiers["HabilitarGravedad"];
+            collisionManager.GravityForce = (Vector3)Modifiers["Gravedad"] /** elapsedTime*/;
+            collisionManager.SlideFactor = (float)Modifiers["SlideFactor"];
+            collisionManager.OnGroundMinDotValue = (float)Modifiers["Pendiente"];
 
             //Si esta saltando, desactivar gravedad
             if (jumping)
@@ -294,14 +298,14 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             }
 
             //Mover personaje con detección de colisiones, sliding y gravedad
-            if ((bool)GuiController.Instance.Modifiers["Collisions"])
+            if ((bool)Modifiers["Collisions"])
             {
                 var realMovement = collisionManager.moveCharacter(characterSphere, movementVector, objetosColisionables);
                 personaje.move(realMovement);
 
                 //Cargar desplazamiento realizar en UserVar
-                GuiController.Instance.UserVars.setValue("Movement", TgcParserUtils.printVector3(realMovement));
-                GuiController.Instance.UserVars.setValue("ySign", realMovement.Y);
+                UserVars.setValue("Movement", TgcParserUtils.printVector3(realMovement));
+                UserVars.setValue("ySign", realMovement.Y);
             }
             else
             {
@@ -315,7 +319,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             }
 
             //Hacer que la camara siga al personaje en su nueva posicion
-            GuiController.Instance.ThirdPersonCamera.Target = personaje.Position;
+            ((TgcThirdPersonCamera)Camara).Target = personaje.Position;
 
             //Actualizar valores de la linea de movimiento
             directionArrow.PStart = characterSphere.Center;
@@ -343,7 +347,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             }
 
             //Render personaje
-            personaje.animateAndRender(elapsedTime);
+            personaje.animateAndRender(ElapsedTime);
             if (showBB)
             {
                 characterSphere.render();
@@ -354,10 +358,14 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
 
             //Render SkyBox
             skyBox.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             escenario.disposeAll();
             personaje.dispose();
             skyBox.dispose();

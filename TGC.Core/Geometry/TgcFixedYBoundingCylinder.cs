@@ -1,9 +1,8 @@
-﻿using System.Drawing;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
@@ -11,14 +10,15 @@ namespace TGC.Core.Geometry
 {
     public class TgcFixedYBoundingCylinder : IRenderObject
     {
+        private readonly TgcCamera camara;
         private Vector3 center;
-        private TgcCamera camara;
 
         public TgcFixedYBoundingCylinder(Vector3 center, float radius, float halfLength, TgcCamera camara)
         {
+            //FIXME puede haber efecto de lado porque si el ejemplo cambia de camara el cilindro no se enteraria
             this.center = center;
-            this.Radius = radius;
-            this.HalfHeight = new Vector3(0, halfLength, 0);
+            Radius = radius;
+            HalfHeight = new Vector3(0, halfLength, 0);
             this.camara = camara;
             color = Color.Yellow;
         }
@@ -148,7 +148,7 @@ namespace TGC.Core.Geometry
         private void updateBordersDraw()
         {
             //obtenemos el vector direccion de vision, y su perpendicular
-            var cameraSeen = this.camara.getPosition() - center;
+            var cameraSeen = camara.getPosition() - center;
             var transversalALaCamara = Vector3.Cross(cameraSeen, HalfHeight);
             transversalALaCamara.Normalize();
             transversalALaCamara *= Radius;

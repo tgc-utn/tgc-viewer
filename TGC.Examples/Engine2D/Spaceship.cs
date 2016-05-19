@@ -3,8 +3,7 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Util;
-using TGC.Util.Input;
+using TGC.Core.Input;
 
 namespace TGC.Examples.Engine2D
 {
@@ -78,19 +77,19 @@ namespace TGC.Examples.Engine2D
 
             RestartPosition();
 
-            GuiController.Instance.UserVars.addVar("elapsed");
-            GuiController.Instance.UserVars.addVar("speedX");
-            GuiController.Instance.UserVars.addVar("speedY");
+            GameManager.Instance.userVars.addVar("elapsed");
+            GameManager.Instance.userVars.addVar("speedX");
+            GameManager.Instance.userVars.addVar("speedY");
 
-            GuiController.Instance.UserVars.addVar("PosX");
-            GuiController.Instance.UserVars.addVar("PosY");
+            GameManager.Instance.userVars.addVar("PosX");
+            GameManager.Instance.userVars.addVar("PosY");
 
-            GuiController.Instance.UserVars.addVar("MousePosX");
-            GuiController.Instance.UserVars.addVar("MousePosY");
+            GameManager.Instance.userVars.addVar("MousePosX");
+            GameManager.Instance.userVars.addVar("MousePosY");
 
-            GuiController.Instance.UserVars.addVar("AngleMouse");
+            GameManager.Instance.userVars.addVar("AngleMouse");
 
-            GuiController.Instance.UserVars.addVar("Misiles");
+            GameManager.Instance.userVars.addVar("Misiles");
         }
 
         private void fireMissile()
@@ -117,28 +116,28 @@ namespace TGC.Examples.Engine2D
             float dirY = 0;
 
             state = StateEnum.Idle;
-            if (GuiController.Instance.D3dInput.keyDown(Key.A))
+            if (TgcD3dInput.Instance.keyDown(Key.A))
             {
-              //  dirX = -1;
-               // state = StateEnum.Moving;
+                //  dirX = -1;
+                // state = StateEnum.Moving;
             }
-            if (GuiController.Instance.D3dInput.keyDown(Key.D))
+            if (TgcD3dInput.Instance.keyDown(Key.D))
             {
-               // dirX = 1;
-               // state = StateEnum.Moving;
+                // dirX = 1;
+                // state = StateEnum.Moving;
             }
-            if (GuiController.Instance.D3dInput.keyDown(Key.W))
+            if (TgcD3dInput.Instance.keyDown(Key.W))
             {
                 dirY = -1;
                 state = StateEnum.Moving;
             }
-            if (GuiController.Instance.D3dInput.keyDown(Key.S))
+            if (TgcD3dInput.Instance.keyDown(Key.S))
             {
                 dirY = 1;
                 state = StateEnum.Moving;
             }
 
-            if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (TgcD3dInput.Instance.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 fireMissile();
             }
@@ -168,7 +167,7 @@ namespace TGC.Examples.Engine2D
             //const float Epsilon = 0.2f;
 
             var spriteMouseVector = new Vector2();
-            var mouseVector = new Vector2(GuiController.Instance.D3dInput.Xpos, GuiController.Instance.D3dInput.Ypos);
+            var mouseVector = new Vector2(TgcD3dInput.Instance.Xpos, TgcD3dInput.Instance.Ypos);
             spriteMouseVector = Vector2.Subtract(mouseVector,
                 Position + new Vector2(spriteSize.X / 2 * size, spriteSize.Y / 2 * size));
 
@@ -223,15 +222,15 @@ namespace TGC.Examples.Engine2D
             if (Position.Y < -spriteSize.Y)
                 Position.Y = GameManager.ScreenHeight + spriteSize.Y;
 
-            GuiController.Instance.UserVars.setValue("elapsed", elapsedTime);
-            GuiController.Instance.UserVars.setValue("speedX", speed.X);
-            GuiController.Instance.UserVars.setValue("speedY", speed.Y);
+            GameManager.Instance.userVars.setValue("elapsed", elapsedTime);
+            GameManager.Instance.userVars.setValue("speedX", speed.X);
+            GameManager.Instance.userVars.setValue("speedY", speed.Y);
 
-            GuiController.Instance.UserVars.setValue("PosX", Position.X);
-            GuiController.Instance.UserVars.setValue("PosY", Position.Y);
-            GuiController.Instance.UserVars.setValue("MousePosX", GuiController.Instance.D3dInput.Xpos);
-            GuiController.Instance.UserVars.setValue("MousePosY", GuiController.Instance.D3dInput.Ypos);
-            GuiController.Instance.UserVars.setValue("AngleMouse", angleToMousePointer * 360 / (2 * Math.PI));
+            GameManager.Instance.userVars.setValue("PosX", Position.X);
+            GameManager.Instance.userVars.setValue("PosY", Position.Y);
+            GameManager.Instance.userVars.setValue("MousePosX", TgcD3dInput.Instance.Xpos);
+            GameManager.Instance.userVars.setValue("MousePosY", TgcD3dInput.Instance.Ypos);
+            GameManager.Instance.userVars.setValue("AngleMouse", angleToMousePointer * 360 / (2 * Math.PI));
         }
 
         public override void Render(float elapsedTime, Drawer drawer)

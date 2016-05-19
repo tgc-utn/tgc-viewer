@@ -1,6 +1,6 @@
-using System;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using System;
 using TGC.Core.Input;
 using TGC.Core.Utils;
 using Device = Microsoft.DirectX.Direct3D.Device;
@@ -46,97 +46,6 @@ namespace TGC.Core.Camara
         private Vector3 xAxis;
         private Vector3 yAxis;
         private Vector3 zAxis;
-
-        #region Getters y Setters
-
-        /// <summary>
-        ///     Aceleracion de la camara en cada uno de sus ejes
-        /// </summary>
-        public Vector3 Acceleration { get; set; }
-
-        /// <summary>
-        ///     Activa o desactiva el efecto de Aceleracion/Desaceleracion
-        /// </summary>
-        public bool AccelerationEnable { get; set; }
-
-        private Vector3 currentVelocity;
-
-        /// <summary>
-        ///     Velocidad de desplazamiento actual, teniendo en cuenta la aceleracion
-        /// </summary>
-        public Vector3 CurrentVelocity
-        {
-            get { return currentVelocity; }
-        }
-
-        private Vector3 velocity;
-
-        /// <summary>
-        ///     Velocidad de desplazamiento de la camara en cada uno de sus ejes
-        /// </summary>
-        public Vector3 Velocity
-        {
-            get { return velocity; }
-            set { velocity = value; }
-        }
-
-        /// <summary>
-        ///     Velocidad de desplazamiento de los ejes XZ de la camara
-        /// </summary>
-        public float MovementSpeed
-        {
-            get { return velocity.X; }
-            set
-            {
-                velocity.X = value;
-                velocity.Z = value;
-            }
-        }
-
-        /// <summary>
-        ///     Velocidad de desplazamiento del eje Y de la camara
-        /// </summary>
-        public float JumpSpeed
-        {
-            get { return velocity.Y; }
-            set { velocity.Y = value; }
-        }
-
-        /// <summary>
-        ///     Velocidad de rotacion de la camara
-        /// </summary>
-        public float RotationSpeed { get; set; }
-
-        private Matrix viewMatrix;
-
-        /// <summary>
-        ///     View Matrix resultante
-        /// </summary>
-        public Matrix ViewMatrix
-        {
-            get { return viewMatrix; }
-        }
-
-        /// <summary>
-        ///     Posicion actual de la camara
-        /// </summary>
-        public Vector3 Position
-        {
-            get { return eye; }
-        }
-
-        /// <summary>
-        ///     Punto hacia donde mira la camara
-        /// </summary>
-        public Vector3 LookAt { get; private set; }
-
-        /// <summary>
-        ///     Boton del mouse que debe ser presionado para rotar la camara.
-        ///     Por default es boton izquierdo.
-        /// </summary>
-        public TgcD3dInput.MouseButtons RotateMouseButton { get; set; }
-
-        #endregion Getters y Setters
 
         /// <summary>
         ///     Crea la camara con valores iniciales.
@@ -700,7 +609,97 @@ namespace TGC.Core.Camara
                    TgcParserUtils.printFloat(eye.Z) + "f), new Vector3(" +
                    TgcParserUtils.printFloat(lookAt.X) + "f, " + TgcParserUtils.printFloat(lookAt.Y) + "f, " +
                    TgcParserUtils.printFloat(lookAt.Z) + "f));";
-
         }
+
+        #region Getters y Setters
+
+        /// <summary>
+        ///     Aceleracion de la camara en cada uno de sus ejes
+        /// </summary>
+        public Vector3 Acceleration { get; set; }
+
+        /// <summary>
+        ///     Activa o desactiva el efecto de Aceleracion/Desaceleracion
+        /// </summary>
+        public bool AccelerationEnable { get; set; }
+
+        private Vector3 currentVelocity;
+
+        /// <summary>
+        ///     Velocidad de desplazamiento actual, teniendo en cuenta la aceleracion
+        /// </summary>
+        public Vector3 CurrentVelocity
+        {
+            get { return currentVelocity; }
+        }
+
+        private Vector3 velocity;
+
+        /// <summary>
+        ///     Velocidad de desplazamiento de la camara en cada uno de sus ejes
+        /// </summary>
+        public Vector3 Velocity
+        {
+            get { return velocity; }
+            set { velocity = value; }
+        }
+
+        /// <summary>
+        ///     Velocidad de desplazamiento de los ejes XZ de la camara
+        /// </summary>
+        public float MovementSpeed
+        {
+            get { return velocity.X; }
+            set
+            {
+                velocity.X = value;
+                velocity.Z = value;
+            }
+        }
+
+        /// <summary>
+        ///     Velocidad de desplazamiento del eje Y de la camara
+        /// </summary>
+        public float JumpSpeed
+        {
+            get { return velocity.Y; }
+            set { velocity.Y = value; }
+        }
+
+        /// <summary>
+        ///     Velocidad de rotacion de la camara
+        /// </summary>
+        public float RotationSpeed { get; set; }
+
+        private Matrix viewMatrix;
+
+        /// <summary>
+        ///     View Matrix resultante
+        /// </summary>
+        public Matrix ViewMatrix
+        {
+            get { return viewMatrix; }
+        }
+
+        /// <summary>
+        ///     Posicion actual de la camara
+        /// </summary>
+        public Vector3 Position
+        {
+            get { return eye; }
+        }
+
+        /// <summary>
+        ///     Punto hacia donde mira la camara
+        /// </summary>
+        public Vector3 LookAt { get; private set; }
+
+        /// <summary>
+        ///     Boton del mouse que debe ser presionado para rotar la camara.
+        ///     Por default es boton izquierdo.
+        /// </summary>
+        public TgcD3dInput.MouseButtons RotateMouseButton { get; set; }
+
+        #endregion Getters y Setters
     }
 }

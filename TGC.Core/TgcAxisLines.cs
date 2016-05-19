@@ -1,7 +1,7 @@
-using System;
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
+using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Textures;
 

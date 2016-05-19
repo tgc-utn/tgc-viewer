@@ -1,11 +1,10 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Geometry;
-using TGC.Core.Input;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 
@@ -23,11 +22,13 @@ namespace TGC.Examples.Tutorial
         //Variable para caja 3D
         private TgcBox box;
 
-        public Tutorial1(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial1(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            this.Category = "Tutorial";
-            this.Name = "Tutorial 1";
-            this.Description = "Muestra como crear una caja 3D de color y como mostrarla por pantalla.";
+            Category = "Tutorial";
+            Name = "Tutorial 1";
+            Description = "Muestra como crear una caja 3D de color y como mostrarla por pantalla.";
         }
 
         /// <summary>
@@ -51,12 +52,12 @@ namespace TGC.Examples.Tutorial
             //Con clic izquierdo del mouse se rota la cámara, con clic derecho se traslada y con la rueda
             //del mouse se hace zoom.
             //Otras cámaras disponibles son: FpsCamera (1ra persona) y ThirdPersonCamera (3ra persona).
-            ((TgcRotationalCamera)this.Camara).targetObject(box.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
         }
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace TGC.Examples.Tutorial
         public override void Render()
         {
             //Iniciamoss la escena
-            this.IniciarEscena();
+            IniciarEscena();
             //Render de la super clase
             base.Render();
 
@@ -78,7 +79,7 @@ namespace TGC.Examples.Tutorial
             box.render();
 
             //Finalizamos el renderizado de la escena
-            this.FinalizarEscena();
+            FinalizarEscena();
         }
 
         /// <summary>

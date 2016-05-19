@@ -3,8 +3,6 @@ using Microsoft.DirectX.DirectInput;
 using TGC.Core.Geometries;
 using TGC.Core.Input;
 using TGC.Core.Utils;
-using TGC.Util;
-using TGC.Util.Input;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Examples.MeshCreator
@@ -40,7 +38,7 @@ namespace TGC.Examples.MeshCreator
                 return;
             }
 
-            var d3dInput = GuiController.Instance.D3dInput;
+            var d3dInput = TgcD3dInput.Instance;
 
             //Obtener variacion XY del mouse
             var mouseX = 0f;

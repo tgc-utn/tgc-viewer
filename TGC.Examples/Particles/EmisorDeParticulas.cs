@@ -1,9 +1,13 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
-using TGC.Core.Particles;
-using TGC.Util;
+using TGC.Core.Geometry;
+using TGC.Core.Particle;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Particles
 {
@@ -19,25 +23,19 @@ namespace TGC.Examples.Particles
         private string[] textureNames;
         private string texturePath;
 
-        public override string getCategory()
+        public EmisorDeParticulas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Particles";
+            Category = "Particles";
+            Name = "Emisor de Particulas";
+            Description = "Emisor de Particulas";
         }
 
-        public override string getName()
-        {
-            return "Emisor de Particulas";
-        }
-
-        public override string getDescription()
-        {
-            return "Emisor de Particulas";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Directorio de texturas
-            texturePath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Particles\\";
+            texturePath = MediaDir + "Texturas\\Particles\\";
 
             //Texturas de particulas a utilizar
             textureNames = new[]
@@ -51,14 +49,14 @@ namespace TGC.Examples.Particles
             };
 
             //Modifiers
-            GuiController.Instance.Modifiers.addInterval("texture", textureNames, 0);
-            GuiController.Instance.Modifiers.addInt("cantidad", 1, 30, 10);
-            GuiController.Instance.Modifiers.addFloat("minSize", 0.25f, 10, 4);
-            GuiController.Instance.Modifiers.addFloat("maxSize", 0.25f, 10, 6);
-            GuiController.Instance.Modifiers.addFloat("timeToLive", 0.25f, 2, 1);
-            GuiController.Instance.Modifiers.addFloat("frecuencia", 0.25f, 4, 1);
-            GuiController.Instance.Modifiers.addInt("dispersion", 50, 400, 100);
-            GuiController.Instance.Modifiers.addVertex3f("speedDir", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
+            Modifiers.addInterval("texture", textureNames, 0);
+            Modifiers.addInt("cantidad", 1, 30, 10);
+            Modifiers.addFloat("minSize", 0.25f, 10, 4);
+            Modifiers.addFloat("maxSize", 0.25f, 10, 6);
+            Modifiers.addFloat("timeToLive", 0.25f, 2, 1);
+            Modifiers.addFloat("frecuencia", 0.25f, 4, 1);
+            Modifiers.addInt("dispersion", 50, 400, 100);
+            Modifiers.addVertex3f("speedDir", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
                 new Vector3(30, 30, 30));
 
             //Crear emisor de particulas
@@ -69,13 +67,21 @@ namespace TGC.Examples.Particles
 
             box = TgcBox.fromSize(new Vector3(0, -30, 0), new Vector3(10, 10, 10), Color.Blue);
 
-            GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Cambiar cantidad de particulas, implica crear un nuevo emisor
-            var cantidad = (int)GuiController.Instance.Modifiers["cantidad"];
+            var cantidad = (int)Modifiers["cantidad"];
             if (selectedParticleCount != cantidad)
             {
                 //Crear nuevo emisor
@@ -85,7 +91,7 @@ namespace TGC.Examples.Particles
             }
 
             //Cambiar textura
-            var textureName = (string)GuiController.Instance.Modifiers["texture"];
+            var textureName = (string)Modifiers["texture"];
             if (selectedTextureName != textureName)
             {
                 selectedTextureName = textureName;
@@ -93,21 +99,25 @@ namespace TGC.Examples.Particles
             }
 
             //Actualizar los demás parametros
-            emitter.MinSizeParticle = (float)GuiController.Instance.Modifiers["minSize"];
-            emitter.MaxSizeParticle = (float)GuiController.Instance.Modifiers["maxSize"];
-            emitter.ParticleTimeToLive = (float)GuiController.Instance.Modifiers["timeToLive"];
-            emitter.CreationFrecuency = (float)GuiController.Instance.Modifiers["frecuencia"];
-            emitter.Dispersion = (int)GuiController.Instance.Modifiers["dispersion"];
-            emitter.Speed = (Vector3)GuiController.Instance.Modifiers["speedDir"];
+            emitter.MinSizeParticle = (float)Modifiers["minSize"];
+            emitter.MaxSizeParticle = (float)Modifiers["maxSize"];
+            emitter.ParticleTimeToLive = (float)Modifiers["timeToLive"];
+            emitter.CreationFrecuency = (float)Modifiers["frecuencia"];
+            emitter.Dispersion = (int)Modifiers["dispersion"];
+            emitter.Speed = (Vector3)Modifiers["speedDir"];
 
             //Render de emisor
-            emitter.render(elapsedTime);
+            emitter.render(ElapsedTime);
 
             box.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //Liberar recursos
             emitter.dispose();
 

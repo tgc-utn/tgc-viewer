@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 using System.Text;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 
 namespace TGC.Examples.Quake3Loader
 {

@@ -1,6 +1,6 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
-using Microsoft.DirectX;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Geometry

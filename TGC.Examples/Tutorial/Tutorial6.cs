@@ -1,9 +1,10 @@
+using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
+using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TgcUserVars = TGC.Core.UserControls.TgcUserVars;
 
 namespace TGC.Examples.Tutorial
 {
@@ -19,11 +20,13 @@ namespace TGC.Examples.Tutorial
         //Variable para la escena 3D
         private TgcScene scene;
 
-        public Tutorial6(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara) : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial6(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            this.Category = "Tutorial";
-            this.Name = "Tutorial 6";
-            this.Description = "Muestra como cargar una escena 3D completa.";
+            Category = "Tutorial";
+            Name = "Tutorial 6";
+            Description = "Muestra como cargar una escena 3D completa.";
         }
 
         public override void Init()
@@ -31,20 +34,20 @@ namespace TGC.Examples.Tutorial
             //En este ejemplo no cargamos un solo modelo 3D sino una escena completa, compuesta por varios modelos.
             //El framework posee varias escenas ya hechas en la carpeta TgcViewer\Examples\Media\MeshCreator\Scenes.
             var loader = new TgcSceneLoader();
-            scene = loader.loadSceneFromFile(this.MediaDir + "MeshCreator\\Scenes\\Iglesia\\Iglesia-TgcScene.xml");
+            scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Iglesia\\Iglesia-TgcScene.xml");
 
             //Hacemos que la cámara esté centrada sobre la escena
-            ((TgcRotationalCamera)this.Camara).targetObject(scene.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(scene.BoundingBox);
         }
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void Render()
         {
-            this.IniciarEscena();
+            IniciarEscena();
             base.Render();
 
             //Dibujar la escena entera
@@ -58,7 +61,7 @@ namespace TGC.Examples.Tutorial
             }
             */
 
-            this.FinalizarEscena();
+            FinalizarEscena();
         }
 
         public override void Close()
