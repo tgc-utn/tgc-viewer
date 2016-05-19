@@ -1,8 +1,12 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.KeyFrameLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.KeyFrameAnimation
 {
@@ -28,29 +32,22 @@ namespace TGC.Examples.KeyFrameAnimation
         private TgcKeyFrameMesh mesh;
         private string selectedAnim;
 
-        public override string getCategory()
+        public EjemploKeyFrameLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "KeyFrameAnimation";
+            Category = "KeyFrameAnimation";
+            Name = "MeshLoader";
+            Description = "Muestra como cargar un personaje con animaciones, en formato TGC.";
         }
 
-        public override string getName()
-        {
-            return "MeshLoader";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como cargar un personaje con animaciones, en formato TGC";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Paths para archivo XML de la malla
-            var pathMesh = GuiController.Instance.ExamplesMediaDir +
-                           "KeyframeAnimations\\Robot\\Robot-TgcKeyFrameMesh.xml";
+            var pathMesh = MediaDir + "KeyframeAnimations\\Robot\\Robot-TgcKeyFrameMesh.xml";
 
             //Path para carpeta de texturas de la malla
-            var mediaPath = GuiController.Instance.ExamplesMediaDir + "KeyframeAnimations\\Robot\\";
+            var mediaPath = MediaDir + "KeyframeAnimations\\Robot\\";
 
             //Lista de animaciones disponibles
             string[] animationList =
@@ -78,35 +75,43 @@ namespace TGC.Examples.KeyFrameAnimation
             mesh = loader.loadMeshAndAnimationsFromFile(pathMesh, mediaPath, animationsPath);
 
             //Agregar combo para elegir animacion
-            GuiController.Instance.Modifiers.addInterval("animation", animationList, 0);
+            Modifiers.addInterval("animation", animationList, 0);
             selectedAnim = animationList[0];
 
             //Modifier para especificar si la animación se anima con loop
             animateWithLoop = true;
-            GuiController.Instance.Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
+            Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
 
             //Modifier para color
             currentColor = Color.White;
-            GuiController.Instance.Modifiers.addColor("Color", currentColor);
+            Modifiers.addColor("Color", currentColor);
 
             //Modifier para BoundingBox
-            GuiController.Instance.Modifiers.addBoolean("BoundingBox", "BoundingBox:", false);
+            Modifiers.addBoolean("BoundingBox", "BoundingBox:", false);
 
             //Elegir animacion Caminando
             mesh.playAnimation(selectedAnim, true);
 
             //Configurar camara
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 70, 0), 200);
+            ((TgcRotationalCamera)Camara).setCamera(new Vector3(0, 70, 0), 200);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Ver si cambio la animacion
-            var anim = (string)GuiController.Instance.Modifiers.getValue("animation");
+            var anim = (string)Modifiers.getValue("animation");
             if (!anim.Equals(selectedAnim))
             {
                 //Ver si animamos con o sin loop
-                animateWithLoop = (bool)GuiController.Instance.Modifiers.getValue("loop");
+                animateWithLoop = (bool)Modifiers.getValue("loop");
 
                 //Cargar nueva animacion elegida
                 selectedAnim = anim;
@@ -114,7 +119,7 @@ namespace TGC.Examples.KeyFrameAnimation
             }
 
             //Ver si cambio el color
-            var selectedColor = (Color)GuiController.Instance.Modifiers.getValue("Color");
+            var selectedColor = (Color)Modifiers.getValue("Color");
             if (currentColor == null || currentColor != selectedColor)
             {
                 currentColor = selectedColor;
@@ -123,18 +128,22 @@ namespace TGC.Examples.KeyFrameAnimation
 
             //Animar y Renderizar.
             //Este metodo actualiza la animacion actual segun el tiempo transcurrido y renderiza la malla resultante
-            mesh.animateAndRender(elapsedTime);
+            mesh.animateAndRender(ElapsedTime);
 
             //BoundingBox
-            var showBB = (bool)GuiController.Instance.Modifiers["BoundingBox"];
+            var showBB = (bool)Modifiers["BoundingBox"];
             if (showBB)
             {
                 mesh.BoundingBox.render();
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             mesh.dispose();
         }
     }

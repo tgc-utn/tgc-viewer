@@ -1,9 +1,13 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.DirectX
 {
@@ -29,22 +33,16 @@ namespace TGC.Examples.DirectX
         private Mesh teapotMesh, faceMesh;
         private CustomVertex.PositionColored[] teapotMeshNormalsVB;
 
-        public override string getCategory()
+        public Lighting(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "DirectX";
+            Category = "DirectX";
+            Name = "Lighting";
+            Description = "Permite modificar varios parametros del modelo de iluminacion de DirectX.";
         }
 
-        public override string getName()
-        {
-            return "Lighting";
-        }
-
-        public override string getDescription()
-        {
-            return "Permite modificar varios parametros del modelo de iluminacion de DirectX";
-        }
-
-        public override void init()
+        public override void Init()
         {
             createMeshes();
 
@@ -63,49 +61,57 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0, 0), 10f);
+            ((TgcRotationalCamera)Camara).setCamera(new Vector3(0, 0, 0), 10f);
 
             //El tipo de mesh para seleccionar.
-            GuiController.Instance.Modifiers.addInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
+            Modifiers.addInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
 
             //Habilito o deshabilito mostrar las normales
-            GuiController.Instance.Modifiers.addBoolean("Normales", "Mostrar normales", false);
+            Modifiers.addBoolean("Normales", "Mostrar normales", false);
 
             //Los distintos colores e intensidades de cada uno de los tipos de iluminacion.
-            GuiController.Instance.Modifiers.addColor("Ambient", Color.FromArgb(0, 0, 0));
-            GuiController.Instance.Modifiers.addColor("Diffuse", Color.FromArgb(0, 0, 0));
-            GuiController.Instance.Modifiers.addColor("Specular", Color.FromArgb(255, 255, 255));
+            Modifiers.addColor("Ambient", Color.FromArgb(0, 0, 0));
+            Modifiers.addColor("Diffuse", Color.FromArgb(0, 0, 0));
+            Modifiers.addColor("Specular", Color.FromArgb(255, 255, 255));
 
             //El exponente del nivel de brillo de la iluminacion especular.
-            GuiController.Instance.Modifiers.addFloat("SpecularSharpness", 0, 500f, 100.00f);
+            Modifiers.addFloat("SpecularSharpness", 0, 500f, 100.00f);
 
             //Habilita o deshabilita el brillo especular.
-            GuiController.Instance.Modifiers.addBoolean("SpecularEnabled", "Enable Specular", false);
+            Modifiers.addBoolean("SpecularEnabled", "Enable Specular", false);
 
             //Habilita o deshabilita el remarcado de los bordes de cada triangulo.
-            GuiController.Instance.Modifiers.addBoolean("Wireframe", "Enable Wireframe", false);
+            Modifiers.addBoolean("Wireframe", "Enable Wireframe", false);
 
             //Habilita o deshabilita el back face culling
-            GuiController.Instance.Modifiers.addBoolean("BackFaceCull", "Enable BackFaceCulling", true);
+            Modifiers.addBoolean("BackFaceCull", "Enable BackFaceCulling", true);
 
             //Selecciona el modo de shading.
-            GuiController.Instance.Modifiers.addInterval("ShaderMode", new[] { "Gouraud", "Flat" }, 1);
+            Modifiers.addInterval("ShaderMode", new[] { "Gouraud", "Flat" }, 1);
 
             //Modifiers para ángulos de rotación de la luz
-            GuiController.Instance.Modifiers.addFloat("angleX", 0, 0.005f, 0.0f);
-            GuiController.Instance.Modifiers.addFloat("angleY", 0, 0.005f, 0.0f);
-            GuiController.Instance.Modifiers.addFloat("angleZ", 0, 0.005f, 0.0f);
+            Modifiers.addFloat("angleX", 0, 0.005f, 0.0f);
+            Modifiers.addFloat("angleY", 0, 0.005f, 0.0f);
+            Modifiers.addFloat("angleZ", 0, 0.005f, 0.0f);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Pongo el fondo negro
             D3DDevice.Instance.Device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
 
             //Obtener valores de Modifiers
-            var vAngleX = (float)GuiController.Instance.Modifiers["angleX"];
-            var vAngleY = (float)GuiController.Instance.Modifiers["angleY"];
-            var vAngleZ = (float)GuiController.Instance.Modifiers["angleZ"];
+            var vAngleX = (float)Modifiers["angleX"];
+            var vAngleY = (float)Modifiers["angleY"];
+            var vAngleZ = (float)Modifiers["angleZ"];
 
             //Rotar la luz en base los ángulos especificados
             angleX += vAngleX;
@@ -130,15 +136,15 @@ namespace TGC.Examples.DirectX
             lightVectorVB[1].Color = Color.Blue.ToArgb();
 
             //Variar el color del material
-            material.Ambient = (Color)GuiController.Instance.Modifiers["Ambient"];
-            material.Diffuse = (Color)GuiController.Instance.Modifiers["Diffuse"];
-            material.Specular = (Color)GuiController.Instance.Modifiers["Specular"];
+            material.Ambient = (Color)Modifiers["Ambient"];
+            material.Diffuse = (Color)Modifiers["Diffuse"];
+            material.Specular = (Color)Modifiers["Specular"];
 
-            material.SpecularSharpness = (float)GuiController.Instance.Modifiers["SpecularSharpness"];
+            material.SpecularSharpness = (float)Modifiers["SpecularSharpness"];
 
             D3DDevice.Instance.Device.Material = material;
 
-            switch ((string)GuiController.Instance.Modifiers["ShaderMode"])
+            switch ((string)Modifiers["ShaderMode"])
             {
                 case "Gouraud":
                     D3DDevice.Instance.Device.RenderState.ShadeMode = ShadeMode.Gouraud;
@@ -150,12 +156,12 @@ namespace TGC.Examples.DirectX
             }
 
             D3DDevice.Instance.Device.RenderState.SpecularEnable =
-                (bool)GuiController.Instance.Modifiers["SpecularEnabled"];
+                (bool)Modifiers["SpecularEnabled"];
 
             D3DDevice.Instance.Device.RenderState.ColorVertex = true;
 
             //Habilito o deshabilito el backface culling.
-            if ((bool)GuiController.Instance.Modifiers["BackFaceCull"])
+            if ((bool)Modifiers["BackFaceCull"])
             {
                 D3DDevice.Instance.Device.RenderState.CullMode = Cull.CounterClockwise;
             }
@@ -165,7 +171,7 @@ namespace TGC.Examples.DirectX
             }
 
             //Selecciono el mesh y el vertex buffer del modelo.
-            switch ((string)GuiController.Instance.Modifiers["SelectedMesh"])
+            switch ((string)Modifiers["SelectedMesh"])
             {
                 case "Teapot":
                     SelectedMesh = teapotMesh;
@@ -185,7 +191,7 @@ namespace TGC.Examples.DirectX
             SelectedMesh.DrawSubset(0);
 
             //Para dibujar el wireframe se desabilita la luz y se pone el fill mode en modo wireframe.
-            if ((bool)GuiController.Instance.Modifiers["Wireframe"])
+            if ((bool)Modifiers["Wireframe"])
             {
                 D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
                 D3DDevice.Instance.Device.RenderState.Lighting = false;
@@ -210,7 +216,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
             //Dibujo las normales si estan habilitadas y si es la tetera.
-            if (selectedNormalVB != null && (bool)GuiController.Instance.Modifiers["Normales"])
+            if (selectedNormalVB != null && (bool)Modifiers["Normales"])
                 D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList,
                     selectedNormalVB.Length / 2,
                     selectedNormalVB);
@@ -218,6 +224,8 @@ namespace TGC.Examples.DirectX
             //Traslado y renderizo la esfera que hace de lampara.
             D3DDevice.Instance.Device.Transform.World *= Matrix.Translation(lightVectorToCenter);
             lightBulb.DrawSubset(0);
+
+            FinalizarEscena();
         }
 
         private void createMeshes()
@@ -227,8 +235,8 @@ namespace TGC.Examples.DirectX
             teapotMesh.ComputeNormals();
 
             //Cargar cara
-            faceMesh = Mesh.FromFile(GuiController.Instance.ExamplesMediaDir + "ModelosX" + "\\" + "Cara.x",
-                MeshFlags.Managed, D3DDevice.Instance.Device);
+            faceMesh = Mesh.FromFile(MediaDir + "ModelosX" + "\\" + "Cara.x", MeshFlags.Managed,
+                D3DDevice.Instance.Device);
             faceMesh.ComputeNormals();
 
             //El vertex buffer con la linea que apunta a la direccion de la luz.
@@ -236,9 +244,7 @@ namespace TGC.Examples.DirectX
 
             //Obtener los vertices para obtener las normales de la tetera.
             var verts = (CustomVertex.PositionNormal[])
-                teapotMesh.VertexBuffer.Lock(0,
-                    typeof(CustomVertex.PositionNormal),
-                    LockFlags.None,
+                teapotMesh.VertexBuffer.Lock(0, typeof(CustomVertex.PositionNormal), LockFlags.None,
                     teapotMesh.NumberVertices);
 
             //El vertex buffer que tiene las lineas de las normales de la tetera;
@@ -261,8 +267,10 @@ namespace TGC.Examples.DirectX
             lightBulb = Mesh.Sphere(D3DDevice.Instance.Device, 0.5f, 10, 10);
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             SelectedMesh.Dispose();
         }
     }

@@ -22,5 +22,89 @@ namespace TGC.Viewer.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Shaders\\")]
+        public string ShadersDirectory {
+            get {
+                return ((string)(this["ShadersDirectory"]));
+            }
+            set {
+                this["ShadersDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Media\\")]
+        public string MediaDirectory {
+            get {
+                return ((string)(this["MediaDirectory"]));
+            }
+            set {
+                this["MediaDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Others")]
+        public string DefaultExampleCategory {
+            get {
+                return ((string)(this["DefaultExampleCategory"]));
+            }
+            set {
+                this["DefaultExampleCategory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Logo de TGC")]
+        public string DefaultExampleName {
+            get {
+                return ((string)(this["DefaultExampleName"]));
+            }
+            set {
+                this["DefaultExampleName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("TGC Viewer - Técnicas de Gráficos por Computadora - UTN - FRBA")]
+        public string Title {
+            get {
+                return ((string)(this["Title"]));
+            }
+            set {
+                this["Title"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("TgcViewer\\")]
+        public string CommonShaders {
+            get {
+                return ((string)(this["CommonShaders"]));
+            }
+            set {
+                this["CommonShaders"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ModifiersPanel {
+            get {
+                return ((bool)(this["ModifiersPanel"]));
+            }
+            set {
+                this["ModifiersPanel"] = value;
+            }
+        }
     }
 }

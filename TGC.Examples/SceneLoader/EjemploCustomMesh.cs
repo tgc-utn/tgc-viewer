@@ -1,9 +1,13 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.SceneLoader
 {
@@ -20,23 +24,17 @@ namespace TGC.Examples.SceneLoader
     {
         private MyCustomMesh mesh;
 
-        public override string getCategory()
+        public EjemploCustomMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "SceneLoader";
+            Category = "SceneLoader";
+            Name = "CustomMesh";
+            Description =
+                "Muestra como extender la clase TgcMesh para agregarle comportamiento personalizado. En este ejemplo se renderiza en Wireframe.";
         }
 
-        public override string getName()
-        {
-            return "CustomMesh";
-        }
-
-        public override string getDescription()
-        {
-            return
-                "Muestra como extender la clase TgcMesh para agregarle comportamiento personalizado. En este ejemplo se renderiza en Wireframe";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear loader
             var loader = new TgcSceneLoader();
@@ -46,21 +44,32 @@ namespace TGC.Examples.SceneLoader
 
             //Cargar mesh
             var sceneOriginal =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Meshes\\Vehiculos\\Buggy\\" + "Buggy-TgcScene.xml");
+                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Buggy\\" + "Buggy-TgcScene.xml");
             mesh = (MyCustomMesh)sceneOriginal.Meshes[0];
 
             //Centrar camara rotacional respecto a este mesh
-            GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             mesh.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             mesh.dispose();
         }
     }

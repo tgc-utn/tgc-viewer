@@ -1,12 +1,16 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Shaders;
 using TGC.Core.SkeletalAnimation;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Lights
 {
@@ -29,64 +33,56 @@ namespace TGC.Examples.Lights
         private TgcBox lightMesh;
         private TgcSkeletalMesh mesh;
 
-        public override string getCategory()
+        public EjemploSkeletalPointLight(string mediaDir, string shadersDir, TgcUserVars userVars,
+            TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Lights";
+            Category = "Lights";
+            Name = "Skeletal - Point light";
+            Description =
+                "Iluminación dinámica para un Skeletal Mesh, por PhongShading de una luz del tipo Point Light.";
         }
 
-        public override string getName()
-        {
-            return "Skeletal - Point light";
-        }
-
-        public override string getDescription()
-        {
-            return "Iluminación dinámica para un Skeletal Mesh, por PhongShading de una luz del tipo Point Light";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Cargar mesh con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
-            mesh = skeletalLoader.loadMeshAndAnimationsFromFile(
-                GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\" +
-                "BasicHuman-TgcSkeletalMesh.xml",
-                new[]
-                {
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" +
-                    "Walk-TgcSkeletalAnim.xml",
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" +
-                    "StandBy-TgcSkeletalAnim.xml",
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" +
-                    "Jump-TgcSkeletalAnim.xml"
-                });
+            mesh =
+                skeletalLoader.loadMeshAndAnimationsFromFile(
+                    MediaDir + "SkeletalAnimations\\BasicHuman\\BasicHuman-TgcSkeletalMesh.xml",
+                    new[]
+                    {
+                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\Walk-TgcSkeletalAnim.xml",
+                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\StandBy-TgcSkeletalAnim.xml",
+                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\Jump-TgcSkeletalAnim.xml"
+                    });
 
             //Configurar animacion inicial
             mesh.playAnimation("Walk", true);
 
             //Camara en 1ra persona
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.MovementSpeed = 400f;
-            GuiController.Instance.FpsCamera.JumpSpeed = 300f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 20, -150), new Vector3(0, 20, 0));
+            Camara = new TgcFpsCamera();
+            ((TgcFpsCamera)Camara).MovementSpeed = 400f;
+            ((TgcFpsCamera)Camara).JumpSpeed = 300f;
+            Camara.setCamera(new Vector3(0, 20, -150), new Vector3(0, 20, 0));
 
             //Mesh para la luz
             lightMesh = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
 
             //Modifiers de la luz
-            GuiController.Instance.Modifiers.addBoolean("lightEnable", "lightEnable", true);
-            GuiController.Instance.Modifiers.addVertex3f("lightPos", new Vector3(-200, -100, -200),
-                new Vector3(200, 200, 300), new Vector3(0, 70, 0));
-            GuiController.Instance.Modifiers.addColor("lightColor", Color.White);
-            GuiController.Instance.Modifiers.addFloat("lightIntensity", 0, 150, 20);
-            GuiController.Instance.Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
-            GuiController.Instance.Modifiers.addFloat("specularEx", 0, 20, 9f);
+            Modifiers.addBoolean("lightEnable", "lightEnable", true);
+            Modifiers.addVertex3f("lightPos", new Vector3(-200, -100, -200), new Vector3(200, 200, 300),
+                new Vector3(0, 70, 0));
+            Modifiers.addColor("lightColor", Color.White);
+            Modifiers.addFloat("lightIntensity", 0, 150, 20);
+            Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
+            Modifiers.addFloat("specularEx", 0, 20, 9f);
 
             //Modifiers de material
-            GuiController.Instance.Modifiers.addColor("mEmissive", Color.Black);
-            GuiController.Instance.Modifiers.addColor("mAmbient", Color.White);
-            GuiController.Instance.Modifiers.addColor("mDiffuse", Color.White);
-            GuiController.Instance.Modifiers.addColor("mSpecular", Color.White);
+            Modifiers.addColor("mEmissive", Color.Black);
+            Modifiers.addColor("mAmbient", Color.White);
+            Modifiers.addColor("mDiffuse", Color.White);
+            Modifiers.addColor("mSpecular", Color.White);
 
             /*
             //corregir normales
@@ -97,15 +93,23 @@ namespace TGC.Examples.Lights
             mesh.computeNormals();
         }
 
+        public override void Update()
+        {
+            throw new NotImplementedException();
+        }
+
         private void computeNormals(TgcSkeletalMesh mesh)
         {
             mesh.getVertexPositions();
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
             //Habilitar luz
-            var lightEnable = (bool)GuiController.Instance.Modifiers["lightEnable"];
+            var lightEnable = (bool)Modifiers["lightEnable"];
             Effect currentShader;
             if (lightEnable)
             {
@@ -124,40 +128,38 @@ namespace TGC.Examples.Lights
             mesh.Technique = TgcShaders.Instance.getTgcSkeletalMeshTechnique(mesh.RenderType);
 
             //Actualzar posición de la luz
-            var lightPos = (Vector3)GuiController.Instance.Modifiers["lightPos"];
+            var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 
             //Renderizar mesh
             if (lightEnable)
             {
                 //Cargar variables shader de la luz
-                mesh.Effect.SetValue("lightColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["lightColor"]));
+                mesh.Effect.SetValue("lightColor", ColorValue.FromColor((Color)Modifiers["lightColor"]));
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
-                mesh.Effect.SetValue("eyePosition",
-                    TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.FpsCamera.getPosition()));
-                mesh.Effect.SetValue("lightIntensity", (float)GuiController.Instance.Modifiers["lightIntensity"]);
-                mesh.Effect.SetValue("lightAttenuation", (float)GuiController.Instance.Modifiers["lightAttenuation"]);
+                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.getPosition()));
+                mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
+                mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
 
                 //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                mesh.Effect.SetValue("materialEmissiveColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mEmissive"]));
-                mesh.Effect.SetValue("materialAmbientColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mAmbient"]));
-                mesh.Effect.SetValue("materialDiffuseColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mDiffuse"]));
-                mesh.Effect.SetValue("materialSpecularColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mSpecular"]));
-                mesh.Effect.SetValue("materialSpecularExp", (float)GuiController.Instance.Modifiers["specularEx"]);
+                mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color)Modifiers["mEmissive"]));
+                mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color)Modifiers["mAmbient"]));
+                mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color)Modifiers["mDiffuse"]));
+                mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color)Modifiers["mSpecular"]));
+                mesh.Effect.SetValue("materialSpecularExp", (float)Modifiers["specularEx"]);
             }
-            mesh.animateAndRender(elapsedTime);
+            mesh.animateAndRender(ElapsedTime);
 
             //Renderizar mesh de luz
             lightMesh.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             mesh.dispose();
             lightMesh.dispose();
         }

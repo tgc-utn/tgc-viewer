@@ -20,7 +20,7 @@
         /// </summary>
         /// <param name="editor"></param>
         /// <returns>True si se efectuaron cambios.</returns>
-        bool update(TgcTerrainEditor editor);
+        bool update(TgcTerrainEditor editor, float elapsedTime);
 
         /// <summary>
         ///     Delega la renderizacion del terreno al pincel.

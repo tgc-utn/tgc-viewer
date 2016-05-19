@@ -148,7 +148,6 @@
             this.autoSizeDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Tag = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.saveFileHeightmap = new System.Windows.Forms.SaveFileDialog();
             this.saveFileVegetation = new System.Windows.Forms.SaveFileDialog();
             this.openFileVegetation = new System.Windows.Forms.OpenFileDialog();
@@ -1439,19 +1438,6 @@
             this.Value.HeaderText = "Value";
             this.Value.Name = "Value";
             // 
-            // Tag
-            // 
-            this.Tag.DataPropertyName = "Tag";
-            this.Tag.HeaderText = "Property";
-            this.Tag.Name = "Tag";
-            this.Tag.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Tag";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Property";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            // 
             // saveFileHeightmap
             // 
             this.saveFileHeightmap.DefaultExt = "jpg";
@@ -1571,11 +1557,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn largeChangeDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn autoSizeDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Value;
-#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
-        private System.Windows.Forms.DataGridViewTextBoxColumn Tag;
-        //FIXME
-#pragma warning restore CS0108 // Member hides inherited member; missing new keyword
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.TabPage pageExport;
         private System.Windows.Forms.SaveFileDialog saveFileHeightmap;
         private System.Windows.Forms.GroupBox groupBoxModifyScale;

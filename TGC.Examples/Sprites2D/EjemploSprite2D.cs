@@ -1,10 +1,15 @@
 using Microsoft.DirectX;
+using System;
+using TGC.Core;
 using TGC.Core._2D;
+using TGC.Core.Camara;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Sprites2D
 {
@@ -22,54 +27,53 @@ namespace TGC.Examples.Sprites2D
         private TgcBox box;
         private TgcSprite sprite;
 
-        public override string getCategory()
+        public EjemploSprite2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Sprite 2D";
+            Category = "Sprite 2D";
+            Name = "Sprite 2D";
+            Description = "Muestra como dibujar un Sprite en pantalla.";
         }
 
-        public override string getName()
-        {
-            return "Sprite 2D";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como dibujar un Sprite en pantalla.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear Sprite
             sprite = new TgcSprite();
-            sprite.Texture =
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "\\Texturas\\LogoTGC.png");
+            sprite.Texture = TgcTexture.createTexture(MediaDir + "\\Texturas\\LogoTGC.png");
 
             //Ubicarlo centrado en la pantalla
-            var screenSize = GuiController.Instance.Panel3d.Size;
             var textureSize = sprite.Texture.Size;
-            sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0),
-                FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
+            sprite.Position = new Vector2(FastMath.Max(D3DDevice.Instance.Width / 2 - textureSize.Width / 2, 0),
+                FastMath.Max(D3DDevice.Instance.Height / 2 - textureSize.Height / 2, 0));
 
             //Modifiers para variar parametros del sprite
-            GuiController.Instance.Modifiers.addVertex2f("position", new Vector2(0, 0),
-                new Vector2(screenSize.Width, screenSize.Height), sprite.Position);
-            GuiController.Instance.Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4), sprite.Scaling);
-            GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);
+            Modifiers.addVertex2f("position", new Vector2(0, 0),
+                new Vector2(D3DDevice.Instance.Width, D3DDevice.Instance.Height), sprite.Position);
+            Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4), sprite.Scaling);
+            Modifiers.addFloat("rotation", 0, 360, 0);
 
             //Creamos un Box3D para que se vea como el Sprite es en 2D y se dibuja siempre arriba de la escena 3D
-            box = TgcBox.fromSize(new Vector3(10, 10, 10),
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "\\Texturas\\pasto.jpg"));
+            box = TgcBox.fromSize(new Vector3(10, 10, 10), TgcTexture.createTexture(MediaDir + "\\Texturas\\pasto.jpg"));
 
             //Hacer que la camara se centre en el box3D
-            GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Actualizar valores cargados en modifiers
-            sprite.Position = (Vector2)GuiController.Instance.Modifiers["position"];
-            sprite.Scaling = (Vector2)GuiController.Instance.Modifiers["scaling"];
-            sprite.Rotation = FastMath.ToRad((float)GuiController.Instance.Modifiers["rotation"]);
+            sprite.Position = (Vector2)Modifiers["position"];
+            sprite.Scaling = (Vector2)Modifiers["scaling"];
+            sprite.Rotation = FastMath.ToRad((float)Modifiers["rotation"]);
 
             //Dibujar box3D. Se deben dibujar primero todos los objetos 3D. Recien al final dibujar los Sprites
             box.render();
@@ -82,10 +86,14 @@ namespace TGC.Examples.Sprites2D
 
             //Finalizar el dibujado de Sprites
             TgcDrawer2D.Instance.endDrawSprite();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             sprite.dispose();
             box.dispose();
         }

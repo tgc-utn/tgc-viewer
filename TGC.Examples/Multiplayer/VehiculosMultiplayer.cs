@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Geometries;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Util;
@@ -29,6 +30,7 @@ namespace TGC.Examples.Multiplayer
     {
         private float acumulatedTime;
         private TgcNetworkingModifier networkingMod;
+        private TgcThirdPersonCamera camara;
 
         public override string getCategory()
         {
@@ -290,7 +292,9 @@ namespace TGC.Examples.Multiplayer
             piso = TgcBox.fromSize(new Vector3(0, -60, 0), new Vector3(5000, 5, 5000), pisoTexture);
 
             //Camara en 3ra persona
-            GuiController.Instance.ThirdPersonCamera.Enable = true;
+            this.camara = new TgcThirdPersonCamera();
+            CamaraManager.Instance.CurrentCamera = this.camara;
+            this.camara.Enable = true;
         }
 
         /// <summary>
@@ -363,8 +367,8 @@ namespace TGC.Examples.Multiplayer
             meshPrincipal.Position = vehiculoData.initialPos;
 
             //Camara
-            GuiController.Instance.ThirdPersonCamera.resetValues();
-            GuiController.Instance.ThirdPersonCamera.setCamera(meshPrincipal.Position, 100, 400);
+            this.camara.resetValues();
+            this.camara.setCamera(meshPrincipal.Position, 100, 400);
 
             //Ver si ya habia mas clientes para cuando nosotros nos conectamos
             var otrosVehiculosCant = (int)msg.readNext();
@@ -384,7 +388,7 @@ namespace TGC.Examples.Multiplayer
             var elapsedTime = GuiController.Instance.ElapsedTime;
             var moveForward = 0f;
             float rotate = 0;
-            var d3dInput = GuiController.Instance.D3dInput;
+            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
             var rotating = false;
 
@@ -420,7 +424,7 @@ namespace TGC.Examples.Multiplayer
             if (rotating)
             {
                 meshPrincipal.rotateY(Geometry.DegreeToRadian(rotate * elapsedTime));
-                GuiController.Instance.ThirdPersonCamera.rotateY(rotate);
+                this.camara.rotateY(rotate);
             }
 
             //Si hubo desplazamiento
@@ -430,7 +434,7 @@ namespace TGC.Examples.Multiplayer
             }
 
             //Hacer que la camara siga al personaje en su nueva posicion
-            GuiController.Instance.ThirdPersonCamera.Target = meshPrincipal.Position;
+            this.camara.Target = meshPrincipal.Position;
 
             //Render piso
             piso.render();

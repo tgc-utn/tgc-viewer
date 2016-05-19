@@ -1,4 +1,9 @@
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Engine2D
 {
@@ -15,37 +20,37 @@ namespace TGC.Examples.Engine2D
     {
         private GameManager gameManager;
 
-        public override string getCategory()
+        public Ejemplo2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "2D";
+            Category = "2D";
+            Name = "Ejemplo 2D";
+            Description = "Ejemplo 2D utilizando Sprites. Hacer clic con el mouse para mover la nave.";
         }
 
-        public override string getName()
-        {
-            return "Ejemplo 2D";
-        }
-
-        public override string getDescription()
-        {
-            return "Ejemplo 2D utilizando Sprites. Hacer clic con el mouse para mover la nave.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             gameManager = GameManager.Instance;
 
-            gameManager.Init(ExampleDir + "Media\\Engine2D\\");
+            gameManager.Init(MediaDir + "Engine2D\\", UserVars);
         }
 
-        public override void close()
+        public override void Update()
         {
+            throw new NotImplementedException();
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
-            gameManager.Update(elapsedTime);
+            IniciarEscena();
+            base.Render();
 
-            gameManager.Render(elapsedTime);
+            gameManager.Update(ElapsedTime);
+
+            gameManager.Render(ElapsedTime);
+
+            FinalizarEscena();
         }
     }
 }

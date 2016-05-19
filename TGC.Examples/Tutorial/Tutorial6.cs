@@ -1,6 +1,10 @@
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Tutorial
 {
@@ -16,36 +20,36 @@ namespace TGC.Examples.Tutorial
         //Variable para la escena 3D
         private TgcScene scene;
 
-        public override string getCategory()
+        public Tutorial6(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Tutorial";
+            Category = "Tutorial";
+            Name = "Tutorial 6";
+            Description = "Muestra como cargar una escena 3D completa.";
         }
 
-        public override string getName()
-        {
-            return "Tutorial 6";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como cargar una escena 3D completa.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //En este ejemplo no cargamos un solo modelo 3D sino una escena completa, compuesta por varios modelos.
             //El framework posee varias escenas ya hechas en la carpeta TgcViewer\Examples\Media\MeshCreator\Scenes.
             var loader = new TgcSceneLoader();
-            scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Scenes\\Iglesia\\Iglesia-TgcScene.xml");
+            scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Iglesia\\Iglesia-TgcScene.xml");
 
             //Hacemos que la cámara esté centrada sobre la escena
-            GuiController.Instance.RotCamera.targetObject(scene.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(scene.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Dibujar la escena entera
             scene.renderAll();
 
@@ -56,10 +60,14 @@ namespace TGC.Examples.Tutorial
                 mesh.render();
             }
             */
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //Liberar memoria de toda la escena
             scene.disposeAll();
         }

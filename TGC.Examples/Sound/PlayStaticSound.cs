@@ -1,10 +1,15 @@
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Drawing;
 using System.IO;
+using TGC.Core;
 using TGC.Core._2D;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Util;
-using TGC.Util.Sound;
+using TGC.Core.Input;
+using TGC.Core.Sound;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Sound
 {
@@ -22,22 +27,16 @@ namespace TGC.Examples.Sound
         private TgcText2d instruccionesText;
         private TgcStaticSound sound;
 
-        public override string getCategory()
+        public PlayStaticSound(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Sound";
+            Category = "Sound";
+            Name = "Play StaticSound";
+            Description = "Muestra como reproducir un archivo de sonido estático en formato WAV.";
         }
 
-        public override string getName()
-        {
-            return "Play StaticSound";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como reproducir un archivo de sonido estático en formato WAV.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Texto para el sonido actual
             currentSoundText = new TgcText2d();
@@ -55,11 +54,18 @@ namespace TGC.Examples.Sound
 
             //Modifier para archivo MP3
             currentFile = null;
-            GuiController.Instance.Modifiers.addFile("WAV-File",
-                GuiController.Instance.ExamplesMediaDir + "Sound\\campanadas horas.wav", "WAVs|*.wav");
+            Modifiers.addFile("WAV-File", MediaDir + "Sound\\campanadas horas.wav", "WAVs|*.wav");
 
             //Modifier para loop
-            GuiController.Instance.Modifiers.addBoolean("PlayLoop", "Play Loop", false);
+            Modifiers.addBoolean("PlayLoop", "Play Loop", false);
+
+            var filePath = (string)Modifiers["WAV-File"];
+            loadSound(filePath);
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -86,19 +92,22 @@ namespace TGC.Examples.Sound
             }
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
             //Ver si cambio el WAV
-            var filePath = (string)GuiController.Instance.Modifiers["WAV-File"];
+            var filePath = (string)Modifiers["WAV-File"];
             loadSound(filePath);
 
             //Contro el input de teclado
-            if (GuiController.Instance.D3dInput.keyPressed(Key.Y))
+            if (TgcD3dInput.Instance.keyPressed(Key.Y))
             {
-                var playLoop = (bool)GuiController.Instance.Modifiers["PlayLoop"];
+                var playLoop = (bool)Modifiers["PlayLoop"];
                 sound.play(playLoop);
             }
-            else if (GuiController.Instance.D3dInput.keyPressed(Key.O))
+            else if (TgcD3dInput.Instance.keyPressed(Key.O))
             {
                 sound.stop();
             }
@@ -106,10 +115,14 @@ namespace TGC.Examples.Sound
             //Render texto
             currentSoundText.render();
             instruccionesText.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             sound.dispose();
         }
     }

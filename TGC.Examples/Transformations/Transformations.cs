@@ -2,9 +2,12 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Transformations
 {
@@ -22,22 +25,16 @@ namespace TGC.Examples.Transformations
 
         private VertexBuffer vertexBuffer;
 
-        public override string getCategory()
+        public Transformations(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Transformations";
+            Category = "Transformations";
+            Name = "Transformaciones";
+            Description = "Transformaciones en 2d.";
         }
 
-        public override string getName()
-        {
-            return "Transformaciones";
-        }
-
-        public override string getDescription()
-        {
-            return "Transformaciones en 2d";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear VertexBuffer
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, D3DDevice.Instance.Device,
@@ -50,20 +47,29 @@ namespace TGC.Examples.Transformations
             data[2] = new CustomVertex.PositionColored(0, 1, 0, Color.Blue.ToArgb());
 
             //FPS Camara
-            GuiController.Instance.FpsCamera.Enable = false;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0.5f, 0, -3), new Vector3(0, 0, 0));
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(0.5f, 0, -3), new Vector3(0, 0, 0));
 
             //User Vars
-            GuiController.Instance.UserVars.addVar("Vertices", 0);
-            GuiController.Instance.UserVars.addVar("Triangles", 0);
+            UserVars.addVar("Vertices", 0);
+            UserVars.addVar("Triangles", 0);
 
-            GuiController.Instance.Modifiers.addFloat("translateX", -5, 5f, 0f);
-            GuiController.Instance.Modifiers.addFloat("rotationZ", 0, (float)(2.0f * Math.PI), 0f);
-            GuiController.Instance.Modifiers.addFloat("ScaleXYZ", 0, 3, 1f);
+            //Modifiers
+            Modifiers.addFloat("translateX", -5, 5f, 0f);
+            Modifiers.addFloat("rotationZ", 0, (float)(2.0f * Math.PI), 0f);
+            Modifiers.addFloat("ScaleXYZ", 0, 3, 1f);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Especificar formato de triangulos
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
 
@@ -75,6 +81,8 @@ namespace TGC.Examples.Transformations
 
             //Dibujar 1 primitiva
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
+
+            FinalizarEscena();
         }
 
         /// <summary>
@@ -94,9 +102,9 @@ namespace TGC.Examples.Transformations
             matFinal = Matrix.Identity;
 
             //Generar las matrices para cada movimiento
-            matTranslate.Translate((float)GuiController.Instance.Modifiers["translateX"], 0, 0);
-            matRotate.RotateZ((float)GuiController.Instance.Modifiers["rotationZ"]);
-            var scale = (float)GuiController.Instance.Modifiers["ScaleXYZ"];
+            matTranslate.Translate((float)Modifiers["translateX"], 0, 0);
+            matRotate.RotateZ((float)Modifiers["rotationZ"]);
+            var scale = (float)Modifiers["ScaleXYZ"];
             matScale.Scale(scale, scale, scale);
 
             //Multiplicar todas las matrices en una sola final
@@ -106,8 +114,11 @@ namespace TGC.Examples.Transformations
             d3dDevice.Transform.World = matFinal;
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
+            vertexBuffer.Dispose();
         }
     }
 }

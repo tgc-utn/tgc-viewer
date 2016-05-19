@@ -37,5 +37,10 @@ namespace TGC.Examples.TerrainEditor.Brushes.Vegetation
             Mesh.Rotation = rotation;
             Mesh.Position = Position;
         }
+
+        public VegetationBrush(string mediaDir) : base(mediaDir)
+        {
+            //TODO revisar
+        }
     }
 }

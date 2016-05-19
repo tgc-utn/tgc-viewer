@@ -1,14 +1,17 @@
 using Microsoft.DirectX;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Util;
-using TGC.Util.Input;
-using TGC.Util.TgcGeometry;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -33,27 +36,20 @@ namespace TGC.Examples.Collision
 
         private TgcBox suelo;
 
-        public override string getCategory()
+        public SeleccionMultiplePicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
+            Category = "Collision";
+            Name = "Seleccion Multiple";
+            Description = "Muestra como seleccionar un objeto con el Mouse creando un rectángulo de selección.";
         }
 
-        public override string getName()
-        {
-            return "Seleccion Multiple";
-        }
-
-        public override string getDescription()
-        {
-            return
-                "Muestra como seleccionar un objeto con el Mouse creando un rectángulo de selección similar a Windows.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear suelo
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\quakeWall3.jpg");
+                MediaDir + "Texturas\\Quake\\quakeWall3.jpg");
             suelo = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(500, 0.1f, 500), texture);
 
             //Iniciarlizar PickingRay
@@ -66,7 +62,7 @@ namespace TGC.Examples.Collision
             //Modelo 1, original
             var loader = new TgcSceneLoader();
             var scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
+                loader.loadSceneFromFile(MediaDir +
                                          "MeshCreator\\Meshes\\Vehiculos\\Carretilla\\Carretilla-TgcScene.xml");
             var modeloOrignal = scene.Meshes[0];
             modelos.Add(modeloOrignal);
@@ -86,16 +82,21 @@ namespace TGC.Examples.Collision
             selectionBox.BoundingBox.setRenderColor(Color.Red);
             selecting = false;
 
-            //Camara fija
-            GuiController.Instance.RotCamera.Enable = false;
-            GuiController.Instance.setCamera(new Vector3(-4.4715f, 239.1167f, 179.248f),
-                new Vector3(-4.4742f, 238.3456f, 178.6113f));
+            Camara.setCamera(new Vector3(-4.4715f, 239.1167f, 179.248f), new Vector3(-4.4742f, 238.3456f, 178.6113f));
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Si hacen clic con el mouse, ver si hay colision con el suelo
-            if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (TgcD3dInput.Instance.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //primera vez
                 if (!selecting)
@@ -135,7 +136,7 @@ namespace TGC.Examples.Collision
             }
 
             //Solto el clic del mouse, terminar la selección
-            if (GuiController.Instance.D3dInput.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (TgcD3dInput.Instance.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 selecting = false;
 
@@ -162,10 +163,14 @@ namespace TGC.Examples.Collision
             {
                 mesh.BoundingBox.render();
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             suelo.dispose();
             foreach (var mesh in modelos)
             {

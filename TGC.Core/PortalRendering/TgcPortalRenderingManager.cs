@@ -1,7 +1,7 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.PortalRendering

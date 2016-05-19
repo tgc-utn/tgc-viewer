@@ -1,13 +1,17 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Lights
 {
@@ -22,8 +26,7 @@ namespace TGC.Examples.Lights
     ///     NormalMap.
     ///     El NormalMap es una textura que cada pixel RGB corresponde a un vector normal (XYZ)
     ///     Crear un buen NormalMap para un mesh es una tarea de diseño. Existen herramientas para generar automáticamente un
-    ///     NormalMap
-    ///     a partir de una textura. Ejemplo: http://sourceforge.net/projects/ssbumpgenerator/
+    ///     NormalMap a partir de una textura. Ejemplo: http://sourceforge.net/projects/ssbumpgenerator/
     ///     Pero no se logra el mismo resultado que con una textura hecha por un artista.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
@@ -36,32 +39,26 @@ namespace TGC.Examples.Lights
         private List<TgcArrow> normals;
         private List<TgcArrow> tangents;
 
-        public override string getCategory()
+        public EjemploBumpMapping(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Lights";
+            Category = "Lights";
+            Name = "Bump Mapping";
+            Description = "Efecto de Bump Mapping utilizando una textura de NormalMap en TangentSpace.";
         }
 
-        public override string getName()
-        {
-            return "Bump Mapping";
-        }
-
-        public override string getDescription()
-        {
-            return "Efecto de Bump Mapping utilizando una textura de NormalMap en TangentSpace";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //DEBUG: para probar codigo que genera un NormalMap automaticamente. Queda bastante peor que el NormalMap que ya viene hecho
-            //createNormalMap(GuiController.Instance.ShadersDir+"BumpMapping_DiffuseMap.jpg", GuiController.Instance.ShadersDir+"NormalMap_Prueba.jpg");
-            //TgcTexture normalMap = TgcTexture.createTexture(GuiController.Instance.ShadersDir+"NormalMap_Prueba2.jpg");
+            //createNormalMap(this.ShadersDir+"BumpMapping_DiffuseMap.jpg", this.ShadersDir+"NormalMap_Prueba.jpg");
+            //TgcTexture normalMap = TgcTexture.createTexture(this.ShadersDir+"NormalMap_Prueba2.jpg");
 
             //Crear 3 paredes y un piso con textura comun y textura de normalMap
             var diffuseMap =
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Texturas//BM_DiffuseMap_pared.jpg");
+                TgcTexture.createTexture(MediaDir + "Texturas//BM_DiffuseMap_pared.jpg");
             var normalMap =
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "Texturas//BM_NormalMap.jpg");
+                TgcTexture.createTexture(MediaDir + "Texturas//BM_NormalMap.jpg");
             TgcTexture[] normalMapArray = { normalMap };
 
             var paredSur = TgcBox.fromExtremes(new Vector3(-200, 0, -210), new Vector3(200, 100, -200), diffuseMap);
@@ -102,11 +99,11 @@ namespace TGC.Examples.Lights
             }
 
             //Camara en 1ra persona
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 50, 100), new Vector3(0, 50, -1));
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(0, 50, 100), new Vector3(0, 50, -1));
 
             //Cargar Shader de personalizado de BumpMapping. Solo soporta meshes de tipo DiffuseMap
-            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "BumpMapping.fx");
+            effect = TgcShaders.loadEffect(ShadersDir + "BumpMapping.fx");
 
             //Cargar shader en meshes
             foreach (var m in meshes)
@@ -117,21 +114,26 @@ namespace TGC.Examples.Lights
 
             //Mesh para la luz
             lightMesh = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
-            GuiController.Instance.Modifiers.addFloat("bumpiness", 0, 1, 1f);
-            GuiController.Instance.Modifiers.addVertex3f("lightPos", new Vector3(-200, 0, -200),
+            Modifiers.addFloat("bumpiness", 0, 1, 1f);
+            Modifiers.addVertex3f("lightPos", new Vector3(-200, 0, -200),
                 new Vector3(200, 100, 200), new Vector3(0, 80, 0));
-            GuiController.Instance.Modifiers.addColor("lightColor", Color.White);
-            GuiController.Instance.Modifiers.addFloat("lightIntensity", 0, 150, 20);
-            GuiController.Instance.Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
-            GuiController.Instance.Modifiers.addFloat("specularEx", 0, 20, 9f);
-            GuiController.Instance.Modifiers.addBoolean("showNormals", "showNormals", false);
-            GuiController.Instance.Modifiers.addBoolean("showTangents", "showTangents", false);
-            GuiController.Instance.Modifiers.addBoolean("showBinormals", "showBinormals", false);
+            Modifiers.addColor("lightColor", Color.White);
+            Modifiers.addFloat("lightIntensity", 0, 150, 20);
+            Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
+            Modifiers.addFloat("specularEx", 0, 20, 9f);
+            Modifiers.addBoolean("showNormals", "showNormals", false);
+            Modifiers.addBoolean("showTangents", "showTangents", false);
+            Modifiers.addBoolean("showBinormals", "showBinormals", false);
 
-            GuiController.Instance.Modifiers.addColor("mEmissive", Color.Black);
-            GuiController.Instance.Modifiers.addColor("mAmbient", Color.White);
-            GuiController.Instance.Modifiers.addColor("mDiffuse", Color.White);
-            GuiController.Instance.Modifiers.addColor("mSpecular", Color.White);
+            Modifiers.addColor("mEmissive", Color.Black);
+            Modifiers.addColor("mAmbient", Color.White);
+            Modifiers.addColor("mDiffuse", Color.White);
+            Modifiers.addColor("mSpecular", Color.White);
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -156,35 +158,38 @@ namespace TGC.Examples.Lights
             }
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
             //Actualzar posición de la luz
-            var lightPos = (Vector3)GuiController.Instance.Modifiers["lightPos"];
+            var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
-            var eyePosition = GuiController.Instance.FpsCamera.getPosition();
+            var eyePosition = Camara.getPosition();
 
             //Renderizar meshes
             foreach (var mesh in meshes)
             {
                 //Cargar variables shader de la luz
                 mesh.Effect.SetValue("lightColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["lightColor"]));
+                    ColorValue.FromColor((Color)Modifiers["lightColor"]));
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
                 mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(eyePosition));
-                mesh.Effect.SetValue("lightIntensity", (float)GuiController.Instance.Modifiers["lightIntensity"]);
-                mesh.Effect.SetValue("lightAttenuation", (float)GuiController.Instance.Modifiers["lightAttenuation"]);
-                mesh.Effect.SetValue("bumpiness", (float)GuiController.Instance.Modifiers["bumpiness"]);
+                mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
+                mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
+                mesh.Effect.SetValue("bumpiness", (float)Modifiers["bumpiness"]);
 
                 //Material
                 mesh.Effect.SetValue("materialEmissiveColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mEmissive"]));
+                    ColorValue.FromColor((Color)Modifiers["mEmissive"]));
                 mesh.Effect.SetValue("materialAmbientColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mAmbient"]));
+                    ColorValue.FromColor((Color)Modifiers["mAmbient"]));
                 mesh.Effect.SetValue("materialDiffuseColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mDiffuse"]));
+                    ColorValue.FromColor((Color)Modifiers["mDiffuse"]));
                 mesh.Effect.SetValue("materialSpecularColor",
-                    ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mSpecular"]));
-                mesh.Effect.SetValue("materialSpecularExp", (float)GuiController.Instance.Modifiers["specularEx"]);
+                    ColorValue.FromColor((Color)Modifiers["mSpecular"]));
+                mesh.Effect.SetValue("materialSpecularExp", (float)Modifiers["specularEx"]);
 
                 //Renderizar modelo
                 mesh.render();
@@ -194,15 +199,17 @@ namespace TGC.Examples.Lights
             lightMesh.render();
 
             //Dibujar flechas de debug
-            var showNormals = (bool)GuiController.Instance.Modifiers["showNormals"];
-            var showTangents = (bool)GuiController.Instance.Modifiers["showTangents"];
-            var showBinormals = (bool)GuiController.Instance.Modifiers["showBinormals"];
+            var showNormals = (bool)Modifiers["showNormals"];
+            var showTangents = (bool)Modifiers["showTangents"];
+            var showBinormals = (bool)Modifiers["showBinormals"];
             for (var i = 0; i < normals.Count; i++)
             {
                 if (showNormals) normals[i].render();
                 if (showTangents) tangents[i].render();
                 if (showBinormals) binormals[i].render();
             }
+
+            FinalizarEscena();
         }
 
         /// <summary>
@@ -271,8 +278,10 @@ namespace TGC.Examples.Lights
             normalMap.Dispose();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             effect.Dispose();
             foreach (var m in meshes)
             {

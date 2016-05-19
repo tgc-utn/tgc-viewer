@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 

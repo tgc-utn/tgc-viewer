@@ -2,13 +2,17 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -36,26 +40,19 @@ namespace TGC.Examples.Collision
 
         private TgcBox piso;
 
-        public override string getCategory()
+        public EjemploColisiones(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
+            Category = "Collision";
+            Name = "Detección Simple";
+            Description = "Ejemplo de Detección de Colisiones y manejo de Input. Movimiento con W, A, S, D.";
         }
 
-        public override string getName()
-        {
-            return "Detección Simple";
-        }
-
-        public override string getDescription()
-        {
-            return "Ejemplo de Detección de Colisiones y manejo de Input. Movimiento con W, A, S, D.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\pasto.jpg");
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
             piso = TgcBox.fromSize(new Vector3(1000, 1, 1000), pisoTexture);
 
             //Cargar obstaculos y posicionarlos
@@ -65,9 +62,8 @@ namespace TGC.Examples.Collision
             TgcMesh obstaculo;
 
             //Obstaculo 1: Malla estatática de Box de formato TGC
-            scene = loader.loadSceneFromFile(
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml",
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\");
+            scene = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Box\\Box-TgcScene.xml",
+                MediaDir + "ModelosTgc\\Box\\");
             //Escalarlo, posicionarlo y agregar a array de obstáculos
             obstaculo = scene.Meshes[0];
             obstaculo.Scale = new Vector3(1, 2, 1);
@@ -75,9 +71,8 @@ namespace TGC.Examples.Collision
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2: Malla estatática de Box de formato TGC
-            scene = loader.loadSceneFromFile(
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml",
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\");
+            scene = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Box\\Box-TgcScene.xml",
+                MediaDir + "ModelosTgc\\Box\\");
             //Escalarlo, posicionarlo y agregar a array de obstáculos
             obstaculo = scene.Meshes[0];
             obstaculo.Scale = new Vector3(1, 2, 1);
@@ -85,15 +80,13 @@ namespace TGC.Examples.Collision
             //Le cambiamos la textura a este modelo particular
             obstaculo.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg")
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg")
             });
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2: Malla estatática de Box de formato TGC
-            scene = loader.loadSceneFromFile(
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml",
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\");
+            scene = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Box\\Box-TgcScene.xml",
+                MediaDir + "ModelosTgc\\Box\\");
             //Escalarlo, posicionarlo y agregar a array de obstáculos
             obstaculo = scene.Meshes[0];
             obstaculo.Scale = new Vector3(1, 2, 1);
@@ -102,14 +95,14 @@ namespace TGC.Examples.Collision
 
             //Cargar personaje con animaciones con herramienta TgcKeyFrameLoader
             var keyFrameLoader = new TgcSkeletalLoader();
-            personaje = keyFrameLoader.loadMeshAndAnimationsFromFile(
-                GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Robot-TgcSkeletalMesh.xml",
-                GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\",
-                new[]
-                {
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" +
-                    "Caminando-TgcSkeletalAnim.xml"
-                });
+            personaje =
+                keyFrameLoader.loadMeshAndAnimationsFromFile(
+                    MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml",
+                    MediaDir + "SkeletalAnimations\\Robot\\",
+                    new[]
+                    {
+                        MediaDir + "SkeletalAnimations\\Robot\\Caminando-TgcSkeletalAnim.xml"
+                    });
 
             //Configurar animacion inicial
             personaje.playAnimation("Caminando", true);
@@ -119,27 +112,32 @@ namespace TGC.Examples.Collision
             personaje.Position = new Vector3(0, 0, 0);
 
             //Hacer que la cámara mire hacia un determinado lugar del escenario
-            GuiController.Instance.setCamera(new Vector3(-80, 165, 230), new Vector3(0, 0, 0));
-
-            //Deshabilitar camara para que no interfiera con los controles de nuestro ejemplo
-            GuiController.Instance.RotCamera.Enable = false;
+            Camara.setCamera(new Vector3(-80, 165, 230), new Vector3(0, 0, 0));
 
             //Modifier para habilitar o no el renderizado del BoundingBox del personaje
-            GuiController.Instance.Modifiers.addBoolean("showBoundingBox", "Bouding Box", false);
+            Modifiers.addBoolean("showBoundingBox", "Bouding Box", false);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Ver si hay que mostrar el BoundingBox
-            var showBB = (bool)GuiController.Instance.Modifiers.getValue("showBoundingBox");
+            var showBB = (bool)Modifiers.getValue("showBoundingBox");
 
             //Calcular proxima posicion de personaje segun Input
             var move = new Vector3(0, 0, 0);
 
             //Multiplicar la velocidad por el tiempo transcurrido, para no acoplarse al CPU
-            var speed = VELOCIDAD_DESPLAZAMIENTO * elapsedTime;
+            var speed = VELOCIDAD_DESPLAZAMIENTO * ElapsedTime;
 
-            var d3dInput = GuiController.Instance.D3dInput;
+            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
 
             //Adelante
@@ -216,16 +214,20 @@ namespace TGC.Examples.Collision
             }
 
             //Render personaje
-            personaje.animateAndRender(elapsedTime);
+            personaje.animateAndRender(ElapsedTime);
             //Renderizar BoundingBox si asi lo pidieron
             if (showBB)
             {
                 personaje.BoundingBox.render();
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             piso.dispose();
             foreach (var obstaculo in obstaculos)
             {

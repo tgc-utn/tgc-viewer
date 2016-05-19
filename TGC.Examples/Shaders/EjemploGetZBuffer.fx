@@ -32,8 +32,6 @@ sampler2D diffuseMap = sampler_state
 	MIPFILTER = LINEAR;
 };
 
-
-
 /**************************************************************************************/
 /* GenerateZBuffer */
 /**************************************************************************************/
@@ -50,10 +48,9 @@ struct VS_INPUT_GenerateZBuffer
 //Output del Vertex Shader
 struct VS_OUTPUT_GenerateZBuffer
 {
-   float4 Position :     POSITION0;
-   float2 Depth    :     TEXCOORD0;
+	float4 Position :     POSITION0;
+	float2 Depth    :     TEXCOORD0;
 };
-
 
 //Vertex Shader
 VS_OUTPUT_GenerateZBuffer vs_GenerateZBuffer(VS_INPUT_GenerateZBuffer input)
@@ -64,12 +61,11 @@ VS_OUTPUT_GenerateZBuffer vs_GenerateZBuffer(VS_INPUT_GenerateZBuffer input)
 	output.Position = mul(input.Position, matWorldViewProj);
 
 	//Guardar Z y W proyectado para usar en el pixel shader
-    output.Depth.x = output.Position.z;
+	output.Depth.x = output.Position.z;
 	output.Depth.y = output.Position.w;
-	  
+
 	return output;
 }
-
 
 //Input del Pixel Shader
 struct PS_GenerateZBuffer
@@ -79,26 +75,22 @@ struct PS_GenerateZBuffer
 
 //Pixel Shader
 float4 ps_GenerateZBuffer(PS_GenerateZBuffer input) : COLOR0
-{      
+{
 	//Calcular depth como 1 - (Z / W) y grabar en la textura
 	return  1 - (input.Depth.x / input.Depth.y);
 }
-
-
 
 /*
 * Technique GenerateZBuffer
 */
 technique GenerateZBuffer
 {
-   pass Pass_0
-   {
-	  VertexShader = compile vs_2_0 vs_GenerateZBuffer();
-	  PixelShader = compile ps_2_0 ps_GenerateZBuffer();
-   }
+	pass Pass_0
+	{
+		VertexShader = compile vs_2_0 vs_GenerateZBuffer();
+		PixelShader = compile ps_2_0 ps_GenerateZBuffer();
+	}
 }
-
-
 
 /**************************************************************************************/
 /* AlterColorByDepth */
@@ -106,7 +98,6 @@ technique GenerateZBuffer
 
 //Tamaño de la pantalla
 float2 screenDimensions;
-
 
 //Textura de zBuffer
 texture texZBuffer;
@@ -119,7 +110,6 @@ sampler2D zBuffer = sampler_state
 	MAGFILTER = LINEAR;
 	MIPFILTER = LINEAR;
 };
-
 
 //Input del Vertex Shader
 struct VS_INPUT_AlterColorByDepth
@@ -138,7 +128,6 @@ struct VS_OUTPUT_AlterColorByDepth
 	float2 Texcoord : TEXCOORD0;
 };
 
-
 //Vertex Shader
 VS_OUTPUT_AlterColorByDepth vs_AlterColorByDepth(VS_INPUT_AlterColorByDepth input)
 {
@@ -149,13 +138,12 @@ VS_OUTPUT_AlterColorByDepth vs_AlterColorByDepth(VS_INPUT_AlterColorByDepth inpu
 
 	//Enviar color directamente
 	output.Color = input.Color;
-	
+
 	//Enviar Texcoord directamente
 	output.Texcoord = input.Texcoord;
-	  
+
 	return output;
 }
-
 
 //Input del Pixel Shader
 struct PS_AlterColorByDepth
@@ -173,7 +161,7 @@ float4 ps_AlterColorByDepth(PS_AlterColorByDepth input) : COLOR0
 
 	//Obtener valor del zBuffer
 	float depth = tex2D(zBuffer, zBufferUV).r;
-	
+
 	//Color tradicional del mesh
 	float4 meshColor = tex2D(diffuseMap, input.Texcoord);
 
@@ -186,16 +174,14 @@ float4 ps_AlterColorByDepth(PS_AlterColorByDepth input) : COLOR0
 	return adaptedColor;
 }
 
-
-
 /*
 * Technique AlterColorByDepth
 */
 technique AlterColorByDepth
 {
-   pass Pass_0
-   {
-	  VertexShader = compile vs_3_0 vs_AlterColorByDepth();
-	  PixelShader = compile ps_3_0 ps_AlterColorByDepth();
-   }
+	pass Pass_0
+	{
+		VertexShader = compile vs_3_0 vs_AlterColorByDepth();
+		PixelShader = compile ps_3_0 ps_AlterColorByDepth();
+	}
 }

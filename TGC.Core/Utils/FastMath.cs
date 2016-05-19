@@ -1,5 +1,5 @@
-using Microsoft.DirectX.Direct3D;
 using System;
+using D3DGeometry = Microsoft.DirectX.Direct3D;
 
 namespace TGC.Core.Utils
 {
@@ -255,7 +255,7 @@ namespace TGC.Core.Utils
         /// <returns>Valor en grados</returns>
         public static float ToDeg(float x)
         {
-            return Geometry.RadianToDegree(x);
+            return D3DGeometry.Geometry.RadianToDegree(x);
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace TGC.Core.Utils
         /// <returns>Valor en radianes</returns>
         public static float ToRad(float x)
         {
-            return Geometry.DegreeToRadian(x);
+            return D3DGeometry.Geometry.DegreeToRadian(x);
         }
 
         /// <summary>

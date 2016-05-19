@@ -1,8 +1,12 @@
 using Microsoft.DirectX;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -17,48 +21,47 @@ namespace TGC.Examples.GeometryBasics
     {
         private TgcEditableLand land;
 
-        public override string getCategory()
+        public CrearEditableLand(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "GeometryBasics";
-        }
-
-        public override string getName()
-        {
-            return "EditableLand";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "GeometryBasics";
+            Name = "EditableLand";
+            Description =
                 "Muestra como utilizar la utilidad TgcEditableLand para crear una grilla de terreno editable de 4x4 poligonos. Movimiento con mouse.";
         }
 
-        public override void init()
+        public override void Init()
         {
             //Crear Land
             land = new TgcEditableLand();
             land.setTexture(
-                TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Textures\\Vegetacion\\blackrock_3.jpg"));
+                TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Vegetacion\\blackrock_3.jpg"));
 
             //Modifiers para configurar altura
-            GuiController.Instance.Modifiers.addInterval("vertices",
+            Modifiers.addInterval("vertices",
                 new[] { "CENTER", "INTERIOR_RING", "EXTERIOR_RING", "TOP_SIDE", "LEFT_SIDE", "RIGHT_SIDE", "BOTTOM_SIDE" },
                 0);
-            GuiController.Instance.Modifiers.addFloat("height", -50, 50, 0);
-            GuiController.Instance.Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f),
-                new Vector2(0, 0));
-            GuiController.Instance.Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4),
-                new Vector2(1, 1));
+            Modifiers.addFloat("height", -50, 50, 0);
+            Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f), new Vector2(0, 0));
+            Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4), new Vector2(1, 1));
 
-            GuiController.Instance.RotCamera.setCamera(new Vector3(40f, 40f, 40f), 150f);
+            ((TgcRotationalCamera)Camara).setCamera(new Vector3(40f, 40f, 40f), 150f);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Configurar altura de los vertices seleccionados
-            var selectedVertices = (string)GuiController.Instance.Modifiers["vertices"];
-            var height = (float)GuiController.Instance.Modifiers["height"];
+            var selectedVertices = (string)Modifiers["vertices"];
+            var height = (float)Modifiers["height"];
             if (selectedVertices == "CENTER")
             {
                 land.setVerticesY(TgcEditableLand.SELECTION_CENTER, height);
@@ -89,18 +92,22 @@ namespace TGC.Examples.GeometryBasics
             }
 
             //Offset y Tiling de textura
-            land.UVOffset = (Vector2)GuiController.Instance.Modifiers["offset"];
-            land.UVTiling = (Vector2)GuiController.Instance.Modifiers["tiling"];
+            land.UVOffset = (Vector2)Modifiers["offset"];
+            land.UVTiling = (Vector2)Modifiers["tiling"];
 
             //Actualizar valores
             land.updateValues();
 
             //Dibujar
             land.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Render();
+
             land.dispose();
         }
     }

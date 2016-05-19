@@ -1,6 +1,9 @@
 using Microsoft.DirectX;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.RoomsEditor
 {
@@ -22,36 +25,34 @@ namespace TGC.Examples.RoomsEditor
     {
         private RoomsEditorModifier modifier;
 
-        public override string getCategory()
+        public TgcRoomsEditor(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines) : base(mediaDir, shadersDir, userVars, modifiers, axisLines)
         {
-            return "Utils";
+            this.Category = "Utils";
+            this.Name = "RoomsEditor";
+            this.Description = "Herramienta para crear escenarios Indoor compuestos por cuartos rectangulares que se comunican entre sí.";
         }
 
-        public override string getName()
-        {
-            return "RoomsEditor";
-        }
-
-        public override string getDescription()
-        {
-            return
-                "Herramienta para crear escenarios Indoor compuestos por cuartos rectangulares que se comunican entre sí.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             modifier = new RoomsEditorModifier("RoomsEditor", this);
-            GuiController.Instance.Modifiers.add(modifier);
+            this.Modifiers.add(modifier);
 
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.MovementSpeed = 200f;
-            GuiController.Instance.FpsCamera.JumpSpeed = 200f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(133.0014f, 264.8258f, -119.0311f),
+            this.Camara = new TgcFpsCamera();
+            ((TgcFpsCamera)this.Camara).MovementSpeed = 200f;
+            ((TgcFpsCamera)this.Camara).JumpSpeed = 200f;
+            this.Camara.setCamera(new Vector3(133.0014f, 264.8258f, -119.0311f),
                 new Vector3(498.1584f, -299.4199f, 621.433f));
         }
 
-        public override void render(float elapsedTime)
+        public override void Update(float elapsedTime)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+
             foreach (var room in modifier.Rooms)
             {
                 foreach (var wall in room.Walls)
@@ -61,8 +62,10 @@ namespace TGC.Examples.RoomsEditor
             }
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             modifier.dispose();
         }
 

@@ -22,7 +22,7 @@ namespace TGC.Core._2D
         public static TgcDrawer2D Instance { get; } = new TgcDrawer2D();
 
         /// <summary>
-        ///     Iniciar render de Sprites
+        ///     Iniciar Render de Sprites
         /// </summary>
         public void beginDrawSprite()
         {
@@ -30,7 +30,7 @@ namespace TGC.Core._2D
         }
 
         /// <summary>
-        ///     Finalizar render de Sprites
+        ///     Finalizar Render de Sprites
         /// </summary>
         public void endDrawSprite()
         {

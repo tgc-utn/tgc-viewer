@@ -1,13 +1,18 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Collision
 {
@@ -31,23 +36,17 @@ namespace TGC.Examples.Collision
         private TgcBoundingBox triagleAABB;
         private CustomVertex.PositionColored[] triangle;
 
-        public override string getCategory()
+        public EjemploBoundingBoxTests(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
-        }
-
-        public override string getName()
-        {
-            return "BoundingBox-Tests";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "Collision";
+            Name = "BoundingBox-Tests";
+            Description =
                 "Muestra como hacer colisiones entre un BoundingBox y distintas figuras geométricas (AABB, Triangle, Sphere, OBB). Movimiento con W, A, S, D.";
         }
 
-        public override void init()
+        public override void Init()
         {
             //Cuerpo principal que se controla con el teclado
             box = TgcBox.fromSize(new Vector3(0, 10, 0), new Vector3(10, 10, 10), Color.Blue);
@@ -70,7 +69,7 @@ namespace TGC.Examples.Collision
             //OBB: computar OBB a partir del AABB del mesh.
             var loader = new TgcSceneLoader();
             var meshObb =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
+                loader.loadSceneFromFile(MediaDir +
                                          "MeshCreator\\Meshes\\Vehiculos\\StarWars-ATST\\StarWars-ATST-TgcScene.xml")
                     .Meshes[0];
             obb = TgcObb.computeFromAABB(meshObb.BoundingBox);
@@ -79,16 +78,24 @@ namespace TGC.Examples.Collision
             obb.setRotation(new Vector3(0, FastMath.PI / 4, 0));
 
             //Configurar camara en Tercer Persona
-            GuiController.Instance.ThirdPersonCamera.Enable = true;
-            GuiController.Instance.ThirdPersonCamera.setCamera(box.Position, 30, -75);
+            Camara = new TgcThirdPersonCamera();
+            ((TgcThirdPersonCamera)Camara).setCamera(box.Position, 30, -75);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
-            var velocidadCaminar = 50f * elapsedTime;
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
+            var velocidadCaminar = 50f * ElapsedTime;
 
             //Calcular proxima posicion de personaje segun Input
-            var d3dInput = GuiController.Instance.D3dInput;
+            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
             var movement = new Vector3(0, 0, 0);
 
@@ -138,7 +145,7 @@ namespace TGC.Examples.Collision
                 box.move(movement);
             }
             //Hacer que la camara siga al personaje en su nueva posicion
-            GuiController.Instance.ThirdPersonCamera.Target = box.Position;
+            ((TgcThirdPersonCamera)Camara).Target = box.Position;
 
             //Detectar colision con triangulo
             if (TgcCollisionUtils.testTriangleAABB(triangle[0].Position, triangle[1].Position, triangle[2].Position,
@@ -185,10 +192,14 @@ namespace TGC.Examples.Collision
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, triangle);
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             box.dispose();
             box2.dispose();
             sphere.dispose();
