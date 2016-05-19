@@ -2,9 +2,12 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.DirectX
 {
@@ -98,22 +101,16 @@ namespace TGC.Examples.DirectX
         private MyCustomVertex[] vertexData;
         private VertexDeclaration vertexDeclaration;
 
-        public override string getCategory()
+        public EjemploBoxDirectX(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "DirectX";
+            Category = "DirectX";
+            Name = "Box DirectX";
+            Description = "Muestra como crear una caja 3D usando DirectX a secas, sin utilizar nada del framework.";
         }
 
-        public override string getName()
-        {
-            return "Box DirectX";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear una caja 3D usando DirectX a secas, sin utilizar nada del framework.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Dimensiones de la caja
             var center = new Vector3(0, 0, 0);
@@ -233,7 +230,7 @@ namespace TGC.Examples.DirectX
             indexBuffer.SetData(indexData, 0, LockFlags.None);
 
             //Cargar shader customizado para este ejemplo
-            var shaderPath = GuiController.Instance.ShadersDir+"EjemploBoxDirectX.fx";
+            var shaderPath = ShadersDir + "EjemploBoxDirectX.fx";
             string compilationErrors;
             effect = Effect.FromFile(D3DDevice.Instance.Device, shaderPath, null, null, ShaderFlags.None, null,
                 out compilationErrors);
@@ -246,23 +243,27 @@ namespace TGC.Examples.DirectX
             effect.Technique = "EjemploBoxDirectX";
 
             //Cargamos 3 texturas cualquiera para mandar al shader
-            texture0 = TextureLoader.FromFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir+ "Texturas\\BM_DiffuseMap_pared.jpg");
-            texture1 = TextureLoader.FromFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\BM_NormalMap.jpg");
-            texture2 = TextureLoader.FromFile(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\efecto_alarma.png");
+            texture0 = TextureLoader.FromFile(D3DDevice.Instance.Device, MediaDir + "Texturas\\BM_DiffuseMap_pared.jpg");
+            texture1 = TextureLoader.FromFile(D3DDevice.Instance.Device, MediaDir + "Texturas\\BM_NormalMap.jpg");
+            texture2 = TextureLoader.FromFile(D3DDevice.Instance.Device, MediaDir + "Texturas\\efecto_alarma.png");
 
             dir = 1;
 
-            GuiController.Instance.RotCamera.Enable = true;
-            GuiController.Instance.RotCamera.CameraDistance = 20;
+            ((TgcRotationalCamera)Camara).CameraDistance = 20;
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
-            acumTime += elapsedTime;
-            var speed = 20 * elapsedTime;
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
+            acumTime += ElapsedTime;
+            var speed = 20 * ElapsedTime;
             if (acumTime > 0.5f)
             {
                 acumTime = 0;
@@ -312,10 +313,14 @@ namespace TGC.Examples.DirectX
             //Finalizar shader
             effect.EndPass();
             effect.End();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             vertexBuffer.Dispose();
             indexBuffer.Dispose();
             effect.Dispose();

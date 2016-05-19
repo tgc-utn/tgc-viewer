@@ -1,9 +1,11 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using TGC.Core;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -79,38 +81,34 @@ namespace TGC.Examples.Quake3Loader
         private string currentLevelFile;
         private string exampleDir;
 
-        public override string getCategory()
+        public EjemploLoadQ3Level(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines) : base(mediaDir, shadersDir, userVars, modifiers, axisLines)
         {
-            return "Quake3";
+            this.Category = "Quake3";
+            this.Name = "Load BSP Level";
+            this.Description = "Permite cargar escenarios de Quake 3 en formato BSP. Utiliza matriz PVS para renderizado y posee detección de colisiones. Presionar L para capturar el mouse. Puede tardar unos minutos en cargar.";
         }
 
-        public override string getName()
-        {
-            return "Load BSP Level";
-        }
-
-        public override string getDescription()
-        {
-            return
-                "Permite cargar escenarios de Quake 3 en formato BSP. Utiliza matriz PVS para renderizado y posee detección de colisiones. Presionar L para capturar el mouse. Puede tardar unos minutos en cargar.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Path de este ejemplo
-            exampleDir = GuiController.Instance.ExamplesMediaDir + "Quake3Levels\\";
+            exampleDir = this.MediaDir + "Quake3Levels\\";
 
             //Cargar nivel inicial
             currentLevelFile = exampleDir + "q3dm1\\maps\\q3dm1.bsp";
             loadLevel(currentLevelFile);
 
             //Modifiers
-            GuiController.Instance.Modifiers.addFile("Level", currentLevelFile, ".Niveles Quake 3|*.bsp");
-            GuiController.Instance.Modifiers.addFloat("Speed", 0, 500f, 350f);
-            GuiController.Instance.Modifiers.addFloat("Gravity", 0, 600, 180);
-            GuiController.Instance.Modifiers.addFloat("JumpSpeed", 60, 600, 100);
-            GuiController.Instance.Modifiers.addBoolean("NoClip", "NoClip", false);
-            GuiController.Instance.Modifiers.addButton("exportButton", "Exportar XML", Export_ButtonClick);
+            this.Modifiers.addFile("Level", currentLevelFile, ".Niveles Quake 3|*.bsp");
+            this.Modifiers.addFloat("Speed", 0, 500f, 350f);
+            this.Modifiers.addFloat("Gravity", 0, 600, 180);
+            this.Modifiers.addFloat("JumpSpeed", 60, 600, 100);
+            this.Modifiers.addBoolean("NoClip", "NoClip", false);
+            this.Modifiers.addButton("exportButton", "Exportar XML", Export_ButtonClick);
+        }
+
+        public override void Update(float elapsedTime)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -172,10 +170,12 @@ namespace TGC.Examples.Quake3Loader
             var entdata = bspMap.Data.entdata;
         }
 
-        public override void render(float elapsedTime)
+        public override void Render(float elapsedTime)
         {
+            base.Render(elapsedTime);
+
             //Ver si cambio el nivel elegido
-            var selectedFileName = (string)GuiController.Instance.Modifiers["Level"];
+            var selectedFileName = (string)this.Modifiers["Level"];
             if (selectedFileName != currentLevelFile)
             {
                 currentLevelFile = selectedFileName;
@@ -183,18 +183,20 @@ namespace TGC.Examples.Quake3Loader
             }
 
             //Actualizar valores de Modifiers
-            bspMap.CollisionManager.Camera.MovementSpeed = (float)GuiController.Instance.Modifiers.getValue("Speed");
-            bspMap.CollisionManager.Gravity = (float)GuiController.Instance.Modifiers.getValue("Gravity");
-            bspMap.CollisionManager.JumpSpeed = (float)GuiController.Instance.Modifiers.getValue("JumpSpeed");
-            bspMap.CollisionManager.NoClip = (bool)GuiController.Instance.Modifiers.getValue("NoClip");
+            bspMap.CollisionManager.Camera.MovementSpeed = (float)this.Modifiers.getValue("Speed");
+            bspMap.CollisionManager.Gravity = (float)this.Modifiers.getValue("Gravity");
+            bspMap.CollisionManager.JumpSpeed = (float)this.Modifiers.getValue("JumpSpeed");
+            bspMap.CollisionManager.NoClip = (bool)this.Modifiers.getValue("NoClip");
 
             //Actualizar estado de colsiones y renderizar con Frustum Culling utilizando matriz PVS
-            var currentPosition = bspMap.CollisionManager.update();
-            bspMap.render(currentPosition);
+            var currentPosition = bspMap.CollisionManager.update(elapsedTime);
+            bspMap.render(currentPosition, elapsedTime);
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //Liberar lock de camara
             bspMap.CollisionManager.Camera.LockCam = false;
 

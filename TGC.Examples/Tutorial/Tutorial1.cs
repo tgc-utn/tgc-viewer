@@ -1,9 +1,12 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
-using TGC.Core.Direct3D;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
-using TGC.Util;
+using TGC.Core.Geometry;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Tutorial
 {
@@ -19,30 +22,21 @@ namespace TGC.Examples.Tutorial
         //Variable para caja 3D
         private TgcBox box;
 
-        public override string getCategory()
+        public Tutorial1(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Tutorial";
-        }
-
-        public override string getName()
-        {
-            return "Tutorial 1";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear una caja 3D de color y como mostrarla por pantalla.";
+            Category = "Tutorial";
+            Name = "Tutorial 1";
+            Description = "Muestra como crear una caja 3D de color y como mostrarla por pantalla.";
         }
 
         /// <summary>
         ///     Método en el que se deben crear todas las cosas que luego se van a querer usar.
         ///     Es invocado solo una vez al inicio del ejemplo.
         /// </summary>
-        public override void init()
+        public override void Init()
         {
-            //Acceso a Device de DirectX. Siempre conviene tenerlo a mano. Suele ser pedido como parámetro de varios métodos
-            var d3dDevice = D3DDevice.Instance.Device;
-
             //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
             var center = new Vector3(0, 0, 0);
             var size = new Vector3(10, 10, 10);
@@ -58,7 +52,12 @@ namespace TGC.Examples.Tutorial
             //Con clic izquierdo del mouse se rota la cámara, con clic derecho se traslada y con la rueda
             //del mouse se hace zoom.
             //Otras cámaras disponibles son: FpsCamera (1ra persona) y ThirdPersonCamera (3ra persona).
-            GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -69,21 +68,28 @@ namespace TGC.Examples.Tutorial
         ///     La variable elapsedTime indica la cantidad de segundos que pasaron entre esta invocación
         ///     y la anterior de render(). Es útil para animar e interpolar valores.
         /// </summary>
-        public override void render(float elapsedTime)
+        public override void Render()
         {
-            //Acceso a Device de DirectX. Siempre conviene tenerlo a mano. Suele ser pedido como parámetro de varios métodos
-            var d3dDevice = D3DDevice.Instance.Device;
+            //Iniciamoss la escena
+            IniciarEscena();
+            //Render de la super clase
+            base.Render();
 
             //Dibujar la caja en pantalla
             box.render();
+
+            //Finalizamos el renderizado de la escena
+            FinalizarEscena();
         }
 
         /// <summary>
         ///     Método que se invoca una sola vez al finalizar el ejemplo.
         ///     Se debe liberar la memoria de todos los recursos utilizados.
         /// </summary>
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //Liberar memoria de la caja 3D.
             //Por mas que estamos en C# con Garbage Collector igual hay que liberar la memoria de los recursos gráficos.
             //Porque están utilizando memoria de la placa de video (y ahí no hay Garbage Collector).

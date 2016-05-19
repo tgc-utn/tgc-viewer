@@ -12,7 +12,6 @@ float4x4 matWorldView; //Matriz World * View
 float4x4 matWorldViewProj; //Matriz World * View * Projection
 float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
 
-
 //Textura 0
 texture tex0;
 sampler2D sampler0 = sampler_state
@@ -34,7 +33,6 @@ sampler2D sampler2 = sampler_state
 	Texture = (tex2);
 };
 
-
 /**************************************************************************************/
 /* EjemploBoxDirectX */
 /**************************************************************************************/
@@ -50,8 +48,7 @@ struct VS_INPUT
 	float2 texcoord2 : TEXCOORD2;
 	float3 auxValue1 : TEXCOORD3;
 	float3 auxValue2 : TEXCOORD4;
-};			
-			
+};
 
 //Output del Vertex Shader
 struct VS_OUTPUT
@@ -86,8 +83,6 @@ VS_OUTPUT vs_EjemploBoxDirectX(VS_INPUT input)
 	return output;
 }
 
-
-
 //Input del Pixel Shader
 struct PS_INPUT
 {
@@ -102,7 +97,7 @@ struct PS_INPUT
 
 //Pixel Shader
 float4 ps_EjemploBoxDirectX(PS_INPUT input) : COLOR0
-{      
+{
 	//Obtener texel de las 3 texturas (usamos cualquier uv)
 	float4 texel0 = tex2D(sampler0, input.texcoord0);
 	float4 texel1 = tex2D(sampler1, input.texcoord1);
@@ -112,15 +107,12 @@ float4 ps_EjemploBoxDirectX(PS_INPUT input) : COLOR0
 	return input.Color;
 }
 
-
 //technique EjemploBoxDirectX
 technique EjemploBoxDirectX
 {
-   pass Pass_0
-   {
-	  VertexShader = compile vs_3_0 vs_EjemploBoxDirectX();
-	  PixelShader = compile ps_3_0 ps_EjemploBoxDirectX();
-   }
+	pass Pass_0
+	{
+		VertexShader = compile vs_3_0 vs_EjemploBoxDirectX();
+		PixelShader = compile ps_3_0 ps_EjemploBoxDirectX();
+	}
 }
-
-

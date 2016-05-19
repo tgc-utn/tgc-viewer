@@ -1,11 +1,16 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Collections.Generic;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.SceneLoader
 {
@@ -16,27 +21,20 @@ namespace TGC.Examples.SceneLoader
     {
         private List<TgcMesh> meshes;
 
-        public override string getCategory()
+        public EjemploMeshInstance(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "SceneLoader";
+            Category = "SceneLoader";
+            Name = "MeshInstance";
+            Description = "Cargar una malla original y dos instancias de esta.";
         }
 
-        public override string getName()
-        {
-            return "MeshInstance";
-        }
-
-        public override string getDescription()
-        {
-            return "Cargar una malla original y dos instancias de esta";
-        }
-
-        public override void init()
+        public override void Init()
         {
             var loader = new TgcSceneLoader();
-            var sceneOriginal =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Box\\" +
-                                         "Box-TgcScene.xml");
+            var sceneOriginal = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Box\\" +
+                                                         "Box-TgcScene.xml");
             var meshOriginal = sceneOriginal.Meshes[0];
 
             var meshInstance1 = new TgcMesh(meshOriginal.Name + "-1", meshOriginal,
@@ -53,27 +51,39 @@ namespace TGC.Examples.SceneLoader
             meshes.Add(meshInstance2);
 
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Piso\\Textures\\piso2.jpg");
+                MediaDir + "ModelosTgc\\Piso\\Textures\\piso2.jpg");
             meshOriginal.changeDiffuseMaps(new[] { texture });
 
-            GuiController.Instance.FpsCamera.Enable = true;
+            Camara = new TgcFpsCamera();
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             foreach (var mesh in meshes)
             {
                 mesh.render();
             }
 
-            if (GuiController.Instance.D3dInput.keyPressed(Key.H))
+            if (TgcD3dInput.Instance.keyPressed(Key.H))
             {
                 meshes[0].dispose();
             }
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             foreach (var mesh in meshes)
             {
                 mesh.dispose();

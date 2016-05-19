@@ -1,9 +1,12 @@
 using Microsoft.DirectX;
 using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
-using TGC.Util;
+using TGC.Core.Geometry;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -22,29 +25,28 @@ namespace TGC.Examples.Collision
         private Vector3[] points;
         private TgcBox[] vertices;
 
-        public override string getCategory()
+        public EjemploComputeObb(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
-        }
-
-        public override string getName()
-        {
-            return "Compute OBB";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "Collision";
+            Name = "Compute OBB";
+            Description =
                 "Muestra como calcular un Oriented BoundingBox (OBB) a partir de una nueva aleatoria de puntos. Movimiento con mouse.";
         }
 
-        public override void init()
+        public override void Init()
         {
             obb = new TgcObb();
             generateObb();
             generate = false;
 
-            GuiController.Instance.Modifiers.addButton("generate", "generate", random_clic);
+            Modifiers.addButton("generate", "generate", random_clic);
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         public void random_clic(object sender, EventArgs args)
@@ -52,8 +54,11 @@ namespace TGC.Examples.Collision
             generate = true;
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
             if (generate)
             {
                 generateObb();
@@ -66,6 +71,8 @@ namespace TGC.Examples.Collision
             }
 
             obb.render();
+
+            FinalizarEscena();
         }
 
         /// <summary>
@@ -108,8 +115,10 @@ namespace TGC.Examples.Collision
             }
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             obb.dispose();
             for (var i = 0; i < vertices.Length; i++)
             {

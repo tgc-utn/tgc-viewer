@@ -2,10 +2,9 @@
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Util;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -67,9 +66,8 @@ namespace TGC.Examples.Quake3Loader
         ///     Renderizar escenario BSP utilizando matriz PVS para descartar clusters no visibles
         /// </summary>
         /// <param name="camPos">Posición actual de la camara</param>
-        public void render(Vector3 camPos)
+        public void render(Vector3 camPos, float elapsedTime)
         {
-            var elapsedTime = GuiController.Instance.ElapsedTime;
             time += elapsedTime;
 
             //Obtener leaf actual

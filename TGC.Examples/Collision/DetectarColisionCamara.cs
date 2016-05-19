@@ -1,14 +1,19 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Collections.Generic;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Collision
 {
@@ -27,27 +32,20 @@ namespace TGC.Examples.Collision
         private TgcSkeletalMesh personaje;
         private TgcBox piso;
 
-        public override string getCategory()
+        public DetectarColisionCamara(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
-        }
-
-        public override string getName()
-        {
-            return "Colision con Camara";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "Collision";
+            Name = "Colision con Camara";
+            Description =
                 "Detecta los objetos que se interponen en la visión de la cámara en 3ra persona y renderiza solo su BoundingBox. Movimiento con W, A, S, D.";
         }
 
-        public override void init()
+        public override void Init()
         {
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\tierra.jpg");
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             piso = TgcBox.fromExtremes(new Vector3(-1000, -2, -1000), new Vector3(1000, 0, 1000), pisoTexture);
 
             //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
@@ -58,56 +56,42 @@ namespace TGC.Examples.Collision
             float wallHeight = 500;
 
             //Obstaculo 1
-            obstaculo = TgcBox.fromExtremes(
-                new Vector3(0, 0, 0),
-                new Vector3(wallSize, wallHeight, 10),
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
+            obstaculo = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(wallSize, wallHeight, 10),
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
-            obstaculo = TgcBox.fromExtremes(
-                new Vector3(0, 0, 0),
-                new Vector3(10, wallHeight, wallSize),
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            obstaculo = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(10, wallHeight, wallSize),
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
-            obstaculo = TgcBox.fromExtremes(
-                new Vector3(0, 0, wallSize),
+            obstaculo = TgcBox.fromExtremes(new Vector3(0, 0, wallSize),
                 new Vector3(wallSize, wallHeight, wallSize + 10),
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(obstaculo);
 
             //Obstaculo 4
-            obstaculo = TgcBox.fromExtremes(
-                new Vector3(wallSize, 0, 0),
+            obstaculo = TgcBox.fromExtremes(new Vector3(wallSize, 0, 0),
                 new Vector3(wallSize + 10, wallHeight, wallSize),
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(obstaculo);
 
             //Obstaculo 5
-            obstaculo = TgcBox.fromExtremes(
-                new Vector3(wallSize / 2, 0, wallSize - 400),
+            obstaculo = TgcBox.fromExtremes(new Vector3(wallSize / 2, 0, wallSize - 400),
                 new Vector3(wallSize + 10, wallHeight, wallSize - 400 + 10),
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(obstaculo);
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
             personaje = skeletalLoader.loadMeshAndAnimationsFromFile(
-                GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Robot-TgcSkeletalMesh.xml",
-                GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\",
+                MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml",
+                MediaDir + "SkeletalAnimations\\Robot\\",
                 new[]
                 {
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" +
-                    "Caminando-TgcSkeletalAnim.xml",
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" +
-                    "Parado-TgcSkeletalAnim.xml"
+                    MediaDir + "SkeletalAnimations\\Robot\\Caminando-TgcSkeletalAnim.xml",
+                    MediaDir + "SkeletalAnimations\\Robot\\Parado-TgcSkeletalAnim.xml"
                 });
 
             //Configurar animacion inicial
@@ -119,25 +103,32 @@ namespace TGC.Examples.Collision
             personaje.rotateY(Geometry.DegreeToRadian(180f));
 
             //Configurar camara en Tercera Persona
-            GuiController.Instance.ThirdPersonCamera.Enable = true;
-            GuiController.Instance.ThirdPersonCamera.setCamera(personaje.Position, 200, -300);
+            Camara = new TgcThirdPersonCamera();
+            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 200, -300);
 
             //Modifiers para modificar propiedades de la camara
-            GuiController.Instance.Modifiers.addFloat("offsetHeight", 0, 300, 100);
-            GuiController.Instance.Modifiers.addFloat("offsetForward", -400, 0, -220);
-            GuiController.Instance.Modifiers.addVertex2f("displacement", new Vector2(0, 0), new Vector2(100, 200),
-                new Vector2(0, 100));
+            Modifiers.addFloat("offsetHeight", 0, 300, 100);
+            Modifiers.addFloat("offsetForward", -400, 0, -220);
+            Modifiers.addVertex2f("displacement", new Vector2(0, 0), new Vector2(100, 200), new Vector2(0, 100));
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             var velocidadCaminar = 400f;
             var velocidadRotacion = 120f;
 
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
-            var d3dInput = GuiController.Instance.D3dInput;
+            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
             var rotating = false;
 
@@ -173,9 +164,9 @@ namespace TGC.Examples.Collision
             if (rotating)
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
-                var rotAngle = Geometry.DegreeToRadian(rotate * elapsedTime);
+                var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
                 personaje.rotateY(rotAngle);
-                GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
+                ((TgcThirdPersonCamera)Camara).rotateY(rotAngle);
             }
 
             //Si hubo desplazamiento
@@ -189,7 +180,7 @@ namespace TGC.Examples.Collision
 
                 //La velocidad de movimiento tiene que multiplicarse por el elapsedTime para hacerse independiente de la velocida de CPU
                 //Ver Unidad 2: Ciclo acoplado vs ciclo desacoplado
-                personaje.moveOrientedY(moveForward * elapsedTime);
+                personaje.moveOrientedY(moveForward * ElapsedTime);
 
                 //Detectar colisiones
                 var collide = false;
@@ -211,7 +202,7 @@ namespace TGC.Examples.Collision
                 }
 
                 //Hacer que la camara siga al personaje en su nueva posicion
-                GuiController.Instance.ThirdPersonCamera.Target = personaje.Position;
+                ((TgcThirdPersonCamera)Camara).Target = personaje.Position;
             }
 
             //Si no se esta moviendo, activar animacion de Parado
@@ -221,7 +212,7 @@ namespace TGC.Examples.Collision
             }
 
             //Ajustar la posicion de la camara segun la colision con los objetos del escenario
-            ajustarPosicionDeCamara(personaje, obstaculos);
+            ajustarPosicionDeCamara(obstaculos);
 
             //Render piso
             piso.render();
@@ -233,7 +224,9 @@ namespace TGC.Examples.Collision
             }
 
             //Render personaje
-            personaje.animateAndRender(elapsedTime);
+            personaje.animateAndRender(ElapsedTime);
+
+            FinalizarEscena();
         }
 
         /// <summary>
@@ -241,23 +234,22 @@ namespace TGC.Examples.Collision
         ///     Acerca la distancia entre el persona y la camara si hay colisiones de objetos
         ///     en el medio
         /// </summary>
-        private void ajustarPosicionDeCamara(TgcSkeletalMesh personaje, List<TgcBox> obstaculos)
+        private void ajustarPosicionDeCamara(List<TgcBox> obstaculos)
         {
             //Actualizar valores de camara segun modifiers
-            var camera = GuiController.Instance.ThirdPersonCamera;
-            camera.OffsetHeight = (float)GuiController.Instance.Modifiers["offsetHeight"];
-            camera.OffsetForward = (float)GuiController.Instance.Modifiers["offsetForward"];
-            var displacement = (Vector2)GuiController.Instance.Modifiers["displacement"];
-            camera.TargetDisplacement = new Vector3(displacement.X, displacement.Y, 0);
+            ((TgcThirdPersonCamera)Camara).OffsetHeight = (float)Modifiers["offsetHeight"];
+            ((TgcThirdPersonCamera)Camara).OffsetForward = (float)Modifiers["offsetForward"];
+            var displacement = (Vector2)Modifiers["displacement"];
+            ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(displacement.X, displacement.Y, 0);
 
             //Pedirle a la camara cual va a ser su proxima posicion
             Vector3 segmentA;
             Vector3 segmentB;
-            camera.generateViewMatrix(out segmentA, out segmentB);
+            ((TgcThirdPersonCamera)Camara).generateViewMatrix(out segmentA, out segmentB);
 
             //Detectar colisiones entre el segmento de recta camara-personaje y todos los objetos del escenario
             Vector3 q;
-            var minDistSq = FastMath.Pow2(camera.OffsetForward);
+            var minDistSq = FastMath.Pow2(((TgcThirdPersonCamera)Camara).OffsetForward);
             foreach (var obstaculo in obstaculos)
             {
                 //Hay colision del segmento camara-personaje y el objeto
@@ -282,11 +274,13 @@ namespace TGC.Examples.Collision
             {
                 newOffsetForward = 10;
             }*/
-            camera.OffsetForward = newOffsetForward;
+            ((TgcThirdPersonCamera)Camara).OffsetForward = newOffsetForward;
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             piso.dispose();
             foreach (var obstaculo in obstaculos)
             {

@@ -3,10 +3,9 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
-using TGC.Util;
-using TGC.Util.Input;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Examples.Quake3Loader
@@ -228,51 +227,51 @@ namespace TGC.Examples.Quake3Loader
         public void updateCamera(float elapsedTime)
         {
             //Forward
-            if (GuiController.Instance.D3dInput.keyDown(Key.W))
+            if (TgcD3dInput.Instance.keyDown(Key.W))
             {
                 moveForward(MovementSpeed * elapsedTime);
             }
 
             //Backward
-            if (GuiController.Instance.D3dInput.keyDown(Key.S))
+            if (TgcD3dInput.Instance.keyDown(Key.S))
             {
                 moveForward(-MovementSpeed * elapsedTime);
             }
 
             //Strafe right
-            if (GuiController.Instance.D3dInput.keyDown(Key.D))
+            if (TgcD3dInput.Instance.keyDown(Key.D))
             {
                 moveSide(MovementSpeed * elapsedTime);
             }
 
             //Strafe left
-            if (GuiController.Instance.D3dInput.keyDown(Key.A))
+            if (TgcD3dInput.Instance.keyDown(Key.A))
             {
                 moveSide(-MovementSpeed * elapsedTime);
             }
 
             //Jump
-            if (GuiController.Instance.D3dInput.keyDown(Key.Space))
+            if (TgcD3dInput.Instance.keyDown(Key.Space))
             {
                 moveUp(JumpSpeed * elapsedTime);
             }
 
             //Crouch
-            if (GuiController.Instance.D3dInput.keyDown(Key.LeftControl))
+            if (TgcD3dInput.Instance.keyDown(Key.LeftControl))
             {
                 moveUp(-JumpSpeed * elapsedTime);
             }
 
-            if (GuiController.Instance.D3dInput.keyPressed(Key.L))
+            if (TgcD3dInput.Instance.keyPressed(Key.L))
             {
                 LockCam = !LockCam;
             }
 
             //Solo rotar si se esta aprentando el boton izq del mouse
-            if (lockCam || GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (lockCam || TgcD3dInput.Instance.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                rotate(-GuiController.Instance.D3dInput.XposRelative * RotationSpeed,
-                    -GuiController.Instance.D3dInput.YposRelative * RotationSpeed);
+                rotate(-TgcD3dInput.Instance.XposRelative * RotationSpeed,
+                    -TgcD3dInput.Instance.YposRelative * RotationSpeed);
             }
 
             if (lockCam)

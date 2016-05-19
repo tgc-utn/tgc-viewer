@@ -1,8 +1,12 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
-using TGC.Util;
+using TGC.Core.Geometry;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -20,35 +24,34 @@ namespace TGC.Examples.GeometryBasics
     {
         private TgcDebugBox debugBox;
 
-        public override string getCategory()
+        public CajaDebug(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "GeometryBasics";
+            Category = "GeometryBasics";
+            Name = "Caja Debug";
+            Description =
+                "Muestra como crear una caja que solo renderiza sus aristas, y no sus caras. Movimiento con mouse.";
         }
 
-        public override string getName()
-        {
-            return "Caja Debug";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear una caja que solo renderiza sus aristas, y no sus caras. Movimiento con mouse.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear caja debug vacia
             debugBox = new TgcDebugBox();
 
             //Modifiers para vararis sus parametros
-            GuiController.Instance.Modifiers.addVertex3f("size", new Vector3(0, 0, 0), new Vector3(100, 100, 100),
-                new Vector3(20, 20, 20));
-            GuiController.Instance.Modifiers.addVertex3f("position", new Vector3(-100, -100, -100),
-                new Vector3(100, 100, 100), new Vector3(0, 0, 0));
-            GuiController.Instance.Modifiers.addFloat("thickness", 0.1f, 5, 0.2f);
-            GuiController.Instance.Modifiers.addColor("color", Color.BurlyWood);
+            Modifiers.addVertex3f("size", new Vector3(0, 0, 0), new Vector3(100, 100, 100), new Vector3(20, 20, 20));
+            Modifiers.addVertex3f("position", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
+                new Vector3(0, 0, 0));
+            Modifiers.addFloat("thickness", 0.1f, 5, 0.2f);
+            Modifiers.addColor("color", Color.BurlyWood);
 
-            GuiController.Instance.RotCamera.CameraDistance = 50;
+            ((TgcRotationalCamera)Camara).CameraDistance = 50;
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -56,10 +59,10 @@ namespace TGC.Examples.GeometryBasics
         /// </summary>
         private void updateBox()
         {
-            var size = (Vector3)GuiController.Instance.Modifiers["size"];
-            var position = (Vector3)GuiController.Instance.Modifiers["position"];
-            var thickness = (float)GuiController.Instance.Modifiers["thickness"];
-            var color = (Color)GuiController.Instance.Modifiers["color"];
+            var size = (Vector3)Modifiers["size"];
+            var position = (Vector3)Modifiers["position"];
+            var thickness = (float)Modifiers["thickness"];
+            var color = (Color)Modifiers["color"];
 
             //Actualizar valores en la caja.
             debugBox.setPositionSize(position, size);
@@ -68,16 +71,23 @@ namespace TGC.Examples.GeometryBasics
             debugBox.updateValues();
         }
 
-        public override void render(float elapsedTime)
+        public override void Render()
         {
+            IniciarEscena();
+            base.Render();
+
             //Actualizar parametros de la caja
             updateBox();
 
             debugBox.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Render();
+
             debugBox.dispose();
         }
     }

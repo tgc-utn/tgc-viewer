@@ -1,9 +1,8 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using TGC.Core.Input;
 using TGC.Core.Utils;
 using TGC.Examples.MeshCreator.Gizmos;
-using TGC.Util;
-using TGC.Util.Input;
 
 namespace TGC.Examples.MeshCreator.EditablePoly
 {
@@ -48,7 +47,7 @@ namespace TGC.Examples.MeshCreator.EditablePoly
         /// </summary>
         public void update()
         {
-            var input = GuiController.Instance.D3dInput;
+            var input = TgcD3dInput.Instance;
             var pickingRay = editablePoly.Control.PickingRay;
 
             switch (currentState)

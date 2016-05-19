@@ -6,11 +6,14 @@ using System.Runtime.InteropServices;
 // asociada con un ensamblado.
 
 [assembly: AssemblyTitle("TGC.Viewer")]
-[assembly: AssemblyDescription("")]
+[assembly:
+    AssemblyDescription(
+        "Es un motor de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA)."
+        )]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TGC - UTN")]
+[assembly: AssemblyCompany("TGC - UTN.BA")]
 [assembly: AssemblyProduct("TGC.Viewer")]
-[assembly: AssemblyCopyright("Copyright © 2009")]
+[assembly: AssemblyCopyright("Copyright © 2009 - 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -18,7 +21,7 @@ using System.Runtime.InteropServices;
 // a los componentes COM. Si necesita obtener acceso a un tipo en este ensamblado desde
 // COM, establezca el atributo ComVisible como true en este tipo.
 
-[assembly: ComVisible(false)]
+[assembly: ComVisible(true)]
 
 // El siguiente GUID sirve como identificador de la biblioteca de tipos si este proyecto se expone a COM
 
@@ -32,5 +35,5 @@ using System.Runtime.InteropServices;
 //      Revisión
 //
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2.2.2.2")]
+[assembly: AssemblyFileVersion("2.2.2.2")]

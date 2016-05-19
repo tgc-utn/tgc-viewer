@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.TerrainEditor.Instances
 {

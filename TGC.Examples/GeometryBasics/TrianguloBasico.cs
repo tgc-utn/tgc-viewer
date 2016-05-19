@@ -1,9 +1,13 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -21,22 +25,16 @@ namespace TGC.Examples.GeometryBasics
         //Array de vértices para crear el triángulo
         private CustomVertex.PositionColored[] data;
 
-        public override string getCategory()
+        public TrianguloBasico(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "GeometryBasics";
+            Category = "GeometryBasics";
+            Name = "Triangulo Básico";
+            Description = "Crea un triangulo 3D básico con color. Movimiento con mouse.";
         }
 
-        public override string getName()
-        {
-            return "Triangulo Básico";
-        }
-
-        public override string getDescription()
-        {
-            return "Crea un triangulo 3D básico con color. Movimiento con mouse.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Definir array de vertices para el triangulo, del tipo Coordendas (X,Y,Z) + Color
             data = new CustomVertex.PositionColored[3];
@@ -47,22 +45,28 @@ namespace TGC.Examples.GeometryBasics
             data[2] = new CustomVertex.PositionColored(0, 1, 0, Color.Blue.ToArgb());
 
             //Configurar camara en rotacion
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0.5f, 0), 3f);
+            ((TgcRotationalCamera)Camara).setCamera(new Vector3(0, 0.5f, 0), 3f);
 
             //Cargar variables de usuario con alguna informacion util para ver en pantalla
-            GuiController.Instance.UserVars.addVar("Cantida de Vertices", data.Length);
+            UserVars.addVar("Cantida de Vertices", data.Length);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Especificar formato de triangulo
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
             //Dibujar 1 primitiva (nuestro triangulo)
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
-        }
 
-        public override void close()
-        {
+            FinalizarEscena();
         }
     }
 }

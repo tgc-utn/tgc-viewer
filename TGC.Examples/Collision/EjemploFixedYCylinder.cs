@@ -1,10 +1,13 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
-using TGC.Util;
-using TGC.Util.Input;
-using TGC.Util.TgcGeometry;
+using TGC.Core.Geometry;
+using TGC.Core.Input;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -25,42 +28,41 @@ namespace TGC.Examples.Collision
 
         private float pickingTimeLeft;
 
-        public override string getCategory()
+        public EjemploFixedYCylinder(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
-        }
-
-        public override string getName()
-        {
-            return "FixedYCylinder";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "Collision";
+            Name = "FixedYCylinder";
+            Description =
                 "Muestra distintos testeos de colision: cilindro-esfera, cilindro-cubo, cilindro-cilindro. Hacer click sobre el viewport para testear colision PickingRay-Cylinder.";
         }
 
-        public override void init()
+        public override void Init()
         {
-            collider = new TgcFixedYBoundingCylinder(new Vector3(0, 0, 0), 3, 3);
+            collider = new TgcFixedYBoundingCylinder(new Vector3(0, 0, 0), 3, 3, Camara);
             collisionableSphere = new TgcBoundingSphere(new Vector3(-6, 0, 0), 3);
             collisionableAABB = new TgcBoundingBox(new Vector3(4, 0, -1), new Vector3(6, 2, 1));
-            collisionableCylinder = new TgcFixedYBoundingCylinder(new Vector3(0, 0, -6), 2, 2);
+            collisionableCylinder = new TgcFixedYBoundingCylinder(new Vector3(0, 0, -6), 2, 2, Camara);
 
-            GuiController.Instance.Modifiers.addVertex2f("size", new Vector2(1, 1), new Vector2(5, 10),
-                new Vector2(2, 5));
-            GuiController.Instance.Modifiers.addVertex3f("position", new Vector3(-20, -20, -20), new Vector3(20, 20, 20),
-                new Vector3(0, 0, 0));
+            Modifiers.addVertex2f("size", new Vector2(1, 1), new Vector2(5, 10), new Vector2(2, 5));
+            Modifiers.addVertex3f("position", new Vector3(-20, -20, -20), new Vector3(20, 20, 20), new Vector3(0, 0, 0));
 
             collider.setRenderColor(Color.LimeGreen);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
-            var modifiers = GuiController.Instance.Modifiers;
-            var size = (Vector2)modifiers.getValue("size");
-            var position = (Vector3)modifiers.getValue("position");
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
+            var size = (Vector2)Modifiers.getValue("size");
+            var position = (Vector3)Modifiers.getValue("position");
 
             collider.Center = position;
             collider.Radius = size.X;
@@ -83,10 +85,10 @@ namespace TGC.Examples.Collision
             else
                 collisionableCylinder.setRenderColor(noCollisionColor);
 
-            if (pickingTimeLeft > 0) pickingTimeLeft -= elapsedTime;
+            if (pickingTimeLeft > 0) pickingTimeLeft -= ElapsedTime;
             else collider.setRenderColor(noCollisionColor);
 
-            if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 var pickingRay = new TgcPickingRay();
                 pickingRay.updateRay();
@@ -101,10 +103,14 @@ namespace TGC.Examples.Collision
             collisionableSphere.render();
             collisionableAABB.render();
             collisionableCylinder.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             collider.dispose();
             collisionableSphere.dispose();
             collisionableAABB.dispose();

@@ -1,4 +1,4 @@
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 
 namespace TGC.Core.PortalRendering
 {

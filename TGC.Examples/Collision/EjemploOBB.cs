@@ -1,9 +1,13 @@
 using Microsoft.DirectX;
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Collision
 {
@@ -20,28 +24,22 @@ namespace TGC.Examples.Collision
         private TgcMesh mesh;
         private TgcObb obb;
 
-        public override string getCategory()
+        public EjemploOBB(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
+            Category = "Collision";
+            Name = "OBB";
+            Description = "Muestra como crear un Oriented BoundingBox a partir de un mesh. Movimiento con mouse.";
         }
 
-        public override string getName()
-        {
-            return "OBB";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear un Oriented BoundingBox a partir de un mesh. Movimiento con mouse.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Cargar modelo
             var loader = new TgcSceneLoader();
-            var scene = loader.loadSceneFromFile(
-                GuiController.Instance.ExamplesMediaDir +
-                "MeshCreator\\Meshes\\Vehiculos\\StarWars-ATST\\StarWars-ATST-TgcScene.xml");
+            var scene =
+                loader.loadSceneFromFile(MediaDir +
+                                         "MeshCreator\\Meshes\\Vehiculos\\StarWars-ATST\\StarWars-ATST-TgcScene.xml");
             mesh = scene.Meshes[0];
 
             //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
@@ -51,18 +49,25 @@ namespace TGC.Examples.Collision
             //obb = TgcObb.computeFromPoints(mesh.getVertexPositions());
 
             //Alejar camara rotacional segun tamaño del BoundingBox del objeto
-            GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
 
             //Modifier para poder rotar y mover el mesh
-            GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);
-            GuiController.Instance.Modifiers.addVertex3f("position", new Vector3(0, 0, 0), new Vector3(50, 50, 50),
-                new Vector3(0, 0, 0));
+            Modifiers.addFloat("rotation", 0, 360, 0);
+            Modifiers.addVertex3f("position", new Vector3(0, 0, 0), new Vector3(50, 50, 50), new Vector3(0, 0, 0));
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Obtener rotacion de mesh (pasar a radianes)
-            var rotation = FastMath.ToRad((float)GuiController.Instance.Modifiers["rotation"]);
+            var rotation = FastMath.ToRad((float)Modifiers["rotation"]);
 
             //Rotar mesh y rotar OBB. A diferencia del AABB, nosotros tenemos que mantener el OBB actualizado segun cada movimiento del mesh
             var lastRot = mesh.Rotation;
@@ -71,7 +76,7 @@ namespace TGC.Examples.Collision
             obb.rotate(new Vector3(0, rotationDiff, 0));
 
             //Actualizar posicion
-            var position = (Vector3)GuiController.Instance.Modifiers["position"];
+            var position = (Vector3)Modifiers["position"];
             var lastPos = mesh.Position;
             var posDiff = position - lastPos;
             mesh.move(posDiff);
@@ -82,10 +87,14 @@ namespace TGC.Examples.Collision
 
             //Renderizar obb
             obb.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             mesh.dispose();
             obb.dispose();
         }

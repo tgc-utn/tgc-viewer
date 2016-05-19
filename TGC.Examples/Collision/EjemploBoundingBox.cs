@@ -1,6 +1,10 @@
+using System;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -16,45 +20,50 @@ namespace TGC.Examples.Collision
     {
         private TgcMesh mesh;
 
-        public override string getCategory()
+        public EjemploBoundingBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Collision";
-        }
-
-        public override string getName()
-        {
-            return "BoundingBox";
-        }
-
-        public override string getDescription()
-        {
-            return
+            Category = "Collision";
+            Name = "BoundingBox";
+            Description =
                 "Carga un modelo 3D estático mediante la herramienta TgcSceneLoader y muestra como renderizar su BoundingBox. Movimiento con mouse.";
         }
 
-        public override void init()
+        public override void Init()
         {
             //Cargar modelo estatico
             var loader = new TgcSceneLoader();
-            var scene = loader.loadSceneFromFile(
-                GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Buggy\\Buggy-TgcScene.xml");
+            var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Buggy\\Buggy-TgcScene.xml");
             mesh = scene.Meshes[0];
 
             //Alejar camara rotacional segun tamaño del BoundingBox del objeto
-            GuiController.Instance.RotCamera.targetObject(mesh.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Renderizar modelo
             mesh.render();
 
             //Renderizar BoundingBox
             mesh.BoundingBox.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             mesh.dispose();
         }
     }

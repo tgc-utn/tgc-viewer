@@ -1,8 +1,27 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TGC.Viewer.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ShadersDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Shaders\</Value>
+    </Setting>
+    <Setting Name="MediaDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Media\</Value>
+    </Setting>
+    <Setting Name="DefaultExampleCategory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Others</Value>
+    </Setting>
+    <Setting Name="DefaultExampleName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Logo de TGC</Value>
+    </Setting>
+    <Setting Name="Title" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TGC Viewer - Técnicas de Gráficos por Computadora - UTN - FRBA</Value>
+    </Setting>
+    <Setting Name="CommonShaders" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TgcViewer\</Value>
+    </Setting>
+    <Setting Name="ModifiersPanel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

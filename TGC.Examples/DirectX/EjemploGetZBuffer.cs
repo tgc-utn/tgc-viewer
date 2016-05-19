@@ -1,14 +1,16 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
-using TGC.Core._2D;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.DirectX
 {
@@ -30,35 +32,24 @@ namespace TGC.Examples.DirectX
         private Surface pOldRT;
         private Texture zBufferTexture;
 
-        public override string getCategory()
+        public EjemploGetZBuffer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "DirectX";
+            Category = "DirectX";
+            Name = "Get Z Buffer";
+            Description =
+                "Muestra como hacer un primer render de un escenario a una textura guardando ahi el valor de Z.";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "Get Z Buffer";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como hacer un primer render de un escenario a una textura guardando ahi el valor de Z.";
-        }
-
-        public override void init()
-        {
-            //Activamos el renderizado customizado. De esta forma el framework nos delega control total sobre como dibujar en pantalla
-            //La responsabilidad cae toda de nuestro lado
-            GuiController.Instance.CustomRenderEnabled = true;
-
             //Cargar shader de este ejemplo
-            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir+"EjemploGetZBuffer.fx");
+            effect = TgcShaders.loadEffect(ShadersDir + "EjemploGetZBuffer.fx");
 
             //Cargamos un escenario
             var loader = new TgcSceneLoader();
-            var scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
+            var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
             meshes = scene.Meshes;
             foreach (var mesh in meshes)
             {
@@ -73,19 +64,26 @@ namespace TGC.Examples.DirectX
                 Usage.RenderTarget, Format.R32F, Pool.Default);
 
             //Camara en 1ra persona
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.MovementSpeed = 400f;
-            GuiController.Instance.FpsCamera.JumpSpeed = 300f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(-20, 80, 450), new Vector3(0, 80, 1));
+            Camara = new TgcFpsCamera();
+            ((TgcFpsCamera)Camara).MovementSpeed = 400f;
+            ((TgcFpsCamera)Camara).JumpSpeed = 300f;
+            Camara.setCamera(new Vector3(-20, 80, 450), new Vector3(0, 80, 1));
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            base.Render();
+
             //Guardar render target original
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
 
             // 1) Mandar a dibujar todos los mesh para que se genere la textura de ZBuffer
-            D3DDevice.Instance.Device.BeginScene();
+            IniciarEscena();
 
             //Seteamos la textura de zBuffer como render  target (en lugar de dibujar a la pantalla)
             var zBufferSurface = zBufferTexture.GetSurfaceLevel(0);
@@ -100,11 +98,11 @@ namespace TGC.Examples.DirectX
             }
 
             zBufferSurface.Dispose();
-            D3DDevice.Instance.Device.EndScene();
+            FinalizarEscena();
 
             // 2) Volvemos a dibujar la escena y pasamos el ZBuffer al shader como una textura.
             // Para este ejemplo particular utilizamos el valor de Z para alterar el color del pixel
-            D3DDevice.Instance.Device.BeginScene();
+            IniciarEscena();
 
             //Restaurar render target original
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
@@ -122,17 +120,13 @@ namespace TGC.Examples.DirectX
                 mesh.render();
             }
 
-            D3DDevice.Instance.Device.EndScene();
-
-            //Mostrar FPS
-            D3DDevice.Instance.Device.BeginScene();
-            TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0,
-                Color.Yellow);
-            D3DDevice.Instance.Device.EndScene();
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             pOldRT.Dispose();
             zBufferTexture.Dispose();
             foreach (var mesh in meshes)

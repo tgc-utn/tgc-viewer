@@ -1,8 +1,8 @@
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
-using TGC.Util;
+using TGC.Core.UserControls;
 
 namespace TGC.Examples.Engine2D
 {
@@ -21,8 +21,12 @@ namespace TGC.Examples.Engine2D
 
         private Drawer spriteDrawer;
 
-        internal void Init(string exampleDir)
+        public TgcUserVars userVars;
+
+        internal void Init(string exampleDir, TgcUserVars userVars)
         {
+            this.userVars = userVars;
+
             //Creo el sprite drawer
             spriteDrawer = new Drawer();
 
@@ -124,7 +128,7 @@ namespace TGC.Examples.Engine2D
             CheckMisileAsteroidCollisions();
             CheckSpaceShipAsteroidCollisions();
 
-            GuiController.Instance.UserVars.setValue("Misiles", misiles.Count);
+            userVars.setValue("Misiles", misiles.Count);
         }
 
         internal void Render(float elapsedTime)

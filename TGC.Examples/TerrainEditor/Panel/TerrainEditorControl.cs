@@ -4,13 +4,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
-using TGC.Examples.MeshCreator;
+using TGC.Core.UserControls.Modifier;
 using TGC.Examples.TerrainEditor.Brushes;
 using TGC.Examples.TerrainEditor.Brushes.Terrain;
 using TGC.Examples.TerrainEditor.Brushes.Vegetation;
 using TGC.Examples.TerrainEditor.Instances;
-using TGC.Util;
-using TGC.Util.Modifiers;
 
 namespace TGC.Examples.TerrainEditor.Panel
 {

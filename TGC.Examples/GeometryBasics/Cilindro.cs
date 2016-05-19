@@ -1,11 +1,15 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -17,25 +21,19 @@ namespace TGC.Examples.GeometryBasics
         private string currentTexture;
         private TgcCylinder cylinder;
 
-        public override string getCategory()
+        public Cilindro(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "GeometryBasics";
+            Category = "GeometryBasics";
+            Name = "Crear Cilindro 3D";
+            Description =
+                "Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parámetros pueden ser modificados. Movimiento con mouse.";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "Crear Cilindro 3D";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parámetros " +
-                   "pueden ser modificados. Movimiento con mouse.";
-        }
-
-        public override void init()
-        {
-            cylinder = new TgcCylinder(new Vector3(0, 0, 0), 2, 4);
+            cylinder = new TgcCylinder(new Vector3(0, 0, 0), 2, 4, Camara);
 
             //cylinder.Transform = Matrix.Scaling(2, 1, 1) * Matrix.RotationYawPitchRoll(0, 0, 1);
             //cylinder.AutoTransformEnable = false;
@@ -43,25 +41,30 @@ namespace TGC.Examples.GeometryBasics
 
             cylinder.AlphaBlendEnable = true;
 
-            GuiController.Instance.Modifiers.addBoolean("boundingCylinder", "boundingCylinder", false);
-            GuiController.Instance.Modifiers.addColor("color", Color.White);
-            GuiController.Instance.Modifiers.addInt("alpha", 0, 255, 255);
-            GuiController.Instance.Modifiers.addTexture("texture",
-                GuiController.Instance.ExamplesMediaDir + "\\Texturas\\madera.jpg");
-            GuiController.Instance.Modifiers.addBoolean("useTexture", "useTexture", true);
+            Modifiers.addBoolean("boundingCylinder", "boundingCylinder", false);
+            Modifiers.addColor("color", Color.White);
+            Modifiers.addInt("alpha", 0, 255, 255);
+            Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
+            Modifiers.addBoolean("useTexture", "useTexture", true);
 
-            GuiController.Instance.Modifiers.addVertex3f("size", new Vector3(-3, -3, 1), new Vector3(7, 7, 10),
-                new Vector3(2, 2, 5));
-            GuiController.Instance.Modifiers.addVertex3f("position", new Vector3(-20, -20, -20), new Vector3(20, 20, 20),
-                new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("size", new Vector3(-3, -3, 1), new Vector3(7, 7, 10), new Vector3(2, 2, 5));
+            Modifiers.addVertex3f("position", new Vector3(-20, -20, -20), new Vector3(20, 20, 20), new Vector3(0, 0, 0));
             var angle = FastMath.TWO_PI;
-            GuiController.Instance.Modifiers.addVertex3f("rotation", new Vector3(-angle, -angle, -angle),
-                new Vector3(angle, angle, angle), new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("rotation", new Vector3(-angle, -angle, -angle), new Vector3(angle, angle, angle),
+                new Vector3(0, 0, 0));
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
-            var modifiers = GuiController.Instance.Modifiers;
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
+            var modifiers = Modifiers;
             var size = (Vector3)modifiers.getValue("size");
             var position = (Vector3)modifiers.getValue("position");
             var rotation = (Vector3)modifiers.getValue("rotation");
@@ -91,10 +94,14 @@ namespace TGC.Examples.GeometryBasics
                 cylinder.BoundingCylinder.render();
             else
                 cylinder.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             cylinder.dispose();
         }
     }

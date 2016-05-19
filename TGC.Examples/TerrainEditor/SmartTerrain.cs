@@ -2,12 +2,11 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.TerrainEditor
 {

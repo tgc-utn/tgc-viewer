@@ -1,9 +1,13 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -23,22 +27,16 @@ namespace TGC.Examples.GeometryBasics
         //Vertex buffer que se va a utilizar
         private VertexBuffer vertexBuffer;
 
-        public override string getCategory()
+        public TrianguloVertexBuffer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "GeometryBasics";
+            Category = "GeometryBasics";
+            Name = "Triangulo VertexBuffer";
+            Description = "Crea un triangulo 3D con color, utilizando Vertex Buffer. Movimiento con mouse.";
         }
 
-        public override string getName()
-        {
-            return "Triangulo VertexBuffer";
-        }
-
-        public override string getDescription()
-        {
-            return "Crea un triangulo 3D con color, utilizando Vertex Buffer. Movimiento con mouse.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear vertexBuffer
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, D3DDevice.Instance.Device,
@@ -54,25 +52,37 @@ namespace TGC.Examples.GeometryBasics
             vertexBuffer.SetData(data, 0, LockFlags.None);
 
             //Configurar camara en rotacion
-            GuiController.Instance.RotCamera.setCamera(new Vector3(0, 0.5f, 0), 3f);
+            ((TgcRotationalCamera)Camara).setCamera(new Vector3(0, 0.5f, 0), 3f);
 
             //User Vars
-            GuiController.Instance.UserVars.addVar("Vertices");
-            GuiController.Instance.UserVars.setValue("Vertices", data.Length);
+            UserVars.addVar("Vertices");
+            UserVars.setValue("Vertices", data.Length);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Especificar formato de triangulos
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
             //Cargar VertexBuffer a renderizar
             D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
             //Dibujar 1 primitiva
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             //liberar VertexBuffer
             vertexBuffer.Dispose();
         }

@@ -2,10 +2,9 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
+using TGC.Core.Camara;
 using TGC.Core.Input;
 using TGC.Core.Utils;
-using TGC.Util;
-using TGC.Util.Input;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Examples.TerrainEditor
@@ -82,14 +81,7 @@ namespace TGC.Examples.TerrainEditor
                 return;
             }
 
-            var d3dInput = GuiController.Instance.D3dInput;
-
-            //Imprimir por consola la posicion actual de la camara
-            if ((d3dInput.keyDown(Key.LeftShift) || d3dInput.keyDown(Key.RightShift)) && d3dInput.keyPressed(Key.P))
-            {
-                GuiController.Instance.Logger.logVector3(getPosition());
-                return;
-            }
+            var d3dInput = TgcD3dInput.Instance;
 
             var heading = 0.0f;
             var pitch = 0.0f;

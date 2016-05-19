@@ -1,15 +1,17 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
-using TGC.Core._2D;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Interpolation;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.PostProcess
 {
@@ -35,27 +37,18 @@ namespace TGC.Examples.PostProcess
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
-        public override string getCategory()
+        public EfectoOscurecer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "PostProcess";
+            Category = "PostProcess";
+            Name = "Efecto Oscurecer";
+            Description =
+                "Graba la escena a un Render Target y luego con un pixel shader la oscurece en forma intermitente.";
         }
 
-        public override string getName()
+        public override void Init()
         {
-            return "Efecto Oscurecer";
-        }
-
-        public override string getDescription()
-        {
-            return "Graba la escena a un Render Target y luego con un pixel shader la oscurece en forma intermitente.";
-        }
-
-        public override void init()
-        {
-            //Activamos el renderizado customizado. De esta forma el framework nos delega control total sobre como dibujar en pantalla
-            //La responsabilidad cae toda de nuestro lado
-            GuiController.Instance.CustomRenderEnabled = true;
-
             //Se crean 2 triangulos (o Quad) con las dimensiones de la pantalla con sus posiciones ya transformadas
             // x = -1 es el extremo izquiedo de la pantalla, x = 1 es el extremo derecho
             // Lo mismo para la Y con arriba y abajo
@@ -80,7 +73,7 @@ namespace TGC.Examples.PostProcess
                 Format.X8R8G8B8, Pool.Default);
 
             //Cargar shader con efectos de Post-Procesado
-            effect = TgcShaders.loadEffect(GuiController.Instance.ShadersDir + "PostProcess.fx");
+            effect = TgcShaders.loadEffect(ShadersDir + "PostProcess.fx");
 
             //Configurar Technique dentro del shader
             effect.Technique = "OscurecerTechnique";
@@ -94,22 +87,27 @@ namespace TGC.Examples.PostProcess
 
             //Cargamos un escenario
             var loader = new TgcSceneLoader();
-            var scene =
-                loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir +
-                                         "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
+            var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
             meshes = scene.Meshes;
 
             //Camara en primera personas
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f),
+            Camara = new TgcFpsCamera();
+            Camara.setCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f),
                 new Vector3(-182.0957f, 82.3147f, -810.9479f));
 
             //Modifier para activar/desactivar efecto de oscurecer
-            GuiController.Instance.Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
+            Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            base.Render();
+
             //Cargamos el Render Targer al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
             //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro Render Target.
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
@@ -124,13 +122,13 @@ namespace TGC.Examples.PostProcess
             pSurf.Dispose();
 
             //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
-            //TextureLoader.Save(GuiController.Instance.ShadersDir + "render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
+            //TextureLoader.Save(this.ShadersDir + "render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
 
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
-            drawPostProcess(D3DDevice.Instance.Device, elapsedTime);
+            drawPostProcess(D3DDevice.Instance.Device, ElapsedTime);
         }
 
         /// <summary>
@@ -141,13 +139,6 @@ namespace TGC.Examples.PostProcess
         {
             //Arrancamos el renderizado. Esto lo tenemos que hacer nosotros a mano porque estamos en modo CustomRenderEnabled = true
             d3dDevice.BeginScene();
-
-            //Como estamos en modo CustomRenderEnabled, tenemos que dibujar todo nosotros, incluso el contador de FPS
-            TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0,
-                Color.Yellow);
-
-            //Tambien hay que dibujar el indicador de los ejes cartesianos
-            GuiController.Instance.AxisLines.render();
 
             //Dibujamos todos los meshes del escenario
             foreach (var m in meshes)
@@ -172,7 +163,7 @@ namespace TGC.Examples.PostProcess
             d3dDevice.SetStreamSource(0, screenQuadVB, 0);
 
             //Ver si el efecto de oscurecer esta activado, configurar Technique del shader segun corresponda
-            var activar_efecto = (bool)GuiController.Instance.Modifiers["activar_efecto"];
+            var activar_efecto = (bool)Modifiers["activar_efecto"];
             if (activar_efecto)
             {
                 effect.Technique = "OscurecerTechnique";
@@ -198,8 +189,10 @@ namespace TGC.Examples.PostProcess
             d3dDevice.EndScene();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             foreach (var m in meshes)
             {
                 m.dispose();

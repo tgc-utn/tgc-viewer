@@ -1,14 +1,18 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
-using TGC.Util;
 
 namespace TGC.Examples.Lights
 {
@@ -32,26 +36,20 @@ namespace TGC.Examples.Lights
         private List<LightData> lights;
         private TgcScene scene;
 
-        public override string getCategory()
+        public EjemploMultipleLights(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Lights";
+            Category = "Lights";
+            Name = "Multiple Lights";
+            Description = "Escenario con muchas luces dinamicas.";
         }
 
-        public override string getName()
-        {
-            return "Multiple Lights";
-        }
-
-        public override string getDescription()
-        {
-            return "Escenario con muchas luces dinamicas";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Cargar escenario, pero inicialmente solo hacemos el parser, para separar los objetos que son solo luces y no meshes
-            var scenePath = GuiController.Instance.ExamplesMediaDir + "Escenario\\EscenarioLuces-TgcScene.xml";
-            var mediaPath = GuiController.Instance.ExamplesMediaDir + "Escenario\\";
+            var scenePath = MediaDir + "Escenario\\EscenarioLuces-TgcScene.xml";
+            var mediaPath = MediaDir + "Escenario\\";
             var parser = new TgcSceneParser();
             var sceneData = parser.parseSceneFromString(File.ReadAllText(scenePath));
 
@@ -89,28 +87,36 @@ namespace TGC.Examples.Lights
             scene = loader.loadScene(sceneData, mediaPath);
 
             //Camara en 1ra persona
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.MovementSpeed = 400f;
-            GuiController.Instance.FpsCamera.JumpSpeed = 300f;
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(-20, 80, 450), new Vector3(0, 80, 1));
+            Camara = new TgcFpsCamera();
+            ((TgcFpsCamera)Camara).MovementSpeed = 400f;
+            ((TgcFpsCamera)Camara).JumpSpeed = 300f;
+            Camara.setCamera(new Vector3(-20, 80, 450), new Vector3(0, 80, 1));
 
             //Modifiers para variables de luz
-            GuiController.Instance.Modifiers.addBoolean("lightEnable", "lightEnable", true);
-            GuiController.Instance.Modifiers.addFloat("lightIntensity", 0, 150, 20);
-            GuiController.Instance.Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
-            GuiController.Instance.Modifiers.addFloat("specularEx", 0, 20, 9f);
+            Modifiers.addBoolean("lightEnable", "lightEnable", true);
+            Modifiers.addFloat("lightIntensity", 0, 150, 20);
+            Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
+            Modifiers.addFloat("specularEx", 0, 20, 9f);
 
             //Modifiers para material
-            GuiController.Instance.Modifiers.addColor("mEmissive", Color.Black);
-            GuiController.Instance.Modifiers.addColor("mAmbient", Color.White);
-            GuiController.Instance.Modifiers.addColor("mDiffuse", Color.White);
-            GuiController.Instance.Modifiers.addColor("mSpecular", Color.White);
+            Modifiers.addColor("mEmissive", Color.Black);
+            Modifiers.addColor("mAmbient", Color.White);
+            Modifiers.addColor("mDiffuse", Color.White);
+            Modifiers.addColor("mSpecular", Color.White);
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Habilitar luz
-            var lightEnable = (bool)GuiController.Instance.Modifiers["lightEnable"];
+            var lightEnable = (bool)Modifiers["lightEnable"];
             Effect currentShader;
             if (lightEnable)
             {
@@ -175,26 +181,22 @@ namespace TGC.Examples.Lights
                     //Cargar variables shader de la luz
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(light.color));
                     mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(light.pos));
-                    mesh.Effect.SetValue("eyePosition",
-                        TgcParserUtils.vector3ToFloat4Array(GuiController.Instance.FpsCamera.getPosition()));
-                    mesh.Effect.SetValue("lightIntensity", (float)GuiController.Instance.Modifiers["lightIntensity"]);
-                    mesh.Effect.SetValue("lightAttenuation",
-                        (float)GuiController.Instance.Modifiers["lightAttenuation"]);
+                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.getPosition()));
+                    mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
+                    mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
 
                     //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                    mesh.Effect.SetValue("materialEmissiveColor",
-                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mEmissive"]));
-                    mesh.Effect.SetValue("materialAmbientColor",
-                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mAmbient"]));
-                    mesh.Effect.SetValue("materialDiffuseColor",
-                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mDiffuse"]));
-                    mesh.Effect.SetValue("materialSpecularColor",
-                        ColorValue.FromColor((Color)GuiController.Instance.Modifiers["mSpecular"]));
-                    mesh.Effect.SetValue("materialSpecularExp", (float)GuiController.Instance.Modifiers["specularEx"]);
+                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color)Modifiers["mEmissive"]));
+                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color)Modifiers["mAmbient"]));
+                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color)Modifiers["mDiffuse"]));
+                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color)Modifiers["mSpecular"]));
+                    mesh.Effect.SetValue("materialSpecularExp", (float)Modifiers["specularEx"]);
                 }
 
                 //Renderizar modelo
                 mesh.render();
+
+                FinalizarEscena();
             }
         }
 
@@ -219,8 +221,10 @@ namespace TGC.Examples.Lights
             return minLight;
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             scene.disposeAll();
         }
 

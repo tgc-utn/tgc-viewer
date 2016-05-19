@@ -2,13 +2,13 @@
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Util;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -73,7 +73,7 @@ namespace TGC.Examples.Quake3Loader
         /// <returns>Mapa cargado</returns>
         public BspMap loadBsp(string bspFilePath, string mediaPath)
         {
-            GuiController.Instance.Logger.log("Cargando BSP file: " + bspFilePath);
+            Debug.WriteLine("Cargando BSP file: " + bspFilePath);
 
             var bspMap = new BspMap();
 
@@ -146,7 +146,7 @@ namespace TGC.Examples.Quake3Loader
             bspMap.Data.entdata = enc.GetString(arrayByte, header.lumps[(int)LumpEnum.Entities].fileofs,
                 header.lumps[(int)LumpEnum.Entities].filelen);
 
-            //GuiController.Instance.Logger.log(bspMap.Data.entdata);
+            Debug.WriteLine(bspMap.Data.entdata);
 
             //leafs
             offset = header.lumps[(int)LumpEnum.Leafs].fileofs;
@@ -565,7 +565,7 @@ namespace TGC.Examples.Quake3Loader
                     else
                     {
                         //logea el shader que no se pudo cargar
-                        GuiController.Instance.Logger.log("ID:" + i + " " + shader_text);
+                        Debug.WriteLine("ID:" + i + " " + shader_text);
                     }
                 }
             }
@@ -582,7 +582,7 @@ namespace TGC.Examples.Quake3Loader
         /// <param name="targetFolder">Carpeta destino</param>
         public void packLevel(BspMap bspMap, string mediaPath, string targetFolder)
         {
-            GuiController.Instance.Logger.log("Empaquetando: nivel: " + bspMap.Data.filePath);
+            Debug.WriteLine("Empaquetando: nivel: " + bspMap.Data.filePath);
             //copia el archivo bsp en la carpeta maps
             var mapa = bspMap.Data.filePath.Substring(bspMap.Data.filePath.LastIndexOf("\\") + 1);
             fileCopy(bspMap.Data.filePath, targetFolder + "\\maps\\" + mapa);
@@ -640,8 +640,6 @@ namespace TGC.Examples.Quake3Loader
                     }
                 }
             }
-
-            GuiController.Instance.Logger.log("Empaquetando Exitoso");
         }
 
         /// <summary>

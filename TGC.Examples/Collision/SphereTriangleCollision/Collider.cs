@@ -1,5 +1,5 @@
 ﻿using Microsoft.DirectX;
-using TGC.Core.Geometries;
+using TGC.Core.Geometry;
 
 namespace TGC.Examples.Collision.SphereTriangleCollision
 {

@@ -1,10 +1,15 @@
 using Microsoft.DirectX;
+using System;
 using System.Drawing;
+using TGC.Core;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
-using TGC.Core.Geometries;
+using TGC.Core.Fog;
+using TGC.Core.Geometry;
 using TGC.Core.Textures;
-using TGC.Util;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Examples.Fog
 {
@@ -18,57 +23,65 @@ namespace TGC.Examples.Fog
     public class EfectoNiebla : TgcExample
     {
         private TgcBox box;
+        private TgcFog fog;
 
-        public override string getCategory()
+        public EfectoNiebla(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
+            TgcAxisLines axisLines, TgcCamera camara)
+            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            return "Fog";
+            Category = "Fog";
+            Name = "Efecto Niebla";
+            Description = "Muestra como utilizar el efecto niebla y como configurar sus diversos atributos.";
         }
 
-        public override string getName()
-        {
-            return "Efecto Niebla";
-        }
-
-        public override string getDescription()
-        {
-            return "Muestra como utilizar el efecto niebla y como configurar sus diversos atributos.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear caja
             box = TgcBox.fromSize(new Vector3(100, 100, 100),
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    GuiController.Instance.ExamplesMediaDir + "Texturas\\pasto.jpg"));
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg"));
 
             //Camara rotacional
-            GuiController.Instance.RotCamera.targetObject(box.BoundingBox);
+            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
 
             //Modifiers para configurar valores de niebla
-            GuiController.Instance.Modifiers.addBoolean("Enabled", "Enabled", true);
-            GuiController.Instance.Modifiers.addFloat("startDistance", 1, 1000, 100);
-            GuiController.Instance.Modifiers.addFloat("endDistance", 1, 1000, 500);
-            GuiController.Instance.Modifiers.addFloat("density", 1, 10, 1);
-            GuiController.Instance.Modifiers.addColor("color", Color.Gray);
+            Modifiers.addBoolean("Enabled", "Enabled", true);
+            Modifiers.addFloat("startDistance", 1, 1000, 100);
+            Modifiers.addFloat("endDistance", 1, 1000, 500);
+            Modifiers.addFloat("density", 1, 10, 1);
+            Modifiers.addColor("color", Color.Gray);
+
+            fog = new TgcFog();
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
         {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            IniciarEscena();
+            base.Render();
+
             //Cargar valores de niebla
-            GuiController.Instance.Fog.Enabled = (bool)GuiController.Instance.Modifiers["Enabled"];
-            GuiController.Instance.Fog.StartDistance = (float)GuiController.Instance.Modifiers["startDistance"];
-            GuiController.Instance.Fog.EndDistance = (float)GuiController.Instance.Modifiers["endDistance"];
-            GuiController.Instance.Fog.Density = (float)GuiController.Instance.Modifiers["density"];
-            GuiController.Instance.Fog.Color = (Color)GuiController.Instance.Modifiers["color"];
+            fog.Enabled = (bool)Modifiers["Enabled"];
+            fog.StartDistance = (float)Modifiers["startDistance"];
+            fog.EndDistance = (float)Modifiers["endDistance"];
+            fog.Density = (float)Modifiers["density"];
+            fog.Color = (Color)Modifiers["color"];
 
             //Actualizar valores
-            GuiController.Instance.Fog.updateValues();
+            fog.updateValues();
 
             box.render();
+
+            FinalizarEscena();
         }
 
-        public override void close()
+        public override void Close()
         {
+            base.Close();
+
             box.dispose();
         }
     }

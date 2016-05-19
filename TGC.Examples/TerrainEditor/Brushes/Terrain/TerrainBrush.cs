@@ -1,12 +1,11 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Core.Geometry;
 using TGC.Core._2D;
-using TGC.Core.Geometries;
+using TGC.Core.Input;
+using TGC.Core.Sound;
 using TGC.Core.Utils;
-using TGC.Util;
-using TGC.Util.Input;
-using TGC.Util.Sound;
 
 namespace TGC.Examples.TerrainEditor.Brushes.Terrain
 {
@@ -252,10 +251,10 @@ namespace TGC.Examples.TerrainEditor.Brushes.Terrain
             var changes = false;
             if (Enabled)
             {
-                if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+                if (TgcD3dInput.Instance.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
                 {
                     reproduceSound();
-                    var invert = GuiController.Instance.D3dInput.keyDown(Key.LeftAlt);
+                    var invert = TgcD3dInput.Instance.keyDown(Key.LeftAlt);
 
                     var oldInvert = Invert;
                     Invert ^= invert;

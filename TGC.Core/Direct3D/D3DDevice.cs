@@ -1,6 +1,8 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Diagnostics;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
@@ -39,13 +41,17 @@ namespace TGC.Core.Direct3D
         /// </summary>
         public Color ClearColor { get; set; }
 
+        public int Width { get; set; }
+
+        public int Height { get; set; }
+
         /// <summary>
         ///     Valores default del Direct3d Device
         /// </summary>
-        public void setDefaultValues()
+        public void DefaultValues()
         {
             //Frustum values
-            Device.Transform.Projection = Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), AspectRatio,
+            Device.Transform.Projection = Matrix.PerspectiveFovLH(FastMath.ToRad(45.0f), AspectRatio,
                 ZNearPlaneDistance, ZFarPlaneDistance);
 
             //Render state
@@ -64,7 +70,7 @@ namespace TGC.Core.Direct3D
             //Alpha Blending
             Device.RenderState.AlphaBlendEnable = false;
             Device.RenderState.AlphaTestEnable = false;
-            Device.RenderState.ReferenceAlpha = 50;//verificar un valor optimo.
+            Device.RenderState.ReferenceAlpha = 50; //verificar un valor optimo.
             Device.RenderState.AlphaFunction = Compare.Greater;
             Device.RenderState.BlendOperation = BlendOperation.Add;
             Device.RenderState.SourceBlend = Blend.SourceAlpha;
@@ -104,6 +110,64 @@ namespace TGC.Core.Direct3D
             this.Device.RenderState.PointScaleB = 1.0f;
             this.Device.RenderState.PointScaleC = 0.0f;
              */
+        }
+
+        public void InitializeD3DDevice(Panel panel)
+        {
+            AspectRatio = (float)panel.Width / panel.Height;
+            Width = panel.Width;
+            Height = panel.Height;
+
+            var caps = Manager.GetDeviceCaps(Manager.Adapters.Default.Adapter, DeviceType.Hardware);
+            Debug.WriteLine("Max primitive count:" + caps.MaxPrimitiveCount);
+
+            CreateFlags flags;
+            if (caps.DeviceCaps.SupportsHardwareTransformAndLight)
+                flags = CreateFlags.HardwareVertexProcessing;
+            else
+                flags = CreateFlags.SoftwareVertexProcessing;
+
+            var d3dpp = new PresentParameters();
+
+            d3dpp.BackBufferFormat = Format.Unknown;
+            d3dpp.SwapEffect = SwapEffect.Discard;
+            d3dpp.Windowed = true;
+            d3dpp.EnableAutoDepthStencil = true;
+            d3dpp.AutoDepthStencilFormat = DepthFormat.D24S8;
+            d3dpp.PresentationInterval = PresentInterval.Immediate;
+
+            //Antialiasing
+            if (Manager.CheckDeviceMultiSampleType(Manager.Adapters.Default.Adapter, DeviceType.Hardware,
+                Manager.Adapters.Default.CurrentDisplayMode.Format, true, MultiSampleType.NonMaskable))
+            {
+                d3dpp.MultiSample = MultiSampleType.NonMaskable;
+                d3dpp.MultiSampleQuality = 0;
+            }
+            else
+            {
+                d3dpp.MultiSample = MultiSampleType.None;
+            }
+
+            //Crear Graphics Device
+            Device.IsUsingEventHandlers = false;
+            var d3DDevice = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
+
+            Device = d3DDevice;
+        }
+
+        public void FillModeWireFrame()
+        {
+            Device.RenderState.FillMode = FillMode.WireFrame;
+        }
+
+        public void FillModeWireSolid()
+        {
+            Device.RenderState.FillMode = FillMode.Solid;
+        }
+
+        public void Clear()
+        {
+            Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Instance.ClearColor, 1.0f, 0);
         }
     }
 }
