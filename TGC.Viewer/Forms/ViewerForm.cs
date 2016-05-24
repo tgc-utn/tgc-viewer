@@ -27,6 +27,9 @@ namespace TGC.Viewer.Forms
 
             modelo = new ViewerModel();
 
+            //Verificamos la carpeta Media
+            modelo.CheckMediaFolder();
+
             //Iniciar graficos
             modelo.InitGraphics(this, treeViewExamples, panel3d, flowLayoutPanelModifiers, dataGridUserVars,
                 toolStripStatusCurrentExample);

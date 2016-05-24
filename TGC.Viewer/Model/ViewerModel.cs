@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using TGC.Core;
@@ -228,6 +231,42 @@ namespace TGC.Viewer.Model
             {
                 ExecuteExample(exampleBackup);
             }
+        }
+
+        public void CheckMediaFolder()
+        {
+            //if (!Directory.Exists(Environment.CurrentDirectory + "\\" + Settings.Default.MediaDirectory))
+            {
+                WebClient client = new WebClient();
+
+                client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+                client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+
+                // Starts the download
+                //client.DownloadFileAsync(new Uri("http://tgcutn.com.ar/images/logotp.png"), @"C:\Users\Mito\Downloads\logotp.png");
+
+                //btnStartDownload.Text = "Download In Process";
+                //btnStartDownload.Enabled = false;
+            }
+        }
+
+        void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            double bytesIn = double.Parse(e.BytesReceived.ToString());
+            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+            double percentage = bytesIn / totalBytes * 100;
+
+            Console.Write(int.Parse(Math.Truncate(percentage).ToString()));
+        }
+
+        void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+
+            MessageBox.Show("Download Completed");
+
+            //btnStartDownload.Text = "Start Download";
+            //btnStartDownload.Enabled = true;
+
         }
     }
 }

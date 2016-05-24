@@ -25,6 +25,7 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
         * [GTK# for .NET](http://download.xamarin.com/GTKforWindows/Windows/gtk-sharp-2.12.30.msi) (instalar segundo)
 
 ### Colaboradores
+* [Daniela Kazarian](https://github.com/Dkazarian)
 * [Leandro Barbagallo](https://github.com/lebarba)
 * [Lucio Moya](https://github.com/DNAngeluS)
 * [Mariano Banquiero](https://github.com/mbanquiero)

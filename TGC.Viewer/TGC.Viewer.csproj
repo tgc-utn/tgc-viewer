@@ -158,8 +158,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF NOT EXIST "Media\" START XCOPY "$(SolutionDir)TGC.Examples\Media" "Media\" /Y /S
-START XCOPY "$(SolutionDir)TGC.Group\Media" "Media\" /D /Y /S
+    <PostBuildEvent>START XCOPY "$(SolutionDir)TGC.Group\Media" "Media\" /D /Y /S
 IF NOT EXIST "Shaders\" START XCOPY "$(SolutionDir)TGC.Examples\Shaders" "Shaders\" /Y /S</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
