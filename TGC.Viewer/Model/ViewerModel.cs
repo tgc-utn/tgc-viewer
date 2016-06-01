@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using TGC.Core;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Input;
@@ -44,8 +45,6 @@ namespace TGC.Viewer.Model
             var settings = Settings.Default;
 
             D3DDevice.Instance.InitializeD3DDevice(this.panel3D);
-            D3DDevice.Instance.Device.DeviceReset += OnResetDevice;
-            OnResetDevice(D3DDevice.Instance.Device, null);
 
             //Iniciar otras herramientas
             TgcD3dInput.Instance.Initialize(this.form, this.panel3D);
@@ -126,29 +125,6 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        ///     This event-handler is a good place to create and initialize any
-        ///     Direct3D related objects, which may become invalid during a
-        ///     device reset.
-        /// </summary>
-        public void OnResetDevice(object sender, EventArgs e)
-        {
-            //TODO antes hacia esto que no entiendo porque GuiController.Instance.onResetDevice();
-            //ese metodo se movio a mainform, pero solo detenia el ejemplo ejecutaba doresetdevice y lo volvia a cargar...
-            doResetDevice();
-        }
-
-        /// <summary>
-        ///     Hace las operaciones de Reset del device
-        /// </summary>
-        public void doResetDevice()
-        {
-            D3DDevice.Instance.DefaultValues();
-
-            //Reset Timer
-            HighResolutionTimer.Instance.Reset();
-        }
-
-        /// <summary>
         ///     Arranca a ejecutar un ejemplo.
         ///     Para el ejemplo anterior, si hay alguno.
         /// </summary>
@@ -199,7 +175,7 @@ namespace TGC.Viewer.Model
             }
 
             //Liberar Device al finalizar la aplicacion
-            D3DDevice.Instance.Device.Dispose();
+            D3DDevice.Instance.Dispose();
             TexturesPool.Instance.clearAll();
 
             //Application.Exit();
@@ -222,12 +198,45 @@ namespace TGC.Viewer.Model
                 StopCurrentExample();
             }
 
-            doResetDevice();
+            D3DDevice.Instance.DoResetDevice();
 
             if (exampleBackup != null)
             {
                 ExecuteExample(exampleBackup);
             }
+        }
+
+        public void DownloadMediaFolder()
+        {
+            WebClient client = new WebClient();
+
+            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
+            client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+
+            // Starts the download
+            //client.DownloadFileAsync(new Uri("http://tgcutn.com.ar/images/logotp.png"), @"C:\Users\Mito\Downloads\logotp.png");
+
+            //btnStartDownload.Text = "Download In Process";
+            //btnStartDownload.Enabled = false;
+        }
+
+        private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            double bytesIn = double.Parse(e.BytesReceived.ToString());
+            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+            double percentage = bytesIn / totalBytes * 100;
+
+            Console.Write(int.Parse(Math.Truncate(percentage).ToString()));
+        }
+
+        private void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+
+            MessageBox.Show("Download Completed");
+
+            //btnStartDownload.Text = "Start Download";
+            //btnStartDownload.Enabled = true;
+
         }
     }
 }

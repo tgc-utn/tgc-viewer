@@ -21,10 +21,12 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
 * IDEs compatibles
     * [Visual Studio Community Edition](https://www.visualstudio.com/es-ar/products/visual-studio-community-vs)
     * [MonoDevelop](http://www.monodevelop.com) (instalar despúes de las siguientes dependencias)
-        * [Microsoft .NET Framework 4.5.2](https://www.microsoft.com/es-ES/download/details.aspx?id=42643) (instalar primero)
+        * [Microsoft .NET Framework 4.5.2 Developer Pack](https://www.microsoft.com/es-ar/download/details.aspx?id=42637) (instalar primero)
         * [GTK# for .NET](http://download.xamarin.com/GTKforWindows/Windows/gtk-sharp-2.12.30.msi) (instalar segundo)
+        * [Microsoft Build Tools 2015](https://www.microsoft.com/es-ar/download/details.aspx?id=48159) (instalar para poder generar la solución de tgc-viewer)
 
 ### Colaboradores
+* [Daniela Kazarian](https://github.com/Dkazarian)
 * [Leandro Barbagallo](https://github.com/lebarba)
 * [Lucio Moya](https://github.com/DNAngeluS)
 * [Mariano Banquiero](https://github.com/mbanquiero)
