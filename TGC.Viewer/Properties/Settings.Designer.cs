@@ -106,5 +106,17 @@ namespace TGC.Viewer.Properties {
                 this["ModifiersPanel"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://drive.google.com/open?id=0B8iAMXTVXrJeOGpIbWhUbjJPaE0")]
+        public string MediaLink {
+            get {
+                return ((string)(this["MediaLink"]));
+            }
+            set {
+                this["MediaLink"] = value;
+            }
+        }
     }
 }

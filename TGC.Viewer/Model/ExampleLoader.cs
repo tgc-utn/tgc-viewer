@@ -33,7 +33,7 @@ namespace TGC.Viewer.Model
             this.shadersDirectory = shadersDirectory;
             userVars = new TgcUserVars(dataGridUserVars);
             modifiers = new TgcModifiers(flowLayoutPanelModifiers);
-            axisLines = new TgcAxisLines(D3DDevice.Instance.Device);
+            axisLines = new TgcAxisLines();
             //Es la camara que ponemos por default
             camara = new TgcRotationalCamera();
         }

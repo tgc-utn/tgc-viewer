@@ -30,10 +30,10 @@ namespace TGC.Core
 
         private readonly VertexBuffer vertexBuffer;
 
-        public TgcAxisLines(Device d3dDevice)
+        public TgcAxisLines()
         {
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), lineVertices.Length,
-                d3dDevice, Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+                D3DDevice.Instance.Device, Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             vertexBuffer.Created += onVertexBufferCreate;
             onVertexBufferCreate(vertexBuffer, null);

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
+using System;
 
 namespace TGC.Core.Direct3D
 {
@@ -153,6 +154,9 @@ namespace TGC.Core.Direct3D
             var d3DDevice = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
 
             Device = d3DDevice;
+
+            Device.DeviceReset += OnResetDevice;
+            OnResetDevice(Device, null);
         }
 
         public void FillModeWireFrame()
@@ -165,9 +169,37 @@ namespace TGC.Core.Direct3D
             Device.RenderState.FillMode = FillMode.Solid;
         }
 
+        /// <summary>
+        ///     This event-handler is a good place to create and initialize any
+        ///     Direct3D related objects, which may become invalid during a
+        ///     device reset.
+        /// </summary>
+        public void OnResetDevice(object sender, EventArgs e)
+        {
+            //TODO antes hacia esto que no entiendo porque GuiController.Instance.onResetDevice();
+            //ese metodo se movio a Decice, pero solo detenia el ejemplo ejecutaba doResetDevice y lo volvia a cargar...
+            DoResetDevice();
+        }
+
+        /// <summary>
+        ///     Hace las operaciones de Reset del device
+        /// </summary>
+        public void DoResetDevice()
+        {
+            DefaultValues();
+
+            //Reset Timer
+            HighResolutionTimer.Instance.Reset();
+        }
+
         public void Clear()
         {
             Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Instance.ClearColor, 1.0f, 0);
+        }
+
+        public void Dispose()
+        {
+            Device.Dispose();
         }
     }
 }
