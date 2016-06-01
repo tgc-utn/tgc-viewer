@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows.Forms;
 using TGC.Viewer.Model;
 using TGC.Viewer.Properties;
@@ -10,7 +11,7 @@ namespace TGC.Viewer.Forms
     /// </summary>
     public partial class ViewerForm : Form
     {
-        private ViewerModel modelo;
+        private ViewerModel Modelo { get; set; }
 
         /// <summary>
         ///     Constructor principal de la aplicacion
@@ -25,15 +26,13 @@ namespace TGC.Viewer.Forms
             //Titulo de la ventana principal
             Text = Settings.Default.Title;
 
-            modelo = new ViewerModel();
+            Modelo = new ViewerModel();
 
-            //Verificamos la carpeta Media
-            modelo.CheckMediaFolder();
+            CheckMediaFolder();
 
             //Iniciar graficos
-            modelo.InitGraphics(this, treeViewExamples, panel3d, flowLayoutPanelModifiers, dataGridUserVars,
-                toolStripStatusCurrentExample);
-            modelo.InitRenderLoop();
+            Modelo.InitGraphics(this, treeViewExamples, panel3d, flowLayoutPanelModifiers, dataGridUserVars, toolStripStatusCurrentExample);
+            Modelo.InitRenderLoop();
 
             //Focus panel3D
             panel3d.Focus();
@@ -41,12 +40,15 @@ namespace TGC.Viewer.Forms
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            modelo.ShutDown();
+            if (this.Modelo.ApplicationRunning)
+            {
+                Modelo.ShutDown();
+            }
         }
 
         private void wireframeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            modelo.WireFrame(wireframeToolStripMenuItem.Checked);
+            Modelo.WireFrame(wireframeToolStripMenuItem.Checked);
         }
 
         private void treeViewExamples_AfterSelect(object sender, TreeViewEventArgs e)
@@ -64,18 +66,18 @@ namespace TGC.Viewer.Forms
 
             if (selectedNode != null && selectedNode.Nodes.Count == 0)
             {
-                modelo.ExecuteExample(selectedNode);
+                Modelo.ExecuteExample(selectedNode);
             }
         }
 
         private void contadorFPSToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            modelo.ContadorFPS(contadorFPSToolStripMenuItem.Checked);
+            Modelo.ContadorFPS(contadorFPSToolStripMenuItem.Checked);
         }
 
         private void ejesCartesianosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            modelo.AxisLines(ejesCartesianosToolStripMenuItem.Checked);
+            Modelo.AxisLines(ejesCartesianosToolStripMenuItem.Checked);
         }
 
         private void acercaDeTgcViewerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -97,9 +99,9 @@ namespace TGC.Viewer.Forms
             contadorFPSToolStripMenuItem.Checked = true;
             ejesCartesianosToolStripMenuItem.Checked = true;
 
-            modelo.WireFrame(wireframeToolStripMenuItem.Checked);
-            modelo.ContadorFPS(contadorFPSToolStripMenuItem.Checked);
-            modelo.AxisLines(ejesCartesianosToolStripMenuItem.Checked);
+            Modelo.WireFrame(wireframeToolStripMenuItem.Checked);
+            Modelo.ContadorFPS(contadorFPSToolStripMenuItem.Checked);
+            Modelo.AxisLines(ejesCartesianosToolStripMenuItem.Checked);
         }
 
         /// <summary>
@@ -122,6 +124,20 @@ namespace TGC.Viewer.Forms
             }
 
             return false;
+        }
+
+        public void CheckMediaFolder()
+        {
+            //Verificamos la carpeta Media
+            string pathMedia = Environment.CurrentDirectory + "\\" + Settings.Default.MediaDirectory;
+
+            if (!Directory.Exists(pathMedia))
+            {
+                //modelo.DownloadMediaFolder();
+                MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine + Environment.NewLine +
+                    "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
+                System.Diagnostics.Process.Start(Settings.Default.MediaLink);
+            }
         }
     }
 }

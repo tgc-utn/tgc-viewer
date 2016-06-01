@@ -64,10 +64,6 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.DirectX.Direct3D, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.Direct3D.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -150,16 +146,11 @@
       <Project>{0a4e6948-ab74-48a5-99e1-6bd1c3949006}</Project>
       <Name>TGC.Examples</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TGC.Group\TGC.Group.csproj">
-      <Project>{659da3d0-b324-45df-83b0-7ae04280adc1}</Project>
-      <Name>TGC.Group</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>START XCOPY "$(SolutionDir)TGC.Group\Media" "Media\" /D /Y /S
-IF NOT EXIST "Shaders\" START XCOPY "$(SolutionDir)TGC.Examples\Shaders" "Shaders\" /Y /S</PostBuildEvent>
+    <PostBuildEvent>IF NOT EXIST "Shaders\" START XCOPY "$(SolutionDir)TGC.Examples\Shaders" "Shaders\" /Y /S</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
