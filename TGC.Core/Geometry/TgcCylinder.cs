@@ -2,7 +2,6 @@
 using Microsoft.DirectX.Direct3D;
 using System.Diagnostics;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -22,11 +21,11 @@ namespace TGC.Core.Geometry
 
         private bool useTexture;
 
-        public TgcCylinder(Vector3 _center, float _topRadius, float _bottomRadius, float _halfLength, TgcCamera camara)
+        public TgcCylinder(Vector3 _center, float _topRadius, float _bottomRadius, float _halfLength)
         {
             TopRadius = _topRadius;
             BottomRadius = _bottomRadius;
-            BoundingCylinder = new TgcBoundingCylinder(_center, 1, _halfLength, camara);
+            BoundingCylinder = new TgcBoundingCylinder(_center, FastMath.Max(TopRadius, BottomRadius), _halfLength);
 
             color = Color.Red.ToArgb();
 
@@ -36,8 +35,8 @@ namespace TGC.Core.Geometry
             initialize();
         }
 
-        public TgcCylinder(Vector3 _center, float _radius, float _halfLength, TgcCamera camara)
-            : this(_center, _radius, _radius, _halfLength, camara)
+        public TgcCylinder(Vector3 _center, float _radius, float _halfLength)
+            : this(_center, _radius, _radius, _halfLength)
         {
             //nothing to do
         }

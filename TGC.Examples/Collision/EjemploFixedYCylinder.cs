@@ -40,10 +40,10 @@ namespace TGC.Examples.Collision
 
         public override void Init()
         {
-            collider = new TgcFixedYBoundingCylinder(new Vector3(0, 0, 0), 3, 3, Camara);
+            collider = new TgcFixedYBoundingCylinder(new Vector3(0, 0, 0), 3, 3);
             collisionableSphere = new TgcBoundingSphere(new Vector3(-6, 0, 0), 3);
             collisionableAABB = new TgcBoundingBox(new Vector3(4, 0, -1), new Vector3(6, 2, 1));
-            collisionableCylinder = new TgcFixedYBoundingCylinder(new Vector3(0, 0, -6), 2, 2, Camara);
+            collisionableCylinder = new TgcFixedYBoundingCylinder(new Vector3(0, 0, -6), 2, 2);
 
             Modifiers.addVertex2f("size", new Vector2(1, 1), new Vector2(5, 10), new Vector2(2, 5));
             Modifiers.addVertex3f("position", new Vector3(-20, -20, -20), new Vector3(20, 20, 20), new Vector3(0, 0, 0));

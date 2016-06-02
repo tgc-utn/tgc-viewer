@@ -33,7 +33,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Init()
         {
-            cylinder = new TgcCylinder(new Vector3(0, 0, 0), 2, 4, Camara);
+            cylinder = new TgcCylinder(new Vector3(0, 0, 0), 2, 4);
 
             //cylinder.Transform = Matrix.Scaling(2, 1, 1) * Matrix.RotationYawPitchRoll(0, 0, 1);
             //cylinder.AutoTransformEnable = false;

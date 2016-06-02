@@ -39,7 +39,7 @@ namespace TGC.Examples.Collision
 
         public override void Init()
         {
-            collider = new TgcBoundingCylinder(new Vector3(0, 0, 0), 2, 4, Camara);
+            collider = new TgcBoundingCylinder(new Vector3(0, 0, 0), 2, 4);
             collisionableSphere = new TgcBoundingSphere(new Vector3(0, 0, -6), 3);
 
             Modifiers.addVertex2f("size", new Vector2(1, 1), new Vector2(5, 10), new Vector2(2, 5));

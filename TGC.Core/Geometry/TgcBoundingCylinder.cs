@@ -1,26 +1,25 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Geometry
 {
+    /// <summary>
+    /// Cilindro Bounding con posibilidad de orietar y rotar, este puede ser utilizado por ejemplo para personajes.
+    /// </summary>
     public class TgcBoundingCylinder : IRenderObject
     {
-        private readonly TgcCamera camara;
         private Vector3 center;
         private Vector3 rotation;
 
-        public TgcBoundingCylinder(Vector3 center, float radius, float halfLength, TgcCamera camara)
+        public TgcBoundingCylinder(Vector3 center, float radius, float halfLength)
         {
-            //FIXME puede pasar efecto de lado si el ejemplo cambia de camara el cilindro no se entera...
             this.center = center;
             Radius = radius;
             HalfLength = halfLength;
-            this.camara = camara;
             rotation = new Vector3(0, 0, 0);
             updateValues();
 
@@ -109,7 +108,7 @@ namespace TGC.Core.Geometry
 
         #region Rendering
 
-        private const int END_CAPS_RESOLUTION = 15;
+        private const int END_CAPS_RESOLUTION = 15*4; //4 para los bordes laterales
         private const int END_CAPS_VERTEX_COUNT = 2 * END_CAPS_RESOLUTION * 2;
         private CustomVertex.PositionColored[] vertices; //line list
         private Color color;
@@ -120,17 +119,17 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Actualiza la posicion de los vertices que componen las tapas
+        ///     Actualiza la posicion de los vertices que componen las tapas y los vertices de las lineas laterales.
         /// </summary>
         private void updateDraw()
         {
             if (vertices == null)
-                vertices = new CustomVertex.PositionColored[END_CAPS_VERTEX_COUNT + 4]; //4 para los bordes laterales
+                vertices = new CustomVertex.PositionColored[END_CAPS_VERTEX_COUNT];
 
             var color = this.color.ToArgb();
 
             //matriz que vamos a usar para girar el vector de dibujado
-            var angle = FastMath.TWO_PI / END_CAPS_RESOLUTION;
+            var angle = FastMath.TWO_PI / (END_CAPS_RESOLUTION / 4); // /4 ya que agregamos los bordes a la resolucion.
             var upVector = new Vector3(0, 1, 0);
             var rotationMatrix = Matrix.RotationAxis(upVector, angle);
 
@@ -140,12 +139,16 @@ namespace TGC.Core.Geometry
             //array donde guardamos los puntos dibujados
             var draw = new Vector3[vertices.Length];
 
-            for (var i = 0; i < END_CAPS_VERTEX_COUNT / 2; i += 2)
+            for (var i = 0; i < END_CAPS_VERTEX_COUNT / 4; i += 4)
             {
                 //vertice inicial de la tapa superior
                 draw[i] = upVector + n;
                 //vertice inicial de la tapa inferior
-                draw[END_CAPS_VERTEX_COUNT / 2 + i] = -upVector + n;
+                draw[END_CAPS_VERTEX_COUNT / 4 + i] = -upVector + n;
+                //vertice inicial del borde de la tapa superior
+                draw[END_CAPS_VERTEX_COUNT / 2 + i] = upVector + n;
+                //vertice inicial del borde de la tapa inferior
+                draw[END_CAPS_VERTEX_COUNT / 2 + i + 1] = -upVector + n;
 
                 //rotamos el vector de dibujado
                 n.TransformNormal(rotationMatrix);
@@ -153,7 +156,11 @@ namespace TGC.Core.Geometry
                 //vertice final de la tapa superior
                 draw[i + 1] = upVector + n;
                 //vertice final de la tapa inferior
-                draw[END_CAPS_VERTEX_COUNT / 2 + i + 1] = -upVector + n;
+                draw[END_CAPS_VERTEX_COUNT / 4 + i + 1] = -upVector + n;
+                //vertice final del borde de la tapa superior
+                draw[END_CAPS_VERTEX_COUNT / 2 + i + 2] = upVector + n;
+                //vertice final del borde de la tapa inferior
+                draw[END_CAPS_VERTEX_COUNT / 2 + i + 3] = -upVector + n;
             }
 
             //rotamos y trasladamos los puntos, y los volcamos al vector de vertices
@@ -163,58 +170,11 @@ namespace TGC.Core.Geometry
                     color);
         }
 
-        /// <summary>
-        ///     Actualiza la posicion de los cuatro vertices que componen los lados
-        /// </summary>
-        private void updateBordersDraw()
-        {
-            //obtenemos las matrices de transformacion y antitransformacion
-            var transformation = Transform;
-            var antiTransformation = transformation;
-            antiTransformation.Invert();
-
-            //obtenemos datos utiles del cilindro
-            var cylHalfHeight = HalfHeight;
-            var cylCenter = Vector3.TransformCoordinate(new Vector3(0, 0, 0), transformation);
-
-            //obtenemos el vector direccion de vision, y su perpendicular
-            var cameraSeen = camara.getPosition() - cylCenter;
-            var transversalALaCamara = Vector3.Cross(cameraSeen, cylHalfHeight);
-
-            //destransformamos la perpendicular para hallar el radio en esa direccion
-            var destransformado = Vector3.TransformNormal(transversalALaCamara, antiTransformation);
-            destransformado.Normalize();
-            var length = Vector3.TransformNormal(destransformado, transformation).Length();
-            transversalALaCamara.Normalize();
-            transversalALaCamara *= length;
-
-            //datos para el dibujado
-            var color = this.color.ToArgb();
-            var firstBorderVertex = END_CAPS_VERTEX_COUNT;
-
-            var cylTop = cylCenter + cylHalfHeight;
-            var cylBottom = cylCenter - cylHalfHeight;
-
-            //linea lateral derecha
-            var point = cylTop + transversalALaCamara;
-            vertices[firstBorderVertex] = new CustomVertex.PositionColored(point, color);
-            point = cylBottom + transversalALaCamara;
-            vertices[firstBorderVertex + 1] = new CustomVertex.PositionColored(point, color);
-
-            //linea lateral izquierda
-            point = cylTop - transversalALaCamara;
-            vertices[firstBorderVertex + 2] = new CustomVertex.PositionColored(point, color);
-            point = cylBottom - transversalALaCamara;
-            vertices[firstBorderVertex + 3] = new CustomVertex.PositionColored(point, color);
-        }
-
         public void render()
         {
-            //actualizamos los vertices de las tapas
+            //actualizamos los vertices de las tapas y los vertices de las lineas laterales
             updateDraw();
-            //actualizamos los vertices de las lineas laterales
-            updateBordersDraw();
-
+            
             //dibujamos
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length / 2, vertices);
         }

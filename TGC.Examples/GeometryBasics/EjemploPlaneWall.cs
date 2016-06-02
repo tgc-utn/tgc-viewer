@@ -29,7 +29,7 @@ namespace TGC.Examples.GeometryBasics
             TgcAxisLines axisLines, TgcCamera camara)
             : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
         {
-            Category = "LiGeometryBasicsghts";
+            Category = "GeometryBasics";
             Name = "PlaneWall";
             Description =
                 "Muestra como utilizar la herramienta TgcPlaneWall para crear paredes planas con textura. Permite editar su posición, tamaño, textura y mapeo de textura. Movimiento con mouse.";
