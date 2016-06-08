@@ -70,8 +70,6 @@ namespace TGC.Examples.Optimization.KdtTree
             //Camara en 1ra persona
             Camara = new TgcFpsSimpleCamera();
             Camara.setCamera(new Vector3(1500, 800, 0), new Vector3(0, 0, -1));
-            ((TgcFpsSimpleCamera)Camara).MovementSpeed = 500f;
-            ((TgcFpsSimpleCamera)Camara).JumpSpeed = 500f;
 
             Modifiers.addBoolean("showKdTree", "Show KdTree", false);
             Modifiers.addBoolean("showTerrain", "Show Terrain", true);
