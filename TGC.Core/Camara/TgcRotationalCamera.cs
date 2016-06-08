@@ -16,6 +16,9 @@ namespace TGC.Core.Camara
         public static float DEFAULT_ROTATION_SPEED = 100f;
         public static Vector3 DEFAULT_DOWN = new Vector3(0f, -1f, 0f);
 
+        /// <summary>
+        /// Crea camara con valores por defecto.
+        /// </summary>
         public TgcRotationalCamera()
         {
             CameraCenter = new Vector3(0, 0, 0);
@@ -31,6 +34,11 @@ namespace TGC.Core.Camara
             this.setCamera(NextPos, LookAt, UpVector);
         }
 
+        /// <summary>
+        /// Crea una camara con una posicion inicial y un objetivo.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="target"></param>
         public TgcRotationalCamera(Vector3 position, Vector3 target) : this()
         {
             NextPos = position;
@@ -38,6 +46,13 @@ namespace TGC.Core.Camara
             this.setCamera(NextPos, LookAt, UpVector);
         }
 
+        /// <summary>
+        ///     Crea una camara con el centro de la camara, la distancia, la velocidad de zoom, Crea una camara con el centro de la camara, la distancia y la velocidad de rotacion.
+        /// </summary>
+        /// <param name="cameraCenter"></param>
+        /// <param name="cameraDistance"></param>
+        /// <param name="zoomFactor"></param>
+        /// <param name="rotationSpeed"></param>
         public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor, float rotationSpeed) : this()
         {
             CameraCenter = cameraCenter;
@@ -46,8 +61,11 @@ namespace TGC.Core.Camara
             RotationSpeed = rotationSpeed;
         }
         /// <summary>
-        ///     Configura el centro de la camara, la distancia y la velocidad de zoom
+        ///     Crea una camara con el centro de la camara, la distancia y la velocidad de zoom
         /// </summary>
+        /// <param name="cameraCenter"></param>
+        /// <param name="cameraDistance"></param>
+        /// <param name="zoomFactor"></param>
         public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor):
             this(cameraCenter, cameraDistance, zoomFactor, DEFAULT_ROTATION_SPEED)
         {
@@ -55,8 +73,10 @@ namespace TGC.Core.Camara
         }
 
         /// <summary>
-        ///     Configura el centro de la camara, la distancia
+        ///     Crea una camara con el centro de la camara, la distancia
         /// </summary>
+        /// <param name="cameraCenter"></param>
+        /// <param name="cameraDistance"></param>
         public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance):
             this(cameraCenter, cameraDistance, DEFAULT_ZOOM_FACTOR)
         {
@@ -64,7 +84,7 @@ namespace TGC.Core.Camara
         }
 
         /// <summary>
-        ///     Configura los parámetros de la cámara en funcion del BoundingBox de un modelo
+        ///     Crea una camara con los parámetros en funcion del BoundingBox de un modelo
         /// </summary>
         /// <param name="boundingBox">BoundingBox en base al cual configurar</param>
         public TgcRotationalCamera(TgcBoundingBox boundingBox):this()
@@ -72,6 +92,10 @@ namespace TGC.Core.Camara
             calculateCenterDistance(boundingBox);
         }
 
+        /// <summary>
+        ///     Configura los parámetros de la cámara en funcion del BoundingBox de un modelo
+        /// </summary>
+        /// <param name="boundingBox">BoundingBox en base al cual configurar</param>
         public void calculateCenterDistance(TgcBoundingBox boundingBox)
         {
             CameraCenter = boundingBox.calculateBoxCenter();
@@ -80,7 +104,7 @@ namespace TGC.Core.Camara
         }
 
         /// <summary>
-        ///     Actualiza los valores de la camara
+        ///     Actualiza los valores de la camara.
         /// </summary>
         public override void updateCamera(float elapsedTime)
         {
