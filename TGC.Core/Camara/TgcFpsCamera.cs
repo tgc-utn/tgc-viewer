@@ -15,7 +15,6 @@ namespace TGC.Core.Camara
     {
         //Constantes de movimiento
         public const float DEFAULT_ROTATION_SPEED = 2f;
-
         public const float DEFAULT_MOVEMENT_SPEED = 100f;
         public const float DEFAULT_JUMP_SPEED = 100f;
         private readonly Vector3 CAMERA_ACCELERATION = new Vector3(400f, 400f, 400f);
