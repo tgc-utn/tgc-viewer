@@ -42,6 +42,8 @@ namespace TGC.Examples.ShadersExamples
         private List<TgcMesh> bosque;
 
         private bool camara_rot;
+        private TgcRotationalCamera CamaraRot;
+        private TgcRotationalCamera DefaultCamera;
         private int cant_palmeras; // sin contar la isla
         private Vector3 dir_canoa;
         private Effect effect;
@@ -180,9 +182,6 @@ namespace TGC.Examples.ShadersExamples
                     bosque.Add(instance);
                 }
 
-            ((TgcRotationalCamera)Camara).CameraDistance = 300;
-            ((TgcRotationalCamera)Camara).RotationSpeed = 1.5f;
-
             // Arreglo las normales del tanque
             /*int[] adj = new int[mesh.D3dMesh.NumberFaces * 3];
             mesh.D3dMesh.GenerateAdjacency(0, adj);
@@ -240,7 +239,12 @@ namespace TGC.Examples.ShadersExamples
             //--------------------------------------------------------------------------------------
             //Centrar camara rotacional respecto a este mesh
             camara_rot = false;
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox);
+            CamaraRot.CameraDistance = 300;
+            CamaraRot.RotationSpeed = 1.5f;
+            DefaultCamera = new TgcRotationalCamera(new Vector3(0, 200, 0), 5000, 0.1f, 1f);
+            Camara = DefaultCamera;
+           
             LookFrom = new Vector3(0, 400, 2000);
             LookAt = new Vector3(0, 200, 0);
 
@@ -375,15 +379,13 @@ namespace TGC.Examples.ShadersExamples
             {
                 if (camara_rot)
                 {
-                    ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
-                    Camara.updateCamera(ElapsedTime);
+                    CamaraRot.calculateCenterDistance(mesh.BoundingBox);
+                    CamaraRot.updateCamera(ElapsedTime);
+                    Camara = CamaraRot;
                 }
                 else
                 {
-                    ((TgcRotationalCamera)Camara).CameraCenter = new Vector3(0, 200, 0);
-                    ((TgcRotationalCamera)Camara).CameraDistance = 2000;
-                    ((TgcRotationalCamera)Camara).RotationSpeed = 1f;
-                    ((TgcRotationalCamera)Camara).ZoomFactor = 0.1f;
+                    Camara = DefaultCamera;                   
                 }
             }
 

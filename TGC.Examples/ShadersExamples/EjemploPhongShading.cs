@@ -60,7 +60,7 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addFloat("specularEx", 0, 40, 20f);
 
             //Centrar camara rotacional respecto a este mesh
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox);
         }
 
         public override void Update()
@@ -70,8 +70,8 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            IniciarEscena();
             base.Render();
+            IniciarEscena();
 
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];

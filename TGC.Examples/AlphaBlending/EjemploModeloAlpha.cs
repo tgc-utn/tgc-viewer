@@ -40,7 +40,7 @@ namespace TGC.Examples.AlphaBlending
             var loader = new TgcSceneLoader();
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pino\\Pino-TgcScene.xml");
 
-            ((TgcRotationalCamera)Camara).targetObject(scene.BoundingBox);
+            Camara = new TgcRotationalCamera(scene.BoundingBox);
         }
 
         public override void Update()

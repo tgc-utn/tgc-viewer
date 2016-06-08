@@ -143,7 +143,7 @@ namespace TGC.Examples.SkeletalAnimation
                 attachment.updateValues();
 
                 //Configurar camara
-                ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+                Camara = new TgcRotationalCamera(mesh.BoundingBox);
             }
         }
 

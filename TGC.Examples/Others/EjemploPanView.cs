@@ -30,7 +30,7 @@ namespace TGC.Examples.Others
         {
             box = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(20, 20, 20), Color.Red);
 
-            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
+            Camara = new TgcRotationalCamera(box.BoundingBox);
         }
 
         public override void Update()

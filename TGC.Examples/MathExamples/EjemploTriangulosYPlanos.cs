@@ -105,7 +105,7 @@ namespace TGC.Examples.MathExamples
             Modifiers.addBoolean("planes", "planes", false);
 
             //Camera
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox);
         }
 
         public override void Update()

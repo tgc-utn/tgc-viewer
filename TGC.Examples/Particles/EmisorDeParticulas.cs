@@ -67,7 +67,7 @@ namespace TGC.Examples.Particles
 
             box = TgcBox.fromSize(new Vector3(0, -30, 0), new Vector3(10, 10, 10), Color.Blue);
 
-            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
+            Camara = new TgcRotationalCamera(box.BoundingBox);
         }
 
         public override void Update()
