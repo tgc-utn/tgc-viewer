@@ -32,7 +32,7 @@ namespace TGC.Core.Camara
         /// </summary>
         /// <param name="pos">Posicion de la camara</param>
         /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
-        public void setCamera(Vector3 pos, Vector3 lookAt)
+        public virtual void setCamera(Vector3 pos, Vector3 lookAt)
         {
             this.Position = pos;
             this.LookAt = lookAt;
@@ -45,7 +45,7 @@ namespace TGC.Core.Camara
         /// </summary>
         /// <param name="pos">Posicion de la camara</param>
         /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
-        public void setCamera(Vector3 pos, Vector3 lookAt, Vector3 upVec)
+        public virtual void setCamera(Vector3 pos, Vector3 lookAt, Vector3 upVec)
         {
             this.Position = pos;
             this.LookAt = lookAt;

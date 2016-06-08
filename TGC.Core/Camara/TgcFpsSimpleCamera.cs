@@ -46,9 +46,17 @@ namespace TGC.Core.Camara
                     D3DDevice.Instance.Device.Viewport.Width / 2,
                     D3DDevice.Instance.Device.Viewport.Height / 2);
             RotationSpeed = 2f;
-
-
+            MovementSpeed = 500f;
+            JumpSpeed = 500f;
         }
+
+        public override void setCamera(Vector3 pos, Vector3 lookAt)
+        {
+            base.setCamera(pos, lookAt);
+            this.setEyeTarget(pos, -lookAt+pos);            
+        }
+
+
         public Vector3 ForwardDirection { get; private set; } = new Vector3();
 
         public Vector3 SideDirection
