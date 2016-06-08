@@ -50,7 +50,7 @@ namespace TGC.Examples.Tutorial
 
             //Camera en 3ra persona
             Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(mainMesh.Position, 200, 300);
+            ((TgcThirdPersonCamera)Camara).setTargetOffsets(mainMesh.Position, 200, 300);
         }
 
         public override void Update()

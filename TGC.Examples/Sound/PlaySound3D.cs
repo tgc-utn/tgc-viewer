@@ -114,7 +114,7 @@ namespace TGC.Examples.Sound
             TgcDirectSound.Instance.ListenerTracking = personaje;
 
             //Configurar camara en Tercer Persona
-            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 200, 300);
+            ((TgcThirdPersonCamera)Camara).setTargetOffsets(personaje.Position, 200, 300);
             ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(0, 100, 0);
 
             //Ejecutar en loop los sonidos

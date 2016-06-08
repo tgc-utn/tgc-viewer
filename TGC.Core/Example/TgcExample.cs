@@ -114,8 +114,8 @@ namespace TGC.Core.Example
             TgcD3dInput.Instance.update();
 
             //Actualizar la camara
-            Camara.updateCamera(ElapsedTime);
-            Camara.updateViewMatrix(D3DDevice.Instance.Device);
+            Camara.updateCamera(ElapsedTime); //FIXME esto deberia hacerce en el update.
+            D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix();
 
             //actualizar el Frustum
             TgcFrustum.Instance.updateVolume(D3DDevice.Instance.Device.Transform.View,

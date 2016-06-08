@@ -14,31 +14,55 @@ namespace TGC.Core.Camara
         /// <summary>
         ///     Posicion de la camara
         /// </summary>
-        public abstract Vector3 getPosition();
-
+        public Vector3 Position { get; private set; }
+        
         /// <summary>
         ///     Posición del punto al que mira la cámara
         /// </summary>
-        public abstract Vector3 getLookAt();
+        public Vector3 LookAt { get; private set; }
 
         /// <summary>
-        ///     Configura la posicion de la camara
+        ///     Vector direccional hacia arriba (puede diferir si la camara se invierte).
+        /// </summary>
+        public Vector3 UpVector { get; private set; }
+
+        /// <summary>
+        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de view.
+        ///     estos vectores son utilizadas por getViewMatrix.
         /// </summary>
         /// <param name="pos">Posicion de la camara</param>
         /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
         public void setCamera(Vector3 pos, Vector3 lookAt)
         {
-            D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(pos, lookAt, DEFAULT_UP_VECTOR);
+            this.Position = pos;
+            this.LookAt = lookAt;
+            this.UpVector = DEFAULT_UP_VECTOR;
         }
 
         /// <summary>
-        ///     Actualizar el estado interno de la camara en cada frame
+        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de view.
+        ///     estos vectores son utilizadas por getViewMatrix.
+        /// </summary>
+        /// <param name="pos">Posicion de la camara</param>
+        /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
+        public void setCamera(Vector3 pos, Vector3 lookAt, Vector3 upVec)
+        {
+            this.Position = pos;
+            this.LookAt = lookAt;
+            this.UpVector = upVec;
+        }
+
+        /// <summary>
+        ///     Actualizar el estado interno de la camara en cada frame.
         /// </summary>
         public abstract void updateCamera(float elapsedTime);
 
         /// <summary>
-        ///     Actualizar la matriz View en base a los valores de la camara
+        ///     Devuelve la matriz View en base a los valores de la camara. Es invocado en cada update de render.
         /// </summary>
-        public abstract void updateViewMatrix(Device d3dDevice);
+        public virtual Matrix getViewMatrix()
+        {
+            return Matrix.LookAtLH(this.Position, this.LookAt, this.UpVector);
+        }
     }
 }

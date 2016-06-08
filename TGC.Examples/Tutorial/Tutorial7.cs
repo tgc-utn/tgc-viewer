@@ -48,7 +48,7 @@ namespace TGC.Examples.Tutorial
 
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(mainMesh.Position, 200, 300);
+            ((TgcThirdPersonCamera)Camara).setTargetOffsets(mainMesh.Position, 200, 300);
         }
 
         public override void Update()

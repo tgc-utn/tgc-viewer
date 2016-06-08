@@ -79,7 +79,7 @@ namespace TGC.Examples.Collision
 
             //Configurar camara en Tercer Persona
             Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(box.Position, 30, -75);
+            ((TgcThirdPersonCamera)Camara).setTargetOffsets(box.Position, 30, -75);
         }
 
         public override void Update()

@@ -19,8 +19,7 @@ namespace TGC.Core.Camara
         private float diffZ;
         private Vector3 nextPos;
 
-        private Vector3 upVector;
-        private Matrix viewMatrix;
+        private Vector3 upVector = new Vector3(0f,1f,0f);
 
         public TgcRotationalCamera()
         {
@@ -119,34 +118,15 @@ namespace TGC.Core.Camara
                 CameraCenter = CameraCenter + desf;
             }
 
-            //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
-            viewMatrix = Matrix.LookAtLH(nextPos, CameraCenter, upVector);
+            //asigna las posiciones de la camara.
+            this.setCamera(nextPos, CameraCenter, upVector);
         }
 
         /// <summary>
-        ///     Actualiza la ViewMatrix, si es que la camara esta activada
-        /// </summary>
-        public override void updateViewMatrix(Device d3dDevice)
-        {
-            d3dDevice.Transform.View = viewMatrix;
-        }
-
-        public override Vector3 getPosition()
-        {
-            return nextPos;
-        }
-
-        public override Vector3 getLookAt()
-        {
-            return CameraCenter;
-        }
-
-        /// <summary>
-        ///     Carga los valores default de la camara
+        ///     Carga los valores default de la camara rotacional.
         /// </summary>
         public void resetValues()
         {
-            upVector = new Vector3(0.0f, 1.0f, 0.0f);
             CameraCenter = new Vector3(0, 0, 0);
             nextPos = new Vector3(0, 0, 0);
             CameraDistance = DEFAULT_CAMERA_DISTANCE;
@@ -154,9 +134,9 @@ namespace TGC.Core.Camara
             RotationSpeed = DEFAULT_ROTATION_SPEED;
             diffX = 0f;
             diffY = 0f;
-            diffZ = 1f;
-            viewMatrix = Matrix.Identity;
+            diffZ = 1f;            
             PanSpeed = 0.01f;
+            this.setCamera(nextPos, LookAt, upVector);
         }
 
         /// <summary>
@@ -200,7 +180,7 @@ namespace TGC.Core.Camara
         /// <summary>
         ///     Configura el centro de la camara, la distancia y la velocidad de zoom
         /// </summary>
-        public void setCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor)
+        public void setCenterDistanceZoom(Vector3 cameraCenter, float cameraDistance, float zoomFactor)
         {
             CameraCenter = cameraCenter;
             CameraDistance = cameraDistance;
@@ -210,7 +190,7 @@ namespace TGC.Core.Camara
         /// <summary>
         ///     Configura el centro de la camara, la distancia
         /// </summary>
-        public void setCamera(Vector3 cameraCenter, float cameraDistance)
+        public void setCenterDistance(Vector3 cameraCenter, float cameraDistance)
         {
             CameraCenter = cameraCenter;
             CameraDistance = cameraDistance;

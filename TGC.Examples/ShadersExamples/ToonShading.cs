@@ -92,7 +92,7 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addFloat("Specular", 0, 1, 0.5f);
             Modifiers.addFloat("SpecularPower", 1, 100, 16);
 
-            ((TgcRotationalCamera)Camara).setCamera(new Vector3(20, 20, 0), 200);
+            ((TgcRotationalCamera)Camara).setCenterDistance(new Vector3(20, 20, 0), 200);
             ((TgcRotationalCamera)Camara).CameraDistance = 300;
             ((TgcRotationalCamera)Camara).RotationSpeed = 1.5f;
 
@@ -195,7 +195,7 @@ namespace TGC.Examples.ShadersExamples
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(lightPosition));
             effect.SetValue("fvEyePosition",
-                TgcParserUtils.vector3ToFloat3Array(Camara.getPosition()));
+                TgcParserUtils.vector3ToFloat3Array(Camara.Position));
             effect.SetValue("k_la", (float)Modifiers["Ambient"]);
             effect.SetValue("k_ld", (float)Modifiers["Diffuse"]);
             effect.SetValue("k_ls", (float)Modifiers["Specular"]);

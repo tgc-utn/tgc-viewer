@@ -133,7 +133,7 @@ namespace TGC.Examples.Collision
 
             //Configurar camara en Tercer Persona
             Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 20, -120);
+            ((TgcThirdPersonCamera)Camara).setTargetOffsets(personaje.Position, 20, -120);
             ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(0, 45, 0);
 
             //Crear SkyBox

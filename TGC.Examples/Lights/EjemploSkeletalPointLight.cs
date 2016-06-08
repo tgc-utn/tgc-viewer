@@ -137,7 +137,7 @@ namespace TGC.Examples.Lights
                 //Cargar variables shader de la luz
                 mesh.Effect.SetValue("lightColor", ColorValue.FromColor((Color)Modifiers["lightColor"]));
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
-                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.getPosition()));
+                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
                 mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
                 mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
 

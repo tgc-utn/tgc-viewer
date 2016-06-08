@@ -42,7 +42,7 @@ namespace TGC.Examples.Others
                 mesh.D3dMesh.Disposing += D3dMesh_Disposing;
             }
 
-            ((TgcRotationalCamera)Camara).setCamera(new Vector3(0f, 300f, 0f), 1500f);
+            ((TgcRotationalCamera)Camara).setCenterDistance(new Vector3(0f, 300f, 0f), 1500f);
         }
 
         private void D3dMesh_Disposing(object sender, EventArgs e)

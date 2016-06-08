@@ -484,7 +484,8 @@ namespace TGC.Examples.ShadersExamples
             if (timer_preview > 0)
                 D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(LookFrom, LookAt, new Vector3(0, 1, 0));
             else
-                Camara.updateViewMatrix(D3DDevice.Instance.Device);
+                D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix(); // TODO FIX IT! esto no se bien para que lo hace aca.
+
             D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, near_plane, far_plane);
@@ -495,7 +496,7 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("fvEyePosition",
                 TgcParserUtils.vector3ToFloat3Array(timer_preview > 0
                     ? LookFrom
-                    : Camara.getPosition()));
+                    : Camara.Position));
             effect.SetValue("time", time);
 
             // -----------------------------------------------------

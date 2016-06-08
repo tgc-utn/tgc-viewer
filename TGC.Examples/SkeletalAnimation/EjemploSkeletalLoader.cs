@@ -119,7 +119,7 @@ namespace TGC.Examples.SkeletalAnimation
             Modifiers.addBoolean("Attachment", "Attachment:", showAttachment);
 
             //Configurar camara
-            ((TgcRotationalCamera)Camara).setCamera(new Vector3(0, 70, 0), 200);
+            ((TgcRotationalCamera)Camara).setCenterDistance(new Vector3(0, 70, 0), 200);
         }
 
         public override void Update()
