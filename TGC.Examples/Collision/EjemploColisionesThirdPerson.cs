@@ -102,7 +102,7 @@ namespace TGC.Examples.Collision
 
             //Configurar camara en Tercer Persona
             Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 200, -300);
+            ((TgcThirdPersonCamera)Camara).setTargetOffsets(personaje.Position, 200, -300);
 
             //Modifier para ver BoundingBox
             Modifiers.addBoolean("showBoundingBox", "Bouding Box", false);

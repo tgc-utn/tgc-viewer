@@ -184,7 +184,7 @@ namespace TGC.Examples.Lights
 
                 //Cargar variables shader de la luz
                 mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
-                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.getPosition()));
+                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
                 mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
 
                 //Cargar variables de shader de Material

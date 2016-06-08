@@ -78,7 +78,7 @@ namespace TGC.Examples.PortalRendering
             if (enablePortalRendering)
             {
                 //Actualizar visibilidad con PortalRendering
-                scene.PortalRendering.updateVisibility(Camara.getPosition());
+                scene.PortalRendering.updateVisibility(Camara.Position);
             }
             else
             {

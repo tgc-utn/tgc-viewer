@@ -32,6 +32,7 @@ namespace TGC.Core.Camara
 
         private float accumPitchDegrees;
         private Vector3 eye;
+        private Vector3 target;
 
         private bool moveBackwardsPressed;
         private bool moveDownPressed;
@@ -79,24 +80,7 @@ namespace TGC.Core.Camara
             }
 
             updatePosition(direction, elapsedTime);
-        }
-
-        /// <summary>
-        ///     Actualiza la ViewMatrix, si es que la camara esta activada
-        /// </summary>
-        public override void updateViewMatrix(Device d3dDevice)
-        {
-            d3dDevice.Transform.View = viewMatrix;
-        }
-
-        public override Vector3 getPosition()
-        {
-            return eye;
-        }
-
-        public override Vector3 getLookAt()
-        {
-            return LookAt;
+            this.setCamera(eye, LookAt);
         }
 
         /// <summary>
@@ -111,7 +95,7 @@ namespace TGC.Core.Camara
             yAxis = new Vector3(0.0f, 1.0f, 0.0f);
             zAxis = new Vector3(0.0f, 0.0f, 1.0f);
             viewDir = new Vector3(0.0f, 0.0f, 1.0f);
-            LookAt = eye + viewDir;
+            target = eye + viewDir;
 
             AccelerationEnable = false;
             Acceleration = CAMERA_ACCELERATION;
@@ -121,12 +105,13 @@ namespace TGC.Core.Camara
             setPosition(CAMERA_POS);
 
             RotateMouseButton = TgcD3dInput.MouseButtons.BUTTON_LEFT;
+            this.setCamera(eye, target);
         }
 
         /// <summary>
-        ///     Configura la posicion de la camara
+        ///     Configura la posicion de la camara segun el ojo y un objetivo.
         /// </summary>
-        private void setCamera(Vector3 eye, Vector3 target, Vector3 up)
+        private void setEyeTarget(Vector3 eye, Vector3 target, Vector3 up)
         {
             this.eye = eye;
 
@@ -134,7 +119,7 @@ namespace TGC.Core.Camara
             zAxis.Normalize();
 
             viewDir = zAxis;
-            LookAt = eye + viewDir;
+            target = eye + viewDir;
 
             xAxis = Vector3.Cross(up, zAxis);
             xAxis.Normalize();
@@ -464,7 +449,7 @@ namespace TGC.Core.Camara
                 xAxis.Normalize();
 
                 viewDir = zAxis;
-                LookAt = eye + viewDir;
+                target = eye + viewDir;
             }
 
             // Reconstruct the view matrix.
@@ -672,27 +657,6 @@ namespace TGC.Core.Camara
         public float RotationSpeed { get; set; }
 
         private Matrix viewMatrix;
-
-        /// <summary>
-        ///     View Matrix resultante
-        /// </summary>
-        public Matrix ViewMatrix
-        {
-            get { return viewMatrix; }
-        }
-
-        /// <summary>
-        ///     Posicion actual de la camara
-        /// </summary>
-        public Vector3 Position
-        {
-            get { return eye; }
-        }
-
-        /// <summary>
-        ///     Punto hacia donde mira la camara
-        /// </summary>
-        public Vector3 LookAt { get; private set; }
 
         /// <summary>
         ///     Boton del mouse que debe ser presionado para rotar la camara.

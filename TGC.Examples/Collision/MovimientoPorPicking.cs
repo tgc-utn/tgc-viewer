@@ -82,7 +82,7 @@ namespace TGC.Examples.Collision
 
             //Camara en tercera persona
             Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(mesh.Position, 800, 1500);
+            ((TgcThirdPersonCamera)Camara).setTargetOffsets(mesh.Position, 800, 1500);
 
             Modifiers.addFloat("speed", 1000, 5000, 2500);
         }

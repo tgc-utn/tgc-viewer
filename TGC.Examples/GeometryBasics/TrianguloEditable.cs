@@ -41,7 +41,7 @@ namespace TGC.Examples.GeometryBasics
         public override void Init()
         {
             //Configurar camara en rotacion
-            ((TgcRotationalCamera)Camara).setCamera(new Vector3(0, 0.5f, 0), 3f);
+            ((TgcRotationalCamera)Camara).setCenterDistance(new Vector3(0, 0.5f, 0), 3f);
 
             //Current texture
             currentTexurePah = MediaDir + "Texturas" + "\\" + "baldosaFacultad.jpg";

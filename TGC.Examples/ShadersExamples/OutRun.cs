@@ -276,7 +276,7 @@ namespace TGC.Examples.ShadersExamples
             effect.EndPass();
             effect.End();
 
-            //TgcDrawText.Instance.drawText("Pos: " + this.Camara.getPosition(), 0, 0, Color.Yellow);
+            //TgcDrawText.Instance.drawText("Pos: " + this.Camara.Position, 0, 0, Color.Yellow);
             //TgcDrawText.Instance.drawText("Look At: " + CamaraManager.Instance.CurrentCamera.getLookAt(), 500, 0, Color.Yellow);
 
             if (circuito.en_ruta)

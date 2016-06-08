@@ -212,7 +212,7 @@ namespace TGC.Examples.ShadersExamples
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", new Vector4(0, 400, 0, 0));
             effect.SetValue("fvEyePosition",
-                TgcParserUtils.vector3ToFloat3Array(Camara.getPosition()));
+                TgcParserUtils.vector3ToFloat3Array(Camara.Position));
             effect.SetValue("kx", (float)Modifiers["Reflexion"]);
             effect.SetValue("kc", (float)Modifiers["Refraccion"]);
             effect.SetValue("usar_fresnel", (bool)Modifiers["Fresnel"]);
@@ -333,7 +333,7 @@ namespace TGC.Examples.ShadersExamples
             //TextureLoader.Save("test.bmp", ImageFileFormat.Bmp, g_pCubeMap);
 
             // Restauro el estado de las transformaciones
-            Camara.updateViewMatrix(D3DDevice.Instance.Device);
+            D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix();
             D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, 1f, 10000f);

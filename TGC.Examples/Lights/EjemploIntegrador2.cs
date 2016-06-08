@@ -188,7 +188,7 @@ namespace TGC.Examples.Lights
                 meshData.mesh.Technique = currentTechnique;
             }
 
-            var eyePosition = Camara.getPosition();
+            var eyePosition = Camara.Position;
 
             //Renderizar meshes con BumpMapping
             foreach (var meshData in meshesWithLight)

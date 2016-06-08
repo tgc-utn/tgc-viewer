@@ -86,7 +86,7 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("specularExp", 10f);
             mesh.Effect.SetValue("lightPosition", lightPos);
             mesh.Effect.SetValue("eyePosition",
-                TgcParserUtils.vector3ToFloat4Array(Camara.getPosition()));
+                TgcParserUtils.vector3ToFloat4Array(Camara.Position));
 
             mesh.rotateY(-ElapsedTime / 2);
             mesh.render();

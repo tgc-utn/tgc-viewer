@@ -166,7 +166,7 @@ namespace TGC.Examples.Lights
             //Actualzar posición de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
-            var eyePosition = Camara.getPosition();
+            var eyePosition = Camara.Position;
 
             //Renderizar meshes
             foreach (var mesh in meshes)

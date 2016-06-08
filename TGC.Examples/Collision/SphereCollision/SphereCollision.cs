@@ -113,7 +113,7 @@ namespace TGC.Examples.Collision.SphereCollision
 
             //Configurar camara en Tercer Persona
             Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 100, -400);
+            ((TgcThirdPersonCamera)Camara).setTargetOffsets(personaje.Position, 100, -400);
             ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(0, 100, 0);
 
             //Crear SkyBox
@@ -260,7 +260,7 @@ namespace TGC.Examples.Collision.SphereCollision
             foreach (var mesh in escenario.Meshes)
             {
                 Vector3 q;
-                if (TgcCollisionUtils.intersectSegmentAABB(Camara.getPosition(), ((TgcThirdPersonCamera)Camara).Target,
+                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, ((TgcThirdPersonCamera)Camara).Target,
                     mesh.BoundingBox, out q))
                 {
                     objectsBehind.Add(mesh);

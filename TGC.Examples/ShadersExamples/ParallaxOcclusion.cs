@@ -123,7 +123,7 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("min_cant_samples", (float)Modifiers["minSample"]);
             effect.SetValue("max_cant_samples", (float)Modifiers["maxSample"]);
             effect.SetValue("fHeightMapScale", (float)Modifiers["HeightMapScale"]);
-            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(Camara.getPosition()));
+            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(Camara.Position));
 
             device.EndScene();
             effect.SetValue("time", time);

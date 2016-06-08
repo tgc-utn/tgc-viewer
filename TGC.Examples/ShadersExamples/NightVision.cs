@@ -165,7 +165,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            var pos = Camara.getPosition();
+            var pos = Camara.Position;
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
                 // reset
@@ -263,7 +263,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     timer_firing[i] += total_timer_firing;
                     pos_bala[i] = pos + new Vector3(rnd.Next(-10, 10), rnd.Next(-10, 10), rnd.Next(-10, 10));
-                    dir_bala[i] = Camara.getLookAt() - pos;
+                    dir_bala[i] = Camara.LookAt - pos;
                     dir_bala[i].Normalize();
                 }
                 else
@@ -299,7 +299,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
                 m.render();
 
-            TgcDrawText.Instance.drawText("Pos: " + Camara.getPosition(), 0, 0, Color.Yellow);
+            TgcDrawText.Instance.drawText("Pos: " + Camara.Position, 0, 0, Color.Yellow);
 
             FinalizarEscena();
         }

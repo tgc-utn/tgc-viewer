@@ -104,7 +104,7 @@ namespace TGC.Examples.Collision
 
             //Configurar camara en Tercera Persona
             Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 200, -300);
+            ((TgcThirdPersonCamera)Camara).setTargetOffsets(personaje.Position, 200, -300);
 
             //Modifiers para modificar propiedades de la camara
             Modifiers.addFloat("offsetHeight", 0, 300, 100);
@@ -245,7 +245,7 @@ namespace TGC.Examples.Collision
             //Pedirle a la camara cual va a ser su proxima posicion
             Vector3 segmentA;
             Vector3 segmentB;
-            ((TgcThirdPersonCamera)Camara).generateViewMatrix(out segmentA, out segmentB);
+            ((TgcThirdPersonCamera)Camara).updatePositionTarget(out segmentA, out segmentB);
 
             //Detectar colisiones entre el segmento de recta camara-personaje y todos los objetos del escenario
             Vector3 q;

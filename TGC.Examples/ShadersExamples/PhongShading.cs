@@ -84,7 +84,7 @@ namespace TGC.Examples.ShadersExamples
 
             // Creo 3 viewport, para mostrar una comparativa entre los metodos de iluminacion
 
-            ((TgcRotationalCamera)Camara).setCamera(new Vector3(20, 20, 0), 200);
+            ((TgcRotationalCamera)Camara).setCenterDistance(new Vector3(20, 20, 0), 200);
 
             View1 = new Viewport();
             View1.X = 0;
@@ -138,7 +138,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(lightPosition));
-            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(Camara.getPosition()));
+            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(Camara.Position));
             effect.SetValue("k_la", (float)Modifiers["Ambient"]);
             effect.SetValue("k_ld", (float)Modifiers["Diffuse"]);
             effect.SetValue("k_ls", (float)Modifiers["Specular"]);
