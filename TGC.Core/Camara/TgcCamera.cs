@@ -9,7 +9,7 @@ namespace TGC.Core.Camara
     /// </summary>
     public abstract class TgcCamera
     {
-        private readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
+        protected readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
 
         /// <summary>
         ///     Posicion de la camara
@@ -24,7 +24,7 @@ namespace TGC.Core.Camara
         /// <summary>
         ///     Vector direccional hacia arriba (puede diferir si la camara se invierte).
         /// </summary>
-        public Vector3 UpVector { get; private set; }
+        public Vector3 UpVector { get; protected set; }
 
         /// <summary>
         ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de view.

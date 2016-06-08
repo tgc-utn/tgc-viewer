@@ -49,7 +49,7 @@ namespace TGC.Examples.ShadersExamples
         private TgcMesh palmera, avion;
         private TgcScene scene, scene2, scene3, sceneX;
         private TgcSkyBox skyBox;
-
+        private TgcRotationalCamera CamaraRot;
         // enviroment map
         private TgcSimpleTerrain
             terrain;
@@ -146,9 +146,6 @@ namespace TGC.Examples.ShadersExamples
                     bosque.Add(instance);
                 }
 
-            ((TgcRotationalCamera)Camara).CameraDistance = 300;
-            ((TgcRotationalCamera)Camara).RotationSpeed = 1.5f;
-
             // Arreglo las normales del tanque
             /*int[] adj = new int[mesh.D3dMesh.NumberFaces * 3];
             mesh.D3dMesh.GenerateAdjacency(0, adj);
@@ -173,7 +170,10 @@ namespace TGC.Examples.ShadersExamples
             vel_tanque = 10;
 
             //Centrar camara rotacional respecto a este mesh
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox);
+            CamaraRot.CameraDistance = 300;
+            CamaraRot.RotationSpeed = 1.5f;
+            Camara = CamaraRot;
 
             kx = kc = 0.5f;
             Modifiers.addFloat("Reflexion", 0, 1, kx);
@@ -248,8 +248,9 @@ namespace TGC.Examples.ShadersExamples
             dir_avion = new Vector3(-(float)System.Math.Sin(beta), 0, (float)System.Math.Cos(beta));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
-            Camara.updateCamera(ElapsedTime);
+            
+            CamaraRot.calculateCenterDistance(mesh.BoundingBox);
+            
             // --------------------------------------------------------------------
             D3DDevice.Instance.Device.EndScene();
             var g_pCubeMap = new CubeTexture(D3DDevice.Instance.Device, 256, 1, Usage.RenderTarget,

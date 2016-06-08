@@ -58,7 +58,7 @@ namespace TGC.Examples.ShadersExamples
             time = 0;
             g_pVideoBuffer = new Texture[500];
 
-            ((TgcRotationalCamera)Camara).setCenterDistance(new Vector3(0, 0, 0), 100);
+            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 100);
 
             // Quad
             CustomVertex.PositionTextured[] vertices =

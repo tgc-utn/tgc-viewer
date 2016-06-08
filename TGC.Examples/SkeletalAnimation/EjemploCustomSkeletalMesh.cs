@@ -53,7 +53,7 @@ namespace TGC.Examples.SkeletalAnimation
             mesh.playAnimation("Push");
 
             //Centrar camara rotacional respecto a este mesh
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox);
         }
 
         public override void Update()

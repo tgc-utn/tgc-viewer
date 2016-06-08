@@ -41,7 +41,7 @@ namespace TGC.Examples.Fog
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg"));
 
             //Camara rotacional
-            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
+            Camara = new TgcRotationalCamera(box.BoundingBox);
 
             //Modifiers para configurar valores de niebla
             Modifiers.addBoolean("Enabled", "Enabled", true);

@@ -52,7 +52,7 @@ namespace TGC.Examples.GeometryBasics
             vertexBuffer.SetData(data, 0, LockFlags.None);
 
             //Configurar camara en rotacion
-            ((TgcRotationalCamera)Camara).setCenterDistance(new Vector3(0, 0.5f, 0), 3f);
+            Camara = new TgcRotationalCamera(new Vector3(0, 0.5f, 0), 3f);
 
             //User Vars
             UserVars.addVar("Vertices");

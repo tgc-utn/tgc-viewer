@@ -84,7 +84,7 @@ namespace TGC.Examples.ShadersExamples
 
             // Creo 3 viewport, para mostrar una comparativa entre los metodos de iluminacion
 
-            ((TgcRotationalCamera)Camara).setCenterDistance(new Vector3(20, 20, 0), 200);
+            Camara = new TgcRotationalCamera(new Vector3(20, 20, 0), 200);
 
             View1 = new Viewport();
             View1.X = 0;
@@ -128,8 +128,8 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            IniciarEscena();
             base.Render();
+            IniciarEscena();
 
             if (TgcD3dInput.Instance.keyPressed(Key.Space))
                 vista_unica = !vista_unica;
@@ -202,8 +202,8 @@ namespace TGC.Examples.ShadersExamples
 
                 lightBox.render();
 
-                FinalizarEscena();
             }
+            FinalizarEscena();
         }
 
         public override void Close()

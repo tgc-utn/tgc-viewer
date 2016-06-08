@@ -84,11 +84,11 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
 
             //Centrar camara rotacional respecto a este mesh
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
-            ((TgcRotationalCamera)Camara).CameraCenter = ((TgcRotationalCamera)Camara).CameraCenter +
-                                                          new Vector3(0, 20f, 0);
-            ((TgcRotationalCamera)Camara).CameraDistance = 75;
-            ((TgcRotationalCamera)Camara).RotationSpeed = 50f;
+            var rotCamera = new TgcRotationalCamera(mesh.BoundingBox);
+            rotCamera.CameraCenter = rotCamera.CameraCenter + new Vector3(0, 20f, 0);
+            rotCamera.CameraDistance = 75;
+            rotCamera.RotationSpeed = 50f;
+            Camara = rotCamera;
 
             pom = false;
             phong = true;

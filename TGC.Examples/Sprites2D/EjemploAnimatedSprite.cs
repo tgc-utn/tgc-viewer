@@ -65,7 +65,7 @@ namespace TGC.Examples.Sprites2D
             box = TgcBox.fromSize(new Vector3(10, 10, 10), TgcTexture.createTexture(MediaDir + "\\Texturas\\pasto.jpg"));
 
             //Hacer que la camara se centre en el box3D
-            ((TgcRotationalCamera)Camara).targetObject(box.BoundingBox);
+            Camara = new TgcRotationalCamera(box.BoundingBox);
         }
 
         public override void Update()
