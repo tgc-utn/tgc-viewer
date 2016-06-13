@@ -115,9 +115,9 @@ namespace TGC.Examples.Collision
             }
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             obb.dispose();
             for (var i = 0; i < vertices.Length; i++)

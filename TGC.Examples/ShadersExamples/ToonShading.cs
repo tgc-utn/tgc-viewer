@@ -260,9 +260,9 @@ namespace TGC.Examples.ShadersExamples
             D3DDevice.Instance.Device.Present();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             effect.Dispose();
             scene.disposeAll();

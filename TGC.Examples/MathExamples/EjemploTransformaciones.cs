@@ -127,5 +127,9 @@ namespace TGC.Examples.MathExamples
 
             helperPostRender();
         }
+        public override void Dispose()
+        {
+            //nada en state.
+        }
     }
 }

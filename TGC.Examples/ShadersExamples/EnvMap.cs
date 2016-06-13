@@ -483,9 +483,9 @@ namespace TGC.Examples.ShadersExamples
             return H;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             effect.Dispose();
             scene.disposeAll();

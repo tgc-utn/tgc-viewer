@@ -97,9 +97,9 @@ namespace TGC.Examples.Optimization.GrillaRegular
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             skyBox.dispose();
             terreno.dispose();

@@ -509,9 +509,9 @@ namespace TGC.Examples.ShadersExamples
                 }
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             foreach (var m in meshes)
             {

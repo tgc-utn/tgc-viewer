@@ -135,9 +135,9 @@ namespace TGC.Examples.Lights
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             scene.disposeAll();
             lightMesh.dispose();

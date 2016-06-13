@@ -141,9 +141,9 @@ namespace TGC.Examples.DirectX
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //Liberar recursos de la malla
             mesh.Dispose();

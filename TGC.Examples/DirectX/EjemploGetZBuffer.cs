@@ -122,9 +122,9 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.Present();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             pOldRT.Dispose();
             zBufferTexture.Dispose();

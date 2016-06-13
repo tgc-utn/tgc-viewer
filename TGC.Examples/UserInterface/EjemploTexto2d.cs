@@ -73,9 +73,9 @@ namespace TGC.Examples.UserInterface
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             text1.dispose();
             text2.dispose();

@@ -267,9 +267,9 @@ namespace TGC.Examples.DirectX
             lightBulb = Mesh.Sphere(D3DDevice.Instance.Device, 0.5f, 10, 10);
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             SelectedMesh.Dispose();
         }

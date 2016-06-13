@@ -66,9 +66,9 @@ namespace TGC.Examples.Tutorial
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //Liberar memoria del modelo 3D
             mesh.dispose();

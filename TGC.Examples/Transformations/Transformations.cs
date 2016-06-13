@@ -113,9 +113,9 @@ namespace TGC.Examples.Transformations
             d3dDevice.Transform.World = matFinal;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             vertexBuffer.Dispose();
         }

@@ -97,9 +97,9 @@ namespace TGC.Examples.Optimization.KdtTree
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             skyBox.dispose();
             terreno.dispose();

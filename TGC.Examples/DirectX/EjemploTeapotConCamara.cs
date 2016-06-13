@@ -88,9 +88,9 @@ namespace TGC.Examples.DirectX
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             teapot.Dispose();
             box.Dispose();

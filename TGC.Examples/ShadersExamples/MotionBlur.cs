@@ -179,9 +179,9 @@ namespace TGC.Examples.ShadersExamples
             g_pVel1 = aux;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
 

@@ -60,9 +60,9 @@ namespace TGC.Examples.Collision
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
         }

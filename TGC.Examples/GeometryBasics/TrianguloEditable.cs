@@ -151,5 +151,10 @@ namespace TGC.Examples.GeometryBasics
 
             helperPostRender();
         }
+
+        public override void Dispose()
+        {
+            texture.Dispose();
+        }
     }
 }

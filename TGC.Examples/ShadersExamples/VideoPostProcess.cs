@@ -241,9 +241,9 @@ namespace TGC.Examples.ShadersExamples
         ///     Método que se llama cuando termina la ejecución del ejemplo.
         ///     Hacer dispose() de todos los objetos creados.
         /// </summary>
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //for (int i = 0; i < cant_frames; ++i)
             //  g_pVideoBuffer[i].Dispose();

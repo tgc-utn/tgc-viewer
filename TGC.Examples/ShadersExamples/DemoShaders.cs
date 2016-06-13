@@ -815,9 +815,9 @@ namespace TGC.Examples.ShadersExamples
             return matWorld;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             effect.Dispose();
             scene.disposeAll();

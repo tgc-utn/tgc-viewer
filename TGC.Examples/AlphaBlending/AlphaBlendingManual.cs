@@ -91,9 +91,9 @@ namespace TGC.Examples.AlphaBlending
             D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh1.dispose();
             mesh2.dispose();

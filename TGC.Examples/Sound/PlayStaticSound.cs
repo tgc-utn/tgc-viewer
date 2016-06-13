@@ -119,9 +119,9 @@ namespace TGC.Examples.Sound
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             sound.dispose();
         }

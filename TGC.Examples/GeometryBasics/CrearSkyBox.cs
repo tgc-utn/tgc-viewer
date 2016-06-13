@@ -76,9 +76,9 @@ namespace TGC.Examples.GeometryBasics
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //Liberar recursos del SkyBox
             skyBox.dispose();

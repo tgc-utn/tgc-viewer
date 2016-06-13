@@ -228,15 +228,9 @@ namespace TGC.Core.Example
 
         /// <summary>
         ///     Se llama cuando el ejemplo es cerrado.
-        ///     Liberar todos los recursos utilizados.
+        ///     Liberar todos los recursos utilizados. OBLIGATORIAMENTE!!!!
         /// </summary>
-        public virtual void Close()
-        {
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
-            UserVars.ClearVars();
-            Modifiers.Clear();
-            ElapsedTime = -1;
-        }
+        public abstract void Dispose();
 
         /// <summary>
         ///     Vuelve la configuracion de Render y otras cosas a la configuracion inicial
@@ -244,6 +238,10 @@ namespace TGC.Core.Example
         public void ResetDefaultConfig()
         {
             D3DDevice.Instance.DefaultValues();
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            UserVars.ClearVars();
+            Modifiers.Clear();
+            ElapsedTime = -1;
         }
     }
 }

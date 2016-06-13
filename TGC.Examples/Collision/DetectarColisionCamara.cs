@@ -277,9 +277,9 @@ namespace TGC.Examples.Collision
             camaraInterna.OffsetForward = newOffsetForward;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             piso.dispose();
             foreach (var obstaculo in obstaculos)

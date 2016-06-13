@@ -165,9 +165,9 @@ namespace TGC.Examples.ShadersExamples
             device.Present();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             foreach (var m in meshes)
             {

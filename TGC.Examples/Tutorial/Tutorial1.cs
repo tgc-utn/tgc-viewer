@@ -86,9 +86,9 @@ namespace TGC.Examples.Tutorial
         ///     Método que se invoca una sola vez al finalizar el ejemplo.
         ///     Se debe liberar la memoria de todos los recursos utilizados.
         /// </summary>
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //Liberar memoria de la caja 3D.
             //Por mas que estamos en C# con Garbage Collector igual hay que liberar la memoria de los recursos gráficos.
