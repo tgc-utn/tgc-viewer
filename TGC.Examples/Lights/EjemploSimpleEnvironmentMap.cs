@@ -45,7 +45,7 @@ namespace TGC.Examples.Lights
         public override void Init()
         {
             //Cargar textura de CubeMap para Environment Map
-            cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device, ShadersDir + "CubeMap.dds");
+            cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device, MediaDir + "CubeMap.dds");
 
             //Crear 3 paredes y un piso con textura comun y textura de normalMap
             var diffuseMap = TgcTexture.createTexture(MediaDir + "Texturas//BM_DiffuseMap_pared.jpg");
@@ -153,13 +153,11 @@ namespace TGC.Examples.Lights
             //Renderizar mesh de luz
             lightMesh.render();
 
-            helperPostRender();
+            base.helperPostRender();
         }
 
         public override void Dispose()
         {
-            
-
             effect.Dispose();
             foreach (var m in meshes)
             {

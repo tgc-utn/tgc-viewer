@@ -48,7 +48,7 @@ namespace TGC.Examples.Lights
         public override void Init()
         {
             //Cargar textura de CubeMap para Environment Map, fijo para todos los meshes
-            cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device, ShadersDir + "CubeMap.dds");
+            cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device, MediaDir + "CubeMap.dds");
 
             //Cargar Shader personalizado de EnvironmentMap
             effect = TgcShaders.loadEffect(ShadersDir + "EnvironmentMap_Integrador2.fx");
@@ -103,7 +103,7 @@ namespace TGC.Examples.Lights
                     //Por convencion de este ejemplo el NormalMap se llama igual que el DiffuseMap (y cada mesh tiene una sola)
                     var path = mesh.DiffuseMaps[0].FilePath;
                     var split = path.Split('.');
-                    path = split[0] + "_NormalMap.png";
+                    path = split[0] + "." + split[1] + "_NormalMap.png";
 
                     //Convertir TgcMesh a TgcMeshBumpMapping
                     var normalMap = TgcTexture.createTexture(path);
@@ -194,7 +194,7 @@ namespace TGC.Examples.Lights
             {
                 var mesh = meshData.mesh;
 
-                if (lightEnable)
+                if (true)//FIXME da error cuando se desabilitan las luces.) (lightEnable)
                 {
                     mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(eyePosition));
                     mesh.Effect.SetValue("bumpiness", (float)Modifiers["bumpiness"]);
