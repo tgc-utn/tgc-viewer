@@ -112,13 +112,13 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Actualzar posición de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
@@ -159,7 +159,7 @@ namespace TGC.Examples.Lights
             //Renderizar mesh de luz
             lightMesh.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

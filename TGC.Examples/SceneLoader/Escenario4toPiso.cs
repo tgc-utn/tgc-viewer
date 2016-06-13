@@ -66,13 +66,13 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var frustumCullingEnabled = (bool)Modifiers["culling"];
 
@@ -106,7 +106,7 @@ namespace TGC.Examples.SceneLoader
                 UserVars.setValue("Meshes renderizadas", totalMeshes);
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

@@ -48,13 +48,13 @@ namespace TGC.Examples.Transformations
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Rotación Euler
             var rotEuler = (Vector3)Modifiers["Rot-Euler"];
@@ -74,7 +74,7 @@ namespace TGC.Examples.Transformations
             boxEuler.render();
             boxQuaternion.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

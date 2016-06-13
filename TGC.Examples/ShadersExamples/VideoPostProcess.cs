@@ -132,12 +132,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            base.Render();
+            base.helperRenderClearTextures();
 
             var d3dDevice = D3DDevice.Instance.Device;
 
@@ -177,7 +177,7 @@ namespace TGC.Examples.ShadersExamples
 
             //1-era pasada: calculo la intensidad
             // imagen-->rendertarget_A
-            IniciarEscena();
+            d3dDevice.BeginScene();
             effect.Begin(0);
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             effect.BeginPass(0);
@@ -214,11 +214,11 @@ namespace TGC.Examples.ShadersExamples
             d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             effect.EndPass();
             effect.End();
-            FinalizarEscena();
+            d3dDevice.EndScene();
 
             // restuaro el render target
             d3dDevice.SetRenderTarget(0, pOldRT);
-            IniciarEscena();
+            d3dDevice.BeginScene();
             effect.Technique = "motionDetect";
             effect.SetValue("base_Tex", g_pVideoFrame);
             effect.SetValue("g_RenderTarget", g_pRenderTarget);
@@ -228,7 +228,8 @@ namespace TGC.Examples.ShadersExamples
             d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             effect.EndPass();
             effect.End();
-            FinalizarEscena();
+            d3dDevice.EndScene();
+            d3dDevice.Present();
 
             // cambio los render Targets
             var p_aux = g_pRenderTarget_ant;

@@ -61,13 +61,13 @@ namespace TGC.Examples.Transformations
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Especificar formato de triangulos
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
@@ -81,7 +81,7 @@ namespace TGC.Examples.Transformations
             //Dibujar 1 primitiva
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         /// <summary>

@@ -64,13 +64,13 @@ namespace TGC.Examples.Outdoor
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si cambio el heightmap
             var selectedHeightmap = (string)Modifiers["heightmap"];
@@ -104,7 +104,7 @@ namespace TGC.Examples.Outdoor
             //Renderizar terreno
             terrain.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

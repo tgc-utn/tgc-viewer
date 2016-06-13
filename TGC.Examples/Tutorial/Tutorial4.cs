@@ -47,13 +47,13 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Obtenemos acceso al objeto que maneja input de mouse y teclado del framework
             var input = TgcD3dInput.Instance;
@@ -103,7 +103,7 @@ namespace TGC.Examples.Tutorial
 
             box.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

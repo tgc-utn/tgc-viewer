@@ -51,18 +51,19 @@ namespace TGC.Examples.Fog
             Modifiers.addColor("color", Color.Gray);
 
             fog = new TgcFog();
+
+            
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
-
+            base.helperPreRender();
+            
             //Cargar valores de niebla
             fog.Enabled = (bool)Modifiers["Enabled"];
             fog.StartDistance = (float)Modifiers["startDistance"];
@@ -75,7 +76,7 @@ namespace TGC.Examples.Fog
 
             box.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

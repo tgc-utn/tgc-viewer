@@ -71,13 +71,13 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Actualizar Technique
             mesh.Technique = (string)Modifiers["Technique"];
@@ -89,7 +89,7 @@ namespace TGC.Examples.ShadersExamples
 
             mesh.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

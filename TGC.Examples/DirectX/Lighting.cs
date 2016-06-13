@@ -97,13 +97,13 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Pongo el fondo negro
             D3DDevice.Instance.Device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
@@ -225,7 +225,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.Transform.World *= Matrix.Translation(lightVectorToCenter);
             lightBulb.DrawSubset(0);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         private void createMeshes()

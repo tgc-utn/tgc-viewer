@@ -161,6 +161,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
+            base.helperPreUpdate();
             var pos = Camara.Position;
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
@@ -271,13 +272,18 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            base.Render();
+            base.helperRenderClearTextures();
 
-            Update();
             if ((bool)Modifiers["activar_efecto"])
                 renderConEfectos(ElapsedTime);
             else
                 renderSinEfectos(ElapsedTime);
+
+            D3DDevice.Instance.Device.BeginScene();
+            base.helperRenderFPS();
+            base.helperRenderAxis();
+            D3DDevice.Instance.Device.EndScene();
+            D3DDevice.Instance.Device.Present();
         }
 
         public void renderSinEfectos(float elapsedTime)
@@ -288,7 +294,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
-            IniciarEscena();
+            device.BeginScene();
             //Dibujamos todos los meshes del escenario
             renderScene(elapsedTime, "DefaultTechnique");
             //Render personames enemigos
@@ -297,7 +303,8 @@ namespace TGC.Examples.ShadersExamples
 
             TgcDrawText.Instance.drawText("Pos: " + Camara.Position, 0, 0, Color.Yellow);
 
-            FinalizarEscena();
+            device.EndScene();
+
         }
 
         public void renderConEfectos(float elapsedTime)
@@ -315,14 +322,15 @@ namespace TGC.Examples.ShadersExamples
             device.DepthStencilSurface = g_pDepthStencil;
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
-            IniciarEscena();
+            device.BeginScene();
             //Dibujamos todos los meshes del escenario
             renderScene(elapsedTime, "DefaultTechnique");
             //Render personames enemigos
             foreach (var m in enemigos)
                 m.render();
 
-            FinalizarEscena();
+            device.EndScene();
+
             pSurf.Dispose();
 
             // dibujo el glow map
@@ -331,7 +339,7 @@ namespace TGC.Examples.ShadersExamples
             device.SetRenderTarget(0, pSurf);
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
-            IniciarEscena();
+            device.BeginScene();
 
             //Dibujamos SOLO los meshes que tienen glow brillantes
             //Render personaje brillante
@@ -357,7 +365,8 @@ namespace TGC.Examples.ShadersExamples
             // El resto opacos
             renderScene(elapsedTime, "DibujarObjetosOscuros");
 
-            FinalizarEscena();
+            device.EndScene();
+
             pSurf.Dispose();
 
             // Hago un blur sobre el glow map
@@ -366,7 +375,7 @@ namespace TGC.Examples.ShadersExamples
             pSurf = g_pRenderTarget4.GetSurfaceLevel(0);
             device.SetRenderTarget(0, pSurf);
 
-            IniciarEscena();
+            device.BeginScene();
             effect.Technique = "DownFilter4";
             device.VertexFormat = CustomVertex.PositionTextured.Format;
             device.SetStreamSource(0, g_pVBV3D, 0);
@@ -380,7 +389,8 @@ namespace TGC.Examples.ShadersExamples
             effect.End();
             pSurf.Dispose();
 
-            FinalizarEscena();
+            device.EndScene();
+
             device.DepthStencilSurface = pOldDS;
 
             // Pasadas de blur
@@ -392,7 +402,7 @@ namespace TGC.Examples.ShadersExamples
                 device.SetRenderTarget(0, pSurf);
                 // dibujo el quad pp dicho :
 
-                IniciarEscena();
+                device.BeginScene();
                 effect.Technique = "GaussianBlurSeparable";
                 device.VertexFormat = CustomVertex.PositionTextured.Format;
                 device.SetStreamSource(0, g_pVBV3D, 0);
@@ -406,7 +416,8 @@ namespace TGC.Examples.ShadersExamples
                 effect.End();
                 pSurf.Dispose();
 
-                FinalizarEscena();
+                device.EndScene();
+
 
                 pSurf = g_pRenderTarget4.GetSurfaceLevel(0);
                 device.SetRenderTarget(0, pSurf);
@@ -415,7 +426,7 @@ namespace TGC.Examples.ShadersExamples
                 //  Gaussian blur Vertical
                 // -----------------------------------------------------
 
-                IniciarEscena();
+                device.BeginScene();
                 effect.Technique = "GaussianBlurSeparable";
                 device.VertexFormat = CustomVertex.PositionTextured.Format;
                 device.SetStreamSource(0, g_pVBV3D, 0);
@@ -428,7 +439,8 @@ namespace TGC.Examples.ShadersExamples
                 effect.EndPass();
                 effect.End();
 
-                FinalizarEscena();
+                device.EndScene();
+
             }
 
             //  To Gray Scale
@@ -438,7 +450,7 @@ namespace TGC.Examples.ShadersExamples
             //pSurf = g_pRenderTarget4Aux.GetSurfaceLevel(0);
             //device.SetRenderTarget(0, pSurf);
 
-            IniciarEscena();
+            device.BeginScene();
 
             effect.Technique = "GrayScale";
             device.VertexFormat = CustomVertex.PositionTextured.Format;
@@ -452,7 +464,8 @@ namespace TGC.Examples.ShadersExamples
             effect.EndPass();
             effect.End();
 
-            FinalizarEscena();
+            device.EndScene();
+
         }
 
         public void renderScene(float elapsedTime, string Technique)

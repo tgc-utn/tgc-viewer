@@ -145,13 +145,13 @@ namespace TGC.Examples.Collision.SphereCollision
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Obtener boolean para saber si hay que mostrar Bounding Box
             var showBB = (bool)Modifiers.getValue("showBoundingBox");
@@ -300,7 +300,7 @@ namespace TGC.Examples.Collision.SphereCollision
             //Render SkyBox
             skyBox.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

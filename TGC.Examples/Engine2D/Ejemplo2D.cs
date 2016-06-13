@@ -38,19 +38,19 @@ namespace TGC.Examples.Engine2D
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             gameManager.Update(ElapsedTime);
 
             gameManager.Render(ElapsedTime);
 
-            FinalizarEscena();
+            helperPostRender();
         }
     }
 }

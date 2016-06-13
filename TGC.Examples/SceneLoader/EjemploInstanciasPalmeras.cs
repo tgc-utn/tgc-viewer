@@ -75,13 +75,13 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Renderizar suelo
             suelo.render();
@@ -92,7 +92,7 @@ namespace TGC.Examples.SceneLoader
                 mesh.render();
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

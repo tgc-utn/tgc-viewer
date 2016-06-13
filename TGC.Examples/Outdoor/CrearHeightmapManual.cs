@@ -70,7 +70,7 @@ namespace TGC.Examples.Outdoor
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         /// <summary>
@@ -167,8 +167,8 @@ namespace TGC.Examples.Outdoor
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si cambio el heightmap
             var selectedHeightmap = (string)Modifiers["heightmap"];
@@ -202,7 +202,7 @@ namespace TGC.Examples.Outdoor
             D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

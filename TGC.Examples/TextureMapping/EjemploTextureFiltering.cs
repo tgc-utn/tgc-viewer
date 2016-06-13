@@ -51,7 +51,7 @@ namespace TGC.Examples.TextureMapping
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         private void changeBoxTexure(Device d3dDevice, TgcBox box, string texturePath)
@@ -90,8 +90,8 @@ namespace TGC.Examples.TextureMapping
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var currentFiltering = (string)Modifiers["Filtering"];
             if (currentFiltering != lastFiltering)
@@ -109,7 +109,7 @@ namespace TGC.Examples.TextureMapping
 
             box.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

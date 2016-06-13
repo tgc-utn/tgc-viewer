@@ -137,13 +137,15 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperRenderClearTextures();
+
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
 
             time += ElapsedTime;
             // animo la pos del avion
@@ -177,7 +179,8 @@ namespace TGC.Examples.ShadersExamples
             //Cargar valores de la flecha
             arrow.render();
 
-            FinalizarEscena();
+            D3DDevice.Instance.Device.EndScene();
+            D3DDevice.Instance.Device.Present();
         }
 
         public void RenderShadowMap()

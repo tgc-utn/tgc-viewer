@@ -89,13 +89,13 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -172,7 +172,7 @@ namespace TGC.Examples.Collision
             suelo.render();
             mesh.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

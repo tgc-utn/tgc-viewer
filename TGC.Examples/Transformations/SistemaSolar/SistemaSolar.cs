@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using TGC.Core;
@@ -83,23 +84,21 @@ namespace TGC.Examples.Transformations.SistemaSolar
             sun.AutoTransformEnable = false;
             earth.AutoTransformEnable = false;
             moon.AutoTransformEnable = false;
-
-            //Color de fondo
-            D3DDevice.Instance.ClearColor = Color.Black;
-
+            
             //Camara en primera persona
             Camara = new TgcFpsCamera(new Vector3(705.2938f, 305.347f, -888.1567f));
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
+            base.helperRenderClearTextures();
 
             //Actualizar transformacion y renderizar el sol
             sun.Transform = getSunTransform(ElapsedTime);
@@ -121,7 +120,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
             //Limpiamos todas las transformaciones con la Matrix identidad
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         private Matrix getSunTransform(float elapsedTime)

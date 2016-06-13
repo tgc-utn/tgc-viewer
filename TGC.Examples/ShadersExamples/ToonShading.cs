@@ -177,14 +177,13 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
-
+            base.helperPreRender();
+            
             var lightPosition = (Vector3)Modifiers["LightPosition"];
 
             if (TgcD3dInput.Instance.keyPressed(Key.Space))
@@ -255,7 +254,10 @@ namespace TGC.Examples.ShadersExamples
             effect.EndPass();
             effect.End();
 
-            FinalizarEscena();
+            base.helperRenderFPS();
+            base.helperRenderAxis();
+            D3DDevice.Instance.Device.EndScene();
+            D3DDevice.Instance.Device.Present();
         }
 
         public override void Close()

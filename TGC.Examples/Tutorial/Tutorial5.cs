@@ -52,18 +52,18 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Dibujar el modelo 3D
             mesh.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()
