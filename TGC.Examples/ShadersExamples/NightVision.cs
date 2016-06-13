@@ -105,11 +105,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(-1000, 50, -1000), new Vector3(-1000, 50, -1001));
-            ((TgcFpsCamera)Camara).MovementSpeed *= 2;
-            ((TgcFpsCamera)Camara).JumpSpeed = 600f;
-            ((TgcFpsCamera)Camara).RotationSpeed *= 4;
+            Camara = new TgcFpsCamera(new Vector3(-1000, 50, -1000), 1000f, 600f);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
@@ -165,7 +161,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            var pos = Camara.getPosition();
+            var pos = Camara.Position;
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
                 // reset
@@ -263,7 +259,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     timer_firing[i] += total_timer_firing;
                     pos_bala[i] = pos + new Vector3(rnd.Next(-10, 10), rnd.Next(-10, 10), rnd.Next(-10, 10));
-                    dir_bala[i] = Camara.getLookAt() - pos;
+                    dir_bala[i] = Camara.LookAt - pos;
                     dir_bala[i].Normalize();
                 }
                 else
@@ -299,7 +295,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
                 m.render();
 
-            TgcDrawText.Instance.drawText("Pos: " + Camara.getPosition(), 0, 0, Color.Yellow);
+            TgcDrawText.Instance.drawText("Pos: " + Camara.Position, 0, 0, Color.Yellow);
 
             FinalizarEscena();
         }

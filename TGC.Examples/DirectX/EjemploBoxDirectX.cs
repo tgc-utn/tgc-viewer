@@ -249,7 +249,7 @@ namespace TGC.Examples.DirectX
 
             dir = 1;
 
-            ((TgcRotationalCamera)Camara).CameraDistance = 20;
+            Camara = new TgcRotationalCamera(new Vector3(), 20f);
         }
 
         public override void Update()

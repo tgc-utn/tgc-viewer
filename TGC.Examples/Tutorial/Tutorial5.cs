@@ -47,7 +47,7 @@ namespace TGC.Examples.Tutorial
             mesh = scene.Meshes[0];
 
             //Hacemos que la cámara esté centrada sobre el mesh.
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()

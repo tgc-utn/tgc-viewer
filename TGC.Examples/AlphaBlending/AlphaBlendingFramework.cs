@@ -47,8 +47,7 @@ namespace TGC.Examples.AlphaBlending
                 meshes.Add(instanceMesh);
             }
 
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(-100.0f, 0.0f, -50.0f), new Vector3(0.0f, 0.0f, 50.0f));
+            Camara = new TgcFpsCamera(new Vector3(-100.0f, 0.0f, -50.0f));
         }
 
         public override void Update()

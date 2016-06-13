@@ -61,10 +61,7 @@ namespace TGC.Examples.Outdoor
             loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
 
             //Configurar FPS Camara
-            Camara = new TgcFpsCamera();
-            ((TgcFpsCamera)Camara).MovementSpeed = 100f;
-            ((TgcFpsCamera)Camara).JumpSpeed = 100f;
-            Camara.setCamera(new Vector3(-24.9069f, 386.3114f, 673.7542f), new Vector3(844.4131f, -107.726f, 688.2306f));
+            Camara = new TgcFpsCamera(new Vector3(-24.9069f, 386.3114f, 673.7542f), 100f, 100f);
 
             //UserVars para cantidad de vertices
             UserVars.addVar("Vertices", totalVertices);
