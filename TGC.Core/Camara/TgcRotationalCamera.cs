@@ -1,6 +1,4 @@
 using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Utils;
 
@@ -81,26 +79,6 @@ namespace TGC.Core.Camara
             this(cameraCenter, cameraDistance, DEFAULT_ZOOM_FACTOR)
         {
 
-        }
-
-        /// <summary>
-        ///     Crea una camara con los parámetros en funcion del BoundingBox de un modelo
-        /// </summary>
-        /// <param name="boundingBox">BoundingBox en base al cual configurar</param>
-        public TgcRotationalCamera(TgcBoundingBox boundingBox):this()
-        {
-            calculateCenterDistance(boundingBox);
-        }
-
-        /// <summary>
-        ///     Configura los parámetros de la cámara en funcion del BoundingBox de un modelo
-        /// </summary>
-        /// <param name="boundingBox">BoundingBox en base al cual configurar</param>
-        public void calculateCenterDistance(TgcBoundingBox boundingBox)
-        {
-            CameraCenter = boundingBox.calculateBoxCenter();
-            var r = boundingBox.calculateBoxRadius();
-            CameraDistance = 2 * r;
         }
 
         /// <summary>

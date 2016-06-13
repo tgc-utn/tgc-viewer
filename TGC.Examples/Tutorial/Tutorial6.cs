@@ -37,7 +37,7 @@ namespace TGC.Examples.Tutorial
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Iglesia\\Iglesia-TgcScene.xml");
 
             //Hacemos que la cámara esté centrada sobre la escena
-            Camara = new TgcRotationalCamera(scene.BoundingBox);
+            Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(), scene.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()

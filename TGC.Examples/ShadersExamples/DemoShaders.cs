@@ -239,7 +239,7 @@ namespace TGC.Examples.ShadersExamples
             //--------------------------------------------------------------------------------------
             //Centrar camara rotacional respecto a este mesh
             camara_rot = false;
-            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox);
+            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
             DefaultCamera = new TgcRotationalCamera(new Vector3(0, 200, 0), 5000, 0.1f, 1f);
@@ -379,7 +379,8 @@ namespace TGC.Examples.ShadersExamples
             {
                 if (camara_rot)
                 {
-                    CamaraRot.calculateCenterDistance(mesh.BoundingBox);
+                    CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
+                    //CamaraRot.CameraDistance = mesh.BoundingBox.calculateBoxRadius() * 2;
                     CamaraRot.updateCamera(ElapsedTime);
                     Camara = CamaraRot;
                 }

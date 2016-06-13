@@ -170,7 +170,7 @@ namespace TGC.Examples.ShadersExamples
             vel_tanque = 10;
 
             //Centrar camara rotacional respecto a este mesh
-            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox);
+            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
             Camara = CamaraRot;
@@ -248,8 +248,9 @@ namespace TGC.Examples.ShadersExamples
             dir_avion = new Vector3(-(float)System.Math.Sin(beta), 0, (float)System.Math.Cos(beta));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
-            
-            CamaraRot.calculateCenterDistance(mesh.BoundingBox);
+
+            CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
+            //CamaraRot.CameraDistance = mesh.BoundingBox.calculateBoxRadius() * 2;
             
             // --------------------------------------------------------------------
             D3DDevice.Instance.Device.EndScene();

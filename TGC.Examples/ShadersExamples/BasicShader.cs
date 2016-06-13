@@ -61,7 +61,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Centrar camara rotacional respecto a este mesh
 
-            Camara = new TgcRotationalCamera(mesh.BoundingBox);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
 
             time = 0;
         }
