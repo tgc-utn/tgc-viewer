@@ -127,7 +127,7 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addVertex3f("LightLookAt", new Vector3(-K, -K, -K), new Vector3(K, K, K),
                 new Vector3(0, 0, 0));
 
-            var rotCamera = new TgcRotationalCamera(scene.Meshes[0].BoundingBox);
+            var rotCamera = new TgcRotationalCamera(scene.Meshes[0].BoundingBox.calculateBoxCenter(), scene.Meshes[0].BoundingBox.calculateBoxRadius() * 2);
             rotCamera.CameraCenter = rotCamera.CameraCenter +
                                                           new Vector3(0, 50f, 0);
             rotCamera.CameraDistance = 300;

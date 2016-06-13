@@ -38,7 +38,7 @@ namespace TGC.Examples.Collision
             mesh = scene.Meshes[0];
 
             //Alejar camara rotacional segun tamaño del BoundingBox del objeto
-            Camara = new TgcRotationalCamera(mesh.BoundingBox);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
