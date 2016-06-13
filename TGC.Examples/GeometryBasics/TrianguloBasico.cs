@@ -68,5 +68,9 @@ namespace TGC.Examples.GeometryBasics
 
             helperPostRender();
         }
+        public override void Dispose()
+        {
+            //nada en state.
+        }
     }
 }

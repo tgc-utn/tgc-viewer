@@ -92,9 +92,9 @@ namespace TGC.Examples.ShadersExamples
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
             mesh.Effect.Dispose();

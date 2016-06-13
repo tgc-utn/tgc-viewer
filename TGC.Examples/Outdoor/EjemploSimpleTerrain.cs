@@ -107,9 +107,9 @@ namespace TGC.Examples.Outdoor
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             terrain.dispose();
         }

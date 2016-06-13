@@ -97,7 +97,6 @@ namespace TGC.Examples.GeometryBasics
         {
             base.helperPreRender();
             
-
             //Actualizar parametros de la caja
             updateBox();
 
@@ -111,12 +110,12 @@ namespace TGC.Examples.GeometryBasics
                 box.BoundingBox.render();
             }
 
-            helperPostRender();
+            base.helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             box.dispose();
         }

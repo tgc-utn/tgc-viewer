@@ -118,9 +118,9 @@ namespace TGC.Examples.Particles
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //Liberar recursos
             emitter.dispose();

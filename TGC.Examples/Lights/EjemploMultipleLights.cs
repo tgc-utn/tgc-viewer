@@ -217,9 +217,9 @@ namespace TGC.Examples.Lights
             return minLight;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             scene.disposeAll();
         }

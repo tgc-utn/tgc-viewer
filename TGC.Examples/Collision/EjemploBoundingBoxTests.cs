@@ -197,9 +197,9 @@ namespace TGC.Examples.Collision
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             box.dispose();
             box2.dispose();

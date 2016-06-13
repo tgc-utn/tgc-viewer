@@ -64,9 +64,9 @@ namespace TGC.Examples.Tutorial
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //Liberar memoria de toda la escena
             scene.disposeAll();

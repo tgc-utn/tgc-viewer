@@ -185,9 +185,9 @@ namespace TGC.Examples.PostProcess
             d3dDevice.Present();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             foreach (var m in meshes)
             {

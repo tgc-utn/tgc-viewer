@@ -156,9 +156,9 @@ namespace TGC.Examples.Lights
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             effect.Dispose();
             foreach (var m in meshes)

@@ -67,9 +67,8 @@ namespace TGC.Examples.AlphaBlending
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
             meshes[0].dispose();
         }
     }

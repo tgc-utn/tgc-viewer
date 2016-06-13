@@ -138,9 +138,9 @@ namespace TGC.Examples.Sound
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mp3Player.closeFile();
         }

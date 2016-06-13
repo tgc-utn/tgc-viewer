@@ -39,18 +39,21 @@ namespace TGC.Examples.Engine2D
         public override void Update()
         {
             base.helperPreUpdate();
+            gameManager.Update(ElapsedTime);
         }
 
         public override void Render()
         {
             base.helperPreRender();
             
-
-            gameManager.Update(ElapsedTime);
-
             gameManager.Render(ElapsedTime);
 
-            helperPostRender();
+            base.helperPostRender();
+        }
+
+        public override void Dispose()
+        {
+            gameManager.Dispose();
         }
     }
 }

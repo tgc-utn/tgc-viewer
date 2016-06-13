@@ -66,9 +66,9 @@ namespace TGC.Examples.SceneLoader
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
         }

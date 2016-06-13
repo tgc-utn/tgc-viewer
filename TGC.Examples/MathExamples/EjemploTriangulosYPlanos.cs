@@ -164,9 +164,9 @@ namespace TGC.Examples.MathExamples
             return Color.FromArgb(FastMath.Min(c.R + r, 255), FastMath.Min(c.G + r, 255), FastMath.Min(c.B + r, 255));
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
             foreach (var t in triangles)

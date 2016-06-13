@@ -90,9 +90,9 @@ namespace TGC.Examples.Sprites2D
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             sprite.dispose();
             box.dispose();

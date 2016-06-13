@@ -82,13 +82,12 @@ namespace TGC.Examples.GeometryBasics
 
             debugBox.render();
 
-            helperPostRender();
+            base.helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
             
-
             debugBox.dispose();
         }
     }

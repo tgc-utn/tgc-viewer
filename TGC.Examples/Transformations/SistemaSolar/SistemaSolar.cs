@@ -151,9 +151,9 @@ namespace TGC.Examples.Transformations.SistemaSolar
             return scale * yRot * earthOffset * moonOrbit * earthTransform;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             sun.dispose();
             moon.dispose();

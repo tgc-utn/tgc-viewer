@@ -68,9 +68,9 @@ namespace TGC.Examples.Tutorial
             helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             box.dispose();
         }

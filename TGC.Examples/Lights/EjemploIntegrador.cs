@@ -254,9 +254,9 @@ namespace TGC.Examples.Lights
             return minLight;
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             effect.Dispose();
             foreach (var m in bumpMeshes)
