@@ -61,10 +61,7 @@ namespace TGC.Examples.Lights
             mesh.playAnimation("Walk", true);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera();
-            ((TgcFpsCamera)Camara).MovementSpeed = 400f;
-            ((TgcFpsCamera)Camara).JumpSpeed = 300f;
-            Camara.setCamera(new Vector3(0, 20, -150), new Vector3(0, 20, 0));
+            Camara = new TgcFpsCamera(new Vector3(0, 20, -150), 400f, 300f);
 
             //Mesh para la luz
             lightMesh = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);

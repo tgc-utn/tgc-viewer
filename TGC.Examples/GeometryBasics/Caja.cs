@@ -54,7 +54,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addColor("color", Color.White);
             Modifiers.addBoolean("boundingBox", "BoundingBox", false);
 
-            ((TgcRotationalCamera)Camara).CameraDistance = 50;
+            Camara = new TgcRotationalCamera(new Vector3(), 50f);
         }
 
         public override void Update()

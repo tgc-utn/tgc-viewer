@@ -88,8 +88,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
             D3DDevice.Instance.ClearColor = Color.Black;
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(705.2938f, 305.347f, -888.1567f), new Vector3(183.6915f, 19.6596f, -84.2204f));
+            Camara = new TgcFpsCamera(new Vector3(705.2938f, 305.347f, -888.1567f));
         }
 
         public override void Update()

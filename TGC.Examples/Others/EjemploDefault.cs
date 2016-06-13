@@ -62,8 +62,7 @@ namespace TGC.Examples.Others
             helpForm = new EjemploDefaultHelpForm(helpRtf);
 
             //Camara
-            ((TgcRotationalCamera)Camara).CameraCenter = new Vector3(0, 0, 0);
-            ((TgcRotationalCamera)Camara).CameraDistance = 150;
+            Camara = new TgcRotationalCamera(new Vector3(), 150f);
 
             //BackgroundColor
             D3DDevice.Instance.ClearColor = Color.Black;

@@ -37,6 +37,7 @@ namespace TGC.Examples.Collision
         private List<TgcBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcBox piso;
+        private TgcThirdPersonCamera camaraInterna;
 
         public EjemploColisionesThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars,
             TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
@@ -101,8 +102,8 @@ namespace TGC.Examples.Collision
             personaje.rotateY(Geometry.DegreeToRadian(180f));
 
             //Configurar camara en Tercer Persona
-            Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setTargetOffsets(personaje.Position, 200, -300);
+            camaraInterna  = new TgcThirdPersonCamera(personaje.Position, 200, -300);
+            Camara = camaraInterna;
 
             //Modifier para ver BoundingBox
             Modifiers.addBoolean("showBoundingBox", "Bouding Box", false);
@@ -170,7 +171,7 @@ namespace TGC.Examples.Collision
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
                 personaje.rotateY(rotAngle);
-                ((TgcThirdPersonCamera)Camara).rotateY(rotAngle);
+                camaraInterna.rotateY(rotAngle);
             }
 
             //Si hubo desplazamiento
@@ -213,7 +214,7 @@ namespace TGC.Examples.Collision
             }
 
             //Hacer que la camara siga al personaje en su nueva posicion
-            ((TgcThirdPersonCamera)Camara).Target = personaje.Position;
+            camaraInterna.Target = personaje.Position;
 
             //Render piso
             piso.render();
@@ -234,6 +235,8 @@ namespace TGC.Examples.Collision
             {
                 personaje.BoundingBox.render();
             }
+
+            FinalizarEscena();
         }
 
         public override void Close()

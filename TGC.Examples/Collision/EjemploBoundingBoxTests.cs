@@ -35,6 +35,7 @@ namespace TGC.Examples.Collision
         private TgcBoundingSphere sphere;
         private TgcBoundingBox triagleAABB;
         private CustomVertex.PositionColored[] triangle;
+        private TgcThirdPersonCamera camaraInterna;
 
         public EjemploBoundingBoxTests(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -78,8 +79,8 @@ namespace TGC.Examples.Collision
             obb.setRotation(new Vector3(0, FastMath.PI / 4, 0));
 
             //Configurar camara en Tercer Persona
-            Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setTargetOffsets(box.Position, 30, -75);
+            camaraInterna = new TgcThirdPersonCamera(box.Position, 30, -75);
+            Camara = camaraInterna;
         }
 
         public override void Update()
@@ -145,7 +146,7 @@ namespace TGC.Examples.Collision
                 box.move(movement);
             }
             //Hacer que la camara siga al personaje en su nueva posicion
-            ((TgcThirdPersonCamera)Camara).Target = box.Position;
+            camaraInterna.Target = box.Position;
 
             //Detectar colision con triangulo
             if (TgcCollisionUtils.testTriangleAABB(triangle[0].Position, triangle[1].Position, triangle[2].Position,

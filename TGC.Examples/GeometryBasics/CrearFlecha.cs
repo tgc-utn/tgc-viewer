@@ -44,10 +44,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addColor("headColor", Color.LightBlue);
 
             //Camara FPS
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(0.0302f, 5.842f, -18.97f), new Vector3(27.9348f, -29.0575f, 980.0311f));
-            ((TgcFpsCamera)Camara).MovementSpeed = 10f;
-            ((TgcFpsCamera)Camara).JumpSpeed = 10f;
+            Camara = new TgcFpsCamera(new Vector3(0.0302f, 5.842f, -18.97f), 10f, 10f);
         }
 
         public override void Update()
