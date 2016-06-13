@@ -70,10 +70,7 @@ namespace TGC.Examples.SceneLoader
             }
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera();
-            ((TgcFpsCamera)Camara).MovementSpeed = 400;
-            ((TgcFpsCamera)Camara).JumpSpeed = 400;
-            Camara.setCamera(new Vector3(61.8657f, 403.7024f, -527.558f), new Vector3(379.7143f, 12.9713f, 336.3295f));
+            Camara = new TgcFpsCamera(new Vector3(61.8657f, 403.7024f, -527.558f));
         }
 
         public override void Update()

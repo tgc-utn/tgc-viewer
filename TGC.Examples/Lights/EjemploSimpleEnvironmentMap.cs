@@ -81,8 +81,7 @@ namespace TGC.Examples.Lights
             m4.dispose();
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(0, 50, 100), new Vector3(0, 50, -1));
+            Camara = new TgcFpsCamera(new Vector3(0, 50, 100));
 
             //Cargar Shader de DynamicLights
             effect = TgcShaders.loadEffect(ShadersDir + "EnvironmentMap.fx");
@@ -124,7 +123,7 @@ namespace TGC.Examples.Lights
             //Actualzar posición de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
-            var eyePosition = Camara.getPosition();
+            var eyePosition = Camara.Position;
 
             //Renderizar meshes
             foreach (var mesh in meshes)

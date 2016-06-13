@@ -35,6 +35,7 @@ namespace TGC.Examples.Collision
         private Vector3 originalMeshRot;
         private TgcPickingRay pickingRay;
         private TgcBox suelo;
+        private TgcThirdPersonCamera camaraInterna;
 
         public MovimientoPorPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -81,9 +82,8 @@ namespace TGC.Examples.Collision
             directionArrow.HeadSize = new Vector2(10, 10);
 
             //Camara en tercera persona
-            Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(mesh.Position, 800, 1500);
-
+            camaraInterna = new TgcThirdPersonCamera(mesh.Position, 800, 1500);
+            Camara = camaraInterna;
             Modifiers.addFloat("speed", 1000, 5000, 2500);
         }
 
@@ -153,7 +153,7 @@ namespace TGC.Examples.Collision
                     mesh.Transform = meshRotationMatrix * Matrix.Translation(mesh.Position);
 
                     //Actualizar camara
-                    ((TgcThirdPersonCamera)Camara).Target = mesh.Position;
+                    camaraInterna.Target = mesh.Position;
                 }
                 //Se acabo el movimiento
                 else

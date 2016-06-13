@@ -42,6 +42,8 @@ namespace TGC.Examples.ShadersExamples
         private List<TgcMesh> bosque;
 
         private bool camara_rot;
+        private TgcRotationalCamera CamaraRot;
+        private TgcRotationalCamera DefaultCamera;
         private int cant_palmeras; // sin contar la isla
         private Vector3 dir_canoa;
         private Effect effect;
@@ -180,9 +182,6 @@ namespace TGC.Examples.ShadersExamples
                     bosque.Add(instance);
                 }
 
-            ((TgcRotationalCamera)Camara).CameraDistance = 300;
-            ((TgcRotationalCamera)Camara).RotationSpeed = 1.5f;
-
             // Arreglo las normales del tanque
             /*int[] adj = new int[mesh.D3dMesh.NumberFaces * 3];
             mesh.D3dMesh.GenerateAdjacency(0, adj);
@@ -240,7 +239,12 @@ namespace TGC.Examples.ShadersExamples
             //--------------------------------------------------------------------------------------
             //Centrar camara rotacional respecto a este mesh
             camara_rot = false;
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            CamaraRot.CameraDistance = 300;
+            CamaraRot.RotationSpeed = 1.5f;
+            DefaultCamera = new TgcRotationalCamera(new Vector3(0, 200, 0), 5000, 0.1f, 1f);
+            Camara = DefaultCamera;
+           
             LookFrom = new Vector3(0, 400, 2000);
             LookAt = new Vector3(0, 200, 0);
 
@@ -375,15 +379,13 @@ namespace TGC.Examples.ShadersExamples
             {
                 if (camara_rot)
                 {
-                    ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
-                    Camara.updateCamera(ElapsedTime);
+                    CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
+                    CamaraRot.updateCamera(ElapsedTime);//FIXME, puede que no haga falta esto.
+                    Camara = CamaraRot;
                 }
                 else
                 {
-                    ((TgcRotationalCamera)Camara).CameraCenter = new Vector3(0, 200, 0);
-                    ((TgcRotationalCamera)Camara).CameraDistance = 2000;
-                    ((TgcRotationalCamera)Camara).RotationSpeed = 1f;
-                    ((TgcRotationalCamera)Camara).ZoomFactor = 0.1f;
+                    Camara = DefaultCamera;                   
                 }
             }
 
@@ -484,7 +486,8 @@ namespace TGC.Examples.ShadersExamples
             if (timer_preview > 0)
                 D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(LookFrom, LookAt, new Vector3(0, 1, 0));
             else
-                Camara.updateViewMatrix(D3DDevice.Instance.Device);
+                D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix(); // TODO FIX IT! esto no se bien para que lo hace aca.
+
             D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, near_plane, far_plane);
@@ -495,7 +498,7 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("fvEyePosition",
                 TgcParserUtils.vector3ToFloat3Array(timer_preview > 0
                     ? LookFrom
-                    : Camara.getPosition()));
+                    : Camara.Position));
             effect.SetValue("time", time);
 
             // -----------------------------------------------------

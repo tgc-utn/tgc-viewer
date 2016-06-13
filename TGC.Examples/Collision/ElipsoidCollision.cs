@@ -49,6 +49,7 @@ namespace TGC.Examples.Collision
         private float jumpingElapsedTime;
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
+        private TgcThirdPersonCamera camaraInterna;
 
         public ElipsoidCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -132,9 +133,8 @@ namespace TGC.Examples.Collision
             collisionPoint = TgcBox.fromSize(new Vector3(4, 4, 4), Color.Red);
 
             //Configurar camara en Tercer Persona
-            Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 20, -120);
-            ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(0, 45, 0);
+            camaraInterna = new TgcThirdPersonCamera(personaje.Position, new Vector3(0, 45, 0), 20, -120);
+            Camara = camaraInterna;
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
@@ -240,7 +240,7 @@ namespace TGC.Examples.Collision
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
                 personaje.rotateY(rotAngle);
-                ((TgcThirdPersonCamera)Camara).rotateY(rotAngle);
+                camaraInterna.rotateY(rotAngle);
             }
 
             //Saltando
@@ -326,7 +326,7 @@ namespace TGC.Examples.Collision
             */
 
             //Hacer que la camara siga al personaje en su nueva posicion
-            ((TgcThirdPersonCamera)Camara).Target = personaje.Position;
+            camaraInterna.Target = personaje.Position;
 
             //Actualizar valores de la linea de movimiento
             directionArrow.PStart = characterElipsoid.Center;

@@ -61,7 +61,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Centrar camara rotacional respecto a este mesh
 
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
 
             time = 0;
         }
@@ -78,8 +78,6 @@ namespace TGC.Examples.ShadersExamples
 
             time += ElapsedTime;
 
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
-            Camara.updateCamera(ElapsedTime);
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             // Cargar variables de shader, por ejemplo el tiempo transcurrido.

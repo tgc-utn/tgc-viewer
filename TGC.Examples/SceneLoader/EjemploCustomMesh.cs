@@ -48,7 +48,7 @@ namespace TGC.Examples.SceneLoader
             mesh = (MyCustomMesh)sceneOriginal.Meshes[0];
 
             //Centrar camara rotacional respecto a este mesh
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()

@@ -77,11 +77,8 @@ namespace TGC.Examples.PostProcess
             meshes = scene.Meshes;
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera();
-            ((TgcFpsCamera)Camara).MovementSpeed *= 2;
-            Camara.setCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f),
-                new Vector3(-182.0957f, 82.3147f, -810.9479f));
-
+            Camara = new TgcFpsCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f));
+            
             //Modifier para activar/desactivar efecto
             Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
             Modifiers.addFloat("deviation", 1, 5, 1);

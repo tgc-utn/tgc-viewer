@@ -1,6 +1,4 @@
 using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Utils;
 
@@ -14,21 +12,77 @@ namespace TGC.Core.Camara
         public static float DEFAULT_ZOOM_FACTOR = 0.15f;
         public static float DEFAULT_CAMERA_DISTANCE = 10f;
         public static float DEFAULT_ROTATION_SPEED = 100f;
-        private float diffX;
-        private float diffY;
-        private float diffZ;
-        private Vector3 nextPos;
+        public static Vector3 DEFAULT_DOWN = new Vector3(0f, -1f, 0f);
 
-        private Vector3 upVector;
-        private Matrix viewMatrix;
-
+        /// <summary>
+        /// Crea camara con valores por defecto.
+        /// </summary>
         public TgcRotationalCamera()
         {
-            resetValues();
+            CameraCenter = new Vector3(0, 0, 0);
+            NextPos = new Vector3(0, 0, 0);
+            CameraDistance = DEFAULT_CAMERA_DISTANCE;
+            ZoomFactor = DEFAULT_ZOOM_FACTOR;
+            RotationSpeed = DEFAULT_ROTATION_SPEED;
+            DiffX = 0f;
+            DiffY = 0f;
+            DiffZ = 1f;
+            PanSpeed = 0.01f;
+            UpVector = new Vector3(0f, 1f, 0f);
+            this.setCamera(NextPos, LookAt, UpVector);
         }
 
         /// <summary>
-        ///     Actualiza los valores de la camara
+        /// Crea una camara con una posicion inicial y un objetivo.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="target"></param>
+        public TgcRotationalCamera(Vector3 position, Vector3 target) : this()
+        {
+            NextPos = position;
+            CameraCenter = target;
+            this.setCamera(NextPos, LookAt, UpVector);
+        }
+
+        /// <summary>
+        ///     Crea una camara con el centro de la camara, la distancia, la velocidad de zoom, Crea una camara con el centro de la camara, la distancia y la velocidad de rotacion.
+        /// </summary>
+        /// <param name="cameraCenter"></param>
+        /// <param name="cameraDistance"></param>
+        /// <param name="zoomFactor"></param>
+        /// <param name="rotationSpeed"></param>
+        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor, float rotationSpeed) : this()
+        {
+            CameraCenter = cameraCenter;
+            CameraDistance = cameraDistance;
+            ZoomFactor = zoomFactor;
+            RotationSpeed = rotationSpeed;
+        }
+        /// <summary>
+        ///     Crea una camara con el centro de la camara, la distancia y la velocidad de zoom
+        /// </summary>
+        /// <param name="cameraCenter"></param>
+        /// <param name="cameraDistance"></param>
+        /// <param name="zoomFactor"></param>
+        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor):
+            this(cameraCenter, cameraDistance, zoomFactor, DEFAULT_ROTATION_SPEED)
+        {
+            
+        }
+
+        /// <summary>
+        ///     Crea una camara con el centro de la camara, la distancia
+        /// </summary>
+        /// <param name="cameraCenter"></param>
+        /// <param name="cameraDistance"></param>
+        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance):
+            this(cameraCenter, cameraDistance, DEFAULT_ZOOM_FACTOR)
+        {
+
+        }
+
+        /// <summary>
+        ///     Actualiza los valores de la camara.
         /// </summary>
         public override void updateCamera(float elapsedTime)
         {
@@ -42,46 +96,46 @@ namespace TGC.Core.Camara
                 mouseX = d3dInput.XposRelative;
                 mouseY = d3dInput.YposRelative;
 
-                diffX += mouseX * elapsedTime * RotationSpeed;
-                diffY += mouseY * elapsedTime * RotationSpeed;
+                DiffX += mouseX * elapsedTime * RotationSpeed;
+                DiffY += mouseY * elapsedTime * RotationSpeed;
             }
             else
             {
-                diffX += mouseX;
-                diffY += mouseY;
+                DiffX += mouseX;
+                DiffY += mouseY;
             }
 
             //Calcular rotacion a aplicar
-            var rotX = -diffY / FastMath.PI;
-            var rotY = diffX / FastMath.PI;
+            var rotX = -DiffY / FastMath.PI;
+            var rotY = DiffX / FastMath.PI;
 
             //Truncar valores de rotacion fuera de rango
             if (rotX > FastMath.PI * 2 || rotX < -FastMath.PI * 2)
             {
-                diffY = 0;
+                DiffY = 0;
                 rotX = 0;
             }
 
             //Invertir Y de UpVector segun el angulo de rotacion
             if (rotX < -FastMath.PI / 2 && rotX > -FastMath.PI * 3 / 2)
             {
-                upVector.Y = -1;
+                UpVector = DEFAULT_DOWN;
             }
             else if (rotX > FastMath.PI / 2 && rotX < FastMath.PI * 3 / 2)
             {
-                upVector.Y = -1;
+                UpVector = DEFAULT_DOWN;
             }
             else
             {
-                upVector.Y = 1;
+                UpVector = DEFAULT_UP_VECTOR;
             }
 
             //Determinar distancia de la camara o zoom segun el Mouse Wheel
             if (d3dInput.WheelPos != 0)
             {
-                diffZ += ZoomFactor * d3dInput.WheelPos * -1;
+                DiffZ += ZoomFactor * d3dInput.WheelPos * -1;
             }
-            var distance = -CameraDistance * diffZ;
+            var distance = -CameraDistance * DiffZ;
 
             //Limitar el zoom a 0
             if (distance > 0)
@@ -96,9 +150,7 @@ namespace TGC.Core.Camara
                     * Matrix.Translation(CameraCenter);
 
             //Extraer la posicion final de la matriz de transformacion
-            nextPos.X = m.M41;
-            nextPos.Y = m.M42;
-            nextPos.Z = m.M43;
+            NextPos = new Vector3(m.M41,m.M42,m.M43);
 
             //Hacer efecto de Pan View
             if (d3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_RIGHT))
@@ -107,70 +159,23 @@ namespace TGC.Core.Camara
                 var dy = d3dInput.YposRelative;
                 var panSpeedZoom = PanSpeed * FastMath.Abs(distance);
 
-                var d = CameraCenter - nextPos;
+                var d = CameraCenter - NextPos;
                 d.Normalize();
 
-                var n = Vector3.Cross(d, upVector);
+                var n = Vector3.Cross(d, UpVector);
                 n.Normalize();
 
                 var up = Vector3.Cross(n, d);
                 var desf = Vector3.Scale(up, dy * panSpeedZoom) - Vector3.Scale(n, dx * panSpeedZoom);
-                nextPos = nextPos + desf;
+                NextPos = NextPos + desf;
                 CameraCenter = CameraCenter + desf;
             }
 
-            //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
-            viewMatrix = Matrix.LookAtLH(nextPos, CameraCenter, upVector);
+            //asigna las posiciones de la camara.
+            this.setCamera(NextPos, CameraCenter, UpVector);
         }
 
-        /// <summary>
-        ///     Actualiza la ViewMatrix, si es que la camara esta activada
-        /// </summary>
-        public override void updateViewMatrix(Device d3dDevice)
-        {
-            d3dDevice.Transform.View = viewMatrix;
-        }
-
-        public override Vector3 getPosition()
-        {
-            return nextPos;
-        }
-
-        public override Vector3 getLookAt()
-        {
-            return CameraCenter;
-        }
-
-        /// <summary>
-        ///     Carga los valores default de la camara
-        /// </summary>
-        public void resetValues()
-        {
-            upVector = new Vector3(0.0f, 1.0f, 0.0f);
-            CameraCenter = new Vector3(0, 0, 0);
-            nextPos = new Vector3(0, 0, 0);
-            CameraDistance = DEFAULT_CAMERA_DISTANCE;
-            ZoomFactor = DEFAULT_ZOOM_FACTOR;
-            RotationSpeed = DEFAULT_ROTATION_SPEED;
-            diffX = 0f;
-            diffY = 0f;
-            diffZ = 1f;
-            viewMatrix = Matrix.Identity;
-            PanSpeed = 0.01f;
-        }
-
-        /// <summary>
-        ///     Configura los parámetros de la cámara en funcion del BoundingBox de un modelo
-        /// </summary>
-        /// <param name="boundingBox">BoundingBox en base al cual configurar</param>
-        public void targetObject(TgcBoundingBox boundingBox)
-        {
-            CameraCenter = boundingBox.calculateBoxCenter();
-            var r = boundingBox.calculateBoxRadius();
-            CameraDistance = 2 * r;
-        }
-
-        #region Getters y Setters
+       #region Getters y Setters
 
         /// <summary>
         ///     Centro de la camara sobre la cual se rota
@@ -197,26 +202,12 @@ namespace TGC.Core.Camara
         /// </summary>
         public float PanSpeed { get; set; }
 
-        /// <summary>
-        ///     Configura el centro de la camara, la distancia y la velocidad de zoom
-        /// </summary>
-        public void setCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor)
-        {
-            CameraCenter = cameraCenter;
-            CameraDistance = cameraDistance;
-            ZoomFactor = zoomFactor;
-        }
+        public Vector3 NextPos { get; set; }
 
-        /// <summary>
-        ///     Configura el centro de la camara, la distancia
-        /// </summary>
-        public void setCamera(Vector3 cameraCenter, float cameraDistance)
-        {
-            CameraCenter = cameraCenter;
-            CameraDistance = cameraDistance;
-            ZoomFactor = DEFAULT_ZOOM_FACTOR;
-        }
+        public float DiffX { get; set; }
+        public float DiffY { get; set; }
+        public float DiffZ { get; set; }
 
-        #endregion Getters y Setters
+       #endregion Getters y Setters
     }
 }

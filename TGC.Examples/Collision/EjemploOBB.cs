@@ -49,7 +49,7 @@ namespace TGC.Examples.Collision
             //obb = TgcObb.computeFromPoints(mesh.getVertexPositions());
 
             //Alejar camara rotacional segun tamaño del BoundingBox del objeto
-            ((TgcRotationalCamera)Camara).targetObject(mesh.BoundingBox);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
 
             //Modifier para poder rotar y mover el mesh
             Modifiers.addFloat("rotation", 0, 360, 0);

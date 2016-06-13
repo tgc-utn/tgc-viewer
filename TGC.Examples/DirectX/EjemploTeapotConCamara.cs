@@ -60,10 +60,7 @@ namespace TGC.Examples.DirectX
 
             //Habilitar esquema de Iluminación Dinámica
             D3DDevice.Instance.Device.RenderState.Lighting = true;
-
-            //Configurar camara rotacional
-            ((TgcRotationalCamera)Camara).CameraCenter = new Vector3(0, 0, 0);
-            ((TgcRotationalCamera)Camara).CameraDistance = 10f;
+                        
         }
 
         public override void Update()

@@ -68,11 +68,8 @@ namespace TGC.Examples.Optimization.Quadtree
             quadtree.createDebugQuadtreeMeshes();
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(1500, 800, 0), new Vector3(0, 0, -1));
-            ((TgcFpsCamera)Camara).MovementSpeed = 500f;
-            ((TgcFpsCamera)Camara).JumpSpeed = 500f;
-
+            Camara = new TgcFpsCamera(new Vector3(1500, 800, 0));
+            
             Modifiers.addBoolean("showQuadtree", "Show Quadtree", false);
             Modifiers.addBoolean("showTerrain", "Show Terrain", true);
         }

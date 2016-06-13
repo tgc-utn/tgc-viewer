@@ -8,8 +8,6 @@ namespace TGC.Core.Camara
     /// </summary>
     public class TgcThirdPersonCamera : TgcCamera
     {
-        private static readonly Vector3 UP_VECTOR = new Vector3(0, 1, 0);
-
         private Vector3 position;
 
         /// <summary>
@@ -20,16 +18,20 @@ namespace TGC.Core.Camara
             resetValues();
         }
 
-        /// <summary>
-        ///     Posicion del ojo de la camara
-        /// </summary>
-        public Vector3 Position
+        public TgcThirdPersonCamera(Vector3 target, float offsetHeight, float offsetForward): this()
         {
-            get { return position; }
-            set { position = value; }
+            Target = target;
+            OffsetHeight = offsetHeight;
+            OffsetForward = offsetForward;
         }
 
-        public Matrix ViewMatrix { get; set; }
+        public TgcThirdPersonCamera(Vector3 target, Vector3 targetDisplacement, float offsetHeight, float offsetForward) : this()
+        {
+            Target = target;
+            TargetDisplacement = targetDisplacement;
+            OffsetHeight = offsetHeight;
+            OffsetForward = offsetForward;
+        }
 
         /// <summary>
         ///     Desplazamiento en altura de la camara respecto del target
@@ -61,22 +63,7 @@ namespace TGC.Core.Camara
         public override void updateCamera(float elapsedTime)
         {
             Vector3 targetCenter;
-            ViewMatrix = generateViewMatrix(out position, out targetCenter);
-        }
-
-        public override Vector3 getPosition()
-        {
-            return position;
-        }
-
-        public override Vector3 getLookAt()
-        {
-            return Target;
-        }
-
-        public override void updateViewMatrix(Device d3dDevice)
-        {
-            d3dDevice.Transform.View = ViewMatrix;
+            updatePositionTarget(out position, out targetCenter);
         }
 
         /// <summary>
@@ -90,7 +77,6 @@ namespace TGC.Core.Camara
             TargetDisplacement = Vector3.Empty;
             Target = Vector3.Empty;
             position = Vector3.Empty;
-            ViewMatrix = Matrix.Identity;
         }
 
         /// <summary>
@@ -99,7 +85,7 @@ namespace TGC.Core.Camara
         /// <param name="target">Objetivo al cual la camara tiene que apuntar</param>
         /// <param name="offsetHeight">Desplazamiento en altura de la camara respecto del target</param>
         /// <param name="offsetForward">Desplazamiento hacia adelante o atras de la camara repecto del target.</param>
-        public void setCamera(Vector3 target, float offsetHeight, float offsetForward)
+        public void setTargetOffsets(Vector3 target, float offsetHeight, float offsetForward)
         {
             Target = target;
             OffsetHeight = offsetHeight;
@@ -110,9 +96,8 @@ namespace TGC.Core.Camara
         ///     Genera la proxima matriz de view, sin actualizar aun los valores internos
         /// </summary>
         /// <param name="pos">Futura posicion de camara generada</param>
-        /// <param name="pos">Futuro centro de camara a generada</param>
-        /// <returns>Futura matriz de view generada</returns>
-        public Matrix generateViewMatrix(out Vector3 pos, out Vector3 targetCenter)
+        /// <param name="pos">Futuro centro de camara a generada</param>        
+        public void updatePositionTarget(out Vector3 pos, out Vector3 targetCenter)
         {
             //alejarse, luego rotar y lueg ubicar camara en el centro deseado
             targetCenter = Vector3.Add(Target, TargetDisplacement);
@@ -125,7 +110,7 @@ namespace TGC.Core.Camara
             pos.Z = m.M43;
 
             //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
-            return Matrix.LookAtLH(pos, targetCenter, UP_VECTOR);
+            this.setCamera(pos, targetCenter);
         }
 
         /// <summary>

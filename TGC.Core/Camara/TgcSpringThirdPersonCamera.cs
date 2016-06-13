@@ -46,24 +46,8 @@ namespace TGC.Core.Camara
             {
                 updateViewMatrix();
             }
-        }
 
-        /// <summary>
-        ///     Actualiza la ViewMatrix, si es que la camara esta activada
-        /// </summary>
-        public override void updateViewMatrix(Device d3dDevice)
-        {
-            d3dDevice.Transform.View = m_viewMatrix;
-        }
-
-        public override Vector3 getPosition()
-        {
-            return Position;
-        }
-
-        public override Vector3 getLookAt()
-        {
-            return Target;
+            this.setCamera(Eye, Target);
         }
 
         /// <summary>
@@ -79,7 +63,7 @@ namespace TGC.Core.Camara
             m_headingDegrees = 0.0f;
             m_pitchDegrees = 0.0f;
 
-            Position = new Vector3(0.0f, 0.0f, 0.0f);
+            Eye = new Vector3(0.0f, 0.0f, 0.0f);
             Target = new Vector3(0.0f, 0.0f, 0.0f);
             m_targetYAxis = new Vector3(0, 1, 0);
 
@@ -87,27 +71,31 @@ namespace TGC.Core.Camara
 
             m_viewMatrix = Matrix.Identity;
             m_orientation = Quaternion.Identity;
+            this.setCamera(Eye, Target);
         }
 
         /// <summary>
-        ///     Configura los valores iniciales de la cámara
+        ///    Asigna target con offsets.
         /// </summary>
-        /// <param name="eye"></param>
-        /// <param name="target"></param>
-        public void setCamera(Vector3 target, float offsetY, float offsetZ)
+        public void setTargetOffset(Vector3 target, float offsetY, float offsetZ)
         {
-            Position = new Vector3(target.X, target.Y + offsetY, target.Z + offsetZ);
+            Eye = new Vector3(target.X, target.Y + offsetY, target.Z + offsetZ);
 
             Target = target;
 
-            m_viewMatrix = Matrix.LookAtLH(Position, Target, m_targetYAxis);
+            m_viewMatrix = Matrix.LookAtLH(Eye, Target, m_targetYAxis);
             m_orientation = Quaternion.RotationMatrix(m_viewMatrix);
 
-            var offset = Target - Position;
+            var offset = Target - Eye;
             m_offsetDistance = offset.Length();
 
             m_headingDegrees = 0.0f;
             m_pitchDegrees = 0.0f;
+        }
+
+        public override Matrix getViewMatrix()
+        {
+            return m_viewMatrix;
         }
 
         /// <summary>
@@ -154,11 +142,11 @@ namespace TGC.Core.Camara
             var m_yAxis = new Vector3(m_viewMatrix.M12, m_viewMatrix.M22, m_viewMatrix.M32);
             var m_zAxis = new Vector3(m_viewMatrix.M13, m_viewMatrix.M23, m_viewMatrix.M33);
 
-            Position = Target + m_zAxis * -m_offsetDistance;
+            Eye = Target + m_zAxis * -m_offsetDistance;
 
-            m_viewMatrix.M41 = -Vector3.Dot(m_xAxis, Position);
-            m_viewMatrix.M42 = -Vector3.Dot(m_yAxis, Position);
-            m_viewMatrix.M43 = -Vector3.Dot(m_zAxis, Position);
+            m_viewMatrix.M41 = -Vector3.Dot(m_xAxis, Eye);
+            m_viewMatrix.M42 = -Vector3.Dot(m_yAxis, Eye);
+            m_viewMatrix.M43 = -Vector3.Dot(m_zAxis, Eye);
         }
 
         private void updateViewMatrix(float elapsedTimeSec)
@@ -182,11 +170,11 @@ namespace TGC.Core.Camara
             //     Gems 4, Andrew Kirmse, Editor, Charles River Media, Inc., 2004.
 
             var idealPosition = Target + m_zAxis * -m_offsetDistance;
-            var displacement = Position - idealPosition;
+            var displacement = Eye - idealPosition;
             var springAcceleration = -Spring * displacement - Damping * m_velocity;
 
             m_velocity += springAcceleration * elapsedTimeSec;
-            Position += m_velocity * elapsedTimeSec;
+            Eye += m_velocity * elapsedTimeSec;
 
             // The view matrix is always relative to the camera's current position
             // 'm_eye'. Since a spring system is being used here 'm_eye' will be
@@ -197,7 +185,7 @@ namespace TGC.Core.Camara
             // axes so that they're relative to 'm_eye'. Once that's done we can use
             // those axes to reconstruct the view matrix.
 
-            m_zAxis = Target - Position;
+            m_zAxis = Target - Eye;
             m_zAxis.Normalize();
 
             m_xAxis = Vector3.Cross(m_targetYAxis, m_zAxis);
@@ -211,17 +199,17 @@ namespace TGC.Core.Camara
             m_viewMatrix.M11 = m_xAxis.X;
             m_viewMatrix.M21 = m_xAxis.Y;
             m_viewMatrix.M31 = m_xAxis.Z;
-            m_viewMatrix.M41 = -Vector3.Dot(m_xAxis, Position);
+            m_viewMatrix.M41 = -Vector3.Dot(m_xAxis, Eye);
 
             m_viewMatrix.M12 = m_yAxis.X;
             m_viewMatrix.M22 = m_yAxis.Y;
             m_viewMatrix.M32 = m_yAxis.Z;
-            m_viewMatrix.M42 = -Vector3.Dot(m_yAxis, Position);
+            m_viewMatrix.M42 = -Vector3.Dot(m_yAxis, Eye);
 
             m_viewMatrix.M13 = m_zAxis.X;
             m_viewMatrix.M23 = m_zAxis.Y;
             m_viewMatrix.M33 = m_zAxis.Z;
-            m_viewMatrix.M43 = -Vector3.Dot(m_zAxis, Position);
+            m_viewMatrix.M43 = -Vector3.Dot(m_zAxis, Eye);
         }
 
         public Vector3 calulateNextPosition(float headingDegrees, float elapsedTimeSec)
@@ -285,7 +273,7 @@ namespace TGC.Core.Camara
         /// <summary>
         ///     Posicion del ojo de la camara que apunta hacia el Target
         /// </summary>
-        public Vector3 Position { get; set; }
+        public Vector3 Eye { get; set; }
 
         #endregion Getters y Setters
     }

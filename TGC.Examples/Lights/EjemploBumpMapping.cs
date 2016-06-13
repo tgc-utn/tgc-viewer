@@ -99,8 +99,7 @@ namespace TGC.Examples.Lights
             }
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(0, 50, 100), new Vector3(0, 50, -1));
+            Camara = new TgcFpsCamera(new Vector3(0, 50, 100));
 
             //Cargar Shader de personalizado de BumpMapping. Solo soporta meshes de tipo DiffuseMap
             effect = TgcShaders.loadEffect(ShadersDir + "BumpMapping.fx");
@@ -166,7 +165,7 @@ namespace TGC.Examples.Lights
             //Actualzar posición de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
-            var eyePosition = Camara.getPosition();
+            var eyePosition = Camara.Position;
 
             //Renderizar meshes
             foreach (var mesh in meshes)

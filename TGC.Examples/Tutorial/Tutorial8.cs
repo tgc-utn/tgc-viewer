@@ -24,6 +24,7 @@ namespace TGC.Examples.Tutorial
         private const float MOVEMENT_SPEED = 200f;
         private TgcMesh mainMesh;
         private TgcScene scene;
+        private TgcThirdPersonCamera camaraInterna;
 
         public Tutorial8(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -49,8 +50,8 @@ namespace TGC.Examples.Tutorial
             mainMesh.move(0, 5, 0);
 
             //Camera en 3ra persona
-            Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(mainMesh.Position, 200, 300);
+            camaraInterna = new TgcThirdPersonCamera(mainMesh.Position, 200, 300);
+            Camara = camaraInterna;
         }
 
         public override void Update()
@@ -122,7 +123,7 @@ namespace TGC.Examples.Tutorial
             }
 
             //Actualizar posicion de cámara
-            ((TgcThirdPersonCamera)Camara).Target = mainMesh.Position;
+            camaraInterna.Target = mainMesh.Position;
 
             //Dibujar
             mainMesh.render();

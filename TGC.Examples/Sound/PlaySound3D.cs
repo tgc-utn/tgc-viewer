@@ -40,6 +40,7 @@ namespace TGC.Examples.Sound
 
         private TgcBox piso;
         private List<Tgc3dSound> sonidos;
+        private TgcThirdPersonCamera camaraInterna;
 
         public PlaySound3D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -114,9 +115,9 @@ namespace TGC.Examples.Sound
             TgcDirectSound.Instance.ListenerTracking = personaje;
 
             //Configurar camara en Tercer Persona
-            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 200, 300);
-            ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(0, 100, 0);
-
+            camaraInterna = new TgcThirdPersonCamera(personaje.Position, new Vector3(0, 100, 0), 200, 300);
+            Camara = camaraInterna;
+            
             //Ejecutar en loop los sonidos
             foreach (var s in sonidos)
             {
@@ -175,7 +176,7 @@ namespace TGC.Examples.Sound
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
                 personaje.rotateY(rotAngle);
-                ((TgcThirdPersonCamera)Camara).rotateY(rotAngle);
+                camaraInterna.rotateY(rotAngle);
             }
 
             //Si hubo desplazamiento
@@ -207,7 +208,7 @@ namespace TGC.Examples.Sound
 
             //Hacer que la camara siga al personaje en su nueva posicion
             Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).Target = personaje.Position;
+            camaraInterna.Target = personaje.Position;
 
             //Render piso
             piso.render();

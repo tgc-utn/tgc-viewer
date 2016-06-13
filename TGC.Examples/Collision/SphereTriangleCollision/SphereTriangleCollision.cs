@@ -47,6 +47,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
         private float jumpingElapsedTime;
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
+        private TgcThirdPersonCamera camaraInterna;
 
         public SphereTriangleCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -134,9 +135,8 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             collisionManager.GravityEnabled = true;
 
             //Configurar camara en Tercer Persona
-            Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setCamera(personaje.Position, 100, -400);
-            ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(0, 100, 0);
+            camaraInterna = new TgcThirdPersonCamera(personaje.Position, new Vector3(0, 100, 0), 100, -400);
+            Camara = camaraInterna;
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
@@ -242,7 +242,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
                 personaje.rotateY(rotAngle);
-                ((TgcThirdPersonCamera)Camara).rotateY(rotAngle);
+                camaraInterna.rotateY(rotAngle);
             }
 
             //Si hubo desplazamiento
@@ -319,7 +319,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             }
 
             //Hacer que la camara siga al personaje en su nueva posicion
-            ((TgcThirdPersonCamera)Camara).Target = personaje.Position;
+            camaraInterna.Target = personaje.Position;
 
             //Actualizar valores de la linea de movimiento
             directionArrow.PStart = characterSphere.Center;

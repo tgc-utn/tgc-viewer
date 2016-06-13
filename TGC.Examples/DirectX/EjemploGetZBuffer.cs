@@ -64,10 +64,7 @@ namespace TGC.Examples.DirectX
                 Usage.RenderTarget, Format.R32F, Pool.Default);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera();
-            ((TgcFpsCamera)Camara).MovementSpeed = 400f;
-            ((TgcFpsCamera)Camara).JumpSpeed = 300f;
-            Camara.setCamera(new Vector3(-20, 80, 450), new Vector3(0, 80, 1));
+            Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f);
         }
 
         public override void Update()
