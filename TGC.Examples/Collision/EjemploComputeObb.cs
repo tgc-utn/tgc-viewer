@@ -46,7 +46,7 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public void random_clic(object sender, EventArgs args)
@@ -56,8 +56,8 @@ namespace TGC.Examples.Collision
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             if (generate)
             {
@@ -72,7 +72,7 @@ namespace TGC.Examples.Collision
 
             obb.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         /// <summary>

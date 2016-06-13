@@ -161,6 +161,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
+            base.helperPreUpdate();
             var d3dInput = TgcD3dInput.Instance;
 
             if (d3dInput.keyPressed(Key.F1))
@@ -216,9 +217,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            base.Render();
-
-            Update();
+            base.helperRenderClearTextures();
 
             var device = D3DDevice.Instance.Device;
             effect.Technique = "DefaultTechnique";
@@ -233,7 +232,7 @@ namespace TGC.Examples.ShadersExamples
 
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
-            IniciarEscena();
+            device.BeginScene();
 
             // -------------------------------------
             //Renderizar terreno
@@ -250,13 +249,13 @@ namespace TGC.Examples.ShadersExamples
             car.render();
             // -------------------------------------
 
-            FinalizarEscena();
+            device.EndScene();
 
             pSurf.Dispose();
 
             // Ultima pasada vertical va sobre la pantalla pp dicha
             device.SetRenderTarget(0, pOldRT);
-            IniciarEscena();
+            device.BeginScene();
 
             effect.Technique = "FrameMotionBlur";
             device.VertexFormat = CustomVertex.PositionTextured.Format;
@@ -277,12 +276,15 @@ namespace TGC.Examples.ShadersExamples
             //TgcDrawText.Instance.drawText("Look At: " + CamaraManager.Instance.CurrentCamera.getLookAt(), 500, 0, Color.Yellow);
 
             if (circuito.en_ruta)
-                TgcDrawText.Instance.drawText("Tramo:" + circuito.pos_en_ruta, 0, 0, Color.Yellow);
+                TgcDrawText.Instance.drawText("Tramo:" + circuito.pos_en_ruta, 0, 15, Color.Yellow);
 
             //TgcDrawText.Instance.drawText("dist_cam:" + dist_cam + "defY" + desf.Y, 0, 0, Color.Yellow);
             //TgcDrawText.Instance.drawText("vel:" + vel, 0, 0, Color.Yellow);
 
-            FinalizarEscena();
+            base.helperRenderFPS();
+            base.helperRenderAxis();
+            device.EndScene();
+            device.Present();
 
             ftime += ElapsedTime;
             if (ftime > 0.03f)

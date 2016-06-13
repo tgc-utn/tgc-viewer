@@ -277,13 +277,14 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperRenderClearTextures();
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
 
             var aspectRatio = D3DDevice.Instance.AspectRatio;
 
@@ -566,7 +567,10 @@ namespace TGC.Examples.ShadersExamples
 
             g_pCubeMap.Dispose();
 
-            FinalizarEscena();
+            base.helperRenderFPS();
+            base.helperRenderAxis();
+            D3DDevice.Instance.Device.EndScene();
+            D3DDevice.Instance.Device.Present();
         }
 
         public void renderScene(float elapsedTime, bool cubemap)

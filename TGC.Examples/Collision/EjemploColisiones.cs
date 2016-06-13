@@ -112,7 +112,7 @@ namespace TGC.Examples.Collision
             personaje.Position = new Vector3(0, 0, 0);
 
             //Hacer que la cámara mire hacia un determinado lugar del escenario
-            Camara.setCamera(new Vector3(-80, 165, 230), new Vector3(0, 0, 0));
+            Camara = new TgcRotationalCamera(new Vector3(-80, 165, 230), 200f);
 
             //Modifier para habilitar o no el renderizado del BoundingBox del personaje
             Modifiers.addBoolean("showBoundingBox", "Bouding Box", false);
@@ -120,13 +120,13 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si hay que mostrar el BoundingBox
             var showBB = (bool)Modifiers.getValue("showBoundingBox");
@@ -221,7 +221,7 @@ namespace TGC.Examples.Collision
                 personaje.BoundingBox.render();
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

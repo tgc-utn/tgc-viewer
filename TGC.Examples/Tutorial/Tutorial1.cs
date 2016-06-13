@@ -57,7 +57,7 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         /// <summary>
@@ -71,15 +71,15 @@ namespace TGC.Examples.Tutorial
         public override void Render()
         {
             //Iniciamoss la escena
-            IniciarEscena();
+            base.helperPreRender();
             //Render de la super clase
-            base.Render();
+            
 
             //Dibujar la caja en pantalla
             box.render();
 
             //Finalizamos el renderizado de la escena
-            FinalizarEscena();
+            helperPostRender();
         }
 
         /// <summary>

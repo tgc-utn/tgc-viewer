@@ -43,13 +43,13 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Renderizar modelo
             mesh.render();
@@ -57,7 +57,7 @@ namespace TGC.Examples.Collision
             //Renderizar BoundingBox
             mesh.BoundingBox.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

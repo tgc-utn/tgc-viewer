@@ -84,6 +84,7 @@ namespace TGC.Viewer.Model
                     //Solo renderizamos si la aplicacion tiene foco, para no consumir recursos innecesarios
                     if (form.ApplicationActive())
                     {
+                        ExampleLoader.CurrentExample.Update();
                         ExampleLoader.CurrentExample.Render();
                     }
                     else

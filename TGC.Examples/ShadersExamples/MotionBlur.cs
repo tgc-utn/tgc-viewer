@@ -58,9 +58,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Camara
             Camara = new TgcRotationalCamera(new Vector3(), 150f);
-
-            D3DDevice.Instance.ClearColor = Color.Black;
-
+            
             // stencil
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
@@ -101,6 +99,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
+            base.helperPreUpdate();
             time += ElapsedTime;
             float r = 40;
             mesh.Position = new Vector3(r * (float)System.Math.Cos(time * 0.5), 0, 0 * (float)System.Math.Sin(time * 0.5));
@@ -115,9 +114,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            base.Render();
-
-            Update();
+            base.helperRenderClearTextures();
             var device = D3DDevice.Instance.Device;
 
             // guardo el Render target anterior y seteo la textura como render target
@@ -133,11 +130,13 @@ namespace TGC.Examples.ShadersExamples
             // necesito mandarle la matrix de view proj anterior
             effect.SetValue("matWorldViewProjAnt", antMatWorldView * device.Transform.Projection);
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            device.BeginScene();
 
-            IniciarEscena();
             renderScene("VelocityMap");
 
-            FinalizarEscena();
+            device.EndScene();
+            device.Present();
+
             pSurf.Dispose();
 
             // 2- Genero la imagen pp dicha
@@ -145,17 +144,18 @@ namespace TGC.Examples.ShadersExamples
             pSurf = g_pRenderTarget.GetSurfaceLevel(0);
             device.SetRenderTarget(0, pSurf);
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            device.BeginScene();
 
-            IniciarEscena();
             renderScene("DefaultTechnique");
 
-            FinalizarEscena();
+            device.EndScene();
+            device.Present();
             pSurf.Dispose();
 
             // Ultima pasada vertical va sobre la pantalla pp dicha
             device.SetRenderTarget(0, pOldRT);
 
-            IniciarEscena();
+            device.BeginScene();
             effect.Technique = "PostProcessMotionBlur";
             device.VertexFormat = CustomVertex.PositionTextured.Format;
             device.SetStreamSource(0, g_pVBV3D, 0);
@@ -169,7 +169,8 @@ namespace TGC.Examples.ShadersExamples
             effect.EndPass();
             effect.End();
 
-            FinalizarEscena();
+            device.EndScene();
+            device.Present();
 
             // actualizo los valores para el proximo frame
             antMatWorldView = mesh.Transform * device.Transform.View;

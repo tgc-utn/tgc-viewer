@@ -13,8 +13,6 @@ namespace TGC.Core.Direct3D
     {
         public static readonly Material DEFAULT_MATERIAL = new Material();
 
-        private readonly Color DEFAULT_CLEAR_COLOR = Color.FromArgb(255, 78, 129, 179);
-
         /// <summary>
         ///     Constructor privado para poder hacer el singleton
         /// </summary>
@@ -32,15 +30,11 @@ namespace TGC.Core.Direct3D
 
         public float AspectRatio { get; set; } = -1f;
 
-        public float ZFarPlaneDistance { get; } = 10000f;
-        public float ZNearPlaneDistance { get; } = 1f;
+        public float ZFarPlaneDistance { get; set; } = 10000f;
+        public float ZNearPlaneDistance { get; set; } = 1f;
+        public bool ParticlesEnabled { get; set; } = false;
 
         public static D3DDevice Instance { get; } = new D3DDevice();
-
-        /// <summary>
-        ///     Color con el que se limpia la pantalla
-        /// </summary>
-        public Color ClearColor { get; set; }
 
         public int Width { get; set; }
 
@@ -97,20 +91,30 @@ namespace TGC.Core.Direct3D
 
             //Reset Material
             Device.Material = DEFAULT_MATERIAL;
-            ClearColor = DEFAULT_CLEAR_COLOR;
 
             //Limpiar IndexBuffer
             Device.Indices = null;
 
-            /* INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
+            this.enableParticles();
 
-            //PointSprite
-            this.Device.RenderState.PointSpriteEnable = true;
-            this.Device.RenderState.PointScaleEnable = true;
-            this.Device.RenderState.PointScaleA = 1.0f;
-            this.Device.RenderState.PointScaleB = 1.0f;
-            this.Device.RenderState.PointScaleC = 0.0f;
-             */
+            
+        }
+
+        /// <summary>
+        ///  habilita los points sprites.
+        ///  Estaba este comentario antes, asi que lo dejo con default false.
+        ///  INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
+        /// </summary>
+        public void enableParticles()
+        {
+            if (ParticlesEnabled) { 
+                //PointSprite
+                this.Device.RenderState.PointSpriteEnable = true;
+                this.Device.RenderState.PointScaleEnable = true;
+                this.Device.RenderState.PointScaleA = 1.0f;
+                this.Device.RenderState.PointScaleB = 1.0f;
+                this.Device.RenderState.PointScaleC = 0.0f;
+            }
         }
 
         public void InitializeD3DDevice(Panel panel)
@@ -190,11 +194,6 @@ namespace TGC.Core.Direct3D
 
             //Reset Timer
             HighResolutionTimer.Instance.Reset();
-        }
-
-        public void Clear()
-        {
-            Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Instance.ClearColor, 1.0f, 0);
         }
 
         public void Dispose()

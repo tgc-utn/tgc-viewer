@@ -91,12 +91,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            base.Render();
+            base.helperRenderClearTextures();
 
             var device = D3DDevice.Instance.Device;
 
@@ -121,7 +121,7 @@ namespace TGC.Examples.ShadersExamples
 
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
-            IniciarEscena();
+            device.BeginScene();
 
             //Dibujamos todos los meshes del escenario
             foreach (var m in meshes)
@@ -129,7 +129,7 @@ namespace TGC.Examples.ShadersExamples
                 m.render();
             }
 
-            FinalizarEscena();
+            device.EndScene();
 
             pSurf.Dispose();
 
@@ -140,7 +140,7 @@ namespace TGC.Examples.ShadersExamples
                 device.SetRenderTarget(0, pOldRT);
 
                 // dibujo el quad pp dicho :
-                IniciarEscena();
+                device.BeginScene();
 
                 effect.Technique = "PostProcess";
                 effect.SetValue("time", time);
@@ -155,8 +155,14 @@ namespace TGC.Examples.ShadersExamples
                 effect.EndPass();
                 effect.End();
 
-                FinalizarEscena();
+                device.EndScene();
             }
+
+            device.BeginScene();
+            base.helperRenderAxis();
+            base.helperRenderFPS();
+            device.EndScene();
+            device.Present();
         }
 
         public override void Close()

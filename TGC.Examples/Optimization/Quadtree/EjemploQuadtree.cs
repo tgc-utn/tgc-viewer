@@ -76,13 +76,13 @@ namespace TGC.Examples.Optimization.Quadtree
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var showQuadtree = (bool)Modifiers["showQuadtree"];
             var showTerrain = (bool)Modifiers["showTerrain"];
@@ -94,7 +94,7 @@ namespace TGC.Examples.Optimization.Quadtree
             }
             quadtree.render(TgcFrustum.Instance, showQuadtree);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

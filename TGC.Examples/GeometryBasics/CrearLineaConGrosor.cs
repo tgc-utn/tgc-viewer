@@ -48,13 +48,13 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var start = (Vector3)Modifiers["start"];
             var end = (Vector3)Modifiers["end"];
@@ -73,7 +73,7 @@ namespace TGC.Examples.GeometryBasics
             //Render
             line.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

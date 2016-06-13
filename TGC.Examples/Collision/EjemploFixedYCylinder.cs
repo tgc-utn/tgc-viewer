@@ -53,13 +53,13 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var size = (Vector2)Modifiers.getValue("size");
             var position = (Vector3)Modifiers.getValue("position");
@@ -104,7 +104,7 @@ namespace TGC.Examples.Collision
             collisionableAABB.render();
             collisionableCylinder.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()

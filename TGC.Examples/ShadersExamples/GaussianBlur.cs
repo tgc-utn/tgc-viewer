@@ -98,12 +98,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            base.Render();
+            base.helperRenderClearTextures();
             var device = D3DDevice.Instance.Device;
 
             var activar_efecto = (bool)Modifiers["activar_efecto"];
@@ -126,14 +126,15 @@ namespace TGC.Examples.ShadersExamples
 
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
-            IniciarEscena();
+            device.BeginScene();
 
             //Dibujamos todos los meshes del escenario
             foreach (var m in meshes)
             {
                 m.render();
             }
-            FinalizarEscena();
+            device.EndScene();
+
             pSurf.Dispose();
 
             if (activar_efecto)
@@ -147,7 +148,7 @@ namespace TGC.Examples.ShadersExamples
                     // -----------------------------------------------------
                     pSurf = g_pRenderTarget4.GetSurfaceLevel(0);
                     device.SetRenderTarget(0, pSurf);
-                    IniciarEscena();
+                    device.BeginScene();
 
                     effect.Technique = "DownFilter4";
                     device.VertexFormat = CustomVertex.PositionTextured.Format;
@@ -162,7 +163,7 @@ namespace TGC.Examples.ShadersExamples
                     effect.End();
                     pSurf.Dispose();
 
-                    FinalizarEscena();
+                    device.EndScene();
 
                     // TextureLoader.Save("scene.bmp", ImageFileFormat.Bmp, g_pRenderTarget4);
                     device.DepthStencilSurface = pOldDS;
@@ -175,7 +176,7 @@ namespace TGC.Examples.ShadersExamples
                         pSurf = g_pRenderTarget4Aux.GetSurfaceLevel(0);
                         device.SetRenderTarget(0, pSurf);
                         // dibujo el quad pp dicho :
-                        IniciarEscena();
+                        device.BeginScene();
 
                         effect.Technique = "GaussianBlurSeparable";
                         device.VertexFormat = CustomVertex.PositionTextured.Format;
@@ -190,7 +191,7 @@ namespace TGC.Examples.ShadersExamples
                         effect.End();
                         pSurf.Dispose();
 
-                        FinalizarEscena();
+                        device.EndScene();
                         //TextureLoader.Save("blurH.bmp", ImageFileFormat.Bmp, g_pRenderTarget4Aux);
 
                         if (P < cant_pasadas - 1)
@@ -198,6 +199,7 @@ namespace TGC.Examples.ShadersExamples
                             pSurf = g_pRenderTarget4.GetSurfaceLevel(0);
                             device.SetRenderTarget(0, pSurf);
                             pSurf.Dispose();
+                            device.BeginScene();
                         }
                         else
                             // Ultima pasada vertical va sobre la pantalla pp dicha
@@ -205,8 +207,7 @@ namespace TGC.Examples.ShadersExamples
 
                         //  Gaussian blur Vertical
                         // -----------------------------------------------------
-                        IniciarEscena();
-
+                        
                         effect.Technique = "GaussianBlurSeparable";
                         device.VertexFormat = CustomVertex.PositionTextured.Format;
                         device.SetStreamSource(0, g_pVBV3D, 0);
@@ -218,8 +219,9 @@ namespace TGC.Examples.ShadersExamples
                         device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
                         effect.EndPass();
                         effect.End();
-                        if (P < cant_pasadas - 1)
-                            FinalizarEscena();
+                        if (P < cant_pasadas - 1) {
+                            device.EndScene();
+                        }
 
                         //TextureLoader.Save("blurV.bmp", ImageFileFormat.Bmp, g_pRenderTarget4);
                     }
@@ -232,7 +234,7 @@ namespace TGC.Examples.ShadersExamples
                     device.SetRenderTarget(0, pOldRT);
 
                     // dibujo el quad pp dicho :
-                    IniciarEscena();
+                    device.BeginScene();
 
                     effect.Technique = "GaussianBlur";
                     device.VertexFormat = CustomVertex.PositionTextured.Format;
@@ -245,10 +247,18 @@ namespace TGC.Examples.ShadersExamples
                     device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
                     effect.EndPass();
                     effect.End();
+                    device.EndScene();
                 }
 
-                FinalizarEscena();
             }
+
+            device.BeginScene();
+            base.helperRenderAxis();
+            base.helperRenderFPS();
+            device.EndScene();
+            device.Present();
+
+
         }
 
         public override void Close()

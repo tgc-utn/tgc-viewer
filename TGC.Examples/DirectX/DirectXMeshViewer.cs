@@ -53,7 +53,7 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         /// <summary>
@@ -113,8 +113,8 @@ namespace TGC.Examples.DirectX
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si cambio el modelo elegido por el usuario
             var selectedPath = (string)Modifiers["Mesh"];
@@ -138,7 +138,7 @@ namespace TGC.Examples.DirectX
                 mesh.DrawSubset(i);
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public override void Close()
