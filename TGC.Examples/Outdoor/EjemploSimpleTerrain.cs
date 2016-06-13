@@ -59,10 +59,7 @@ namespace TGC.Examples.Outdoor
             terrain.loadTexture(currentTexture);
 
             //Configurar FPS Camara
-            Camara = new TgcFpsCamera();
-            ((TgcFpsCamera)Camara).MovementSpeed = 100f;
-            ((TgcFpsCamera)Camara).JumpSpeed = 100f;
-            Camara.setCamera(new Vector3(-722.6171f, 495.0046f, -31.2611f), new Vector3(164.9481f, 35.3185f, -61.5394f));
+            Camara = new TgcFpsCamera(new Vector3(-722.6171f, 495.0046f, -31.2611f), 100f, 100f);
         }
 
         public override void Update()

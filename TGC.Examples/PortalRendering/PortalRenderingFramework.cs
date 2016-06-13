@@ -47,11 +47,8 @@ namespace TGC.Examples.PortalRendering
             scene.setMeshesEnabled(false);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera();
-            ((TgcFpsCamera)Camara).MovementSpeed = 800f;
-            ((TgcFpsCamera)Camara).JumpSpeed = 600f;
-            Camara.setCamera(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
-
+            Camara = new TgcFpsCamera(new Vector3(0, 0, 0), 800f, 600f);
+            
             //Modifiers
             Modifiers.addBoolean("portalRendering", "PortalRendering", true);
             Modifiers.addBoolean("WireFrame", "WireFrame", false);

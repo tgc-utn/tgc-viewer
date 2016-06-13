@@ -57,8 +57,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.Effect = effect;
 
             //Camara
-            ((TgcRotationalCamera)Camara).CameraCenter = new Vector3(0, 0, 0);
-            ((TgcRotationalCamera)Camara).CameraDistance = 150;
+            Camara = new TgcRotationalCamera(new Vector3(), 150f);
 
             D3DDevice.Instance.ClearColor = Color.Black;
 

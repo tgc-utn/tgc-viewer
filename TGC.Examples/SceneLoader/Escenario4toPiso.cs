@@ -42,10 +42,7 @@ namespace TGC.Examples.SceneLoader
         public override void Init()
         {
             //FPS Camara
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(-140f, 40f, -50f), new Vector3(-140f, 40f, -120f));
-            ((TgcFpsCamera)Camara).MovementSpeed = 200f;
-            ((TgcFpsCamera)Camara).JumpSpeed = 200f;
+            Camara = new TgcFpsCamera(new Vector3(-140f, 40f, -50f), 200f, 200f);
 
             //Cargar escena desde archivo ZIP
             var loader = new TgcSceneLoader();

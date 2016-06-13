@@ -84,11 +84,8 @@ namespace TGC.Examples.SkeletalAnimation
             }
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera();
-            ((TgcFpsCamera)Camara).MovementSpeed = 400;
-            ((TgcFpsCamera)Camara).JumpSpeed = 400;
-            Camara.setCamera(new Vector3(293.201f, 291.0797f, -604.6647f),
-                new Vector3(299.1028f, -63.9185f, 330.1836f));
+            Camara = new TgcFpsCamera(new Vector3(293.201f, 291.0797f, -604.6647f));
+            
         }
 
         public override void Update()

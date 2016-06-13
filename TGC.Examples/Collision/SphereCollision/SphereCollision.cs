@@ -45,6 +45,7 @@ namespace TGC.Examples.Collision.SphereCollision
         private TgcScene escenario;
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
+        private TgcThirdPersonCamera camaraInterna;
 
         public SphereCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -112,10 +113,9 @@ namespace TGC.Examples.Collision.SphereCollision
             collisionManager.GravityEnabled = true;
 
             //Configurar camara en Tercer Persona
-            Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setTargetOffsets(personaje.Position, 100, -400);
-            ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(0, 100, 0);
-
+            camaraInterna = new TgcThirdPersonCamera(personaje.Position, new Vector3(0, 100, 0), 100, -400);
+            Camara = camaraInterna;
+            
             //Crear SkyBox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
@@ -209,7 +209,7 @@ namespace TGC.Examples.Collision.SphereCollision
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
                 personaje.rotateY(rotAngle);
-                ((TgcThirdPersonCamera)Camara).rotateY(rotAngle);
+                camaraInterna.rotateY(rotAngle);
             }
 
             //Si hubo desplazamiento
@@ -244,7 +244,7 @@ namespace TGC.Examples.Collision.SphereCollision
             personaje.move(realMovement);
 
             //Hacer que la camara siga al personaje en su nueva posicion
-            ((TgcThirdPersonCamera)Camara).Target = personaje.Position;
+            camaraInterna.Target = personaje.Position;
 
             //Actualizar valores de la linea de movimiento
             directionArrow.PStart = characterSphere.Center;
@@ -260,7 +260,7 @@ namespace TGC.Examples.Collision.SphereCollision
             foreach (var mesh in escenario.Meshes)
             {
                 Vector3 q;
-                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, ((TgcThirdPersonCamera)Camara).Target,
+                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, camaraInterna.Target,
                     mesh.BoundingBox, out q))
                 {
                     objectsBehind.Add(mesh);

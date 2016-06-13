@@ -31,6 +31,7 @@ namespace TGC.Examples.Collision
         private List<TgcBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcBox piso;
+        private TgcThirdPersonCamera camaraInterna; 
 
         public DetectarColisionCamara(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -102,9 +103,9 @@ namespace TGC.Examples.Collision
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.rotateY(Geometry.DegreeToRadian(180f));
 
-            //Configurar camara en Tercera Persona
-            Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setTargetOffsets(personaje.Position, 200, -300);
+            //Configurar camara en Tercera Persona y la asigno al TGC.
+            camaraInterna = new TgcThirdPersonCamera(personaje.Position, 200, -300);
+            Camara = camaraInterna;
 
             //Modifiers para modificar propiedades de la camara
             Modifiers.addFloat("offsetHeight", 0, 300, 100);
@@ -166,7 +167,7 @@ namespace TGC.Examples.Collision
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
                 personaje.rotateY(rotAngle);
-                ((TgcThirdPersonCamera)Camara).rotateY(rotAngle);
+                camaraInterna.rotateY(rotAngle);
             }
 
             //Si hubo desplazamiento
@@ -202,7 +203,7 @@ namespace TGC.Examples.Collision
                 }
 
                 //Hacer que la camara siga al personaje en su nueva posicion
-                ((TgcThirdPersonCamera)Camara).Target = personaje.Position;
+                camaraInterna.Target = personaje.Position;
             }
 
             //Si no se esta moviendo, activar animacion de Parado
@@ -225,7 +226,7 @@ namespace TGC.Examples.Collision
 
             //Render personaje
             personaje.animateAndRender(ElapsedTime);
-
+            
             FinalizarEscena();
         }
 
@@ -237,19 +238,19 @@ namespace TGC.Examples.Collision
         private void ajustarPosicionDeCamara(List<TgcBox> obstaculos)
         {
             //Actualizar valores de camara segun modifiers
-            ((TgcThirdPersonCamera)Camara).OffsetHeight = (float)Modifiers["offsetHeight"];
-            ((TgcThirdPersonCamera)Camara).OffsetForward = (float)Modifiers["offsetForward"];
+            camaraInterna.OffsetHeight = (float)Modifiers["offsetHeight"];
+            camaraInterna.OffsetForward = (float)Modifiers["offsetForward"];
             var displacement = (Vector2)Modifiers["displacement"];
-            ((TgcThirdPersonCamera)Camara).TargetDisplacement = new Vector3(displacement.X, displacement.Y, 0);
+            camaraInterna.TargetDisplacement = new Vector3(displacement.X, displacement.Y, 0);
 
             //Pedirle a la camara cual va a ser su proxima posicion
             Vector3 segmentA;
             Vector3 segmentB;
-            ((TgcThirdPersonCamera)Camara).updatePositionTarget(out segmentA, out segmentB);
+            camaraInterna.updatePositionTarget(out segmentA, out segmentB);
 
             //Detectar colisiones entre el segmento de recta camara-personaje y todos los objetos del escenario
             Vector3 q;
-            var minDistSq = FastMath.Pow2(((TgcThirdPersonCamera)Camara).OffsetForward);
+            var minDistSq = FastMath.Pow2(camaraInterna.OffsetForward);
             foreach (var obstaculo in obstaculos)
             {
                 //Hay colision del segmento camara-personaje y el objeto
@@ -274,7 +275,7 @@ namespace TGC.Examples.Collision
             {
                 newOffsetForward = 10;
             }*/
-            ((TgcThirdPersonCamera)Camara).OffsetForward = newOffsetForward;
+            camaraInterna.OffsetForward = newOffsetForward;
         }
 
         public override void Close()

@@ -64,7 +64,7 @@ namespace TGC.Examples.GeometryBasics
             UserVars.addVar("Vertices");
             UserVars.addVar("Triangulos");
 
-            ((TgcRotationalCamera)Camara).CameraDistance = 50;
+            Camara = new TgcRotationalCamera(new Vector3(), 50f);
         }
 
         public override void Update()

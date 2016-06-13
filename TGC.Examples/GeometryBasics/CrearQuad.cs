@@ -48,7 +48,7 @@ namespace TGC.Examples.GeometryBasics
             normalArrow = new TgcArrow();
             Modifiers.addBoolean("showNormal", "Show normal", true);
 
-            ((TgcRotationalCamera)Camara).CameraDistance = 50;
+            Camara = new TgcRotationalCamera(new Vector3(), 50f);
         }
 
         public override void Update()

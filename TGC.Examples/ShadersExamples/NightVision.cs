@@ -105,11 +105,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(-1000, 50, -1000), new Vector3(-1000, 50, -1001));
-            ((TgcFpsCamera)Camara).MovementSpeed *= 2;
-            ((TgcFpsCamera)Camara).JumpSpeed = 600f;
-            ((TgcFpsCamera)Camara).RotationSpeed *= 4;
+            Camara = new TgcFpsCamera(new Vector3(-1000, 50, -1000), 1000f, 600f);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,

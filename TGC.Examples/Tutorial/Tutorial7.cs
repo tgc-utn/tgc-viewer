@@ -23,6 +23,7 @@ namespace TGC.Examples.Tutorial
         private const float MOVEMENT_SPEED = 200f;
         private TgcMesh mainMesh;
         private TgcScene scene;
+        private TgcThirdPersonCamera camaraInterna;
 
         public Tutorial7(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -47,8 +48,8 @@ namespace TGC.Examples.Tutorial
             mainMesh = scene2.Meshes[0];
 
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
-            Camara = new TgcThirdPersonCamera();
-            ((TgcThirdPersonCamera)Camara).setTargetOffsets(mainMesh.Position, 200, 300);
+            camaraInterna = new TgcThirdPersonCamera(mainMesh.Position, 200, 300);
+            Camara = camaraInterna;
         }
 
         public override void Update()
@@ -86,7 +87,7 @@ namespace TGC.Examples.Tutorial
             mainMesh.move(movement);
 
             //Hacer que la cámara en 3ra persona se ajuste a la nueva posición del objeto
-            ((TgcThirdPersonCamera)Camara).Target = mainMesh.Position;
+            camaraInterna.Target = mainMesh.Position;
 
             //Dibujar objeto principal
             //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)

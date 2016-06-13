@@ -250,7 +250,6 @@ namespace TGC.Examples.ShadersExamples
 
 
             CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
-            //CamaraRot.CameraDistance = mesh.BoundingBox.calculateBoxRadius() * 2;
             
             // --------------------------------------------------------------------
             D3DDevice.Instance.Device.EndScene();

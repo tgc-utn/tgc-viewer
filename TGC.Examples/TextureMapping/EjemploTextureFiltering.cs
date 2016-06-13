@@ -46,9 +46,7 @@ namespace TGC.Examples.TextureMapping
             Modifiers.addInterval("Filtering", new[] { "Nearest", "Linear", "Bilinear", "Anisotropic" }, 0);
             changeTextureFiltering(D3DDevice.Instance.Device, lastFiltering);
 
-            Camara = new TgcFpsCamera();
-            Camara.setCamera(new Vector3(-54.93998f, 2f, -1.118192f), new Vector3(-53.94024f, 1.969789f, -1.140801f));
-            ((TgcFpsCamera)Camara).MovementSpeed = 150f;
+            Camara = new TgcFpsCamera(new Vector3(-54.93998f, 2f, -1.118192f), 150f, 500f);
         }
 
         public override void Update()

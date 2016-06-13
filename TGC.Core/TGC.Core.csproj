@@ -66,7 +66,6 @@
     <Compile Include="2D\TgcText2d.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
     <Compile Include="Camara\TgcFpsCamera.cs" />
-    <Compile Include="Camara\TgcFpsSimpleCamera.cs" />
     <Compile Include="Camara\TgcRotationalCamera.cs" />
     <Compile Include="Camara\TgcSpringThirdPersonCamera.cs" />
     <Compile Include="Camara\TgcThirdPersonCamera.cs" />

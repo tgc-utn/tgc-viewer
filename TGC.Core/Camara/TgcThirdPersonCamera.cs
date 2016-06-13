@@ -18,6 +18,21 @@ namespace TGC.Core.Camara
             resetValues();
         }
 
+        public TgcThirdPersonCamera(Vector3 target, float offsetHeight, float offsetForward): this()
+        {
+            Target = target;
+            OffsetHeight = offsetHeight;
+            OffsetForward = offsetForward;
+        }
+
+        public TgcThirdPersonCamera(Vector3 target, Vector3 targetDisplacement, float offsetHeight, float offsetForward) : this()
+        {
+            Target = target;
+            TargetDisplacement = targetDisplacement;
+            OffsetHeight = offsetHeight;
+            OffsetForward = offsetForward;
+        }
+
         /// <summary>
         ///     Desplazamiento en altura de la camara respecto del target
         /// </summary>

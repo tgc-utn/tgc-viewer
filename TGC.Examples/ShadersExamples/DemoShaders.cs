@@ -380,8 +380,7 @@ namespace TGC.Examples.ShadersExamples
                 if (camara_rot)
                 {
                     CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
-                    //CamaraRot.CameraDistance = mesh.BoundingBox.calculateBoxRadius() * 2;
-                    CamaraRot.updateCamera(ElapsedTime);
+                    CamaraRot.updateCamera(ElapsedTime);//FIXME, puede que no haga falta esto.
                     Camara = CamaraRot;
                 }
                 else
