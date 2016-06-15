@@ -69,18 +69,17 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            base.Render();
-
+            base.helperRenderClearTextures();
             //Guardar render target original
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
 
             // 1) Mandar a dibujar todos los mesh para que se genere la textura de ZBuffer
-            IniciarEscena();
+            D3DDevice.Instance.Device.BeginScene();
 
             //Seteamos la textura de zBuffer como render  target (en lugar de dibujar a la pantalla)
             var zBufferSurface = zBufferTexture.GetSurfaceLevel(0);
@@ -95,11 +94,11 @@ namespace TGC.Examples.DirectX
             }
 
             zBufferSurface.Dispose();
-            FinalizarEscena();
+            D3DDevice.Instance.Device.EndScene();
 
             // 2) Volvemos a dibujar la escena y pasamos el ZBuffer al shader como una textura.
             // Para este ejemplo particular utilizamos el valor de Z para alterar el color del pixel
-            IniciarEscena();
+            D3DDevice.Instance.Device.BeginScene();
 
             //Restaurar render target original
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
@@ -117,12 +116,15 @@ namespace TGC.Examples.DirectX
                 mesh.render();
             }
 
-            FinalizarEscena();
+            base.helperRenderFPS();
+            base.helperRenderAxis();
+            D3DDevice.Instance.Device.EndScene();
+            D3DDevice.Instance.Device.Present();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             pOldRT.Dispose();
             zBufferTexture.Dispose();

@@ -78,13 +78,13 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Obtener valores de Modifiers
             var vAngleX = (float)Modifiers["angleX"];
@@ -124,12 +124,12 @@ namespace TGC.Examples.DirectX
             //Renderizar malla
             mesh.DrawSubset(0);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.Dispose();
         }

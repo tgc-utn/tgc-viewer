@@ -64,19 +64,19 @@ namespace TGC.Examples.Others
             //Camara
             Camara = new TgcRotationalCamera(new Vector3(), 150f);
 
-            //BackgroundColor
-            D3DDevice.Instance.ClearColor = Color.Black;
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            //BackgroundColor
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
+            helperRenderClearTextures();
 
             //Cargar variables shader
             mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(Color.Gray));
@@ -98,12 +98,12 @@ namespace TGC.Examples.Others
                 helpForm.ShowDialog();
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
             textHelp.dispose();

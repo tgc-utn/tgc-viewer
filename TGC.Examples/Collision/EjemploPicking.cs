@@ -66,7 +66,8 @@ namespace TGC.Examples.Collision
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay();
 
-            Camara.setCamera(new Vector3(94.9854f, 138.4992f, -284.3344f), new Vector3(86.4563f, -15.4191f, 703.7123f));
+            Camara = new TgcRotationalCamera(new Vector3(100f, 100f, -250f), 600f);
+            //FIXME esta camara deberi ser estatica y no rotacional, ya que sino trae problemas con el picking.
 
             //Crear caja para marcar en que lugar hubo colision
             collisionPointMesh = TgcBox.fromSize(new Vector3(3, 3, 3), Color.Red);
@@ -80,13 +81,13 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Si hacen clic con el mouse, ver si hay colision RayAABB
             if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -138,12 +139,12 @@ namespace TGC.Examples.Collision
                 UserVars.setValue("CollP-Z:", 0);
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             foreach (var box in boxes)
             {

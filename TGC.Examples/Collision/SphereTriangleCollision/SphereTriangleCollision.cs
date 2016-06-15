@@ -172,13 +172,13 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Obtener boolean para saber si hay que mostrar Bounding Box
             var showBB = (bool)Modifiers.getValue("showBoundingBox");
@@ -359,12 +359,12 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             //Render SkyBox
             skyBox.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             escenario.disposeAll();
             personaje.dispose();

@@ -65,13 +65,13 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            base.Render();
-            IniciarEscena();
+            
+            base.helperPreRender();
 
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];
@@ -113,12 +113,12 @@ namespace TGC.Examples.ShadersExamples
             //Renderizar mesh de luz
             lightMesh.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
             lightMesh.dispose();

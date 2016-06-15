@@ -73,7 +73,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         private void loadTexture(Device d3dDevice, string path)
@@ -83,8 +83,8 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si cambio la textura
             var selectedTexture = (string)Modifiers["Texture image"];
@@ -149,7 +149,12 @@ namespace TGC.Examples.GeometryBasics
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColoredTextured.Format;
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
 
-            FinalizarEscena();
+            helperPostRender();
+        }
+
+        public override void Dispose()
+        {
+            texture.Dispose();
         }
     }
 }

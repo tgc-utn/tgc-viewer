@@ -142,6 +142,13 @@ namespace TGC.Examples.Engine2D
             spriteDrawer.EndDrawSprite();
         }
 
+        internal void Dispose()
+        {
+            this.asteroidBitmap.Texture.Dispose();
+            this.misilBitmap.Texture.Dispose();
+            this.spaceshipBitmap.Texture.Dispose();
+        }
+
         #region Singleton
 
         private static volatile GameManager instance;

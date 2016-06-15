@@ -76,13 +76,13 @@ namespace TGC.Examples.Optimization.GrillaRegular
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var showGrid = (bool)Modifiers["showGrid"];
             var showTerrain = (bool)Modifiers["showTerrain"];
@@ -94,12 +94,12 @@ namespace TGC.Examples.Optimization.GrillaRegular
             }
             grilla.render(TgcFrustum.Instance, showGrid);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             skyBox.dispose();
             terreno.dispose();

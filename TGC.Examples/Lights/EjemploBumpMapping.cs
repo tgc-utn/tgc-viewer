@@ -132,7 +132,7 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         /// <summary>
@@ -159,8 +159,8 @@ namespace TGC.Examples.Lights
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Actualzar posición de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
@@ -208,7 +208,7 @@ namespace TGC.Examples.Lights
                 if (showBinormals) binormals[i].render();
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         /// <summary>
@@ -277,9 +277,9 @@ namespace TGC.Examples.Lights
             normalMap.Dispose();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             effect.Dispose();
             foreach (var m in meshes)

@@ -58,22 +58,22 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             mesh.animateAndRender(ElapsedTime);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
         }
@@ -119,7 +119,7 @@ namespace TGC.Examples.SkeletalAnimation
             D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
 
             //Llamamos al metodo original del padre
-            base.render();
+            
 
             //Restrablecemos modo solido
             D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;

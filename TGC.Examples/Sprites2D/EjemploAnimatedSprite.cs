@@ -70,13 +70,13 @@ namespace TGC.Examples.Sprites2D
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Actualizar valores cargados en modifiers
             animatedSprite.setFrameRate((float)Modifiers["frameRate"]);
@@ -97,12 +97,12 @@ namespace TGC.Examples.Sprites2D
             //Finalizar el dibujado de Sprites
             TgcDrawer2D.Instance.endDrawSprite();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             animatedSprite.dispose();
             box.dispose();

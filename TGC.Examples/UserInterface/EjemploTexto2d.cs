@@ -57,25 +57,25 @@ namespace TGC.Examples.UserInterface
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Renderizar los tres textoss
             text1.render();
             text2.render();
             text3.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             text1.dispose();
             text2.dispose();

@@ -125,23 +125,23 @@ namespace TGC.Examples.Others
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var renderMethod = (RenderMethod)Modifiers["Render Method"];
             doRender(renderMethod);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             currentRenderMethod = RenderMethod.Unsorted;
             disposeCajas();

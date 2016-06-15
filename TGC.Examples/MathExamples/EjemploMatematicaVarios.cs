@@ -34,18 +34,18 @@ namespace TGC.Examples.MathExamples
 
         public override void Init()
         {
-            throw new NotImplementedException();
+            //none for init.
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             // 1) Crear un vector en 3D
             var v = new Vector3(0, 19, -1759.21f);
@@ -85,7 +85,12 @@ namespace TGC.Examples.MathExamples
                 "Este ejemplo no muestra nada por pantalla. Sino que es para leer el código y sus comentarios.", 5, 50,
                 Color.Yellow);
 
-            FinalizarEscena();
+            helperPostRender();
+        }
+
+        public override void Dispose()
+        {
+            //nada en state.
         }
     }
 }

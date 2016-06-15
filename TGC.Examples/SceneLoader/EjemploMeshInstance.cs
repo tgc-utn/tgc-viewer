@@ -59,13 +59,13 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             foreach (var mesh in meshes)
             {
@@ -77,12 +77,12 @@ namespace TGC.Examples.SceneLoader
                 meshes[0].dispose();
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             foreach (var mesh in meshes)
             {

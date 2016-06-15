@@ -76,13 +76,13 @@ namespace TGC.Examples.Optimization.KdtTree
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var showKdTree = (bool)Modifiers["showKdTree"];
             var showTerrain = (bool)Modifiers["showTerrain"];
@@ -94,12 +94,12 @@ namespace TGC.Examples.Optimization.KdtTree
             }
             kdtree.render(TgcFrustum.Instance, showKdTree);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             skyBox.dispose();
             terreno.dispose();

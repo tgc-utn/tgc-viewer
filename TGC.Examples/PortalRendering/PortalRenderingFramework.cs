@@ -63,13 +63,13 @@ namespace TGC.Examples.PortalRendering
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var enablePortalRendering = (bool)Modifiers["portalRendering"];
             if (enablePortalRendering)
@@ -133,12 +133,12 @@ namespace TGC.Examples.PortalRendering
                 scene.PortalRendering.renderPortals();
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             scene.disposeAll();
         }

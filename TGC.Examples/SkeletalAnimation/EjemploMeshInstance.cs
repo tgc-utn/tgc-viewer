@@ -90,13 +90,13 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Renderizar suelo
             suelo.render();
@@ -108,12 +108,12 @@ namespace TGC.Examples.SkeletalAnimation
                 instance.animateAndRender(ElapsedTime);
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             suelo.dispose();
 

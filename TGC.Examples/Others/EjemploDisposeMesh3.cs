@@ -42,13 +42,13 @@ namespace TGC.Examples.Others
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             time += ElapsedTime;
             if (time > 1f)
@@ -78,12 +78,12 @@ namespace TGC.Examples.Others
 
             boxMesh.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             boxMesh.dispose();
         }
