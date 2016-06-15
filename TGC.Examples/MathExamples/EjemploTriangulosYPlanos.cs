@@ -110,13 +110,13 @@ namespace TGC.Examples.MathExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Draw mesh
             var drawMesh = (bool)Modifiers["mesh"];
@@ -155,7 +155,7 @@ namespace TGC.Examples.MathExamples
                 }
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
         public Color adaptColorRandom(Color c)
@@ -164,9 +164,9 @@ namespace TGC.Examples.MathExamples
             return Color.FromArgb(FastMath.Min(c.R + r, 255), FastMath.Min(c.G + r, 255), FastMath.Min(c.B + r, 255));
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
             foreach (var t in triangles)

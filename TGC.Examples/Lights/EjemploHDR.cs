@@ -124,16 +124,14 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            base.Render();
-
             //Guardar RT original
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
-
+            helperRenderClearTextures();
             //Dibujamos la escena al RT en floating point
             drawSceneToRenderTarget(D3DDevice.Instance.Device);
 
@@ -151,6 +149,12 @@ namespace TGC.Examples.Lights
 
             //Final render
             finalRender(D3DDevice.Instance.Device);
+
+            D3DDevice.Instance.Device.BeginScene();
+            base.helperRenderAxis();
+            base.helperRenderFPS();
+            D3DDevice.Instance.Device.EndScene();
+            D3DDevice.Instance.Device.Present();
         }
 
         /// <summary>
@@ -162,9 +166,8 @@ namespace TGC.Examples.Lights
             var pSurf = sceneRT.GetSurfaceLevel(0);
             d3dDevice.SetRenderTarget(0, pSurf);
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-
             //Arrancamos el renderizado
-            IniciarEscena();
+            d3dDevice.BeginScene();
 
             //Actualzar posición de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
@@ -195,7 +198,8 @@ namespace TGC.Examples.Lights
             //Renderizar mesh de luz
             lightMesh.render();
 
-            FinalizarEscena();
+            d3dDevice.EndScene();
+
             pSurf.Dispose();
         }
 
@@ -206,7 +210,7 @@ namespace TGC.Examples.Lights
         /// </summary>
         private void scaleScene(Device d3dDevice)
         {
-            IniciarEscena();
+            d3dDevice.BeginScene();
 
             var backBufferWidth = d3dDevice.PresentationParameters.BackBufferWidth;
             var backBufferHeight = d3dDevice.PresentationParameters.BackBufferHeight;
@@ -220,7 +224,8 @@ namespace TGC.Examples.Lights
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             screenQuad.render(effect);
 
-            FinalizarEscena();
+            d3dDevice.EndScene();
+
             scaledSceneS.Dispose();
         }
 
@@ -230,7 +235,7 @@ namespace TGC.Examples.Lights
         /// </summary>
         private void findAverageLuminance(Device d3dDevice)
         {
-            IniciarEscena();
+            d3dDevice.BeginScene();
 
             //Obtener surfaces de todos los luminanceRTs
             var luminanceSurfaces = new Surface[luminanceRTs.Length];
@@ -314,7 +319,8 @@ namespace TGC.Examples.Lights
                 luminanceSurfaces[i].Dispose();
             }
 
-            FinalizarEscena();
+            d3dDevice.EndScene();
+
         }
 
         /// <summary>
@@ -322,7 +328,7 @@ namespace TGC.Examples.Lights
         /// </summary>
         private void brightPass(Device d3dDevice)
         {
-            IniciarEscena();
+            d3dDevice.BeginScene();
 
             var middleGray = (float)Modifiers["middleGray"];
 
@@ -339,7 +345,8 @@ namespace TGC.Examples.Lights
             //TextureLoader.Save(this.ShadersDir + "brightPass.bmp", ImageFileFormat.Bmp, brightPassRT);
 
             brightPassS.Dispose();
-            FinalizarEscena();
+            d3dDevice.EndScene();
+
         }
 
         /// <summary>
@@ -348,7 +355,7 @@ namespace TGC.Examples.Lights
         /// <param name="d3dDevice"></param>
         private void bloomPass(Device d3dDevice)
         {
-            IniciarEscena();
+            d3dDevice.BeginScene();
 
             //Gaussian blur horizontal
             Vector2[] texCoordOffsets;
@@ -377,7 +384,8 @@ namespace TGC.Examples.Lights
             bloomTempS.Dispose();
             bloomS.Dispose();
 
-            FinalizarEscena();
+            d3dDevice.EndScene();
+
         }
 
         /// <summary>
@@ -385,7 +393,7 @@ namespace TGC.Examples.Lights
         /// </summary>
         private void finalRender(Device d3dDevice)
         {
-            IniciarEscena();
+            d3dDevice.BeginScene();
 
             var toneMapping = (bool)Modifiers["toneMapping"];
             effect.Technique = toneMapping ? "FinalRender" : "FinalRenderNoToneMapping";
@@ -397,12 +405,13 @@ namespace TGC.Examples.Lights
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             screenQuad.render(effect);
 
-            FinalizarEscena();
+            d3dDevice.EndScene();
+
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             foreach (var m in meshes)
             {

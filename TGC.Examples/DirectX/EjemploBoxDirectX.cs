@@ -254,13 +254,13 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             acumTime += ElapsedTime;
             var speed = 20 * ElapsedTime;
@@ -314,12 +314,12 @@ namespace TGC.Examples.DirectX
             effect.EndPass();
             effect.End();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             vertexBuffer.Dispose();
             indexBuffer.Dispose();

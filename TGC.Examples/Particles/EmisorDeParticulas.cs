@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Particle;
@@ -67,18 +68,21 @@ namespace TGC.Examples.Particles
 
             box = TgcBox.fromSize(new Vector3(0, -30, 0), new Vector3(10, 10, 10), Color.Blue);
 
-            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(), box.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 300f);
+
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            //IMPORTANTE PARA PERMITIR ESTE EFECTO.
+            D3DDevice.Instance.ParticlesEnabled = true;
+            D3DDevice.Instance.enableParticles();
 
             //Cambiar cantidad de particulas, implica crear un nuevo emisor
             var cantidad = (int)Modifiers["cantidad"];
@@ -111,12 +115,12 @@ namespace TGC.Examples.Particles
 
             box.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //Liberar recursos
             emitter.dispose();

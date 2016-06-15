@@ -84,6 +84,7 @@ namespace TGC.Viewer.Model
                     //Solo renderizamos si la aplicacion tiene foco, para no consumir recursos innecesarios
                     if (form.ApplicationActive())
                     {
+                        ExampleLoader.CurrentExample.Update();
                         ExampleLoader.CurrentExample.Render();
                     }
                     else
@@ -156,7 +157,7 @@ namespace TGC.Viewer.Model
         {
             if (ExampleLoader.CurrentExample != null)
             {
-                ExampleLoader.CurrentExample.Close();
+                ExampleLoader.CurrentExample.Dispose();
                 toolStripStatus.Text = "Ejemplo actual terminado." + ExampleLoader.CurrentExample.Name + " terminado";
                 ExampleLoader.CurrentExample = null;
             }
@@ -171,7 +172,7 @@ namespace TGC.Viewer.Model
 
             if (ExampleLoader.CurrentExample != null)
             {
-                ExampleLoader.CurrentExample.Close();
+                ExampleLoader.CurrentExample.Dispose();
             }
 
             //Liberar Device al finalizar la aplicacion

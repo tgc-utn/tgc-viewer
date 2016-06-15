@@ -37,7 +37,7 @@ namespace TGC.Examples.GeometryBasics
             //Crear SkyBox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
-            skyBox.Size = new Vector3(1000, 1000, 1000);
+            skyBox.Size = new Vector3(10000, 10000, 10000);
 
             //Configurar color
             //skyBox.Color = Color.OrangeRed;
@@ -62,23 +62,23 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Renderizar SkyBox
             skyBox.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //Liberar recursos del SkyBox
             skyBox.dispose();

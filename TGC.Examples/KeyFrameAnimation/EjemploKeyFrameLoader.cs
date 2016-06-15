@@ -98,13 +98,13 @@ namespace TGC.Examples.KeyFrameAnimation
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si cambio la animacion
             var anim = (string)Modifiers.getValue("animation");
@@ -137,12 +137,12 @@ namespace TGC.Examples.KeyFrameAnimation
                 mesh.BoundingBox.render();
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
         }

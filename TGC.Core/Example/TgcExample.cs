@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core._2D;
 using TGC.Core.Camara;
@@ -14,6 +15,9 @@ namespace TGC.Core.Example
 {
     public abstract class TgcExample
     {
+
+        private static readonly Color DEFAULT_CLEAR_COLOR = Color.FromArgb(255, 78, 129, 179);
+
         public TgcExample(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
         {
@@ -95,84 +99,138 @@ namespace TGC.Core.Example
         public abstract void Init();
 
         /// <summary>
-        ///     Update de mi modelo
+        ///     Update de mi modelo.
         /// </summary>
-        /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
         public abstract void Update();
 
         /// <summary>
         ///     Se llama para renderizar cada cuadro del ejemplo.
         /// </summary>
-        /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
-        public virtual void Render()
+        public abstract void Render();
+
+        /// <summary>
+        ///  helper que aglutina todos los helpers invocables antes del update.
+        /// </summary>
+        protected virtual void helperPreUpdate()
+        {
+            helperUpdateClock();
+            helperUpdateInput();
+            helperUpdateView();
+            helperUpdateFrustum();
+            helperUpdateSounds3D();
+        }
+
+        /// <summary>
+        ///  helper que aglutina todos los helpers invocables antes del render.
+        /// </summary>
+        protected virtual void helperPreRender()
+        {
+            helperRenderBeginScene();
+            helperRenderClearTextures(); //no se si falta algo mas previo.
+        }
+
+        /// <summary>
+        ///  helper que aglutina todos los helpers invocables antes del render.
+        /// </summary>
+        protected virtual void helperPostRender()
+        {
+            helperRenderAxis();
+            helperRenderFPS();
+            helperRenderEndScene();
+        }
+
+        /// <summary>
+        ///     helper para actualizar el elapsedTime, importante invocar en cada update loop.
+        /// </summary>
+        protected void helperUpdateClock()
         {
             ElapsedTime = HighResolutionTimer.Instance.FrameTime;
-            D3DDevice.Instance.Clear();
             HighResolutionTimer.Instance.Set();
-
-            //Acutalizar input
+        }
+        /// <summary>
+        ///   Helper acutalizar input
+        /// </summary>
+        protected void helperUpdateInput()
+        {
             TgcD3dInput.Instance.update();
-
-            //Actualizar la camara
+        }
+        /// <summary>
+        ///   Helper acutalizar la camara
+        /// </summary>
+        protected void helperUpdateView()
+        {
             Camara.updateCamera(ElapsedTime); //FIXME esto deberia hacerce en el update.
             D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix();
-
-            //actualizar el Frustum
+        }
+        /// <summary>
+        ///   Helper acutalizar el Frustum
+        /// </summary>
+        protected void helperUpdateFrustum()
+        {
             TgcFrustum.Instance.updateVolume(D3DDevice.Instance.Device.Transform.View,
-                D3DDevice.Instance.Device.Transform.Projection);
-
-            //limpiar texturas
-            TexturesManager.Instance.clearAll();
-
-            //actualizar Listener3D
+                     D3DDevice.Instance.Device.Transform.Projection);
+        }
+        /// <summary>
+        ///   Helper acutalizar Listener3D
+        /// </summary>
+        protected void helperUpdateSounds3D()
+        {
             TgcDirectSound.Instance.updateListener3d();
+        }
 
-            //Actualizar contador de FPS si esta activo
-            if (FPS)
-            {
-                DrawFPS();
-            }
+        /// <summary>
+        ///     Helper para iniciar escena 3D
+        /// </summary>
+        protected void helperRenderBeginScene()
+        {
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, DEFAULT_CLEAR_COLOR, 1.0f, 0);
+            D3DDevice.Instance.Device.BeginScene();
+        }
 
-            //Hay que dibujar el indicador de los ejes cartesianos
+        /// <summary>
+        ///     helper para limpiar texturas
+        /// </summary>
+        protected void helperRenderClearTextures()
+        {
+            TexturesManager.Instance.clearAll();
+        }
+
+        /// <summary>
+        ///  helper para dibujar el indicador de los ejes cartesianos
+        /// </summary>
+        protected void helperRenderAxis()
+        {
             if (AxisLines.Enable)
             {
                 AxisLines.render();
             }
         }
 
-        private void DrawFPS()
+        /// <summary>
+        ///  Helper para actualizar contador de FPS si esta activo
+        /// </summary>
+        protected void helperRenderFPS()
         {
-            TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+            if (FPS)
+            {
+                TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+            }
         }
 
         /// <summary>
-        ///     Se llama cuando el ejemplo es cerrado.
-        ///     Liberar todos los recursos utilizados.
+        ///   Helper para finalizar escena 3D
         /// </summary>
-        public virtual void Close()
-        {
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
-            UserVars.ClearVars();
-            Modifiers.Clear();
-            ElapsedTime = -1;
-        }
-
-        /// <summary>
-        ///     Iniciar escena 3D
-        /// </summary>
-        public void IniciarEscena()
-        {
-            D3DDevice.Instance.Device.BeginScene();
-        }
-
-        /// <summary>
-        ///     Finalizar escena 3D
-        /// </summary>
-        public void FinalizarEscena()
+        protected void helperRenderEndScene()
         {
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }
+
+        /// <summary>
+        ///     Se llama cuando el ejemplo es cerrado.
+        ///     Liberar todos los recursos utilizados. OBLIGATORIAMENTE!!!!
+        /// </summary>
+        public abstract void Dispose();
 
         /// <summary>
         ///     Vuelve la configuracion de Render y otras cosas a la configuracion inicial
@@ -180,6 +238,10 @@ namespace TGC.Core.Example
         public void ResetDefaultConfig()
         {
             D3DDevice.Instance.DefaultValues();
+            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            UserVars.ClearVars();
+            Modifiers.Clear();
+            ElapsedTime = -1;
         }
     }
 }

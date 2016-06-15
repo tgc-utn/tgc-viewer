@@ -75,13 +75,13 @@ namespace TGC.Examples.Optimization.Octree
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var showOctree = (bool)Modifiers["showOctree"];
             var showTerrain = (bool)Modifiers["showTerrain"];
@@ -93,12 +93,12 @@ namespace TGC.Examples.Optimization.Octree
             }
             octree.render(TgcFrustum.Instance, showOctree);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             skyBox.dispose();
             terreno.dispose();

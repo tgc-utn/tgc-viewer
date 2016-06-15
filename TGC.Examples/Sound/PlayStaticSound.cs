@@ -65,7 +65,7 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace TGC.Examples.Sound
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si cambio el WAV
             var filePath = (string)Modifiers["WAV-File"];
@@ -116,12 +116,12 @@ namespace TGC.Examples.Sound
             currentSoundText.render();
             instruccionesText.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             sound.dispose();
         }

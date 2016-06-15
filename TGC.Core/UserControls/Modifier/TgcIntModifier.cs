@@ -84,7 +84,10 @@ namespace TGC.Core.UserControls.Modifier
 
             if (maxValue - minValue > 10)
             {
-                numericUpDown.Value = trackBar.Value * maxValue / 10;
+                if (trackBar.Value > minValue)
+                    numericUpDown.Value = trackBar.Value * maxValue / 10;
+                else
+                    numericUpDown.Value = minValue;
             }
             else
             {

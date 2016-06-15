@@ -52,7 +52,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         /// <summary>
@@ -74,21 +74,20 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Actualizar parametros de la caja
             updateBox();
 
             debugBox.render();
 
-            FinalizarEscena();
+            base.helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Render();
-
+            
             debugBox.dispose();
         }
     }

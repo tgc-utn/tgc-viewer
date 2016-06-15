@@ -61,7 +61,7 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         /// <summary>
@@ -83,8 +83,8 @@ namespace TGC.Examples.Sound
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si cambio el MP3
             var filePath = (string)Modifiers["MP3-File"];
@@ -135,12 +135,12 @@ namespace TGC.Examples.Sound
             currentMusicText.render();
             instruccionesText.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mp3Player.closeFile();
         }

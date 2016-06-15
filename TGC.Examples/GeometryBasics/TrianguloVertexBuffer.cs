@@ -61,13 +61,13 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Especificar formato de triangulos
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
@@ -76,12 +76,12 @@ namespace TGC.Examples.GeometryBasics
             //Dibujar 1 primitiva
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //liberar VertexBuffer
             vertexBuffer.Dispose();

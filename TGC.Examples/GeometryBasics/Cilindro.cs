@@ -56,13 +56,13 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             var modifiers = Modifiers;
             var size = (Vector3)modifiers.getValue("size");
@@ -95,12 +95,12 @@ namespace TGC.Examples.GeometryBasics
             else
                 cylinder.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             cylinder.dispose();
         }

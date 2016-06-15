@@ -127,13 +127,13 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
@@ -222,12 +222,12 @@ namespace TGC.Examples.Sound
             //Render personaje
             personaje.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             piso.dispose();
             foreach (var obstaculo in obstaculos)

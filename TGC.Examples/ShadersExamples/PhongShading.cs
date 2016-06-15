@@ -123,13 +123,14 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            base.Render();
-            IniciarEscena();
+            base.helperRenderClearTextures();
+
+            D3DDevice.Instance.Device.BeginScene();
 
             if (TgcD3dInput.Instance.keyPressed(Key.Space))
                 vista_unica = !vista_unica;
@@ -203,12 +204,15 @@ namespace TGC.Examples.ShadersExamples
                 lightBox.render();
 
             }
-            FinalizarEscena();
+            base.helperRenderFPS();
+            base.helperRenderAxis();
+            D3DDevice.Instance.Device.EndScene();
+            D3DDevice.Instance.Device.Present();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             effect.Dispose();
             scene.disposeAll();

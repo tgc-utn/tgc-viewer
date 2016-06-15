@@ -105,7 +105,7 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         /// <summary>
@@ -158,8 +158,8 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si cambio la malla
             var meshPath = (string)Modifiers.getValue("mesh");
@@ -215,12 +215,12 @@ namespace TGC.Examples.SkeletalAnimation
                 mesh.BoundingBox.render();
             }
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             //La malla también hace dispose del attachment
             mesh.dispose();

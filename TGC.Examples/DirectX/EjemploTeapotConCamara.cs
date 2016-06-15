@@ -65,13 +65,13 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Restaurar la matriz identidad, sino queda sucio del cuadro anterior
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
@@ -85,12 +85,12 @@ namespace TGC.Examples.DirectX
             //Renderizar Box
             box.DrawSubset(0);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             teapot.Dispose();
             box.Dispose();

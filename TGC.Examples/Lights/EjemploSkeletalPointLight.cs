@@ -92,7 +92,7 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         private void computeNormals(TgcSkeletalMesh mesh)
@@ -102,8 +102,8 @@ namespace TGC.Examples.Lights
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];
@@ -150,12 +150,12 @@ namespace TGC.Examples.Lights
             //Renderizar mesh de luz
             lightMesh.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
             lightMesh.dispose();

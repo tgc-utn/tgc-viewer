@@ -70,7 +70,7 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         /// <summary>
@@ -155,8 +155,8 @@ namespace TGC.Examples.SceneLoader
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Ver si cambio la malla
             var selectedPath = (string)Modifiers["Mesh"];
@@ -183,12 +183,12 @@ namespace TGC.Examples.SceneLoader
             //Renderizar escena entera
             currentScene.renderAll(showBoundingBox);
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             currentScene.disposeAll();
         }

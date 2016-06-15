@@ -58,13 +58,13 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            throw new NotImplementedException();
+            base.helperPreUpdate();
         }
 
         public override void Render()
         {
-            IniciarEscena();
-            base.Render();
+            base.helperPreRender();
+            
 
             //Obtener rotacion de mesh (pasar a radianes)
             var rotation = FastMath.ToRad((float)Modifiers["rotation"]);
@@ -88,12 +88,12 @@ namespace TGC.Examples.Collision
             //Renderizar obb
             obb.render();
 
-            FinalizarEscena();
+            helperPostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
+            
 
             mesh.dispose();
             obb.dispose();
