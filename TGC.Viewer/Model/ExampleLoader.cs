@@ -35,7 +35,7 @@ namespace TGC.Viewer.Model
             modifiers = new TgcModifiers(flowLayoutPanelModifiers);
             axisLines = new TgcAxisLines();
             //Es la camara que ponemos por default
-            camara = new TgcRotationalCamera();
+            camara = new TgcCamera();
         }
 
         /// <summary>

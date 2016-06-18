@@ -99,7 +99,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Configurar FPS Camara
-            Camara = new TgcFpsCamera(new Vector3(315.451f, 40, -464.28490f), 250f, 50f);
+            Camara.setCamera(new Vector3(315.451f, 40, -464.28490f), new Vector3(315.451f, 40, -465.28490f));
 
             reset_pos();
 
