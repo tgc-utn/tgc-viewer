@@ -287,7 +287,6 @@
     <Content Include="Shaders\BumpMapping.fx" />
     <Content Include="Shaders\BumpMappingNoTangent.fx" />
     <Content Include="Shaders\Cel.fx" />
-    <Content Include="Shaders\CubeMap.dds" />
     <Content Include="Shaders\DynamicLights.fx" />
     <Content Include="Shaders\Ejemplo1.fx" />
     <Content Include="Shaders\EjemploBoxDirectX.fx" />
@@ -300,6 +299,7 @@
     <Content Include="Shaders\PostProcess.fx" />
     <Content Include="Shaders\TerrainEditor\EditableTerrain.fx" />
     <Content Include="Shaders\TgcViewer\TgcKeyFrameMeshShader.fx" />
+    <Content Include="Shaders\TgcViewer\TgcFogShader.fx" />
     <Content Include="Shaders\TgcViewer\TgcMeshPhongShader.fx" />
     <Content Include="Shaders\TgcViewer\TgcMeshPointLightShader.fx" />
     <Content Include="Shaders\TgcViewer\TgcMeshShader.fx" />
