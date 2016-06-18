@@ -105,7 +105,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new Vector3(-1000, 50, -1000), 1000f, 600f);
+            Camara = new TgcFpsCamera(new Vector3(-1000, 250, -1000), 1000f, 600f);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
@@ -165,10 +165,8 @@ namespace TGC.Examples.ShadersExamples
             var pos = Camara.Position;
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
-                // reset
-                pos.X = -1000;
-                pos.Z = -1000;
-                Camara.setCamera(pos, pos + new Vector3(0, 0, 1));
+                // reset pos camara
+                Camara.setCamera(new Vector3(-1000, 250, -1000), new Vector3(0, 0, -1));
             }
 
             //Activar animacion de caminando

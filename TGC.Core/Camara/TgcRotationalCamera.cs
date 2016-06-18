@@ -29,7 +29,7 @@ namespace TGC.Core.Camara
             DiffZ = 1f;
             PanSpeed = 0.01f;
             UpVector = new Vector3(0f, 1f, 0f);
-            this.setCamera(NextPos, LookAt, UpVector);
+            base.setCamera(NextPos, LookAt, UpVector);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace TGC.Core.Camara
         {
             NextPos = position;
             CameraCenter = target;
-            this.setCamera(NextPos, LookAt, UpVector);
+            base.setCamera(NextPos, LookAt, UpVector);
         }
 
         /// <summary>
@@ -172,10 +172,17 @@ namespace TGC.Core.Camara
             }
 
             //asigna las posiciones de la camara.
-            this.setCamera(NextPos, CameraCenter, UpVector);
+            base.setCamera(NextPos, CameraCenter, UpVector);
         }
 
-       #region Getters y Setters
+        public override void setCamera(Vector3 position, Vector3 target)
+        {
+            NextPos = position;
+            CameraCenter = target;
+            base.setCamera(NextPos, CameraCenter, UpVector);            
+        }
+
+        #region Getters y Setters
 
         /// <summary>
         ///     Centro de la camara sobre la cual se rota

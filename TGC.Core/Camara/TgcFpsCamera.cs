@@ -25,7 +25,9 @@ namespace TGC.Core.Camara
 
         private bool lockCam;
         private Point mouseCenter; //Centro de mause 2D para ocultarlo.
-        
+        //Se mantiene la matriz rotacion para no hacer este calculo cada vez.
+        private Matrix cameraRotation;
+
         public TgcFpsCamera()
         {
             positionEye = new Vector3();
@@ -36,6 +38,7 @@ namespace TGC.Core.Camara
             RotationSpeed = 0.1f;
             MovementSpeed = 500f;
             JumpSpeed = 500f;
+            cameraRotation = Matrix.RotationX(updownRot) * Matrix.RotationY(leftrightRot);
         }
 
         public TgcFpsCamera(Vector3 positionEye, Vector3 directionView) : this()
@@ -129,7 +132,7 @@ namespace TGC.Core.Camara
                 moveVector += new Vector3(0, -1, 0) * JumpSpeed;
             }
 
-            if (TgcD3dInput.Instance.keyPressed(Key.L))
+            if (TgcD3dInput.Instance.keyPressed(Key.L) || TgcD3dInput.Instance.keyPressed(Key.Escape))
             {
                 LockCam = !lockCam;
             }
@@ -139,27 +142,37 @@ namespace TGC.Core.Camara
             {
                 leftrightRot -= (-TgcD3dInput.Instance.XposRelative * RotationSpeed);
                 updownRot -= (TgcD3dInput.Instance.YposRelative * RotationSpeed);
+                //Se actualiza matrix de rotacion, para no hacer este calculo cada vez y solo cuando en verdad es necesario.
+                cameraRotation = Matrix.RotationX(updownRot) * Matrix.RotationY(leftrightRot);
             }
 
             if (lockCam)
                 Cursor.Position = mouseCenter;
 
             //Calculamos la nueva posicion del ojo segun la rotacion actual de la camara.
-            Matrix cameraRotation = Matrix.RotationX(updownRot) * Matrix.RotationY(leftrightRot);
-            Vector3 rotatedVector = Vector3.TransformNormal(moveVector * elapsedTime, cameraRotation);
-            positionEye += rotatedVector;
+            Vector3 cameraRotatedPositionEye = Vector3.TransformNormal(moveVector * elapsedTime, cameraRotation);
+            positionEye += cameraRotatedPositionEye; 
 
             //Calculamos el target de la camara, segun su direccion inicial y las rotaciones en screen space x,y.
-            Vector3 cameraOriginalTarget = directionView;
-            Vector3 cameraRotatedTarget = Vector3.TransformNormal(cameraOriginalTarget, cameraRotation);
+            Vector3 cameraRotatedTarget = Vector3.TransformNormal(directionView, cameraRotation);
             Vector3 cameraFinalTarget = positionEye + cameraRotatedTarget;
 
-            Vector3 cameraOriginalUpVector = new Vector3(0, 1, 0);
+            Vector3 cameraOriginalUpVector = base.DEFAULT_UP_VECTOR;
             Vector3 cameraRotatedUpVector = Vector3.TransformNormal(cameraOriginalUpVector, cameraRotation);
 
-            this.setCamera(positionEye, cameraFinalTarget, cameraRotatedUpVector);
+            base.setCamera(positionEye, cameraFinalTarget, cameraRotatedUpVector);
         }
 
-
+        /// <summary>
+        ///  se hace override para actualizar las posiones internas, estas seran utilizadas en el proximo update.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="directionView"></param>
+        public override void setCamera(Vector3 position, Vector3 directionView)
+        {
+            this.positionEye = position;
+            this.directionView = directionView;
+        }
+        
     }
 }

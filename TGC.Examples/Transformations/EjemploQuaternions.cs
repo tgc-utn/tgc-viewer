@@ -43,7 +43,7 @@ namespace TGC.Examples.Transformations
             Modifiers.addVertex3f("Rot-Quaternion", new Vector3(0, 0, 0), new Vector3(360, 360, 360),
                 new Vector3(0, 0, 0));
 
-            Camara.setCamera(new Vector3(0f, 1f, -160.2245f), new Vector3(0f, 1f, 839.7755f));
+            Camara.setCamera(new Vector3(0f, 1f, -100f), new Vector3(0f, 1f, 500f));
         }
 
         public override void Update()

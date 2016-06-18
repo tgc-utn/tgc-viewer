@@ -5,9 +5,9 @@ using TGC.Core.Direct3D;
 namespace TGC.Core.Camara
 {
     /// <summary>
-    ///     Clase generica para una camara del Framework
+    ///     Clase camara estatica, default del Framework.
     /// </summary>
-    public abstract class TgcCamera
+    public class TgcCamera
     {
         protected readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
 
@@ -53,9 +53,14 @@ namespace TGC.Core.Camara
         }
 
         /// <summary>
-        ///     Actualizar el estado interno de la camara en cada frame.
+        ///     Permite actualizar el estado interno de la camara si se sobrescribe este metodo. por defecto no realiza ninguna accion.
+        ///     Si se realiza procesamiento interno se puede invocar al metodo setCamera para actualizar posicion, lookAt y upVector.
         /// </summary>
-        public abstract void updateCamera(float elapsedTime);
+        public virtual void updateCamera(float elapsedTime)
+        {
+            //Esta camara no tienen movimiento, una vez inicializada con posicion y lookAt ya no es actualizada.
+            //Se puede invocar a setCamera para actualizar posicion, lookAt y upVector.
+        }
 
         /// <summary>
         ///     Devuelve la matriz View en base a los valores de la camara. Es invocado en cada update de render.
