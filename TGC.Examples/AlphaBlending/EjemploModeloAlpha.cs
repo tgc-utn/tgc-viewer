@@ -45,16 +45,16 @@ namespace TGC.Examples.AlphaBlending
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            helperPreRender();
+            PreRender();
 
             scene.renderAll();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

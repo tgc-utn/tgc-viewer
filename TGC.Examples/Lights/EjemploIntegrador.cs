@@ -152,12 +152,12 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Habilitar luz
@@ -230,7 +230,7 @@ namespace TGC.Examples.Lights
                 mesh.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         /// <summary>

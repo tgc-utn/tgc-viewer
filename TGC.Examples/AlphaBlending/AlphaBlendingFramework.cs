@@ -52,19 +52,19 @@ namespace TGC.Examples.AlphaBlending
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            helperPreRender();
+            PreRender();
             
             foreach (var mesh in meshes)
             {
                 mesh.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

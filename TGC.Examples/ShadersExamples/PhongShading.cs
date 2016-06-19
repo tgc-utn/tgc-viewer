@@ -123,12 +123,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperRenderClearTextures();
+            base.ClearTextures();
 
             D3DDevice.Instance.Device.BeginScene();
 
@@ -204,8 +204,8 @@ namespace TGC.Examples.ShadersExamples
                 lightBox.render();
 
             }
-            base.helperRenderFPS();
-            base.helperRenderAxis();
+            base.RenderFPS();
+            base.RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }

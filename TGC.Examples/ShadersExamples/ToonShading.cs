@@ -177,12 +177,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
             var lightPosition = (Vector3)Modifiers["LightPosition"];
 
@@ -254,8 +254,8 @@ namespace TGC.Examples.ShadersExamples
             effect.EndPass();
             effect.End();
 
-            base.helperRenderFPS();
-            base.helperRenderAxis();
+            base.RenderFPS();
+            base.RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }

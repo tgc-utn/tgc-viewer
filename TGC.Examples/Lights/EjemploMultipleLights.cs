@@ -104,12 +104,12 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];
@@ -193,7 +193,7 @@ namespace TGC.Examples.Lights
                 mesh.render();
 
             }
-            helperPostRender();
+            PostRender();
         }
 
         /// <summary>

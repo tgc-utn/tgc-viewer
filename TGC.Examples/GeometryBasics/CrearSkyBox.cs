@@ -62,18 +62,18 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Renderizar SkyBox
             skyBox.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

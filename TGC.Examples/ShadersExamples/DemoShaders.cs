@@ -277,12 +277,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperRenderClearTextures();
+            base.ClearTextures();
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             D3DDevice.Instance.Device.BeginScene();
 
@@ -567,8 +567,8 @@ namespace TGC.Examples.ShadersExamples
 
             g_pCubeMap.Dispose();
 
-            base.helperRenderFPS();
-            base.helperRenderAxis();
+            base.RenderFPS();
+            base.RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }

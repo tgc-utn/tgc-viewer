@@ -57,12 +57,12 @@ namespace TGC.Examples.UserInterface
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Renderizar los tres textoss
@@ -70,7 +70,7 @@ namespace TGC.Examples.UserInterface
             text2.render();
             text3.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

@@ -42,12 +42,12 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Dibujar la escena entera
@@ -61,7 +61,7 @@ namespace TGC.Examples.Tutorial
             }
             */
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

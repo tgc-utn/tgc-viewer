@@ -254,12 +254,12 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             acumTime += ElapsedTime;
@@ -314,7 +314,7 @@ namespace TGC.Examples.DirectX
             effect.EndPass();
             effect.End();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

@@ -53,7 +53,7 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace TGC.Examples.DirectX
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Ver si cambio el modelo elegido por el usuario
@@ -138,7 +138,7 @@ namespace TGC.Examples.DirectX
                 mesh.DrawSubset(i);
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

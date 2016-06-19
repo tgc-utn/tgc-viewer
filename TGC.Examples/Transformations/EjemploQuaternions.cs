@@ -48,12 +48,12 @@ namespace TGC.Examples.Transformations
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Rotación Euler
@@ -74,7 +74,7 @@ namespace TGC.Examples.Transformations
             boxEuler.render();
             boxQuaternion.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

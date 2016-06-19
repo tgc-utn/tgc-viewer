@@ -76,12 +76,12 @@ namespace TGC.Examples.Optimization.KdtTree
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var showKdTree = (bool)Modifiers["showKdTree"];
@@ -94,7 +94,7 @@ namespace TGC.Examples.Optimization.KdtTree
             }
             kdtree.render(TgcFrustum.Instance, showKdTree);
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

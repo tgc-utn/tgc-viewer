@@ -76,12 +76,12 @@ namespace TGC.Examples.Optimization.GrillaRegular
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var showGrid = (bool)Modifiers["showGrid"];
@@ -94,7 +94,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
             }
             grilla.render(TgcFrustum.Instance, showGrid);
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

@@ -110,12 +110,12 @@ namespace TGC.Examples.MathExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Draw mesh
@@ -155,7 +155,7 @@ namespace TGC.Examples.MathExamples
                 }
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public Color adaptColorRandom(Color c)

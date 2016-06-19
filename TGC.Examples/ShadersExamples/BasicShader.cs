@@ -68,12 +68,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            helperRenderClearTextures();
+            ClearTextures();
             D3DDevice.Instance.Device.BeginScene();
 
 
@@ -87,8 +87,8 @@ namespace TGC.Examples.ShadersExamples
             // dibujo la malla pp dicha
             mesh.render();
 
-            base.helperRenderAxis();
-            base.helperRenderFPS();
+            base.RenderAxis();
+            base.RenderFPS();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }

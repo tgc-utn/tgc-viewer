@@ -172,12 +172,12 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Obtener boolean para saber si hay que mostrar Bounding Box
@@ -359,7 +359,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             //Render SkyBox
             skyBox.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

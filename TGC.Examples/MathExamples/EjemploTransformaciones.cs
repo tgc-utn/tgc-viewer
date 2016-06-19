@@ -39,12 +39,12 @@ namespace TGC.Examples.MathExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             // 1) Crear una matriz de transformacion (de 4x4 para 3D) con la identidad
@@ -125,7 +125,7 @@ namespace TGC.Examples.MathExamples
                 "Este ejemplo no muestra nada por pantalla. Sino que es para leer el código y sus comentarios.", 5, 50,
                 Color.Yellow);
 
-            helperPostRender();
+            PostRender();
         }
         public override void Dispose()
         {

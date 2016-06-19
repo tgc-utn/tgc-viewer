@@ -65,7 +65,7 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace TGC.Examples.Sound
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Ver si cambio el WAV
@@ -116,7 +116,7 @@ namespace TGC.Examples.Sound
             currentSoundText.render();
             instruccionesText.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

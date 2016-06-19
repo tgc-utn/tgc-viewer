@@ -51,12 +51,12 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Configurar altura de los vertices seleccionados
@@ -101,7 +101,7 @@ namespace TGC.Examples.GeometryBasics
             //Dibujar
             land.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

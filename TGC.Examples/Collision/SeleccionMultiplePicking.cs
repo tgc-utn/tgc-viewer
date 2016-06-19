@@ -88,12 +88,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
@@ -165,7 +165,7 @@ namespace TGC.Examples.Collision
                 mesh.BoundingBox.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

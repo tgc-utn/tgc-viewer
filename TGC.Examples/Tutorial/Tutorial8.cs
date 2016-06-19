@@ -56,12 +56,12 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Procesamos input de teclado para mover el objeto principal en el plano XZ
@@ -137,7 +137,7 @@ namespace TGC.Examples.Tutorial
                 mesh.BoundingBox.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

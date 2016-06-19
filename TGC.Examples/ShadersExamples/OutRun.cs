@@ -161,7 +161,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
             var d3dInput = TgcD3dInput.Instance;
 
             if (d3dInput.keyPressed(Key.F1))
@@ -217,7 +217,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            base.helperRenderClearTextures();
+            base.ClearTextures();
 
             var device = D3DDevice.Instance.Device;
             effect.Technique = "DefaultTechnique";
@@ -281,8 +281,8 @@ namespace TGC.Examples.ShadersExamples
             //TgcDrawText.Instance.drawText("dist_cam:" + dist_cam + "defY" + desf.Y, 0, 0, Color.Yellow);
             //TgcDrawText.Instance.drawText("vel:" + vel, 0, 0, Color.Yellow);
 
-            base.helperRenderFPS();
-            base.helperRenderAxis();
+            base.RenderFPS();
+            base.RenderAxis();
             device.EndScene();
             device.Present();
 

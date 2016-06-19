@@ -127,12 +127,12 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Calcular proxima posicion de personaje segun Input
@@ -222,7 +222,7 @@ namespace TGC.Examples.Sound
             //Render personaje
             personaje.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

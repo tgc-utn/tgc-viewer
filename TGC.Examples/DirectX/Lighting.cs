@@ -97,12 +97,12 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Pongo el fondo negro
@@ -225,7 +225,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.Transform.World *= Matrix.Translation(lightVectorToCenter);
             lightBulb.DrawSubset(0);
 
-            helperPostRender();
+            PostRender();
         }
 
         private void createMeshes()

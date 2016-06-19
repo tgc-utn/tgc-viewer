@@ -99,12 +99,12 @@ namespace TGC.Examples.PostProcess
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperRenderClearTextures();
+            base.ClearTextures();
 
             //Cargamos el Render Targer al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
             //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro Render Target.
@@ -184,8 +184,8 @@ namespace TGC.Examples.PostProcess
             effect.End();
 
             //Terminamos el renderizado de la escena
-            base.helperRenderFPS();
-            base.helperRenderAxis();
+            base.RenderFPS();
+            base.RenderAxis();
             d3dDevice.EndScene();
             d3dDevice.Present();
         }

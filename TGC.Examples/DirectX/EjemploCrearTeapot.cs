@@ -78,12 +78,12 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Obtener valores de Modifiers
@@ -124,7 +124,7 @@ namespace TGC.Examples.DirectX
             //Renderizar malla
             mesh.DrawSubset(0);
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

@@ -52,12 +52,12 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //En cada cuadro de render rotamos la caja con cierta velocidad (en radianes)
@@ -78,7 +78,7 @@ namespace TGC.Examples.Tutorial
 
             box.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

@@ -61,12 +61,12 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Especificar formato de triangulos
@@ -76,7 +76,7 @@ namespace TGC.Examples.GeometryBasics
             //Dibujar 1 primitiva
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

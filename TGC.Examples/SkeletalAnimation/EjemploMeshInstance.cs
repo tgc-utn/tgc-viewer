@@ -90,12 +90,12 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Renderizar suelo
@@ -108,7 +108,7 @@ namespace TGC.Examples.SkeletalAnimation
                 instance.animateAndRender(ElapsedTime);
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

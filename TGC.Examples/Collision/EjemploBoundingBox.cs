@@ -43,12 +43,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Renderizar modelo
@@ -57,7 +57,7 @@ namespace TGC.Examples.Collision
             //Renderizar BoundingBox
             mesh.BoundingBox.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

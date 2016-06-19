@@ -61,12 +61,12 @@ namespace TGC.Examples.Transformations
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Especificar formato de triangulos
@@ -81,7 +81,7 @@ namespace TGC.Examples.Transformations
             //Dibujar 1 primitiva
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
 
-            helperPostRender();
+            PostRender();
         }
 
         /// <summary>

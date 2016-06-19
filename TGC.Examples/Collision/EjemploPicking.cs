@@ -81,12 +81,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Si hacen clic con el mouse, ver si hay colision RayAABB
@@ -139,7 +139,7 @@ namespace TGC.Examples.Collision
                 UserVars.setValue("CollP-Z:", 0);
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

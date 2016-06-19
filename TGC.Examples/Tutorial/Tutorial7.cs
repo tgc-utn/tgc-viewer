@@ -54,12 +54,12 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Procesamos input de teclado para mover el objeto principal en el plano XZ
@@ -96,7 +96,7 @@ namespace TGC.Examples.Tutorial
             //Dibujamos la escena
             scene.renderAll();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

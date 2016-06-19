@@ -74,12 +74,12 @@ namespace TGC.Examples.Particles
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             //IMPORTANTE PARA PERMITIR ESTE EFECTO.
             D3DDevice.Instance.ParticlesEnabled = true;
             D3DDevice.Instance.enableParticles();
@@ -115,7 +115,7 @@ namespace TGC.Examples.Particles
 
             box.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

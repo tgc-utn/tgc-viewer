@@ -97,12 +97,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
             var device = D3DDevice.Instance.Device;
 
@@ -155,8 +155,8 @@ namespace TGC.Examples.ShadersExamples
             TgcDrawText.Instance.drawText((pom ? "ParallaxOcclusion" : "BumpMap") +
                                           "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0, 15, Color.Yellow);
 
-            base.helperRenderFPS();
-            base.helperRenderAxis();
+            base.RenderFPS();
+            base.RenderAxis();
             device.EndScene();
             device.Present();
         }

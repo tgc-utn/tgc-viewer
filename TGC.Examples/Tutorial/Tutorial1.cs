@@ -57,7 +57,7 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace TGC.Examples.Tutorial
         public override void Render()
         {
             //Iniciamoss la escena
-            base.helperPreRender();
+            base.PreRender();
             //Render de la super clase
             
 
@@ -79,7 +79,7 @@ namespace TGC.Examples.Tutorial
             box.render();
 
             //Finalizamos el renderizado de la escena
-            helperPostRender();
+            PostRender();
         }
 
         /// <summary>
