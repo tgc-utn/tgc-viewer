@@ -65,12 +65,12 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Restaurar la matriz identidad, sino queda sucio del cuadro anterior
@@ -85,7 +85,7 @@ namespace TGC.Examples.DirectX
             //Renderizar Box
             box.DrawSubset(0);
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

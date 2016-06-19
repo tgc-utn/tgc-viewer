@@ -60,12 +60,12 @@ namespace TGC.Examples.AlphaBlending
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            helperPreRender();
+            PreRender();
 
             var invert = (bool)Modifiers["invertRender"];
 
@@ -82,7 +82,7 @@ namespace TGC.Examples.AlphaBlending
                 mesh2.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         private void setAlphaEnable()

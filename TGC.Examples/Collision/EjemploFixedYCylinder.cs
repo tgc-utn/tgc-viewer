@@ -53,12 +53,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var size = (Vector2)Modifiers.getValue("size");
@@ -104,7 +104,7 @@ namespace TGC.Examples.Collision
             collisionableAABB.render();
             collisionableCylinder.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

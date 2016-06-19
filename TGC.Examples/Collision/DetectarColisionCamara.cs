@@ -115,12 +115,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            helperPreRender();
+            PreRender();
 
             var velocidadCaminar = 400f;
             var velocidadRotacion = 120f;
@@ -226,7 +226,7 @@ namespace TGC.Examples.Collision
             //Render personaje
             personaje.animateAndRender(ElapsedTime);
             
-            helperPostRender();
+            PostRender();
         }
 
         /// <summary>

@@ -137,12 +137,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperRenderClearTextures();
+            base.ClearTextures();
 
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             D3DDevice.Instance.Device.BeginScene();

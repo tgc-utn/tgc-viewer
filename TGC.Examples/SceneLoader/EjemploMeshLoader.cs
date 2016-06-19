@@ -70,7 +70,7 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace TGC.Examples.SceneLoader
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Ver si cambio la malla
@@ -183,7 +183,7 @@ namespace TGC.Examples.SceneLoader
             //Renderizar escena entera
             currentScene.renderAll(showBoundingBox);
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

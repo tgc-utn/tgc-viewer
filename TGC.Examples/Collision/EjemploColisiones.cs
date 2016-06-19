@@ -120,12 +120,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Ver si hay que mostrar el BoundingBox
@@ -221,7 +221,7 @@ namespace TGC.Examples.Collision
                 personaje.BoundingBox.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

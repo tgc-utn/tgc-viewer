@@ -46,18 +46,18 @@ namespace TGC.Examples.Others
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             TgcDrawText.Instance.drawText("ok", 100, 100, Color.Red);
             scene1.renderAll();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

@@ -47,12 +47,12 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Obtenemos acceso al objeto que maneja input de mouse y teclado del framework
@@ -103,7 +103,7 @@ namespace TGC.Examples.Tutorial
 
             box.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

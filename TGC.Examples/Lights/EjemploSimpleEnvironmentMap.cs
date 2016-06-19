@@ -112,12 +112,12 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Actualzar posición de la luz
@@ -153,7 +153,7 @@ namespace TGC.Examples.Lights
             //Renderizar mesh de luz
             lightMesh.render();
 
-            base.helperPostRender();
+            base.PostRender();
         }
 
         public override void Dispose()

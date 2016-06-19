@@ -71,12 +71,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Actualizar Technique
@@ -89,7 +89,7 @@ namespace TGC.Examples.ShadersExamples
 
             mesh.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

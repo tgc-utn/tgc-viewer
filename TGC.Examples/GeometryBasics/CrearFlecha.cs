@@ -49,12 +49,12 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var start = (Vector3)Modifiers["start"];
@@ -78,7 +78,7 @@ namespace TGC.Examples.GeometryBasics
             //Render
             arrow.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

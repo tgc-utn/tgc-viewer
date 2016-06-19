@@ -63,12 +63,12 @@ namespace TGC.Examples.PortalRendering
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var enablePortalRendering = (bool)Modifiers["portalRendering"];
@@ -133,7 +133,7 @@ namespace TGC.Examples.PortalRendering
                 scene.PortalRendering.renderPortals();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

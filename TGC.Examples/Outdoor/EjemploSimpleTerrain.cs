@@ -64,12 +64,12 @@ namespace TGC.Examples.Outdoor
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Ver si cambio el heightmap
@@ -104,7 +104,7 @@ namespace TGC.Examples.Outdoor
             //Renderizar terreno
             terrain.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

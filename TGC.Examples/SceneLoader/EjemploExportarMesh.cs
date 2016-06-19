@@ -51,17 +51,17 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             sceneRecover.renderAll();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

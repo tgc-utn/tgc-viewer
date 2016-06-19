@@ -53,7 +53,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var showNormal = (bool)Modifiers["showNormal"];
@@ -101,7 +101,7 @@ namespace TGC.Examples.GeometryBasics
                 normalArrow.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

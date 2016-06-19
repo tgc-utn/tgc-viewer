@@ -80,12 +80,12 @@ namespace TGC.Examples.Fog
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            helperRenderClearTextures();
+            ClearTextures();
             D3DDevice.Instance.Device.BeginScene();
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
@@ -148,8 +148,8 @@ namespace TGC.Examples.Fog
             }
            
 
-            base.helperRenderAxis();
-            base.helperRenderFPS();
+            RenderAxis();
+            RenderFPS();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }

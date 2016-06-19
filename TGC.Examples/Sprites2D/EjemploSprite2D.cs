@@ -62,12 +62,12 @@ namespace TGC.Examples.Sprites2D
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Actualizar valores cargados en modifiers
@@ -87,7 +87,7 @@ namespace TGC.Examples.Sprites2D
             //Finalizar el dibujado de Sprites
             TgcDrawer2D.Instance.endDrawSprite();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

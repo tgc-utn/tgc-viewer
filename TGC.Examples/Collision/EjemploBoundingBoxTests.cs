@@ -85,12 +85,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var velocidadCaminar = 50f * ElapsedTime;
@@ -194,7 +194,7 @@ namespace TGC.Examples.Collision
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, triangle);
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

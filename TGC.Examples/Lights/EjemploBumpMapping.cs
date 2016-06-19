@@ -132,7 +132,7 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace TGC.Examples.Lights
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Actualzar posición de la luz
@@ -208,7 +208,7 @@ namespace TGC.Examples.Lights
                 if (showBinormals) binormals[i].render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         /// <summary>

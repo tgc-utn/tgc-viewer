@@ -105,7 +105,7 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Ver si cambio la malla
@@ -215,7 +215,7 @@ namespace TGC.Examples.SkeletalAnimation
                 mesh.BoundingBox.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

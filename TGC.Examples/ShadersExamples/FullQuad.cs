@@ -91,12 +91,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperRenderClearTextures();
+            base.ClearTextures();
 
             var device = D3DDevice.Instance.Device;
 
@@ -159,8 +159,8 @@ namespace TGC.Examples.ShadersExamples
             }
 
             device.BeginScene();
-            base.helperRenderAxis();
-            base.helperRenderFPS();
+            base.RenderAxis();
+            base.RenderFPS();
             device.EndScene();
             device.Present();
         }

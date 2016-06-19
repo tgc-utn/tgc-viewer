@@ -183,12 +183,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
             var aspectRatio = D3DDevice.Instance.AspectRatio;
             if (TgcD3dInput.Instance.keyPressed(Key.Space))

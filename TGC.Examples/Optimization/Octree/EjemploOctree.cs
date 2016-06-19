@@ -75,12 +75,12 @@ namespace TGC.Examples.Optimization.Octree
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var showOctree = (bool)Modifiers["showOctree"];
@@ -93,7 +93,7 @@ namespace TGC.Examples.Optimization.Octree
             }
             octree.render(TgcFrustum.Instance, showOctree);
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

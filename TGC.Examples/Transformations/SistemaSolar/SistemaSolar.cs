@@ -91,14 +91,14 @@ namespace TGC.Examples.Transformations.SistemaSolar
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             D3DDevice.Instance.Device.BeginScene();
-            base.helperRenderClearTextures();
+            base.ClearTextures();
 
             //Actualizar transformacion y renderizar el sol
             sun.Transform = getSunTransform(ElapsedTime);
@@ -120,7 +120,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
             //Limpiamos todas las transformaciones con la Matrix identidad
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
 
-            helperPostRender();
+            PostRender();
         }
 
         private Matrix getSunTransform(float elapsedTime)

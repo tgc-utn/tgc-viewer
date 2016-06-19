@@ -69,12 +69,12 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperRenderClearTextures();
+            base.ClearTextures();
             //Guardar render target original
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
 
@@ -116,8 +116,8 @@ namespace TGC.Examples.DirectX
                 mesh.render();
             }
 
-            base.helperRenderFPS();
-            base.helperRenderAxis();
+            base.RenderFPS();
+            base.RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }

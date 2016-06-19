@@ -124,14 +124,14 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
             //Guardar RT original
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
-            helperRenderClearTextures();
+            ClearTextures();
             //Dibujamos la escena al RT en floating point
             drawSceneToRenderTarget(D3DDevice.Instance.Device);
 
@@ -151,8 +151,8 @@ namespace TGC.Examples.Lights
             finalRender(D3DDevice.Instance.Device);
 
             D3DDevice.Instance.Device.BeginScene();
-            base.helperRenderAxis();
-            base.helperRenderFPS();
+            base.RenderAxis();
+            base.RenderFPS();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }

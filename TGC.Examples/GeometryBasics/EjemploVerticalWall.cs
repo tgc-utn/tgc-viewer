@@ -58,7 +58,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         private void updateWall()
@@ -86,7 +86,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var d3dDevice = D3DDevice.Instance.Device;
@@ -103,7 +103,7 @@ namespace TGC.Examples.GeometryBasics
             wall.render();
             mesh.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

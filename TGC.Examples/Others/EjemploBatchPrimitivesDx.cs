@@ -120,18 +120,18 @@ namespace TGC.Examples.Others
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             var renderMethod = (RenderMethod)Modifiers["Render Method"];
             doRender(renderMethod);
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

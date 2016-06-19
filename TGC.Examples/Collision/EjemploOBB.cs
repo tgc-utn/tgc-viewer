@@ -58,12 +58,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Obtener rotacion de mesh (pasar a radianes)
@@ -88,7 +88,7 @@ namespace TGC.Examples.Collision
             //Renderizar obb
             obb.render();
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

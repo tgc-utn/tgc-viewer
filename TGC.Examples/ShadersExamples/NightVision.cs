@@ -161,7 +161,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
             var pos = Camara.Position;
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
@@ -270,7 +270,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            base.helperRenderClearTextures();
+            base.ClearTextures();
 
             if ((bool)Modifiers["activar_efecto"])
                 renderConEfectos(ElapsedTime);
@@ -278,8 +278,8 @@ namespace TGC.Examples.ShadersExamples
                 renderSinEfectos(ElapsedTime);
 
             D3DDevice.Instance.Device.BeginScene();
-            base.helperRenderFPS();
-            base.helperRenderAxis();
+            base.RenderFPS();
+            base.RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }

@@ -53,12 +53,12 @@ namespace TGC.Examples.Others
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             foreach (var m in meshes)
@@ -66,7 +66,7 @@ namespace TGC.Examples.Others
                 m.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()

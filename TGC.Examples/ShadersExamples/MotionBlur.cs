@@ -99,7 +99,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
             time += ElapsedTime;
             float r = 40;
             mesh.Position = new Vector3(r * (float)System.Math.Cos(time * 0.5), 0, 0 * (float)System.Math.Sin(time * 0.5));
@@ -114,7 +114,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            base.helperRenderClearTextures();
+            base.ClearTextures();
             var device = D3DDevice.Instance.Device;
 
             // guardo el Render target anterior y seteo la textura como render target

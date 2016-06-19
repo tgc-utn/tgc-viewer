@@ -1,7 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Drawing;
 using System.IO;
 using TGC.Core;
@@ -68,7 +67,7 @@ namespace TGC.Examples.Others
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
@@ -76,7 +75,7 @@ namespace TGC.Examples.Others
             //BackgroundColor
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             D3DDevice.Instance.Device.BeginScene();
-            helperRenderClearTextures();
+            ClearTextures();
 
             //Cargar variables shader
             mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(Color.Gray));
@@ -98,7 +97,7 @@ namespace TGC.Examples.Others
                 helpForm.ShowDialog();
             }
 
-            helperPostRender();
+			PostRender();
         }
 
         public override void Dispose()

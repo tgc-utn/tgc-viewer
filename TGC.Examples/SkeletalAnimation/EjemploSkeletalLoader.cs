@@ -124,12 +124,12 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Update()
         {
-            base.helperPreUpdate();
+            base.PreUpdate();
         }
 
         public override void Render()
         {
-            base.helperPreRender();
+            base.PreRender();
             
 
             //Ver si cambio la animacion
@@ -191,7 +191,7 @@ namespace TGC.Examples.SkeletalAnimation
                 mesh.BoundingBox.render();
             }
 
-            helperPostRender();
+            PostRender();
         }
 
         public override void Dispose()
