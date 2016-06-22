@@ -254,13 +254,12 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             acumTime += ElapsedTime;
             var speed = 20 * ElapsedTime;
@@ -319,8 +318,6 @@ namespace TGC.Examples.DirectX
 
         public override void Dispose()
         {
-            
-
             vertexBuffer.Dispose();
             indexBuffer.Dispose();
             effect.Dispose();

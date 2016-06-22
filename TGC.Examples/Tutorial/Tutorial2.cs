@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -50,18 +49,18 @@ namespace TGC.Examples.Tutorial
             box = TgcBox.fromSize(center, size, texture);
 
             //Hacemos que la cámara esté centrada el box.
-            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(), box.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
+                box.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             box.render();
 
@@ -70,8 +69,6 @@ namespace TGC.Examples.Tutorial
 
         public override void Dispose()
         {
-            
-
             box.dispose();
         }
     }

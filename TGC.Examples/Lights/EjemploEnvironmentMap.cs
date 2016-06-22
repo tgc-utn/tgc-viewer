@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
@@ -112,13 +111,13 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
+
             //Actualzar posición de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
@@ -158,7 +157,7 @@ namespace TGC.Examples.Lights
             //Renderizar mesh de luz
             lightMesh.render();
 
-            base.PostRender();
+            PostRender();
         }
 
         public override void Dispose()

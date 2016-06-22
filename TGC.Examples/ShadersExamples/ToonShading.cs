@@ -1,7 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
@@ -177,13 +176,13 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
+
             var lightPosition = (Vector3)Modifiers["LightPosition"];
 
             if (TgcD3dInput.Instance.keyPressed(Key.Space))
@@ -254,16 +253,14 @@ namespace TGC.Examples.ShadersExamples
             effect.EndPass();
             effect.End();
 
-            base.RenderFPS();
-            base.RenderAxis();
+            RenderFPS();
+            RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }
 
         public override void Dispose()
         {
-            
-
             effect.Dispose();
             scene.disposeAll();
             g_pRenderTarget.Dispose();

@@ -84,7 +84,8 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
 
             //Centrar camara rotacional respecto a este mesh
-            var rotCamera = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            var rotCamera = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
             rotCamera.CameraCenter = rotCamera.CameraCenter + new Vector3(0, 20f, 0);
             rotCamera.CameraDistance = 75;
             rotCamera.RotationSpeed = 50f;
@@ -97,13 +98,13 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
+
             var device = D3DDevice.Instance.Device;
 
             time += ElapsedTime;
@@ -153,18 +154,17 @@ namespace TGC.Examples.ShadersExamples
             mesh.render();
 
             TgcDrawText.Instance.drawText((pom ? "ParallaxOcclusion" : "BumpMap") +
-                                          "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0, 15, Color.Yellow);
+                                          "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0, 15,
+                Color.Yellow);
 
-            base.RenderFPS();
-            base.RenderAxis();
+            RenderFPS();
+            RenderAxis();
             device.EndScene();
             device.Present();
         }
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
             effect.Dispose();
             g_pBaseTexture.Dispose();

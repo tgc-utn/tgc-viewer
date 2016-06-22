@@ -132,12 +132,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
 
             var d3dDevice = D3DDevice.Instance.Device;
 
@@ -243,8 +243,6 @@ namespace TGC.Examples.ShadersExamples
         /// </summary>
         public override void Dispose()
         {
-            
-
             //for (int i = 0; i < cant_frames; ++i)
             //  g_pVideoBuffer[i].Dispose();
 
@@ -253,10 +251,10 @@ namespace TGC.Examples.ShadersExamples
             effect.Dispose();
         }
 
-        /// </summary>
-        /// and plays the first frame inside the panel
-        /// opens a video from an avi file
-
         /// <summary>
+        /// opens a video from an avi file
+        /// and plays the first frame inside the panel
+
+        /// </summary>
     }
 }

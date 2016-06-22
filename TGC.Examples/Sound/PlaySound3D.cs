@@ -1,7 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Collections.Generic;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -35,12 +34,12 @@ namespace TGC.Examples.Sound
     {
         private const float VELODICAD_CAMINAR = 250f;
         private const float VELOCIDAD_ROTACION = 120f;
+        private TgcThirdPersonCamera camaraInterna;
         private List<TgcBox> obstaculos;
         private TgcMesh personaje;
 
         private TgcBox piso;
         private List<Tgc3dSound> sonidos;
-        private TgcThirdPersonCamera camaraInterna;
 
         public PlaySound3D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -117,7 +116,7 @@ namespace TGC.Examples.Sound
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, new Vector3(0, 100, 0), 200, 300);
             Camara = camaraInterna;
-            
+
             //Ejecutar en loop los sonidos
             foreach (var s in sonidos)
             {
@@ -127,13 +126,12 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
@@ -227,8 +225,6 @@ namespace TGC.Examples.Sound
 
         public override void Dispose()
         {
-            
-
             piso.dispose();
             foreach (var obstaculo in obstaculos)
             {

@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -59,7 +58,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -95,8 +94,8 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
+
             //Actualizar parametros de la caja
             updateBox();
 
@@ -110,13 +109,11 @@ namespace TGC.Examples.GeometryBasics
                 box.BoundingBox.render();
             }
 
-            base.PostRender();
+            PostRender();
         }
 
         public override void Dispose()
         {
-            
-
             box.dispose();
         }
     }

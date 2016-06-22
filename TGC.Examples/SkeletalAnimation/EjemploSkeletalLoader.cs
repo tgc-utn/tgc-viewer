@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -124,13 +123,12 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio la animacion
             var anim = (string)Modifiers.getValue("animation");
@@ -196,8 +194,6 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Dispose()
         {
-            
-
             //La malla también hace dispose del attachment
             mesh.dispose();
         }

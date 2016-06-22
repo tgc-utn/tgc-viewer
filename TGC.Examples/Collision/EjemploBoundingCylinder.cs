@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -53,13 +52,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var size = (Vector2)Modifiers.getValue("size");
             var position = (Vector3)Modifiers.getValue("position");
@@ -99,8 +97,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             collider.dispose();
             collisionableSphere.dispose();
         }

@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -60,18 +59,18 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addFloat("specularEx", 0, 40, 20f);
 
             //Centrar camara rotacional respecto a este mesh
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            
-            base.PreRender();
+            PreRender();
 
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];
@@ -118,8 +117,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
             lightMesh.dispose();
         }

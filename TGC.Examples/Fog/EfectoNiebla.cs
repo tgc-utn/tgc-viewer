@@ -1,17 +1,14 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Fog;
-using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Terrain;
-using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
@@ -27,10 +24,10 @@ namespace TGC.Examples.Fog
     /// </summary>
     public class EfectoNiebla : TgcExample
     {
-        private TgcSkyBox skyBox;
-        private TgcScene scene;
         private Effect effect;
         private TgcFog fog;
+        private TgcScene scene;
+        private TgcSkyBox skyBox;
 
         public EfectoNiebla(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -74,8 +71,6 @@ namespace TGC.Examples.Fog
             Modifiers.addColor("color", Color.LightGray);
 
             fog = new TgcFog();
-
-            
         }
 
         public override void Update()
@@ -90,13 +85,13 @@ namespace TGC.Examples.Fog
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Cargar valores de niebla
-            bool fogShader = (bool)Modifiers["FogShader"];
+            var fogShader = (bool)Modifiers["FogShader"];
             fog.Enabled = !(bool)Modifiers["FogShader"];
             fog.StartDistance = (float)Modifiers["startDistance"];
             fog.EndDistance = (float)Modifiers["endDistance"];
             fog.Density = (float)Modifiers["density"];
             fog.Color = (Color)Modifiers["color"];
-            
+
             if (fog.Enabled)
             {
                 fog.updateValues();
@@ -115,23 +110,7 @@ namespace TGC.Examples.Fog
 
             //Actualizar valores
             //
-            foreach (TgcMesh mesh in skyBox.Faces)
-            {
-                if (fogShader)
-                {
-                    mesh.Effect = effect;
-                    mesh.Technique = "RenderScene";
-                } else {
-                    mesh.Effect = TgcShaders.Instance.TgcMeshShader;
-                    mesh.Technique = "DIFFUSE_MAP";
-                }                
-                
-                mesh.render();
-            }
-
-            //skyBox.render();
-
-            foreach (TgcMesh mesh in scene.Meshes)
+            foreach (var mesh in skyBox.Faces)
             {
                 if (fogShader)
                 {
@@ -146,7 +125,24 @@ namespace TGC.Examples.Fog
 
                 mesh.render();
             }
-           
+
+            //skyBox.render();
+
+            foreach (var mesh in scene.Meshes)
+            {
+                if (fogShader)
+                {
+                    mesh.Effect = effect;
+                    mesh.Technique = "RenderScene";
+                }
+                else
+                {
+                    mesh.Effect = TgcShaders.Instance.TgcMeshShader;
+                    mesh.Technique = "DIFFUSE_MAP";
+                }
+
+                mesh.render();
+            }
 
             RenderAxis();
             RenderFPS();

@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace TGC.Viewer.Forms
+namespace TGC.Viewer.UI
 {
     internal partial class AboutForm : Form
     {

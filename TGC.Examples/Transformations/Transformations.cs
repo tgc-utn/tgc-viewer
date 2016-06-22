@@ -61,13 +61,12 @@ namespace TGC.Examples.Transformations
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Especificar formato de triangulos
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
@@ -115,8 +114,6 @@ namespace TGC.Examples.Transformations
 
         public override void Dispose()
         {
-            
-
             vertexBuffer.Dispose();
         }
     }

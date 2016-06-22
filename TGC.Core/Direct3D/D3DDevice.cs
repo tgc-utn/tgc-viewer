@@ -1,11 +1,10 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
-using System;
 
 namespace TGC.Core.Direct3D
 {
@@ -95,25 +94,24 @@ namespace TGC.Core.Direct3D
             //Limpiar IndexBuffer
             Device.Indices = null;
 
-            this.enableParticles();
-
-            
+            enableParticles();
         }
 
         /// <summary>
-        ///  habilita los points sprites.
-        ///  Estaba este comentario antes, asi que lo dejo con default false.
-        ///  INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
+        ///     habilita los points sprites.
+        ///     Estaba este comentario antes, asi que lo dejo con default false.
+        ///     INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
         /// </summary>
         public void enableParticles()
         {
-            if (ParticlesEnabled) { 
+            if (ParticlesEnabled)
+            {
                 //PointSprite
-                this.Device.RenderState.PointSpriteEnable = true;
-                this.Device.RenderState.PointScaleEnable = true;
-                this.Device.RenderState.PointScaleA = 1.0f;
-                this.Device.RenderState.PointScaleB = 1.0f;
-                this.Device.RenderState.PointScaleC = 0.0f;
+                Device.RenderState.PointSpriteEnable = true;
+                Device.RenderState.PointScaleEnable = true;
+                Device.RenderState.PointScaleA = 1.0f;
+                Device.RenderState.PointScaleB = 1.0f;
+                Device.RenderState.PointScaleC = 0.0f;
             }
         }
 

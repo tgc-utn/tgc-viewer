@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Shaders;
@@ -85,38 +86,38 @@ namespace TGC.Examples.ShadersExamples
                         Vector3 v1, v2, v3, v4;
                         {
                             var r = radio_2 + heightmapData[ri, rj] * scaleY;
-                            var s = 2f * (float)System.Math.PI * j / dj;
-                            var t = -(float)System.Math.PI * i / di;
-                            var x = (float)System.Math.Cos(s) * (radio_1 + r * (float)System.Math.Cos(t));
-                            var z = (float)System.Math.Sin(s) * (radio_1 + r * (float)System.Math.Cos(t));
-                            var y = r * (float)System.Math.Sin(t);
+                            var s = 2f * (float)Math.PI * j / dj;
+                            var t = -(float)Math.PI * i / di;
+                            var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var y = r * (float)Math.Sin(t);
                             v1 = new Vector3(x, y, z);
                         }
                         {
                             var r = radio_2 + heightmapData[ri, rj1] * scaleY;
-                            var s = 2f * (float)System.Math.PI * (j + 1) / dj;
-                            var t = -(float)System.Math.PI * i / di;
-                            var x = (float)System.Math.Cos(s) * (radio_1 + r * (float)System.Math.Cos(t));
-                            var z = (float)System.Math.Sin(s) * (radio_1 + r * (float)System.Math.Cos(t));
-                            var y = r * (float)System.Math.Sin(t);
+                            var s = 2f * (float)Math.PI * (j + 1) / dj;
+                            var t = -(float)Math.PI * i / di;
+                            var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var y = r * (float)Math.Sin(t);
                             v2 = new Vector3(x, y, z);
                         }
                         {
                             var r = radio_2 + heightmapData[ri1, rj] * scaleY;
-                            var s = 2f * (float)System.Math.PI * j / dj;
-                            var t = -(float)System.Math.PI * (i + 1) / di;
-                            var x = (float)System.Math.Cos(s) * (radio_1 + r * (float)System.Math.Cos(t));
-                            var z = (float)System.Math.Sin(s) * (radio_1 + r * (float)System.Math.Cos(t));
-                            var y = r * (float)System.Math.Sin(t);
+                            var s = 2f * (float)Math.PI * j / dj;
+                            var t = -(float)Math.PI * (i + 1) / di;
+                            var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var y = r * (float)Math.Sin(t);
                             v3 = new Vector3(x, y, z);
                         }
                         {
                             var r = radio_2 + heightmapData[ri1, rj1] * scaleY;
-                            var s = 2f * (float)System.Math.PI * (j + 1) / dj;
-                            var t = -(float)System.Math.PI * (i + 1) / di;
-                            var x = (float)System.Math.Cos(s) * (radio_1 + r * (float)System.Math.Cos(t));
-                            var z = (float)System.Math.Sin(s) * (radio_1 + r * (float)System.Math.Cos(t));
-                            var y = r * (float)System.Math.Sin(t);
+                            var s = 2f * (float)Math.PI * (j + 1) / dj;
+                            var t = -(float)Math.PI * (i + 1) / di;
+                            var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
+                            var y = r * (float)Math.Sin(t);
                             v4 = new Vector3(x, y, z);
                         }
 

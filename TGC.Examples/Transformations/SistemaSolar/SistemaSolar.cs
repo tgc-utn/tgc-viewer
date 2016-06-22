@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -84,21 +83,21 @@ namespace TGC.Examples.Transformations.SistemaSolar
             sun.AutoTransformEnable = false;
             earth.AutoTransformEnable = false;
             moon.AutoTransformEnable = false;
-            
+
             //Camara en primera persona
             Camara = new TgcFpsCamera(new Vector3(705.2938f, 305.347f, -888.1567f));
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             D3DDevice.Instance.Device.BeginScene();
-            base.ClearTextures();
+            ClearTextures();
 
             //Actualizar transformacion y renderizar el sol
             sun.Transform = getSunTransform(ElapsedTime);
@@ -153,8 +152,6 @@ namespace TGC.Examples.Transformations.SistemaSolar
 
         public override void Dispose()
         {
-            
-
             sun.dispose();
             moon.dispose();
             earth.dispose();

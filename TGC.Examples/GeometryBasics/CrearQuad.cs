@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -53,7 +52,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -86,8 +85,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var showNormal = (bool)Modifiers["showNormal"];
 
@@ -106,8 +104,6 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            
-
             quad.dispose();
             normalArrow.dispose();
         }

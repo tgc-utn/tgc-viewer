@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Camara
@@ -47,7 +46,7 @@ namespace TGC.Core.Camara
                 updateViewMatrix();
             }
 
-            this.setCamera(Eye, Target);
+            setCamera(Eye, Target);
         }
 
         /// <summary>
@@ -71,11 +70,11 @@ namespace TGC.Core.Camara
 
             m_viewMatrix = Matrix.Identity;
             m_orientation = Quaternion.Identity;
-            this.setCamera(Eye, Target);
+            setCamera(Eye, Target);
         }
 
         /// <summary>
-        ///    Asigna target con offsets.
+        ///     Asigna target con offsets.
         /// </summary>
         public void setTargetOffset(Vector3 target, float offsetY, float offsetZ)
         {

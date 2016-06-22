@@ -1,5 +1,4 @@
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Drawing;
 using System.IO;
 using TGC.Core;
@@ -65,7 +64,7 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -94,8 +93,7 @@ namespace TGC.Examples.Sound
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio el WAV
             var filePath = (string)Modifiers["WAV-File"];
@@ -121,8 +119,6 @@ namespace TGC.Examples.Sound
 
         public override void Dispose()
         {
-            
-
             sound.dispose();
         }
     }

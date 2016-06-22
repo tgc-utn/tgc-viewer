@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core._2D;
 using TGC.Core.Camara;
@@ -57,18 +56,18 @@ namespace TGC.Examples.Sprites2D
             box = TgcBox.fromSize(new Vector3(10, 10, 10), TgcTexture.createTexture(MediaDir + "\\Texturas\\pasto.jpg"));
 
             //Hacer que la camara se centre en el box3D
-            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(), box.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
+                box.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Actualizar valores cargados en modifiers
             sprite.Position = (Vector2)Modifiers["position"];
@@ -92,8 +91,6 @@ namespace TGC.Examples.Sprites2D
 
         public override void Dispose()
         {
-            
-
             sprite.dispose();
             box.dispose();
         }

@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
@@ -69,12 +68,12 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
             //Guardar render target original
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
 
@@ -116,16 +115,14 @@ namespace TGC.Examples.DirectX
                 mesh.render();
             }
 
-            base.RenderFPS();
-            base.RenderAxis();
+            RenderFPS();
+            RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }
 
         public override void Dispose()
         {
-            
-
             pOldRT.Dispose();
             zBufferTexture.Dispose();
             foreach (var mesh in meshes)

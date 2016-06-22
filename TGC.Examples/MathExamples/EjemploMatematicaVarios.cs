@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core._2D;
@@ -39,13 +38,12 @@ namespace TGC.Examples.MathExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             // 1) Crear un vector en 3D
             var v = new Vector3(0, 19, -1759.21f);

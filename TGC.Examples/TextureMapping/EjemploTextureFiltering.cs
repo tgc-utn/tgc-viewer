@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
@@ -51,7 +50,7 @@ namespace TGC.Examples.TextureMapping
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         private void changeBoxTexure(Device d3dDevice, TgcBox box, string texturePath)
@@ -90,8 +89,7 @@ namespace TGC.Examples.TextureMapping
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var currentFiltering = (string)Modifiers["Filtering"];
             if (currentFiltering != lastFiltering)
@@ -114,8 +112,6 @@ namespace TGC.Examples.TextureMapping
 
         public override void Dispose()
         {
-            
-
             box.dispose();
         }
     }

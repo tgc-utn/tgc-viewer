@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Collections.Generic;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -75,13 +74,12 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Renderizar suelo
             suelo.render();
@@ -97,8 +95,6 @@ namespace TGC.Examples.SceneLoader
 
         public override void Dispose()
         {
-            
-
             suelo.dispose();
 
             //Al hacer dispose del original, se hace dispose automáticamente de todas las instancias

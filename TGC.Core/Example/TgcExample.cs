@@ -36,81 +36,81 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Tiempo en segundos transcurridos desde el ultimo frame.
+        ///     Tiempo en segundos transcurridos desde el ultimo frame.
         /// </summary>
         public float ElapsedTime { get; set; }
 
         /// <summary>
-        /// Activa o desactiva el contador de frames por segundo.
+        ///     Activa o desactiva el contador de frames por segundo.
         /// </summary>
         public bool FPS { get; set; }
 
         /// <summary>
-        /// Utilidad para visualizar los ejes cartesianos
+        ///     Utilidad para visualizar los ejes cartesianos
         /// </summary>
         public TgcAxisLines AxisLines { get; set; }
 
         /// <summary>
-        /// Categoria a la que pertenece el ejemplo.
-        /// Influye en donde se va a haber en el arbol de la derecha de la pantalla.
+        ///     Categoria a la que pertenece el ejemplo.
+        ///     Influye en donde se va a haber en el arbol de la derecha de la pantalla.
         /// </summary>
         public string Category { get; set; }
 
         /// <summary>
-        /// Completar nombre del grupo en formato Grupo NN
+        ///     Completar nombre del grupo en formato Grupo NN
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Completar con la descripcion del TP
+        ///     Completar con la descripcion del TP
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Path de la carpeta Media que contiene todo el contenido visual de los ejemplos, como texturas, modelos 3D, etc.
+        ///     Path de la carpeta Media que contiene todo el contenido visual de los ejemplos, como texturas, modelos 3D, etc.
         /// </summary>
         public string MediaDir { get; set; }
 
         /// <summary>
-        /// Path de la carpeta Shaders que contiene todo los shaders genericos
+        ///     Path de la carpeta Shaders que contiene todo los shaders genericos
         /// </summary>
         public string ShadersDir { get; set; }
 
         /// <summary>
-        /// Camara que esta utilizando el ejemplo
+        ///     Camara que esta utilizando el ejemplo
         /// </summary>
         public TgcCamera Camara { get; set; }
 
         /// <summary>
-        /// Utilidad para administrar las variables de usuario visibles en el panel derecho de la aplicacion.
+        ///     Utilidad para administrar las variables de usuario visibles en el panel derecho de la aplicacion.
         /// </summary>
         public TgcUserVars UserVars { get; set; }
 
         /// <summary>
-        /// Utilidad para crear modificadores de variables de usuario, que son mostradas en el panel derecho de la aplicacion.
+        ///     Utilidad para crear modificadores de variables de usuario, que son mostradas en el panel derecho de la aplicacion.
         /// </summary>
         public TgcModifiers Modifiers { get; set; }
 
         /// <summary>
-        /// Se llama cuando el ejemplo es elegido para ejecutar.
-        /// Inicializar todos los recursos y configuraciones que se van a utilizar.
+        ///     Se llama cuando el ejemplo es elegido para ejecutar.
+        ///     Inicializar todos los recursos y configuraciones que se van a utilizar.
         /// </summary>
         public abstract void Init();
 
         /// <summary>
-        /// Update de mi modelo.
+        ///     Update de mi modelo.
         /// </summary>
         public abstract void Update();
 
         /// <summary>
-        /// Se llama para renderizar cada cuadro del ejemplo.
+        ///     Se llama para renderizar cada cuadro del ejemplo.
         /// </summary>
         public abstract void Render();
 
-		/// <summary>
-		/// Metodos a ejecutar antes del update.
-		/// </summary>
-		protected virtual void PreUpdate()
+        /// <summary>
+        ///     Metodos a ejecutar antes del update.
+        /// </summary>
+        protected virtual void PreUpdate()
         {
             UpdateClock();
             UpdateInput();
@@ -120,7 +120,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Metodos a ejecutar antes del render.
+        ///     Metodos a ejecutar antes del render.
         /// </summary>
         protected virtual void PreRender()
         {
@@ -129,7 +129,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Metodos a ejecutar cuando termino el render.
+        ///     Metodos a ejecutar cuando termino el render.
         /// </summary>
         protected virtual void PostRender()
         {
@@ -139,59 +139,59 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Actualiza el elapsedTime, importante invocar en cada update loop.
+        ///     Actualiza el elapsedTime, importante invocar en cada update loop.
         /// </summary>
-		protected void UpdateClock()
+        protected void UpdateClock()
         {
             ElapsedTime = HighResolutionTimer.Instance.FrameTime;
             HighResolutionTimer.Instance.Set();
         }
 
         /// <summary>
-        /// Acutaliza el input
+        ///     Acutaliza el input
         /// </summary>
-		protected void UpdateInput()
+        protected void UpdateInput()
         {
             TgcD3dInput.Instance.update();
         }
 
         /// <summary>
-        /// Actualiza la Camara
+        ///     Actualiza la Camara
         /// </summary>
-		protected void UpdateView()
+        protected void UpdateView()
         {
             Camara.updateCamera(ElapsedTime); //FIXME esto deberia hacerce en el update.
             D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix();
         }
 
         /// <summary>
-        /// Acutaliza el Frustum
+        ///     Acutaliza el Frustum
         /// </summary>
-		protected void UpdateFrustum()
+        protected void UpdateFrustum()
         {
             TgcFrustum.Instance.updateVolume(D3DDevice.Instance.Device.Transform.View,
-                     D3DDevice.Instance.Device.Transform.Projection);
+                D3DDevice.Instance.Device.Transform.Projection);
         }
 
         /// <summary>
-        /// Actualiza el Listener3D
+        ///     Actualiza el Listener3D
         /// </summary>
-		protected void UpdateSounds3D()
+        protected void UpdateSounds3D()
         {
             TgcDirectSound.Instance.updateListener3d();
         }
 
         /// <summary>
-        /// Inicia la escena 3D
+        ///     Inicia la escena 3D
         /// </summary>
-		protected void BeginRenderScene()
+        protected void BeginRenderScene()
         {
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, DEFAULT_CLEAR_COLOR, 1.0f, 0);
             D3DDevice.Instance.Device.BeginScene();
         }
 
         /// <summary>
-		/// Limpia las texturas
+        ///     Limpia las texturas
         /// </summary>
         protected void ClearTextures()
         {
@@ -199,7 +199,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        ///  Dibuja el indicador de los ejes cartesianos
+        ///     Dibuja el indicador de los ejes cartesianos
         /// </summary>
         protected void RenderAxis()
         {
@@ -210,7 +210,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Dibuja el contador de FPS si esta activo
+        ///     Dibuja el contador de FPS si esta activo
         /// </summary>
         protected void RenderFPS()
         {
@@ -221,22 +221,22 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Finaliza la escena 3D
+        ///     Finaliza la escena 3D
         /// </summary>
-		protected void EndRenderScene()
+        protected void EndRenderScene()
         {
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }
 
         /// <summary>
-        /// Se llama cuando el ejemplo es cerrado.
-        /// Liberar todos los recursos utilizados. OBLIGATORIAMENTE!!!!
+        ///     Se llama cuando el ejemplo es cerrado.
+        ///     Liberar todos los recursos utilizados. OBLIGATORIAMENTE!!!!
         /// </summary>
         public abstract void Dispose();
 
         /// <summary>
-        /// Vuelve la configuracion de Render y otras cosas a la configuracion inicial
+        ///     Vuelve la configuracion de Render y otras cosas a la configuracion inicial
         /// </summary>
         public void ResetDefaultConfig()
         {

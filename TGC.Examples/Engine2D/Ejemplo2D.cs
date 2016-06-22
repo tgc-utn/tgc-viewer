@@ -1,4 +1,3 @@
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -38,17 +37,17 @@ namespace TGC.Examples.Engine2D
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
             gameManager.Update(ElapsedTime);
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
+
             gameManager.Render(ElapsedTime);
 
-            base.PostRender();
+            PostRender();
         }
 
         public override void Dispose()

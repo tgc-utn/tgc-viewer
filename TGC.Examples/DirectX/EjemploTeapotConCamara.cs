@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -60,18 +59,16 @@ namespace TGC.Examples.DirectX
 
             //Habilitar esquema de Iluminación Dinámica
             D3DDevice.Instance.Device.RenderState.Lighting = true;
-                        
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Restaurar la matriz identidad, sino queda sucio del cuadro anterior
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
@@ -90,8 +87,6 @@ namespace TGC.Examples.DirectX
 
         public override void Dispose()
         {
-            
-
             teapot.Dispose();
             box.Dispose();
         }

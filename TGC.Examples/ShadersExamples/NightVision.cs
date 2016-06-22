@@ -25,9 +25,12 @@ namespace TGC.Examples.ShadersExamples
 
         private readonly int cant_balas = 100;
         private readonly int cant_pasadas = 3;
+        private readonly List<TgcSkeletalMesh> enemigos = new List<TgcSkeletalMesh>();
+        private readonly float total_timer_firing = 2f;
+        private readonly float vel_bala = 300;
+        private readonly float vel_bot = 100;
         private Vector3[] dir_bala;
         private Effect effect;
-        private readonly List<TgcSkeletalMesh> enemigos = new List<TgcSkeletalMesh>();
         private Surface g_pDepthStencil; // Depth-stencil buffer
         private Texture g_pRenderTarget, g_pGlowMap, g_pRenderTarget4, g_pRenderTarget4Aux;
         private VertexBuffer g_pVBV3D;
@@ -36,9 +39,6 @@ namespace TGC.Examples.ShadersExamples
         private TgcMesh pasto, arbol, arbusto;
         private Vector3[] pos_bala;
         private float[] timer_firing;
-        private readonly float total_timer_firing = 2f;
-        private readonly float vel_bala = 300;
-        private readonly float vel_bot = 100;
 
         public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -161,7 +161,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
             var pos = Camara.Position;
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
@@ -177,7 +177,7 @@ namespace TGC.Examples.ShadersExamples
                 dir_escape.Y = 0;
                 var dist = dir_escape.Length();
 
-                if (System.Math.Abs(dist) < 10)
+                if (Math.Abs(dist) < 10)
                 {
                     // lo alcance, lo mato
                     bot_status[t] = 99;
@@ -214,7 +214,7 @@ namespace TGC.Examples.ShadersExamples
                     // escapando
                     case 1:
                         dir_escape.Normalize();
-                        m.rotateY((float)System.Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y + 3.1415f);
+                        m.rotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y + 3.1415f);
                         m.move(dir_escape * (vel_bot * ElapsedTime));
                         var X = m.Position.X;
                         var Z = m.Position.Z;
@@ -233,9 +233,9 @@ namespace TGC.Examples.ShadersExamples
                     // persiguiendo
                     case 2:
                         dir_escape.Normalize();
-                        if (System.Math.Abs(dir_escape.Z) > 0.01f)
+                        if (Math.Abs(dir_escape.Z) > 0.01f)
                         {
-                            m.rotateY((float)System.Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y);
+                            m.rotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y);
                             m.move(dir_escape * (-60 * ElapsedTime));
                         }
                         m.playAnimation("Run", true, 20);
@@ -270,7 +270,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
 
             if ((bool)Modifiers["activar_efecto"])
                 renderConEfectos(ElapsedTime);
@@ -278,8 +278,8 @@ namespace TGC.Examples.ShadersExamples
                 renderSinEfectos(ElapsedTime);
 
             D3DDevice.Instance.Device.BeginScene();
-            base.RenderFPS();
-            base.RenderAxis();
+            RenderFPS();
+            RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }
@@ -302,7 +302,6 @@ namespace TGC.Examples.ShadersExamples
             TgcDrawText.Instance.drawText("Pos: " + Camara.Position, 0, 0, Color.Yellow);
 
             device.EndScene();
-
         }
 
         public void renderConEfectos(float elapsedTime)
@@ -416,7 +415,6 @@ namespace TGC.Examples.ShadersExamples
 
                 device.EndScene();
 
-
                 pSurf = g_pRenderTarget4.GetSurfaceLevel(0);
                 device.SetRenderTarget(0, pSurf);
                 pSurf.Dispose();
@@ -438,7 +436,6 @@ namespace TGC.Examples.ShadersExamples
                 effect.End();
 
                 device.EndScene();
-
             }
 
             //  To Gray Scale
@@ -463,7 +460,6 @@ namespace TGC.Examples.ShadersExamples
             effect.End();
 
             device.EndScene();
-
         }
 
         public void renderScene(float elapsedTime, string Technique)
@@ -509,8 +505,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            
-
             foreach (var m in meshes)
             {
                 m.dispose();

@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -47,12 +46,11 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addColor("color", Color.BurlyWood);
 
             Camara = new TgcRotationalCamera(new Vector3(), 50f);
-            
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -74,20 +72,18 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Actualizar parametros de la caja
             updateBox();
 
             debugBox.render();
 
-            base.PostRender();
+            PostRender();
         }
 
         public override void Dispose()
         {
-            
             debugBox.dispose();
         }
     }

@@ -452,7 +452,7 @@ namespace TGC.Core.Utils
         }
 
         /// <summary>
-        ///  convierte un color base(255,255,255,255) a un Vector4(1f,1f,1f,1f).
+        ///     convierte un color base(255,255,255,255) a un Vector4(1f,1f,1f,1f).
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
@@ -460,6 +460,5 @@ namespace TGC.Core.Utils
         {
             return Vector4.Normalize(new Vector4(color.R, color.G, color.B, color.A));
         }
-        
     }
 }

@@ -1,7 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
@@ -39,13 +38,13 @@ namespace TGC.Examples.Collision.SphereCollision
         private readonly List<TgcMesh> objectsBehind = new List<TgcMesh>();
         private readonly List<TgcMesh> objectsInFront = new List<TgcMesh>();
         private readonly List<TgcBoundingBox> objetosColisionables = new List<TgcBoundingBox>();
+        private TgcThirdPersonCamera camaraInterna;
         private TgcBoundingSphere characterSphere;
         private SphereCollisionManager collisionManager;
         private TgcArrow directionArrow;
         private TgcScene escenario;
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
-        private TgcThirdPersonCamera camaraInterna;
 
         public SphereCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -115,7 +114,7 @@ namespace TGC.Examples.Collision.SphereCollision
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, new Vector3(0, 100, 0), 100, -400);
             Camara = camaraInterna;
-            
+
             //Crear SkyBox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
@@ -145,13 +144,12 @@ namespace TGC.Examples.Collision.SphereCollision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Obtener boolean para saber si hay que mostrar Bounding Box
             var showBB = (bool)Modifiers.getValue("showBoundingBox");
@@ -305,8 +303,6 @@ namespace TGC.Examples.Collision.SphereCollision
 
         public override void Dispose()
         {
-            
-
             escenario.disposeAll();
             personaje.dispose();
             skyBox.dispose();

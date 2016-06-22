@@ -66,18 +66,18 @@ namespace TGC.Examples.ShadersExamples
             r = new Random();
 
             //Centrar camara rotacional respecto a este mesh
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Actualizar Technique
             mesh.Technique = (string)Modifiers["Technique"];
@@ -94,8 +94,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
             mesh.Effect.Dispose();
         }

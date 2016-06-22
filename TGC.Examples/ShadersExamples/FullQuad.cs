@@ -91,12 +91,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
 
             var device = D3DDevice.Instance.Device;
 
@@ -159,16 +159,14 @@ namespace TGC.Examples.ShadersExamples
             }
 
             device.BeginScene();
-            base.RenderAxis();
-            base.RenderFPS();
+            RenderAxis();
+            RenderFPS();
             device.EndScene();
             device.Present();
         }
 
         public override void Dispose()
         {
-            
-
             foreach (var m in meshes)
             {
                 m.dispose();

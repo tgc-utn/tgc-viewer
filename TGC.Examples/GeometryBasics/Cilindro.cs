@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -56,13 +55,12 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var modifiers = Modifiers;
             var size = (Vector3)modifiers.getValue("size");
@@ -100,8 +98,6 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            
-
             cylinder.dispose();
         }
     }

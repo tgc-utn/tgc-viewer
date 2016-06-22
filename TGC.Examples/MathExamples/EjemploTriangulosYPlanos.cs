@@ -105,18 +105,18 @@ namespace TGC.Examples.MathExamples
             Modifiers.addBoolean("planes", "planes", false);
 
             //Camera
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Draw mesh
             var drawMesh = (bool)Modifiers["mesh"];
@@ -166,8 +166,6 @@ namespace TGC.Examples.MathExamples
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
             foreach (var t in triangles)
             {

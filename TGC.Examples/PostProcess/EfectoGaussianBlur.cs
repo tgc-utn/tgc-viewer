@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
@@ -78,7 +77,7 @@ namespace TGC.Examples.PostProcess
 
             //Camara en primera personas
             Camara = new TgcFpsCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f));
-            
+
             //Modifier para activar/desactivar efecto
             Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
             Modifiers.addFloat("deviation", 1, 5, 1);
@@ -86,12 +85,12 @@ namespace TGC.Examples.PostProcess
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
 
             //Cargamos el Render Targer al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
             //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro Render Target.
@@ -186,16 +185,14 @@ namespace TGC.Examples.PostProcess
             }
 
             //Terminamos el renderizado de la escena
-            base.RenderFPS();
-            base.RenderAxis();
+            RenderFPS();
+            RenderAxis();
             d3dDevice.EndScene();
             d3dDevice.Present();
         }
 
         public override void Dispose()
         {
-            
-
             foreach (var m in meshes)
             {
                 m.dispose();

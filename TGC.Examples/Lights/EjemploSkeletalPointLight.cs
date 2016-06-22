@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -92,7 +91,7 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         private void computeNormals(TgcSkeletalMesh mesh)
@@ -102,8 +101,7 @@ namespace TGC.Examples.Lights
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];
@@ -155,8 +153,6 @@ namespace TGC.Examples.Lights
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
             lightMesh.dispose();
         }

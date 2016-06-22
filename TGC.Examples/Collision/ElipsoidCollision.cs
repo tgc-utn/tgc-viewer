@@ -1,7 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
@@ -39,6 +38,7 @@ namespace TGC.Examples.Collision
     public class ElipsoidCollision : TgcExample
     {
         private readonly List<Collider> objetosColisionables = new List<Collider>();
+        private TgcThirdPersonCamera camaraInterna;
         private TgcElipsoid characterElipsoid;
         private ElipsoidCollisionManager collisionManager;
         private TgcArrow collisionNormalArrow;
@@ -49,7 +49,6 @@ namespace TGC.Examples.Collision
         private float jumpingElapsedTime;
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
-        private TgcThirdPersonCamera camaraInterna;
 
         public ElipsoidCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -169,13 +168,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Obtener boolean para saber si hay que mostrar Bounding Box
             var showBB = (bool)Modifiers.getValue("showBoundingBox");
@@ -371,8 +369,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             escenario.disposeAll();
             personaje.dispose();
             skyBox.dispose();

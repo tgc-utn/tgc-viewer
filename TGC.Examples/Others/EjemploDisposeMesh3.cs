@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -37,18 +36,18 @@ namespace TGC.Examples.Others
             box.dispose();
             time = 0;
 
-            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(), box.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
+                box.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             time += ElapsedTime;
             if (time > 1f)
@@ -83,8 +82,6 @@ namespace TGC.Examples.Others
 
         public override void Dispose()
         {
-            
-
             boxMesh.dispose();
         }
     }

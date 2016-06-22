@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
@@ -10,16 +9,14 @@ using TGC.Core.Input;
 using TGC.Core.Shaders;
 using TGC.Core.Sound;
 using TGC.Core.Textures;
-using TGC.Viewer.Forms;
 using TGC.Viewer.Properties;
+using TGC.Viewer.UI;
 
 namespace TGC.Viewer.Model
 {
     public class ViewerModel
     {
-        private ViewerForm form;
-        private Panel panel3D;
-        private ToolStripStatusLabel toolStripStatus;
+        private ViewerForm Form { get; set; }
 
         /// <summary>
         ///     Obtener o parar el estado del RenderLoop.
@@ -32,46 +29,41 @@ namespace TGC.Viewer.Model
         public ExampleLoader ExampleLoader { get; private set; }
 
         public void InitGraphics(ViewerForm form, TreeView treeViewExamples, Panel panel3D,
-            FlowLayoutPanel flowLayoutPanelModifiers, DataGridView dataGridUserVars,
             ToolStripStatusLabel toolStripStatusCurrentExample)
         {
             ApplicationRunning = true;
 
-            this.form = form;
-            this.panel3D = panel3D;
-            toolStripStatus = toolStripStatusCurrentExample;
+            Form = form;
 
             //Configuracion
             var settings = Settings.Default;
 
-            D3DDevice.Instance.InitializeD3DDevice(this.panel3D);
+            D3DDevice.Instance.InitializeD3DDevice(panel3D);
 
             //Iniciar otras herramientas
-            TgcD3dInput.Instance.Initialize(this.form, this.panel3D);
-            TgcDirectSound.Instance.InitializeD3DDevice(this.form);
+            TgcD3dInput.Instance.Initialize(Form, panel3D);
+            TgcDirectSound.Instance.InitializeD3DDevice(Form);
 
             //Directorio actual de ejecucion
             var currentDirectory = Environment.CurrentDirectory + "\\";
 
             //Cargar shaders del framework
             TgcShaders.Instance.loadCommonShaders(currentDirectory + settings.ShadersDirectory + settings.CommonShaders);
+        }
+
+        public void LoadExamples(TreeView treeViewExamples, FlowLayoutPanel flowLayoutPanelModifiers,
+            DataGridView dataGridUserVars)
+        {
+            //Configuracion
+            var settings = Settings.Default;
+
+            //Directorio actual de ejecucion
+            var currentDirectory = Environment.CurrentDirectory + "\\";
 
             //Cargo los ejemplos en el arbol
             ExampleLoader = new ExampleLoader(currentDirectory + settings.MediaDirectory,
                 currentDirectory + settings.ShadersDirectory, dataGridUserVars, flowLayoutPanelModifiers);
             ExampleLoader.LoadExamplesInGui(treeViewExamples, currentDirectory);
-
-            //Cargar ejemplo default
-            try
-            {
-                var defaultExample = ExampleLoader.GetExampleByName(settings.DefaultExampleName,
-                    settings.DefaultExampleCategory);
-                ExecuteExample(defaultExample);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         public void InitRenderLoop()
@@ -82,7 +74,7 @@ namespace TGC.Viewer.Model
                 if (ExampleLoader.CurrentExample != null)
                 {
                     //Solo renderizamos si la aplicacion tiene foco, para no consumir recursos innecesarios
-                    if (form.ApplicationActive())
+                    if (Form.ApplicationActive())
                     {
                         ExampleLoader.CurrentExample.Update();
                         ExampleLoader.CurrentExample.Render();
@@ -98,7 +90,7 @@ namespace TGC.Viewer.Model
             }
         }
 
-        public void WireFrame(bool state)
+        public void Wireframe(bool state)
         {
             if (state)
             {
@@ -120,11 +112,6 @@ namespace TGC.Viewer.Model
             ExampleLoader.CurrentExample.AxisLines.Enable = state;
         }
 
-        public void ExecuteExample(TreeNode selectedNode)
-        {
-            ExecuteExample(ExampleLoader.GetExampleByTreeNode(selectedNode));
-        }
-
         /// <summary>
         ///     Arranca a ejecutar un ejemplo.
         ///     Para el ejemplo anterior, si hay alguno.
@@ -140,8 +127,6 @@ namespace TGC.Viewer.Model
                 example.ResetDefaultConfig();
                 example.Init();
                 ExampleLoader.CurrentExample = example;
-                toolStripStatus.Text = "Ejemplo actual: " + example.Name;
-                panel3D.Focus();
             }
             catch (Exception e)
             {
@@ -158,15 +143,14 @@ namespace TGC.Viewer.Model
             if (ExampleLoader.CurrentExample != null)
             {
                 ExampleLoader.CurrentExample.Dispose();
-                toolStripStatus.Text = "Ejemplo actual terminado." + ExampleLoader.CurrentExample.Name + " terminado";
                 ExampleLoader.CurrentExample = null;
             }
         }
 
         /// <summary>
-        ///     Finalizar aplicacion
+        ///     Finaliza el render loop y hace dispose del ejemplo y recursos
         /// </summary>
-        public void ShutDown()
+        public void Dispose()
         {
             ApplicationRunning = false;
 
@@ -178,12 +162,6 @@ namespace TGC.Viewer.Model
             //Liberar Device al finalizar la aplicacion
             D3DDevice.Instance.Dispose();
             TexturesPool.Instance.clearAll();
-
-            //Application.Exit();
-
-            //Matar proceso principal a la fuerza
-            var currentProcess = Process.GetCurrentProcess();
-            currentProcess.Kill();
         }
 
         /// <summary>
@@ -209,10 +187,10 @@ namespace TGC.Viewer.Model
 
         public void DownloadMediaFolder()
         {
-            WebClient client = new WebClient();
+            var client = new WebClient();
 
-            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-            client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+            client.DownloadProgressChanged += client_DownloadProgressChanged;
+            client.DownloadFileCompleted += client_DownloadFileCompleted;
 
             // Starts the download
             //client.DownloadFileAsync(new Uri("http://tgcutn.com.ar/images/logotp.png"), @"C:\Users\Mito\Downloads\logotp.png");
@@ -223,21 +201,19 @@ namespace TGC.Viewer.Model
 
         private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            double bytesIn = double.Parse(e.BytesReceived.ToString());
-            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-            double percentage = bytesIn / totalBytes * 100;
+            var bytesIn = double.Parse(e.BytesReceived.ToString());
+            var totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+            var percentage = bytesIn / totalBytes * 100;
 
             Console.Write(int.Parse(Math.Truncate(percentage).ToString()));
         }
 
         private void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-
             MessageBox.Show("Download Completed");
 
             //btnStartDownload.Text = "Start Download";
             //btnStartDownload.Enabled = true;
-
         }
     }
 }

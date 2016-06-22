@@ -70,7 +70,7 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -102,7 +102,8 @@ namespace TGC.Examples.SceneLoader
             currentScene = loader.loadSceneFromFile(path);
 
             //Ajustar camara en base al tamaño del objeto
-            Camara = new TgcRotationalCamera(currentScene.BoundingBox.calculateBoxCenter(), currentScene.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(currentScene.BoundingBox.calculateBoxCenter(),
+                currentScene.BoundingBox.calculateBoxRadius() * 2);
 
             //Calcular cantidad de triangulos y texturas
             var triangleCount = 0;
@@ -155,8 +156,7 @@ namespace TGC.Examples.SceneLoader
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio la malla
             var selectedPath = (string)Modifiers["Mesh"];
@@ -188,8 +188,6 @@ namespace TGC.Examples.SceneLoader
 
         public override void Dispose()
         {
-            
-
             currentScene.disposeAll();
         }
     }

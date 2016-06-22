@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -51,13 +50,12 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Configurar altura de los vertices seleccionados
             var selectedVertices = (string)Modifiers["vertices"];
@@ -106,8 +104,6 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            
-
             land.dispose();
         }
     }

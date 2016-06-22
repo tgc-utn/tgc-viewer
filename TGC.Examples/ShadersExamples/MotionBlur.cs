@@ -58,7 +58,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Camara
             Camara = new TgcRotationalCamera(new Vector3(), 150f);
-            
+
             // stencil
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
@@ -99,10 +99,10 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
             time += ElapsedTime;
             float r = 40;
-            mesh.Position = new Vector3(r * (float)System.Math.Cos(time * 0.5), 0, 0 * (float)System.Math.Sin(time * 0.5));
+            mesh.Position = new Vector3(r * (float)Math.Cos(time * 0.5), 0, 0 * (float)Math.Sin(time * 0.5));
             //mesh.rotateY(elapsedTime);
         }
 
@@ -114,7 +114,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
             var device = D3DDevice.Instance.Device;
 
             // guardo el Render target anterior y seteo la textura como render target
@@ -181,8 +181,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
 
             g_pRenderTarget.Dispose();

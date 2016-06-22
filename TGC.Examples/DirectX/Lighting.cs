@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -97,13 +96,12 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Pongo el fondo negro
             D3DDevice.Instance.Device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
@@ -269,8 +267,6 @@ namespace TGC.Examples.DirectX
 
         public override void Dispose()
         {
-            
-
             SelectedMesh.Dispose();
         }
     }

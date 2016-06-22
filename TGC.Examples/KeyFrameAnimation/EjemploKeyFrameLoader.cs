@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -98,13 +97,12 @@ namespace TGC.Examples.KeyFrameAnimation
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio la animacion
             var anim = (string)Modifiers.getValue("animation");
@@ -142,8 +140,6 @@ namespace TGC.Examples.KeyFrameAnimation
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
         }
     }

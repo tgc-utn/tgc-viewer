@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
@@ -125,13 +124,12 @@ namespace TGC.Examples.Others
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var renderMethod = (RenderMethod)Modifiers["Render Method"];
             doRender(renderMethod);
@@ -141,8 +139,6 @@ namespace TGC.Examples.Others
 
         public override void Dispose()
         {
-            
-
             currentRenderMethod = RenderMethod.Unsorted;
             disposeCajas();
         }
