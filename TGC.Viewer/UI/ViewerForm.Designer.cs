@@ -1,4 +1,4 @@
-﻿namespace TGC.Viewer.Forms
+﻿namespace TGC.Viewer.UI
 {
     partial class ViewerForm
     {
@@ -32,13 +32,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewerForm));
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.archivoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.salirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fullExampleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.wireframeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contadorFPSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ejesCartesianosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ejecutarEnFullScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fpsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.axisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeTgcViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusCurrentExample = new System.Windows.Forms.ToolStripStatusLabel();
@@ -53,7 +57,7 @@
             this.groupBoxExamples = new System.Windows.Forms.GroupBox();
             this.treeViewExamples = new System.Windows.Forms.TreeView();
             this.textBoxExampleDescription = new System.Windows.Forms.TextBox();
-            this.panel3d = new System.Windows.Forms.Panel();
+            this.panel3D = new System.Windows.Forms.Panel();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerDerecha)).BeginInit();
@@ -85,79 +89,102 @@
             // archivoToolStripMenuItem
             // 
             this.archivoToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.salirToolStripMenuItem});
+            this.exitToolStripMenuItem});
             this.archivoToolStripMenuItem.Name = "archivoToolStripMenuItem";
             this.archivoToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.archivoToolStripMenuItem.Text = "Archivo";
             // 
-            // salirToolStripMenuItem
+            // exitToolStripMenuItem
             // 
-            this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
-            this.salirToolStripMenuItem.Text = "Salir";
-            this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
+            this.exitToolStripMenuItem.Text = "Salir";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
             // verToolStripMenuItem
             // 
             this.verToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fullExampleToolStripMenuItem,
+            this.toolStripSeparator1,
             this.wireframeToolStripMenuItem,
-            this.contadorFPSToolStripMenuItem,
-            this.ejesCartesianosToolStripMenuItem,
-            this.ejecutarEnFullScreenToolStripMenuItem});
+            this.fpsToolStripMenuItem,
+            this.axisToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.resetToolStripMenuItem});
             this.verToolStripMenuItem.Name = "verToolStripMenuItem";
             this.verToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.verToolStripMenuItem.Text = "Ver";
+            // 
+            // fullExampleToolStripMenuItem
+            // 
+            this.fullExampleToolStripMenuItem.CheckOnClick = true;
+            this.fullExampleToolStripMenuItem.Name = "fullExampleToolStripMenuItem";
+            this.fullExampleToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.fullExampleToolStripMenuItem.Text = "Maximizar ejemplo";
+            this.fullExampleToolStripMenuItem.Click += new System.EventHandler(this.fullExampleToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(186, 6);
             // 
             // wireframeToolStripMenuItem
             // 
             this.wireframeToolStripMenuItem.CheckOnClick = true;
             this.wireframeToolStripMenuItem.Name = "wireframeToolStripMenuItem";
-            this.wireframeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.W)));
-            this.wireframeToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.wireframeToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.wireframeToolStripMenuItem.Text = "Wireframe";
             this.wireframeToolStripMenuItem.Click += new System.EventHandler(this.wireframeToolStripMenuItem_Click);
             // 
-            // contadorFPSToolStripMenuItem
+            // fpsToolStripMenuItem
             // 
-            this.contadorFPSToolStripMenuItem.Checked = true;
-            this.contadorFPSToolStripMenuItem.CheckOnClick = true;
-            this.contadorFPSToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.contadorFPSToolStripMenuItem.Name = "contadorFPSToolStripMenuItem";
-            this.contadorFPSToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.contadorFPSToolStripMenuItem.Text = "Contador FPS";
-            this.contadorFPSToolStripMenuItem.Click += new System.EventHandler(this.contadorFPSToolStripMenuItem_Click);
+            this.fpsToolStripMenuItem.CheckOnClick = true;
+            this.fpsToolStripMenuItem.Name = "fpsToolStripMenuItem";
+            this.fpsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.fpsToolStripMenuItem.Text = "Contador FPS";
+            this.fpsToolStripMenuItem.Click += new System.EventHandler(this.fpsToolStripMenuItem_Click);
             // 
-            // ejesCartesianosToolStripMenuItem
+            // axisToolStripMenuItem
             // 
-            this.ejesCartesianosToolStripMenuItem.Checked = true;
-            this.ejesCartesianosToolStripMenuItem.CheckOnClick = true;
-            this.ejesCartesianosToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ejesCartesianosToolStripMenuItem.Name = "ejesCartesianosToolStripMenuItem";
-            this.ejesCartesianosToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.ejesCartesianosToolStripMenuItem.Text = "Ejes cartesianos";
-            this.ejesCartesianosToolStripMenuItem.Click += new System.EventHandler(this.ejesCartesianosToolStripMenuItem_Click);
+            this.axisToolStripMenuItem.CheckOnClick = true;
+            this.axisToolStripMenuItem.Name = "axisToolStripMenuItem";
+            this.axisToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.axisToolStripMenuItem.Text = "Ejes cartesianos";
+            this.axisToolStripMenuItem.Click += new System.EventHandler(this.axisToolStripMenuItem_Click);
             // 
-            // ejecutarEnFullScreenToolStripMenuItem
+            // toolStripSeparator2
             // 
-            this.ejecutarEnFullScreenToolStripMenuItem.CheckOnClick = true;
-            this.ejecutarEnFullScreenToolStripMenuItem.Name = "ejecutarEnFullScreenToolStripMenuItem";
-            this.ejecutarEnFullScreenToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.ejecutarEnFullScreenToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.ejecutarEnFullScreenToolStripMenuItem.Text = "Ejecutar en Full Screen (BETA)";
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(186, 6);
+            // 
+            // resetToolStripMenuItem
+            // 
+            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.resetToolStripMenuItem.Text = "Reiniciar visualización";
+            this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
             // ayudaToolStripMenuItem
             // 
             this.ayudaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.helpToolStripMenuItem,
             this.acercaDeTgcViewerToolStripMenuItem});
             this.ayudaToolStripMenuItem.Name = "ayudaToolStripMenuItem";
             this.ayudaToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
             this.ayudaToolStripMenuItem.Text = "Ayuda";
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.helpToolStripMenuItem.Text = "Ayuda";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
+            // 
             // acercaDeTgcViewerToolStripMenuItem
             // 
             this.acercaDeTgcViewerToolStripMenuItem.Name = "acercaDeTgcViewerToolStripMenuItem";
-            this.acercaDeTgcViewerToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.acercaDeTgcViewerToolStripMenuItem.Text = "Acerca de TGC Viewer";
+            this.acercaDeTgcViewerToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.acercaDeTgcViewerToolStripMenuItem.Text = "Acerca de";
             this.acercaDeTgcViewerToolStripMenuItem.Click += new System.EventHandler(this.acercaDeTgcViewerToolStripMenuItem_Click);
             // 
             // statusStrip
@@ -318,22 +345,22 @@
             this.textBoxExampleDescription.Size = new System.Drawing.Size(180, 214);
             this.textBoxExampleDescription.TabIndex = 0;
             // 
-            // panel3d
+            // panel3D
             // 
-            this.panel3d.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.panel3d.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3d.Location = new System.Drawing.Point(180, 24);
-            this.panel3d.Name = "panel3d";
-            this.panel3d.Size = new System.Drawing.Size(354, 515);
-            this.panel3d.TabIndex = 9;
+            this.panel3D.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel3D.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3D.Location = new System.Drawing.Point(180, 24);
+            this.panel3D.Name = "panel3D";
+            this.panel3D.Size = new System.Drawing.Size(354, 515);
+            this.panel3D.TabIndex = 9;
             // 
-            // MainForm
+            // ViewerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(784, 561);
-            this.Controls.Add(this.panel3d);
+            this.Controls.Add(this.panel3D);
             this.Controls.Add(this.splitContainerDerecha);
             this.Controls.Add(this.splitContainerIzquierda);
             this.Controls.Add(this.statusStrip);
@@ -341,11 +368,11 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.MinimumSize = new System.Drawing.Size(800, 600);
-            this.Name = "MainForm";
+            this.Name = "ViewerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ViewerForm_FormClosing);
+            this.Load += new System.EventHandler(this.ViewerForm_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -377,12 +404,12 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripMenuItem verToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wireframeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem contadorFPSToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fpsToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusCurrentExample;
-        private System.Windows.Forms.ToolStripMenuItem ejesCartesianosToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ejecutarEnFullScreenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem axisToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fullExampleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem acercaDeTgcViewerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem salirToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainerIzquierda;
         private System.Windows.Forms.GroupBox groupBoxExamples;
         private System.Windows.Forms.TreeView treeViewExamples;
@@ -394,7 +421,11 @@
         private System.Windows.Forms.DataGridView dataGridUserVars;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnValue;
-        private System.Windows.Forms.Panel panel3d;
+        private System.Windows.Forms.Panel panel3D;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     }
 }
 

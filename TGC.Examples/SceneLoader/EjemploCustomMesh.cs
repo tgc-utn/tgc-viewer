@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
@@ -48,18 +47,18 @@ namespace TGC.Examples.SceneLoader
             mesh = (MyCustomMesh)sceneOriginal.Meshes[0];
 
             //Centrar camara rotacional respecto a este mesh
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             mesh.render();
 
@@ -68,8 +67,6 @@ namespace TGC.Examples.SceneLoader
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
         }
     }
@@ -110,7 +107,6 @@ namespace TGC.Examples.SceneLoader
             D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
 
             //Llamamos al metodo original del padre
-            
 
             //Restrablecemos modo solido
             D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;

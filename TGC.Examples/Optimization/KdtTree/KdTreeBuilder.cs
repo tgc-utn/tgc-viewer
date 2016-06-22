@@ -189,7 +189,7 @@ namespace TGC.Examples.Optimization.KdtTree
                 splitByPlane(p, modelos, possitiveList, negativeList);
 
                 //calcular balance
-                var balance = System.Math.Abs(possitiveList.Count - negativeList.Count);
+                var balance = Math.Abs(possitiveList.Count - negativeList.Count);
 
                 //guardar mejor
                 if (balance < bestBalance)

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using TGC.Viewer.Forms;
+using TGC.Viewer.UI;
 
 namespace TGC.Viewer
 {

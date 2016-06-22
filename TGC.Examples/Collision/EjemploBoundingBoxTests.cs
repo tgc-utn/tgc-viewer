@@ -1,7 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -31,11 +30,11 @@ namespace TGC.Examples.Collision
     {
         private TgcBox box;
         private TgcBox box2;
+        private TgcThirdPersonCamera camaraInterna;
         private TgcObb obb;
         private TgcBoundingSphere sphere;
         private TgcBoundingBox triagleAABB;
         private CustomVertex.PositionColored[] triangle;
-        private TgcThirdPersonCamera camaraInterna;
 
         public EjemploBoundingBoxTests(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -85,13 +84,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var velocidadCaminar = 50f * ElapsedTime;
 
@@ -199,8 +197,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             box.dispose();
             box2.dispose();
             sphere.dispose();

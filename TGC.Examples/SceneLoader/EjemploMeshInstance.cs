@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Collections.Generic;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -59,13 +58,12 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             foreach (var mesh in meshes)
             {
@@ -82,8 +80,6 @@ namespace TGC.Examples.SceneLoader
 
         public override void Dispose()
         {
-            
-
             foreach (var mesh in meshes)
             {
                 mesh.dispose();

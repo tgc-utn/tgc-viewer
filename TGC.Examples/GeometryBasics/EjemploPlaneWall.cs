@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
@@ -61,7 +60,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -102,13 +101,13 @@ namespace TGC.Examples.GeometryBasics
             wall.updateValues();
 
             //Ajustar camara segun tamaño de la pared
-            Camara = new TgcRotationalCamera(wall.BoundingBox.calculateBoxCenter(), wall.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(wall.BoundingBox.calculateBoxCenter(),
+                wall.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Actualizar valrores de pared
             updateWall();
@@ -121,8 +120,6 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            
-
             wall.dispose();
         }
     }

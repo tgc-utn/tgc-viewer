@@ -62,12 +62,11 @@ namespace TGC.Examples.Others
 
             //Camara
             Camara = new TgcRotationalCamera(new Vector3(), 150f);
-
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
@@ -97,13 +96,11 @@ namespace TGC.Examples.Others
                 helpForm.ShowDialog();
             }
 
-			PostRender();
+            PostRender();
         }
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
             textHelp.dispose();
             helpForm.Dispose();

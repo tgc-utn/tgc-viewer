@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Collections.Generic;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -76,13 +75,12 @@ namespace TGC.Examples.Optimization.KdtTree
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var showKdTree = (bool)Modifiers["showKdTree"];
             var showTerrain = (bool)Modifiers["showTerrain"];
@@ -99,8 +97,6 @@ namespace TGC.Examples.Optimization.KdtTree
 
         public override void Dispose()
         {
-            
-
             skyBox.dispose();
             terreno.dispose();
             foreach (var mesh in objetosIsla)

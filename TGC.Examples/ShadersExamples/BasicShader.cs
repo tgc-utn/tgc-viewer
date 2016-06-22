@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -61,21 +60,21 @@ namespace TGC.Examples.ShadersExamples
 
             //Centrar camara rotacional respecto a este mesh
 
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
 
             time = 0;
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
             ClearTextures();
             D3DDevice.Instance.Device.BeginScene();
-
 
             time += ElapsedTime;
 
@@ -87,16 +86,14 @@ namespace TGC.Examples.ShadersExamples
             // dibujo la malla pp dicha
             mesh.render();
 
-            base.RenderAxis();
-            base.RenderFPS();
+            RenderAxis();
+            RenderFPS();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }
 
         public override void Dispose()
         {
-            
-
             effect.Dispose();
             scene.disposeAll();
         }

@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -73,7 +72,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         private void loadTexture(Device d3dDevice, string path)
@@ -83,8 +82,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio la textura
             var selectedTexture = (string)Modifiers["Texture image"];

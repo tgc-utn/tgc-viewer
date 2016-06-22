@@ -8,7 +8,7 @@ using TGC.Core.Utils;
 namespace TGC.Core.Geometry
 {
     /// <summary>
-    /// Cilindro Bounding alineado a al eje Y, este puede ser utilizado por ejemplo para personajes.
+    ///     Cilindro Bounding alineado a al eje Y, este puede ser utilizado por ejemplo para personajes.
     /// </summary>
     public class TgcFixedYBoundingCylinder : IRenderObject
     {
@@ -89,7 +89,7 @@ namespace TGC.Core.Geometry
 
         #region Rendering
 
-        private const int END_CAPS_RESOLUTION = 15*4; //4 para los bordes laterales
+        private const int END_CAPS_RESOLUTION = 15 * 4; //4 para los bordes laterales
         private const int END_CAPS_VERTEX_COUNT = 2 * END_CAPS_RESOLUTION * 2;
         private CustomVertex.PositionColored[] vertices; //line list
         private Color color;
@@ -100,13 +100,13 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Actualiza la posicion de los vertices que componen las tapas 
+        ///     Actualiza la posicion de los vertices que componen las tapas
         ///     y los vertices de las lineas laterales. FIXME este update puede ser una transformacion solamente.
         /// </summary>
         private void updateDraw()
         {
             if (vertices == null)
-                vertices = new CustomVertex.PositionColored[END_CAPS_VERTEX_COUNT]; 
+                vertices = new CustomVertex.PositionColored[END_CAPS_VERTEX_COUNT];
 
             var color = this.color.ToArgb();
             var zeroVector = center;
@@ -154,7 +154,7 @@ namespace TGC.Core.Geometry
         {
             //actualizamos los vertices de las tapas
             updateDraw();
-        
+
             //dibujamos
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length / 2, vertices);
         }

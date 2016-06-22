@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -62,13 +61,12 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Renderizar SkyBox
             skyBox.render();
@@ -78,8 +76,6 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            
-
             //Liberar recursos del SkyBox
             skyBox.dispose();
         }

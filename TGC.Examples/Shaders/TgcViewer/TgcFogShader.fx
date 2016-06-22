@@ -52,7 +52,6 @@ VS_OUTPUT_VERTEX vs_main(VS_INPUT_VERTEX input)
 	output.Texture = input.Texture;
 	float4 CameraPosWorld = mul(CameraPos, matWorld);
 
-
 	//Calcula fog lineal
 	//output.Fog = saturate((EndFogDistance - CameraPosWorld.z) / (EndFogDistance - StartFogDistance));
 	//calcula fog Exponencial
@@ -61,7 +60,6 @@ VS_OUTPUT_VERTEX vs_main(VS_INPUT_VERTEX input)
 	//Calcula fog exponencial 2
 	//output.Fog = saturate(exp((StartFogDistance-DistFog)*Density*(StartFogDistance-DistFog)*Density));
 	return output;
-
 }
 
 //Input del Pixel Shader

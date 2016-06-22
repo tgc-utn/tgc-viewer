@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
@@ -82,19 +81,18 @@ namespace TGC.Examples.Collision
             selectionBox.BoundingBox.setRenderColor(Color.Red);
             selecting = false;
 
-            Camara = new TgcRotationalCamera(new Vector3(0f,100f,0f), 300f);
+            Camara = new TgcRotationalCamera(new Vector3(0f, 100f, 0f), 300f);
             //FIXME esta camara deberi ser estatica y no rotacional, ya que sino trae problemas con el picking.
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (TgcD3dInput.Instance.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -170,8 +168,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             suelo.dispose();
             foreach (var mesh in modelos)
             {

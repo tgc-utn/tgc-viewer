@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
@@ -53,7 +52,7 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -113,8 +112,7 @@ namespace TGC.Examples.DirectX
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio el modelo elegido por el usuario
             var selectedPath = (string)Modifiers["Mesh"];
@@ -143,8 +141,6 @@ namespace TGC.Examples.DirectX
 
         public override void Dispose()
         {
-            
-
             //Liberar recursos de la malla
             mesh.Dispose();
         }

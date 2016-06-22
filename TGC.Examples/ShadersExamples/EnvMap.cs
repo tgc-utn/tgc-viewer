@@ -30,6 +30,7 @@ namespace TGC.Examples.ShadersExamples
     public class EnvMap : TgcExample
     {
         private List<TgcMesh> bosque;
+        private TgcRotationalCamera CamaraRot;
 
         private string currentHeightmap;
         private float currentScaleXZ;
@@ -49,7 +50,7 @@ namespace TGC.Examples.ShadersExamples
         private TgcMesh palmera, avion;
         private TgcScene scene, scene2, scene3, sceneX;
         private TgcSkyBox skyBox;
-        private TgcRotationalCamera CamaraRot;
+
         // enviroment map
         private TgcSimpleTerrain
             terrain;
@@ -124,14 +125,14 @@ namespace TGC.Examples.ShadersExamples
             mesh.Position = new Vector3(0f, 0f, 0f);
             mesh.AutoTransformEnable = false;
             var size = mesh.BoundingBox.calculateSize();
-            largo_tanque = System.Math.Abs(size.Z);
-            alto_tanque = System.Math.Abs(size.Y) * mesh.Scale.Y;
+            largo_tanque = Math.Abs(size.Z);
+            alto_tanque = Math.Abs(size.Y) * mesh.Scale.Y;
             avion.Scale = new Vector3(1f, 1f, 1f);
             avion.Position = new Vector3(3000f, 550f, 0f);
             avion.AutoTransformEnable = false;
             dir_avion = new Vector3(0, 0, 1);
             size = palmera.BoundingBox.calculateSize();
-            var alto_palmera = System.Math.Abs(size.Y);
+            var alto_palmera = Math.Abs(size.Y);
             int i;
             bosque = new List<TgcMesh>();
             float[] r = { 1900f, 2100f, 2300f, 1800f };
@@ -140,8 +141,8 @@ namespace TGC.Examples.ShadersExamples
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
                     instance.Scale = new Vector3(0.5f, 1.5f, 0.5f);
-                    var x = r[i] * (float)System.Math.Cos(Geometry.DegreeToRadian(180 + 10.0f * j));
-                    var z = r[i] * (float)System.Math.Sin(Geometry.DegreeToRadian(180 + 10.0f * j));
+                    var x = r[i] * (float)Math.Cos(Geometry.DegreeToRadian(180 + 10.0f * j));
+                    var z = r[i] * (float)Math.Sin(Geometry.DegreeToRadian(180 + 10.0f * j));
                     instance.Position = new Vector3(x, CalcularAltura(x, z) /*+ alto_palmera / 2 * instance.Scale.Y*/, z);
                     bosque.Add(instance);
                 }
@@ -170,7 +171,8 @@ namespace TGC.Examples.ShadersExamples
             vel_tanque = 10;
 
             //Centrar camara rotacional respecto a este mesh
-            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
             Camara = CamaraRot;
@@ -183,13 +185,13 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
+
             var aspectRatio = D3DDevice.Instance.AspectRatio;
             if (TgcD3dInput.Instance.keyPressed(Key.Space))
             {
@@ -219,15 +221,15 @@ namespace TGC.Examples.ShadersExamples
             time += ElapsedTime;
             // animar tanque
             var alfa = -time * Geometry.DegreeToRadian(vel_tanque);
-            var x0 = 2000f * (float)System.Math.Cos(alfa);
-            var z0 = 2000f * (float)System.Math.Sin(alfa);
+            var x0 = 2000f * (float)Math.Cos(alfa);
+            var z0 = 2000f * (float)Math.Sin(alfa);
             float offset_rueda = 13;
             var H = CalcularAltura(x0, z0) + alto_tanque / 2 - offset_rueda;
             if (volar)
                 H += 300;
             mesh.Position = new Vector3(x0, H, z0);
             // direccion tangente sobre el piso:
-            var dir_tanque = new Vector2(-(float)System.Math.Sin(alfa), (float)System.Math.Cos(alfa));
+            var dir_tanque = new Vector2(-(float)Math.Sin(alfa), (float)Math.Cos(alfa));
             dir_tanque.Normalize();
             // Posicion de la parte de adelante del tanque
             var pos2d = new Vector2(x0, z0);
@@ -242,14 +244,13 @@ namespace TGC.Examples.ShadersExamples
             mesh.Transform = CalcularMatriz(mesh.Position, mesh.Scale, Vel);
 
             var beta = -time * Geometry.DegreeToRadian(120.0f);
-            avion.Position = new Vector3(x0 + 300f * (float)System.Math.Cos(beta),
-                400 + H, z0 + 300f * (float)System.Math.Sin(alfa));
-            dir_avion = new Vector3(-(float)System.Math.Sin(beta), 0, (float)System.Math.Cos(beta));
+            avion.Position = new Vector3(x0 + 300f * (float)Math.Cos(beta),
+                400 + H, z0 + 300f * (float)Math.Sin(alfa));
+            dir_avion = new Vector3(-(float)Math.Sin(beta), 0, (float)Math.Cos(beta));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
-
             CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
-            
+
             // --------------------------------------------------------------------
             D3DDevice.Instance.Device.EndScene();
             var g_pCubeMap = new CubeTexture(D3DDevice.Instance.Device, 256, 1, Usage.RenderTarget,
@@ -485,8 +486,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            
-
             effect.Dispose();
             scene.disposeAll();
             scene2.disposeAll();

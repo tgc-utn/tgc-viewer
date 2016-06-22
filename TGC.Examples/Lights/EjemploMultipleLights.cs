@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -104,13 +103,13 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
+
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];
             Effect currentShader;
@@ -191,7 +190,6 @@ namespace TGC.Examples.Lights
 
                 //Renderizar modelo
                 mesh.render();
-
             }
             PostRender();
         }
@@ -219,8 +217,6 @@ namespace TGC.Examples.Lights
 
         public override void Dispose()
         {
-            
-
             scene.disposeAll();
         }
 

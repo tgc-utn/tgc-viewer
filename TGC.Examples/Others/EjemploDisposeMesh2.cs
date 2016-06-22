@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core._2D;
@@ -46,13 +45,12 @@ namespace TGC.Examples.Others
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             TgcDrawText.Instance.drawText("ok", 100, 100, Color.Red);
             scene1.renderAll();
@@ -62,8 +60,6 @@ namespace TGC.Examples.Others
 
         public override void Dispose()
         {
-            
-
             scene1.disposeAll();
         }
     }

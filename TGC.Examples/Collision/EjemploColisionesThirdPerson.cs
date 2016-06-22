@@ -1,7 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Collections.Generic;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -34,10 +33,10 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploColisionesThirdPerson : TgcExample
     {
+        private TgcThirdPersonCamera camaraInterna;
         private List<TgcBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcBox piso;
-        private TgcThirdPersonCamera camaraInterna;
 
         public EjemploColisionesThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars,
             TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
@@ -102,7 +101,7 @@ namespace TGC.Examples.Collision
             personaje.rotateY(Geometry.DegreeToRadian(180f));
 
             //Configurar camara en Tercer Persona
-            camaraInterna  = new TgcThirdPersonCamera(personaje.Position, 200, -300);
+            camaraInterna = new TgcThirdPersonCamera(personaje.Position, 200, -300);
             Camara = camaraInterna;
 
             //Modifier para ver BoundingBox
@@ -115,13 +114,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Obtener boolean para saber si hay que mostrar Bounding Box
             var showBB = (bool)Modifiers.getValue("showBoundingBox");
@@ -241,8 +239,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             piso.dispose();
             foreach (var obstaculo in obstaculos)
             {

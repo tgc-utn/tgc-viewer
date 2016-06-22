@@ -1,5 +1,4 @@
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Drawing;
 using System.IO;
 using TGC.Core;
@@ -61,7 +60,7 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -83,8 +82,7 @@ namespace TGC.Examples.Sound
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio el MP3
             var filePath = (string)Modifiers["MP3-File"];
@@ -140,8 +138,6 @@ namespace TGC.Examples.Sound
 
         public override void Dispose()
         {
-            
-
             mp3Player.closeFile();
         }
     }

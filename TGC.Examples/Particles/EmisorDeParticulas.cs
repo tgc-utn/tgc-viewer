@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -69,17 +68,16 @@ namespace TGC.Examples.Particles
             box = TgcBox.fromSize(new Vector3(0, -30, 0), new Vector3(10, 10, 10), Color.Blue);
 
             Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 300f);
-
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
+            PreRender();
             //IMPORTANTE PARA PERMITIR ESTE EFECTO.
             D3DDevice.Instance.ParticlesEnabled = true;
             D3DDevice.Instance.enableParticles();
@@ -120,8 +118,6 @@ namespace TGC.Examples.Particles
 
         public override void Dispose()
         {
-            
-
             //Liberar recursos
             emitter.dispose();
 

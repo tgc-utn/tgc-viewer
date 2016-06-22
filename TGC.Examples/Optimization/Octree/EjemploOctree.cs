@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Collections.Generic;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -75,13 +74,12 @@ namespace TGC.Examples.Optimization.Octree
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var showOctree = (bool)Modifiers["showOctree"];
             var showTerrain = (bool)Modifiers["showTerrain"];
@@ -98,8 +96,6 @@ namespace TGC.Examples.Optimization.Octree
 
         public override void Dispose()
         {
-            
-
             skyBox.dispose();
             terreno.dispose();
             foreach (var mesh in objetosIsla)

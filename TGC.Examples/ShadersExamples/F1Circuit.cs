@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
@@ -73,9 +74,9 @@ namespace TGC.Examples.ShadersExamples
             //float dw = 10000;
             while (t < hasta + 0.1)
             {
-                pt_ruta[cant].X = (float)(8 * (8 * System.Math.Cos(t) + System.Math.Cos(5 * t) * System.Math.Cos(t))) * scaleXZ;
-                pt_ruta[cant].Z = (float)(8 * (8 * System.Math.Sin(t) + System.Math.Cos(4 * t) * System.Math.Sin(t))) * scaleXZ;
-                pt_ruta[cant].Y = (float)System.Math.Max(0, 3 + 2 * System.Math.Cos(3 + t * 5)) * scaleY;
+                pt_ruta[cant].X = (float)(8 * (8 * Math.Cos(t) + Math.Cos(5 * t) * Math.Cos(t))) * scaleXZ;
+                pt_ruta[cant].Z = (float)(8 * (8 * Math.Sin(t) + Math.Cos(4 * t) * Math.Sin(t))) * scaleXZ;
+                pt_ruta[cant].Y = (float)Math.Max(0, 3 + 2 * Math.Cos(3 + t * 5)) * scaleY;
                 t += dt;
                 ++cant;
             }
@@ -301,7 +302,7 @@ namespace TGC.Examples.ShadersExamples
             var cant_p = 0;
             var ndx = new int[700];
             for (var i = 0; i < cant_ptos_ruta - 1; ++i)
-                if (System.Math.Abs(x - pt_ruta[i].X) < mdist + 5 && System.Math.Abs(z - pt_ruta[i].Z) < mdist + 5)
+                if (Math.Abs(x - pt_ruta[i].X) < mdist + 5 && Math.Abs(z - pt_ruta[i].Z) < mdist + 5)
                     // es un pto posible
                     ndx[cant_p++] = i;
 

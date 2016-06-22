@@ -98,12 +98,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
             var device = D3DDevice.Instance.Device;
 
             var activar_efecto = (bool)Modifiers["activar_efecto"];
@@ -207,7 +207,7 @@ namespace TGC.Examples.ShadersExamples
 
                         //  Gaussian blur Vertical
                         // -----------------------------------------------------
-                        
+
                         effect.Technique = "GaussianBlurSeparable";
                         device.VertexFormat = CustomVertex.PositionTextured.Format;
                         device.SetStreamSource(0, g_pVBV3D, 0);
@@ -219,7 +219,8 @@ namespace TGC.Examples.ShadersExamples
                         device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
                         effect.EndPass();
                         effect.End();
-                        if (P < cant_pasadas - 1) {
+                        if (P < cant_pasadas - 1)
+                        {
                             device.EndScene();
                         }
 
@@ -249,22 +250,17 @@ namespace TGC.Examples.ShadersExamples
                     effect.End();
                     device.EndScene();
                 }
-
             }
 
             device.BeginScene();
-            base.RenderAxis();
-            base.RenderFPS();
+            RenderAxis();
+            RenderFPS();
             device.EndScene();
             device.Present();
-
-
         }
 
         public override void Dispose()
         {
-            
-
             foreach (var m in meshes)
             {
                 m.dispose();

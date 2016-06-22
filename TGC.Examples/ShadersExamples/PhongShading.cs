@@ -1,7 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -123,12 +122,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
 
             D3DDevice.Instance.Device.BeginScene();
 
@@ -202,18 +201,15 @@ namespace TGC.Examples.ShadersExamples
                 }
 
                 lightBox.render();
-
             }
-            base.RenderFPS();
-            base.RenderAxis();
+            RenderFPS();
+            RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }
 
         public override void Dispose()
         {
-            
-
             effect.Dispose();
             scene.disposeAll();
             lightBox.dispose();

@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
@@ -85,18 +84,16 @@ namespace TGC.Examples.SkeletalAnimation
 
             //Camara en primera persona
             Camara = new TgcFpsCamera(new Vector3(293.201f, 291.0797f, -604.6647f));
-            
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Renderizar suelo
             suelo.render();
@@ -113,8 +110,6 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Dispose()
         {
-            
-
             suelo.dispose();
 
             //Al hacer dispose del original, se hace dispose automáticamente de todas las instancias

@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -155,13 +154,12 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];
@@ -194,7 +192,7 @@ namespace TGC.Examples.Lights
             {
                 var mesh = meshData.mesh;
 
-                if (true)//FIXME da error cuando se desabilitan las luces.) (lightEnable)
+                if (true) //FIXME da error cuando se desabilitan las luces.) (lightEnable)
                 {
                     mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(eyePosition));
                     mesh.Effect.SetValue("bumpiness", (float)Modifiers["bumpiness"]);
@@ -280,8 +278,6 @@ namespace TGC.Examples.Lights
 
         public override void Dispose()
         {
-            
-
             effect.Dispose();
             foreach (var meshData in meshesWithLight)
             {

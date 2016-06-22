@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
@@ -58,7 +57,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         private void updateWall()
@@ -86,8 +85,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var d3dDevice = D3DDevice.Instance.Device;
 
@@ -108,8 +106,6 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            
-
             wall.dispose();
         }
     }

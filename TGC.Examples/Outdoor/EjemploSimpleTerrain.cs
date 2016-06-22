@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -64,13 +63,12 @@ namespace TGC.Examples.Outdoor
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio el heightmap
             var selectedHeightmap = (string)Modifiers["heightmap"];
@@ -109,8 +107,6 @@ namespace TGC.Examples.Outdoor
 
         public override void Dispose()
         {
-            
-
             terrain.dispose();
         }
     }

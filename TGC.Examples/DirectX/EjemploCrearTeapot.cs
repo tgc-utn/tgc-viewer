@@ -78,13 +78,12 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Obtener valores de Modifiers
             var vAngleX = (float)Modifiers["angleX"];
@@ -129,8 +128,6 @@ namespace TGC.Examples.DirectX
 
         public override void Dispose()
         {
-            
-
             mesh.Dispose();
         }
     }

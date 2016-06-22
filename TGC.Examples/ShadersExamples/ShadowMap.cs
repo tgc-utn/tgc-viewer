@@ -127,9 +127,10 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addVertex3f("LightLookAt", new Vector3(-K, -K, -K), new Vector3(K, K, K),
                 new Vector3(0, 0, 0));
 
-            var rotCamera = new TgcRotationalCamera(scene.Meshes[0].BoundingBox.calculateBoxCenter(), scene.Meshes[0].BoundingBox.calculateBoxRadius() * 2);
+            var rotCamera = new TgcRotationalCamera(scene.Meshes[0].BoundingBox.calculateBoxCenter(),
+                scene.Meshes[0].BoundingBox.calculateBoxRadius() * 2);
             rotCamera.CameraCenter = rotCamera.CameraCenter +
-                                                          new Vector3(0, 50f, 0);
+                                     new Vector3(0, 50f, 0);
             rotCamera.CameraDistance = 300;
             rotCamera.RotationSpeed = 50f;
             Camara = rotCamera;
@@ -137,12 +138,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
 
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             D3DDevice.Instance.Device.BeginScene();
@@ -150,9 +151,9 @@ namespace TGC.Examples.ShadersExamples
             time += ElapsedTime;
             // animo la pos del avion
             var alfa = -time * Geometry.DegreeToRadian(15.0f);
-            avion.Position = new Vector3(80f * (float)System.Math.Cos(alfa), 40 - 20 * (float)System.Math.Sin(alfa),
-                80f * (float)System.Math.Sin(alfa));
-            dir_avion = new Vector3(-(float)System.Math.Sin(alfa), 0, (float)System.Math.Cos(alfa));
+            avion.Position = new Vector3(80f * (float)Math.Cos(alfa), 40 - 20 * (float)Math.Sin(alfa),
+                80f * (float)Math.Sin(alfa));
+            dir_avion = new Vector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
             g_LightPos = (Vector3)Modifiers["LightLookFrom"];
@@ -289,8 +290,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            
-
             effect.Dispose();
             scene.disposeAll();
             scene2.disposeAll();

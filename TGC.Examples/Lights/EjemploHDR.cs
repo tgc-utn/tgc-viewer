@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core;
@@ -124,7 +123,7 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
@@ -151,8 +150,8 @@ namespace TGC.Examples.Lights
             finalRender(D3DDevice.Instance.Device);
 
             D3DDevice.Instance.Device.BeginScene();
-            base.RenderAxis();
-            base.RenderFPS();
+            RenderAxis();
+            RenderFPS();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }
@@ -320,7 +319,6 @@ namespace TGC.Examples.Lights
             }
 
             d3dDevice.EndScene();
-
         }
 
         /// <summary>
@@ -346,7 +344,6 @@ namespace TGC.Examples.Lights
 
             brightPassS.Dispose();
             d3dDevice.EndScene();
-
         }
 
         /// <summary>
@@ -385,7 +382,6 @@ namespace TGC.Examples.Lights
             bloomS.Dispose();
 
             d3dDevice.EndScene();
-
         }
 
         /// <summary>
@@ -406,13 +402,10 @@ namespace TGC.Examples.Lights
             screenQuad.render(effect);
 
             d3dDevice.EndScene();
-
         }
 
         public override void Dispose()
         {
-            
-
             foreach (var m in meshes)
             {
                 m.dispose();

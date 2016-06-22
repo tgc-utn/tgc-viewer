@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -47,18 +46,18 @@ namespace TGC.Examples.Tutorial
             box = TgcBox.fromSize(center, size, texture);
 
             //Hacemos que la cámara esté centrada sobre el box.
-            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(), box.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
+                box.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //En cada cuadro de render rotamos la caja con cierta velocidad (en radianes)
             //Siempre tenemos que multiplicar las velocidades por el elapsedTime.
@@ -83,8 +82,6 @@ namespace TGC.Examples.Tutorial
 
         public override void Dispose()
         {
-            
-
             box.dispose();
         }
     }

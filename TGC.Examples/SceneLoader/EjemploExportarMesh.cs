@@ -1,4 +1,3 @@
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -51,13 +50,12 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             sceneRecover.renderAll();
 
@@ -66,8 +64,6 @@ namespace TGC.Examples.SceneLoader
 
         public override void Dispose()
         {
-            
-
             sceneRecover.disposeAll();
         }
     }

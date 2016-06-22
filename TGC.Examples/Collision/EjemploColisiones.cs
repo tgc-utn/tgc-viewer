@@ -120,13 +120,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si hay que mostrar el BoundingBox
             var showBB = (bool)Modifiers.getValue("showBoundingBox");
@@ -226,8 +225,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             piso.dispose();
             foreach (var obstaculo in obstaculos)
             {

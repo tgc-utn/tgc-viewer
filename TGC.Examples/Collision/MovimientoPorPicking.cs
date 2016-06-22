@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -27,6 +26,7 @@ namespace TGC.Examples.Collision
     public class MovimientoPorPicking : TgcExample
     {
         private bool applyMovement;
+        private TgcThirdPersonCamera camaraInterna;
         private TgcBox collisionPointMesh;
         private TgcArrow directionArrow;
         private TgcMesh mesh;
@@ -35,7 +35,6 @@ namespace TGC.Examples.Collision
         private Vector3 originalMeshRot;
         private TgcPickingRay pickingRay;
         private TgcBox suelo;
-        private TgcThirdPersonCamera camaraInterna;
 
         public MovimientoPorPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -89,13 +88,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -177,8 +175,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             suelo.dispose();
             mesh.dispose();
             collisionPointMesh.dispose();

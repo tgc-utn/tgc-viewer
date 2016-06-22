@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core._2D;
@@ -57,13 +56,12 @@ namespace TGC.Examples.UserInterface
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Renderizar los tres textoss
             text1.render();
@@ -75,8 +73,6 @@ namespace TGC.Examples.UserInterface
 
         public override void Dispose()
         {
-            
-
             text1.dispose();
             text2.dispose();
             text3.dispose();

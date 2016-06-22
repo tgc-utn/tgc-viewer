@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -152,13 +151,12 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];
@@ -189,7 +187,7 @@ namespace TGC.Examples.Lights
             //Renderizar meshes con BumpMapping
             foreach (var mesh in bumpMeshes)
             {
-                if (true)//FIXME da error cuando se desabilitan las luces.) (lightEnable)
+                if (true) //FIXME da error cuando se desabilitan las luces.) (lightEnable)
                 {
                     //Obtener la luz que corresponde a este mesh (buscamos la mas cercana)
                     var light = getClosestLight(mesh.BoundingBox.calculateBoxCenter());
@@ -256,8 +254,6 @@ namespace TGC.Examples.Lights
 
         public override void Dispose()
         {
-            
-
             effect.Dispose();
             foreach (var m in bumpMeshes)
             {

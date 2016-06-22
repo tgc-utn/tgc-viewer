@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -53,7 +52,7 @@ namespace TGC.Examples.Lights
 
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new Vector3(-210.0958f, 114.911f, -109.2159f), 400f, 300f);
-            
+
             //Cargar Shader personalizado de MultiDiffuseLights
             /*
              * Cargar Shader personalizado de MultiDiffuseLights
@@ -93,13 +92,12 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Habilitar luz
             var lightEnable = (bool)Modifiers["lightEnable"];
@@ -175,8 +173,6 @@ namespace TGC.Examples.Lights
 
         public override void Dispose()
         {
-            
-
             scene.disposeAll();
             effect.Dispose();
             for (var i = 0; i < lightMeshes.Length; i++)

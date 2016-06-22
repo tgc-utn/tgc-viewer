@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -66,13 +65,12 @@ namespace TGC.Examples.SceneLoader
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var frustumCullingEnabled = (bool)Modifiers["culling"];
 
@@ -111,8 +109,6 @@ namespace TGC.Examples.SceneLoader
 
         public override void Dispose()
         {
-            
-
             tgcScene.disposeAll();
         }
     }

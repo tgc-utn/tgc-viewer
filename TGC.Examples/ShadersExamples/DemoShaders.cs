@@ -43,8 +43,8 @@ namespace TGC.Examples.ShadersExamples
 
         private bool camara_rot;
         private TgcRotationalCamera CamaraRot;
-        private TgcRotationalCamera DefaultCamera;
         private int cant_palmeras; // sin contar la isla
+        private TgcRotationalCamera DefaultCamera;
         private Vector3 dir_canoa;
         private Effect effect;
         private Vector3 g_LightDir; // direccion de la luz actual
@@ -135,8 +135,8 @@ namespace TGC.Examples.ShadersExamples
             mesh.Position = new Vector3(0f, 0f, 0f);
             mesh.AutoTransformEnable = false;
             var size = mesh.BoundingBox.calculateSize();
-            largo_tanque = System.Math.Abs(size.Z);
-            alto_tanque = System.Math.Abs(size.Y) * mesh.Scale.Y;
+            largo_tanque = Math.Abs(size.Z);
+            alto_tanque = Math.Abs(size.Y) * mesh.Scale.Y;
             vel_tanque = 10;
             an_tanque = 0;
             canoa.Scale = new Vector3(1f, 1f, 1f);
@@ -148,7 +148,7 @@ namespace TGC.Examples.ShadersExamples
             piso.Position = new Vector3(0f, nivel_mar, 0f);
 
             size = palmera.BoundingBox.calculateSize();
-            var alto_palmera = System.Math.Abs(size.Y);
+            var alto_palmera = Math.Abs(size.Y);
             cant_palmeras = 0;
             int i;
             bosque = new List<TgcMesh>();
@@ -158,8 +158,8 @@ namespace TGC.Examples.ShadersExamples
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
                     instance.Scale = new Vector3(0.5f, 1.5f, 0.5f);
-                    var x = r[i] * (float)System.Math.Cos(Geometry.DegreeToRadian(100 + 10.0f * j));
-                    var z = r[i] * (float)System.Math.Sin(Geometry.DegreeToRadian(100 + 10.0f * j));
+                    var x = r[i] * (float)Math.Cos(Geometry.DegreeToRadian(100 + 10.0f * j));
+                    var z = r[i] * (float)Math.Sin(Geometry.DegreeToRadian(100 + 10.0f * j));
                     instance.Position = new Vector3(x, terrain.CalcularAltura(x, z)
                         /*+ alto_palmera / 2 * instance.Scale.Y*/, z);
                     bosque.Add(instance);
@@ -175,8 +175,8 @@ namespace TGC.Examples.ShadersExamples
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
                     instance.Scale = new Vector3(0.5f, 1f + j / 5f * 0.33f, 0.5f);
-                    var x = r2[i] * (float)System.Math.Cos(Geometry.DegreeToRadian(25.0f * j));
-                    var z = r2[i] * (float)System.Math.Sin(Geometry.DegreeToRadian(25.0f * j));
+                    var x = r2[i] * (float)Math.Cos(Geometry.DegreeToRadian(25.0f * j));
+                    var z = r2[i] * (float)Math.Sin(Geometry.DegreeToRadian(25.0f * j));
                     instance.Position = new Vector3(x, terrain.CalcularAltura(x, z)
                         /*+ alto_palmera / 2 * instance.Scale.Y*/, z);
                     bosque.Add(instance);
@@ -239,12 +239,13 @@ namespace TGC.Examples.ShadersExamples
             //--------------------------------------------------------------------------------------
             //Centrar camara rotacional respecto a este mesh
             camara_rot = false;
-            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
             DefaultCamera = new TgcRotationalCamera(new Vector3(0, 200, 0), 5000, 0.1f, 1f);
             Camara = DefaultCamera;
-           
+
             LookFrom = new Vector3(0, 400, 2000);
             LookAt = new Vector3(0, 200, 0);
 
@@ -277,12 +278,12 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             D3DDevice.Instance.Device.BeginScene();
 
@@ -331,15 +332,15 @@ namespace TGC.Examples.ShadersExamples
             // animar tanque
             an_tanque -= ElapsedTime * Geometry.DegreeToRadian(vel_tanque);
             var alfa = an_tanque;
-            var x0 = 2000f * (float)System.Math.Cos(alfa);
-            var z0 = 2000f * (float)System.Math.Sin(alfa);
+            var x0 = 2000f * (float)Math.Cos(alfa);
+            var z0 = 2000f * (float)Math.Sin(alfa);
             float offset_rueda = 10;
             var H = terrain.CalcularAltura(x0, z0) + alto_tanque / 2 - offset_rueda;
             if (H < nivel_mar)
                 H = nivel_mar;
             mesh.Position = new Vector3(x0, H, z0);
             // direccion tangente sobre el piso:
-            var dir_tanque = new Vector2(-(float)System.Math.Sin(alfa), (float)System.Math.Cos(alfa));
+            var dir_tanque = new Vector2(-(float)Math.Sin(alfa), (float)Math.Cos(alfa));
             dir_tanque.Normalize();
             // Posicion de la parte de adelante del tanque
             var pos2d = new Vector2(x0, z0);
@@ -354,10 +355,10 @@ namespace TGC.Examples.ShadersExamples
 
             // animo la canoa en circulos:
             alfa = -time * Geometry.DegreeToRadian(10.0f);
-            x0 = 400f * (float)System.Math.Cos(alfa);
-            z0 = 400f * (float)System.Math.Sin(alfa);
+            x0 = 400f * (float)Math.Cos(alfa);
+            z0 = 400f * (float)Math.Sin(alfa);
             canoa.Position = new Vector3(x0, 150, z0);
-            dir_canoa = new Vector3(-(float)System.Math.Sin(alfa), 0, (float)System.Math.Cos(alfa));
+            dir_canoa = new Vector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
             canoa.Transform = CalcularMatriz(canoa.Position, canoa.Scale, dir_canoa);
 
             alfa_sol += ElapsedTime * Geometry.DegreeToRadian(1.0f);
@@ -365,7 +366,7 @@ namespace TGC.Examples.ShadersExamples
                 alfa_sol = 1.5f;
             // animo la posicion del sol
             //g_LightPos = new Vector3(1500f * (float)Math.Cos(alfa_sol), 1500f * (float)Math.Sin(alfa_sol), 0f);
-            g_LightPos = new Vector3(2000f * (float)System.Math.Cos(alfa_sol), 2000f * (float)System.Math.Sin(alfa_sol),
+            g_LightPos = new Vector3(2000f * (float)Math.Cos(alfa_sol), 2000f * (float)Math.Sin(alfa_sol),
                 0f);
             g_LightDir = -g_LightPos;
             g_LightDir.Normalize();
@@ -373,20 +374,20 @@ namespace TGC.Examples.ShadersExamples
             if (timer_preview > 0)
             {
                 var an = -time * Geometry.DegreeToRadian(10.0f);
-                LookFrom.X = 1500f * (float)System.Math.Sin(an);
-                LookFrom.Z = 1500f * (float)System.Math.Cos(an);
+                LookFrom.X = 1500f * (float)Math.Sin(an);
+                LookFrom.Z = 1500f * (float)Math.Cos(an);
             }
             else
             {
                 if (camara_rot)
                 {
                     CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
-                    CamaraRot.updateCamera(ElapsedTime);//FIXME, puede que no haga falta esto.
+                    CamaraRot.updateCamera(ElapsedTime); //FIXME, puede que no haga falta esto.
                     Camara = CamaraRot;
                 }
                 else
                 {
-                    Camara = DefaultCamera;                   
+                    Camara = DefaultCamera;
                 }
             }
 
@@ -487,7 +488,8 @@ namespace TGC.Examples.ShadersExamples
             if (timer_preview > 0)
                 D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(LookFrom, LookAt, new Vector3(0, 1, 0));
             else
-                D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix(); // TODO FIX IT! esto no se bien para que lo hace aca.
+                D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix();
+            // TODO FIX IT! esto no se bien para que lo hace aca.
 
             D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
@@ -567,8 +569,8 @@ namespace TGC.Examples.ShadersExamples
 
             g_pCubeMap.Dispose();
 
-            base.RenderFPS();
-            base.RenderAxis();
+            RenderFPS();
+            RenderAxis();
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
         }
@@ -817,8 +819,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            
-
             effect.Dispose();
             scene.disposeAll();
             scene2.disposeAll();

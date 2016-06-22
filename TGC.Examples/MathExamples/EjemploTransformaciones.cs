@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core._2D;
@@ -39,13 +38,12 @@ namespace TGC.Examples.MathExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             // 1) Crear una matriz de transformacion (de 4x4 para 3D) con la identidad
             var m = Matrix.Identity;
@@ -127,6 +125,7 @@ namespace TGC.Examples.MathExamples
 
             PostRender();
         }
+
         public override void Dispose()
         {
             //nada en state.

@@ -1,6 +1,4 @@
 using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TGC.Core.Direct3D;
 
 namespace TGC.Core.Camara
 {
@@ -15,7 +13,7 @@ namespace TGC.Core.Camara
         ///     Posicion de la camara
         /// </summary>
         public Vector3 Position { get; private set; }
-        
+
         /// <summary>
         ///     Posición del punto al que mira la cámara
         /// </summary>
@@ -27,34 +25,38 @@ namespace TGC.Core.Camara
         public Vector3 UpVector { get; protected set; }
 
         /// <summary>
-        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de view.
+        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de
+        ///     view.
         ///     estos vectores son utilizadas por getViewMatrix.
         /// </summary>
         /// <param name="pos">Posicion de la camara</param>
         /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
         public virtual void setCamera(Vector3 pos, Vector3 lookAt)
         {
-            this.Position = pos;
-            this.LookAt = lookAt;
-            this.UpVector = DEFAULT_UP_VECTOR;
+            Position = pos;
+            LookAt = lookAt;
+            UpVector = DEFAULT_UP_VECTOR;
         }
 
         /// <summary>
-        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de view.
+        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de
+        ///     view.
         ///     estos vectores son utilizadas por getViewMatrix.
         /// </summary>
         /// <param name="pos">Posicion de la camara</param>
         /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
         public virtual void setCamera(Vector3 pos, Vector3 lookAt, Vector3 upVec)
         {
-            this.Position = pos;
-            this.LookAt = lookAt;
-            this.UpVector = upVec;
+            Position = pos;
+            LookAt = lookAt;
+            UpVector = upVec;
         }
 
         /// <summary>
-        ///     Permite actualizar el estado interno de la camara si se sobrescribe este metodo. por defecto no realiza ninguna accion.
-        ///     Si se realiza procesamiento interno se puede invocar al metodo setCamera para actualizar posicion, lookAt y upVector.
+        ///     Permite actualizar el estado interno de la camara si se sobrescribe este metodo. por defecto no realiza ninguna
+        ///     accion.
+        ///     Si se realiza procesamiento interno se puede invocar al metodo setCamera para actualizar posicion, lookAt y
+        ///     upVector.
         /// </summary>
         public virtual void updateCamera(float elapsedTime)
         {
@@ -67,7 +69,7 @@ namespace TGC.Core.Camara
         /// </summary>
         public virtual Matrix getViewMatrix()
         {
-            return Matrix.LookAtLH(this.Position, this.LookAt, this.UpVector);
+            return Matrix.LookAtLH(Position, LookAt, UpVector);
         }
     }
 }

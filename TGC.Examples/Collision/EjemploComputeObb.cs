@@ -46,7 +46,7 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public void random_clic(object sender, EventArgs args)
@@ -56,8 +56,7 @@ namespace TGC.Examples.Collision
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             if (generate)
             {
@@ -117,8 +116,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             obb.dispose();
             for (var i = 0; i < vertices.Length; i++)
             {

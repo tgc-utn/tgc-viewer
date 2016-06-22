@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Drawing;
 using System.IO;
 using TGC.Core;
@@ -105,7 +104,7 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -143,7 +142,8 @@ namespace TGC.Examples.SkeletalAnimation
                 attachment.updateValues();
 
                 //Configurar camara
-                Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+                Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                    mesh.BoundingBox.calculateBoxRadius() * 2);
             }
         }
 
@@ -158,8 +158,7 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio la malla
             var meshPath = (string)Modifiers.getValue("mesh");
@@ -220,8 +219,6 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Dispose()
         {
-            
-
             //La malla también hace dispose del attachment
             mesh.dispose();
             mesh = null;

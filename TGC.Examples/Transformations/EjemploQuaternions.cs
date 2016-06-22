@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
@@ -48,13 +47,12 @@ namespace TGC.Examples.Transformations
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Rotación Euler
             var rotEuler = (Vector3)Modifiers["Rot-Euler"];
@@ -79,8 +77,6 @@ namespace TGC.Examples.Transformations
 
         public override void Dispose()
         {
-            
-
             boxEuler.dispose();
             boxQuaternion.dispose();
         }

@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Windows.Forms;
 using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;

@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -48,7 +47,7 @@ namespace TGC.Examples.PortalRendering
 
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new Vector3(0, 0, 0), 800f, 600f);
-            
+
             //Modifiers
             Modifiers.addBoolean("portalRendering", "PortalRendering", true);
             Modifiers.addBoolean("WireFrame", "WireFrame", false);
@@ -63,13 +62,12 @@ namespace TGC.Examples.PortalRendering
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var enablePortalRendering = (bool)Modifiers["portalRendering"];
             if (enablePortalRendering)
@@ -138,8 +136,6 @@ namespace TGC.Examples.PortalRendering
 
         public override void Dispose()
         {
-            
-
             scene.disposeAll();
         }
     }

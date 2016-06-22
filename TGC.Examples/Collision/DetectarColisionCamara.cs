@@ -1,7 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Collections.Generic;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -28,10 +27,10 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class DetectarColisionCamara : TgcExample
     {
+        private TgcThirdPersonCamera camaraInterna;
         private List<TgcBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcBox piso;
-        private TgcThirdPersonCamera camaraInterna; 
 
         public DetectarColisionCamara(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -115,7 +114,7 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
@@ -225,7 +224,7 @@ namespace TGC.Examples.Collision
 
             //Render personaje
             personaje.animateAndRender(ElapsedTime);
-            
+
             PostRender();
         }
 
@@ -279,8 +278,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             piso.dispose();
             foreach (var obstaculo in obstaculos)
             {

@@ -1,4 +1,3 @@
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -37,18 +36,18 @@ namespace TGC.Examples.Tutorial
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Iglesia\\Iglesia-TgcScene.xml");
 
             //Hacemos que la cámara esté centrada sobre la escena
-            Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(), scene.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(),
+                scene.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Dibujar la escena entera
             scene.renderAll();
@@ -66,8 +65,6 @@ namespace TGC.Examples.Tutorial
 
         public override void Dispose()
         {
-            
-
             //Liberar memoria de toda la escena
             scene.disposeAll();
         }

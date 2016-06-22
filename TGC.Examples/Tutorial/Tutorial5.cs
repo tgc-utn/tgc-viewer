@@ -1,4 +1,3 @@
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -47,18 +46,18 @@ namespace TGC.Examples.Tutorial
             mesh = scene.Meshes[0];
 
             //Hacemos que la cámara esté centrada sobre el mesh.
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Dibujar el modelo 3D
             mesh.render();
@@ -68,8 +67,6 @@ namespace TGC.Examples.Tutorial
 
         public override void Dispose()
         {
-            
-
             //Liberar memoria del modelo 3D
             mesh.dispose();
         }

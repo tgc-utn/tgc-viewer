@@ -1,5 +1,4 @@
 ﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 
 namespace TGC.Core.Camara
 {
@@ -18,14 +17,15 @@ namespace TGC.Core.Camara
             resetValues();
         }
 
-        public TgcThirdPersonCamera(Vector3 target, float offsetHeight, float offsetForward): this()
+        public TgcThirdPersonCamera(Vector3 target, float offsetHeight, float offsetForward) : this()
         {
             Target = target;
             OffsetHeight = offsetHeight;
             OffsetForward = offsetForward;
         }
 
-        public TgcThirdPersonCamera(Vector3 target, Vector3 targetDisplacement, float offsetHeight, float offsetForward) : this()
+        public TgcThirdPersonCamera(Vector3 target, Vector3 targetDisplacement, float offsetHeight, float offsetForward)
+            : this()
         {
             Target = target;
             TargetDisplacement = targetDisplacement;
@@ -96,7 +96,7 @@ namespace TGC.Core.Camara
         ///     Genera la proxima matriz de view, sin actualizar aun los valores internos
         /// </summary>
         /// <param name="pos">Futura posicion de camara generada</param>
-        /// <param name="pos">Futuro centro de camara a generada</param>        
+        /// <param name="pos">Futuro centro de camara a generada</param>
         public void updatePositionTarget(out Vector3 pos, out Vector3 targetCenter)
         {
             //alejarse, luego rotar y lueg ubicar camara en el centro deseado
@@ -110,7 +110,7 @@ namespace TGC.Core.Camara
             pos.Z = m.M43;
 
             //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
-            this.setCamera(pos, targetCenter);
+            setCamera(pos, targetCenter);
         }
 
         /// <summary>

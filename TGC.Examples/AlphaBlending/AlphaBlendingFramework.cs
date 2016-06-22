@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Collections.Generic;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -52,13 +51,13 @@ namespace TGC.Examples.AlphaBlending
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
             PreRender();
-            
+
             foreach (var mesh in meshes)
             {
                 mesh.render();

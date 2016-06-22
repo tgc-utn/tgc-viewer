@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -49,7 +48,8 @@ namespace TGC.Examples.Collision
             //obb = TgcObb.computeFromPoints(mesh.getVertexPositions());
 
             //Alejar camara rotacional segun tamaño del BoundingBox del objeto
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2);
 
             //Modifier para poder rotar y mover el mesh
             Modifiers.addFloat("rotation", 0, 360, 0);
@@ -58,13 +58,12 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Obtener rotacion de mesh (pasar a radianes)
             var rotation = FastMath.ToRad((float)Modifiers["rotation"]);
@@ -93,8 +92,6 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            
-
             mesh.dispose();
             obb.dispose();
         }

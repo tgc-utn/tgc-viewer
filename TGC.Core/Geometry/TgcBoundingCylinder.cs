@@ -8,7 +8,7 @@ using TGC.Core.Utils;
 namespace TGC.Core.Geometry
 {
     /// <summary>
-    /// Cilindro Bounding con posibilidad de orietar y rotar, este puede ser utilizado por ejemplo para personajes.
+    ///     Cilindro Bounding con posibilidad de orietar y rotar, este puede ser utilizado por ejemplo para personajes.
     /// </summary>
     public class TgcBoundingCylinder : IRenderObject
     {
@@ -108,7 +108,7 @@ namespace TGC.Core.Geometry
 
         #region Rendering
 
-        private const int END_CAPS_RESOLUTION = 15*4; //4 para los bordes laterales
+        private const int END_CAPS_RESOLUTION = 15 * 4; //4 para los bordes laterales
         private const int END_CAPS_VERTEX_COUNT = 2 * END_CAPS_RESOLUTION * 2;
         private CustomVertex.PositionColored[] vertices; //line list
         private Color color;
@@ -174,7 +174,7 @@ namespace TGC.Core.Geometry
         {
             //actualizamos los vertices de las tapas y los vertices de las lineas laterales
             updateDraw();
-            
+
             //dibujamos
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length / 2, vertices);
         }

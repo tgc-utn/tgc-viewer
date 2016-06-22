@@ -1,4 +1,3 @@
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -40,12 +39,13 @@ namespace TGC.Examples.AlphaBlending
             var loader = new TgcSceneLoader();
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pino\\Pino-TgcScene.xml");
 
-            Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(), scene.BoundingBox.calculateBoxRadius() * 2);
+            Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(),
+                scene.BoundingBox.calculateBoxRadius() * 2);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
@@ -59,8 +59,6 @@ namespace TGC.Examples.AlphaBlending
 
         public override void Dispose()
         {
-            
-
             scene.disposeAll();
         }
     }

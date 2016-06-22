@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -53,13 +52,12 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Especificar formato de triangulo
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
@@ -68,6 +66,7 @@ namespace TGC.Examples.GeometryBasics
 
             PostRender();
         }
+
         public override void Dispose()
         {
             //nada en state.

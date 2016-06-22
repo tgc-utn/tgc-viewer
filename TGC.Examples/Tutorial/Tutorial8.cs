@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using System;
 using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Example;
@@ -22,9 +21,9 @@ namespace TGC.Examples.Tutorial
     public class Tutorial8 : TgcExample
     {
         private const float MOVEMENT_SPEED = 200f;
+        private TgcThirdPersonCamera camaraInterna;
         private TgcMesh mainMesh;
         private TgcScene scene;
-        private TgcThirdPersonCamera camaraInterna;
 
         public Tutorial8(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
             TgcAxisLines axisLines, TgcCamera camara)
@@ -56,13 +55,12 @@ namespace TGC.Examples.Tutorial
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Procesamos input de teclado para mover el objeto principal en el plano XZ
             var input = TgcD3dInput.Instance;
@@ -142,8 +140,6 @@ namespace TGC.Examples.Tutorial
 
         public override void Dispose()
         {
-            
-
             scene.disposeAll();
             mainMesh.dispose();
         }

@@ -1,4 +1,4 @@
-﻿namespace TGC.Viewer.Forms
+﻿namespace TGC.Viewer.UI
 {
     partial class AboutForm
     {

@@ -161,7 +161,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
             var d3dInput = TgcD3dInput.Instance;
 
             if (d3dInput.keyPressed(Key.F1))
@@ -217,7 +217,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Render()
         {
-            base.ClearTextures();
+            ClearTextures();
 
             var device = D3DDevice.Instance.Device;
             effect.Technique = "DefaultTechnique";
@@ -281,8 +281,8 @@ namespace TGC.Examples.ShadersExamples
             //TgcDrawText.Instance.drawText("dist_cam:" + dist_cam + "defY" + desf.Y, 0, 0, Color.Yellow);
             //TgcDrawText.Instance.drawText("vel:" + vel, 0, 0, Color.Yellow);
 
-            base.RenderFPS();
-            base.RenderAxis();
+            RenderFPS();
+            RenderAxis();
             device.EndScene();
             device.Present();
 
@@ -301,8 +301,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            
-
             circuito.dispose();
             car.dispose();
             effect.Dispose();
@@ -357,8 +355,8 @@ namespace TGC.Examples.ShadersExamples
 
         public Vector3 rotar_xz(Vector3 v, float an)
         {
-            return new Vector3((float)(v.X * System.Math.Cos(an) - v.Z * System.Math.Sin(an)), v.Y,
-                (float)(v.X * System.Math.Sin(an) + v.Z * System.Math.Cos(an)));
+            return new Vector3((float)(v.X * Math.Cos(an) - v.Z * Math.Sin(an)), v.Y,
+                (float)(v.X * Math.Sin(an) + v.Z * Math.Cos(an)));
         }
     }
 }

@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using System;
 using System.Collections.Generic;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -69,20 +68,19 @@ namespace TGC.Examples.Optimization.Quadtree
 
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new Vector3(1500, 800, 0));
-            
+
             Modifiers.addBoolean("showQuadtree", "Show Quadtree", false);
             Modifiers.addBoolean("showTerrain", "Show Terrain", true);
         }
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             var showQuadtree = (bool)Modifiers["showQuadtree"];
             var showTerrain = (bool)Modifiers["showTerrain"];
@@ -99,8 +97,6 @@ namespace TGC.Examples.Optimization.Quadtree
 
         public override void Dispose()
         {
-            
-
             skyBox.dispose();
             terreno.dispose();
             foreach (var mesh in objetosIsla)

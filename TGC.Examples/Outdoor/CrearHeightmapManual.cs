@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Drawing;
 using TGC.Core;
 using TGC.Core.Camara;
@@ -70,7 +69,7 @@ namespace TGC.Examples.Outdoor
 
         public override void Update()
         {
-            base.PreUpdate();
+            PreUpdate();
         }
 
         /// <summary>
@@ -167,8 +166,7 @@ namespace TGC.Examples.Outdoor
 
         public override void Render()
         {
-            base.PreRender();
-            
+            PreRender();
 
             //Ver si cambio el heightmap
             var selectedHeightmap = (string)Modifiers["heightmap"];
@@ -207,8 +205,6 @@ namespace TGC.Examples.Outdoor
 
         public override void Dispose()
         {
-            
-
             vbTerrain.Dispose();
             terrainTexture.Dispose();
         }

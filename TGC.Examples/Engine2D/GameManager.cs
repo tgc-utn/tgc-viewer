@@ -144,9 +144,9 @@ namespace TGC.Examples.Engine2D
 
         internal void Dispose()
         {
-            this.asteroidBitmap.Texture.Dispose();
-            this.misilBitmap.Texture.Dispose();
-            this.spaceshipBitmap.Texture.Dispose();
+            asteroidBitmap.Texture.Dispose();
+            misilBitmap.Texture.Dispose();
+            spaceshipBitmap.Texture.Dispose();
         }
 
         #region Singleton
