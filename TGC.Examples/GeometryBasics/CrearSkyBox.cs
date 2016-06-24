@@ -52,9 +52,12 @@ namespace TGC.Examples.GeometryBasics
             //Hay veces es necesario invertir las texturas Front y Back si se pasa de un sistema RightHanded a uno LeftHanded
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
+            skyBox.SkyEpsilon = 25f;
+            //Inicializa todos los valores para crear el SkyBox
+            skyBox.InitSkyBox();
 
-            //Actualizar todos los valores para crear el SkyBox
-            skyBox.updateValues();
+            //Modifier para ver BoundingBox
+            Modifiers.addBoolean("moveWhitCamera", "Move Whit Camera", false);
 
             Camara = new TgcFpsCamera();
         }
@@ -62,13 +65,17 @@ namespace TGC.Examples.GeometryBasics
         public override void Update()
         {
             PreUpdate();
+
+            //Se actualiza la posicion del skybox.
+            if ((bool)Modifiers.getValue("moveWhitCamera"))
+                skyBox.Center = Camara.Position;
         }
 
         public override void Render()
         {
             PreRender();
 
-            //Renderizar SkyBox
+            //Renderizar SkyBox            
             skyBox.render();
 
             PostRender();

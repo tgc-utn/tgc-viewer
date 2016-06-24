@@ -112,7 +112,7 @@ namespace TGC.Examples.ShadersExamples
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.SkyEpsilon = 50f;
-            skyBox.updateValues();
+            skyBox.InitSkyBox();
 
             // ------------------------------------------------------------
             //Cargar los mesh:
