@@ -1,10 +1,12 @@
 using Microsoft.DirectX;
 using TGC.Core;
 using TGC.Core.Camara;
+using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Core.Utils;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -65,6 +67,13 @@ namespace TGC.Examples.GeometryBasics
         public override void Update()
         {
             PreUpdate();
+
+            //Se cambia el valor por defecto del farplane
+            D3DDevice.Instance.Device.Transform.Projection = 
+                    Matrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView,
+                                            D3DDevice.Instance.AspectRatio,
+                                            D3DDevice.Instance.ZNearPlaneDistance,
+                                            D3DDevice.Instance.ZFarPlaneDistance*2f);
 
             //Se actualiza la posicion del skybox.
             if ((bool)Modifiers.getValue("moveWhitCamera"))
