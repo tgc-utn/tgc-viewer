@@ -30,6 +30,8 @@ namespace TGC.Core.Terrain
         }
 
         private Color color;
+        private Vector3 center;
+        private Matrix traslation;
 
         /// <summary>
         ///     Crear un SkyBox vacio
@@ -38,7 +40,7 @@ namespace TGC.Core.Terrain
         {
             Faces = new TgcMesh[6];
             FaceTextures = new string[6];
-            SkyEpsilon = 5f;
+            SkyEpsilon = 25f;
             color = Color.White;
             Center = new Vector3(0, 0, 0);
             Size = new Vector3(1000, 1000, 1000);
@@ -46,25 +48,32 @@ namespace TGC.Core.Terrain
 
         /// <summary>
         ///     Valor de desplazamiento utilizado para que las caras del SkyBox encajen bien entre sí.
-        ///     Llamar a updateValues() para aplicar cambios.
+        ///     Llamar a InitSkyBox() para aplicar cambios.
         /// </summary>
         public float SkyEpsilon { get; set; }
 
         /// <summary>
         ///     Tamaño del SkyBox.
-        ///     Llamar a updateValues() para aplicar cambios.
+        ///     Llamar a InitSkyBox() para aplicar cambios.
         /// </summary>
         public Vector3 Size { get; set; }
 
         /// <summary>
-        ///     Centro del SkyBox.
-        ///     Llamar a updateValues() para aplicar cambios.
+        ///     Centro del SkyBox al cambiar el centro se cambia la matriz traslacion.
+        ///     Esto hace que en render se trasladen las caras, utilizado para que un skybox siga al personaje.
         /// </summary>
-        public Vector3 Center { get; set; }
+        public Vector3 Center
+        {
+            get { return center; }
+            set {
+                center = value;
+                traslation = Matrix.Translation(center);
+            }
+        }
 
         /// <summary>
         ///     Color del SkyBox.
-        ///     Llamar a updateValues() para aplicar cambios.
+        ///     Llamar a InitSkyBox() para aplicar cambios.
         /// </summary>
         public Color Color
         {
@@ -73,12 +82,14 @@ namespace TGC.Core.Terrain
         }
 
         /// <summary>
-        ///     Meshes de cada una de las 6 caras del cubo, en el orden en que se enumeran en SkyFaces
+        ///     Meshes de cada una de las 6 caras del cubo, en el orden en que se enumeran en SkyFaces.
+        ///     Las mismas se inicializan con InitSkyBox();
         /// </summary>
         public TgcMesh[] Faces { get; }
 
         /// <summary>
         ///     Path de las texturas de cada una de las 6 caras del cubo, en el orden en que se enumeran en SkyFaces
+        ///     Para actualizarlas se debe llamar setFaceTexture y luego InitSkyBox();
         /// </summary>
         public string[] FaceTextures { get; }
 
@@ -106,6 +117,7 @@ namespace TGC.Core.Terrain
         {
             foreach (var face in Faces)
             {
+                face.Transform = Matrix.Identity * traslation;
                 face.render();
             }
         }
@@ -122,7 +134,8 @@ namespace TGC.Core.Terrain
         }
 
         /// <summary>
-        ///     Configurar la textura de una cara del SkyBox
+        ///     Configurar la textura de una cara del SkyBox.
+        ///     Para aplicar los cambios se debe llamar InitSkyBox.
         /// </summary>
         /// <param name="face">Cara del SkyBox</param>
         /// <param name="texturePath">Path de la textura</param>
@@ -132,9 +145,9 @@ namespace TGC.Core.Terrain
         }
 
         /// <summary>
-        ///     Tomar los valores configurados y crear el SkyBox
+        ///     Tomar los valores configurados y crear el SkyBox. Solo invocar en tiempo de INIT!!!
         /// </summary>
-        public void updateValues()
+        public void InitSkyBox()
         {
             //Crear cada cara
             for (var i = 0; i < Faces.Length; i++)
@@ -167,6 +180,7 @@ namespace TGC.Core.Terrain
                 faceMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
                 faceMesh.createBoundingBox();
                 faceMesh.Enabled = true;
+                faceMesh.AutoTransformEnable = false;
 
                 //textura
                 var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, FaceTextures[i]);

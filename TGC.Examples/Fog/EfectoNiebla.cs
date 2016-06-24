@@ -51,7 +51,7 @@ namespace TGC.Examples.Fog
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
-            skyBox.updateValues();
+            skyBox.InitSkyBox();
 
             //Cargar escenario de Isla
             var loader = new TgcSceneLoader();

@@ -148,7 +148,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "Right.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "Back.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "Front.jpg");
-            skyBox.updateValues();
+            skyBox.InitSkyBox();
 
             //Modifier para ver BoundingBox
             Modifiers.addBoolean("Collisions", "Collisions", true);
