@@ -269,7 +269,7 @@ namespace TGC.Core.Geometry
         public void updateMesh(Vector3 position, Vector3 lookAt)
         {
             updateMesh(position, lookAt, D3DDevice.Instance.AspectRatio, D3DDevice.Instance.ZNearPlaneDistance,
-                D3DDevice.Instance.ZFarPlaneDistance, D3DDevice.Instance.FieldOfViewY);
+                D3DDevice.Instance.ZFarPlaneDistance, D3DDevice.Instance.FieldOfView);
         }
 
         /// <summary>

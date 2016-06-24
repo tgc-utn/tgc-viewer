@@ -25,7 +25,7 @@ namespace TGC.Core.Direct3D
         public Device Device { get; set; }
 
         //Valores de configuracion de la matriz de Proyeccion
-        public float FieldOfViewY { get; } = FastMath.ToRad(45.0f);
+        public float FieldOfView { get; set; } = FastMath.ToRad(45.0f);
 
         public float AspectRatio { get; set; } = -1f;
 
@@ -45,8 +45,7 @@ namespace TGC.Core.Direct3D
         public void DefaultValues()
         {
             //Frustum values
-            Device.Transform.Projection = Matrix.PerspectiveFovLH(FastMath.ToRad(45.0f), AspectRatio,
-                ZNearPlaneDistance, ZFarPlaneDistance);
+            Device.Transform.Projection = Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance, ZFarPlaneDistance);
 
             //Render state
             Device.RenderState.SpecularEnable = false;
