@@ -1,23 +1,21 @@
 using Microsoft.DirectX;
 using System;
 using System.Drawing;
-using TGC.Core;
-using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploComputeObb:
     ///     Unidades Involucradas:
-    ///     # Unidad 6 - Detección de Colisiones - Oriented BoundingBox
+    ///     # Unidad 6 - Deteccion de Colisiones - Oriented BoundingBox
     ///     Muestra como calcular un Oriented BoundingBox (OBB) a partir de una nueva aleatoria de puntos
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploComputeObb : TgcExample
+    public class EjemploComputeObb : TGCExampleViewer
     {
         private static readonly Random rand = new Random();
         private bool generate;
@@ -25,9 +23,8 @@ namespace TGC.Examples.Collision
         private Vector3[] points;
         private TgcBox[] vertices;
 
-        public EjemploComputeObb(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploComputeObb(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
             Name = "Compute OBB";
@@ -82,7 +79,7 @@ namespace TGC.Examples.Collision
             obb.dispose();
             obb = null;
 
-            //Crear nube ed puntos
+            //Crear nube de puntos
             var COUNT = 10;
             var MIN_RAND = -20f;
             var MAX_RAND = 20f;

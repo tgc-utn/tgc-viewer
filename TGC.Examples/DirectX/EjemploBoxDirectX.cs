@@ -2,31 +2,30 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo EjemploBoxDirectX:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - VertexBuffer
+    ///     # Unidad 3 - Conceptos Basicos de 3D - VertexBuffer
     ///     Muestra como crear una caja 3D usando DirectX a secas, sin utilizar nada del framework.
     ///     El objetivo del ejemplo es explicar como utilizar la API de DirectX directamente para poder hacer cosas
     ///     personalizadas.
-    ///     Si lo que se desea es dibujar una caja 3D de forma rápida utilizar TgcBox.
+    ///     Si lo que se desea es dibujar una caja 3D de forma rapida utilizar TgcBox.
     ///     Muestra como usar un vertex buffer y un index buffer.
     ///     El formato de vertice utilizado para la caja es 100% customizado.
     ///     Luego se usa un shader customizado para mostrar como interactuar con estos atributos de vertice personalizados.
     ///     El shader en si no tiene ninguna finalidad especial, solo es para mostrar como agregar nuevos atributos a un
     ///     vertice.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploBoxDirectX : TgcExample
+    public class EjemploBoxDirectX : TGCExampleViewer
     {
         /// <summary>
         ///     Vertex declaration para el vertice customizado. Hay que tener cuidado con la suma de bytes
@@ -101,9 +100,8 @@ namespace TGC.Examples.DirectX
         private MyCustomVertex[] vertexData;
         private VertexDeclaration vertexDeclaration;
 
-        public EjemploBoxDirectX(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploBoxDirectX(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "DirectX";
             Name = "Box DirectX";
@@ -131,7 +129,7 @@ namespace TGC.Examples.DirectX
                 Usage.Dynamic | Usage.WriteOnly, MyCustomVertexFormat, Pool.Default);
 
             //Llenar array con los 8 vertices de la caja
-            //La normal se carga combinando la dirección de las 3 caras que toca
+            //La normal se carga combinando la direccion de las 3 caras que toca
             //inferiores (son las 4 combinaciones de min-max entre XZ)
             vertexData[0] = new MyCustomVertex(new Vector3(min.X, min.Y, min.Z),
                 Vector3.Normalize(new Vector3(-1, -1, -1)), color1);
@@ -152,7 +150,7 @@ namespace TGC.Examples.DirectX
             vertexData[7] = new MyCustomVertex(new Vector3(max.X, max.Y, max.Z), Vector3.Normalize(new Vector3(1, 1, 1)),
                 color2);
 
-            //Setear información en VertexBuffer
+            //Setear informacion en VertexBuffer
             vertexBuffer.SetData(vertexData, 0, LockFlags.None);
 
             //Crear IndexBuffer con 36 vertices para los 12 triangulos que forman la caja (2 triangulos por cada => 6 vertices por cara => 6 caras)
@@ -226,7 +224,7 @@ namespace TGC.Examples.DirectX
             indexData[iIdx++] = 3;
             indexData[iIdx++] = 1;
 
-            //Setear información en IndexBuffer
+            //Setear informacion en IndexBuffer
             indexBuffer.SetData(indexData, 0, LockFlags.None);
 
             //Cargar shader customizado para este ejemplo
@@ -239,7 +237,7 @@ namespace TGC.Examples.DirectX
                 throw new Exception("Error al cargar shader: " + shaderPath + ". Errores: " + compilationErrors);
             }
 
-            //Setear el único technique que tiene
+            //Setear el unico technique que tiene
             effect.Technique = "EjemploBoxDirectX";
 
             //Cargamos 3 texturas cualquiera para mandar al shader

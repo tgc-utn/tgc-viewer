@@ -1,14 +1,13 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core._2D;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Sprites2D
 {
@@ -21,14 +20,13 @@ namespace TGC.Examples.Sprites2D
     ///     Es muy útil para crear menues, íconos, etc.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploSprite2D : TgcExample
+    public class EjemploSprite2D : TGCExampleViewer
     {
         private TgcBox box;
         private TgcSprite sprite;
 
-        public EjemploSprite2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploSprite2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Sprite 2D";
             Name = "Sprite 2D";
@@ -38,7 +36,7 @@ namespace TGC.Examples.Sprites2D
         public override void Init()
         {
             //Crear Sprite
-            sprite = new TgcSprite();
+            sprite = new TgcSprite(Drawer2D);
             sprite.Texture = TgcTexture.createTexture(MediaDir + "\\Texturas\\LogoTGC.png");
 
             //Ubicarlo centrado en la pantalla
@@ -78,13 +76,13 @@ namespace TGC.Examples.Sprites2D
             box.render();
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
-            TgcDrawer2D.Instance.beginDrawSprite();
+            Drawer2D.beginDrawSprite();
 
             //Dibujar sprite (si hubiese mas, deberian ir todos aquí)
             sprite.render();
 
             //Finalizar el dibujado de Sprites
-            TgcDrawer2D.Instance.endDrawSprite();
+            Drawer2D.endDrawSprite();
 
             PostRender();
         }

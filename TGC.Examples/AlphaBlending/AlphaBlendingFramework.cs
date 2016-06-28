@@ -1,24 +1,22 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.AlphaBlending
 {
     /// <summary>
     ///     AlphaBlendingFramework
     /// </summary>
-    public class AlphaBlendingFramework : TgcExample
+    public class AlphaBlendingFramework : TGCExampleViewer
     {
         private List<TgcMesh> meshes;
 
-        public AlphaBlendingFramework(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public AlphaBlendingFramework(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "AlphaBlending";
             Name = "AlphaBlending Framework";

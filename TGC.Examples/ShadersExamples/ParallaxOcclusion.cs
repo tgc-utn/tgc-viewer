@@ -3,21 +3,20 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core._2D;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
 {
-    public class ParallaxOcclusion : TgcExample
+    public class ParallaxOcclusion : TGCExampleViewer
     {
         private Effect effect;
         private Texture g_pBaseTexture;
@@ -34,9 +33,8 @@ namespace TGC.Examples.ShadersExamples
 
         private float time;
 
-        public ParallaxOcclusion(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public ParallaxOcclusion(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-ParallaxOcclusion";
@@ -153,9 +151,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.Technique = pom ? "ParallaxOcclusion" : "BumpMap";
             mesh.render();
 
-            TgcDrawText.Instance.drawText((pom ? "ParallaxOcclusion" : "BumpMap") +
-                                          "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0, 15,
-                Color.Yellow);
+            DrawText.drawText((pom ? "ParallaxOcclusion" : "BumpMap") + "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0, 15, Color.Yellow);
 
             RenderFPS();
             RenderAxis();

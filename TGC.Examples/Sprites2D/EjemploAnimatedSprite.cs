@@ -1,15 +1,14 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core._2D;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Sprites2D
 {
@@ -25,14 +24,13 @@ namespace TGC.Examples.Sprites2D
     ///     Es muy útil para crear menues, íconos, etc.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploAnimatedSprite : TgcExample
+    public class EjemploAnimatedSprite : TGCExampleViewer
     {
         private TgcAnimatedSprite animatedSprite;
         private TgcBox box;
 
-        public EjemploAnimatedSprite(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploAnimatedSprite(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Sprite 2D";
             Name = "Sprite Animado";
@@ -45,8 +43,8 @@ namespace TGC.Examples.Sprites2D
             animatedSprite = new TgcAnimatedSprite(MediaDir + "\\Texturas\\Sprites\\Explosion.png", //Textura de 256x256
                 new Size(64, 64), //Tamaño de un frame (64x64px en este caso)
                 16, //Cantidad de frames, (son 16 de 64x64px)
-                10 //Velocidad de animacion, en cuadros x segundo
-                );
+                10, //Velocidad de animacion, en cuadros x segundo,
+                Drawer2D);
 
             //Ubicarlo centrado en la pantalla
             var textureSize = animatedSprite.Sprite.Texture.Size;
@@ -87,14 +85,14 @@ namespace TGC.Examples.Sprites2D
             box.render();
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
-            TgcDrawer2D.Instance.beginDrawSprite();
+            Drawer2D.beginDrawSprite();
 
             //Dibujar sprite (si hubiese mas, deberian ir todos aquí)
             //Actualizamos el estado de la animacion y renderizamos
             animatedSprite.updateAndRender(ElapsedTime);
 
             //Finalizar el dibujado de Sprites
-            TgcDrawer2D.Instance.endDrawSprite();
+            Drawer2D.endDrawSprite();
 
             PostRender();
         }

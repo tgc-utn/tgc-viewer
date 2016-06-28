@@ -1,13 +1,11 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core._2D;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.MathExamples
 {
@@ -15,21 +13,20 @@ namespace TGC.Examples.MathExamples
     ///     Ejemplo EjemploTransformaciones:
     ///     Unidades Involucradas:
     ///     # Unidad 2 - Conceptos Avanzados de 2D - Transformaciones
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Anexo matemática 3D
-    ///     Este ejemplo no muestra nada por pantalla. Sino que es para leer el código y sus comentarios.
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Anexo matematica 3D
+    ///     Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.
     ///     Muestra distintas operaciones con matrices de transformacion
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploTransformaciones : TgcExample
+    public class EjemploTransformaciones : TGCExampleViewer
     {
-        public EjemploTransformaciones(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploTransformaciones(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Math";
             Name = "Transformaciones";
             Description =
-                "Este ejemplo no muestra nada por pantalla. Sino que es para leer el código y sus comentarios. Muestra distintas operaciones con matrices de transformacion.";
+                "Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios. Muestra distintas operaciones con matrices de transformacion.";
         }
 
         public override void Init()
@@ -119,9 +116,7 @@ namespace TGC.Examples.MathExamples
                 vAux.X * inverseView.M13 + vAux.Y * inverseView.M23 + vAux.Z * inverseView.M33);
             //Con origin y direction formamos una recta que hay que buscar interseccion contra todos los objetos del escenario y quedarnos con la mas cercana a la camara
 
-            TgcDrawText.Instance.drawText(
-                "Este ejemplo no muestra nada por pantalla. Sino que es para leer el código y sus comentarios.", 5, 50,
-                Color.Yellow);
+            DrawText.drawText("Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.", 5, 50, Color.Yellow);
 
             PostRender();
         }

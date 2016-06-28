@@ -1,29 +1,28 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
+using TGC.Core.Direct3D;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo CrearSkyBox.
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - SkyBox
+    ///     # Unidad 4 - Texturas e Iluminacion - SkyBox
     ///     Muestra como utilizar la herramienta TgcSkyBox para crear
     ///     un cubo de 6 caras con una textura en cada una, que permite
     ///     lograr el efecto de cielo envolvente en la escena.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class CrearSkyBox : TgcExample
+    public class CrearSkyBox : TGCExampleViewer
     {
         private TgcSkyBox skyBox;
 
-        public CrearSkyBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public CrearSkyBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "SkyBox";
@@ -52,9 +51,12 @@ namespace TGC.Examples.GeometryBasics
             //Hay veces es necesario invertir las texturas Front y Back si se pasa de un sistema RightHanded a uno LeftHanded
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
+            skyBox.SkyEpsilon = 25f;
+            //Inicializa todos los valores para crear el SkyBox
+            skyBox.Init();
 
-            //Actualizar todos los valores para crear el SkyBox
-            skyBox.updateValues();
+            //Modifier para ver BoundingBox
+            Modifiers.addBoolean("moveWhitCamera", "Move Whit Camera", false);
 
             Camara = new TgcFpsCamera();
         }
@@ -62,6 +64,17 @@ namespace TGC.Examples.GeometryBasics
         public override void Update()
         {
             PreUpdate();
+
+            //Se cambia el valor por defecto del farplane
+            D3DDevice.Instance.Device.Transform.Projection =
+                Matrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView,
+                    D3DDevice.Instance.AspectRatio,
+                    D3DDevice.Instance.ZNearPlaneDistance,
+                    D3DDevice.Instance.ZFarPlaneDistance * 2f);
+
+            //Se actualiza la posicion del skybox.
+            if ((bool)Modifiers.getValue("moveWhitCamera"))
+                skyBox.Center = Camara.Position;
         }
 
         public override void Render()

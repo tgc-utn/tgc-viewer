@@ -1,25 +1,23 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core._2D;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Others
 {
     /// <summary>
     ///     EjemploDisposeMesh2
     /// </summary>
-    public class EjemploDisposeMesh2 : TgcExample
+    public class EjemploDisposeMesh2 : TGCExampleViewer
     {
         private TgcScene scene1;
 
-        public EjemploDisposeMesh2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploDisposeMesh2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Others";
             Name = "Dispose Mesh 2";
@@ -52,7 +50,7 @@ namespace TGC.Examples.Others
         {
             PreRender();
 
-            TgcDrawText.Instance.drawText("ok", 100, 100, Color.Red);
+            DrawText.drawText("ok", 100, 100, Color.Red);
             scene1.renderAll();
 
             PostRender();

@@ -1,9 +1,7 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
@@ -11,6 +9,7 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
@@ -23,7 +22,7 @@ namespace TGC.Examples.Collision
     ///     y el objeto se traslada hasta ahí.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class MovimientoPorPicking : TgcExample
+    public class MovimientoPorPicking : TGCExampleViewer
     {
         private bool applyMovement;
         private TgcThirdPersonCamera camaraInterna;
@@ -36,9 +35,8 @@ namespace TGC.Examples.Collision
         private TgcPickingRay pickingRay;
         private TgcBox suelo;
 
-        public MovimientoPorPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public MovimientoPorPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
             Name = "Movimiento por Picking";

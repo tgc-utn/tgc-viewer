@@ -1,14 +1,13 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -19,16 +18,15 @@ namespace TGC.Examples.ShadersExamples
     ///     Es el hola mundo de los shaders
     ///     Autor: Mariano Banquiero
     /// </summary>
-    public class BasicShader : TgcExample
+    public class BasicShader : TGCExampleViewer
     {
         private Effect effect;
         private TgcMesh mesh;
         private TgcScene scene;
         private float time;
 
-        public BasicShader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public BasicShader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-BasicShader";

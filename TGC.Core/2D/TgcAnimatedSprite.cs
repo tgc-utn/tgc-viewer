@@ -36,7 +36,7 @@ namespace TGC.Core._2D
         /// <param name="frameSize">tamaño de un tile de la animacion</param>
         /// <param name="totalFrames">cantidad de frames que tiene la animacion</param>
         /// <param name="frameRate">velocidad en cuadros por segundo</param>
-        public TgcAnimatedSprite(string texturePath, Size frameSize, int totalFrames, float frameRate)
+        public TgcAnimatedSprite(string texturePath, Size frameSize, int totalFrames, float frameRate, TgcDrawer2D drawer2D)
         {
             enabled = true;
             currentFrame = 0;
@@ -49,7 +49,7 @@ namespace TGC.Core._2D
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, texturePath);
 
             //Sprite
-            Sprite = new TgcSprite();
+            Sprite = new TgcSprite(drawer2D);
             Sprite.Texture = texture;
 
             //Calcular valores de frames de la textura

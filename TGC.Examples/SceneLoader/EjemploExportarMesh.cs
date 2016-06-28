@@ -1,22 +1,19 @@
-using TGC.Core;
-using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Exportar una malla a XML
     /// </summary>
-    public class EjemploExportarMesh : TgcExample
+    public class EjemploExportarMesh : TGCExampleViewer
     {
         private TgcScene sceneRecover;
 
-        public EjemploExportarMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploExportarMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "SceneLoader";
             Name = "MeshExporter";

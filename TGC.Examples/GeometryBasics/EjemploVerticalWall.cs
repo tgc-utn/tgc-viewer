@@ -1,28 +1,26 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     EjemploVerticalWall.
     /// </summary>
-    public class EjemploVerticalWall : TgcExample
+    public class EjemploVerticalWall : TGCExampleViewer
     {
         private TgcTexture currentTexture;
         private TgcMesh mesh;
         private TgcPlaneWall wall;
 
-        public EjemploVerticalWall(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploVerticalWall(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "EjemploVerticalWall";

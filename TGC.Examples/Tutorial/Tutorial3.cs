@@ -1,12 +1,11 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Tutorial
 {
@@ -17,7 +16,7 @@ namespace TGC.Examples.Tutorial
     ///     Muestra como crear una caja 3D con textura que se traslada y rota en cada cuadro.
     ///     Autor: Matías Leone
     /// </summary>
-    public class Tutorial3 : TgcExample
+    public class Tutorial3 : TGCExampleViewer
     {
         //Constantes para velocidades de movimiento
         private const float ROTATION_SPEED = 1f;
@@ -28,9 +27,8 @@ namespace TGC.Examples.Tutorial
         //Variable direccion de movimiento
         private float currentMoveDir = 1f;
 
-        public Tutorial3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Tutorial";
             Name = "Tutorial 3";

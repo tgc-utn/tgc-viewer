@@ -2,15 +2,14 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.PostProcess
 {
@@ -23,9 +22,9 @@ namespace TGC.Examples.PostProcess
     ///     Toda la escena no se dibuja a pantalla sino que se dibuja a una textura auxiliar.
     ///     Luego esa textura es renderizada con una pasada de Gaussian blur horizontal.
     ///     Y por ultimo se hace otra pasada mas de Gaussian blur pero vertical.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EfectoGaussianBlur : TgcExample
+    public class EfectoGaussianBlur : TGCExampleViewer
     {
         private Texture blurTempRT;
         private Effect effect;
@@ -34,9 +33,8 @@ namespace TGC.Examples.PostProcess
         private Texture sceneRT;
         private TgcScreenQuad screenQuad;
 
-        public EfectoGaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EfectoGaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "PostProcess";
             Name = "Efecto Gaussian Blur";
@@ -56,7 +54,7 @@ namespace TGC.Examples.PostProcess
                 Format.X8R8G8B8,
                 Pool.Default);
 
-            //Definimos el tamaño de una textura que sea de 1/4 x 1/4 de la original, y que sean divisibles por 8 para facilitar los calculos de sampleo
+            //Definimos el tamano de una textura que sea de 1/4 x 1/4 de la original, y que sean divisibles por 8 para facilitar los calculos de sampleo
             var cropWidth = (backBufferWidth - backBufferWidth % 8) / 4;
             var cropHeight = (backBufferHeight - backBufferHeight % 8) / 4;
 

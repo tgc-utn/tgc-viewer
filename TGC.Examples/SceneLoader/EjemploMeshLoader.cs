@@ -1,40 +1,38 @@
 using System;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Ejemplo EjemploMeshLoader:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
-    ///     Permite cargar una malla estática de formato TGC desde el FileSystem.
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
+    ///     Permite cargar una malla estatica de formato TGC desde el FileSystem.
     ///     Utiliza la herramienta TgcMeshLoader.
     ///     Esta herramienta crea un objeto TgcScene, compuesto a su vez por N TgcMesh
-    ///     Cada uno representa una malla estática.
+    ///     Cada uno representa una malla estatica.
     ///     La escena es cargada desde un archivo XML de formato TGC
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploMeshLoader : TgcExample
+    public class EjemploMeshLoader : TGCExampleViewer
     {
         private bool currentAlphaBlending;
         private Color currentColor;
         private string currentPath;
         private TgcScene currentScene;
 
-        public EjemploMeshLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploMeshLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "SceneLoader";
             Name = "MeshLoader";
-            Description = "Ejemplo de como cargar una Malla estática en formato TGC.";
+            Description = "Ejemplo de como cargar una Malla estatica en formato TGC.";
         }
 
         public override void Init()
@@ -101,7 +99,7 @@ namespace TGC.Examples.SceneLoader
             var loader = new TgcSceneLoader();
             currentScene = loader.loadSceneFromFile(path);
 
-            //Ajustar camara en base al tamaño del objeto
+            //Ajustar camara en base al tamano del objeto
             Camara = new TgcRotationalCamera(currentScene.BoundingBox.calculateBoxCenter(),
                 currentScene.BoundingBox.calculateBoxRadius() * 2);
 

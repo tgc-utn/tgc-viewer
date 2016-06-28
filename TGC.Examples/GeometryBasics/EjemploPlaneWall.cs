@@ -1,42 +1,40 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo EjemploPlaneWall.
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
     ///     Muestra como utilizar la herramienta TgcPlaneWall para crear
     ///     paredes planas con textura.
-    ///     Permite editar su posición, tamaño, textura y mapeo de textura.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Permite editar su posicion, tamano, textura y mapeo de textura.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploPlaneWall : TgcExample
+    public class EjemploPlaneWall : TGCExampleViewer
     {
         private TgcTexture currentTexture;
         private TgcPlaneWall wall;
 
-        public EjemploPlaneWall(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploPlaneWall(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "PlaneWall";
             Description =
-                "Muestra como utilizar la herramienta TgcPlaneWall para crear paredes planas con textura. Permite editar su posición, tamaño, textura y mapeo de textura. Movimiento con mouse.";
+                "Muestra como utilizar la herramienta TgcPlaneWall para crear paredes planas con textura. Permite editar su posicion, tamano, textura y mapeo de textura. Movimiento con mouse.";
         }
 
         public override void Init()
         {
-            //Modifiers para variar parámetros de la pared
+            //Modifiers para variar parametros de la pared
             Modifiers.addVertex3f("origin", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
                 new Vector3(0, 0, 0));
             Modifiers.addVertex3f("dimension", new Vector3(-100, -100, -100), new Vector3(1000, 1000, 100),
@@ -54,7 +52,7 @@ namespace TGC.Examples.GeometryBasics
             wall = new TgcPlaneWall();
             wall.setTexture(currentTexture);
 
-            //Actualizar según valores cargados
+            //Actualizar segun valores cargados
             updateWall();
         }
 
@@ -64,7 +62,7 @@ namespace TGC.Examples.GeometryBasics
         }
 
         /// <summary>
-        ///     Actualizar parámetros de la pared según los valores cargados
+        ///     Actualizar parametros de la pared segun los valores cargados
         /// </summary>
         private void updateWall()
         {
@@ -74,7 +72,7 @@ namespace TGC.Examples.GeometryBasics
             var tiling = (Vector2)Modifiers["tiling"];
             var autoAdjust = (bool)Modifiers["autoAdjust"];
 
-            //Cambiar orienación
+            //Cambiar orienacion
             var orientation = (string)Modifiers["orientation"];
             TgcPlaneWall.Orientations or;
             if (orientation == "XY") or = TgcPlaneWall.Orientations.XYplane;
@@ -100,7 +98,7 @@ namespace TGC.Examples.GeometryBasics
             //Es necesario ejecutar updateValues() para que los cambios tomen efecto
             wall.updateValues();
 
-            //Ajustar camara segun tamaño de la pared
+            //Ajustar camara segun tamano de la pared
             Camara = new TgcRotationalCamera(wall.BoundingBox.calculateBoxCenter(),
                 wall.BoundingBox.calculateBoxRadius() * 2);
         }

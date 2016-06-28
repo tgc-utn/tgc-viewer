@@ -1,9 +1,8 @@
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Tutorial
 {
@@ -14,14 +13,13 @@ namespace TGC.Examples.Tutorial
     ///     Muestra como cargar una escena 3D completa.
     ///     Autor: Matías Leone
     /// </summary>
-    public class Tutorial6 : TgcExample
+    public class Tutorial6 : TGCExampleViewer
     {
         //Variable para la escena 3D
         private TgcScene scene;
 
-        public Tutorial6(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial6(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Tutorial";
             Name = "Tutorial 6";

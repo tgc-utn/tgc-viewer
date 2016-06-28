@@ -1,24 +1,23 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Outdoor
 {
     /// <summary>
     ///     Ejemplo EjemploSimpleTerrain:
     ///     Unidades Involucradas:
-    ///     # Unidad 7 - Técnicas de Optimización - Heightmap
+    ///     # Unidad 7 - Tecnicas de Optimizacion - Heightmap
     ///     Muestra como crear un terreno en base a una textura de Heightmap y
     ///     le aplica arriba una textura de color (DiffuseMap).
     ///     Se utiliza la herramienta TgcSimpleTerrain
     ///     Posee modifiers para variar la textura de Heightmap, el DiffuseMap y el vector de escala del terreno.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploSimpleTerrain : TgcExample
+    public class EjemploSimpleTerrain : TGCExampleViewer
     {
         private string currentHeightmap;
         private float currentScaleXZ;
@@ -26,9 +25,8 @@ namespace TGC.Examples.Outdoor
         private string currentTexture;
         private TgcSimpleTerrain terrain;
 
-        public EjemploSimpleTerrain(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploSimpleTerrain(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Outdoor";
             Name = "SimpleTerrain";

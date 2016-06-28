@@ -46,17 +46,17 @@ namespace TGC.Core.PortalRendering
         ///     resto se deshabilita.
         /// </summary>
         /// <param name="cameraPos">Posición de la cámara</param>
-        public void updateVisibility(Vector3 cameraPos)
+        public void updateVisibility(Vector3 cameraPos, TgcFrustum frustum)
         {
             //Armar Frustum para uso internor, en base al Frustum actual
             var currentFrustumPlanes = new Plane[6];
             currentFrustumPlanes = new Plane[6];
-            currentFrustumPlanes[0] = TgcFrustum.Instance.NearPlane;
-            currentFrustumPlanes[1] = TgcFrustum.Instance.FarPlane;
-            currentFrustumPlanes[2] = TgcFrustum.Instance.LeftPlane;
-            currentFrustumPlanes[3] = TgcFrustum.Instance.RightPlane;
-            currentFrustumPlanes[4] = TgcFrustum.Instance.BottomPlane;
-            currentFrustumPlanes[5] = TgcFrustum.Instance.TopPlane;
+            currentFrustumPlanes[0] = frustum.NearPlane;
+            currentFrustumPlanes[1] = frustum.FarPlane;
+            currentFrustumPlanes[2] = frustum.LeftPlane;
+            currentFrustumPlanes[3] = frustum.RightPlane;
+            currentFrustumPlanes[4] = frustum.BottomPlane;
+            currentFrustumPlanes[5] = frustum.TopPlane;
 
             //Deshabilitar todas las celdas
             foreach (var cell in Cells)

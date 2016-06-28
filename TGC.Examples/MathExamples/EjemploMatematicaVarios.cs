@@ -1,34 +1,31 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core._2D;
-using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.MathExamples
 {
     /// <summary>
     ///     Ejemplo EjemploMatematicaVarios:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Anexo matemática 3D
-    ///     Este ejemplo no muestra nada por pantalla. Sino que es para leer el código y sus comentarios.
-    ///     Muestra como hacer distintas operaciones matemáticas que son comunes a la hora de programar en 3D,
-    ///     como producto escalar entre vectores, producto vectorial, sacar el ángulo entre vectores, etc.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Anexo matematica 3D
+    ///     Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.
+    ///     Muestra como hacer distintas operaciones matematicas que son comunes a la hora de programar en 3D,
+    ///     como producto escalar entre vectores, producto vectorial, sacar el angulo entre vectores, etc.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploMatematicaVarios : TgcExample
+    public class EjemploMatematicaVarios : TGCExampleViewer
     {
-        public EjemploMatematicaVarios(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploMatematicaVarios(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Math";
             Name = "Matematica varios";
             Description =
-                "Este ejemplo no muestra nada por pantalla. Sino que es para leer el código y sus comentarios. Muestra como hacer distintas operaciones matemáticas que son comunes.";
+                "Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios. Muestra como hacer distintas operaciones matematicas que son comunes.";
         }
 
         public override void Init()
@@ -66,22 +63,20 @@ namespace TGC.Examples.MathExamples
             // 5) Normalizar vector
             var norm = Vector3.Normalize(v1);
 
-            // 6) Obtener el ángulo que hay entre dos vectores que están en XZ, expresion A.B=|A||B|cos(a)
+            // 6) Obtener el angulo que hay entre dos vectores que estan en XZ, expresion A.B=|A||B|cos(a)
             var v3 = new Vector3(-1, 0, 19);
             var v4 = new Vector3(3, 0, -5);
             var angle = FastMath.Acos(Vector3.Dot(Vector3.Normalize(v3), Vector3.Normalize(v4)));
             //Tienen que estar normalizados
 
-            // 7) Tenemos un objeto que rota un cierto ángulo en Y (ej: un auto) y queremos saber los componentes X,Z para donde tiene que avanzar al moverse
+            // 7) Tenemos un objeto que rota un cierto angulo en Y (ej: un auto) y queremos saber los componentes X,Z para donde tiene que avanzar al moverse
             var rotacionY = FastMath.PI_HALF;
             var componenteX = FastMath.Sin(rotacionY);
             var componenteZ = FastMath.Cos(rotacionY);
             float velocidadMovimiento = 100; //Ojo que este valor deberia siempre multiplicarse por el elapsedTime
             var movimientoAdelante = new Vector3(componenteX * velocidadMovimiento, 0, componenteZ * velocidadMovimiento);
 
-            TgcDrawText.Instance.drawText(
-                "Este ejemplo no muestra nada por pantalla. Sino que es para leer el código y sus comentarios.", 5, 50,
-                Color.Yellow);
+            DrawText.drawText("Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.", 5, 50, Color.Yellow);
 
             PostRender();
         }

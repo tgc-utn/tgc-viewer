@@ -29,7 +29,7 @@ namespace TGC.Core.Terrain
             Left = 5
         }
 
-        private Color color;
+        private Vector3 center;
 
         /// <summary>
         ///     Crear un SkyBox vacio
@@ -38,47 +38,55 @@ namespace TGC.Core.Terrain
         {
             Faces = new TgcMesh[6];
             FaceTextures = new string[6];
-            SkyEpsilon = 5f;
-            color = Color.White;
+            SkyEpsilon = 25f;
+            Color = Color.White;
             Center = new Vector3(0, 0, 0);
             Size = new Vector3(1000, 1000, 1000);
         }
 
         /// <summary>
         ///     Valor de desplazamiento utilizado para que las caras del SkyBox encajen bien entre sí.
-        ///     Llamar a updateValues() para aplicar cambios.
+        ///     Llamar a InitSkyBox() para aplicar cambios.
         /// </summary>
         public float SkyEpsilon { get; set; }
 
         /// <summary>
         ///     Tamaño del SkyBox.
-        ///     Llamar a updateValues() para aplicar cambios.
+        ///     Llamar a InitSkyBox() para aplicar cambios.
         /// </summary>
         public Vector3 Size { get; set; }
 
         /// <summary>
-        ///     Centro del SkyBox.
-        ///     Llamar a updateValues() para aplicar cambios.
+        ///     Centro del SkyBox al cambiar el centro se cambia la matriz traslacion.
+        ///     Esto hace que en render se trasladen las caras, utilizado para que un skybox siga al personaje.
         /// </summary>
-        public Vector3 Center { get; set; }
-
-        /// <summary>
-        ///     Color del SkyBox.
-        ///     Llamar a updateValues() para aplicar cambios.
-        /// </summary>
-        public Color Color
+        public Vector3 Center
         {
-            get { return color; }
-            set { color = value; }
+            get { return center; }
+            set
+            {
+                center = value;
+                Traslation = Matrix.Translation(center);
+            }
         }
 
         /// <summary>
-        ///     Meshes de cada una de las 6 caras del cubo, en el orden en que se enumeran en SkyFaces
+        ///     Color del SkyBox.
+        ///     Llamar a InitSkyBox() para aplicar cambios.
+        /// </summary>
+        public Color Color { get; set; }
+
+        private Matrix Traslation { get; set; }
+
+        /// <summary>
+        ///     Meshes de cada una de las 6 caras del cubo, en el orden en que se enumeran en SkyFaces.
+        ///     Las mismas se inicializan con InitSkyBox();
         /// </summary>
         public TgcMesh[] Faces { get; }
 
         /// <summary>
         ///     Path de las texturas de cada una de las 6 caras del cubo, en el orden en que se enumeran en SkyFaces
+        ///     Para actualizarlas se debe llamar setFaceTexture y luego InitSkyBox();
         /// </summary>
         public string[] FaceTextures { get; }
 
@@ -94,18 +102,19 @@ namespace TGC.Core.Terrain
             {
                 foreach (var face in Faces)
                 {
-                    face.AlphaBlendEnable = true;
+                    face.AlphaBlendEnable = value;
                 }
             }
         }
 
         /// <summary>
-        ///     Renderizar SkyBox
+        ///     Render del SkyBox
         /// </summary>
         public void render()
         {
             foreach (var face in Faces)
             {
+                face.Transform = Matrix.Identity * Traslation;
                 face.render();
             }
         }
@@ -122,7 +131,8 @@ namespace TGC.Core.Terrain
         }
 
         /// <summary>
-        ///     Configurar la textura de una cara del SkyBox
+        ///     Configurar la textura de una cara del SkyBox.
+        ///     Para aplicar los cambios se debe llamar InitSkyBox.
         /// </summary>
         /// <param name="face">Cara del SkyBox</param>
         /// <param name="texturePath">Path de la textura</param>
@@ -132,9 +142,9 @@ namespace TGC.Core.Terrain
         }
 
         /// <summary>
-        ///     Tomar los valores configurados y crear el SkyBox
+        ///     Tomar los valores configurados y crear el SkyBox. Solo invocar en tiempo de INIT!!!
         /// </summary>
-        public void updateValues()
+        public void Init()
         {
             //Crear cada cara
             for (var i = 0; i < Faces.Length; i++)
@@ -148,7 +158,7 @@ namespace TGC.Core.Terrain
                 using (var vb = m.VertexBuffer)
                 {
                     var data = vb.Lock(0, 0, LockFlags.None);
-                    var colorRgb = color.ToArgb();
+                    var colorRgb = Color.ToArgb();
                     cargarVertices(skyFace, data, colorRgb);
                     vb.Unlock();
                 }
@@ -167,6 +177,7 @@ namespace TGC.Core.Terrain
                 faceMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
                 faceMesh.createBoundingBox();
                 faceMesh.Enabled = true;
+                faceMesh.AutoTransformEnable = false;
 
                 //textura
                 var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, FaceTextures[i]);

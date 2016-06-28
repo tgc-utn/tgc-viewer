@@ -2,34 +2,33 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploBumpMapping:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploPointLight"
-    ///     Muestra como dibujar un mesh con efecto de BumpMapping, utilizando iluminación dinámica con una luz PointLight
-    ///     BumpMapping no usa la normal de cada vértice para iluminar, sino que utiliza una textura auxiliar denominada
+    ///     Muestra como dibujar un mesh con efecto de BumpMapping, utilizando iluminacion dinamica con una luz PointLight
+    ///     BumpMapping no usa la normal de cada vertice para iluminar, sino que utiliza una textura auxiliar denominada
     ///     NormalMap.
     ///     El NormalMap es una textura que cada pixel RGB corresponde a un vector normal (XYZ)
-    ///     Crear un buen NormalMap para un mesh es una tarea de diseño. Existen herramientas para generar automáticamente un
+    ///     Crear un buen NormalMap para un mesh es una tarea de diseno. Existen herramientas para generar automaticamente un
     ///     NormalMap a partir de una textura. Ejemplo: http://sourceforge.net/projects/ssbumpgenerator/
     ///     Pero no se logra el mismo resultado que con una textura hecha por un artista.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploBumpMapping : TgcExample
+    public class EjemploBumpMapping : TGCExampleViewer
     {
         private List<TgcArrow> binormals;
         private Effect effect;
@@ -38,9 +37,8 @@ namespace TGC.Examples.Lights
         private List<TgcArrow> normals;
         private List<TgcArrow> tangents;
 
-        public EjemploBumpMapping(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploBumpMapping(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "Bump Mapping";
@@ -160,7 +158,7 @@ namespace TGC.Examples.Lights
         {
             PreRender();
 
-            //Actualzar posición de la luz
+            //Actualzar posicion de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
             var eyePosition = Camara.Position;

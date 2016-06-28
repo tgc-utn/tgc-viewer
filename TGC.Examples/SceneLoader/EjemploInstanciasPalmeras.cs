@@ -1,35 +1,33 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Ejemplo EjemploInstanciasPalmeras
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
-    ///     # Unidad 7 - Técnicas de Optimización - Instancias de Modelos
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
+    ///     # Unidad 7 - Tecnicas de Optimizacion - Instancias de Modelos
     ///     Muestra como crear varias instancias de un mismo TgcMesh.
-    ///     De esta forma se reutiliza su información gráfica (triángulos, vértices, textura, etc).
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     De esta forma se reutiliza su informacion grafica (triangulos, vertices, textura, etc).
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploInstanciasPalmeras : TgcExample
+    public class EjemploInstanciasPalmeras : TGCExampleViewer
     {
         private List<TgcMesh> meshes;
         private TgcMesh palmeraOriginal;
         private TgcBox suelo;
 
         public EjemploInstanciasPalmeras(string mediaDir, string shadersDir, TgcUserVars userVars,
-            TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+            TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "SceneLoader";
             Name = "Instancias Palmeras";
@@ -97,7 +95,7 @@ namespace TGC.Examples.SceneLoader
         {
             suelo.dispose();
 
-            //Al hacer dispose del original, se hace dispose automáticamente de todas las instancias
+            //Al hacer dispose del original, se hace dispose automaticamente de todas las instancias
             palmeraOriginal.dispose();
         }
     }

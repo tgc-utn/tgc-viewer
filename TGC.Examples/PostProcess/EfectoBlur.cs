@@ -2,14 +2,13 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.PostProcess
 {
@@ -26,9 +25,9 @@ namespace TGC.Examples.PostProcess
     ///     En este caso, la imagen final se borronea (blurring) promediando muestras de texels vecinos.
     ///     No es un blur real sino que es un Box filter. Para obtener un blur mas real ver ejemplo
     ///     "PostProcess/EfectoGaussianBlur"
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EfectoBlur : TgcExample
+    public class EfectoBlur : TGCExampleViewer
     {
         private Effect effect;
         private List<TgcMesh> meshes;
@@ -36,9 +35,8 @@ namespace TGC.Examples.PostProcess
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
-        public EfectoBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EfectoBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "PostProcess";
             Name = "Efecto Blur";

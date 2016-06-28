@@ -1,43 +1,41 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploSpotLight:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploPointLight"
-    ///     Muestra como aplicar iluminación dinámica con PhongShading por pixel en un Pixel Shader, para un tipo
+    ///     Muestra como aplicar iluminacion dinamica con PhongShading por pixel en un Pixel Shader, para un tipo
     ///     de luz "Spot Light".
-    ///     Permite una única luz por objeto.
-    ///     Calcula todo el modelo de iluminación completo (Ambient, Diffuse, Specular)
-    ///     Las luces poseen atenuación por la distancia.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Permite una unica luz por objeto.
+    ///     Calcula todo el modelo de iluminacion completo (Ambient, Diffuse, Specular)
+    ///     Las luces poseen atenuacion por la distancia.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploSpotLight : TgcExample
+    public class EjemploSpotLight : TGCExampleViewer
     {
         private TgcBox lightMesh;
         private TgcScene scene;
 
-        public EjemploSpotLight(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploSpotLight(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "Spot light";
-            Description = "Iluminación dinámica por PhongShading de una luz del tipo Spot Light.";
+            Description = "Iluminacion dinamica por PhongShading de una luz del tipo Spot Light.";
         }
 
         public override void Init()
@@ -103,7 +101,7 @@ namespace TGC.Examples.Lights
                 mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
             }
 
-            //Actualzar posición de la luz
+            //Actualzar posicion de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 

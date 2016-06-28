@@ -1,19 +1,18 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Others
 {
     /// <summary>
     ///     EjemploBatchPrimitivesDx
     /// </summary>
-    public class EjemploBatchPrimitivesDx : TgcExample
+    public class EjemploBatchPrimitivesDx : TGCExampleViewer
     {
         private const float boxSize = 3f;
         private const int boxPerSquare = 50;
@@ -25,9 +24,8 @@ namespace TGC.Examples.Others
         private RenderMethod currentRenderMethod;
         private Mesh[] meshes;
 
-        public EjemploBatchPrimitivesDx(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploBatchPrimitivesDx(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Others";
             Name = "BatchPrimitivesDx";
@@ -75,7 +73,7 @@ namespace TGC.Examples.Others
         }
 
         /// <summary>
-        ///     Renderizar haciendo que se tenga que alternar la textura a propósito
+        ///     Renderizar haciendo que se tenga que alternar la textura a proposito
         /// </summary>
         private void doUnsortedRender()
         {

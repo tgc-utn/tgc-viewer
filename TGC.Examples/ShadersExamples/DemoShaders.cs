@@ -4,10 +4,8 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
@@ -16,6 +14,7 @@ using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
@@ -28,7 +27,7 @@ namespace TGC.Examples.ShadersExamples
     ///     Demo general que integra diversos efectos de shaders.
     ///     Autor: Mariano Banquiero
     /// </summary>
-    public class DemoShaders : TgcExample
+    public class DemoShaders : TGCExampleViewer
     {
         private readonly float far_plane = 10000f;
         private readonly float near_plane = 1f;
@@ -77,14 +76,13 @@ namespace TGC.Examples.ShadersExamples
         private float vel_tanque;
         private Viewport View1, View2, ViewF;
 
-        public DemoShaders(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public DemoShaders(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-DemoShaders";
             Description =
-                "Demostración de distintos Effectos Vs Fixed Pipeline. C->Camara, F->Fixed Pipeline, D->Dos Vistas al mismo tiempo [SPACE]->Parar/Arrancar Tanque";
+                "Demostracion de distintos Effectos Vs Fixed Pipeline. C->Camara, F->Fixed Pipeline, D->Dos Vistas al mismo tiempo [SPACE]->Parar/Arrancar Tanque";
         }
 
         public override void Init()
@@ -112,7 +110,7 @@ namespace TGC.Examples.ShadersExamples
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.SkyEpsilon = 50f;
-            skyBox.updateValues();
+            skyBox.Init();
 
             // ------------------------------------------------------------
             //Cargar los mesh:
@@ -213,7 +211,7 @@ namespace TGC.Examples.ShadersExamples
                 Pool.Default);
 
             // tengo que crear un stencilbuffer para el shadowmap manualmente
-            // para asegurarme que tenga la el mismo tamaño que el shadowmap, y que no tenga
+            // para asegurarme que tenga la el mismo tamano que el shadowmap, y que no tenga
             // multisample, etc etc.
             g_pDSShadow = D3DDevice.Instance.Device.CreateDepthStencilSurface(SHADOWMAP_SIZE,
                 SHADOWMAP_SIZE,
@@ -489,7 +487,7 @@ namespace TGC.Examples.ShadersExamples
                 D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(LookFrom, LookAt, new Vector3(0, 1, 0));
             else
                 D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix();
-            // TODO FIX IT! esto no se bien para que lo hace aca.
+            // FIXME! esto no se bien para que lo hace aca.
 
             D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),

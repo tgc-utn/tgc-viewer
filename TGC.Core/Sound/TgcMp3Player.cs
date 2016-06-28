@@ -201,12 +201,12 @@ namespace TGC.Core.Sound
         /// </summary>
         /// <param name="nombreLargo">Nombre y ruta del archivo a convertir.</param>
         /// <returns>Nombre corto del archivo especificado.</returns>
-        private string NombreCorto(string NombreLargo)
+        private string NombreCorto(string nombreLargo)
         {
             // Creamos un buffer usando un constructor de la clase StringBuider.
             var sBuffer = new StringBuilder(MAX_PATH);
             // intentamos la conversión del archivo.
-            if (GetShortPathName(NombreLargo, sBuffer, MAX_PATH) > 0)
+            if (GetShortPathName(nombreLargo, sBuffer, MAX_PATH) > 0)
                 // si la función ha tenido éxito devolvemos el buffer formateado
                 // a tipo string.
                 return sBuffer.ToString();

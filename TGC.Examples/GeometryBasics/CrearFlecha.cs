@@ -1,28 +1,26 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo CrearFlecha
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
     ///     Muestra como crear una flecha 3D, utilizando la herramienta TgcArrow.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class CrearFlecha : TgcExample
+    public class CrearFlecha : TGCExampleViewer
     {
         private TgcArrow arrow;
 
-        public CrearFlecha(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public CrearFlecha(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "Flecha 3D";
@@ -31,7 +29,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Init()
         {
-            //Crea flecha genérica
+            //Crea flecha generica
             arrow = new TgcArrow();
 
             //Crear modifiers

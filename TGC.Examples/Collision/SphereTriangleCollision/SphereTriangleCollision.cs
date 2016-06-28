@@ -3,10 +3,8 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
@@ -16,6 +14,7 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision.SphereTriangleCollision
 {
@@ -33,7 +32,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
     ///     El paper no ha sido implementado en su totalidad y aún existen muchos puntos por mejorar.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class SphereTriangleCollision : TgcExample
+    public class SphereTriangleCollision : TGCExampleViewer
     {
         private readonly List<Collider> objetosColisionables = new List<Collider>();
         private TgcThirdPersonCamera camaraInterna;
@@ -48,9 +47,8 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
 
-        public SphereTriangleCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public SphereTriangleCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
             Name = "Colision Esfera-Triangulos";
@@ -148,7 +146,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "Right.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "Back.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "Front.jpg");
-            skyBox.updateValues();
+            skyBox.Init();
 
             //Modifier para ver BoundingBox
             Modifiers.addBoolean("Collisions", "Collisions", true);

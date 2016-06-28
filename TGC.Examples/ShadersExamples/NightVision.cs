@@ -4,22 +4,21 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core._2D;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
 {
-    public class NightVision : TgcExample
+    public class NightVision : TGCExampleViewer
     {
         private readonly int[] bot_status = new int[100];
 
@@ -40,9 +39,8 @@ namespace TGC.Examples.ShadersExamples
         private Vector3[] pos_bala;
         private float[] timer_firing;
 
-        public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-NightVision";
@@ -299,7 +297,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
                 m.render();
 
-            TgcDrawText.Instance.drawText("Pos: " + Camara.Position, 0, 0, Color.Yellow);
+            DrawText.drawText("Pos: " + Camara.Position, 0, 0, Color.Yellow);
 
             device.EndScene();
         }

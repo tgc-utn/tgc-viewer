@@ -1,51 +1,48 @@
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
-using TGC.Core;
 using TGC.Core._2D;
-using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Input;
 using TGC.Core.Sound;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Sound
 {
     /// <summary>
     ///     Ejemplo PlayMp3:
     ///     Unidades PlayStaticSound:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - GameEngine
-    ///     Muestra como reproducir un archivo de sonido estático en formato WAV.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     # Unidad 3 - Conceptos Basicos de 3D - GameEngine
+    ///     Muestra como reproducir un archivo de sonido estatico en formato WAV.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class PlayStaticSound : TgcExample
+    public class PlayStaticSound : TGCExampleViewer
     {
         private string currentFile;
         private TgcText2d currentSoundText;
         private TgcText2d instruccionesText;
         private TgcStaticSound sound;
 
-        public PlayStaticSound(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public PlayStaticSound(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Sound";
             Name = "Play StaticSound";
-            Description = "Muestra como reproducir un archivo de sonido estático en formato WAV.";
+            Description = "Muestra como reproducir un archivo de sonido estatico en formato WAV.";
         }
 
         public override void Init()
         {
             //Texto para el sonido actual
-            currentSoundText = new TgcText2d();
+            currentSoundText = new TgcText2d(DrawText);
             currentSoundText.Text = "No sound";
             currentSoundText.Position = new Point(50, 20);
             currentSoundText.Color = Color.Gold;
             currentSoundText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Italic));
 
             //Texto de instrucciones
-            instruccionesText = new TgcText2d();
+            instruccionesText = new TgcText2d(DrawText);
             instruccionesText.Text = "Y = Play, O = Stop.";
             instruccionesText.Position = new Point(50, 60);
             instruccionesText.Color = Color.Green;
@@ -85,7 +82,7 @@ namespace TGC.Examples.Sound
 
                 //Cargar sonido
                 sound = new TgcStaticSound();
-                sound.loadSound(currentFile);
+                sound.loadSound(currentFile, DirectSound.DsDevice);
 
                 currentSoundText.Text = "Playing: " + new FileInfo(currentFile).Name;
             }

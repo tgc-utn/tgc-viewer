@@ -12,10 +12,6 @@ namespace TGC.Core.Sound
     /// </summary>
     public class Tgc3dSound
     {
-        public Tgc3dSound()
-        {
-        }
-
         /// <summary>
         ///     Crea un sonido 3D
         ///     Solo se pueden cargar sonidos WAV que sean MONO (1 channel).
@@ -23,9 +19,9 @@ namespace TGC.Core.Sound
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="position">Posicion del sonido en el espacio</param>
-        public Tgc3dSound(string soundPath, Vector3 position)
+        public Tgc3dSound(string soundPath, Vector3 position, Device device)
         {
-            loadSound(soundPath);
+            loadSound(soundPath, device);
             Position = position;
         }
 
@@ -67,7 +63,7 @@ namespace TGC.Core.Sound
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="volume">Volumen del mismo</param>
-        public void loadSound(string soundPath, int volume)
+        public void loadSound(string soundPath, int volume, Device device)
         {
             try
             {
@@ -80,8 +76,7 @@ namespace TGC.Core.Sound
                     bufferDescription.ControlVolume = true;
                 }
 
-                SoundBuffer = new SecondaryBuffer(soundPath, bufferDescription,
-                    TgcDirectSound.Instance.DsDevice);
+                SoundBuffer = new SecondaryBuffer(soundPath, bufferDescription, device);
                 Buffer3d = new Buffer3D(SoundBuffer);
                 Buffer3d.MinDistance = 50;
 
@@ -102,9 +97,9 @@ namespace TGC.Core.Sound
         ///     Sonidos stereos (2 channels) no pueden ser utilizados.
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
-        public void loadSound(string soundPath)
+        public void loadSound(string soundPath, Device device)
         {
-            loadSound(soundPath, -1);
+            loadSound(soundPath, -1, device);
         }
 
         /// <summary>

@@ -13,15 +13,6 @@ namespace TGC.Core.Sound
         private Buffer primaryBuffer;
 
         /// <summary>
-        ///     Constructor privado para poder hacer el singleton
-        /// </summary>
-        private TgcDirectSound()
-        {
-        }
-
-        public static TgcDirectSound Instance { get; } = new TgcDirectSound();
-
-        /// <summary>
         ///     Device de DirectSound
         /// </summary>
         public Device DsDevice { get; set; }
@@ -43,7 +34,7 @@ namespace TGC.Core.Sound
         /// <summary>
         ///     Actualiza la posición del Listener3D en base al ListenerTracking
         /// </summary>
-        public void updateListener3d()
+        public void UpdateListener3d()
         {
             if (ListenerTracking != null)
             {
