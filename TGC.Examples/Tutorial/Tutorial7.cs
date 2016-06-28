@@ -1,32 +1,30 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Tutorial
 {
     /// <summary>
     ///     Tutorial 7:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
     ///     Muestra como cargar una escena 3D y como mover un modelo dentra de ella con el teclado.
-    ///     Autor: Matías Leone
+    ///     Autor: Matias Leone
     /// </summary>
-    public class Tutorial7 : TgcExample
+    public class Tutorial7 : TGCExampleViewer
     {
         private const float MOVEMENT_SPEED = 200f;
         private TgcThirdPersonCamera camaraInterna;
         private TgcMesh mainMesh;
         private TgcScene scene;
 
-        public Tutorial7(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial7(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Tutorial";
             Name = "Tutorial 7";
@@ -46,7 +44,7 @@ namespace TGC.Examples.Tutorial
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
             mainMesh = scene2.Meshes[0];
 
-            //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
+            //Vamos a utilizar la camara en 3ra persona para que siga al objeto principal a medida que se mueve
             camaraInterna = new TgcThirdPersonCamera(mainMesh.Position, 200, 300);
             Camara = camaraInterna;
         }
@@ -84,11 +82,11 @@ namespace TGC.Examples.Tutorial
             movement *= MOVEMENT_SPEED * ElapsedTime;
             mainMesh.move(movement);
 
-            //Hacer que la cámara en 3ra persona se ajuste a la nueva posición del objeto
+            //Hacer que la camara en 3ra persona se ajuste a la nueva posicion del objeto
             camaraInterna.Target = mainMesh.Position;
 
             //Dibujar objeto principal
-            //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
+            //Siempre primero hacer todos los calculos de logica e input y luego al final dibujar todo (ciclo update-render)
             mainMesh.render();
 
             //Dibujamos la escena

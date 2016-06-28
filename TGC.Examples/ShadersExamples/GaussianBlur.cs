@@ -3,17 +3,16 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.ShadersExamples
 {
-    public class GaussianBlur : TgcExample
+    public class GaussianBlur : TGCExampleViewer
     {
         private Effect effect;
         private Surface g_pDepthStencil; // Depth-stencil buffer
@@ -22,9 +21,8 @@ namespace TGC.Examples.ShadersExamples
         private List<TgcMesh> meshes;
         private string MyShaderDir;
 
-        public GaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public GaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-GaussianBlur";

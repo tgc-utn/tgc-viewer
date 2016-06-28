@@ -2,38 +2,36 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo EjemploGetZBuffer:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Z Buffer
+    ///     # Unidad 4 - Texturas e Iluminacion - Z Buffer
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Muestra como hacer un primer render de un escenario a una textura guardando ahi el valor de Z.
     ///     Seria como Z Buffer pero propio de la aplicacion.
     ///     Y luego usar ese Z Buffer como una textura de entrada para una siguiente pasada de shader.
     ///     El ejemplo usa el valor de Z para oscurecer los puntos lejos y aclarar los puntos cercanos.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploGetZBuffer : TgcExample
+    public class EjemploGetZBuffer : TGCExampleViewer
     {
         private Effect effect;
         private List<TgcMesh> meshes;
         private Surface pOldRT;
         private Texture zBufferTexture;
 
-        public EjemploGetZBuffer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploGetZBuffer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "DirectX";
             Name = "Get Z Buffer";

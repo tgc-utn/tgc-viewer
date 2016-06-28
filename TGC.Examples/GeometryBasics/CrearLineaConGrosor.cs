@@ -1,28 +1,26 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo Caja
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
     ///     Muestra como crear una linea 3D con grosor configurable, utilizando la herramienta TgcBoxLine.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class CrearLineaConGrosor : TgcExample
+    public class CrearLineaConGrosor : TGCExampleViewer
     {
         private TgcBoxLine line;
 
-        public CrearLineaConGrosor(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public CrearLineaConGrosor(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "Linea con Grosor";
@@ -32,7 +30,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Init()
         {
-            //Crea línea genérica
+            //Crea linea generica
             line = new TgcBoxLine();
 
             //Crear modifiers
@@ -59,7 +57,7 @@ namespace TGC.Examples.GeometryBasics
             var thickness = (float)Modifiers["thickness"];
             var color = (Color)Modifiers["color"];
 
-            //Cargar valores de la línea
+            //Cargar valores de la linea
             line.PStart = start;
             line.PEnd = end;
             line.Thickness = thickness;

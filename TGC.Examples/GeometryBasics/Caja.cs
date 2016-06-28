@@ -1,38 +1,36 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo Caja
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
-    ///     Muestra como crear una caja 3D con la herramienta TgcBox, cuyos parámetros
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
+    ///     Muestra como crear una caja 3D con la herramienta TgcBox, cuyos parametros
     ///     pueden ser modificados.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class Caja : TgcExample
+    public class Caja : TGCExampleViewer
     {
         private TgcBox box;
         private string currentTexture;
 
-        public Caja(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Caja(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "Crear Caja 3D";
             Description =
-                "Muestra como crear una caja 3D con la herramienta TgcBox, cuyos parámetros pueden ser modificados. Movimiento con mouse.";
+                "Muestra como crear una caja 3D con la herramienta TgcBox, cuyos parametros pueden ser modificados. Movimiento con mouse.";
         }
 
         public override void Init()
@@ -62,7 +60,7 @@ namespace TGC.Examples.GeometryBasics
         }
 
         /// <summary>
-        ///     Actualiza los parámetros de la caja en base a lo cargado por el usuario
+        ///     Actualiza los parametros de la caja en base a lo cargado por el usuario
         /// </summary>
         private void updateBox()
         {
@@ -74,12 +72,12 @@ namespace TGC.Examples.GeometryBasics
                 box.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
-            //Tamaño, posición y color
+            //Tamano, posicion y color
             box.Size = (Vector3)Modifiers["size"];
             box.Position = (Vector3)Modifiers["position"];
             box.Color = (Color)Modifiers["color"];
 
-            //Rotación, converitr a radianes
+            //Rotacion, converitr a radianes
             var rotaion = (Vector3)Modifiers["rotation"];
             box.Rotation = new Vector3(Geometry.DegreeToRadian(rotaion.X), Geometry.DegreeToRadian(rotaion.Y),
                 Geometry.DegreeToRadian(rotaion.Z));

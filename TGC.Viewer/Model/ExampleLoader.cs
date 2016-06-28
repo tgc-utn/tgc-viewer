@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using TGC.Core;
-using TGC.Core.Camara;
 using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Viewer.Model
 {
@@ -16,8 +15,6 @@ namespace TGC.Viewer.Model
     /// </summary>
     public class ExampleLoader
     {
-        private readonly TgcAxisLines axisLines;
-        private readonly TgcCamera camara;
         private readonly string mediaDirectory;
         private readonly TgcModifiers modifiers;
         private readonly string shadersDirectory;
@@ -32,9 +29,6 @@ namespace TGC.Viewer.Model
             this.shadersDirectory = shadersDirectory;
             userVars = new TgcUserVars(dataGridUserVars);
             modifiers = new TgcModifiers(flowLayoutPanelModifiers);
-            axisLines = new TgcAxisLines();
-            //Es la camara que ponemos por default
-            camara = new TgcCamera();
         }
 
         /// <summary>
@@ -137,11 +131,11 @@ namespace TGC.Viewer.Model
                             continue;
                         }
 
-                        if (type.BaseType.Equals(typeof(TgcExample)))
+                        if (type.BaseType.Equals(typeof(TGCExampleViewer)))
                         {
                             var obj = Activator.CreateInstance(type, mediaDirectory, shadersDirectory, userVars,
-                                modifiers, axisLines, camara);
-                            var example = (TgcExample)obj;
+                                modifiers);
+                            var example = (TGCExampleViewer)obj;
                             examples.Add(example);
                         }
                     }

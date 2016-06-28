@@ -1,34 +1,31 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
-using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Optimization.GrillaRegular
 {
     /// <summary>
     ///     Ejemplo EjemploGrillaRegular
     ///     Unidades Involucradas:
-    ///     # Unidad 7 - Optimización - Grilla Regular
+    ///     # Unidad 7 - Optimizacion - Grilla Regular
     ///     Muestra como crear y utilizar una Grilla Regular para optimizar el renderizado de un escenario por Frustum Culling.
-    ///     El escenario es una isla con palmeras, rocas y el suelo. Solo las palmeras y rocas se optimizan con esta técnica.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     El escenario es una isla con palmeras, rocas y el suelo. Solo las palmeras y rocas se optimizan con esta tecnica.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploGrillaRegular : TgcExample
+    public class EjemploGrillaRegular : TGCExampleViewer
     {
         private GrillaRegular grilla;
         private List<TgcMesh> objetosIsla;
         private TgcSkyBox skyBox;
         private TgcMesh terreno;
 
-        public EjemploGrillaRegular(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploGrillaRegular(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Optimization";
             Name = "GrillaRegular";
@@ -49,7 +46,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
-            skyBox.updateValues();
+            skyBox.Init();
 
             //Cargar escenario de Isla
             var loader = new TgcSceneLoader();
@@ -90,7 +87,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
             {
                 terreno.render();
             }
-            grilla.render(TgcFrustum.Instance, showGrid);
+            grilla.render(Frustum, showGrid);
 
             PostRender();
         }

@@ -18,7 +18,7 @@ namespace TGC.Core.Sound
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="volume">Volumen del mismo</param>
-        public void loadSound(string soundPath, int volume)
+        public void loadSound(string soundPath, int volume, Device device)
         {
             try
             {
@@ -30,8 +30,7 @@ namespace TGC.Core.Sound
                     bufferDescription.ControlVolume = true;
                 }
 
-                SoundBuffer = new SecondaryBuffer(soundPath, bufferDescription,
-                    TgcDirectSound.Instance.DsDevice);
+                SoundBuffer = new SecondaryBuffer(soundPath, bufferDescription, device);
 
                 if (volume != -1)
                 {
@@ -48,9 +47,9 @@ namespace TGC.Core.Sound
         ///     Carga un archivo WAV de audio, con el volumen default del mismo
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
-        public void loadSound(string soundPath)
+        public void loadSound(string soundPath, Device device)
         {
-            loadSound(soundPath, -1);
+            loadSound(soundPath, -1, device);
         }
 
         /// <summary>

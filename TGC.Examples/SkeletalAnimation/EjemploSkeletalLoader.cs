@@ -1,33 +1,32 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.SkeletalAnimation
 {
     /// <summary>
     ///     Ejemplo EjemploSkeletalLoader:
     ///     Unidades Involucradas:
-    ///     # Unidad 5 - Animación - Skeletal Animation
-    ///     Carga un personaje animado con el método de Animacion Esqueletica, utilizando
+    ///     # Unidad 5 - Animacion - Skeletal Animation
+    ///     Carga un personaje animado con el megtodo de Animacion Esqueletica, utilizando
     ///     la herramienta TgcSkeletalLoader.
-    ///     Es una alternativa a la herramienta de animación TgcKeyFrameLoader.
-    ///     Se crea un Modifier para que el usuario puede alternar la animación que se muestra.
+    ///     Es una alternativa a la herramienta de animacion TgcKeyFrameLoader.
+    ///     Se crea un Modifier para que el usuario puede alternar la animacion que se muestra.
     ///     La herramienta TgcSkeletalLoader crea una malla del tipo TgcSkeletalMesh.
     ///     Una malla TgcSkeletalMesh puede tener una o varias animaciones.
     ///     Cada animacion es un archivo XML diferente.
     ///     La estructura general de la malla tambien es un XML diferente.
     ///     Todos los XML son del formato TGC.
     ///     Muestra como renderizar el esqueleto del modelo.
-    ///     También muestra como agregar un objeto "Attachment" que siga un hueso del modelo.
-    ///     Autor: Leandro Barbagallo, Matías Leone
+    ///     Tambien muestra como agregar un objeto "Attachment" que siga un hueso del modelo.
+    ///     Autor: Leandro Barbagallo, Matias Leone
     /// </summary>
-    public class EjemploSkeletalLoader : TgcExample
+    public class EjemploSkeletalLoader : TGCExampleViewer
     {
         private TgcSkeletalBoneAttach attachment;
         private Color currentColor;
@@ -35,13 +34,12 @@ namespace TGC.Examples.SkeletalAnimation
         private string selectedAnim;
         private bool showAttachment;
 
-        public EjemploSkeletalLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploSkeletalLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "SkeletalAnimation";
             Name = "MeshLoader";
-            Description = "Muestra como cargar un personaje con animación esquelética, en formato TGC.";
+            Description = "Muestra como cargar un personaje con animacion esqueletica, en formato TGC.";
         }
 
         public override void Init()
@@ -84,7 +82,7 @@ namespace TGC.Examples.SkeletalAnimation
             Modifiers.addInterval("animation", animationList, 0);
             selectedAnim = animationList[0];
 
-            //Modifier para especificar si la animación se anima con loop
+            //Modifier para especificar si la animacion se anima con loop
             var animateWithLoop = true;
             Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
 
@@ -161,7 +159,7 @@ namespace TGC.Examples.SkeletalAnimation
                 showAttachment = showAttachmentFlag;
                 if (showAttachment)
                 {
-                    //Al agregar el attachment, el modelo se encarga de renderizarlo en forma automática
+                    //Al agregar el attachment, el modelo se encarga de renderizarlo en forma automatica
                     attachment.Mesh.Enabled = true;
                     mesh.Attachments.Add(attachment);
                 }
@@ -194,7 +192,7 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Dispose()
         {
-            //La malla también hace dispose del attachment
+            //La malla tambien hace dispose del attachment
             mesh.dispose();
         }
     }

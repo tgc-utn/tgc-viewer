@@ -1,35 +1,33 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.SceneLoader
 {
     /// <summary>
     ///     Ejemplo Escenario4toPiso:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
-    ///     # Unidad 4 - Texturas e Iluminación - Lightmap
-    ///     # Unidad 7 - Técnicas de Optimización - Frustum Culling, Fuerza Bruta
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
+    ///     # Unidad 4 - Texturas e Iluminacion - Lightmap
+    ///     # Unidad 7 - Tecnicas de Optimizacion - Frustum Culling, Fuerza Bruta
     ///     Utiliza la herramienta TgcSceneLoader para cargar un escenario 3D
     ///     similar al 4to piso de la sede Medrano de la facultad.
-    ///     Este modelo fue utilizado en el segundo Trabajo Práctico de Gestión de Datos de 2009.
+    ///     Este modelo fue utilizado en el segundo Trabajo Practico de Gestion de Datos de 2009.
     ///     El escenario no se encuentra optimizado (sin Frustum Culling ni Occlusion Culling) y
-    ///     su performance puede variar de acuerdo a cada dispositivo gráfico.
-    ///     Permite aplicar Frustum Culling con método de Fuerza Bruta para mostrar el cambio de performance.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     su performance puede variar de acuerdo a cada dispositivo grafico.
+    ///     Permite aplicar Frustum Culling con metodo de Fuerza Bruta para mostrar el cambio de performance.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class Escenario4toPiso : TgcExample
+    public class Escenario4toPiso : TGCExampleViewer
     {
         private TgcScene tgcScene;
 
-        public Escenario4toPiso(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Escenario4toPiso(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "SceneLoader";
             Name = "4toPiso";
@@ -92,7 +90,7 @@ namespace TGC.Examples.SceneLoader
                     if (mesh.Enabled)
                     {
                         //Solo mostrar la malla si colisiona contra el Frustum
-                        var r = TgcCollisionUtils.classifyFrustumAABB(TgcFrustum.Instance, mesh.BoundingBox);
+                        var r = TgcCollisionUtils.classifyFrustumAABB(Frustum, mesh.BoundingBox);
                         if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
                         {
                             mesh.render();

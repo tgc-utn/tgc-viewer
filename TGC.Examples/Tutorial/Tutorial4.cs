@@ -1,13 +1,12 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Tutorial
 {
@@ -18,14 +17,13 @@ namespace TGC.Examples.Tutorial
     ///     Muestra como crear una caja 3D que se mueve cuando las flechas del teclado.
     ///     Autor: Matías Leone
     /// </summary>
-    public class Tutorial4 : TgcExample
+    public class Tutorial4 : TGCExampleViewer
     {
         private const float MOVEMENT_SPEED = 10f;
         private TgcBox box;
 
-        public Tutorial4(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial4(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Tutorial";
             Name = "Tutorial 4";

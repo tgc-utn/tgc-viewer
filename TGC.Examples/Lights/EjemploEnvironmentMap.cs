@@ -2,39 +2,37 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploEnvironmentMap:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploSimpleEnvironmentMap"
-    ///     Muestra como combinar los efectos de EnvironmentMap y BumpMapping con iluminación dinámica con un PointLight.
+    ///     Muestra como combinar los efectos de EnvironmentMap y BumpMapping con iluminacion dinamca con un PointLight.
     ///     Para EnvironmentMap se utiliza un CubeMap ya generado.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploEnvironmentMap : TgcExample
+    public class EjemploEnvironmentMap : TGCExampleViewer
     {
         private CubeTexture cubeMap;
         private Effect effect;
         private TgcBox lightMesh;
         private List<TgcMeshBumpMapping> meshes;
 
-        public EjemploEnvironmentMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploEnvironmentMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "Environment Map";
@@ -118,7 +116,7 @@ namespace TGC.Examples.Lights
         {
             PreRender();
 
-            //Actualzar posición de la luz
+            //Actualzar posicion de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
             var eyePosition = Camara.Position;

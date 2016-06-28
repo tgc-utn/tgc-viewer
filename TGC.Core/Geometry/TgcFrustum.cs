@@ -31,29 +31,18 @@ namespace TGC.Core.Geometry
 
         private static readonly Vector3 UP_VECTOR = new Vector3(0, 1, 0);
 
-        private Color color;
-
-        protected Effect effect;
-
-        protected string technique;
-
-        /// <summary>
-        ///     VertexBuffer para mesh debug de Frustum
-        /// </summary>
-        private VertexBuffer vertexBuffer;
-
         public TgcFrustum()
         {
             FrustumPlanes = new Plane[6];
 
-            color = Color.Green;
+            Color = Color.Green;
             AlphaBlendingValue = 0.7f;
         }
 
         /// <summary>
-        ///     Permite acceder a una instancia de la clase TgcShaders desde cualquier parte del codigo.
+        ///     VertexBuffer para mesh debug de Frustum
         /// </summary>
-        public static TgcFrustum Instance { get; } = new TgcFrustum();
+        private VertexBuffer VertexBuffer { get; set; }
 
         /// <summary>
         ///     Los 6 planos que componen el Frustum.
@@ -67,21 +56,13 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Shader del mesh
         /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
+        public Effect Effect { get; set; }
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
         ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
+        public string Technique { get; set; }
 
         /// <summary>
         ///     Left plane
@@ -139,11 +120,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Color del mesh debug
         /// </summary>
-        public Color Color
-        {
-            get { return color; }
-            set { color = value; }
-        }
+        public Color Color { get; set; }
 
         /// <summary>
         ///     Actualiza los planos que conforman el volumen del Frustum.
@@ -269,7 +246,7 @@ namespace TGC.Core.Geometry
         public void updateMesh(Vector3 position, Vector3 lookAt)
         {
             updateMesh(position, lookAt, D3DDevice.Instance.AspectRatio, D3DDevice.Instance.ZNearPlaneDistance,
-                D3DDevice.Instance.ZFarPlaneDistance, D3DDevice.Instance.FieldOfViewY);
+                D3DDevice.Instance.ZFarPlaneDistance, D3DDevice.Instance.FieldOfView);
         }
 
         /// <summary>
@@ -289,15 +266,15 @@ namespace TGC.Core.Geometry
             var corners = computeFrustumCorners(position, lookAt, aspectRatio, nearDistance, farDistance, fieldOfViewY);
 
             //Crear vertexBuffer
-            if (vertexBuffer == null)
+            if (VertexBuffer == null)
             {
-                vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 36, D3DDevice.Instance.Device,
+                VertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 36, D3DDevice.Instance.Device,
                     Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
             }
 
             //Cargar vertices de las 6 caras
             var vertices = new CustomVertex.PositionColored[36];
-            var color = this.color.ToArgb();
+            var color = Color.ToArgb();
 
             // Front face
             vertices[0] = new CustomVertex.PositionColored(corners[0], color);
@@ -348,7 +325,7 @@ namespace TGC.Core.Geometry
             vertices[35] = new CustomVertex.PositionColored(corners[3], color);
 
             //Actualizar vertexBuffer
-            vertexBuffer.SetData(vertices, 0, LockFlags.None);
+            VertexBuffer.SetData(vertices, 0, LockFlags.None);
             vertices = null;
         }
 
@@ -363,28 +340,28 @@ namespace TGC.Core.Geometry
             TexturesManager.Instance.clear(1);
 
             //Cargar shader si es la primera vez
-            if (effect == null)
+            if (Effect == null)
             {
-                effect = TgcShaders.Instance.VariosShader;
-                technique = TgcShaders.T_POSITION_COLORED_ALPHA;
+                Effect = TgcShaders.Instance.VariosShader;
+                Technique = TgcShaders.T_POSITION_COLORED_ALPHA;
             }
 
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
             D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
-            effect.Technique = technique;
-            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
+            Effect.Technique = Technique;
+            D3DDevice.Instance.Device.SetStreamSource(0, VertexBuffer, 0);
 
-            //transparencia
-            effect.SetValue("alphaValue", AlphaBlendingValue);
+            //Transparencia
+            Effect.SetValue("alphaValue", AlphaBlendingValue);
             D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
             D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
 
             //Draw shader
-            effect.Begin(0);
-            effect.BeginPass(0);
+            Effect.Begin(0);
+            Effect.BeginPass(0);
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
-            effect.EndPass();
-            effect.End();
+            Effect.EndPass();
+            Effect.End();
 
             D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
             D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
@@ -395,7 +372,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public void dispose()
         {
-            vertexBuffer.Dispose();
+            VertexBuffer.Dispose();
         }
     }
 }

@@ -1,31 +1,29 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploOBB:
     ///     Unidades Involucradas:
-    ///     # Unidad 6 - Detección de Colisiones - Oriented BoundingBox (OBB)
+    ///     # Unidad 6 - Deteccion de Colisiones - Oriented BoundingBox (OBB)
     ///     Muestra como crear un Oriented BoundingBox a partir de un mesh.
-    ///     El mesh se puede rotar el OBB acompaña esta rotacion (cosa que el AABB no puede hacer)
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     El mesh se puede rotar el OBB acompana esta rotacion (cosa que el AABB no puede hacer)
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploOBB : TgcExample
+    public class EjemploOBB : TGCExampleViewer
     {
         private TgcMesh mesh;
         private TgcObb obb;
 
-        public EjemploOBB(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploOBB(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
             Name = "OBB";
@@ -47,7 +45,7 @@ namespace TGC.Examples.Collision
             //Otra alternativa es computar OBB a partir de sus vertices. Esto genera un OBB lo mas apretado posible pero es una operacion costosa
             //obb = TgcObb.computeFromPoints(mesh.getVertexPositions());
 
-            //Alejar camara rotacional segun tamaño del BoundingBox del objeto
+            //Alejar camara rotacional segun tamano del BoundingBox del objeto
             Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
                 mesh.BoundingBox.calculateBoxRadius() * 2);
 

@@ -3,10 +3,8 @@ using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -14,13 +12,14 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploIntegrador:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploMultipleLights" y "Lights/EjemploEnvironmentMap"
     ///     Muestra como integrar distintas tecnicas aisladas de iluminacion que se vieron en otros ejemplos.
@@ -31,12 +30,12 @@ namespace TGC.Examples.Lights
     ///     - otros layers: meshes comunes
     ///     El ejemplo utiliza los efectos: BumpMapping, EnvironmentMap y Phong-Shading con PointLight.
     ///     Cada mesh se ve afectado por una solo la luz (la mas cercana).
-    ///     Todos los meshes del layer BumpMap tienen una textura de NormalMap. Por convención se llama:
+    ///     Todos los meshes del layer BumpMap tienen una textura de NormalMap. Por convencion se llama:
     ///     NOMBRE_ORIGINAL_NormalMap.png
     ///     Todos los meshes se ven afectados por un unico CubeMap.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploIntegrador : TgcExample
+    public class EjemploIntegrador : TGCExampleViewer
     {
         private List<TgcMeshBumpMapping> bumpMeshes;
         private List<TgcMesh> commonMeshes;
@@ -44,9 +43,8 @@ namespace TGC.Examples.Lights
         private Effect effect;
         private List<LightData> lights;
 
-        public EjemploIntegrador(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploIntegrador(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "Integrador";

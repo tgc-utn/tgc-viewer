@@ -3,17 +3,16 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
-using TGC.Core;
 using TGC.Core._2D;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 using Font = System.Drawing.Font;
 
 namespace TGC.Examples.Others
@@ -21,16 +20,15 @@ namespace TGC.Examples.Others
     /// <summary>
     ///     Ejemplo default con logo de TGC
     /// </summary>
-    public class EjemploDefault : TgcExample
+    public class EjemploDefault : TGCExampleViewer
     {
         private readonly float[] lightPos = { 0, 50, 300 };
         private EjemploDefaultHelpForm helpForm;
         private TgcMesh mesh;
         private TgcText2d textHelp;
 
-        public EjemploDefault(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploDefault(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Others";
             Name = "Logo de TGC";
@@ -48,13 +46,13 @@ namespace TGC.Examples.Others
             mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
 
             //Texto help
-            textHelp = new TgcText2d();
+            textHelp = new TgcText2d(DrawText);
             textHelp.Position = new Point(15, 260);
             textHelp.Size = new Size(500, 100);
             textHelp.changeFont(new Font("TimesNewRoman", 16, FontStyle.Regular));
             textHelp.Color = Color.Yellow;
             textHelp.Align = TgcText2d.TextAlign.LEFT;
-            textHelp.Text = "øPor dÛnde empezar? Presionar \"H\"";
+            textHelp.Text = "ÅøPor donde empezar? Presionar \"H\"";
 
             //Help form
             var helpRtf = File.ReadAllText(MediaDir + "ModelosTgc\\LogoTGC\\help.rtf");

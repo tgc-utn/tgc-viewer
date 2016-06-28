@@ -2,31 +2,30 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploBoundingBoxTests:
     ///     Unidades Involucradas:
-    ///     # Unidad 6 - Detección de Colisiones - BoundingBox
-    ///     Muestra como hacer colisiones entre un BoundingBox y distintas figuras geométricas:
+    ///     # Unidad 6 - Deteccion de Colisiones - BoundingBox
+    ///     Muestra como hacer colisiones entre un BoundingBox y distintas figuras geometricas:
     ///     - BoundingBox vs Triangulo
     ///     - BoundingBox vs otro BoundingBox
     ///     - BoundingBox vs Esfera
     ///     - BoundingBox vs OBB
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploBoundingBoxTests : TgcExample
+    public class EjemploBoundingBoxTests : TGCExampleViewer
     {
         private TgcBox box;
         private TgcBox box2;
@@ -36,9 +35,8 @@ namespace TGC.Examples.Collision
         private TgcBoundingBox triagleAABB;
         private CustomVertex.PositionColored[] triangle;
 
-        public EjemploBoundingBoxTests(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploBoundingBoxTests(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
             Name = "BoundingBox-Tests";

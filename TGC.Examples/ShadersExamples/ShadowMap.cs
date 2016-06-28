@@ -2,15 +2,14 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -19,10 +18,10 @@ namespace TGC.Examples.ShadersExamples
     ///     Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Shaders/WorkshopShaders/BasicShader".
-    ///     Muestra como generar efecto de sombras en tiempo real utilizando la técnicade ShadowMap.
+    ///     Muestra como generar efecto de sombras en tiempo real utilizando la tecnica de ShadowMap.
     ///     Autor: Mariano Banquiero
     /// </summary>
-    public class ShadowMap : TgcExample
+    public class ShadowMap : TGCExampleViewer
     {
         private readonly float far_plane = 1500f;
         private readonly float near_plane = 2f;
@@ -47,9 +46,8 @@ namespace TGC.Examples.ShadersExamples
         private TgcScene scene, scene2;
         private float time;
 
-        public ShadowMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public ShadowMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-ShadowMap";
@@ -98,7 +96,7 @@ namespace TGC.Examples.ShadersExamples
                 Pool.Default);
 
             // tengo que crear un stencilbuffer para el shadowmap manualmente
-            // para asegurarme que tenga la el mismo tamaño que el shadowmap, y que no tenga
+            // para asegurarme que tenga la el mismo tamano que el shadowmap, y que no tenga
             // multisample, etc etc.
             g_pDSShadow = D3DDevice.Instance.Device.CreateDepthStencilSurface(SHADOWMAP_SIZE,
                 SHADOWMAP_SIZE,

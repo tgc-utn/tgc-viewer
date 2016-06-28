@@ -1,25 +1,24 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Transformations.SistemaSolar
 {
     /// <summary>
     ///     Ejemplo SistemaSolar:
     ///     Unidades PlayStaticSound:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Transformaciones
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Transformaciones
     ///     Muestra como concatenar transformaciones para generar movimientos de planetas del sistema solar.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class SistemaSolar : TgcExample
+    public class SistemaSolar : TGCExampleViewer
     {
         private const float AXIS_ROTATION_SPEED = 0.5f;
         private const float EARTH_AXIS_ROTATION_SPEED = 10f;
@@ -44,9 +43,8 @@ namespace TGC.Examples.Transformations.SistemaSolar
 
         private TgcMesh sun;
 
-        public SistemaSolar(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public SistemaSolar(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Transformations";
             Name = "Sistema Solar";
@@ -79,7 +77,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\MoonTexture.jpg")
             });
 
-            //Deshabilitamos el manejo automático de Transformaciones de TgcMesh, para poder manipularlas en forma customizada
+            //Deshabilitamos el manejo automatico de Transformaciones de TgcMesh, para poder manipularlas en forma personalizada
             sun.AutoTransformEnable = false;
             earth.AutoTransformEnable = false;
             moon.AutoTransformEnable = false;

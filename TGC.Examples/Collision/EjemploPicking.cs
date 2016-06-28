@@ -1,31 +1,30 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo EjemploPicking:
     ///     Unidades Involucradas:
-    ///     # Unidad 6 - Detección de Colisiones - Picking
+    ///     # Unidad 6 - Deteccion de Colisiones - Picking
     ///     Permite seleccionar un objeto de la escena haciendo clic con el mouse sobre la pantalla.
-    ///     Utiliza la técnica de Picking para hacer un testing Ray-AABB contra cada Mesh.
+    ///     Utiliza la tecnica de Picking para hacer un testing Ray-AABB contra cada Mesh.
     ///     Los objetos de la escena son creados con TgcBox.
     ///     Se utiliza la utiliadad intersectRayAABB() de TgcCollisionUtils para detectar colisiones
     ///     entre un Ray y un BoundingBox.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploPicking : TgcExample
+    public class EjemploPicking : TGCExampleViewer
     {
         private List<TgcBox> boxes;
         private Vector3 collisionPoint;
@@ -34,9 +33,8 @@ namespace TGC.Examples.Collision
         private bool selected;
         private TgcBox selectedMesh;
 
-        public EjemploPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
             Name = "Picking";
@@ -90,7 +88,7 @@ namespace TGC.Examples.Collision
             //Si hacen clic con el mouse, ver si hay colision RayAABB
             if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                //Actualizar Ray de colisión en base a posición del mouse
+                //Actualizar Ray de colision en base a posicion del mouse
                 pickingRay.updateRay();
 
                 //Testear Ray contra el AABB de todos los meshes

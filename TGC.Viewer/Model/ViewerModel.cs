@@ -23,6 +23,8 @@ namespace TGC.Viewer.Model
         /// </summary>
         public bool ApplicationRunning { get; set; }
 
+        private TgcDirectSound DirectSound { get; set; }
+
         /// <summary>
         ///     Cargador de ejemplos
         /// </summary>
@@ -39,10 +41,12 @@ namespace TGC.Viewer.Model
             var settings = Settings.Default;
 
             D3DDevice.Instance.InitializeD3DDevice(panel3D);
+            D3DDevice.Instance.Device.DeviceReset += OnResetDevice;
 
             //Iniciar otras herramientas
             TgcD3dInput.Instance.Initialize(Form, panel3D);
-            TgcDirectSound.Instance.InitializeD3DDevice(Form);
+            DirectSound = new TgcDirectSound();
+            DirectSound.InitializeD3DDevice(panel3D);
 
             //Directorio actual de ejecucion
             var currentDirectory = Environment.CurrentDirectory + "\\";
@@ -124,9 +128,13 @@ namespace TGC.Viewer.Model
             //Ejecutar Init
             try
             {
-                example.ResetDefaultConfig();
-                example.Init();
                 ExampleLoader.CurrentExample = example;
+                //TODO esto no me cierra mucho OnResetDevice
+                OnResetDevice(D3DDevice.Instance.Device, null);
+                example.ResetDefaultConfig();
+                example.DirectSound = DirectSound;
+                example.Init();
+                //TODO esto no deberia ir aca pero por ahora queda
             }
             catch (Exception e)
             {
@@ -177,12 +185,36 @@ namespace TGC.Viewer.Model
                 StopCurrentExample();
             }
 
-            D3DDevice.Instance.DoResetDevice();
+            DoResetDevice();
 
             if (exampleBackup != null)
             {
                 ExecuteExample(exampleBackup);
             }
+        }
+
+        /// <summary>
+        ///     This event-handler is a good place to create and initialize any
+        ///     Direct3D related objects, which may become invalid during a
+        ///     device reset.
+        /// </summary>
+        public void OnResetDevice(object sender, EventArgs e)
+        {
+            //TODO antes hacia esto que no entiendo porque GuiController.Instance.onResetDevice();
+            //pero solo detenia el ejemplo ejecutaba doResetDevice y lo volvia a cargar...
+            DoResetDevice();
+        }
+
+        /// <summary>
+        ///     Hace las operaciones de Reset del device
+        /// </summary>
+        public void DoResetDevice()
+        {
+            //Default values para el device
+            ExampleLoader.CurrentExample.DeviceDefaultValues();
+
+            //Reset Timer
+            ExampleLoader.CurrentExample.ResetTimer();
         }
 
         public void DownloadMediaFolder()

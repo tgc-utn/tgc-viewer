@@ -18,11 +18,12 @@ namespace TGC.Core._2D
         }
 
         private TextAlign align;
-
         private Rectangle rectangle;
+        private TgcDrawText DrawText { get; set; }
 
-        public TgcText2d()
+        public TgcText2d(TgcDrawText drawText)
         {
+            DrawText = drawText;
             changeTextAlign(TextAlign.CENTER);
             changeFont(TgcDrawText.VERDANA_10);
             Color = Color.Black;
@@ -81,7 +82,7 @@ namespace TGC.Core._2D
 
         public void render()
         {
-            var sprite = TgcDrawText.Instance.TextSprite;
+            var sprite = DrawText.TextSprite;
             sprite.Begin(SpriteFlags.AlphaBlend);
             D3dFont.DrawText(sprite, Text, rectangle, Format, Color);
             sprite.End();

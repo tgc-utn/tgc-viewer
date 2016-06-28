@@ -1,34 +1,31 @@
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
-using TGC.Core;
 using TGC.Core._2D;
-using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Input;
 using TGC.Core.Sound;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Sound
 {
     /// <summary>
     ///     Ejemplo PlayMp3:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - GameEngine
+    ///     # Unidad 3 - Conceptos Basicos de 3D - GameEngine
     ///     Muestra como reproducir un archivo de sonido en formato MP3.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class PlayMp3 : TgcExample
+    public class PlayMp3 : TGCExampleViewer
     {
         private string currentFile;
         private TgcText2d currentMusicText;
         private TgcText2d instruccionesText;
         private TgcMp3Player mp3Player;
 
-        public PlayMp3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public PlayMp3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Sound";
             Name = "Play Mp3";
@@ -38,14 +35,14 @@ namespace TGC.Examples.Sound
         public override void Init()
         {
             //Texto para la musica actual
-            currentMusicText = new TgcText2d();
+            currentMusicText = new TgcText2d(DrawText);
             currentMusicText.Text = "No music";
             currentMusicText.Position = new Point(50, 20);
             currentMusicText.Color = Color.Gold;
             currentMusicText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Italic));
 
             //Texto para las instrucciones de uso
-            instruccionesText = new TgcText2d();
+            instruccionesText = new TgcText2d(DrawText);
             instruccionesText.Text = "Y = Play, U = Pause, I = Resume, O = Stop.";
             instruccionesText.Position = new Point(50, 60);
             instruccionesText.Color = Color.Green;

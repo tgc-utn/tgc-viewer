@@ -1,20 +1,19 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Particle;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Particles
 {
     /// <summary>
     ///     Emisor de Particulas
     /// </summary>
-    public class EmisorDeParticulas : TgcExample
+    public class EmisorDeParticulas : TGCExampleViewer
     {
         private TgcBox box;
         private ParticleEmitter emitter;
@@ -23,9 +22,8 @@ namespace TGC.Examples.Particles
         private string[] textureNames;
         private string texturePath;
 
-        public EmisorDeParticulas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EmisorDeParticulas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Particles";
             Name = "Emisor de Particulas";
@@ -80,7 +78,7 @@ namespace TGC.Examples.Particles
             PreRender();
             //IMPORTANTE PARA PERMITIR ESTE EFECTO.
             D3DDevice.Instance.ParticlesEnabled = true;
-            D3DDevice.Instance.enableParticles();
+            D3DDevice.Instance.EnableParticles();
 
             //Cambiar cantidad de particulas, implica crear un nuevo emisor
             var cantidad = (int)Modifiers["cantidad"];
@@ -100,7 +98,7 @@ namespace TGC.Examples.Particles
                 emitter.changeTexture(texturePath + selectedTextureName);
             }
 
-            //Actualizar los demás parametros
+            //Actualizar los demas parametros
             emitter.MinSizeParticle = (float)Modifiers["minSize"];
             emitter.MaxSizeParticle = (float)Modifiers["maxSize"];
             emitter.ParticleTimeToLive = (float)Modifiers["timeToLive"];

@@ -2,32 +2,30 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Transformations
 {
     /// <summary>
     ///     Ejemplo EjemploTextureFiltering:
     ///     Unidades:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Transformaciones
-    ///     Muestra como aplicar transformaciones de DirectX a un triángulo
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Transformaciones
+    ///     Muestra como aplicar transformaciones de DirectX a un triangulo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class Transformations : TgcExample
+    public class Transformations : TGCExampleViewer
     {
-        //Array de vértices para crear el triángulo
+        //Array de vertices para crear el triangulo
         private CustomVertex.PositionColored[] data;
 
         private VertexBuffer vertexBuffer;
 
-        public Transformations(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Transformations(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Transformations";
             Name = "Transformaciones";
@@ -108,7 +106,7 @@ namespace TGC.Examples.Transformations
             //Multiplicar todas las matrices en una sola final
             matFinal = matScale * matRotate * matTranslate;
 
-            //Configurar la matriz de transformación actual de DirectX para todo lo que se va a dibujar a continuacion
+            //Configurar la matriz de transformacion actual de DirectX para todo lo que se va a dibujar a continuacion
             d3dDevice.Transform.World = matFinal;
         }
 

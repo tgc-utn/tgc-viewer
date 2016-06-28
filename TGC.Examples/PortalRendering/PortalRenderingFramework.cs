@@ -1,44 +1,42 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.PortalRendering
 {
     /// <summary>
     ///     Ejemplo PortalRenderingFramework
     ///     Unidades Involucradas:
-    ///     # Unidad 7 - Optimización - Portal Rendering
-    ///     Muestra como utilizar la técnica Portal Rendering para optimizar el renderizado de un escenario.
-    ///     Utiliza la información de Celdas y Portales exportada por el plugin de 3Ds MAX.
-    ///     Utiliza la clase TgcPortalRenderingManager de TgcScene para manejar todo el renderizado de esta técnica.
-    ///     Esta clase posee una implementación básica de la estrategia de Portal Rendering. Hay muchos puntos pendientes
-    ///     aún de mejorar y optimizar.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     # Unidad 7 - Optimizacion - Portal Rendering
+    ///     Muestra como utilizar la tecnica Portal Rendering para optimizar el renderizado de un escenario.
+    ///     Utiliza la informacion de Celdas y Portales exportada por el plugin de 3Ds MAX.
+    ///     Utiliza la clase TgcPortalRenderingManager de TgcScene para manejar todo el renderizado de esta tecnica.
+    ///     Esta clase posee una implementacion basica de la estrategia de Portal Rendering. Hay muchos puntos pendientes
+    ///     aun de mejorar y optimizar.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class PortalRenderingFramework : TgcExample
+    public class PortalRenderingFramework : TGCExampleViewer
     {
         private TgcScene scene;
 
-        public PortalRenderingFramework(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public PortalRenderingFramework(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "PortalRendering";
             Name = "PortalRendering Framework";
             Description =
-                "Muestra como utilizar la técnica Portal Rendering para optimizar el renderizado de un escenario.";
+                "Muestra como utilizar la tecnica Portal Rendering para optimizar el renderizado de un escenario.";
         }
 
         public override void Init()
         {
-            //Cargar escenario con información especial exportada de PortalRendering
+            //Cargar escenario con informacion especial exportada de PortalRendering
             var loader = new TgcSceneLoader();
             scene = loader.loadSceneFromFile(MediaDir + "EscenarioPortal\\EscenarioPortal-TgcScene.xml");
 
@@ -73,7 +71,7 @@ namespace TGC.Examples.PortalRendering
             if (enablePortalRendering)
             {
                 //Actualizar visibilidad con PortalRendering
-                scene.PortalRendering.updateVisibility(Camara.Position);
+                scene.PortalRendering.updateVisibility(Camara.Position, Frustum);
             }
             else
             {
@@ -102,7 +100,7 @@ namespace TGC.Examples.PortalRendering
                     meshCount++;
                 }
 
-                //Renderizar modelo y luego desactivarlo para el próximo cuadro
+                //Renderizar modelo y luego desactivarlo para el proximo cuadro
                 mesh.render();
                 mesh.Enabled = false;
             }
@@ -116,7 +114,7 @@ namespace TGC.Examples.PortalRendering
                     meshCount++;
                 }
 
-                //Renderizar modelo y luego desactivarlo para el próximo cuadro
+                //Renderizar modelo y luego desactivarlo para el proximo cuadro
                 mesh.render();
                 mesh.Enabled = false;
             }

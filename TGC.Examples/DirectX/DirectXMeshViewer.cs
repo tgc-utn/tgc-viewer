@@ -1,11 +1,10 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.DirectX
 {
@@ -18,16 +17,15 @@ namespace TGC.Examples.DirectX
     ///     Muestra como interactuar con los distintos Subset que puede tener la malla
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class DirectXMeshViewer : TgcExample
+    public class DirectXMeshViewer : TGCExampleViewer
     {
         private string currentMeshFile;
         private Mesh mesh;
         private Material[] meshMaterials;
         private Texture[] meshTextures;
 
-        public DirectXMeshViewer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public DirectXMeshViewer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "DirectX";
             Name = "Mesh Viewer";
@@ -58,7 +56,7 @@ namespace TGC.Examples.DirectX
         /// <summary>
         ///     Cargar malla de DirectX.
         ///     Una malla de DirectX posee varios Subset, que son distintos grupos
-        ///     de triángulos. Cada grupo puede tener su propia textura y material.
+        ///     de triangulos. Cada grupo puede tener su propia textura y material.
         /// </summary>
         /// <param name="path"></param>
         private void loadMesh(string path)

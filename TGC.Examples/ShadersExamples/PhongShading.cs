@@ -2,10 +2,8 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
@@ -13,6 +11,7 @@ using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
@@ -29,7 +28,7 @@ namespace TGC.Examples.ShadersExamples
     ///     y el color del pixel se obtiene interpolando.
     ///     Autor: Mariano Banquiero
     /// </summary>
-    public class PhongShading : TgcExample
+    public class PhongShading : TGCExampleViewer
     {
         private Effect effect;
         private TgcBox lightBox;
@@ -40,9 +39,8 @@ namespace TGC.Examples.ShadersExamples
         private Viewport View1, View2, View3, ViewF;
         private bool vista_unica = true;
 
-        public PhongShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public PhongShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-PhongShading";

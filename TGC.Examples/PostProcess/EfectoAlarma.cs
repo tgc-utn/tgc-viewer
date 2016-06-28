@@ -2,16 +2,15 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Interpolation;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.PostProcess
 {
@@ -27,9 +26,9 @@ namespace TGC.Examples.PostProcess
     ///     De esta forma se pueden hacer diversos efectos 2D con pixels shaders sobre la imagen final.
     ///     En este caso, se concatena el dibujo final de la escena con una textura que genera un efecto
     ///     de alarma.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EfectoAlarma : TgcExample
+    public class EfectoAlarma : TGCExampleViewer
     {
         private TgcTexture alarmTexture;
         private Effect effect;
@@ -39,9 +38,8 @@ namespace TGC.Examples.PostProcess
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
-        public EfectoAlarma(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EfectoAlarma(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "PostProcess";
             Name = "Efecto Alarma";

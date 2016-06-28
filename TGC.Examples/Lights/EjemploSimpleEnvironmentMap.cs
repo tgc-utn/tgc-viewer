@@ -2,30 +2,29 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploEnvironmentMap:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploPointLight"
     ///     Muestra utilizar el efecto de EnvironmentMap.
     ///     Se utiliza un CubeMap ya generado.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploSimpleEnvironmentMap : TgcExample
+    public class EjemploSimpleEnvironmentMap : TGCExampleViewer
     {
         private CubeTexture cubeMap;
         private Effect effect;
@@ -33,8 +32,7 @@ namespace TGC.Examples.Lights
         private List<TgcMeshBumpMapping> meshes;
 
         public EjemploSimpleEnvironmentMap(string mediaDir, string shadersDir, TgcUserVars userVars,
-            TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+            TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "Simple Environment Map";
@@ -118,7 +116,7 @@ namespace TGC.Examples.Lights
         {
             PreRender();
 
-            //Actualzar posición de la luz
+            //Actualzar posicion de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
             var eyePosition = Camara.Position;
