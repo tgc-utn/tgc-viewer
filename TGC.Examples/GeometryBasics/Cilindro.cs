@@ -1,33 +1,31 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
-    ///     Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
+    ///     Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parametros pueden ser modificados.
+    ///     Movimiento con mouse.
     /// </summary>
-    public class Cilindro : TgcExample
+    public class Cilindro : TGCExampleViewer
     {
         private string currentTexture;
         private TgcCylinder cylinder;
 
-        public Cilindro(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Cilindro(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "Crear Cilindro 3D";
             Description =
-                "Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parámetros pueden ser modificados. Movimiento con mouse.";
+                "Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parametros pueden ser modificados. Movimiento con mouse.";
         }
 
         public override void Init()

@@ -1,23 +1,22 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo Lighting:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación Dinámica, Material, Gouraud Shading
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion Dinamica, Material, Gouraud Shading
     ///     Crea una tetera y una cara, en la cual puede modificarse varios parametros de iluminacion.
-    ///     Autor: Leandro Barbagallo, Matías Leone
+    ///     Autor: Leandro Barbagallo, Matias Leone
     /// </summary>
-    public class Lighting : TgcExample
+    public class Lighting : TGCExampleViewer
     {
         private readonly float lightDistance = 7;
         private float angleX;
@@ -32,9 +31,8 @@ namespace TGC.Examples.DirectX
         private Mesh teapotMesh, faceMesh;
         private CustomVertex.PositionColored[] teapotMeshNormalsVB;
 
-        public Lighting(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Lighting(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "DirectX";
             Name = "Lighting";
@@ -48,7 +46,7 @@ namespace TGC.Examples.DirectX
             //Crear Material
             material = new Material();
 
-            //Crear una fuente de luz direccional en la posición 0.
+            //Crear una fuente de luz direccional en la posicion 0.
             D3DDevice.Instance.Device.Lights[0].Type = LightType.Directional;
             D3DDevice.Instance.Device.Lights[0].Diffuse = Color.White;
             D3DDevice.Instance.Device.Lights[0].Ambient = Color.White;
@@ -56,7 +54,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.Lights[0].Range = 1000;
             D3DDevice.Instance.Device.Lights[0].Enabled = true;
 
-            //Habilitar esquema de Iluminación Dinámica
+            //Habilitar esquema de Iluminacion Dinamica
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
@@ -88,7 +86,7 @@ namespace TGC.Examples.DirectX
             //Selecciona el modo de shading.
             Modifiers.addInterval("ShaderMode", new[] { "Gouraud", "Flat" }, 1);
 
-            //Modifiers para ángulos de rotación de la luz
+            //Modifiers para angulos de rotacion de la luz
             Modifiers.addFloat("angleX", 0, 0.005f, 0.0f);
             Modifiers.addFloat("angleY", 0, 0.005f, 0.0f);
             Modifiers.addFloat("angleZ", 0, 0.005f, 0.0f);
@@ -111,7 +109,7 @@ namespace TGC.Examples.DirectX
             var vAngleY = (float)Modifiers["angleY"];
             var vAngleZ = (float)Modifiers["angleZ"];
 
-            //Rotar la luz en base los ángulos especificados
+            //Rotar la luz en base los angulos especificados
             angleX += vAngleX;
             angleY += vAngleY;
             angleZ += vAngleZ;

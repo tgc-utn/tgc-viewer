@@ -2,28 +2,27 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploHDR:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploPointLight" y "PostProcess/EfectoGaussianBlur"
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EfectoGaussianBlur : TgcExample
+    public class EfectoGaussianBlur : TGCExampleViewer
     {
         private const int NUM_LUMINANCE_TEXTURES = 4;
         private Texture bloomRT;
@@ -39,9 +38,8 @@ namespace TGC.Examples.Lights
 
         private TgcScreenQuad screenQuad;
 
-        public EfectoGaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EfectoGaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "HDR";
@@ -59,14 +57,14 @@ namespace TGC.Examples.Lights
             sceneRT = new Texture(D3DDevice.Instance.Device, backBufferWidth, backBufferHeight, 1, Usage.RenderTarget,
                 Format.A16B16G16R16F, Pool.Default);
 
-            //Crear RT para escalar sceneRT a un tamaño menor, de 1/4 x 1/4 (y divisible por 8 para facilitar los calculos de sampleo)
+            //Crear RT para escalar sceneRT a un tamano menor, de 1/4 x 1/4 (y divisible por 8 para facilitar los calculos de sampleo)
             var cropWidth = (backBufferWidth - backBufferWidth % 8) / 4;
             var cropHeight = (backBufferHeight - backBufferHeight % 8) / 4;
             scaledSceneRT = new Texture(D3DDevice.Instance.Device, cropWidth, cropHeight, 1, Usage.RenderTarget,
                 Format.A16B16G16R16F,
                 Pool.Default);
 
-            //Crear RT para el bright-pass filter, de igual tamaño que scaledSceneRT (formato comun)
+            //Crear RT para el bright-pass filter, de igual tamano que scaledSceneRT (formato comun)
             brightPassRT = new Texture(D3DDevice.Instance.Device, cropWidth, cropHeight, 1, Usage.RenderTarget,
                 Format.A8R8G8B8,
                 Pool.Default);
@@ -168,7 +166,7 @@ namespace TGC.Examples.Lights
             //Arrancamos el renderizado
             d3dDevice.BeginScene();
 
-            //Actualzar posición de la luz
+            //Actualzar posicion de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 

@@ -1,34 +1,31 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo EjemploTeapotConCamara:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
     ///     Crea un Teapot de DirectX y Box que sirve de piso.
     ///     El ejemplo permite ver como funciona la camara rotacional y
     ///     muestra como renderizar dos Mesh en posiciones distintas utilizando
     ///     Transformaciones
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploTeapotConCamara : TgcExample
+    public class EjemploTeapotConCamara : TGCExampleViewer
     {
         private Mesh box;
         private Material materialTeapot;
         private Mesh teapot;
 
-        public EjemploTeapotConCamara(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploTeapotConCamara(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "DirectX";
             Name = "Teapot + Box";
@@ -50,14 +47,14 @@ namespace TGC.Examples.DirectX
             materialTeapot.Diffuse = Color.Red;
             materialTeapot.Specular = Color.Red;
 
-            //Crear una fuente de Luz en la posición 0 (Cada adaptador de video soporta hasta un límite máximo de luces)
+            //Crear una fuente de Luz en la posicion 0 (Cada adaptador de video soporta hasta un limite minimo de luces)
             D3DDevice.Instance.Device.Lights[0].Type = LightType.Directional;
             D3DDevice.Instance.Device.Lights[0].Diffuse = Color.Red;
             D3DDevice.Instance.Device.Lights[0].Position = new Vector3(0, 10, 0);
             D3DDevice.Instance.Device.Lights[0].Direction = new Vector3(0, -1, 0);
             D3DDevice.Instance.Device.Lights[0].Enabled = true;
 
-            //Habilitar esquema de Iluminación Dinámica
+            //Habilitar esquema de Iluminacion Dinamica
             D3DDevice.Instance.Device.RenderState.Lighting = true;
         }
 

@@ -1,40 +1,38 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo TrianguloEditable:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
-    ///     # Unidad 4 - Texturas e Iluminación - Coordenadas de Textura
-    ///     Crea un triángulo 3D con textura y colores por vértice.
-    ///     Posee Modifiers para variar las posiciones de los vértices,
-    ///     las coordenadas UV y los colores de cada vértice.
-    ///     El triángulo se vuelve a armar en cada loop de render en base
-    ///     a los parámetros configurados en los Modifiers.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
+    ///     # Unidad 4 - Texturas e Iluminacion - Coordenadas de Textura
+    ///     Crea un triangulo 3D con textura y colores por vertice.
+    ///     Posee Modifiers para variar las posiciones de los vertices,
+    ///     las coordenadas UV y los colores de cada vertice.
+    ///     El triangulo se vuelve a armar en cada loop de render en base
+    ///     a los parametros configurados en los Modifiers.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class TrianguloEditable : TgcExample
+    public class TrianguloEditable : TGCExampleViewer
     {
         private string currentTexurePah;
         private Texture texture;
 
-        public TrianguloEditable(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public TrianguloEditable(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "Triangulo Editable";
             Description =
-                "Muestra un triangulo 3D al que se le pueden modificar sus atributos básicos. Movimiento con mouse.";
+                "Muestra un triangulo 3D al que se le pueden modificar sus atributos basicos. Movimiento con mouse.";
         }
 
         public override void Init()

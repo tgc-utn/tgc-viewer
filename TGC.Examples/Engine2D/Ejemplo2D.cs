@@ -1,27 +1,24 @@
-using TGC.Core;
-using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Engine2D
 {
     /// <summary>
     ///     Ejemplo Ejemplo2D:
     ///     Unidades Involucradas:
-    ///     # Unidad 2 - Conceptos Avanzados de 2D - Animación, Sprites, Primitivas
+    ///     # Unidad 2 - Conceptos Avanzados de 2D - Animacion, Sprites, Primitivas
     ///     MiniJuego de nave con asteroides.
     ///     Muestra como utilizar las herramientas de dibujado 2D de DirectX.
-    ///     Muestra como utilizar eventos del mouse y detección de colisiones 2D.
-    ///     Autor: Leandro Barbagallo, Matías Leone
+    ///     Muestra como utilizar eventos del mouse y deteccion de colisiones 2D.
+    ///     Autor: Leandro Barbagallo, Matias Leone
     /// </summary>
-    public class Ejemplo2D : TgcExample
+    public class Ejemplo2D : TGCExampleViewer
     {
         private GameManager gameManager;
 
-        public Ejemplo2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Ejemplo2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "2D";
             Name = "Ejemplo 2D";

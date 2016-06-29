@@ -2,14 +2,13 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.PostProcess
 {
@@ -24,9 +23,9 @@ namespace TGC.Examples.PostProcess
     ///     esta imagen generada antes.
     ///     De esta forma se pueden hacer diversos efectos 2D con pixels shaders sobre la imagen final.
     ///     En este caso, la imagen final se deforma generando ondas con senos
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EfectoOndas : TgcExample
+    public class EfectoOndas : TGCExampleViewer
     {
         private Effect effect;
         private List<TgcMesh> meshes;
@@ -34,9 +33,8 @@ namespace TGC.Examples.PostProcess
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
-        public EfectoOndas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EfectoOndas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "PostProcess";
             Name = "Efecto Ondas";
@@ -83,7 +81,7 @@ namespace TGC.Examples.PostProcess
             //Camara en primera personas
             Camara = new TgcFpsCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f));
 
-            //Modifier para variar tamaño de ondas
+            //Modifier para variar tamano de ondas
             Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
             Modifiers.addFloat("wave_length", 0, 300, 200);
             Modifiers.addFloat("wave_size", 0.01f, 1, 0.01f);

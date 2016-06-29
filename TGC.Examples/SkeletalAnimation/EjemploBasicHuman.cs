@@ -1,27 +1,26 @@
 using Microsoft.DirectX;
 using System.Drawing;
 using System.IO;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.SkeletalAnimation
 {
     /// <summary>
     ///     Ejemplo BasicHuman:
     ///     Unidades Involucradas:
-    ///     # Unidad 5 - Animación - Skeletal Animation
-    ///     Utiliza el esqueleto genérico BasicHuman provisto por la cátedra para
-    ///     animar varios modelos distintos mediante animación esquelética.
+    ///     # Unidad 5 - Animacion - Skeletal Animation
+    ///     Utiliza el esqueleto genenico BasicHuman provisto por la catedra para
+    ///     animar varios modelos distintos mediante animacion esqueletica.
     ///     El esqueleto posee una lista de animaciones default que pueden ser reutilizadas
     ///     para varios modelos distintos que se hayan acoplado a estos huesos.
-    ///     Autor: Leandro Barbagallo, Matías Leone
+    ///     Autor: Leandro Barbagallo, Matias Leone
     /// </summary>
-    public class BasicHuman : TgcExample
+    public class BasicHuman : TGCExampleViewer
     {
         private string[] animationsPath;
         private TgcSkeletalBoneAttach attachment;
@@ -32,14 +31,13 @@ namespace TGC.Examples.SkeletalAnimation
         private string selectedMesh;
         private bool showAttachment;
 
-        public BasicHuman(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public BasicHuman(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "SkeletalAnimation";
             Name = "BasicHuman";
             Description =
-                "Utiliza el esqueleto genérico BasicHuman provisto por la cátedra para animar varios modelos distintos mediante animación esquelética.";
+                "Utiliza el esqueleto genenico BasicHuman provisto por la catedra para animar varios modelos distintos mediante animacion esqueletica.";
         }
 
         public override void Init()
@@ -186,7 +184,7 @@ namespace TGC.Examples.SkeletalAnimation
                 showAttachment = showAttachmentFlag;
                 if (showAttachment)
                 {
-                    //Al agregar el attachment, el modelo se encarga de renderizarlo en forma automática
+                    //Al agregar el attachment, el modelo se encarga de renderizarlo en forma automatica
                     attachment.Mesh.Enabled = true;
                     mesh.Attachments.Add(attachment);
                 }
@@ -219,7 +217,7 @@ namespace TGC.Examples.SkeletalAnimation
 
         public override void Dispose()
         {
-            //La malla también hace dispose del attachment
+            //La malla tambien hace dispose del attachment
             mesh.dispose();
             mesh = null;
             selectedMesh = null;

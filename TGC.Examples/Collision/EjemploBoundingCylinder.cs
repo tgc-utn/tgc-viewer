@@ -1,20 +1,19 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
-using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
     /// <summary>
-    ///     Ejemplo en Blanco. Ideal para copiar y pegar cuando queres empezar a hacer tu propio ejemplo.
+    ///     Muestra el testeo de colision entre cilindro orientable y esfera. Hacer click sobre el viewport para testear
+    ///     colision PickingRay-Cylinder.
     /// </summary>
-    public class EjemploBoundingCylinder : TgcExample
+    public class EjemploBoundingCylinder : TGCExampleViewer
     {
         private const float PICKING_TIME = 0.5f;
         private readonly Color collisionColor = Color.Red;
@@ -26,9 +25,8 @@ namespace TGC.Examples.Collision
 
         private float pickingTimeLeft;
 
-        public EjemploBoundingCylinder(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploBoundingCylinder(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
             Name = "BoundingCylinder";

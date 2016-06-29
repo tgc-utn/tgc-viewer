@@ -1,30 +1,28 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo Caja
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
     ///     Muestra como crear una cara rectanglar 3D (Quad) orientable en base a un vector normal,
     ///     utilizando la herramienta TgcQuad.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class CrearQuad : TgcExample
+    public class CrearQuad : TGCExampleViewer
     {
         private TgcArrow normalArrow;
         private TgcQuad quad;
 
-        public CrearQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public CrearQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "Crear Quad";
@@ -56,7 +54,7 @@ namespace TGC.Examples.GeometryBasics
         }
 
         /// <summary>
-        ///     Actualiza los parámetros de la caja en base a lo cargado por el usuario
+        ///     Actualiza los parametros de la caja en base a lo cargado por el usuario
         /// </summary>
         private void updateQuad(bool showNormal)
         {

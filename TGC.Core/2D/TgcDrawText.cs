@@ -16,18 +16,13 @@ namespace TGC.Core._2D
 
         private readonly Directx.Font dxFont;
 
-        /// <summary>
-        ///     Constructor privado para poder hacer el singleton
-        /// </summary>
-        private TgcDrawText()
+        public TgcDrawText()
         {
             TextSprite = new Directx.Sprite(D3DDevice.Instance.Device);
 
             //Fuente default
             dxFont = new Directx.Font(D3DDevice.Instance.Device, VERDANA_10);
         }
-
-        public static TgcDrawText Instance { get; } = new TgcDrawText();
 
         /// <summary>
         ///     Sprite para renderizar texto

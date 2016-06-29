@@ -1,16 +1,15 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
@@ -23,7 +22,7 @@ namespace TGC.Examples.Collision
     ///     dentro.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class SeleccionMultiplePicking : TgcExample
+    public class SeleccionMultiplePicking : TGCExampleViewer
     {
         private const float SELECTION_BOX_HEIGHT = 50;
         private Vector3 initSelectionPoint;
@@ -35,9 +34,8 @@ namespace TGC.Examples.Collision
 
         private TgcBox suelo;
 
-        public SeleccionMultiplePicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public SeleccionMultiplePicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
             Name = "Seleccion Multiple";
@@ -82,7 +80,7 @@ namespace TGC.Examples.Collision
             selecting = false;
 
             Camara = new TgcRotationalCamera(new Vector3(0f, 100f, 0f), 300f);
-            //FIXME esta camara deberi ser estatica y no rotacional, ya que sino trae problemas con el picking.
+            //FIXME esta camara deberia ser estatica y no rotacional, ya que sino trae problemas con el picking.
         }
 
         public override void Update()

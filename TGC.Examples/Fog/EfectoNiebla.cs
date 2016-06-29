@@ -1,10 +1,8 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Fog;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -12,26 +10,26 @@ using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Fog
 {
     /// <summary>
     ///     Ejemplo EfectoNiebla
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Conceptos Básicos de 3D - Fog
-    ///     Muestra como utilizar los efectos de niebla provistos por el Pipeline, a través de la herramienta TgcFog
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     # Unidad 4 - Conceptos Basicos de 3D - Fog
+    ///     Muestra como utilizar los efectos de niebla provistos por el Pipeline, a traves de la herramienta TgcFog
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EfectoNiebla : TgcExample
+    public class EfectoNiebla : TGCExampleViewer
     {
         private Effect effect;
         private TgcFog fog;
         private TgcScene scene;
         private TgcSkyBox skyBox;
 
-        public EfectoNiebla(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EfectoNiebla(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Fog";
             Name = "Efecto Niebla";
@@ -51,7 +49,7 @@ namespace TGC.Examples.Fog
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
-            skyBox.InitSkyBox();
+            skyBox.Init();
 
             //Cargar escenario de Isla
             var loader = new TgcSceneLoader();
@@ -99,8 +97,7 @@ namespace TGC.Examples.Fog
 
             if (fogShader)
             {
-                // Cargamos las variables de shader,
-                //color del fog.
+                // Cargamos las variables de shader, color del fog.
                 effect.SetValue("ColorFog", fog.Color.ToArgb());
                 effect.SetValue("CameraPos", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
                 effect.SetValue("StartFogDistance", fog.StartDistance);
@@ -109,7 +106,6 @@ namespace TGC.Examples.Fog
             }
 
             //Actualizar valores
-            //
             foreach (var mesh in skyBox.Faces)
             {
                 if (fogShader)

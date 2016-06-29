@@ -3,16 +3,15 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
@@ -25,7 +24,7 @@ namespace TGC.Examples.ShadersExamples
     ///     Muestra como utilizar el efecto de ToonShading, que le da a un mesh un aspecto de caricatura.
     ///     Autor: Mariano Banquiero
     /// </summary>
-    public class ToonShading : TgcExample
+    public class ToonShading : TGCExampleViewer
     {
         private bool efecto_blur;
         private Effect effect;
@@ -38,9 +37,8 @@ namespace TGC.Examples.ShadersExamples
         private string MyShaderDir;
         private TgcScene scene;
 
-        public ToonShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public ToonShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-ToonShading";

@@ -2,28 +2,27 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.DirectX
 {
     /// <summary>
     ///     Ejemplo EjemploCrearTeapot:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación Dinámica, Material
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion Dinamica, Material
     ///     Crea una malla de Teapot (tetera) que viene pre-fabricada en DirectX.
     ///     A esta malla se le agrega un Material y se configura una fuente de luz
-    ///     para mostrar como se utiliza el esquema de iluminación dinámica.
+    ///     para mostrar como se utiliza el esquema de iluminacion dinamica.
     ///     El Teapot gira sobre los distintso ejes, en base a los valores especificados
     ///     por el usuario en los Modifiers
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploCrearTeapot : TgcExample
+    public class EjemploCrearTeapot : TGCExampleViewer
     {
         private float angleX;
         private float angleY;
@@ -31,13 +30,12 @@ namespace TGC.Examples.DirectX
         private Material material;
         private Mesh mesh;
 
-        public EjemploCrearTeapot(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploCrearTeapot(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "DirectX";
             Name = "Teapot + Light";
-            Description = "Crea un Teapot de DirectX con iluminación dinámica que gira sobre los tres ejes.";
+            Description = "Crea un Teapot de DirectX con iluminacion dinamica que gira sobre los tres ejes.";
         }
 
         public override void Init()
@@ -51,20 +49,20 @@ namespace TGC.Examples.DirectX
             material.Diffuse = Color.Green;
             material.Specular = Color.Red;
 
-            //Crear una fuente de Luz en la posición 0 (Cada adaptador de video soporta hasta un límite máximo de luces)
+            //Crear una fuente de Luz en la posicion 0 (Cada adaptador de video soporta hasta un limite minimo de luces)
             D3DDevice.Instance.Device.Lights[0].Type = LightType.Directional;
             D3DDevice.Instance.Device.Lights[0].Diffuse = Color.Yellow;
             D3DDevice.Instance.Device.Lights[0].Position = new Vector3(0, 10, 0);
             D3DDevice.Instance.Device.Lights[0].Direction = new Vector3(0, -1, 0);
             D3DDevice.Instance.Device.Lights[0].Enabled = true;
 
-            //Habilitar esquema de Iluminación Dinámica
+            //Habilitar esquema de Iluminacion Dinamica
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
             Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 10f);
 
-            //Modifiers para ángulos de rotación
+            //Modifiers para angulos de rotacion
             Modifiers.addFloat("angleX", 0, 10, 0);
             Modifiers.addFloat("angleY", 0, 10, 1);
             Modifiers.addFloat("angleZ", 0, 10, 0);
@@ -104,12 +102,12 @@ namespace TGC.Examples.DirectX
             //Ver si hay que usar Quaternions
             var useQuat = (bool)Modifiers["quaternion"];
 
-            //Rotación Euler
+            //Rotacion Euler
             if (!useQuat)
             {
                 D3DDevice.Instance.Device.Transform.World = Matrix.RotationYawPitchRoll(angleY, angleX, angleZ);
             }
-            //Rotación Quaternion
+            //Rotacion Quaternion
             else
             {
                 var q = Quaternion.RotationYawPitchRoll(angleY, angleX, angleZ);

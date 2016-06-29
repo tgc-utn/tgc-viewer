@@ -381,7 +381,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
         ///     cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
-        ///     Por default está en True.
+        ///     Por default está en False.
         /// </summary>
         public bool AutoTransformEnable { get; set; }
 
@@ -509,7 +509,7 @@ namespace TGC.Core.KeyFrameLoader
             VertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
 
             //variables de movimiento
-            AutoTransformEnable = true;
+            AutoTransformEnable = false;
             translation = new Vector3(0f, 0f, 0f);
             rotation = new Vector3(0f, 0f, 0f);
             scale = new Vector3(1f, 1f, 1f);

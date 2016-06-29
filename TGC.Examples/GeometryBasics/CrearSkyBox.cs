@@ -1,31 +1,28 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo CrearSkyBox.
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - SkyBox
+    ///     # Unidad 4 - Texturas e Iluminacion - SkyBox
     ///     Muestra como utilizar la herramienta TgcSkyBox para crear
     ///     un cubo de 6 caras con una textura en cada una, que permite
     ///     lograr el efecto de cielo envolvente en la escena.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class CrearSkyBox : TgcExample
+    public class CrearSkyBox : TGCExampleViewer
     {
         private TgcSkyBox skyBox;
 
-        public CrearSkyBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public CrearSkyBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "SkyBox";
@@ -56,7 +53,7 @@ namespace TGC.Examples.GeometryBasics
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.SkyEpsilon = 25f;
             //Inicializa todos los valores para crear el SkyBox
-            skyBox.InitSkyBox();
+            skyBox.Init();
 
             //Modifier para ver BoundingBox
             Modifiers.addBoolean("moveWhitCamera", "Move Whit Camera", false);
@@ -69,11 +66,11 @@ namespace TGC.Examples.GeometryBasics
             PreUpdate();
 
             //Se cambia el valor por defecto del farplane
-            D3DDevice.Instance.Device.Transform.Projection = 
-                    Matrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView,
-                                            D3DDevice.Instance.AspectRatio,
-                                            D3DDevice.Instance.ZNearPlaneDistance,
-                                            D3DDevice.Instance.ZFarPlaneDistance*2f);
+            D3DDevice.Instance.Device.Transform.Projection =
+                Matrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView,
+                    D3DDevice.Instance.AspectRatio,
+                    D3DDevice.Instance.ZNearPlaneDistance,
+                    D3DDevice.Instance.ZFarPlaneDistance * 2f);
 
             //Se actualiza la posicion del skybox.
             if ((bool)Modifiers.getValue("moveWhitCamera"))
@@ -84,7 +81,7 @@ namespace TGC.Examples.GeometryBasics
         {
             PreRender();
 
-            //Renderizar SkyBox            
+            //Renderizar SkyBox
             skyBox.render();
 
             PostRender();

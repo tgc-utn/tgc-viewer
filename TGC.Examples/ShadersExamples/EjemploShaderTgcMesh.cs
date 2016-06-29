@@ -1,11 +1,10 @@
 using System;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -16,16 +15,15 @@ namespace TGC.Examples.ShadersExamples
     ///     Muestra como utilizar shaders con un TgcMesh.
     ///     Carga un shader en formato .fx que posee varios Techniques.
     ///     El ejemplo permite elegir que Technique renderizar.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploShaderTgcMesh : TgcExample
+    public class EjemploShaderTgcMesh : TGCExampleViewer
     {
         private TgcMesh mesh;
         private Random r;
 
-        public EjemploShaderTgcMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploShaderTgcMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Shader con TgcMesh";

@@ -4,21 +4,19 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using TGC.Core;
 using TGC.Core._2D;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
 {
-    public class OutRun : TgcExample
+    public class OutRun : TGCExampleViewer
     {
         public float acel_mouse_wheel = 20f;
         private TgcMesh car;
@@ -46,9 +44,8 @@ namespace TGC.Examples.ShadersExamples
         private TgcSimpleTerrain terrain;
         public float vel = 100f;
 
-        public OutRun(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public OutRun(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-OutRun";
@@ -80,7 +77,7 @@ namespace TGC.Examples.ShadersExamples
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
-            skyBox.InitSkyBox();
+            skyBox.Init();
 
             var loader = new TgcSceneLoader();
             var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Auto\\Auto-TgcScene.xml");
@@ -276,7 +273,7 @@ namespace TGC.Examples.ShadersExamples
             //TgcDrawText.Instance.drawText("Look At: " + CamaraManager.Instance.CurrentCamera.getLookAt(), 500, 0, Color.Yellow);
 
             if (circuito.en_ruta)
-                TgcDrawText.Instance.drawText("Tramo:" + circuito.pos_en_ruta, 0, 15, Color.Yellow);
+                DrawText.drawText("Tramo:" + circuito.pos_en_ruta, 0, 15, Color.Yellow);
 
             //TgcDrawText.Instance.drawText("dist_cam:" + dist_cam + "defY" + desf.Y, 0, 0, Color.Yellow);
             //TgcDrawText.Instance.drawText("vel:" + vel, 0, 0, Color.Yellow);

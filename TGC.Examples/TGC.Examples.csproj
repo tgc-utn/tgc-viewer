@@ -77,6 +77,9 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="Microsoft.DirectX.DirectSound">
+      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectSound.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlphaBlending\AlphaBlendingFramework.cs" />
@@ -237,6 +240,7 @@
     <Compile Include="Tutorial\Tutorial2.cs" />
     <Compile Include="Tutorial\Tutorial1.cs" />
     <Compile Include="UserInterface\EjemploTexto2d.cs" />
+    <Compile Include="Example\TGCExampleViewer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">
@@ -320,6 +324,9 @@
     <Content Include="Shaders\WorkshopShaders\ShadowMap.fx" />
     <Content Include="Shaders\WorkshopShaders\ToonShading.fx" />
     <Content Include="Shaders\WorkshopShaders\VolRender.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Example\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

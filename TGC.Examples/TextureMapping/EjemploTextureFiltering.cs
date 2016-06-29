@@ -1,32 +1,30 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.TextureMapping
 {
     /// <summary>
     ///     Ejemplo EjemploTextureFiltering:
     ///     Unidades PlayStaticSound:
-    ///     # Unidad 4 - Texturas e Iluminación - Texture Filtering
+    ///     # Unidad 4 - Texturas e Iluminacion - Texture Filtering
     ///     Muestra los distintos modos de Texture Filtering de DirectX
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploTextureFiltering : TgcExample
+    public class EjemploTextureFiltering : TGCExampleViewer
     {
         private TgcBox box;
         private string lastFiltering;
         private string lastTexture;
 
-        public EjemploTextureFiltering(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploTextureFiltering(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "TextureMapping";
             Name = "TextureFiltering";

@@ -1,45 +1,43 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Shaders;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploSkeletalPointLight:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
-    ///     # Unidad 5 - Animación - Skeletal Animation
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
+    ///     # Unidad 5 - Animacion - Skeletal Animation
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "SkeletalAnimation/EjemploBasicHuman" y luego "Lights/EjemploPointLight".
-    ///     Muestra como aplicar iluminación dinámica a un personaje animado con Skeletal Mesh, con PhongShading
+    ///     Muestra como aplicar iluminacion dinamica a un personaje animado con Skeletal Mesh, con PhongShading
     ///     por pixel en un Pixel Shader, para un tipo de luz "Point Light".
-    ///     Permite una única luz por objeto.
-    ///     Calcula todo el modelo de iluminación completo (Ambient, Diffuse, Specular)
-    ///     Las luces poseen atenuación por la distancia.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Permite una unica luz por objeto.
+    ///     Calcula todo el modelo de iluminacion completo (Ambient, Diffuse, Specular)
+    ///     Las luces poseen atenuacion por la distancia.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploSkeletalPointLight : TgcExample
+    public class EjemploSkeletalPointLight : TGCExampleViewer
     {
         private TgcBox lightMesh;
         private TgcSkeletalMesh mesh;
 
         public EjemploSkeletalPointLight(string mediaDir, string shadersDir, TgcUserVars userVars,
-            TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+            TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "Skeletal - Point light";
             Description =
-                "Iluminación dinámica para un Skeletal Mesh, por PhongShading de una luz del tipo Point Light.";
+                "Iluminacion dinamica para un Skeletal Mesh, por PhongShading de una luz del tipo Point Light.";
         }
 
         public override void Init()
@@ -122,7 +120,7 @@ namespace TGC.Examples.Lights
             //El Technique depende del tipo RenderType del mesh
             mesh.Technique = TgcShaders.Instance.getTgcSkeletalMeshTechnique(mesh.RenderType);
 
-            //Actualzar posición de la luz
+            //Actualzar posicion de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 

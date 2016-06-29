@@ -2,10 +2,8 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
@@ -13,24 +11,25 @@ using TGC.Core.Sound;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Sound
 {
     /// <summary>
     ///     Ejemplo PlaySound3D:
     ///     Unidades PlayStaticSound:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Mesh, GameEngine
-    ///     # Unidad 6- Detección de Colisiones - BoundingBox
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh, GameEngine
+    ///     # Unidad 6- Deteccion de Colisiones - BoundingBox
     ///     Muestra como reproducir un archivo de sonido 3D en formato WAV.
-    ///     El volumen del sonido varía según su posición en el espacio.
+    ///     El volumen del sonido varia segun su posicion en el espacio.
     ///     Crea un modelo de un auto que se desplaza por un escenario con 3
     ///     objetos que tienen un sonido 3D asociado.
-    ///     El volumen del sonido varía según la posición del auto.
+    ///     El volumen del sonido varia segun la posicion del auto.
     ///     El sonido 3D solo funciona con archivos WAV Mono (No stereo). Hacer boton der => Propiedades sobre el archivo
     ///     y tiene que decir "1 Channel".
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class PlaySound3D : TgcExample
+    public class PlaySound3D : TGCExampleViewer
     {
         private const float VELODICAD_CAMINAR = 250f;
         private const float VELOCIDAD_ROTACION = 120f;
@@ -41,9 +40,8 @@ namespace TGC.Examples.Sound
         private TgcBox piso;
         private List<Tgc3dSound> sonidos;
 
-        public PlaySound3D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public PlaySound3D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Sound";
             Name = "Play Sound3D";
@@ -56,7 +54,7 @@ namespace TGC.Examples.Sound
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             piso = TgcBox.fromSize(new Vector3(0, -60, 0), new Vector3(5000, 5, 5000), pisoTexture);
 
-            //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
+            //Cargar obstaculos y posicionarlos. Los obstaculos se crean con TgcBox en lugar de cargar un modelo.
             obstaculos = new List<TgcBox>();
             sonidos = new List<Tgc3dSound>();
             TgcBox obstaculo;
@@ -72,7 +70,7 @@ namespace TGC.Examples.Sound
             //Sondio obstaculo 1
             //OJO, solo funcionan sonidos WAV Mono (No stereo). Hacer boton der => Propiedades sobre el archivo
             //y tiene que decir "1 Channel".
-            sound = new Tgc3dSound(MediaDir + "Sound\\armonía, continuo.wav", obstaculo.Position);
+            sound = new Tgc3dSound(MediaDir + "Sound\\armonía, continuo.wav", obstaculo.Position, DirectSound.DsDevice);
             //Hay que configurar la mínima distancia a partir de la cual se empieza a atenuar el sonido 3D
             sound.MinDistance = 50f;
             sonidos.Add(sound);
@@ -86,7 +84,7 @@ namespace TGC.Examples.Sound
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 2
-            sound = new Tgc3dSound(MediaDir + "Sound\\viento helado.wav", obstaculo.Position);
+            sound = new Tgc3dSound(MediaDir + "Sound\\viento helado.wav", obstaculo.Position, DirectSound.DsDevice);
             sound.MinDistance = 50f;
             sonidos.Add(sound);
 
@@ -99,7 +97,7 @@ namespace TGC.Examples.Sound
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 3
-            sound = new Tgc3dSound(MediaDir + "Sound\\risa de maníaco.wav", obstaculo.Position);
+            sound = new Tgc3dSound(MediaDir + "Sound\\risa de maníaco.wav", obstaculo.Position, DirectSound.DsDevice);
             sound.MinDistance = 50f;
             sonidos.Add(sound);
 
@@ -111,7 +109,7 @@ namespace TGC.Examples.Sound
             personaje.Position = new Vector3(0, -50, 0);
 
             //Hacer que el Listener del sonido 3D siga al personaje
-            TgcDirectSound.Instance.ListenerTracking = personaje;
+            DirectSound.ListenerTracking = personaje;
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, new Vector3(0, 100, 0), 200, 300);

@@ -1,37 +1,35 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.SkeletalAnimation
 {
     /// <summary>
     ///     Ejemplo EjemploMeshInstance:
     ///     Unidades Involucradas:
-    ///     # Unidad 5 - Animación - Skeletal Animation
-    ///     # Unidad 7 - Técnicas de Optimización - Instancias de Modelos
+    ///     # Unidad 5 - Animacion - Skeletal Animation
+    ///     # Unidad 7 - Tecnicas de Optimizacion - Instancias de Modelos
     ///     Muestra como crear instancias de modelos animados con Skeletal Animation.
-    ///     Al crear instancias de un único modelo original se reutiliza toda su información
-    ///     gráfica (animaciones, vértices, texturas, etc.)
-    ///     Autor: Leandro Barbagallo, Matías Leone
+    ///     Al crear instancias de un unico modelo original se reutiliza toda su informacion
+    ///     grafica (animaciones, vertices, texturas, etc.)
+    ///     Autor: Leandro Barbagallo, Matias Leone
     /// </summary>
-    public class EjemploMeshInstance : TgcExample
+    public class EjemploMeshInstance : TGCExampleViewer
     {
         private List<TgcSkeletalMesh> instances;
         private TgcSkeletalMesh original;
         private TgcBox suelo;
 
-        public EjemploMeshInstance(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploMeshInstance(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "SkeletalAnimation";
             Name = "MeshInstance";
@@ -51,7 +49,7 @@ namespace TGC.Examples.SkeletalAnimation
             var mediaPath = MediaDir + "SkeletalAnimations\\Robot\\";
             original = loader.loadMeshFromFile(pathMesh, mediaPath);
 
-            //Agregar animación a original
+            //Agregar animacion a original
             loader.loadAnimationFromFile(original, mediaPath + "Patear-TgcSkeletalAnim.xml");
 
             //Agregar attachment a original
@@ -75,7 +73,7 @@ namespace TGC.Examples.SkeletalAnimation
                 instances.Add(instance);
             }
 
-            //Especificar la animación actual para todos los modelos
+            //Especificar la animacion actual para todos los modelos
             original.playAnimation("Patear");
             foreach (var instance in instances)
             {
@@ -112,7 +110,7 @@ namespace TGC.Examples.SkeletalAnimation
         {
             suelo.dispose();
 
-            //Al hacer dispose del original, se hace dispose automáticamente de todas las instancias
+            //Al hacer dispose del original, se hace dispose automaticamente de todas las instancias
             original.dispose();
         }
     }

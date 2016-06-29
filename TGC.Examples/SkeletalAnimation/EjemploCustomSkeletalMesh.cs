@@ -1,11 +1,10 @@
 using Microsoft.DirectX.Direct3D;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.SkeletalAnimation
 {
@@ -18,13 +17,12 @@ namespace TGC.Examples.SkeletalAnimation
     ///     el modelo en Wireframe.
     ///     Autor: Leandro Barbagallo, Matías Leone
     /// </summary>
-    public class EjemploCustomSkeletalMesh : TgcExample
+    public class EjemploCustomSkeletalMesh : TGCExampleViewer
     {
         private MyCustomMesh mesh;
 
         public EjemploCustomSkeletalMesh(string mediaDir, string shadersDir, TgcUserVars userVars,
-            TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+            TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "SkeletalAnimation";
             Name = "CustomMesh";

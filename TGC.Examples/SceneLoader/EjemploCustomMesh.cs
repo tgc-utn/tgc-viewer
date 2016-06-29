@@ -1,12 +1,11 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.SceneLoader
 {
@@ -19,13 +18,12 @@ namespace TGC.Examples.SceneLoader
     ///     el modelo en Wireframe.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploCustomMesh : TgcExample
+    public class EjemploCustomMesh : TGCExampleViewer
     {
         private MyCustomMesh mesh;
 
-        public EjemploCustomMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploCustomMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "SceneLoader";
             Name = "CustomMesh";

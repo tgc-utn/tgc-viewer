@@ -1,27 +1,24 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TGC.Core;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Transformations
 {
     /// <summary>
     ///     Euler vs Quaternions
     /// </summary>
-    public class EjemploQuaternions : TgcExample
+    public class EjemploQuaternions : TGCExampleViewer
     {
         private TgcBox boxEuler;
         private TgcBox boxQuaternion;
 
-        public EjemploQuaternions(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploQuaternions(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Transformations";
             Name = "Euler vs Quaternion";
@@ -54,14 +51,14 @@ namespace TGC.Examples.Transformations
         {
             PreRender();
 
-            //Rotación Euler
+            //Rotacion Euler
             var rotEuler = (Vector3)Modifiers["Rot-Euler"];
             rotEuler.X = Geometry.DegreeToRadian(rotEuler.X);
             rotEuler.Y = Geometry.DegreeToRadian(rotEuler.Y);
             rotEuler.Z = Geometry.DegreeToRadian(rotEuler.Z);
             boxEuler.Rotation = rotEuler;
 
-            //Rotación Quaternion
+            //Rotacion Quaternion
             var rotQuat = (Vector3)Modifiers["Rot-Quaternion"];
             rotQuat.X = Geometry.DegreeToRadian(rotQuat.X);
             rotQuat.Y = Geometry.DegreeToRadian(rotQuat.Y);

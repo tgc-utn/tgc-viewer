@@ -1,34 +1,31 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
-using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Optimization.Octree
 {
     /// <summary>
     ///     Ejemplo EjemploOctree
     ///     Unidades Involucradas:
-    ///     # Unidad 7 - Optimización - Octree
+    ///     # Unidad 7 - Optimizacion - Octree
     ///     Muestra como crear y utilizar una Octree para optimizar el renderizado de un escenario por Frustum Culling.
-    ///     El escenario es una isla con palmeras, rocas y el suelo. Solo las palmeras y rocas se optimizan con esta técnica.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     El escenario es una isla con palmeras, rocas y el suelo. Solo las palmeras y rocas se optimizan con esta tecnica.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploOctree : TgcExample
+    public class EjemploOctree : TGCExampleViewer
     {
         private List<TgcMesh> objetosIsla;
         private Octree octree;
         private TgcSkyBox skyBox;
         private TgcMesh terreno;
 
-        public EjemploOctree(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploOctree(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Optimization";
             Name = "Octree";
@@ -49,7 +46,7 @@ namespace TGC.Examples.Optimization.Octree
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
-            skyBox.InitSkyBox();
+            skyBox.Init();
 
             //Cargar escenario de Isla
             var loader = new TgcSceneLoader();
@@ -89,7 +86,7 @@ namespace TGC.Examples.Optimization.Octree
             {
                 terreno.render();
             }
-            octree.render(TgcFrustum.Instance, showOctree);
+            octree.render(Frustum, showOctree);
 
             PostRender();
         }

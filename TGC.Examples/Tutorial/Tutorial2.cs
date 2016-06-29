@@ -1,11 +1,10 @@
 using Microsoft.DirectX;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Tutorial
 {
@@ -16,13 +15,12 @@ namespace TGC.Examples.Tutorial
     ///     Muestra como crear una caja 3D con una imagen 2D como textura para darle color.
     ///     Autor: Matías Leone
     /// </summary>
-    public class Tutorial2 : TgcExample
+    public class Tutorial2 : TGCExampleViewer
     {
         private TgcBox box;
 
-        public Tutorial2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Tutorial";
             Name = "Tutorial 2";

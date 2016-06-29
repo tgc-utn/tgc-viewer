@@ -1,27 +1,25 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.AlphaBlending
 {
     /// <summary>
     ///     AlphaBlendingManual
     /// </summary>
-    public class AlphaBlendingManual : TgcExample
+    public class AlphaBlendingManual : TGCExampleViewer
     {
         private TgcPlaneWall mesh1;
         private TgcPlaneWall mesh2;
 
-        public AlphaBlendingManual(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public AlphaBlendingManual(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "AlphaBlending";
             Name = "AlphaBlending Manual";
