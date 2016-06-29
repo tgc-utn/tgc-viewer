@@ -583,7 +583,7 @@ namespace TGC.Core.SceneLoader
             meshInstances = new List<TgcMesh>();
             alphaBlendEnable = false;
 
-            autoTransformEnable = true;
+            AutoTransformEnable = false;
             AutoUpdateBoundingBox = true;
             translation = new Vector3(0f, 0f, 0f);
             rotation = new Vector3(0f, 0f, 0f);

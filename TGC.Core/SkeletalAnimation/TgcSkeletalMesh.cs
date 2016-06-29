@@ -714,7 +714,7 @@ namespace TGC.Core.SkeletalAnimation
             alphaBlendEnable = false;
 
             //variables de movimiento
-            autoTransformEnable = true;
+            AutoTransformEnable = false;
             translation = new Vector3(0f, 0f, 0f);
             rotation = new Vector3(0f, 0f, 0f);
             scale = new Vector3(1f, 1f, 1f);
