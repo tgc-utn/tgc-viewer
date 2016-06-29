@@ -30,7 +30,7 @@ namespace TGC.Core.Geometry
             color = Color.Red.ToArgb();
 
             manualTransformation = Matrix.Identity;
-            AutoTransformEnable = true;
+            AutoTransformEnable = false;
 
             initialize();
         }
