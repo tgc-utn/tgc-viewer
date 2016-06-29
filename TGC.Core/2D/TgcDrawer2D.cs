@@ -11,15 +11,10 @@ namespace TGC.Core._2D
     {
         private readonly Sprite dxSprite;
 
-        /// <summary>
-        ///     Constructor privado para poder hacer el singleton
-        /// </summary>
-        private TgcDrawer2D()
+        public TgcDrawer2D()
         {
             dxSprite = new Sprite(D3DDevice.Instance.Device);
         }
-
-        public static TgcDrawer2D Instance { get; } = new TgcDrawer2D();
 
         /// <summary>
         ///     Iniciar Render de Sprites

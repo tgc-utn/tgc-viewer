@@ -15,6 +15,8 @@ namespace TGC.Core.Camara
     /// </summary>
     public class TgcFpsCamera : TgcCamera
     {
+        private readonly Point mouseCenter; //Centro de mause 2D para ocultarlo.
+
         //Se mantiene la matriz rotacion para no hacer este calculo cada vez.
         private Matrix cameraRotation;
 
@@ -24,7 +26,6 @@ namespace TGC.Core.Camara
         private float leftrightRot = FastMath.PI_HALF;
 
         private bool lockCam;
-        private readonly Point mouseCenter; //Centro de mause 2D para ocultarlo.
         private Vector3 positionEye;
         private float updownRot = -FastMath.PI / 10.0f;
 

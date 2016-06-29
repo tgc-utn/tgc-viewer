@@ -1,9 +1,7 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Interpolation;
 using TGC.Core.SceneLoader;
@@ -11,22 +9,23 @@ using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploMultiDiffuseLights:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploMultipleLights".
-    ///     Muestra como aplicar iluminación dinámica con PhongShading por pixel en un Pixel Shader.
+    ///     Muestra como aplicar iluminacion dinamica con PhongShading por pixel en un Pixel Shader.
     ///     Utiliza varias luces para un mismo objeto, en una misma pasada de Shaders.
-    ///     Solo calcula el componente Diffuse, para acelerar los cálculos.
-    ///     Las luces poseen atenuación por la distancia.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Solo calcula el componente Diffuse, para acelerar los circulos.
+    ///     Las luces poseen atenuacion por la distancia.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploMultiDiffuseLights : TgcExample
+    public class EjemploMultiDiffuseLights : TGCExampleViewer
     {
         private Effect effect;
         private InterpoladorVaiven interp;
@@ -35,12 +34,11 @@ namespace TGC.Examples.Lights
         private TgcScene scene;
 
         public EjemploMultiDiffuseLights(string mediaDir, string shadersDir, TgcUserVars userVars,
-            TgcModifiers modifiers, TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+            TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "Multi-DiffuseLights";
-            Description = "Iluminación dinámicas con 4 luces Diffuse a la vez para un mismo mesh.";
+            Description = "Iluminacion dinamicas con 4 luces Diffuse a la vez para un mismo mesh.";
         }
 
         public override void Init()

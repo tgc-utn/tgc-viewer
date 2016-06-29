@@ -16,20 +16,6 @@ namespace TGC.Core
         // Members
         private long _startTime;
 
-        // Constructor
-        /// <summary>
-        ///     Cannot instantiate the timer directly.
-        /// </summary>
-        private HighResolutionTimer()
-        {
-        }
-
-        // Static Properties
-        /// <summary>
-        ///     Gets the timer instance.
-        /// </summary>
-        public static HighResolutionTimer Instance { get; } = new HighResolutionTimer();
-
         /// <summary>
         ///     Gets the frequency that all timers performs at.
         /// </summary>

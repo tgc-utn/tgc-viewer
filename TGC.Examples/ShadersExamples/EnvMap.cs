@@ -4,10 +4,8 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -15,6 +13,7 @@ using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
@@ -27,7 +26,7 @@ namespace TGC.Examples.ShadersExamples
     ///     Muestra como reflejar un Enviroment Map en un mesh.
     ///     Autor: Mariano Banquiero
     /// </summary>
-    public class EnvMap : TgcExample
+    public class EnvMap : TGCExampleViewer
     {
         private List<TgcMesh> bosque;
         private TgcRotationalCamera CamaraRot;
@@ -59,9 +58,8 @@ namespace TGC.Examples.ShadersExamples
         private float vel_tanque; // grados x segundo
         private bool volar;
 
-        public EnvMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EnvMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-EnviromentMap";
@@ -101,7 +99,7 @@ namespace TGC.Examples.ShadersExamples
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.SkyEpsilon = 50f;
-            skyBox.InitSkyBox();
+            skyBox.Init();
 
             // ------------------------------------------------------------
             //Cargar los mesh:

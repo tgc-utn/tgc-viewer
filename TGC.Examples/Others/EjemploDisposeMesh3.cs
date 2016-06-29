@@ -1,28 +1,26 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Others
 {
     /// <summary>
     ///     EjemploDisposeMesh3
     /// </summary>
-    public class EjemploDisposeMesh3 : TgcExample
+    public class EjemploDisposeMesh3 : TGCExampleViewer
     {
         private TgcMesh boxMesh;
         private float time;
 
-        public EjemploDisposeMesh3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploDisposeMesh3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Others";
             Name = "Dispose Mesh 3";

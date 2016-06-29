@@ -1,9 +1,8 @@
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Tutorial
 {
@@ -14,14 +13,13 @@ namespace TGC.Examples.Tutorial
     ///     Muestra como cargar un modelo 3D.
     ///     Autor: Matías Leone
     /// </summary>
-    public class Tutorial5 : TgcExample
+    public class Tutorial5 : TGCExampleViewer
     {
         //Variable para el modelo 3D
         private TgcMesh mesh;
 
-        public Tutorial5(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public Tutorial5(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Tutorial";
             Name = "Tutorial 5";

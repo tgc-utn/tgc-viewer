@@ -8,8 +8,6 @@ using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Sound;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 
 namespace TGC.Core.Example
 {
@@ -17,18 +15,20 @@ namespace TGC.Core.Example
     {
         private static readonly Color DEFAULT_CLEAR_COLOR = Color.FromArgb(255, 78, 129, 179);
 
-        public TgcExample(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
+        public TgcExample(string mediaDir, string shadersDir)
         {
+            //TgcAxisLines axisLines, TgcCamera camara
             MediaDir = mediaDir;
             ShadersDir = shadersDir;
-            UserVars = userVars;
-            Modifiers = modifiers;
-            AxisLines = axisLines;
-            AxisLines.Enable = true;
-            Camara = camara;
+            AxisLines = new TgcAxisLines();
+            Camara = new TgcCamera();
             FPS = true;
             ElapsedTime = -1;
+            HighResolutionTimer = new HighResolutionTimer();
+            Frustum = new TgcFrustum();
+            //DirectSound = new TgcDirectSound(); Por ahora se carga por afuera
+            DrawText = new TgcDrawText();
+            Drawer2D = new TgcDrawer2D();
 
             Category = "Others";
             Name = "Ejemplo en Blanco";
@@ -81,15 +81,15 @@ namespace TGC.Core.Example
         /// </summary>
         public TgcCamera Camara { get; set; }
 
-        /// <summary>
-        ///     Utilidad para administrar las variables de usuario visibles en el panel derecho de la aplicacion.
-        /// </summary>
-        public TgcUserVars UserVars { get; set; }
+        private HighResolutionTimer HighResolutionTimer { get; }
 
-        /// <summary>
-        ///     Utilidad para crear modificadores de variables de usuario, que son mostradas en el panel derecho de la aplicacion.
-        /// </summary>
-        public TgcModifiers Modifiers { get; set; }
+        public TgcFrustum Frustum { get; set; }
+
+        public TgcDirectSound DirectSound { get; set; }
+
+        public TgcDrawText DrawText { get; set; }
+
+        public TgcDrawer2D Drawer2D { get; set; }
 
         /// <summary>
         ///     Se llama cuando el ejemplo es elegido para ejecutar.
@@ -143,8 +143,8 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateClock()
         {
-            ElapsedTime = HighResolutionTimer.Instance.FrameTime;
-            HighResolutionTimer.Instance.Set();
+            ElapsedTime = HighResolutionTimer.FrameTime;
+            HighResolutionTimer.Set();
         }
 
         /// <summary>
@@ -160,7 +160,8 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateView()
         {
-            Camara.updateCamera(ElapsedTime); //FIXME esto deberia hacerce en el update.
+            //FIXME esto deberia ir en el update.
+            Camara.updateCamera(ElapsedTime);
             D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix();
         }
 
@@ -169,7 +170,7 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateFrustum()
         {
-            TgcFrustum.Instance.updateVolume(D3DDevice.Instance.Device.Transform.View,
+            Frustum.updateVolume(D3DDevice.Instance.Device.Transform.View,
                 D3DDevice.Instance.Device.Transform.Projection);
         }
 
@@ -178,7 +179,7 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateSounds3D()
         {
-            TgcDirectSound.Instance.updateListener3d();
+            DirectSound.UpdateListener3d();
         }
 
         /// <summary>
@@ -216,7 +217,7 @@ namespace TGC.Core.Example
         {
             if (FPS)
             {
-                TgcDrawText.Instance.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
+                DrawText.drawText("FPS: " + HighResolutionTimer.FramesPerSecond, 0, 0, Color.Yellow);
             }
         }
 
@@ -229,6 +230,16 @@ namespace TGC.Core.Example
             D3DDevice.Instance.Device.Present();
         }
 
+        public void DeviceDefaultValues()
+        {
+            D3DDevice.Instance.DefaultValues();
+        }
+
+        public void ResetTimer()
+        {
+            HighResolutionTimer.Reset();
+        }
+
         /// <summary>
         ///     Se llama cuando el ejemplo es cerrado.
         ///     Liberar todos los recursos utilizados. OBLIGATORIAMENTE!!!!
@@ -238,12 +249,10 @@ namespace TGC.Core.Example
         /// <summary>
         ///     Vuelve la configuracion de Render y otras cosas a la configuracion inicial
         /// </summary>
-        public void ResetDefaultConfig()
+        public virtual void ResetDefaultConfig()
         {
             D3DDevice.Instance.DefaultValues();
             D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
-            UserVars.ClearVars();
-            Modifiers.Clear();
             ElapsedTime = -1;
         }
     }

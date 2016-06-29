@@ -2,26 +2,25 @@ using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.MathExamples
 {
     /// <summary>
     ///     Ejemplo EjemploTriangulosYPlanos:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - Anexo matemática 3D
-    ///     Muestra como obtener los triángulos de un TgcMesh y generar un plano y un vector normal por cada uno.
-    ///     Luego muestra esos triángulos por pantalla junto con sus normales
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     # Unidad 3 - Conceptos Basicos de 3D - Anexo matematica 3D
+    ///     Muestra como obtener los triangulos de un TgcMesh y generar un plano y un vector normal por cada uno.
+    ///     Luego muestra esos triangulos por pantalla junto con sus normales
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploTriangulosYPlanos : TgcExample
+    public class EjemploTriangulosYPlanos : TGCExampleViewer
     {
         private readonly Random random = new Random();
         private TgcMesh mesh;
@@ -29,14 +28,13 @@ namespace TGC.Examples.MathExamples
         private List<TgcQuad> planes;
         private List<TgcTriangle> triangles;
 
-        public EjemploTriangulosYPlanos(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploTriangulosYPlanos(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Math";
             Name = "Triangulos y Planos";
             Description =
-                "Muestra como obtener los triángulos de un TgcMesh y generar un plano y un vector normal por cada uno.";
+                "Muestra como obtener los triangulos de un TgcMesh y generar un plano y un vector normal por cada uno.";
         }
 
         public override void Init()
@@ -76,7 +74,7 @@ namespace TGC.Examples.MathExamples
 
                 ///////////// Creacion de elementos para poder dibujar a pantalla (propios de este ejemplo) ///////////////
 
-                //Crear un quad (pequeño plano) con la clase TgcQuad para poder dibujar el plano que contiene al triangulo
+                //Crear un quad (pequeno plano) con la clase TgcQuad para poder dibujar el plano que contiene al triangulo
                 var quad = new TgcQuad();
                 quad.Center = center;
                 quad.Normal = normal;

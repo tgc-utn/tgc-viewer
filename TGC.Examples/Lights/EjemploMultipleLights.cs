@@ -3,41 +3,39 @@ using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploMultipleLights:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploPointLight"
-    ///     Muestra como aplicar iluminación dinámica con PhongShading por pixel en un Pixel Shader, para un tipo
+    ///     Muestra como aplicar iluminacion dinamica con PhongShading por pixel en un Pixel Shader, para un tipo
     ///     de luz "Point Light".
-    ///     Permite una única luz por objeto.
+    ///     Permite una unica luz por objeto.
     ///     El escenario cuenta con muchas luces.
     ///     Cada objeto solo se ve influenciado por la luz mas cercana.
-    ///     Calcula todo el modelo de iluminación completo (Ambient, Diffuse, Specular)
-    ///     Las luces poseen atenuación por la distancia.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Calcula todo el modelo de iluminacion completo (Ambient, Diffuse, Specular)
+    ///     Las luces poseen atenuacion por la distancia.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploMultipleLights : TgcExample
+    public class EjemploMultipleLights : TGCExampleViewer
     {
         private List<LightData> lights;
         private TgcScene scene;
 
-        public EjemploMultipleLights(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploMultipleLights(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "Multiple Lights";
@@ -140,18 +138,18 @@ namespace TGC.Examples.Lights
                     /* Obtener la luz que corresponde a este mesh.
                  * En este escenario a un mesh lo pueden estar iluminando varias luces a la vez.
                  * Cuando se tienen varias luces en un escenario surge el problema de "Many-Light shader"
-                 * No existe una única forma de resolverlo. Algunas alternativas son:
+                 * No existe una unica forma de resolverlo. Algunas alternativas son:
                  *  1) Cada mesh solo se ilumina por una unica luz. Aunque haya varias
                  *  2) El shader se programa para que soporte 2 o mas luces.
                  *  3) Se hacen varias pasadas, renderizando una vez con cada luz
                  *  4) Se utiliza la tecnica de Deferred Shading. Ver: http://ogldev.atspace.co.uk/www/tutorial35/tutorial35.html
                  *
                  * En este ejemplo se utiliza la tecnica 1, por ser la mas simple. Para cada objeto se usa solo la luz mas cercana.
-                 * El problema es que un mesh solo se ve influenciado por una única luz.
-                 * Para un mesh chico no es muy problemático. Pero para un mesh largo, como una pared, se nota bastante.
-                 * Si la pared tiene 3 luces, solo una va a contribuir en la iluminación, las otras dos no.
+                 * El problema es que un mesh solo se ve influenciado por una unica luz.
+                 * Para un mesh chico no es muy problematico. Pero para un mesh largo, como una pared, se nota bastante.
+                 * Si la pared tiene 3 luces, solo una va a contribuir en la iluminacion, las otras dos no.
                  * Se podria usar otro criterio distinto que cercania. Cada mesh podria tener asignada una luz segun el cuarto en el que se encuentra o
-                 * segun algun otro criterio de diseño.
+                 * segun algun otro criterio de diseno.
                  * Si es por cercania y hay muchas luces lo mejor armar una grilla o octree offline que indique que luz corresponde a cada celda.
                  * En este ejemplo en cambio por cada mesh se sale a recorrer todas las luces que hay para ver las mas cercana (no es para nada optimo)
                  * Como posicion del mesh se toma el centro del AABB. En este ejemplo el centro se calcula en cada cuadro. Deberia estar precalculado para
@@ -167,7 +165,7 @@ namespace TGC.Examples.Lights
                  * La tecnica 3 permite usar el mismo shader sin hacerlo mas complejo, pero requiere renderizar varias veces el mismo mesh.
                  * Si el mesh tiene muchos triangulos puede ser bastante costoso dibujarlo varias veces.
                  *
-                 * La tecnica 4 es a la que muchas aplicaciones están tendiendo hoy en dia. Pero es compleja, requiere que la GPU soporte un modelo
+                 * La tecnica 4 es a la que muchas aplicaciones estan tendiendo hoy en dia. Pero es compleja, requiere que la GPU soporte un modelo
                  * de Pixel Shader bastante nuevo, y consume bastante memoria de GPU.
                  *
                  */

@@ -37,6 +37,8 @@ namespace TGC.Core
 
             vertexBuffer.Created += onVertexBufferCreate;
             onVertexBufferCreate(vertexBuffer, null);
+
+            Enable = true;
         }
 
         /// <summary>

@@ -2,10 +2,8 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
@@ -13,6 +11,7 @@ using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
@@ -21,32 +20,31 @@ namespace TGC.Examples.Collision
     ///     Unidades Involucradas:
     ///     # Unidad 2 - Conceptos Avanzados de 2D - Ciclo acoplado vs Ciclo desacoplado
     ///     # Unidad 5 - Animaciones - Skeletal Animation
-    ///     # Unidad 6 - Detección de Colisiones - BoundingBox
-    ///     Muestra como utilizar detección de colisiones con BoundingBox.
-    ///     Además muestra como desplazar un modelo animado en base a la entrada de teclado.
+    ///     # Unidad 6 - Deteccion de Colisiones - BoundingBox
+    ///     Muestra como utilizar deteccion de colisiones con BoundingBox.
+    ///     Ademas muestra como desplazar un modelo animado en base a la entrada de teclado.
     ///     El modelo animado utiliza la herramienta TgcKeyFrameLoader.
-    ///     La cámara se encuentra fija en este ejemplo.
-    ///     Los obstáculos se cargan como modelos estáticos con TgcSceneLoader
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     La camara se encuentra fija en este ejemplo.
+    ///     Los obstaculos se cargan como modelos estaticos con TgcSceneLoader
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploColisiones : TgcExample
+    public class EjemploColisiones : TGCExampleViewer
     {
         //Velocidad de desplazamiento
         private const float VELOCIDAD_DESPLAZAMIENTO = 200f;
 
-        private Vector3 move = new Vector3();
+        private Vector3 move;
         private List<TgcMesh> obstaculos;
         private TgcSkeletalMesh personaje;
 
         private TgcBox piso;
 
-        public EjemploColisiones(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploColisiones(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "Detección Simple";
-            Description = "Ejemplo de Detección de Colisiones y manejo de Input. Movimiento con W, A, S, D.";
+            Name = "Deteccion Simple";
+            Description = "Ejemplo de Deteccion de Colisiones y manejo de Input. Movimiento con W, A, S, D.";
         }
 
         public override void Init()
@@ -61,19 +59,19 @@ namespace TGC.Examples.Collision
             TgcScene scene;
             TgcMesh obstaculo;
 
-            //Obstaculo 1: Malla estatática de Box de formato TGC
+            //Obstaculo 1: Malla estatica de Box de formato TGC
             scene = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Box\\Box-TgcScene.xml",
                 MediaDir + "ModelosTgc\\Box\\");
-            //Escalarlo, posicionarlo y agregar a array de obstáculos
+            //Escalarlo, posicionarlo y agregar a array de obstaculos
             obstaculo = scene.Meshes[0];
             obstaculo.Scale = new Vector3(1, 2, 1);
             obstaculo.move(-100, 20, 0);
             obstaculos.Add(obstaculo);
 
-            //Obstaculo 2: Malla estatática de Box de formato TGC
+            //Obstaculo 2: Malla estatica de Box de formato TGC
             scene = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Box\\Box-TgcScene.xml",
                 MediaDir + "ModelosTgc\\Box\\");
-            //Escalarlo, posicionarlo y agregar a array de obstáculos
+            //Escalarlo, posicionarlo y agregar a array de obstaculos
             obstaculo = scene.Meshes[0];
             obstaculo.Scale = new Vector3(1, 2, 1);
             obstaculo.move(0, 20, 100);
@@ -84,10 +82,10 @@ namespace TGC.Examples.Collision
             });
             obstaculos.Add(obstaculo);
 
-            //Obstaculo 2: Malla estatática de Box de formato TGC
+            //Obstaculo 2: Malla estatica de Box de formato TGC
             scene = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Box\\Box-TgcScene.xml",
                 MediaDir + "ModelosTgc\\Box\\");
-            //Escalarlo, posicionarlo y agregar a array de obstáculos
+            //Escalarlo, posicionarlo y agregar a array de obstaculos
             obstaculo = scene.Meshes[0];
             obstaculo.Scale = new Vector3(1, 2, 1);
             obstaculo.move(100, 20, 100);
@@ -111,7 +109,7 @@ namespace TGC.Examples.Collision
             personaje.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             personaje.Position = new Vector3(0, 0, 0);
 
-            //Hacer que la cámara mire hacia un determinado lugar del escenario
+            //Hacer que la camara mire hacia un determinado lugar del escenario
             Camara = new TgcRotationalCamera(new Vector3(-80, 165, 230), 200f);
 
             //Modifier para habilitar o no el renderizado del BoundingBox del personaje
@@ -131,7 +129,7 @@ namespace TGC.Examples.Collision
             var showBB = (bool)Modifiers.getValue("showBoundingBox");
 
             //Calcular proxima posicion de personaje segun Input
-            var move = new Vector3(0, 0, 0);
+            move = new Vector3(0, 0, 0);
 
             //Multiplicar la velocidad por el tiempo transcurrido, para no acoplarse al CPU
             var speed = VELOCIDAD_DESPLAZAMIENTO * ElapsedTime;

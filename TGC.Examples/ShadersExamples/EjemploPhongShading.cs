@@ -1,15 +1,14 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -18,23 +17,22 @@ namespace TGC.Examples.ShadersExamples
     ///     Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Shaders/EjemploShaderTgcMesh".
-    ///     Muestra como utilizar un Shader para lograr iluminación dinámica del tipo Phong-Shading.
-    ///     El ejemplo permite modificar los parámetros de iluminación para ver como afectan sobre el objeto
+    ///     Muestra como utilizar un Shader para lograr iluminacion dinamica del tipo Phong-Shading.
+    ///     El ejemplo permite modificar los parametros de iluminacion para ver como afectan sobre el objeto
     ///     en tiempo real.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploPhongShading : TgcExample
+    public class EjemploPhongShading : TGCExampleViewer
     {
         private TgcBox lightMesh;
         private TgcMesh mesh;
 
-        public EjemploPhongShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploPhongShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "PhongShading";
-            Description = "Muestra como utilizar un Shader para lograr iluminación dinámica del tipo Phong-Shading.";
+            Description = "Muestra como utilizar un Shader para lograr iluminacion dinamica del tipo Phong-Shading.";
         }
 
         public override void Init()
@@ -91,7 +89,7 @@ namespace TGC.Examples.ShadersExamples
             //El Technique depende del tipo RenderType del mesh
             mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
 
-            //Actualzar posición de la luz
+            //Actualzar posicion de la luz
             var lightPos = (Vector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 

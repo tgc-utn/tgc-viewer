@@ -2,15 +2,14 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Interpolation;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.PostProcess
 {
@@ -25,9 +24,9 @@ namespace TGC.Examples.PostProcess
     ///     esta imagen generada antes.
     ///     De esta forma se pueden hacer diversos efectos 2D con pixels shaders sobre la imagen final.
     ///     En este caso, la imagen final se oscurece de forma intermitente.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EfectoOscurecer : TgcExample
+    public class EfectoOscurecer : TGCExampleViewer
     {
         private Effect effect;
         private InterpoladorVaiven intVaivenOscurecer;
@@ -36,9 +35,8 @@ namespace TGC.Examples.PostProcess
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
-        public EfectoOscurecer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EfectoOscurecer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "PostProcess";
             Name = "Efecto Oscurecer";

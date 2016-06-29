@@ -3,10 +3,8 @@ using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -14,20 +12,21 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights
 {
     /// <summary>
     ///     Ejemplo EjemploIntegrador2:
     ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e Iluminación - Iluminación dinámica
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploIntegrador"
     ///     Similar al Ejemplo Integrador 1 pero se usan 3 luces para cada mesh.
-    ///     Se pre-calcula que luz le corresponde a cada mesh según su cercania.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Se pre-calcula que luz le corresponde a cada mesh segun su cercania.
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploIntegrador2 : TgcExample
+    public class EjemploIntegrador2 : TGCExampleViewer
     {
         private List<TgcMesh> commonMeshes;
         private CubeTexture cubeMap;
@@ -35,9 +34,8 @@ namespace TGC.Examples.Lights
         private List<LightData> lights;
         private List<MeshLightData> meshesWithLight;
 
-        public EjemploIntegrador2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploIntegrador2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Lights";
             Name = "Integrador 2";

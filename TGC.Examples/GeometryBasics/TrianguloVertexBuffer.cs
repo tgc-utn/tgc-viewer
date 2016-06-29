@@ -1,34 +1,31 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
     ///     Ejemplo TrianguloVertexBuffer:
     ///     Unidades Involucradas:
-    ///     # Unidad 3 - Conceptos Básicos de 3D - VertexBuffer
-    ///     Crea el mismo triángulo que el ejemplo TrianguloBasico.
-    ///     Pero utiliza la herramienta de VertexBuffer para crearlo en forma más
-    ///     óptima.
+    ///     # Unidad 3 - Conceptos Basicos de 3D - VertexBuffer
+    ///     Crea el mismo triangulo que el ejemplo TrianguloBasico.
+    ///     Pero utiliza la herramienta de VertexBuffer para crearlo en forma mas optima.
     ///     En lugar de mandar a renderizar cada primitiva por separado, se envia
     ///     el VertexBuffer entero.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class TrianguloVertexBuffer : TgcExample
+    public class TrianguloVertexBuffer : TGCExampleViewer
     {
         //Vertex buffer que se va a utilizar
         private VertexBuffer vertexBuffer;
 
-        public TrianguloVertexBuffer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public TrianguloVertexBuffer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "GeometryBasics";
             Name = "Triangulo VertexBuffer";
@@ -47,7 +44,7 @@ namespace TGC.Examples.GeometryBasics
             data[1] = new CustomVertex.PositionColored(1, 0, 0, Color.Green.ToArgb());
             data[2] = new CustomVertex.PositionColored(0, 1, 0, Color.Blue.ToArgb());
 
-            //Almacenar información en VertexBuffer
+            //Almacenar informacion en VertexBuffer
             vertexBuffer.SetData(data, 0, LockFlags.None);
 
             //Configurar camara en rotacion

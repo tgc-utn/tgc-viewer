@@ -1,6 +1,5 @@
 ﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using TGC.Core.Textures;
@@ -19,6 +18,8 @@ namespace TGC.Core.Direct3D
         {
         }
 
+        public static D3DDevice Instance { get; } = new D3DDevice();
+
         /// <summary>
         ///     Device de DirectX 3D para crear primitivas
         /// </summary>
@@ -28,15 +29,10 @@ namespace TGC.Core.Direct3D
         public float FieldOfView { get; set; } = FastMath.ToRad(45.0f);
 
         public float AspectRatio { get; set; } = -1f;
-
         public float ZFarPlaneDistance { get; set; } = 10000f;
         public float ZNearPlaneDistance { get; set; } = 1f;
         public bool ParticlesEnabled { get; set; } = false;
-
-        public static D3DDevice Instance { get; } = new D3DDevice();
-
         public int Width { get; set; }
-
         public int Height { get; set; }
 
         /// <summary>
@@ -45,7 +41,8 @@ namespace TGC.Core.Direct3D
         public void DefaultValues()
         {
             //Frustum values
-            Device.Transform.Projection = Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance, ZFarPlaneDistance);
+            Device.Transform.Projection = Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
+                ZFarPlaneDistance);
 
             //Render state
             Device.RenderState.SpecularEnable = false;
@@ -93,7 +90,7 @@ namespace TGC.Core.Direct3D
             //Limpiar IndexBuffer
             Device.Indices = null;
 
-            enableParticles();
+            EnableParticles();
         }
 
         /// <summary>
@@ -101,7 +98,7 @@ namespace TGC.Core.Direct3D
         ///     Estaba este comentario antes, asi que lo dejo con default false.
         ///     INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
         /// </summary>
-        public void enableParticles()
+        public void EnableParticles()
         {
             if (ParticlesEnabled)
             {
@@ -152,12 +149,7 @@ namespace TGC.Core.Direct3D
 
             //Crear Graphics Device
             Device.IsUsingEventHandlers = false;
-            var d3DDevice = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
-
-            Device = d3DDevice;
-
-            Device.DeviceReset += OnResetDevice;
-            OnResetDevice(Device, null);
+            Device = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
         }
 
         public void FillModeWireFrame()
@@ -168,29 +160,6 @@ namespace TGC.Core.Direct3D
         public void FillModeWireSolid()
         {
             Device.RenderState.FillMode = FillMode.Solid;
-        }
-
-        /// <summary>
-        ///     This event-handler is a good place to create and initialize any
-        ///     Direct3D related objects, which may become invalid during a
-        ///     device reset.
-        /// </summary>
-        public void OnResetDevice(object sender, EventArgs e)
-        {
-            //TODO antes hacia esto que no entiendo porque GuiController.Instance.onResetDevice();
-            //ese metodo se movio a Decice, pero solo detenia el ejemplo ejecutaba doResetDevice y lo volvia a cargar...
-            DoResetDevice();
-        }
-
-        /// <summary>
-        ///     Hace las operaciones de Reset del device
-        /// </summary>
-        public void DoResetDevice()
-        {
-            DefaultValues();
-
-            //Reset Timer
-            HighResolutionTimer.Instance.Reset();
         }
 
         public void Dispose()

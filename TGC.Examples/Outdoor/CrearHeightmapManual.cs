@@ -1,28 +1,27 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Outdoor
 {
     /// <summary>
     ///     Ejemplo CrearHeightmapManual:
     ///     Unidades Involucradas:
-    ///     # Unidad 7 - Técnicas de Optimización - Heightmap
+    ///     # Unidad 7 - Tecnicas de Optimizacion - Heightmap
     ///     Crea un terreno en base a una textura de Heightmap.
     ///     Aplica sobre el terreno una textura para dar color (DiffuseMap).
     ///     Se parsea la textura y se crea un VertexBuffer en base las distintas
     ///     alturas de la imagen.
     ///     Ver el ejemplo EjemploSimpleTerrain para aprender como realizar esto mismo
     ///     pero en forma mas simple con la herramienta TgcSimpleTerrain
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class CrearHeightmapManual : TgcExample
+    public class CrearHeightmapManual : TGCExampleViewer
     {
         private string currentHeightmap;
         private float currentScaleXZ;
@@ -32,9 +31,8 @@ namespace TGC.Examples.Outdoor
         private int totalVertices;
         private VertexBuffer vbTerrain;
 
-        public CrearHeightmapManual(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public CrearHeightmapManual(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Outdoor";
             Name = "Heightmap Manual";

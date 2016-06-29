@@ -23,11 +23,14 @@ namespace TGC.Core._2D
 
         protected Matrix transformationMatrix;
 
+        private TgcDrawer2D Drawer2D { get; set; }
+
         /// <summary>
         ///     Crear un nuevo Sprite
         /// </summary>
-        public TgcSprite()
+        public TgcSprite(TgcDrawer2D drawer2D)
         {
+            Drawer2D = drawer2D;
             initialize();
         }
 
@@ -169,7 +172,7 @@ namespace TGC.Core._2D
                 updateTransformationMatrix();
             }
 
-            TgcDrawer2D.Instance.drawSprite(this);
+            Drawer2D.drawSprite(this);
         }
 
         /// <summary>

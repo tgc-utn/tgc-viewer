@@ -2,16 +2,15 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.ShadersExamples
 {
-    public class EjemploVideoPostProcess : TgcExample
+    public class EjemploVideoPostProcess : TGCExampleViewer
     {
         private int cant_frames;
 
@@ -38,9 +37,8 @@ namespace TGC.Examples.ShadersExamples
 
         private float time;
 
-        public EjemploVideoPostProcess(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploVideoPostProcess(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
             Name = "Workshop-VideoPostProcess";
@@ -238,7 +236,7 @@ namespace TGC.Examples.ShadersExamples
         }
 
         /// <summary>
-        ///     Método que se llama cuando termina la ejecución del ejemplo.
+        ///     Metodo que se llama cuando termina la ejecucion del ejemplo.
         ///     Hacer dispose() de todos los objetos creados.
         /// </summary>
         public override void Dispose()
@@ -250,11 +248,5 @@ namespace TGC.Examples.ShadersExamples
                 g_pVideoFrame.Dispose();
             effect.Dispose();
         }
-
-        /// <summary>
-        /// opens a video from an avi file
-        /// and plays the first frame inside the panel
-
-        /// </summary>
     }
 }

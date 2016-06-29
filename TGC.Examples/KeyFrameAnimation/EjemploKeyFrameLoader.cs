@@ -1,39 +1,37 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core;
 using TGC.Core.Camara;
-using TGC.Core.Example;
 using TGC.Core.KeyFrameLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.KeyFrameAnimation
 {
     /// <summary>
     ///     Ejemplo EjemploKeyFrameLoader:
     ///     Unidades Involucradas:
-    ///     # Unidad 5 - Animación - KeyFrame Animation
-    ///     Carga un personaje animado con el método de KeyFrameAnimation, utilizando
+    ///     # Unidad 5 - Animacion - KeyFrame Animation
+    ///     Carga un personaje animado con el metodo de KeyFrameAnimation, utilizando
     ///     la herramienta TgcKeyFrameLoader.
-    ///     Es una alternativa de animación a la herramienta TgcSkeletalLoader
-    ///     Se crea un Modifier para que el usuario puede alternar la animación que se muestra.
+    ///     Es una alternativa de animacion a la herramienta TgcSkeletalLoader
+    ///     Se crea un Modifier para que el usuario puede alternar la animacion que se muestra.
     ///     La herramienta TgcKeyFrameLoader crea una malla del tipo TgcKeyFrameMesh.
     ///     Una malla TgcKeyFrameMesh puede tener una o varias animaciones.
     ///     Cada animacion es un archivo XML diferente.
     ///     La estructura general de la malla tambien es un XML diferente.
     ///     Todos los XML son del formato TGC.
-    ///     Autor: Leandro Barbagallo, Matías Leone
+    ///     Autor: Leandro Barbagallo, Matias Leone
     /// </summary>
-    public class EjemploKeyFrameLoader : TgcExample
+    public class EjemploKeyFrameLoader : TGCExampleViewer
     {
         private bool animateWithLoop;
         private Color currentColor;
         private TgcKeyFrameMesh mesh;
         private string selectedAnim;
 
-        public EjemploKeyFrameLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public EjemploKeyFrameLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "KeyFrameAnimation";
             Name = "MeshLoader";
@@ -77,7 +75,7 @@ namespace TGC.Examples.KeyFrameAnimation
             Modifiers.addInterval("animation", animationList, 0);
             selectedAnim = animationList[0];
 
-            //Modifier para especificar si la animación se anima con loop
+            //Modifier para especificar si la animacion se anima con loop
             animateWithLoop = true;
             Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
 
@@ -118,7 +116,7 @@ namespace TGC.Examples.KeyFrameAnimation
 
             //Ver si cambio el color
             var selectedColor = (Color)Modifiers.getValue("Color");
-            if (currentColor == null || currentColor != selectedColor)
+            if (currentColor != selectedColor)
             {
                 currentColor = selectedColor;
                 mesh.setColor(currentColor);

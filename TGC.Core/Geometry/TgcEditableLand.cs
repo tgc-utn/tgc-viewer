@@ -57,7 +57,7 @@ namespace TGC.Core.Geometry
                 }
             }
 
-            AutoTransformEnable = true;
+            AutoTransformEnable = false;
             Transform = Matrix.Identity;
             translation = new Vector3(0, 0, 0);
             rotation = new Vector3(0, 0, 0);
@@ -201,7 +201,7 @@ namespace TGC.Core.Geometry
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
         ///     cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
-        ///     Por default está en True.
+        ///     Por default está en False.
         /// </summary>
         public bool AutoTransformEnable { get; set; }
 

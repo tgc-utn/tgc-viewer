@@ -2,10 +2,8 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
-using TGC.Core;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SkeletalAnimation;
@@ -13,6 +11,7 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
@@ -25,16 +24,15 @@ namespace TGC.Examples.Collision
     ///     Acorta la distancia de la camara a la mínima colision encontrada con los objetos del escenario.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class DetectarColisionCamara : TgcExample
+    public class DetectarColisionCamara : TGCExampleViewer
     {
         private TgcThirdPersonCamera camaraInterna;
         private List<TgcBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcBox piso;
 
-        public DetectarColisionCamara(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers,
-            TgcAxisLines axisLines, TgcCamera camara)
-            : base(mediaDir, shadersDir, userVars, modifiers, axisLines, camara)
+        public DetectarColisionCamara(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+            : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
             Name = "Colision con Camara";
@@ -211,7 +209,7 @@ namespace TGC.Examples.Collision
             }
 
             //Ajustar la posicion de la camara segun la colision con los objetos del escenario
-            ajustarPosicionDeCamara(obstaculos);
+            ajustarPosicionDeCamara();
 
             //Render piso
             piso.render();
@@ -233,7 +231,7 @@ namespace TGC.Examples.Collision
         ///     Acerca la distancia entre el persona y la camara si hay colisiones de objetos
         ///     en el medio
         /// </summary>
-        private void ajustarPosicionDeCamara(List<TgcBox> obstaculos)
+        private void ajustarPosicionDeCamara()
         {
             //Actualizar valores de camara segun modifiers
             camaraInterna.OffsetHeight = (float)Modifiers["offsetHeight"];
