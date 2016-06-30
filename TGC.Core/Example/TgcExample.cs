@@ -27,7 +27,7 @@ namespace TGC.Core.Example
             HighResolutionTimer = new HighResolutionTimer();
             Frustum = new TgcFrustum();
             //DirectSound = new TgcDirectSound(); Por ahora se carga por afuera
-            DrawText = new TgcText2d();
+            DrawText = new TgcText2D();
             Drawer2D = new TgcDrawer2D();
 
             Category = "Others";
@@ -87,7 +87,7 @@ namespace TGC.Core.Example
 
         public TgcDirectSound DirectSound { get; set; }
 
-        public TgcText2d DrawText { get; set; }
+        public TgcText2D DrawText { get; set; }
 
         public TgcDrawer2D Drawer2D { get; set; }
 
