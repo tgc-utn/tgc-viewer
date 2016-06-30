@@ -41,6 +41,12 @@ namespace TGC.Examples.SceneLoader
             //FPS Camara
             Camara = new TgcFpsCamera(new Vector3(-140f, 40f, -50f), 200f, 200f);
 
+            //Modifier para habilitar o deshabilitar FrustumCulling
+            Modifiers.addBoolean("culling", "Frustum culling", true);
+
+            //UserVar para contar la cantidad de meshes que se renderizan
+            UserVars.addVar("Meshes renderizadas");
+
             //Cargar escena desde archivo ZIP
             var loader = new TgcSceneLoader();
             tgcScene = loader.loadSceneFromZipFile("4toPiso-TgcScene.xml", MediaDir + "4toPiso\\4toPiso.zip",
@@ -53,12 +59,7 @@ namespace TGC.Examples.SceneLoader
                 this.MediaDir + "4toPiso\\Extract\\4toPiso-TgcScene.xml",
                 this.MediaDir + "4toPiso\\Extract\\");
             */
-
-            //Modifier para habilitar o deshabilitar FrustumCulling
-            Modifiers.addBoolean("culling", "Frustum culling", true);
-
-            //UserVar para contar la cantidad de meshes que se renderizan
-            UserVars.addVar("Meshes renderizadas");
+                       
         }
 
         public override void Update()

@@ -61,7 +61,6 @@
   <ItemGroup>
     <Compile Include="2D\TgcAnimatedSprite.cs" />
     <Compile Include="2D\TgcDrawer2D.cs" />
-    <Compile Include="2D\TgcDrawText.cs" />
     <Compile Include="2D\TgcSprite.cs" />
     <Compile Include="2D\TgcText2d.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
