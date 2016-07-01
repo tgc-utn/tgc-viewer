@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Input;
+using TGC.Examples.Engine2D.Core;
 
 namespace TGC.Examples.Engine2D
 {
@@ -35,32 +36,32 @@ namespace TGC.Examples.Engine2D
         private float size;
 
         //El bitmap del spritesheet.
-        private Bitmap spaceshipBitmap;
+        private CustomBitmap spaceshipBitmap;
 
         //La velocidad de la nave.
         private Vector2 speed;
 
         //Los distintos sprites de animacion.
-        private List<Sprite> sprites;
+        private List<CustomSprite> sprites;
 
         public Vector2 spriteSize;
 
         //El estado de la nave.
         private StateEnum state;
 
-        public void Load(Bitmap bitmap)
+        public void Load(CustomBitmap bitmap)
         {
             spaceshipBitmap = bitmap;
 
-            sprites = new List<Sprite>();
+            sprites = new List<CustomSprite>();
 
             spriteSize = new Vector2(41, 44);
             size = 2.0f;
 
-            Sprite newSprite;
+            CustomSprite newSprite;
             for (var i = 0; i < 3; i++)
             {
-                newSprite = new Sprite();
+                newSprite = new CustomSprite();
                 newSprite.Bitmap = spaceshipBitmap;
                 newSprite.SrcRect = new Rectangle(i * (int)spriteSize.X, 0, (int)spriteSize.X, (int)spriteSize.Y);
                 newSprite.Scaling = new Vector2(size, size);
@@ -233,7 +234,7 @@ namespace TGC.Examples.Engine2D
             GameManager.Instance.userVars.setValue("AngleMouse", angleToMousePointer * 360 / (2 * Math.PI));
         }
 
-        public override void Render(float elapsedTime, Drawer drawer)
+        public override void Render(float elapsedTime, Drawer2D drawer)
         {
             drawer.DrawSprite(sprites[currentSprite]);
         }

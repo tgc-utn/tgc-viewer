@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Examples.Engine2D.Core;
 
 namespace TGC.Examples.Engine2D
 {
@@ -14,7 +15,7 @@ namespace TGC.Examples.Engine2D
         private float angle;
 
         //El bitmap del spritesheet
-        private Bitmap asteroidBitmap;
+        private CustomBitmap asteroidBitmap;
 
         //El indice el sprite actual.
         private int currentSprite;
@@ -25,27 +26,27 @@ namespace TGC.Examples.Engine2D
         private float size;
 
         //La lista de sprites.
-        private List<Sprite> sprites;
+        private List<CustomSprite> sprites;
 
         private Vector2 spriteSize;
 
-        public void Load(string exampleDir, Bitmap spriteSheet)
+        public void Load(string exampleDir, CustomBitmap spriteSheet)
         {
             asteroidBitmap = spriteSheet;
 
-            sprites = new List<Sprite>();
+            sprites = new List<CustomSprite>();
 
             spriteSize = new Vector2(SpriteWidth, SpriteHeight);
             size = 1.0f;
             angle = 0.0f;
 
-            Sprite newSprite;
+            CustomSprite newSprite;
             //Creo 64 sprites asignando distintos clipping rects a cada uno.
             for (var i = 0; i < 8; i++)
             {
                 for (var j = 0; j < 8; j++)
                 {
-                    newSprite = new Sprite();
+                    newSprite = new CustomSprite();
                     newSprite.Bitmap = asteroidBitmap;
                     newSprite.SrcRect = new Rectangle(j * (int)spriteSize.X, i * (int)spriteSize.Y, (int)spriteSize.X,
                         (int)spriteSize.Y);
@@ -105,7 +106,7 @@ namespace TGC.Examples.Engine2D
                 angle = (float)Math.Atan2(ScreenCenterVector.Y, ScreenCenterVector.X);
         }
 
-        public override void Render(float elapsedTime, Drawer drawer)
+        public override void Render(float elapsedTime, Drawer2D drawer)
         {
             drawer.DrawSprite(sprites[currentSprite]);
         }

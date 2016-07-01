@@ -59,9 +59,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="2D\TgcAnimatedSprite.cs" />
-    <Compile Include="2D\TgcDrawer2D.cs" />
-    <Compile Include="2D\TgcSprite.cs" />
     <Compile Include="2D\TgcText2D.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
     <Compile Include="Camara\TgcFpsCamera.cs" />
