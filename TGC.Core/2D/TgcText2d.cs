@@ -1,11 +1,12 @@
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using Font = Microsoft.DirectX.Direct3D.Font;
 
 namespace TGC.Core._2D
 {
-    public class TgcText2D
+    public class TgcText2D : IDisposable
     {
         /// <summary>
         ///     Alternativas de alineación del texto
@@ -136,7 +137,7 @@ namespace TGC.Core._2D
             TextSprite.End();
         }
 
-        public void dispose()
+        public void Dispose()
         {
             D3dFont.Dispose();
         }
