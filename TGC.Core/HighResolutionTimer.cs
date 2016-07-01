@@ -105,5 +105,10 @@ namespace TGC.Core
                 _frameCount = 0;
             }
         }
+
+        public override string ToString()
+        {
+            return "FPS: " + _fps;
+        }
     }
 }

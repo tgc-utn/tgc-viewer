@@ -7,6 +7,8 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Engine2D;
+using TGC.Examples.Engine2D.Core;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.Sprites2D
@@ -23,12 +25,13 @@ namespace TGC.Examples.Sprites2D
     public class EjemploSprite2D : TGCExampleViewer
     {
         private TgcBox box;
-        private TgcSprite sprite;
+        private CustomSprite sprite;
+        private Drawer2D drawer2D;
 
         public EjemploSprite2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Sprite 2D";
+            Category = "2D";
             Name = "Sprite 2D";
             Description = "Muestra como dibujar un Sprite en pantalla.";
         }
@@ -36,11 +39,12 @@ namespace TGC.Examples.Sprites2D
         public override void Init()
         {
             //Crear Sprite
-            sprite = new TgcSprite(Drawer2D);
-            sprite.Texture = TgcTexture.createTexture(MediaDir + "\\Texturas\\LogoTGC.png");
+            drawer2D = new Drawer2D();
+            sprite = new CustomSprite();
+            sprite.Bitmap = new CustomBitmap(MediaDir + "\\Texturas\\LogoTGC.png", D3DDevice.Instance.Device);
 
             //Ubicarlo centrado en la pantalla
-            var textureSize = sprite.Texture.Size;
+            var textureSize = sprite.Bitmap.Size;
             sprite.Position = new Vector2(FastMath.Max(D3DDevice.Instance.Width / 2 - textureSize.Width / 2, 0),
                 FastMath.Max(D3DDevice.Instance.Height / 2 - textureSize.Height / 2, 0));
 
@@ -76,20 +80,20 @@ namespace TGC.Examples.Sprites2D
             box.render();
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
-            Drawer2D.beginDrawSprite();
+            drawer2D.BeginDrawSprite();
 
             //Dibujar sprite (si hubiese mas, deberian ir todos aquí)
-            sprite.render();
+            drawer2D.DrawSprite(sprite);
 
             //Finalizar el dibujado de Sprites
-            Drawer2D.endDrawSprite();
+            drawer2D.EndDrawSprite();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            sprite.dispose();
+            sprite.Dispose();
             box.dispose();
         }
     }

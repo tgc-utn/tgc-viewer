@@ -8,6 +8,8 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Engine2D;
+using TGC.Examples.Engine2D.Core;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.Sprites2D
@@ -26,28 +28,32 @@ namespace TGC.Examples.Sprites2D
     /// </summary>
     public class EjemploAnimatedSprite : TGCExampleViewer
     {
-        private TgcAnimatedSprite animatedSprite;
+        private AnimatedSprite animatedSprite;
         private TgcBox box;
+
+        public Drawer2D Drawer2D { get; private set; }
 
         public EjemploAnimatedSprite(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Sprite 2D";
+            Category = "2D";
             Name = "Sprite Animado";
             Description = "Muestra como dibujar un Sprite Animado en 2D.";
         }
 
         public override void Init()
         {
+            Drawer2D = new Drawer2D();
+
             //Crear Sprite animado
-            animatedSprite = new TgcAnimatedSprite(MediaDir + "\\Texturas\\Sprites\\Explosion.png", //Textura de 256x256
+            animatedSprite = new AnimatedSprite(MediaDir + "\\Texturas\\Sprites\\Explosion.png", //Textura de 256x256
                 new Size(64, 64), //Tamaño de un frame (64x64px en este caso)
                 16, //Cantidad de frames, (son 16 de 64x64px)
-                10, //Velocidad de animacion, en cuadros x segundo,
-                Drawer2D);
+                10); //Velocidad de animacion, en cuadros x segundo,
+
 
             //Ubicarlo centrado en la pantalla
-            var textureSize = animatedSprite.Sprite.Texture.Size;
+            var textureSize = animatedSprite.Bitmap.Size;
             animatedSprite.Position = new Vector2(D3DDevice.Instance.Width / 2 - textureSize.Width / 2,
                 D3DDevice.Instance.Height / 2 - textureSize.Height / 2);
 
@@ -69,6 +75,8 @@ namespace TGC.Examples.Sprites2D
         public override void Update()
         {
             PreUpdate();
+            //Actualizamos el estado de la animacion y renderizamos
+            animatedSprite.update(ElapsedTime);
         }
 
         public override void Render()
@@ -85,21 +93,20 @@ namespace TGC.Examples.Sprites2D
             box.render();
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
-            Drawer2D.beginDrawSprite();
+            Drawer2D.BeginDrawSprite();
 
             //Dibujar sprite (si hubiese mas, deberian ir todos aquí)
-            //Actualizamos el estado de la animacion y renderizamos
-            animatedSprite.updateAndRender(ElapsedTime);
+            Drawer2D.DrawSprite(animatedSprite);
 
             //Finalizar el dibujado de Sprites
-            Drawer2D.endDrawSprite();
+            Drawer2D.EndDrawSprite();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            animatedSprite.dispose();
+            animatedSprite.Dispose();
             box.dispose();
         }
     }

@@ -20,8 +20,8 @@ namespace TGC.Examples.Sound
     public class PlayMp3 : TGCExampleViewer
     {
         private string currentFile;
-        private TgcText2d currentMusicText;
-        private TgcText2d instruccionesText;
+        private TgcText2D currentMusicText;
+        private TgcText2D instruccionesText;
         private TgcMp3Player mp3Player;
 
         public PlayMp3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
@@ -35,14 +35,14 @@ namespace TGC.Examples.Sound
         public override void Init()
         {
             //Texto para la musica actual
-            currentMusicText = new TgcText2d(DrawText);
+            currentMusicText = new TgcText2D();
             currentMusicText.Text = "No music";
             currentMusicText.Position = new Point(50, 20);
             currentMusicText.Color = Color.Gold;
             currentMusicText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Italic));
 
             //Texto para las instrucciones de uso
-            instruccionesText = new TgcText2d(DrawText);
+            instruccionesText = new TgcText2D();
             instruccionesText.Text = "Y = Play, U = Pause, I = Resume, O = Stop.";
             instruccionesText.Position = new Point(50, 60);
             instruccionesText.Color = Color.Green;

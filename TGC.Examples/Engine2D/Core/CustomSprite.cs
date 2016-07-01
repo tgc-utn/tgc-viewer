@@ -1,11 +1,12 @@
 using Microsoft.DirectX;
 using System.Drawing;
+using System;
 
-namespace TGC.Examples.Engine2D
+namespace TGC.Examples.Engine2D.Core
 {
-    public class Sprite
+    public class CustomSprite : IDisposable
     {
-        public Sprite()
+        public CustomSprite()
         {
             initialize();
         }
@@ -48,7 +49,7 @@ namespace TGC.Examples.Engine2D
         /// <summary>
         ///     The linked bitmap for the sprite.
         /// </summary>
-        public Bitmap Bitmap { get; set; }
+        public CustomBitmap Bitmap { get; set; }
 
         /// <summary>
         ///     The color of the sprite.
@@ -131,5 +132,17 @@ namespace TGC.Examples.Engine2D
         }
 
         #endregion Public members
+
+        #region Miembros de IDisposable
+
+        public void Dispose()
+        {
+            if (Bitmap != null)
+            {
+                Bitmap.Dispose();
+            }
+        }
+
+        #endregion Miembros de IDisposable
     }
 }

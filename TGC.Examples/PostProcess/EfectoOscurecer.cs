@@ -32,6 +32,7 @@ namespace TGC.Examples.PostProcess
         private InterpoladorVaiven intVaivenOscurecer;
         private List<TgcMesh> meshes;
         private Surface pOldRT;
+        private Surface depthStencil; // Depth-stencil buffer
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
@@ -65,9 +66,15 @@ namespace TGC.Examples.PostProcess
 
             //Creamos un Render Targer sobre el cual se va a dibujar la pantalla
             renderTarget2D = new Texture(D3DDevice.Instance.Device,
-                D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
-                , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
+                1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
+
+            //Creamos un DepthStencil que debe ser compatible con nuestra definicion de renderTarget2D.
+            depthStencil = D3DDevice.Instance.Device.CreateDepthStencilSurface(D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
+                DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             //Cargar shader con efectos de Post-Procesado
             effect = TgcShaders.loadEffect(ShadersDir + "PostProcess.fx");
@@ -121,6 +128,9 @@ namespace TGC.Examples.PostProcess
 
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
+            // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
+            // por no soportar usualmente el multisampling en el render to texture (en nuevas placas de video)
+            D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcess(D3DDevice.Instance.Device, ElapsedTime);
@@ -196,6 +206,7 @@ namespace TGC.Examples.PostProcess
             effect.Dispose();
             screenQuadVB.Dispose();
             renderTarget2D.Dispose();
+            depthStencil.Dispose();
         }
     }
 }

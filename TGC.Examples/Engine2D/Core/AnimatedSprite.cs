@@ -2,14 +2,13 @@
 using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
-using TGC.Core.Textures;
 
-namespace TGC.Core._2D
+namespace TGC.Examples.Engine2D.Core
 {
     /// <summary>
     ///     Utilidad para Sprites 2D animados en forma de tile dentro de una textura
     /// </summary>
-    public class TgcAnimatedSprite
+    public class AnimatedSprite : CustomSprite
     {
         private readonly int framesPerColumn;
         private readonly int framesPerRow;
@@ -36,7 +35,7 @@ namespace TGC.Core._2D
         /// <param name="frameSize">tamaño de un tile de la animacion</param>
         /// <param name="totalFrames">cantidad de frames que tiene la animacion</param>
         /// <param name="frameRate">velocidad en cuadros por segundo</param>
-        public TgcAnimatedSprite(string texturePath, Size frameSize, int totalFrames, float frameRate, TgcDrawer2D drawer2D)
+        public AnimatedSprite(string texturePath, Size frameSize, int totalFrames, float frameRate):base()
         {
             enabled = true;
             currentFrame = 0;
@@ -45,16 +44,12 @@ namespace TGC.Core._2D
             currentTime = 0;
             playing = true;
 
-            //Crear textura
-            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, texturePath);
-
             //Sprite
-            Sprite = new TgcSprite(drawer2D);
-            Sprite.Texture = texture;
+            this.Bitmap = new CustomBitmap(texturePath, D3DDevice.Instance.Device);
 
             //Calcular valores de frames de la textura
-            textureWidth = texture.Width;
-            textureHeight = texture.Height;
+            textureWidth = this.Bitmap.Width;
+            textureHeight = this.Bitmap.Height;
             framesPerColumn = (int)textureWidth / frameSize.Width;
             framesPerRow = (int)textureHeight / frameSize.Height;
             var realTotalFrames = framesPerRow * framesPerColumn;
@@ -87,11 +82,6 @@ namespace TGC.Core._2D
         }
 
         /// <summary>
-        ///     Sprite con toda la textura a animar
-        /// </summary>
-        public TgcSprite Sprite { get; }
-
-        /// <summary>
         ///     Velocidad de la animacion medida en cuadros por segundo.
         /// </summary>
         public float FrameRate
@@ -106,33 +96,6 @@ namespace TGC.Core._2D
         {
             get { return currentFrame; }
             set { currentFrame = value; }
-        }
-
-        /// <summary>
-        ///     Posicion del sprite
-        /// </summary>
-        public Vector2 Position
-        {
-            get { return Sprite.Position; }
-            set { Sprite.Position = value; }
-        }
-
-        /// <summary>
-        ///     Factor de escala en X e Y
-        /// </summary>
-        public Vector2 Scaling
-        {
-            get { return Sprite.Scaling; }
-            set { Sprite.Scaling = value; }
-        }
-
-        /// <summary>
-        ///     Angulo de rotación en radianes
-        /// </summary>
-        public float Rotation
-        {
-            get { return Sprite.Rotation; }
-            set { Sprite.Rotation = value; }
         }
 
         /// <summary>
@@ -172,38 +135,7 @@ namespace TGC.Core._2D
             srcRect.Width = frameSize.Width;
             srcRect.X = frameSize.Height * (currentFrame % framesPerColumn);
             srcRect.Height = frameSize.Height;
-            Sprite.SrcRect = srcRect;
-        }
-
-        /// <summary>
-        ///     Renderizar Sprite.
-        ///     Se debe llamar primero a update().
-        ///     Sino se dibuja el ultimo estado actualizado.
-        /// </summary>
-        public void render()
-        {
-            if (!enabled)
-                return;
-
-            //Dibujar sprite
-            Sprite.render();
-        }
-
-        /// <summary>
-        ///     Actualiza la animacion y dibuja el Sprite
-        /// </summary>
-        public void updateAndRender(float elapsedTime)
-        {
-            update(elapsedTime);
-            render();
-        }
-
-        /// <summary>
-        ///     Liberar recursos
-        /// </summary>
-        public void dispose()
-        {
-            Sprite.dispose();
+            this.SrcRect = srcRect;
         }
     }
 }
