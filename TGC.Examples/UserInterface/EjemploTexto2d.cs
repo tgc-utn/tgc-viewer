@@ -70,9 +70,9 @@ namespace TGC.Examples.UserInterface
 
         public override void Dispose()
         {
-            text1.dispose();
-            text2.dispose();
-            text3.dispose();
+            text1.Dispose();
+            text2.Dispose();
+            text3.Dispose();
         }
     }
 }

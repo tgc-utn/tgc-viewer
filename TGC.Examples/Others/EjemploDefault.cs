@@ -100,7 +100,7 @@ namespace TGC.Examples.Others
         public override void Dispose()
         {
             mesh.dispose();
-            textHelp.dispose();
+            textHelp.Dispose();
             helpForm.Dispose();
         }
     }
