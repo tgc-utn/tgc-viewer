@@ -138,7 +138,6 @@ namespace TGC.Core._2D
 
         public void dispose()
         {
-            //TODO: No se por que pero esto da error al hacer resize de la pantalla
             D3dFont.Dispose();
         }
     }
