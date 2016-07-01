@@ -1,23 +1,24 @@
 using Microsoft.DirectX;
 using System;
+using TGC.Examples.Engine2D.Core;
 
 namespace TGC.Examples.Engine2D
 {
     public class Misil : GameObject
     {
-        private static Bitmap misilBitmap;
+        private static CustomBitmap misilBitmap;
 
         public float Angle;
 
         public Vector2 Position;
 
-        private Sprite sprite;
+        private CustomSprite sprite;
 
-        public void Load(Bitmap spriteBitmap)
+        public void Load(CustomBitmap spriteBitmap)
         {
             misilBitmap = spriteBitmap;
 
-            sprite = new Sprite();
+            sprite = new CustomSprite();
             sprite.Bitmap = misilBitmap;
         }
 
@@ -32,7 +33,7 @@ namespace TGC.Examples.Engine2D
             sprite.Rotation = Angle;
         }
 
-        public override void Render(float ElapsedTime, Drawer drawer)
+        public override void Render(float ElapsedTime, Drawer2D drawer)
         {
             drawer.DrawSprite(sprite);
         }

@@ -15,9 +15,9 @@ namespace TGC.Examples.UserInterface
     /// </summary>
     public class EjemploTexto2d : TGCExampleViewer
     {
-        private TgcText2d text1;
-        private TgcText2d text2;
-        private TgcText2d text3;
+        private TgcText2D text1;
+        private TgcText2D text2;
+        private TgcText2D text3;
 
         public EjemploTexto2d(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -30,22 +30,22 @@ namespace TGC.Examples.UserInterface
         public override void Init()
         {
             //Crear texto 1, basico
-            text1 = new TgcText2d(DrawText);
+            text1 = new TgcText2D();
             text1.Text = "Texto de prueba";
 
             //Crear texto 2, especificando color, alineacion, posicion, tamano y fuente.
-            text2 = new TgcText2d(DrawText);
+            text2 = new TgcText2D();
             text2.Text = "Texto largo que no entra en el ancho especificado, y se hace WordWrap.";
             text2.Color = Color.BlueViolet;
-            text2.Align = TgcText2d.TextAlign.LEFT;
+            text2.Align = TgcText2D.TextAlign.LEFT;
             text2.Position = new Point(300, 100);
             text2.Size = new Size(300, 100);
             text2.changeFont(new Font("TimesNewRoman", 25, FontStyle.Bold | FontStyle.Italic));
 
             //Crear texto 3, especificando color, alineacion, posicion y tamano.
-            text3 = new TgcText2d(DrawText);
+            text3 = new TgcText2D();
             text3.Text = "Texto alineado a la derecha con color.";
-            text3.Align = TgcText2d.TextAlign.RIGHT;
+            text3.Align = TgcText2D.TextAlign.RIGHT;
             text3.Position = new Point(50, 50);
             text3.Size = new Size(300, 100);
             text3.Color = Color.Gold;
