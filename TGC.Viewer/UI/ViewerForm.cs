@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using TGC.Core.Example;
+using TGC.Examples.Others;
 using TGC.Viewer.Model;
 using TGC.Viewer.Properties;
 
@@ -127,7 +128,11 @@ namespace TGC.Viewer.UI
 
         private void OpenHelp()
         {
-            throw new NotImplementedException();
+            var pathMedia = Environment.CurrentDirectory + "\\" + Settings.Default.MediaDirectory;
+
+            //Help form
+            var helpRtf = File.ReadAllText(pathMedia + "\\help.rtf");
+            new EjemploDefaultHelpForm(helpRtf).ShowDialog();
         }
 
         private void OpenAbout()

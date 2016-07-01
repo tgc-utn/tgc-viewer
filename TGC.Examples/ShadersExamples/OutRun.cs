@@ -159,15 +159,14 @@ namespace TGC.Examples.ShadersExamples
         public override void Update()
         {
             PreUpdate();
-            var d3dInput = TgcD3dInput.Instance;
 
-            if (d3dInput.keyPressed(Key.F1))
+            if (Input.keyPressed(Key.F1))
                 paused = !paused;
 
             if (paused)
                 return;
 
-            if (d3dInput.keyPressed(Key.M))
+            if (Input.keyPressed(Key.M))
             {
                 mouseCaptured = !mouseCaptured;
                 if (mouseCaptured)
@@ -176,12 +175,12 @@ namespace TGC.Examples.ShadersExamples
                     Cursor.Show();
             }
 
-            vel += d3dInput.WheelPos * acel_mouse_wheel;
+            vel += Input.WheelPos * acel_mouse_wheel;
 
-            if (mouseCaptured && d3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (mouseCaptured && Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //float pitch = d3dInput.YposRelative * rotationSpeed;
-                var heading = d3dInput.XposRelative * rotationSpeed;
+                var heading = Input.XposRelative * rotationSpeed;
                 dir = rotar_xz(dir, -heading);
             }
 

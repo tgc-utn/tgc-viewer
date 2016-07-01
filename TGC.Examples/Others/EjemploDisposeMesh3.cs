@@ -35,7 +35,7 @@ namespace TGC.Examples.Others
             time = 0;
 
             Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
-                box.BoundingBox.calculateBoxRadius() * 2);
+                box.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()

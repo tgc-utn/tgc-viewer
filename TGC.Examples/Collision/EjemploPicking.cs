@@ -61,9 +61,9 @@ namespace TGC.Examples.Collision
             }
 
             //Iniciarlizar PickingRay
-            pickingRay = new TgcPickingRay();
+            pickingRay = new TgcPickingRay(Input);
 
-            Camara = new TgcRotationalCamera(new Vector3(100f, 100f, -250f), 600f);
+            Camara = new TgcRotationalCamera(new Vector3(100f, 100f, -250f), 600f, Input);
             //FIXME esta camara deberi ser estatica y no rotacional, ya que sino trae problemas con el picking.
 
             //Crear caja para marcar en que lugar hubo colision
@@ -86,7 +86,7 @@ namespace TGC.Examples.Collision
             PreRender();
 
             //Si hacen clic con el mouse, ver si hay colision RayAABB
-            if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (Input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Actualizar Ray de colision en base a posicion del mouse
                 pickingRay.updateRay();

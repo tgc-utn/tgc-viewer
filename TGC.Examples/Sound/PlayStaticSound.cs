@@ -97,12 +97,12 @@ namespace TGC.Examples.Sound
             loadSound(filePath);
 
             //Contro el input de teclado
-            if (TgcD3dInput.Instance.keyPressed(Key.Y))
+            if (Input.keyPressed(Key.Y))
             {
                 var playLoop = (bool)Modifiers["PlayLoop"];
                 sound.play(playLoop);
             }
-            else if (TgcD3dInput.Instance.keyPressed(Key.O))
+            else if (Input.keyPressed(Key.O))
             {
                 sound.stop();
             }

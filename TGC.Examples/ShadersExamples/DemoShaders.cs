@@ -238,10 +238,10 @@ namespace TGC.Examples.ShadersExamples
             //Centrar camara rotacional respecto a este mesh
             camara_rot = false;
             CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2);
+                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
-            DefaultCamera = new TgcRotationalCamera(new Vector3(0, 200, 0), 5000, 0.1f, 1f);
+            DefaultCamera = new TgcRotationalCamera(new Vector3(0, 200, 0), 5000, 0.1f, 1f, Input);
             Camara = DefaultCamera;
 
             LookFrom = new Vector3(0, 400, 2000);
@@ -289,13 +289,13 @@ namespace TGC.Examples.ShadersExamples
 
             time += ElapsedTime;
 
-            if (TgcD3dInput.Instance.keyPressed(Key.C))
+            if (Input.keyPressed(Key.C))
             {
                 timer_preview = 0;
                 camara_rot = !camara_rot;
             }
 
-            if (TgcD3dInput.Instance.keyPressed(Key.F))
+            if (Input.keyPressed(Key.F))
             {
                 if (tipo_vista == 1)
                     tipo_vista = 0;
@@ -304,7 +304,7 @@ namespace TGC.Examples.ShadersExamples
                 ant_vista = tipo_vista;
             }
 
-            if (TgcD3dInput.Instance.keyPressed(Key.D))
+            if (Input.keyPressed(Key.D))
             {
                 if (tipo_vista == 2)
                     tipo_vista = ant_vista;
@@ -312,7 +312,7 @@ namespace TGC.Examples.ShadersExamples
                     tipo_vista = 2;
             }
 
-            if (TgcD3dInput.Instance.keyPressed(Key.Space))
+            if (Input.keyPressed(Key.Space))
             {
                 if (vel_tanque <= 1)
                     vel_tanque = 10;

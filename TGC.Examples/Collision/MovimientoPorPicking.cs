@@ -51,7 +51,7 @@ namespace TGC.Examples.Collision
             suelo = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(5000, 0.1f, 5000), texture);
 
             //Iniciarlizar PickingRay
-            pickingRay = new TgcPickingRay();
+            pickingRay = new TgcPickingRay(Input);
 
             //Cargar nave
             var loader = new TgcSceneLoader();
@@ -94,7 +94,7 @@ namespace TGC.Examples.Collision
             PreRender();
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
-            if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (Input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //Actualizar Ray de colisión en base a posición del mouse
                 pickingRay.updateRay();

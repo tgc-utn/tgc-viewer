@@ -56,7 +56,7 @@ namespace TGC.Examples.Outdoor
             terrain.loadTexture(currentTexture);
 
             //Configurar FPS Camara
-            Camara = new TgcFpsCamera(new Vector3(-722.6171f, 495.0046f, -31.2611f), 100f, 100f);
+            Camara = new TgcFpsCamera(new Vector3(-722.6171f, 495.0046f, -31.2611f), 100f, 100f, Input);
         }
 
         public override void Update()

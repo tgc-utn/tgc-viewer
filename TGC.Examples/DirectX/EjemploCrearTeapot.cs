@@ -60,7 +60,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
-            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 10f);
+            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 10f, Input);
 
             //Modifiers para angulos de rotacion
             Modifiers.addFloat("angleX", 0, 10, 0);

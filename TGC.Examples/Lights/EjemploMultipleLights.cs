@@ -84,7 +84,7 @@ namespace TGC.Examples.Lights
             scene = loader.loadScene(sceneData, mediaPath);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f);
+            Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f, Input);
 
             //Modifiers para variables de luz
             Modifiers.addBoolean("lightEnable", "lightEnable", true);

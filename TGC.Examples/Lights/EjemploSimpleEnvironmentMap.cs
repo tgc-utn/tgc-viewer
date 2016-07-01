@@ -78,7 +78,7 @@ namespace TGC.Examples.Lights
             m4.dispose();
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(0, 50, 100));
+            Camara = new TgcFpsCamera(new Vector3(0, 50, 100), Input);
 
             //Cargar Shader de DynamicLights
             effect = TgcShaders.loadEffect(ShadersDir + "EnvironmentMap.fx");

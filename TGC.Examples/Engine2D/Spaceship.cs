@@ -24,8 +24,6 @@ namespace TGC.Examples.Engine2D
         //El numero de sprite dentro del spritesheet
         private int currentSprite;
 
-        private float elapsedTime;
-
         //Cuanto tiempo paso desde que se disparo el ultimo misil.
         private float misilRateCounter;
 
@@ -49,8 +47,11 @@ namespace TGC.Examples.Engine2D
         //El estado de la nave.
         private StateEnum state;
 
-        public void Load(CustomBitmap bitmap)
+	private TgcD3dInput Input { get; set; }
+
+        public void Load(CustomBitmap bitmap, TgcD3dInput input)
         {
+	    Input = input;
             spaceshipBitmap = bitmap;
 
             sprites = new List<CustomSprite>();
@@ -111,34 +112,32 @@ namespace TGC.Examples.Engine2D
 
         public override void Update(float elapsedTime)
         {
-            this.elapsedTime = elapsedTime;
-
             //float dirX = 0;
             float dirY = 0;
 
             state = StateEnum.Idle;
-            if (TgcD3dInput.Instance.keyDown(Key.A))
+            if (Input.keyDown(Key.A))
             {
                 //  dirX = -1;
                 // state = StateEnum.Moving;
             }
-            if (TgcD3dInput.Instance.keyDown(Key.D))
+            if (Input.keyDown(Key.D))
             {
                 // dirX = 1;
                 // state = StateEnum.Moving;
             }
-            if (TgcD3dInput.Instance.keyDown(Key.W))
+            if (Input.keyDown(Key.W))
             {
                 dirY = -1;
                 state = StateEnum.Moving;
             }
-            if (TgcD3dInput.Instance.keyDown(Key.S))
+            if (Input.keyDown(Key.S))
             {
                 dirY = 1;
                 state = StateEnum.Moving;
             }
 
-            if (TgcD3dInput.Instance.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 fireMissile();
             }
@@ -168,7 +167,7 @@ namespace TGC.Examples.Engine2D
             //const float Epsilon = 0.2f;
 
             var spriteMouseVector = new Vector2();
-            var mouseVector = new Vector2(TgcD3dInput.Instance.Xpos, TgcD3dInput.Instance.Ypos);
+            var mouseVector = new Vector2(Input.Xpos, Input.Ypos);
             spriteMouseVector = Vector2.Subtract(mouseVector,
                 Position + new Vector2(spriteSize.X / 2 * size, spriteSize.Y / 2 * size));
 
@@ -229,8 +228,8 @@ namespace TGC.Examples.Engine2D
 
             GameManager.Instance.userVars.setValue("PosX", Position.X);
             GameManager.Instance.userVars.setValue("PosY", Position.Y);
-            GameManager.Instance.userVars.setValue("MousePosX", TgcD3dInput.Instance.Xpos);
-            GameManager.Instance.userVars.setValue("MousePosY", TgcD3dInput.Instance.Ypos);
+            GameManager.Instance.userVars.setValue("MousePosX", Input.Xpos);
+            GameManager.Instance.userVars.setValue("MousePosY", Input.Ypos);
             GameManager.Instance.userVars.setValue("AngleMouse", angleToMousePointer * 360 / (2 * Math.PI));
         }
 

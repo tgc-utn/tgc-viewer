@@ -29,7 +29,7 @@ namespace TGC.Examples.Engine2D
         {
             gameManager = GameManager.Instance;
 
-            gameManager.Init(MediaDir + "Engine2D\\", UserVars);
+            gameManager.Init(MediaDir + "Engine2D\\", UserVars, Input);
         }
 
         public override void Update()

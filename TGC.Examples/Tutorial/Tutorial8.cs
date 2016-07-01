@@ -61,21 +61,20 @@ namespace TGC.Examples.Tutorial
             PreRender();
 
             //Procesamos input de teclado para mover el objeto principal en el plano XZ
-            var input = TgcD3dInput.Instance;
             var movement = new Vector3(0, 0, 0);
-            if (input.keyDown(Key.Left) || input.keyDown(Key.A))
+            if (Input.keyDown(Key.Left) || Input.keyDown(Key.A))
             {
                 movement.X = 1;
             }
-            else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
+            else if (Input.keyDown(Key.Right) || Input.keyDown(Key.D))
             {
                 movement.X = -1;
             }
-            if (input.keyDown(Key.Up) || input.keyDown(Key.W))
+            if (Input.keyDown(Key.Up) || Input.keyDown(Key.W))
             {
                 movement.Z = -1;
             }
-            else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
+            else if (Input.keyDown(Key.Down) || Input.keyDown(Key.S))
             {
                 movement.Z = 1;
             }

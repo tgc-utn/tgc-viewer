@@ -83,7 +83,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Centrar camara rotacional respecto a este mesh
             var rotCamera = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2);
+                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
             rotCamera.CameraCenter = rotCamera.CameraCenter + new Vector3(0, 20f, 0);
             rotCamera.CameraDistance = 75;
             rotCamera.RotationSpeed = 50f;
@@ -106,11 +106,11 @@ namespace TGC.Examples.ShadersExamples
             var device = D3DDevice.Instance.Device;
 
             time += ElapsedTime;
-            if (TgcD3dInput.Instance.keyPressed(Key.Space))
+            if (Input.keyPressed(Key.Space))
                 pom = !pom;
-            if (TgcD3dInput.Instance.keyPressed(Key.L))
+            if (Input.keyPressed(Key.L))
                 phong = !phong;
-            if (TgcD3dInput.Instance.keyPressed(Key.S))
+            if (Input.keyPressed(Key.S))
             {
                 if (++nro_textura >= 3)
                     nro_textura = 0;

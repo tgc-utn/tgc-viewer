@@ -39,7 +39,7 @@ namespace TGC.Examples.SceneLoader
         public override void Init()
         {
             //FPS Camara
-            Camara = new TgcFpsCamera(new Vector3(-140f, 40f, -50f), 200f, 200f);
+            Camara = new TgcFpsCamera(new Vector3(-140f, 40f, -50f), 200f, 200f, Input);
 
             //Modifier para habilitar o deshabilitar FrustumCulling
             Modifiers.addBoolean("culling", "Frustum culling", true);

@@ -90,7 +90,7 @@ namespace TGC.Examples.KeyFrameAnimation
             mesh.playAnimation(selectedAnim, true);
 
             //Configurar camara
-            Camara = new TgcRotationalCamera(new Vector3(0, 70, 0), 200);
+            Camara = new TgcRotationalCamera(new Vector3(0, 70, 0), 200, Input);
         }
 
         public override void Update()

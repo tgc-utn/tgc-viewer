@@ -81,7 +81,7 @@ namespace TGC.Examples.SkeletalAnimation
             }
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(293.201f, 291.0797f, -604.6647f));
+            Camara = new TgcFpsCamera(new Vector3(293.201f, 291.0797f, -604.6647f), Input);
         }
 
         public override void Update()

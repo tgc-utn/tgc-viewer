@@ -43,7 +43,7 @@ namespace TGC.Examples.TextureMapping
             Modifiers.addInterval("Filtering", new[] { "Nearest", "Linear", "Bilinear", "Anisotropic" }, 0);
             changeTextureFiltering(D3DDevice.Instance.Device, lastFiltering);
 
-            Camara = new TgcFpsCamera(new Vector3(-54.93998f, 2f, -1.118192f), 150f, 500f);
+            Camara = new TgcFpsCamera(new Vector3(-54.93998f, 2f, -1.118192f), 150f, 500f, Input);
         }
 
         public override void Update()

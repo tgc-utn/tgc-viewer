@@ -50,7 +50,7 @@ namespace TGC.Examples.AlphaBlending
             mesh2.VTile = 1;
             mesh2.updateValues();
 
-            Camara = new TgcFpsCamera(new Vector3(50.0f, 50.0f, 150.0f));
+            Camara = new TgcFpsCamera(new Vector3(50.0f, 50.0f, 150.0f), Input);
 
             Modifiers.addBoolean("invertRender", "Invert Render", false);
         }

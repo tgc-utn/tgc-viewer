@@ -43,7 +43,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addFloat("thickness", 0.1f, 5, 0.2f);
             Modifiers.addColor("color", Color.BurlyWood);
 
-            Camara = new TgcRotationalCamera(new Vector3(), 50f);
+            Camara = new TgcRotationalCamera(new Vector3(), 50f, Input);
         }
 
         public override void Update()

@@ -81,7 +81,7 @@ namespace TGC.Examples.ShadersExamples
 
             // Creo 3 viewport, para mostrar una comparativa entre los metodos de iluminacion
 
-            Camara = new TgcRotationalCamera(new Vector3(20, 20, 0), 200);
+            Camara = new TgcRotationalCamera(new Vector3(20, 20, 0), 200, Input);
 
             View1 = new Viewport();
             View1.X = 0;
@@ -129,7 +129,7 @@ namespace TGC.Examples.ShadersExamples
 
             D3DDevice.Instance.Device.BeginScene();
 
-            if (TgcD3dInput.Instance.keyPressed(Key.Space))
+            if (Input.keyPressed(Key.Space))
                 vista_unica = !vista_unica;
 
             var lightPosition = (Vector3)Modifiers["LightPosition"];

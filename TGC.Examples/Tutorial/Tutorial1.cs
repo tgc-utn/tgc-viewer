@@ -50,7 +50,7 @@ namespace TGC.Examples.Tutorial
             //del mouse se hace zoom.
             //Otras cámaras disponibles son: FpsCamera (1ra persona) y ThirdPersonCamera (3ra persona).
             Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
-                box.BoundingBox.calculateBoxRadius() * 2);
+                box.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()

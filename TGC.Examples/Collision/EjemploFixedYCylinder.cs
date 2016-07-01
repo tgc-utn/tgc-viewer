@@ -84,9 +84,9 @@ namespace TGC.Examples.Collision
             if (pickingTimeLeft > 0) pickingTimeLeft -= ElapsedTime;
             else collider.setRenderColor(noCollisionColor);
 
-            if (TgcD3dInput.Instance.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (Input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                var pickingRay = new TgcPickingRay();
+                var pickingRay = new TgcPickingRay(Input);
                 pickingRay.updateRay();
                 if (TgcCollisionUtils.testRayCylinder(pickingRay.Ray, collider))
                 {

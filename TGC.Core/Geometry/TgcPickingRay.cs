@@ -9,8 +9,11 @@ namespace TGC.Core.Geometry
     /// </summary>
     public class TgcPickingRay
     {
-        public TgcPickingRay()
+        private TgcD3dInput Input { get; set; }
+
+        public TgcPickingRay(TgcD3dInput input)
         {
+            Input = input;
             Ray = new TgcRay();
         }
 
@@ -25,8 +28,8 @@ namespace TGC.Core.Geometry
         public void updateRay()
         {
             //Crear Ray en base a coordenadas del mouse
-            var sx = TgcD3dInput.Instance.Xpos;
-            var sy = TgcD3dInput.Instance.Ypos;
+            var sx = Input.Xpos;
+            var sy = Input.Ypos;
             var w = D3DDevice.Instance.Device.Viewport.Width;
             var h = D3DDevice.Instance.Device.Viewport.Height;
             var matProj = D3DDevice.Instance.Device.Transform.Projection;

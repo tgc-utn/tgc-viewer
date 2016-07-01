@@ -45,7 +45,7 @@ namespace TGC.Examples.Transformations
             data[2] = new CustomVertex.PositionColored(0, 1, 0, Color.Blue.ToArgb());
 
             //FPS Camara
-            Camara = new TgcFpsCamera(new Vector3(0.5f, 0, -3));
+            Camara = new TgcFpsCamera(new Vector3(0.5f, 0, -3), Input);
 
             //User Vars
             UserVars.addVar("Vertices", 0);

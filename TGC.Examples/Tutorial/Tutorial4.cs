@@ -40,7 +40,7 @@ namespace TGC.Examples.Tutorial
 
             //Hacemos que la cámara esté centrada el box.
             Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
-                box.BoundingBox.calculateBoxRadius() * 2);
+                box.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
@@ -53,7 +53,7 @@ namespace TGC.Examples.Tutorial
             PreRender();
 
             //Obtenemos acceso al objeto que maneja input de mouse y teclado del framework
-            var input = TgcD3dInput.Instance;
+            var input = Input;
 
             //Declaramos un vector de movimiento inicializado todo en cero.
             //El movimiento sobre el suelo es sobre el plano XZ.

@@ -58,7 +58,7 @@ namespace TGC.Examples.GeometryBasics
             //Modifier para ver BoundingBox
             Modifiers.addBoolean("moveWhitCamera", "Move Whit Camera", false);
 
-            Camara = new TgcFpsCamera();
+            Camara = new TgcFpsCamera(Input);
         }
 
         public override void Update()

@@ -96,7 +96,7 @@ namespace TGC.Examples.Lights
             }
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(0, 50, 100));
+            Camara = new TgcFpsCamera(new Vector3(0, 50, 100), Input);
 
             //Cargar Shader de personalizado de BumpMapping. Solo soporta meshes de tipo DiffuseMap
             effect = TgcShaders.loadEffect(ShadersDir + "BumpMapping.fx");

@@ -38,7 +38,7 @@ namespace TGC.Examples.AlphaBlending
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pino\\Pino-TgcScene.xml");
 
             Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(),
-                scene.BoundingBox.calculateBoxRadius() * 2);
+                scene.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()

@@ -45,7 +45,7 @@ namespace TGC.Examples.Tutorial
 
             //Hacemos que la cámara esté centrada sobre el box.
             Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
-                box.BoundingBox.calculateBoxRadius() * 2);
+                box.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()

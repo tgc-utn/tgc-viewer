@@ -58,7 +58,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
-            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 10f);
+            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 10f, Input);
 
             //El tipo de mesh para seleccionar.
             Modifiers.addInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
