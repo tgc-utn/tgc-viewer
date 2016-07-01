@@ -111,6 +111,7 @@
     <Compile Include="DirectX\EjemploGetZBuffer.cs" />
     <Compile Include="DirectX\EjemploTeapotConCamara.cs" />
     <Compile Include="DirectX\Lighting.cs" />
+    <Compile Include="Engine2D\Core\AnimatedSprite.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />
     <Compile Include="ShadersExamples\DemoShaders.cs" />
     <Compile Include="ShadersExamples\EjemploPhongShading.cs" />
@@ -129,14 +130,14 @@
     <Compile Include="ShadersExamples\ToonShading.cs" />
     <Compile Include="ShadersExamples\VideoPostProcess.cs" />
     <Compile Include="Engine2D\Asteroide.cs" />
-    <Compile Include="Engine2D\Bitmap.cs" />
-    <Compile Include="Engine2D\Drawer.cs" />
+    <Compile Include="Engine2D\Core\CustomBitmap.cs" />
+    <Compile Include="Engine2D\Core\Drawer2D.cs" />
     <Compile Include="Engine2D\Ejemplo2D.cs" />
     <Compile Include="Engine2D\GameManager.cs" />
     <Compile Include="Engine2D\GameObject.cs" />
     <Compile Include="Engine2D\Misil.cs" />
     <Compile Include="Engine2D\Spaceship.cs" />
-    <Compile Include="Engine2D\Sprite.cs" />
+    <Compile Include="Engine2D\Core\CustomSprite.cs" />
     <Compile Include="Fog\EfectoNiebla.cs" />
     <Compile Include="GeometryBasics\Caja.cs" />
     <Compile Include="GeometryBasics\CajaDebug.cs" />
@@ -225,8 +226,8 @@
     <Compile Include="Sound\PlayMp3.cs" />
     <Compile Include="Sound\PlaySound3D.cs" />
     <Compile Include="Sound\PlayStaticSound.cs" />
-    <Compile Include="Sprites2D\EjemploAnimatedSprite.cs" />
-    <Compile Include="Sprites2D\EjemploSprite2D.cs" />
+    <Compile Include="Engine2D\Sprites2D\EjemploAnimatedSprite.cs" />
+    <Compile Include="Engine2D\Sprites2D\EjemploSprite2D.cs" />
     <Compile Include="TextureMapping\EjemploTextureFiltering.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
@@ -325,9 +326,7 @@
     <Content Include="Shaders\WorkshopShaders\ToonShading.fx" />
     <Content Include="Shaders\WorkshopShaders\VolRender.fx" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Example\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

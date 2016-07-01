@@ -28,7 +28,6 @@ namespace TGC.Core.Example
             Frustum = new TgcFrustum();
             //DirectSound = new TgcDirectSound(); Por ahora se carga por afuera
             DrawText = new TgcText2D();
-            Drawer2D = new TgcDrawer2D();
 
             Category = "Others";
             Name = "Ejemplo en Blanco";
@@ -88,8 +87,6 @@ namespace TGC.Core.Example
         public TgcDirectSound DirectSound { get; set; }
 
         public TgcText2D DrawText { get; set; }
-
-        public TgcDrawer2D Drawer2D { get; set; }
 
         /// <summary>
         ///     Se llama cuando el ejemplo es elegido para ejecutar.
