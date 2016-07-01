@@ -20,8 +20,8 @@ namespace TGC.Examples.Sound
     public class PlayStaticSound : TGCExampleViewer
     {
         private string currentFile;
-        private TgcText2d currentSoundText;
-        private TgcText2d instruccionesText;
+        private TgcText2D currentSoundText;
+        private TgcText2D instruccionesText;
         private TgcStaticSound sound;
 
         public PlayStaticSound(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
@@ -35,14 +35,14 @@ namespace TGC.Examples.Sound
         public override void Init()
         {
             //Texto para el sonido actual
-            currentSoundText = new TgcText2d(DrawText);
+            currentSoundText = new TgcText2D();
             currentSoundText.Text = "No sound";
             currentSoundText.Position = new Point(50, 20);
             currentSoundText.Color = Color.Gold;
             currentSoundText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Italic));
 
             //Texto de instrucciones
-            instruccionesText = new TgcText2d(DrawText);
+            instruccionesText = new TgcText2D();
             instruccionesText.Text = "Y = Play, O = Stop.";
             instruccionesText.Position = new Point(50, 60);
             instruccionesText.Color = Color.Green;

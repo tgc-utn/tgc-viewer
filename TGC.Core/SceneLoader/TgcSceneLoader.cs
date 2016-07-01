@@ -67,16 +67,15 @@ namespace TGC.Core.SceneLoader
         {
             //extraer archivo pisando archivos existentes
             var zip = ZipFile.OpenRead(zipFilePath);
-            zip.ExtractToDirectory(extractDir);
-
-            /*using (var zip = ZipFile.Read(zipFilePath))
+            try
             {
-                foreach (var e in zip)
-                {
-                    e.Extract(extractDir, ExtractExistingFileAction.OverwriteSilently);
-                }
-            }*/
-
+                zip.ExtractToDirectory(extractDir);
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            
             return loadSceneFromFile(extractDir + sceneFileName, extractDir);
         }
 

@@ -1,11 +1,12 @@
 using Microsoft.DirectX.Direct3D;
+using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using Font = Microsoft.DirectX.Direct3D.Font;
 
 namespace TGC.Core._2D
 {
-    public class TgcText2d
+    public class TgcText2D : IDisposable
     {
         /// <summary>
         ///     Alternativas de alineación del texto
@@ -16,16 +17,17 @@ namespace TGC.Core._2D
             RIGHT,
             CENTER
         }
-
         private TextAlign align;
+        //font default.
+        public static readonly System.Drawing.Font VERDANA_10 = new System.Drawing.Font("Verdana", 10, FontStyle.Regular, GraphicsUnit.Pixel);
         private Rectangle rectangle;
-        private TgcDrawText DrawText { get; set; }
+        private Sprite TextSprite { get; set; }
 
-        public TgcText2d(TgcDrawText drawText)
+        public TgcText2D()
         {
-            DrawText = drawText;
+            TextSprite = new Sprite(D3DDevice.Instance.Device);
             changeTextAlign(TextAlign.CENTER);
-            changeFont(TgcDrawText.VERDANA_10);
+            changeFont(VERDANA_10);
             Color = Color.Black;
 
             var viewport = D3DDevice.Instance.Device.Viewport;
@@ -82,10 +84,9 @@ namespace TGC.Core._2D
 
         public void render()
         {
-            var sprite = DrawText.TextSprite;
-            sprite.Begin(SpriteFlags.AlphaBlend);
-            D3dFont.DrawText(sprite, Text, rectangle, Format, Color);
-            sprite.End();
+            TextSprite.Begin(SpriteFlags.AlphaBlend);
+            D3dFont.DrawText(TextSprite, Text, rectangle, Format, Color);
+            TextSprite.End();
         }
 
         /// <summary>
@@ -121,10 +122,24 @@ namespace TGC.Core._2D
             Format = DrawTextFormat.NoClip | DrawTextFormat.ExpandTabs | DrawTextFormat.WordBreak | fAlign;
         }
 
-        public void dispose()
+        /// <summary>
+        ///     Dibujar un texto en la posición indicada, con el color indicado.
+        ///     Utilizar la fuente default del Framework.
+        /// </summary>
+        /// <param name="text">Texto a dibujar</param>
+        /// <param name="x">Posición X de la pantalla</param>
+        /// <param name="y">Posición Y de la pantalla</param>
+        /// <param name="color">Color del texto</param>
+        public void drawText(string text, int x, int y, Color color)
         {
-            //TODO: No se por que pero esto da error al hacer resize de la pantalla
-            //d3dFont.Dispose();
+            TextSprite.Begin(SpriteFlags.AlphaBlend);
+            D3dFont.DrawText(TextSprite, text, x, y, color);
+            TextSprite.End();
+        }
+
+        public void Dispose()
+        {
+            D3dFont.Dispose();
         }
     }
 }

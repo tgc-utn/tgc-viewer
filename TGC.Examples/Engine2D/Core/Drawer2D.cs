@@ -3,12 +3,12 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
 
-namespace TGC.Examples.Engine2D
+namespace TGC.Examples.Engine2D.Core
 {
     /// <summary>
     ///     Draws sprites and primitives.
     /// </summary>
-    public class Drawer
+    public class Drawer2D
     {
         private readonly Microsoft.DirectX.Direct3D.Sprite DxSprite;
         private readonly Line line;
@@ -16,7 +16,7 @@ namespace TGC.Examples.Engine2D
         private readonly CustomVertex.PositionColoredTextured[] LineVertexData =
             new CustomVertex.PositionColoredTextured[2];
 
-        public Drawer()
+        public Drawer2D()
         {
             DxSprite = new Microsoft.DirectX.Direct3D.Sprite(D3DDevice.Instance.Device);
             line = new Line(D3DDevice.Instance.Device);
@@ -42,10 +42,10 @@ namespace TGC.Examples.Engine2D
         ///     Draws a sprite on the screen.
         /// </summary>
         /// <param name="sprite">The sprite.</param>
-        public void DrawSprite(Sprite sprite)
+        public void DrawSprite(CustomSprite sprite)
         {
             DxSprite.Transform = sprite.TransformationMatrix;
-            DxSprite.Draw(sprite.Bitmap.Texture, sprite.SrcRect, Vector3.Empty, Vector3.Empty, sprite.Color);
+            DxSprite.Draw(sprite.Bitmap.D3dTexture, sprite.SrcRect, Vector3.Empty, Vector3.Empty, sprite.Color);
         }
 
         /// <summary>

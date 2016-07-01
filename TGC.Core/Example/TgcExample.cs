@@ -27,8 +27,7 @@ namespace TGC.Core.Example
             HighResolutionTimer = new HighResolutionTimer();
             Frustum = new TgcFrustum();
             //DirectSound = new TgcDirectSound(); Por ahora se carga por afuera
-            DrawText = new TgcDrawText();
-            Drawer2D = new TgcDrawer2D();
+            DrawText = new TgcText2D();
 
             Category = "Others";
             Name = "Ejemplo en Blanco";
@@ -87,9 +86,7 @@ namespace TGC.Core.Example
 
         public TgcDirectSound DirectSound { get; set; }
 
-        public TgcDrawText DrawText { get; set; }
-
-        public TgcDrawer2D Drawer2D { get; set; }
+        public TgcText2D DrawText { get; set; }
 
         /// <summary>
         ///     Se llama cuando el ejemplo es elegido para ejecutar.
@@ -204,10 +201,7 @@ namespace TGC.Core.Example
         /// </summary>
         protected void RenderAxis()
         {
-            if (AxisLines.Enable)
-            {
-                AxisLines.render();
-            }
+            AxisLines.render();
         }
 
         /// <summary>
@@ -217,7 +211,7 @@ namespace TGC.Core.Example
         {
             if (FPS)
             {
-                DrawText.drawText("FPS: " + HighResolutionTimer.FramesPerSecond, 0, 0, Color.Yellow);
+                DrawText.drawText(HighResolutionTimer.ToString(), 0, 0, Color.Yellow);
             }
         }
 

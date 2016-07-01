@@ -23,7 +23,7 @@ namespace TGC.Core.UserControls.Modifier
 
         public object this[string varName]
         {
-            get { return modifiers[varName].getValue(); }
+            get { return modifiers.ContainsKey(varName)? modifiers[varName].getValue(): null; }
         }
 
         public void add(TgcModifierPanel modifier)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
 using TGC.Core.UserControls;
+using TGC.Examples.Engine2D.Core;
 
 namespace TGC.Examples.Engine2D
 {
@@ -13,13 +14,13 @@ namespace TGC.Examples.Engine2D
 
         public static int ScreenHeight, ScreenWidth;
 
-        private Bitmap asteroidBitmap, spaceshipBitmap, misilBitmap;
+        private CustomBitmap asteroidBitmap, spaceshipBitmap, misilBitmap;
         private List<Asteroide> asteroids;
 
         private List<Misil> misiles;
         private Spaceship spaceShip;
 
-        private Drawer spriteDrawer;
+        private Drawer2D spriteDrawer;
 
         public TgcUserVars userVars;
 
@@ -28,7 +29,7 @@ namespace TGC.Examples.Engine2D
             this.userVars = userVars;
 
             //Creo el sprite drawer
-            spriteDrawer = new Drawer();
+            spriteDrawer = new Drawer2D();
 
             //Creo la lista de asteroides.
             asteroids = new List<Asteroide>();
@@ -39,12 +40,12 @@ namespace TGC.Examples.Engine2D
             ScreenWidth = D3DDevice.Instance.Device.Viewport.Width;
             ScreenHeight = D3DDevice.Instance.Device.Viewport.Height;
             //Cargo el bitmap del spritesheet de la nave.
-            asteroidBitmap = new Bitmap(exampleDir + "Asteroides.png", D3DDevice.Instance.Device);
+            asteroidBitmap = new CustomBitmap(exampleDir + "Asteroides.png", D3DDevice.Instance.Device);
 
-            spaceshipBitmap = new Bitmap(exampleDir + "nave.png", D3DDevice.Instance.Device);
+            spaceshipBitmap = new CustomBitmap(exampleDir + "nave.png", D3DDevice.Instance.Device);
 
             //Cargo el bitmap del misil que dispara la nave.
-            misilBitmap = new Bitmap(exampleDir + "particle.png", D3DDevice.Instance.Device);
+            misilBitmap = new CustomBitmap(exampleDir + "particle.png", D3DDevice.Instance.Device);
 
             //Creo la nave espacial
             spaceShip = new Spaceship();
@@ -144,9 +145,9 @@ namespace TGC.Examples.Engine2D
 
         internal void Dispose()
         {
-            asteroidBitmap.Texture.Dispose();
-            misilBitmap.Texture.Dispose();
-            spaceshipBitmap.Texture.Dispose();
+            asteroidBitmap.D3dTexture.Dispose();
+            misilBitmap.D3dTexture.Dispose();
+            spaceshipBitmap.D3dTexture.Dispose();
         }
 
         #region Singleton

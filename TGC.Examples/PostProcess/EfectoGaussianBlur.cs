@@ -30,6 +30,7 @@ namespace TGC.Examples.PostProcess
         private Effect effect;
         private List<TgcMesh> meshes;
         private Surface pOldRT;
+        private Surface depthStencil; // Depth-stencil buffer
         private Texture sceneRT;
         private TgcScreenQuad screenQuad;
 
@@ -62,6 +63,11 @@ namespace TGC.Examples.PostProcess
             blurTempRT = new Texture(D3DDevice.Instance.Device, cropWidth, cropHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8,
                 Pool.Default);
+
+            //Creamos un DepthStencil que debe ser compatible con nuestra definicion de renderTarget2D.
+            depthStencil = D3DDevice.Instance.Device.CreateDepthStencilSurface(D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
+                DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             //Cargar shader con efectos de Post-Procesado
             effect = TgcShaders.loadEffect(ShadersDir + "GaussianBlur.fx");
@@ -167,6 +173,9 @@ namespace TGC.Examples.PostProcess
                 effect.SetValue("gauss_offsets", TgcParserUtils.vector2ArrayToFloat2Array(texCoordOffsets));
                 effect.SetValue("gauss_weights", colorWeights);
                 d3dDevice.SetRenderTarget(0, pOldRT);
+                // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
+                // por no soportar usualmente el multisampling en el render to texture (en nuevas placas de video)
+                D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
                 d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 screenQuad.render(effect);
 
@@ -178,6 +187,9 @@ namespace TGC.Examples.PostProcess
                 effect.Technique = "DefaultTechnique";
                 effect.SetValue("texSceneRT", sceneRT);
                 d3dDevice.SetRenderTarget(0, pOldRT);
+                // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
+                // por no soportar usualmente el multisampling en el render to texture (en nuevas placas de video)
+                D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
                 d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 screenQuad.render(effect);
             }
@@ -200,6 +212,7 @@ namespace TGC.Examples.PostProcess
             sceneRT.Dispose();
             blurTempRT.Dispose();
             pOldRT.Dispose();
+            depthStencil.Dispose();
         }
     }
 }
