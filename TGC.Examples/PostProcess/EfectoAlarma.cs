@@ -35,6 +35,8 @@ namespace TGC.Examples.PostProcess
         private InterpoladorVaiven intVaivenAlarm;
         private List<TgcMesh> meshes;
         private Surface pOldRT;
+        private Surface depthStencil; // Depth-stencil buffer
+        private Surface depthStencilOld;
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
@@ -70,7 +72,12 @@ namespace TGC.Examples.PostProcess
                 D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
                 , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
-
+            
+            //Creamos un DepthStencil que debe ser compatible con nuestra definicion de renderTarget2D.
+            depthStencil = D3DDevice.Instance.Device.CreateDepthStencilSurface(D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
+                DepthFormat.D24S8, MultiSampleType.None, 0, true);
+            depthStencilOld = D3DDevice.Instance.Device.DepthStencilSurface;
             //Cargar shader con efectos de Post-Procesado
             effect = TgcShaders.loadEffect(ShadersDir + "PostProcess.fx");
 
@@ -97,6 +104,9 @@ namespace TGC.Examples.PostProcess
 
             //Modifier para activar/desactivar efecto de alarma
             Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
+
+            //Modifier para activar/desactivar stensil para ver como el ejemplo se rompe.
+            Modifiers.addBoolean("activar_stencil", "Activar stensil", true);
         }
 
         public override void Update()
@@ -114,7 +124,7 @@ namespace TGC.Examples.PostProcess
             var pSurf = renderTarget2D.GetSurfaceLevel(0);
             D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-
+            
             //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
             drawSceneToRenderTarget(D3DDevice.Instance.Device);
 
@@ -126,6 +136,18 @@ namespace TGC.Examples.PostProcess
 
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
+            // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
+            // por no soportar usualmente el multisampling en el render to texture (en nuevas placas de video)
+            var activar_efecto = (bool)Modifiers["activar_stencil"];
+            if (activar_efecto)
+            {
+                D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
+            }
+            else
+            {
+                D3DDevice.Instance.Device.DepthStencilSurface = depthStencilOld;
+            }
+            
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcess(D3DDevice.Instance.Device, ElapsedTime);
@@ -205,6 +227,7 @@ namespace TGC.Examples.PostProcess
             alarmTexture.dispose();
             screenQuadVB.Dispose();
             renderTarget2D.Dispose();
+            depthStencil.Dispose();
         }
     }
 }
