@@ -46,15 +46,6 @@ namespace TGC.Core.Input
 
         private bool[] previousMouseButtonsState;
 
-        /// <summary>
-        ///     Constructor privado para poder hacer el singleton
-        /// </summary>
-        private TgcD3dInput()
-        {
-        }
-
-        public static TgcD3dInput Instance { get; } = new TgcD3dInput();
-
         public void Initialize(Control guiControl, Control panel3d)
         {
             this.panel3d = panel3d;

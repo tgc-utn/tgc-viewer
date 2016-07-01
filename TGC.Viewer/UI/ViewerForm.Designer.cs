@@ -51,13 +51,13 @@
             this.flowLayoutPanelModifiers = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBoxUserVars = new System.Windows.Forms.GroupBox();
             this.dataGridUserVars = new System.Windows.Forms.DataGridView();
-            this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainerIzquierda = new System.Windows.Forms.SplitContainer();
             this.groupBoxExamples = new System.Windows.Forms.GroupBox();
             this.treeViewExamples = new System.Windows.Forms.TreeView();
             this.textBoxExampleDescription = new System.Windows.Forms.TextBox();
             this.panel3D = new System.Windows.Forms.Panel();
+            this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerDerecha)).BeginInit();
@@ -97,7 +97,7 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Salir";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -176,14 +176,14 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.helpToolStripMenuItem.Text = "Ayuda";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.helpToolStripMenuItem.Text = "Ver ayuda";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
             // 
             // acercaDeTgcViewerToolStripMenuItem
             // 
             this.acercaDeTgcViewerToolStripMenuItem.Name = "acercaDeTgcViewerToolStripMenuItem";
-            this.acercaDeTgcViewerToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.acercaDeTgcViewerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.acercaDeTgcViewerToolStripMenuItem.Text = "Acerca de";
             this.acercaDeTgcViewerToolStripMenuItem.Click += new System.EventHandler(this.acercaDeTgcViewerToolStripMenuItem_Click);
             // 
@@ -231,7 +231,7 @@
             this.groupBoxModifiers.Size = new System.Drawing.Size(250, 185);
             this.groupBoxModifiers.TabIndex = 0;
             this.groupBoxModifiers.TabStop = false;
-            this.groupBoxModifiers.Text = "Modifiers";
+            this.groupBoxModifiers.Text = "Modificadores";
             // 
             // flowLayoutPanelModifiers
             // 
@@ -255,7 +255,7 @@
             this.groupBoxUserVars.Size = new System.Drawing.Size(250, 326);
             this.groupBoxUserVars.TabIndex = 0;
             this.groupBoxUserVars.TabStop = false;
-            this.groupBoxUserVars.Text = "User variables";
+            this.groupBoxUserVars.Text = "Variables de usuario";
             // 
             // dataGridUserVars
             // 
@@ -275,25 +275,6 @@
             this.dataGridUserVars.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dataGridUserVars.Size = new System.Drawing.Size(244, 307);
             this.dataGridUserVars.TabIndex = 0;
-            // 
-            // ColumnName
-            // 
-            this.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ColumnName.DataPropertyName = "Name";
-            this.ColumnName.HeaderText = "Name";
-            this.ColumnName.Name = "ColumnName";
-            this.ColumnName.ReadOnly = true;
-            this.ColumnName.Width = 60;
-            // 
-            // ColumnValue
-            // 
-            this.ColumnValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColumnValue.DataPropertyName = "Value";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ColumnValue.DefaultCellStyle = dataGridViewCellStyle1;
-            this.ColumnValue.HeaderText = "Value";
-            this.ColumnValue.Name = "ColumnValue";
-            this.ColumnValue.ReadOnly = true;
             // 
             // splitContainerIzquierda
             // 
@@ -353,6 +334,25 @@
             this.panel3D.Name = "panel3D";
             this.panel3D.Size = new System.Drawing.Size(354, 515);
             this.panel3D.TabIndex = 9;
+            // 
+            // ColumnName
+            // 
+            this.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ColumnName.DataPropertyName = "Name";
+            this.ColumnName.HeaderText = "Nombre";
+            this.ColumnName.Name = "ColumnName";
+            this.ColumnName.ReadOnly = true;
+            this.ColumnName.Width = 69;
+            // 
+            // ColumnValue
+            // 
+            this.ColumnValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnValue.DataPropertyName = "Value";
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ColumnValue.DefaultCellStyle = dataGridViewCellStyle1;
+            this.ColumnValue.HeaderText = "Valor";
+            this.ColumnValue.Name = "ColumnValue";
+            this.ColumnValue.ReadOnly = true;
             // 
             // ViewerForm
             // 
@@ -419,13 +419,13 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelModifiers;
         private System.Windows.Forms.GroupBox groupBoxUserVars;
         private System.Windows.Forms.DataGridView dataGridUserVars;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnValue;
         private System.Windows.Forms.Panel panel3D;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ColumnValue;
     }
 }
 

@@ -100,7 +100,7 @@ namespace TGC.Examples.GeometryBasics
 
             //Ajustar camara segun tamano de la pared
             Camara = new TgcRotationalCamera(wall.BoundingBox.calculateBoxCenter(),
-                wall.BoundingBox.calculateBoxRadius() * 2);
+                wall.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Render()

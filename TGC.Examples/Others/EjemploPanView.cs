@@ -28,7 +28,7 @@ namespace TGC.Examples.Others
             box = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(20, 20, 20), Color.Red);
 
             Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
-                box.BoundingBox.calculateBoxRadius() * 2);
+                box.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()

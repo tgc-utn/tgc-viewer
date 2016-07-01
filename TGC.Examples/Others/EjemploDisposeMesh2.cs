@@ -38,7 +38,7 @@ namespace TGC.Examples.Others
             scene1 =
                 loader1.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
 
-            Camara = new TgcRotationalCamera(new Vector3(0f, 300f, 0f), 1500f);
+            Camara = new TgcRotationalCamera(new Vector3(0f, 300f, 0f), 1500f, Input);
         }
 
         public override void Update()

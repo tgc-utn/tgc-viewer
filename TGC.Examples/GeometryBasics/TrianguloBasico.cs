@@ -42,7 +42,7 @@ namespace TGC.Examples.GeometryBasics
             data[2] = new CustomVertex.PositionColored(0, 1, 0, Color.Blue.ToArgb());
 
             //Configurar camara en rotacion
-            Camara = new TgcRotationalCamera(new Vector3(0, 0.5f, 0), 3f);
+            Camara = new TgcRotationalCamera(new Vector3(0, 0.5f, 0), 3f, Input);
 
             //Cargar variables de usuario con alguna informacion util para ver en pantalla
             UserVars.addVar("Cantida de Vertices", data.Length);

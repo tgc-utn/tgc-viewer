@@ -64,7 +64,7 @@ namespace TGC.Examples.Optimization.KdtTree
             kdtree.createDebugKdTreeMeshes();
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(1500, 800, 0));
+            Camara = new TgcFpsCamera(new Vector3(1500, 800, 0), Input);
 
             Modifiers.addBoolean("showKdTree", "Show KdTree", false);
             Modifiers.addBoolean("showTerrain", "Show Terrain", true);

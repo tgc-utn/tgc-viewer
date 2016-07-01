@@ -29,8 +29,11 @@ namespace TGC.Core.Camara
         private Vector3 positionEye;
         private float updownRot = -FastMath.PI / 10.0f;
 
-        public TgcFpsCamera()
+        private TgcD3dInput Input { get; set; }
+
+        public TgcFpsCamera(TgcD3dInput input)
         {
+            Input = input;
             positionEye = new Vector3();
             directionView = new Vector3(0, 0, -1);
             mouseCenter = new Point(
@@ -42,25 +45,25 @@ namespace TGC.Core.Camara
             cameraRotation = Matrix.RotationX(updownRot) * Matrix.RotationY(leftrightRot);
         }
 
-        public TgcFpsCamera(Vector3 positionEye, Vector3 directionView) : this()
+        public TgcFpsCamera(Vector3 positionEye, Vector3 directionView, TgcD3dInput input) : this(input)
         {
             this.positionEye = positionEye;
             this.directionView = directionView;
         }
 
-        public TgcFpsCamera(Vector3 positionEye) : this()
+        public TgcFpsCamera(Vector3 positionEye, TgcD3dInput input) : this(input)
         {
             this.positionEye = positionEye;
         }
 
-        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed) : this(positionEye)
+        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed, TgcD3dInput input) : this(positionEye, input)
         {
             MovementSpeed = moveSpeed;
             JumpSpeed = jumpSpeed;
         }
 
-        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed, float rotationSpeed)
-            : this(positionEye, moveSpeed, jumpSpeed)
+        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed, float rotationSpeed, TgcD3dInput input)
+            : this(positionEye, moveSpeed, jumpSpeed, input)
         {
             RotationSpeed = rotationSpeed;
         }
@@ -100,51 +103,51 @@ namespace TGC.Core.Camara
         {
             var moveVector = new Vector3(0, 0, 0);
             //Forward
-            if (TgcD3dInput.Instance.keyDown(Key.W))
+            if (Input.keyDown(Key.W))
             {
                 moveVector += new Vector3(0, 0, -1) * MovementSpeed;
             }
 
             //Backward
-            if (TgcD3dInput.Instance.keyDown(Key.S))
+            if (Input.keyDown(Key.S))
             {
                 moveVector += new Vector3(0, 0, 1) * MovementSpeed;
             }
 
             //Strafe right
-            if (TgcD3dInput.Instance.keyDown(Key.D))
+            if (Input.keyDown(Key.D))
             {
                 moveVector += new Vector3(-1, 0, 0) * MovementSpeed;
             }
 
             //Strafe left
-            if (TgcD3dInput.Instance.keyDown(Key.A))
+            if (Input.keyDown(Key.A))
             {
                 moveVector += new Vector3(1, 0, 0) * MovementSpeed;
             }
 
             //Jump
-            if (TgcD3dInput.Instance.keyDown(Key.Space))
+            if (Input.keyDown(Key.Space))
             {
                 moveVector += new Vector3(0, 1, 0) * JumpSpeed;
             }
 
             //Crouch
-            if (TgcD3dInput.Instance.keyDown(Key.LeftControl))
+            if (Input.keyDown(Key.LeftControl))
             {
                 moveVector += new Vector3(0, -1, 0) * JumpSpeed;
             }
 
-            if (TgcD3dInput.Instance.keyPressed(Key.L) || TgcD3dInput.Instance.keyPressed(Key.Escape))
+            if (Input.keyPressed(Key.L) || Input.keyPressed(Key.Escape))
             {
                 LockCam = !lockCam;
             }
 
             //Solo rotar si se esta aprentando el boton izq del mouse
-            if (lockCam || TgcD3dInput.Instance.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (lockCam || Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                leftrightRot -= -TgcD3dInput.Instance.XposRelative * RotationSpeed;
-                updownRot -= TgcD3dInput.Instance.YposRelative * RotationSpeed;
+                leftrightRot -= -Input.XposRelative * RotationSpeed;
+                updownRot -= Input.YposRelative * RotationSpeed;
                 //Se actualiza matrix de rotacion, para no hacer este calculo cada vez y solo cuando en verdad es necesario.
                 cameraRotation = Matrix.RotationX(updownRot) * Matrix.RotationY(leftrightRot);
             }

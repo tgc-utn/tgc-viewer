@@ -49,7 +49,7 @@ namespace TGC.Examples.Lights
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(-210.0958f, 114.911f, -109.2159f), 400f, 300f);
+            Camara = new TgcFpsCamera(new Vector3(-210.0958f, 114.911f, -109.2159f), 400f, 300f, Input);
 
             //Cargar Shader personalizado de MultiDiffuseLights
             /*

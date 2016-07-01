@@ -59,7 +59,7 @@ namespace TGC.Examples.Sprites2D
 
             //Hacer que la camara se centre en el box3D
             Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
-                box.BoundingBox.calculateBoxRadius() * 2);
+                box.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()

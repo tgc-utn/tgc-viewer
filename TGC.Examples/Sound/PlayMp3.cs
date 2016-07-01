@@ -87,7 +87,7 @@ namespace TGC.Examples.Sound
 
             //Contro del reproductor por teclado
             var currentState = mp3Player.getStatus();
-            if (TgcD3dInput.Instance.keyPressed(Key.Y))
+            if (Input.keyPressed(Key.Y))
             {
                 if (currentState == TgcMp3Player.States.Open)
                 {
@@ -101,7 +101,7 @@ namespace TGC.Examples.Sound
                     mp3Player.play(true);
                 }
             }
-            else if (TgcD3dInput.Instance.keyPressed(Key.U))
+            else if (Input.keyPressed(Key.U))
             {
                 if (currentState == TgcMp3Player.States.Playing)
                 {
@@ -109,7 +109,7 @@ namespace TGC.Examples.Sound
                     mp3Player.pause();
                 }
             }
-            else if (TgcD3dInput.Instance.keyPressed(Key.I))
+            else if (Input.keyPressed(Key.I))
             {
                 if (currentState == TgcMp3Player.States.Paused)
                 {
@@ -117,7 +117,7 @@ namespace TGC.Examples.Sound
                     mp3Player.resume();
                 }
             }
-            else if (TgcD3dInput.Instance.keyPressed(Key.O))
+            else if (Input.keyPressed(Key.O))
             {
                 if (currentState == TgcMp3Player.States.Playing)
                 {

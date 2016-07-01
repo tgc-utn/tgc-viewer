@@ -1,3 +1,5 @@
+using System;
+using System.CodeDom;
 using Microsoft.DirectX;
 using TGC.Core.Input;
 using TGC.Core.Utils;
@@ -13,12 +15,14 @@ namespace TGC.Core.Camara
         public static float DEFAULT_CAMERA_DISTANCE = 10f;
         public static float DEFAULT_ROTATION_SPEED = 100f;
         public static Vector3 DEFAULT_DOWN = new Vector3(0f, -1f, 0f);
+        private TgcD3dInput Input { get; set; }
 
         /// <summary>
         ///     Crea camara con valores por defecto.
         /// </summary>
-        public TgcRotationalCamera()
+        public TgcRotationalCamera(TgcD3dInput input)
         {
+            Input = input;
             CameraCenter = new Vector3(0, 0, 0);
             NextPos = new Vector3(0, 0, 0);
             CameraDistance = DEFAULT_CAMERA_DISTANCE;
@@ -37,7 +41,7 @@ namespace TGC.Core.Camara
         /// </summary>
         /// <param name="position"></param>
         /// <param name="target"></param>
-        public TgcRotationalCamera(Vector3 position, Vector3 target) : this()
+        public TgcRotationalCamera(Vector3 position, Vector3 target, TgcD3dInput input) : this(input)
         {
             NextPos = position;
             CameraCenter = target;
@@ -52,8 +56,8 @@ namespace TGC.Core.Camara
         /// <param name="cameraDistance"></param>
         /// <param name="zoomFactor"></param>
         /// <param name="rotationSpeed"></param>
-        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor, float rotationSpeed)
-            : this()
+        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor, float rotationSpeed, TgcD3dInput input)
+            : this(input)
         {
             CameraCenter = cameraCenter;
             CameraDistance = cameraDistance;
@@ -67,8 +71,8 @@ namespace TGC.Core.Camara
         /// <param name="cameraCenter"></param>
         /// <param name="cameraDistance"></param>
         /// <param name="zoomFactor"></param>
-        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor) :
-            this(cameraCenter, cameraDistance, zoomFactor, DEFAULT_ROTATION_SPEED)
+        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor, TgcD3dInput input) :
+            this(cameraCenter, cameraDistance, zoomFactor, DEFAULT_ROTATION_SPEED, input)
         {
         }
 
@@ -77,8 +81,8 @@ namespace TGC.Core.Camara
         /// </summary>
         /// <param name="cameraCenter"></param>
         /// <param name="cameraDistance"></param>
-        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance) :
-            this(cameraCenter, cameraDistance, DEFAULT_ZOOM_FACTOR)
+        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, TgcD3dInput input) :
+            this(cameraCenter, cameraDistance, DEFAULT_ZOOM_FACTOR, input)
         {
         }
 
@@ -87,15 +91,13 @@ namespace TGC.Core.Camara
         /// </summary>
         public override void updateCamera(float elapsedTime)
         {
-            var d3dInput = TgcD3dInput.Instance;
-
             //Obtener variacion XY del mouse
             var mouseX = 0f;
             var mouseY = 0f;
-            if (d3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                mouseX = d3dInput.XposRelative;
-                mouseY = d3dInput.YposRelative;
+                mouseX = Input.XposRelative;
+                mouseY = Input.YposRelative;
 
                 DiffX += mouseX * elapsedTime * RotationSpeed;
                 DiffY += mouseY * elapsedTime * RotationSpeed;
@@ -132,9 +134,9 @@ namespace TGC.Core.Camara
             }
 
             //Determinar distancia de la camara o zoom segun el Mouse Wheel
-            if (d3dInput.WheelPos != 0)
+            if (Input.WheelPos != 0)
             {
-                DiffZ += ZoomFactor * d3dInput.WheelPos * -1;
+                DiffZ += ZoomFactor * Input.WheelPos * -1;
             }
             var distance = -CameraDistance * DiffZ;
 
@@ -154,10 +156,10 @@ namespace TGC.Core.Camara
             NextPos = new Vector3(m.M41, m.M42, m.M43);
 
             //Hacer efecto de Pan View
-            if (d3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_RIGHT))
+            if (Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_RIGHT))
             {
-                var dx = -d3dInput.XposRelative;
-                var dy = d3dInput.YposRelative;
+                var dx = -Input.XposRelative;
+                var dy = Input.YposRelative;
                 var panSpeedZoom = PanSpeed * FastMath.Abs(distance);
 
                 var d = CameraCenter - NextPos;

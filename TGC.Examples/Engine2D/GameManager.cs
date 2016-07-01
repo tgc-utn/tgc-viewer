@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
+using TGC.Core.Input;
 using TGC.Core.UserControls;
 using TGC.Examples.Engine2D.Core;
 
@@ -24,7 +25,7 @@ namespace TGC.Examples.Engine2D
 
         public TgcUserVars userVars;
 
-        internal void Init(string exampleDir, TgcUserVars userVars)
+        internal void Init(string exampleDir, TgcUserVars userVars, TgcD3dInput input)
         {
             this.userVars = userVars;
 
@@ -49,7 +50,7 @@ namespace TGC.Examples.Engine2D
 
             //Creo la nave espacial
             spaceShip = new Spaceship();
-            spaceShip.Load(spaceshipBitmap);
+            spaceShip.Load(spaceshipBitmap, input);
 
             //Creo la cantidad de asteroides simultaneos.
             for (var i = 0; i < AsteroidCount; i++)

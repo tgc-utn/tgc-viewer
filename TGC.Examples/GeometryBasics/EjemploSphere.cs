@@ -61,7 +61,7 @@ namespace TGC.Examples.GeometryBasics
             UserVars.addVar("Vertices");
             UserVars.addVar("Triangulos");
 
-            Camara = new TgcRotationalCamera(new Vector3(), 50f);
+            Camara = new TgcRotationalCamera(new Vector3(), 50f, Input);
         }
 
         public override void Update()

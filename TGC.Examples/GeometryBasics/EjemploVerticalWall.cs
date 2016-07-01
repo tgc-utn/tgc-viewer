@@ -37,7 +37,7 @@ namespace TGC.Examples.GeometryBasics
             mesh = scene.Meshes[0];
             mesh.Scale = new Vector3(0.25f, 0.25f, 0.25f);
 
-            Camara = new TgcFpsCamera(new Vector3(7.9711f, 11.7f, -32.5475f));
+            Camara = new TgcFpsCamera(new Vector3(7.9711f, 11.7f, -32.5475f), Input);
 
             Modifiers.addVertex3f("origin", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
                 new Vector3(0, 0, 0));

@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.Geometry
@@ -14,10 +15,10 @@ namespace TGC.Core.Geometry
     {
         private readonly TgcPickingRay pickingRay;
 
-        public TgcTriangleArray()
+        public TgcTriangleArray(TgcD3dInput input)
         {
             Triangles = new List<TgcTriangle>();
-            pickingRay = new TgcPickingRay();
+            pickingRay = new TgcPickingRay(input);
         }
 
         /// <summary>
@@ -28,9 +29,9 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crear a partir de un mesh
         /// </summary>
-        public static TgcTriangleArray fromMesh(TgcMesh mesh)
+        public static TgcTriangleArray fromMesh(TgcMesh mesh, TgcD3dInput input)
         {
-            var triangleArray = new TgcTriangleArray();
+            var triangleArray = new TgcTriangleArray(input);
 
             var vertices = mesh.getVertexPositions();
             var triCount = vertices.Length / 3;

@@ -67,7 +67,7 @@ namespace TGC.Examples.SceneLoader
             }
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(61.8657f, 403.7024f, -527.558f));
+            Camara = new TgcFpsCamera(new Vector3(61.8657f, 403.7024f, -527.558f), Input);
         }
 
         public override void Update()

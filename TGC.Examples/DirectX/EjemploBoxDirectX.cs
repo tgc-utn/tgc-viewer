@@ -247,7 +247,7 @@ namespace TGC.Examples.DirectX
 
             dir = 1;
 
-            Camara = new TgcRotationalCamera(new Vector3(), 20f);
+            Camara = new TgcRotationalCamera(new Vector3(), 20f, Input);
         }
 
         public override void Update()

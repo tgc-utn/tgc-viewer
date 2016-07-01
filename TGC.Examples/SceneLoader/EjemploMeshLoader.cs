@@ -101,7 +101,7 @@ namespace TGC.Examples.SceneLoader
 
             //Ajustar camara en base al tamano del objeto
             Camara = new TgcRotationalCamera(currentScene.BoundingBox.calculateBoxCenter(),
-                currentScene.BoundingBox.calculateBoxRadius() * 2);
+                currentScene.BoundingBox.calculateBoxRadius() * 2, Input);
 
             //Calcular cantidad de triangulos y texturas
             var triangleCount = 0;

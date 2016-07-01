@@ -50,7 +50,7 @@ namespace TGC.Examples.Collision
             suelo = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(500, 0.1f, 500), texture);
 
             //Iniciarlizar PickingRay
-            pickingRay = new TgcPickingRay();
+            pickingRay = new TgcPickingRay(Input);
 
             //Cargar modelos que se pueden seleccionar
             modelos = new List<TgcMesh>();
@@ -79,7 +79,7 @@ namespace TGC.Examples.Collision
             selectionBox.BoundingBox.setRenderColor(Color.Red);
             selecting = false;
 
-            Camara = new TgcRotationalCamera(new Vector3(0f, 100f, 0f), 300f);
+            Camara = new TgcRotationalCamera(new Vector3(0f, 100f, 0f), 300f, Input);
             //FIXME esta camara deberia ser estatica y no rotacional, ya que sino trae problemas con el picking.
         }
 
@@ -93,7 +93,7 @@ namespace TGC.Examples.Collision
             PreRender();
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
-            if (TgcD3dInput.Instance.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //primera vez
                 if (!selecting)
@@ -133,7 +133,7 @@ namespace TGC.Examples.Collision
             }
 
             //Solto el clic del mouse, terminar la selección
-            if (TgcD3dInput.Instance.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (Input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 selecting = false;
 

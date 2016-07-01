@@ -126,7 +126,7 @@ namespace TGC.Examples.ShadersExamples
                 new Vector3(0, 0, 0));
 
             var rotCamera = new TgcRotationalCamera(scene.Meshes[0].BoundingBox.calculateBoxCenter(),
-                scene.Meshes[0].BoundingBox.calculateBoxRadius() * 2);
+                scene.Meshes[0].BoundingBox.calculateBoxRadius() * 2, Input);
             rotCamera.CameraCenter = rotCamera.CameraCenter +
                                      new Vector3(0, 50f, 0);
             rotCamera.CameraDistance = 300;

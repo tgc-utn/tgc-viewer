@@ -159,41 +159,40 @@ namespace TGC.Examples.Collision.SphereCollision
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
-            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
             var rotating = false;
             float jump = 0;
 
             //Adelante
-            if (d3dInput.keyDown(Key.W))
+            if (Input.keyDown(Key.W))
             {
                 moveForward = -velocidadCaminar;
                 moving = true;
             }
 
             //Atras
-            if (d3dInput.keyDown(Key.S))
+            if (Input.keyDown(Key.S))
             {
                 moveForward = velocidadCaminar;
                 moving = true;
             }
 
             //Derecha
-            if (d3dInput.keyDown(Key.D))
+            if (Input.keyDown(Key.D))
             {
                 rotate = velocidadRotacion;
                 rotating = true;
             }
 
             //Izquierda
-            if (d3dInput.keyDown(Key.A))
+            if (Input.keyDown(Key.A))
             {
                 rotate = -velocidadRotacion;
                 rotating = true;
             }
 
             //Jump
-            if (d3dInput.keyDown(Key.Space))
+            if (Input.keyDown(Key.Space))
             {
                 jump = 30;
                 moving = true;

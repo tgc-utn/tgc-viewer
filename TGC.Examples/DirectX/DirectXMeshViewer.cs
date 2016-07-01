@@ -105,7 +105,7 @@ namespace TGC.Examples.DirectX
             }
 
             //Alejar camara rotacional, respecto de su Bounding Sphere
-            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), objectRadius * 4, 5f / objectRadius);
+            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), objectRadius * 4, 5f / objectRadius, Input);
         }
 
         public override void Render()

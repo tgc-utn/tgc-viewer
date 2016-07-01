@@ -40,6 +40,7 @@ namespace TGC.Examples.Others
             //Cargar mesh
             var loader = new TgcSceneLoader();
             mesh = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
+            mesh.AutoTransformEnable = true;
 
             //Cargar Shader de PhongShading
             mesh.Effect = TgcShaders.Instance.TgcMeshPhongShader;
@@ -55,11 +56,11 @@ namespace TGC.Examples.Others
             textHelp.Text = "ÅøPor donde empezar? Presionar \"H\"";
 
             //Help form
-            var helpRtf = File.ReadAllText(MediaDir + "ModelosTgc\\LogoTGC\\help.rtf");
+            var helpRtf = File.ReadAllText(MediaDir + "\\help.rtf");
             helpForm = new EjemploDefaultHelpForm(helpRtf);
 
             //Camara
-            Camara = new TgcRotationalCamera(new Vector3(), 150f);
+            Camara = new TgcRotationalCamera(new Vector3(), 150f, Input);
         }
 
         public override void Update()
@@ -89,7 +90,7 @@ namespace TGC.Examples.Others
             textHelp.render();
 
             //Help
-            if (TgcD3dInput.Instance.keyPressed(Key.H))
+            if (Input.keyPressed(Key.H))
             {
                 helpForm.ShowDialog();
             }

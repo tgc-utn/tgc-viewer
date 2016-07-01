@@ -109,7 +109,7 @@ namespace TGC.Examples.Lights
             lightMesh.Technique = "DrawLightSource";
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f);
+            Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f, Input);
 
             //Modifiers de la luz
             Modifiers.addBoolean("toneMapping", "toneMapping", true);

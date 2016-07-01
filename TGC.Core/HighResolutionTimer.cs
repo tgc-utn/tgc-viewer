@@ -106,9 +106,9 @@ namespace TGC.Core
             }
         }
 
-        public override string ToString()
+        public string FramesPerSecondText()
         {
-            return "FPS: " + _fps;
+            return "FPS: " + FramesPerSecond;
         }
     }
 }

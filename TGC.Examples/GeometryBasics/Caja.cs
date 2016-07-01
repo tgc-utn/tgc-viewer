@@ -51,7 +51,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addColor("color", Color.White);
             Modifiers.addBoolean("boundingBox", "BoundingBox", false);
 
-            Camara = new TgcRotationalCamera(new Vector3(), 50f);
+            Camara = new TgcRotationalCamera(new Vector3(), 50f, Input);
         }
 
         public override void Update()

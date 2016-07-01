@@ -41,7 +41,7 @@ namespace TGC.Examples.Others
             Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(D3DDevice.Instance.Device);
 
-            Camara = new TgcFpsCamera(new Vector3(32.1944f, 42.1327f, -68.7882f));
+            Camara = new TgcFpsCamera(new Vector3(32.1944f, 42.1327f, -68.7882f), Input);
         }
 
         private void createMeshes(Device d3dDevice)

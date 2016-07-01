@@ -25,6 +25,8 @@ namespace TGC.Viewer.Model
 
         private TgcDirectSound DirectSound { get; set; }
 
+        private TgcD3dInput Input { get; set; }
+
         /// <summary>
         ///     Cargador de ejemplos
         /// </summary>
@@ -44,7 +46,8 @@ namespace TGC.Viewer.Model
             D3DDevice.Instance.Device.DeviceReset += OnResetDevice;
 
             //Iniciar otras herramientas
-            TgcD3dInput.Instance.Initialize(Form, panel3D);
+            Input = new TgcD3dInput();
+            Input.Initialize(Form, panel3D);
             DirectSound = new TgcDirectSound();
             DirectSound.InitializeD3DDevice(panel3D);
 
@@ -113,7 +116,7 @@ namespace TGC.Viewer.Model
 
         public void AxisLines(bool state)
         {
-            ExampleLoader.CurrentExample.AxisLines.Enable = state;
+            ExampleLoader.CurrentExample.AxisLinesEnable = state;
         }
 
         /// <summary>
@@ -133,6 +136,7 @@ namespace TGC.Viewer.Model
                 OnResetDevice(D3DDevice.Instance.Device, null);
                 example.ResetDefaultConfig();
                 example.DirectSound = DirectSound;
+                example.Input = Input;
                 example.Init();
                 //TODO esto no deberia ir aca pero por ahora queda
             }

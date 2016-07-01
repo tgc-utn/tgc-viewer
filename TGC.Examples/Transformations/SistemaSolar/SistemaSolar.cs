@@ -83,7 +83,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
             moon.AutoTransformEnable = false;
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(705.2938f, 305.347f, -888.1567f));
+            Camara = new TgcFpsCamera(new Vector3(705.2938f, 305.347f, -888.1567f), Input);
         }
 
         public override void Update()

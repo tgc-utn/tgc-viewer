@@ -104,7 +104,7 @@ namespace TGC.Examples.MathExamples
 
             //Camera
             Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2);
+                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()

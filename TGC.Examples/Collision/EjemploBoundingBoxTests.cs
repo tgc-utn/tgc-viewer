@@ -92,45 +92,44 @@ namespace TGC.Examples.Collision
             var velocidadCaminar = 50f * ElapsedTime;
 
             //Calcular proxima posicion de personaje segun Input
-            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
             var movement = new Vector3(0, 0, 0);
 
             //Adelante
-            if (d3dInput.keyDown(Key.W))
+            if (Input.keyDown(Key.W))
             {
                 movement.Z = velocidadCaminar;
                 moving = true;
             }
 
             //Atras
-            if (d3dInput.keyDown(Key.S))
+            if (Input.keyDown(Key.S))
             {
                 movement.Z = -velocidadCaminar;
                 moving = true;
             }
 
             //Derecha
-            if (d3dInput.keyDown(Key.D))
+            if (Input.keyDown(Key.D))
             {
                 movement.X = velocidadCaminar;
                 moving = true;
             }
 
             //Izquierda
-            if (d3dInput.keyDown(Key.A))
+            if (Input.keyDown(Key.A))
             {
                 movement.X = -velocidadCaminar;
                 moving = true;
             }
             //Salto
-            if (d3dInput.keyDown(Key.Space))
+            if (Input.keyDown(Key.Space))
             {
                 movement.Y = velocidadCaminar;
                 moving = true;
             }
             //Agachar
-            if (d3dInput.keyDown(Key.LeftControl))
+            if (Input.keyDown(Key.LeftControl))
             {
                 movement.Y = -velocidadCaminar;
                 moving = true;

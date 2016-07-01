@@ -103,7 +103,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new Vector3(-1000, 250, -1000), 1000f, 600f);
+            Camara = new TgcFpsCamera(new Vector3(-1000, 250, -1000), 1000f, 600f, Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
@@ -342,7 +342,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
                 m.render();
 
-            if (TgcD3dInput.Instance.keyDown(Key.F))
+            if (Input.keyDown(Key.F))
                 for (var i = 0; i < cant_balas; ++i)
                     if (timer_firing[i] > 0)
                     {

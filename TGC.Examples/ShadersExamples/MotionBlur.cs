@@ -55,7 +55,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.Effect = effect;
 
             //Camara
-            Camara = new TgcRotationalCamera(new Vector3(), 150f);
+            Camara = new TgcRotationalCamera(new Vector3(), 150f, Input);
 
             // stencil
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,

@@ -170,7 +170,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Centrar camara rotacional respecto a este mesh
             CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2);
+                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
             Camara = CamaraRot;
@@ -191,16 +191,16 @@ namespace TGC.Examples.ShadersExamples
             PreRender();
 
             var aspectRatio = D3DDevice.Instance.AspectRatio;
-            if (TgcD3dInput.Instance.keyPressed(Key.Space))
+            if (Input.keyPressed(Key.Space))
             {
                 vel_tanque++;
                 if (vel_tanque > 10)
                     vel_tanque = 0;
             }
-            if (TgcD3dInput.Instance.keyPressed(Key.X))
+            if (Input.keyPressed(Key.X))
                 volar = !volar;
 
-            if (TgcD3dInput.Instance.keyPressed(Key.S))
+            if (Input.keyPressed(Key.S))
             {
                 // swap mesh
                 var mesh_aux = mesh;

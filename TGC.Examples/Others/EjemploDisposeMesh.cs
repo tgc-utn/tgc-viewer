@@ -40,7 +40,7 @@ namespace TGC.Examples.Others
                 mesh.D3dMesh.Disposing += D3dMesh_Disposing;
             }
 
-            Camara = new TgcRotationalCamera(new Vector3(0f, 300f, 0f), 1500f);
+            Camara = new TgcRotationalCamera(new Vector3(0f, 300f, 0f), 1500f, Input);
         }
 
         private void D3dMesh_Disposing(object sender, EventArgs e)

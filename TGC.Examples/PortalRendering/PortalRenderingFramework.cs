@@ -44,7 +44,7 @@ namespace TGC.Examples.PortalRendering
             scene.setMeshesEnabled(false);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(0, 0, 0), 800f, 600f);
+            Camara = new TgcFpsCamera(new Vector3(0, 0, 0), 800f, 600f, Input);
 
             //Modifiers
             Modifiers.addBoolean("portalRendering", "PortalRendering", true);

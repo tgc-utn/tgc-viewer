@@ -51,7 +51,7 @@ namespace TGC.Examples.SceneLoader
                 MediaDir + "ModelosTgc\\Piso\\Textures\\piso2.jpg");
             meshOriginal.changeDiffuseMaps(new[] { texture });
 
-            Camara = new TgcFpsCamera();
+            Camara = new TgcFpsCamera(Input);
         }
 
         public override void Update()
@@ -68,7 +68,7 @@ namespace TGC.Examples.SceneLoader
                 mesh.render();
             }
 
-            if (TgcD3dInput.Instance.keyPressed(Key.H))
+            if (Input.keyPressed(Key.H))
             {
                 meshes[0].dispose();
             }

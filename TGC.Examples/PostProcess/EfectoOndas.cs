@@ -85,7 +85,7 @@ namespace TGC.Examples.PostProcess
             meshes = scene.Meshes;
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f));
+            Camara = new TgcFpsCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f), Input);
 
             //Modifier para variar tamano de ondas
             Modifiers.addBoolean("activar_efecto", "Activar efecto", true);

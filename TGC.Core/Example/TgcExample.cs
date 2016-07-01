@@ -21,13 +21,15 @@ namespace TGC.Core.Example
             MediaDir = mediaDir;
             ShadersDir = shadersDir;
             AxisLines = new TgcAxisLines();
-            Camara = new TgcCamera();
+            AxisLinesEnable = true;
             FPS = true;
+            Camara = new TgcCamera();
             ElapsedTime = -1;
             HighResolutionTimer = new HighResolutionTimer();
             Frustum = new TgcFrustum();
             //DirectSound = new TgcDirectSound(); Por ahora se carga por afuera
             DrawText = new TgcText2D();
+	    Input = new TgcD3dInput();
 
             Category = "Others";
             Name = "Ejemplo en Blanco";
@@ -43,6 +45,11 @@ namespace TGC.Core.Example
         ///     Activa o desactiva el contador de frames por segundo.
         /// </summary>
         public bool FPS { get; set; }
+
+        /// <summary>
+        ///     Habilita/Deshabilita el dibujado de los ejes cartesianos
+        /// </summary>
+        public bool AxisLinesEnable { get; set; }
 
         /// <summary>
         ///     Utilidad para visualizar los ejes cartesianos
@@ -87,6 +94,8 @@ namespace TGC.Core.Example
         public TgcDirectSound DirectSound { get; set; }
 
         public TgcText2D DrawText { get; set; }
+
+	public TgcD3dInput Input { get; set; }
 
         /// <summary>
         ///     Se llama cuando el ejemplo es elegido para ejecutar.
@@ -149,7 +158,7 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateInput()
         {
-            TgcD3dInput.Instance.update();
+            Input.update();
         }
 
         /// <summary>
@@ -201,7 +210,10 @@ namespace TGC.Core.Example
         /// </summary>
         protected void RenderAxis()
         {
-            AxisLines.render();
+            if (AxisLinesEnable)
+            {
+                AxisLines.render();
+            }
         }
 
         /// <summary>
@@ -211,7 +223,7 @@ namespace TGC.Core.Example
         {
             if (FPS)
             {
-                DrawText.drawText(HighResolutionTimer.ToString(), 0, 0, Color.Yellow);
+                DrawText.drawText(HighResolutionTimer.FramesPerSecondText(), 0, 0, Color.Yellow);
             }
         }
 

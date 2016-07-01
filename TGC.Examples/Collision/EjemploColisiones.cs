@@ -110,7 +110,7 @@ namespace TGC.Examples.Collision
             personaje.Position = new Vector3(0, 0, 0);
 
             //Hacer que la camara mire hacia un determinado lugar del escenario
-            Camara = new TgcRotationalCamera(new Vector3(-80, 165, 230), 200f);
+            Camara = new TgcRotationalCamera(new Vector3(-80, 165, 230), 200f, Input);
 
             //Modifier para habilitar o no el renderizado del BoundingBox del personaje
             Modifiers.addBoolean("showBoundingBox", "Bouding Box", false);
@@ -134,11 +134,10 @@ namespace TGC.Examples.Collision
             //Multiplicar la velocidad por el tiempo transcurrido, para no acoplarse al CPU
             var speed = VELOCIDAD_DESPLAZAMIENTO * ElapsedTime;
 
-            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
 
             //Adelante
-            if (d3dInput.keyDown(Key.W))
+            if (Input.keyDown(Key.W))
             {
                 move.Z = -speed;
                 personaje.Rotation = new Vector3(0, 0, 0);
@@ -146,7 +145,7 @@ namespace TGC.Examples.Collision
             }
 
             //Atras
-            else if (d3dInput.keyDown(Key.S))
+            else if (Input.keyDown(Key.S))
             {
                 move.Z = speed;
                 personaje.Rotation = new Vector3(0, (float)Math.PI, 0);
@@ -154,7 +153,7 @@ namespace TGC.Examples.Collision
             }
 
             //Izquierda
-            else if (d3dInput.keyDown(Key.A))
+            else if (Input.keyDown(Key.A))
             {
                 move.X = +speed;
                 personaje.Rotation = new Vector3(0, -(float)Math.PI / 2, 0);
@@ -162,7 +161,7 @@ namespace TGC.Examples.Collision
             }
 
             //Derecha
-            else if (d3dInput.keyDown(Key.D))
+            else if (Input.keyDown(Key.D))
             {
                 move.X = -speed;
                 personaje.Rotation = new Vector3(0, (float)Math.PI / 2, 0);

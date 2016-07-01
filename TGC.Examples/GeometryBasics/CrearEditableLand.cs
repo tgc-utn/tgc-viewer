@@ -43,7 +43,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f), new Vector2(0, 0));
             Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4), new Vector2(1, 1));
 
-            Camara = new TgcRotationalCamera(new Vector3(40f, 40f, 40f), 150f);
+            Camara = new TgcRotationalCamera(new Vector3(40f, 40f, 40f), 150f, Input);
         }
 
         public override void Update()
