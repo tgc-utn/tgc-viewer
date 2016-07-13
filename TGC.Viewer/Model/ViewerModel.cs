@@ -176,6 +176,11 @@ namespace TGC.Viewer.Model
             TexturesPool.Instance.clearAll();
         }
 
+        internal void UpdateAspectRatio(System.Windows.Forms.Panel panel)
+        {
+            D3DDevice.Instance.UpdateAspectRatioAndProjection(panel.Width, panel.Height);
+        }
+
         /// <summary>
         ///     Cuando el Direct3D Device se resetea.
         ///     Se reinica el ejemplo actual, si hay alguno.

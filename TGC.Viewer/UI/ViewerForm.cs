@@ -176,6 +176,8 @@ namespace TGC.Viewer.UI
             splitContainerIzquierda.Visible = !splitContainerIzquierda.Visible;
             splitContainerDerecha.Visible = !splitContainerDerecha.Visible;
             statusStrip.Visible = !statusStrip.Visible;
+
+            Modelo.UpdateAspectRatio(panel3D);            
         }
 
         #region Eventos del form
