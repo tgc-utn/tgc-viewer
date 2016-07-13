@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
+using System;
 
 namespace TGC.Core.Direct3D
 {
     public class D3DDevice
     {
         public static readonly Material DEFAULT_MATERIAL = new Material();
+        private PresentParameters d3dpp;
 
         /// <summary>
         ///     Constructor privado para poder hacer el singleton
@@ -125,9 +127,16 @@ namespace TGC.Core.Direct3D
                 flags = CreateFlags.HardwareVertexProcessing;
             else
                 flags = CreateFlags.SoftwareVertexProcessing;
+            d3dpp = CreatePresentationParameters();
 
-            var d3dpp = new PresentParameters();
-
+            //Crear Graphics Device
+            Device.IsUsingEventHandlers = false;
+            Device = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
+        }
+        
+        private PresentParameters CreatePresentationParameters()
+        {
+            d3dpp= new PresentParameters();
             d3dpp.BackBufferFormat = Format.Unknown;
             d3dpp.SwapEffect = SwapEffect.Discard;
             d3dpp.Windowed = true;
@@ -147,16 +156,36 @@ namespace TGC.Core.Direct3D
                 d3dpp.MultiSample = MultiSampleType.None;
             }
 
-            //Crear Graphics Device
-            Device.IsUsingEventHandlers = false;
-            Device = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
+            return d3dpp;
+        }
+
+        public void UpdateAspectRatioAndProjection(int width, int height)
+        {
+            AspectRatio = (float)width / height;
+            Width = width;
+            Height = height;
+            //hay que actualizar tambien la matriz de proyeccion, sino sigue viendo mal.
+            Device.Transform.Projection = Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
+                ZFarPlaneDistance);
+            //FALTA TODO ESTO DE ABAJO....
+            //DefaultValues();
+            //Device.Reset(d3dpp);
+
+            /*Viewport v = new Viewport();
+            v.MaxZ = Device.Viewport.MaxZ;
+            v.MinZ = Device.Viewport.MinZ;
+            v.X = Device.Viewport.X;
+            v.Y = Device.Viewport.Y;
+            v.Width = Width;
+            v.Height = Height;
+            Device.Viewport = v;*/
         }
 
         public void FillModeWireFrame()
         {
             Device.RenderState.FillMode = FillMode.WireFrame;
         }
-
+        
         public void FillModeWireSolid()
         {
             Device.RenderState.FillMode = FillMode.Solid;

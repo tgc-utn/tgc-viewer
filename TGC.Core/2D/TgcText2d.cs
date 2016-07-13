@@ -30,8 +30,8 @@ namespace TGC.Core._2D
             changeFont(VERDANA_10);
             Color = Color.Black;
 
-            var viewport = D3DDevice.Instance.Device.Viewport;
-            rectangle = new Rectangle(0, 0, viewport.Width, viewport.Height);
+            //var viewport = D3DDevice.Instance.Device.Viewport;
+            rectangle = new Rectangle(0, 0, D3DDevice.Instance.Width, D3DDevice.Instance.Height);
         }
 
         /// <summary>
@@ -95,6 +95,8 @@ namespace TGC.Core._2D
         /// <param name="font">Fuente del sistema</param>
         public void changeFont(System.Drawing.Font font)
         {
+            if (D3dFont != null && !D3dFont.Disposed)
+                D3dFont.Dispose();
             D3dFont = new Font(D3DDevice.Instance.Device, font);
         }
 
