@@ -1,12 +1,12 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core._2D;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Sound;
+using TGC.Core.Text;
 using TGC.Core.Textures;
 
 namespace TGC.Core.Example
@@ -29,7 +29,7 @@ namespace TGC.Core.Example
             Frustum = new TgcFrustum();
             //DirectSound = new TgcDirectSound(); Por ahora se carga por afuera
             DrawText = new TgcText2D();
-	    Input = new TgcD3dInput();
+            Input = new TgcD3dInput();
 
             Category = "Others";
             Name = "Ejemplo en Blanco";
@@ -95,7 +95,7 @@ namespace TGC.Core.Example
 
         public TgcText2D DrawText { get; set; }
 
-	public TgcD3dInput Input { get; set; }
+        public TgcD3dInput Input { get; set; }
 
         /// <summary>
         ///     Se llama cuando el ejemplo es elegido para ejecutar.
@@ -189,11 +189,19 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        ///     Inicia la escena 3D
+        /// Limpia la pantalla y inicia la escena 3D
         /// </summary>
         protected void BeginRenderScene()
         {
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, DEFAULT_CLEAR_COLOR, 1.0f, 0);
+            BeginScene();
+        }
+
+        /// <summary>
+        /// Inicia la escena 3D
+        /// </summary>
+        public void BeginScene()
+        {
             D3DDevice.Instance.Device.BeginScene();
         }
 
@@ -228,12 +236,20 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        ///     Finaliza la escena 3D
+        /// Finaliza y presenta (se debe hacer al final del render) la escena 3D
         /// </summary>
         protected void EndRenderScene()
         {
-            D3DDevice.Instance.Device.EndScene();
+            EndScene();
             D3DDevice.Instance.Device.Present();
+        }
+
+        /// <summary>
+        /// Finaliza una escena que se inicio con un BeginScene()
+        /// </summary>
+        private static void EndScene()
+        {
+            D3DDevice.Instance.Device.EndScene();
         }
 
         public void DeviceDefaultValues()

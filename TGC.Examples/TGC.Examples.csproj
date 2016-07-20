@@ -82,9 +82,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlphaBlending\AlphaBlendingFramework.cs" />
-    <Compile Include="AlphaBlending\AlphaBlendingManual.cs" />
-    <Compile Include="AlphaBlending\EjemploModeloAlpha.cs" />
     <Compile Include="Collision\DetectarColisionCamara.cs" />
     <Compile Include="Collision\EjemploBoundingBox.cs" />
     <Compile Include="Collision\EjemploBoundingBoxTests.cs" />
@@ -105,13 +102,8 @@
     <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollision.cs" />
     <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollisionManager.cs" />
     <Compile Include="Collision\SphereTriangleCollision\TriangleMeshCollider.cs" />
-    <Compile Include="DirectX\DirectXMeshViewer.cs" />
-    <Compile Include="DirectX\EjemploBoxDirectX.cs" />
-    <Compile Include="DirectX\EjemploCrearTeapot.cs" />
-    <Compile Include="DirectX\EjemploGetZBuffer.cs" />
-    <Compile Include="DirectX\EjemploTeapotConCamara.cs" />
-    <Compile Include="DirectX\Lighting.cs" />
-    <Compile Include="Engine2D\Core\AnimatedSprite.cs" />
+    <Compile Include="DirectX\DirectXBox.cs" />
+    <Compile Include="DirectX\DirectXLight.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />
     <Compile Include="ShadersExamples\DemoShaders.cs" />
     <Compile Include="ShadersExamples\EjemploPhongShading.cs" />
@@ -129,16 +121,6 @@
     <Compile Include="ShadersExamples\ShadowMap.cs" />
     <Compile Include="ShadersExamples\ToonShading.cs" />
     <Compile Include="ShadersExamples\VideoPostProcess.cs" />
-    <Compile Include="Engine2D\Asteroide.cs" />
-    <Compile Include="Engine2D\Core\CustomBitmap.cs" />
-    <Compile Include="Engine2D\Core\Drawer2D.cs" />
-    <Compile Include="Engine2D\Ejemplo2D.cs" />
-    <Compile Include="Engine2D\GameManager.cs" />
-    <Compile Include="Engine2D\GameObject.cs" />
-    <Compile Include="Engine2D\Misil.cs" />
-    <Compile Include="Engine2D\Spaceship.cs" />
-    <Compile Include="Engine2D\Core\CustomSprite.cs" />
-    <Compile Include="Fog\EfectoNiebla.cs" />
     <Compile Include="GeometryBasics\Caja.cs" />
     <Compile Include="GeometryBasics\CajaDebug.cs" />
     <Compile Include="GeometryBasics\Cilindro.cs" />
@@ -153,7 +135,6 @@
     <Compile Include="GeometryBasics\TrianguloBasico.cs" />
     <Compile Include="GeometryBasics\TrianguloEditable.cs" />
     <Compile Include="GeometryBasics\TrianguloVertexBuffer.cs" />
-    <Compile Include="KeyFrameAnimation\EjemploKeyFrameLoader.cs" />
     <Compile Include="Lights\BilateralFiltering.cs" />
     <Compile Include="Lights\EjemploBumpMapping.cs" />
     <Compile Include="Lights\EjemploEnvironmentMap.cs" />
@@ -163,7 +144,6 @@
     <Compile Include="Lights\EjemploMultiDiffuseLights.cs" />
     <Compile Include="Lights\EjemploMultipleLights.cs" />
     <Compile Include="Lights\EjemploPointLight.cs" />
-    <Compile Include="Lights\EjemploSimpleEnvironmentMap.cs" />
     <Compile Include="Lights\EjemploSkeletalPointLight.cs" />
     <Compile Include="Lights\EjemploSpotLight.cs" />
     <Compile Include="Lights\TgcMeshBumpMapping.cs" />
@@ -197,11 +177,8 @@
     <Compile Include="Others\EjemploDisposeMesh.cs" />
     <Compile Include="Others\EjemploDisposeMesh2.cs" />
     <Compile Include="Others\EjemploDisposeMesh3.cs" />
-    <Compile Include="Others\EjemploPanView.cs" />
-    <Compile Include="Outdoor\CrearHeightmapManual.cs" />
-    <Compile Include="Outdoor\EjemploSimpleTerrain.cs" />
+    <Compile Include="Outdoor\CrearHeightmapBasico.cs" />
     <Compile Include="Particles\EmisorDeParticulas.cs" />
-    <Compile Include="PortalRendering\PortalRenderingFramework.cs" />
     <Compile Include="PostProcess\EfectoAlarma.cs" />
     <Compile Include="PostProcess\EfectoBlur.cs" />
     <Compile Include="PostProcess\EfectoGaussianBlur.cs" />
@@ -219,15 +196,11 @@
     <Compile Include="SceneLoader\EjemploMeshInstance.cs" />
     <Compile Include="SceneLoader\EjemploMeshLoader.cs" />
     <Compile Include="SceneLoader\Escenario4toPiso.cs" />
-    <Compile Include="SkeletalAnimation\EjemploBasicHuman.cs" />
-    <Compile Include="SkeletalAnimation\EjemploCustomSkeletalMesh.cs" />
-    <Compile Include="SkeletalAnimation\EjemploMeshInstance.cs" />
-    <Compile Include="SkeletalAnimation\EjemploSkeletalLoader.cs" />
     <Compile Include="Sound\PlayMp3.cs" />
     <Compile Include="Sound\PlaySound3D.cs" />
     <Compile Include="Sound\PlayStaticSound.cs" />
-    <Compile Include="Engine2D\Sprites2D\EjemploAnimatedSprite.cs" />
-    <Compile Include="Engine2D\Sprites2D\EjemploSprite2D.cs" />
+    <Compile Include="Engine2D\Sprites2D\AnimatedSprite2D.cs" />
+    <Compile Include="Engine2D\Sprites2D\Sprite2D.cs" />
     <Compile Include="TextureMapping\EjemploTextureFiltering.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
@@ -240,8 +213,24 @@
     <Compile Include="Tutorial\Tutorial3.cs" />
     <Compile Include="Tutorial\Tutorial2.cs" />
     <Compile Include="Tutorial\Tutorial1.cs" />
-    <Compile Include="UserInterface\EjemploTexto2d.cs" />
     <Compile Include="Example\TGCExampleViewer.cs" />
+    <Compile Include="Engine2D\Texto2D.cs" />
+    <Compile Include="Engine2D\Spaceship\Core\AnimatedSprite.cs" />
+    <Compile Include="Engine2D\Spaceship\Core\CustomBitmap.cs" />
+    <Compile Include="Engine2D\Spaceship\Core\CustomSprite.cs" />
+    <Compile Include="Engine2D\Spaceship\Core\Drawer2D.cs" />
+    <Compile Include="Engine2D\Spaceship\Asteroide.cs" />
+    <Compile Include="Engine2D\Spaceship\Game2D.cs" />
+    <Compile Include="Engine2D\Spaceship\GameManager.cs" />
+    <Compile Include="Engine2D\Spaceship\GameObject.cs" />
+    <Compile Include="Engine2D\Spaceship\Misil.cs" />
+    <Compile Include="Engine2D\Spaceship\Spaceship.cs" />
+    <Compile Include="PostProcess\EjemploGetZBuffer.cs" />
+    <Compile Include="PostProcess\EfectoNiebla.cs" />
+    <Compile Include="Animation\KeyFrameAnimation.cs" />
+    <Compile Include="Animation\SkeletalAnimation.cs" />
+    <Compile Include="Others\ModeloConAlpha.cs" />
+    <Compile Include="Optimization\PortalRenderingFramework.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">
@@ -327,6 +316,11 @@
     <Content Include="Shaders\WorkshopShaders\VolRender.fx" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Engine2D\Spaceship\" />
+    <Folder Include="Engine2D\Spaceship\Core\" />
+    <Folder Include="Animation\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

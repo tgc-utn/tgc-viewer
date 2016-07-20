@@ -39,15 +39,15 @@ namespace TGC.Viewer.Model
 
             Form = form;
 
-            //Configuracion
-            var settings = Settings.Default;
-
+            //Inicio Device
             D3DDevice.Instance.InitializeD3DDevice(panel3D);
             D3DDevice.Instance.Device.DeviceReset += OnResetDevice;
 
-            //Iniciar otras herramientas
+            //Inicio inputs
             Input = new TgcD3dInput();
             Input.Initialize(Form, panel3D);
+
+            //Inicio sonido
             DirectSound = new TgcDirectSound();
             DirectSound.InitializeD3DDevice(panel3D);
 
@@ -55,7 +55,7 @@ namespace TGC.Viewer.Model
             var currentDirectory = Environment.CurrentDirectory + "\\";
 
             //Cargar shaders del framework
-            TgcShaders.Instance.loadCommonShaders(currentDirectory + settings.ShadersDirectory + settings.CommonShaders);
+            TgcShaders.Instance.loadCommonShaders(currentDirectory + Settings.Default.ShadersDirectory + Settings.Default.CommonShaders);
         }
 
         public void LoadExamples(TreeView treeViewExamples, FlowLayoutPanel flowLayoutPanelModifiers,

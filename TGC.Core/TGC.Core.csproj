@@ -59,7 +59,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="2D\TgcText2D.cs" />
+    <Compile Include="Text\TgcText2D.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
     <Compile Include="Camara\TgcFpsCamera.cs" />
     <Compile Include="Camara\TgcRotationalCamera.cs" />

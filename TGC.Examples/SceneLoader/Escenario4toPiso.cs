@@ -59,7 +59,6 @@ namespace TGC.Examples.SceneLoader
                 this.MediaDir + "4toPiso\\Extract\\4toPiso-TgcScene.xml",
                 this.MediaDir + "4toPiso\\Extract\\");
             */
-                       
         }
 
         public override void Update()

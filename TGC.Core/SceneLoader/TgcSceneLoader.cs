@@ -75,7 +75,7 @@ namespace TGC.Core.SceneLoader
             {
                 Console.WriteLine(ex.ToString());
             }
-            
+
             return loadSceneFromFile(extractDir + sceneFileName, extractDir);
         }
 

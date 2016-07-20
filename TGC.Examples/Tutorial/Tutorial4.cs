@@ -2,7 +2,6 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
-using TGC.Core.Input;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;

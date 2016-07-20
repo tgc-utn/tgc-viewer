@@ -1,9 +1,8 @@
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
-using TGC.Core._2D;
-using TGC.Core.Input;
 using TGC.Core.Sound;
+using TGC.Core.Text;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
