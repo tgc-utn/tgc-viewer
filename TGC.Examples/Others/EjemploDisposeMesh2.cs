@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core._2D;
 using TGC.Core.Camara;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;

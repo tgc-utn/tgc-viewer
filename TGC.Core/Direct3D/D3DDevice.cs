@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
-using System;
 
 namespace TGC.Core.Direct3D
 {
@@ -133,10 +132,10 @@ namespace TGC.Core.Direct3D
             Device.IsUsingEventHandlers = false;
             Device = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
         }
-        
+
         private PresentParameters CreatePresentationParameters()
         {
-            d3dpp= new PresentParameters();
+            d3dpp = new PresentParameters();
             d3dpp.BackBufferFormat = Format.Unknown;
             d3dpp.SwapEffect = SwapEffect.Discard;
             d3dpp.Windowed = true;
@@ -185,7 +184,7 @@ namespace TGC.Core.Direct3D
         {
             Device.RenderState.FillMode = FillMode.WireFrame;
         }
-        
+
         public void FillModeWireSolid()
         {
             Device.RenderState.FillMode = FillMode.Solid;

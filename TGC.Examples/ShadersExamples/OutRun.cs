@@ -4,7 +4,6 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using TGC.Core._2D;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;

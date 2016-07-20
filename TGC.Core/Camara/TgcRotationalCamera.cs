@@ -1,5 +1,3 @@
-using System;
-using System.CodeDom;
 using Microsoft.DirectX;
 using TGC.Core.Input;
 using TGC.Core.Utils;

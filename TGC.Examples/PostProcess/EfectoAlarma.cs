@@ -72,7 +72,7 @@ namespace TGC.Examples.PostProcess
                 D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
                 , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
-            
+
             //Creamos un DepthStencil que debe ser compatible con nuestra definicion de renderTarget2D.
             depthStencil = D3DDevice.Instance.Device.CreateDepthStencilSurface(D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
                 D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
@@ -124,7 +124,7 @@ namespace TGC.Examples.PostProcess
             var pSurf = renderTarget2D.GetSurfaceLevel(0);
             D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            
+
             //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
             drawSceneToRenderTarget(D3DDevice.Instance.Device);
 
@@ -147,7 +147,6 @@ namespace TGC.Examples.PostProcess
             {
                 D3DDevice.Instance.Device.DepthStencilSurface = depthStencilOld;
             }
-            
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcess(D3DDevice.Instance.Device, ElapsedTime);

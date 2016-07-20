@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core._2D;
 using TGC.Core.Direct3D;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;

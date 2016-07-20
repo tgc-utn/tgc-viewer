@@ -7,7 +7,6 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
-using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Terrain;
