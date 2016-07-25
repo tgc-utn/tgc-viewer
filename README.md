@@ -13,7 +13,7 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
 * [Detección de colisiones](https://en.wikipedia.org/wiki/Collision_detection)
 * [Skeletal animation](https://en.wikipedia.org/wiki/Skeletal_animation)
 * [HLSL shaders](https://msdn.microsoft.com/en-us/library/windows/desktop/bb509561%28v=vs.85%29.aspx)
-* [Mesh creator](https://github.com/tgc-utn/mesh-creator)
+* [TGC tools](https://github.com/tgc-utn/tgc-tools)
 * Level editor
 * Exportación para los modelos de [SketchUp](https://www.sketchup.com/) (beta)
 * Plugins para la exportación de modelos desde [3Ds MAX](http://www.autodesk.com/education/free-software/3ds-max) (outdate)
