@@ -1,6 +1,6 @@
 # tgc-viewer
 
-[![GitHub release](https://img.shields.io/github/release/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer)
+[![GitHub release](https://img.shields.io/github/release/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/releases)
 [![GitHub issues](https://img.shields.io/github/issues/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/issues)
 
 Es un motor de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA).
