@@ -1,3 +1,5 @@
+using System.IO;
+using Microsoft.DirectX;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -32,6 +34,12 @@ namespace TGC.Examples.SceneLoader
             //TgcScene sceneOriginal2 = loader.loadSceneFromFile(this.MediaDir + "ModelosTgc\\Box\\" + "Box-TgcScene.xml");
 
             var destFolder = MediaDir + "PruebaExporter";
+
+            if (!Directory.Exists(destFolder))
+            {
+                Directory.CreateDirectory(destFolder);
+            }
+
             var unifiedScene = new TgcScene("PruebaExporter", destFolder);
             unifiedScene.Meshes.AddRange(sceneOriginal.Meshes);
             unifiedScene.Meshes.AddRange(sceneOriginal2.Meshes);
