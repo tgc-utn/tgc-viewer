@@ -25,7 +25,7 @@ namespace TGC.Viewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Shaders\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\TGC.Examples\\Shaders\\")]
         public string ShadersDirectory {
             get {
                 return ((string)(this["ShadersDirectory"]));
