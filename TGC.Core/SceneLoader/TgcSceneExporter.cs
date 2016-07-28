@@ -1153,12 +1153,12 @@ namespace TGC.Core.SceneLoader
                 var tIdx = 0;
                 foreach (var t in mesh1.DiffuseMaps)
                 {
-                    textures[tIdx++] = t.clone();
+                    textures[tIdx++] = t.Clone();
                 }
                 //Texturas del mesh2
                 foreach (var t in mesh2.DiffuseMaps)
                 {
-                    textures[tIdx++] = t.clone();
+                    textures[tIdx++] = t.Clone();
                 }
 
                 //Cargar el AttributeBuffer con la suma de ambos mesh

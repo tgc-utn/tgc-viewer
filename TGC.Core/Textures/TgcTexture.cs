@@ -114,7 +114,7 @@ namespace TGC.Core.Textures
         ///     Crear una nueva textura igual a esta.
         /// </summary>
         /// <returns>Textura clonada</returns>
-        public TgcTexture clone()
+        public TgcTexture Clone()
         {
             TgcTexture cloneTexture;
             if (InPool)

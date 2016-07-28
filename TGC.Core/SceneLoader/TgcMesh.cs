@@ -107,14 +107,20 @@ namespace TGC.Core.SceneLoader
         /// <param name="translation">Traslación respecto de la malla original</param>
         /// <param name="rotation">Rotación respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
+        [Obsolete]
         public TgcMesh(string name, TgcMesh parentInstance, Vector3 translation, Vector3 rotation, Vector3 scale)
         {
             //Cargar datos en base al original
             initData(parentInstance.d3dMesh, name, parentInstance.renderType);
-            diffuseMaps = parentInstance.diffuseMaps;
-            materials = parentInstance.materials;
-            lightMap = parentInstance.lightMap;
-            effect = parentInstance.effect;
+            //Si no se hace clone luego no pueden cambiar las texturas.
+            diffuseMaps = new TgcTexture[parentInstance.diffuseMaps.Length];
+            for (int i = 0; i < diffuseMaps.Length; i++)
+            {
+                diffuseMaps[i] = parentInstance.diffuseMaps[i].Clone();
+            }
+            materials = parentInstance.materials; //es un clone necesario?
+            lightMap = parentInstance.lightMap; //es un clone necesario?
+            effect = parentInstance.effect; //.Clone() pide device ????...... FIXIT.
 
             //Almacenar transformación inicial
             this.translation = translation;
@@ -977,14 +983,14 @@ namespace TGC.Core.SceneLoader
                 cloneMesh.diffuseMaps = new TgcTexture[diffuseMaps.Length];
                 for (var i = 0; i < diffuseMaps.Length; i++)
                 {
-                    cloneMesh.diffuseMaps[i] = diffuseMaps[i].clone();
+                    cloneMesh.diffuseMaps[i] = diffuseMaps[i].Clone();
                 }
             }
 
             //Clonar LightMap
             if (lightMap != null)
             {
-                cloneMesh.lightMap = lightMap.clone();
+                cloneMesh.lightMap = lightMap.Clone();
             }
 
             return cloneMesh;

@@ -540,7 +540,7 @@ namespace TGC.Core.Geometry
             {
                 cloneLand.editableVertices[i].Pos = editableVertices[i].Pos;
             }
-            cloneLand.setTexture(Texture.clone());
+            cloneLand.setTexture(Texture.Clone());
             cloneLand.AutoTransformEnable = AutoTransformEnable;
             cloneLand.Transform = Transform;
             cloneLand.rotation = rotation;

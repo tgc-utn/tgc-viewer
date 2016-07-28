@@ -32,14 +32,17 @@ namespace TGC.Examples.SceneLoader
             var sceneOriginal = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Box\\" +
                                                          "Box-TgcScene.xml");
             var meshOriginal = sceneOriginal.Meshes[0];
+            meshOriginal.AutoTransformEnable = true;
 
             var meshInstance1 = new TgcMesh(meshOriginal.Name + "-1", meshOriginal,
                 new Vector3(50, 0, 0), meshOriginal.Rotation, meshOriginal.Scale);
             meshInstance1.Enabled = true;
+            meshInstance1.AutoTransformEnable = true;
 
             var meshInstance2 = new TgcMesh(meshOriginal.Name + "-2", meshOriginal,
                 new Vector3(100, 0, 0), meshOriginal.Rotation, meshOriginal.Scale);
             meshInstance2.Enabled = true;
+            meshInstance2.AutoTransformEnable = true;
 
             meshes = new List<TgcMesh>();
             meshes.Add(meshOriginal);
@@ -50,7 +53,7 @@ namespace TGC.Examples.SceneLoader
                 MediaDir + "ModelosTgc\\Piso\\Textures\\piso2.jpg");
             meshOriginal.changeDiffuseMaps(new[] { texture });
 
-            Camara = new TgcFpsCamera(Input);
+            Camara.setCamera(new Vector3(50f, 20f, -180f), new Vector3(40f, 0f, 0f));
         }
 
         public override void Update()
@@ -61,6 +64,8 @@ namespace TGC.Examples.SceneLoader
         public override void Render()
         {
             PreRender();
+            DrawText.drawText("Camera pos: " + Core.Utils.TgcParserUtils.printVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
+            DrawText.drawText("Camera LookAt: " + Core.Utils.TgcParserUtils.printVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
 
             foreach (var mesh in meshes)
             {

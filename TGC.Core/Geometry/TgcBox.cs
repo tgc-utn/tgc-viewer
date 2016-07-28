@@ -509,7 +509,7 @@ namespace TGC.Core.Geometry
 
                 //Malla de TGC
                 var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
-                tgcMesh.DiffuseMaps = new[] { Texture.clone() };
+                tgcMesh.DiffuseMaps = new[] { Texture.Clone() };
                 tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
                 tgcMesh.createBoundingBox();
                 tgcMesh.Enabled = true;
@@ -578,7 +578,7 @@ namespace TGC.Core.Geometry
             cloneBox.color = color;
             if (Texture != null)
             {
-                cloneBox.setTexture(Texture.clone());
+                cloneBox.setTexture(Texture.Clone());
             }
             cloneBox.AutoTransformEnable = AutoTransformEnable;
             cloneBox.Transform = Transform;
