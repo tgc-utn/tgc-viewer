@@ -23,7 +23,7 @@ namespace TGC.Examples.Others
         public ModeloConAlpha(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Others";
+            Category = "Mesh";
             Name = "Modelo con Alpha";
             Description = "Carga modelos que poseen texturas PNG-32 con transparencia.";
         }
@@ -37,6 +37,9 @@ namespace TGC.Examples.Others
             var loader = new TgcSceneLoader();
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pino\\Pino-TgcScene.xml");
 
+            //Modifier para activar o desactivar el alpha
+            Modifiers.addBoolean("alpha", "Alpha blend", true);
+
             Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(),
                 scene.BoundingBox.calculateBoxRadius() * 2, Input);
         }
@@ -44,6 +47,13 @@ namespace TGC.Examples.Others
         public override void Update()
         {
             PreUpdate();
+
+            bool alpha = (bool)Modifiers["alpha"];
+
+            foreach (var mesh in scene.Meshes)
+            {
+                mesh.AlphaBlendEnable = alpha;
+            }
         }
 
         public override void Render()

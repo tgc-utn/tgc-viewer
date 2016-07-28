@@ -228,7 +228,7 @@
     <Compile Include="PostProcess\EfectoNiebla.cs" />
     <Compile Include="Animation\KeyFrameAnimation.cs" />
     <Compile Include="Animation\SkeletalAnimation.cs" />
-    <Compile Include="Others\ModeloConAlpha.cs" />
+    <Compile Include="MeshExamples\ModeloConAlpha.cs" />
     <Compile Include="Optimization\PortalRenderingFramework.cs" />
   </ItemGroup>
   <ItemGroup>
