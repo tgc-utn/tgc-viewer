@@ -6,7 +6,7 @@ using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.MathExamples
+namespace TGC.Examples.Transformations
 {
     /// <summary>
     ///     Ejemplo EjemploTransformaciones:
@@ -22,8 +22,8 @@ namespace TGC.Examples.MathExamples
         public EjemploTransformaciones(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Math";
-            Name = "Transformaciones";
+            Category = "Transformations";
+            Name = "Operaciones con matrices";
             Description =
                 "Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios. Muestra distintas operaciones con matrices de transformacion.";
         }

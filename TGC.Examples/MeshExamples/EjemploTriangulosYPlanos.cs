@@ -10,7 +10,7 @@ using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.MathExamples
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     Ejemplo EjemploTriangulosYPlanos:
@@ -31,8 +31,8 @@ namespace TGC.Examples.MathExamples
         public EjemploTriangulosYPlanos(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Math";
-            Name = "Triangulos y Planos";
+            Category = "Mesh";
+            Name = "Obtener triangulos y planos";
             Description =
                 "Muestra como obtener los triangulos de un TgcMesh y generar un plano y un vector normal por cada uno.";
         }
@@ -56,7 +56,7 @@ namespace TGC.Examples.MathExamples
             planes = new List<TgcQuad>();
             for (var i = 0; i < triCount; i++)
             {
-                //Obtenemos los 3 vertices del triangulo
+                //Obtenemos los 3 vertices del triangulo, es importante saber como esta estructurado nuestro mesh.
                 var a = vertices[i * 3];
                 var b = vertices[i * 3 + 1];
                 var c = vertices[i * 3 + 2];
