@@ -165,8 +165,8 @@
     <Compile Include="Optimization\Quadtree\Quadtree.cs" />
     <Compile Include="Optimization\Quadtree\QuadtreeBuilder.cs" />
     <Compile Include="Optimization\Quadtree\QuadtreeNode.cs" />
-    <Compile Include="Others\EjemploBatchPrimitives.cs" />
-    <Compile Include="Others\EjemploBatchPrimitivesDx.cs" />
+    <Compile Include="MeshExamples\EjemploBatchPrimitives.cs" />
+    <Compile Include="MeshExamples\EjemploBatchPrimitivesDx.cs" />
     <Compile Include="Others\EjemploDefault.cs" />
     <Compile Include="Others\EjemploDefaultHelpForm.cs">
       <SubType>Form</SubType>
@@ -174,10 +174,8 @@
     <Compile Include="Others\EjemploDefaultHelpForm.Designer.cs">
       <DependentUpon>EjemploDefaultHelpForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Others\EjemploDisposeMesh.cs" />
-    <Compile Include="Others\EjemploDisposeMesh2.cs" />
-    <Compile Include="Others\EjemploDisposeMesh3.cs" />
-    <Compile Include="Outdoor\CrearHeightmapBasico.cs" />
+    <Compile Include="MeshExamples\EjemploDisposeMesh.cs" />
+    <Compile Include="MeshExamples\CrearHeightmapBasico.cs" />
     <Compile Include="Particles\EmisorDeParticulas.cs" />
     <Compile Include="PostProcess\EfectoAlarma.cs" />
     <Compile Include="PostProcess\EfectoBlur.cs" />

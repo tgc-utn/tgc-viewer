@@ -7,7 +7,7 @@ using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.Others
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     EjemploBatchPrimitivesDx
@@ -27,9 +27,11 @@ namespace TGC.Examples.Others
         public EjemploBatchPrimitivesDx(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Others";
-            Name = "BatchPrimitivesDx";
-            Description = "BatchPrimitivesDx";
+            Category = "Mesh Examples";
+            Name = "Texture primitive Mesh render order";
+            Description = "En este ejemplo podemos ver como afecta el orden de renderisado cuando tenemos un mismo mesh"+
+                " con diferentes texturas. si realizamos multiples render set se nota el costo que tiene. en cambio si "+
+                "asignamos la textura y luego renderisamos todos los mesh de esa textura tiene menos costo.";
         }
 
         public override void Init()
@@ -41,7 +43,7 @@ namespace TGC.Examples.Others
             Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(D3DDevice.Instance.Device);
 
-            Camara = new TgcFpsCamera(new Vector3(32.1944f, 42.1327f, -68.7882f), Input);
+            Camara.setCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
         }
 
         private void createMeshes(Device d3dDevice)
@@ -85,6 +87,7 @@ namespace TGC.Examples.Others
 
                     //Forzar a proposito el cambio de textura
                     D3DDevice.Instance.Device.SetTexture(0, null);
+                    D3DDevice.Instance.Device.SetTexture(1, null);
                     D3DDevice.Instance.Device.SetTexture(0, box3Texture.D3dTexture);
                     D3DDevice.Instance.Device.SetTexture(0, box2Texture.D3dTexture);
                     D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3dTexture);
@@ -103,6 +106,8 @@ namespace TGC.Examples.Others
         private void doTextureSortRender()
         {
             //Un solo texture change
+            D3DDevice.Instance.Device.SetTexture(0, null);
+            D3DDevice.Instance.Device.SetTexture(1, null);
             D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3dTexture);
 
             for (var i = 0; i < boxPerSquare; i++)
