@@ -22,7 +22,7 @@ namespace TGC.Examples.MathExamples
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Math";
-            Name = "Matematica varios";
+            Name = "Operaciones con vectores";
             Description =
                 "Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios. Muestra como hacer distintas operaciones matematicas que son comunes.";
         }

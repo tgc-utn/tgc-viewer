@@ -148,8 +148,8 @@
     <Compile Include="Lights\EjemploSpotLight.cs" />
     <Compile Include="Lights\TgcMeshBumpMapping.cs" />
     <Compile Include="MathExamples\EjemploMatematicaVarios.cs" />
-    <Compile Include="MathExamples\EjemploTransformaciones.cs" />
-    <Compile Include="MathExamples\EjemploTriangulosYPlanos.cs" />
+    <Compile Include="Transformations\EjemploTransformaciones.cs" />
+    <Compile Include="MeshExamples\EjemploTriangulosYPlanos.cs" />
     <Compile Include="Optimization\GrillaRegular\EjemploGrillaRegular.cs" />
     <Compile Include="Optimization\GrillaRegular\GrillaRegular.cs" />
     <Compile Include="Optimization\GrillaRegular\GrillaRegularNode.cs" />
@@ -204,7 +204,6 @@
     <Compile Include="Transformations\EjemploBrazoRobot.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
-    <Compile Include="Transformations\Transformations.cs" />
     <Compile Include="Tutorial\Tutorial8.cs" />
     <Compile Include="Tutorial\Tutorial7.cs" />
     <Compile Include="Tutorial\Tutorial6.cs" />
