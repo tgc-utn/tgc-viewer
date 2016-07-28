@@ -31,7 +31,7 @@ namespace TGC.Examples.MeshExamples
         public EjemploTriangulosYPlanos(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Mesh";
+            Category = "Mesh Examples";
             Name = "Obtener triangulos y planos";
             Description =
                 "Muestra como obtener los triangulos de un TgcMesh y generar un plano y un vector normal por cada uno.";

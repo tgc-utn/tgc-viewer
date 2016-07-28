@@ -7,7 +7,7 @@ using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.Outdoor
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     Ejemplo CrearHeightmapBasico:
@@ -34,31 +34,31 @@ namespace TGC.Examples.Outdoor
         public CrearHeightmapBasico(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Outdoor";
-            Name = "Heightmap Manual";
+            Category = "Mesh Examples";
+            Name = "Simple Heightmap Manual";
             Description = "Muestra como crear un terreno en base a una textura de HeightMap en forma manual.";
         }
 
         public override void Init()
         {
             //Path de Heightmap default del terreno y Modifier para cambiarla
-            currentHeightmap = MediaDir + "Heighmaps\\" + "Heightmap1.jpg";
+            currentHeightmap = MediaDir + "Heighmaps\\" + "Heightmap3.jpg";
             Modifiers.addTexture("heightmap", currentHeightmap);
 
             //Modifiers para variar escala del mapa
-            currentScaleXZ = 20f;
+            currentScaleXZ = 50f;
             Modifiers.addFloat("scaleXZ", 0.1f, 100f, currentScaleXZ);
-            currentScaleY = 1.3f;
+            currentScaleY = 1.5f;
             Modifiers.addFloat("scaleY", 0.1f, 10f, currentScaleY);
             createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, currentScaleXZ, currentScaleY);
 
             //Path de Textura default del terreno y Modifier para cambiarla
-            currentTexture = MediaDir + "Heighmaps\\" + "TerrainTexture1-256x256.jpg";
+            currentTexture = MediaDir + "Heighmaps\\" + "TerrainTexture3.jpg";
             Modifiers.addTexture("texture", currentTexture);
             loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
 
             //Configurar FPS Camara
-            Camara = new TgcFpsCamera(new Vector3(-24.9069f, 386.3114f, 673.7542f), 100f, 100f, Input);
+            Camara = new TgcFpsCamera(new Vector3(3200f, 450f, 1500f), Input);
 
             //UserVars para cantidad de vertices
             UserVars.addVar("Vertices", totalVertices);
@@ -165,6 +165,8 @@ namespace TGC.Examples.Outdoor
         public override void Render()
         {
             PreRender();
+            DrawText.drawText("Camera pos: " + Core.Utils.TgcParserUtils.printVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
+            DrawText.drawText("Camera LookAt: " + Core.Utils.TgcParserUtils.printVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
 
             //Ver si cambio el heightmap
             var selectedHeightmap = (string)Modifiers["heightmap"];

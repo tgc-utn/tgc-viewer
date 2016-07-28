@@ -26,9 +26,13 @@ namespace TGC.Examples.Others
         public EjemploBatchPrimitives(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Others";
-            Name = "BatchPrimitives";
-            Description = "BatchPrimitives";
+            Category = "Mesh Examples";
+            Name = "Texture Mesh render order";
+            Description = "En este ejemplo podemos ver como afecta el orden de renderisado cuando tenemos un mismo mesh" +
+                " con diferentes texturas. si realizamos multiples render set se nota el costo que tiene. en cambio si " +
+                "asignamos la textura y luego renderisamos todos los mesh de esa textura tiene menos costo.";
+            //TO FIX IT, este ejemplo no funciona correctamente porque TGCMesh siempre setea las texturas,
+            //entonces el costo es igual si se utiliza el framework.
         }
 
         public override void Init()
@@ -39,8 +43,8 @@ namespace TGC.Examples.Others
 
             Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(25);
-
-            Camara = new TgcFpsCamera(new Vector3(32.1944f, 42.1327f, -68.7882f), Input);
+            
+            Camara.setCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
         }
 
         private void createMeshes(int cajasPorCuadrante)
@@ -60,10 +64,15 @@ namespace TGC.Examples.Others
                     //Crear tres niveles de caja, una abajo y otra arriba, con texturas diferentes
                     cajasNivel1[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, 0, j * boxSize * 1.5f),
                         new Vector3(boxSize, boxSize, boxSize), box1Texture);
+                    cajasNivel1[cajas].AutoTransformEnable = true;
+
                     cajasNivel2[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, boxSize, j * boxSize * 1.5f),
                         new Vector3(boxSize, boxSize, boxSize), box2Texture);
+                    cajasNivel2[cajas].AutoTransformEnable = true;
+
                     cajasNivel3[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
                         new Vector3(boxSize, boxSize, boxSize), box3Texture);
+                    cajasNivel3[cajas].AutoTransformEnable = true;
                     cajas++;
                 }
             }
@@ -71,6 +80,8 @@ namespace TGC.Examples.Others
 
         private void doRender(RenderMethod renderMethod)
         {
+           
+
             if (currentRenderMethod != renderMethod)
             {
                 currentRenderMethod = renderMethod;
@@ -128,7 +139,7 @@ namespace TGC.Examples.Others
         public override void Render()
         {
             PreRender();
-
+          
             var renderMethod = (RenderMethod)Modifiers["Render Method"];
             doRender(renderMethod);
 

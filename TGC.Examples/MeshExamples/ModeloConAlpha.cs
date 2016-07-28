@@ -4,7 +4,7 @@ using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.Others
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     Ejemplo ModeloConAlpha:
@@ -23,7 +23,7 @@ namespace TGC.Examples.Others
         public ModeloConAlpha(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Mesh";
+            Category = "Mesh Examples";
             Name = "Modelo con Alpha";
             Description = "Carga modelos que poseen texturas PNG-32 con transparencia.";
         }
