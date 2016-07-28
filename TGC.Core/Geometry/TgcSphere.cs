@@ -22,7 +22,7 @@ namespace TGC.Core.Geometry
         {
             var cloneSphere = new TgcSphere(radius, color, translation);
 
-            if (Texture != null) cloneSphere.setTexture(Texture.clone());
+            if (Texture != null) cloneSphere.setTexture(Texture.Clone());
 
             cloneSphere.AutoTransformEnable = AutoTransformEnable;
             cloneSphere.Transform = Transform;
@@ -99,7 +99,7 @@ namespace TGC.Core.Geometry
 
                 //Malla de TGC
                 var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
-                tgcMesh.DiffuseMaps = new[] { Texture.clone() };
+                tgcMesh.DiffuseMaps = new[] { Texture.Clone() };
                 tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
                 tgcMesh.createBoundingBox();
                 tgcMesh.Enabled = true;

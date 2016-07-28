@@ -255,7 +255,7 @@ namespace TGC.Examples.Lights
             var materials = new Material[mesh.Materials.Length];
             for (var i = 0; i < mesh.DiffuseMaps.Length; i++)
             {
-                diffuseMaps[i] = mesh.DiffuseMaps[i].clone();
+                diffuseMaps[i] = mesh.DiffuseMaps[i].Clone();
                 materials[i] = D3DDevice.DEFAULT_MATERIAL;
             }
 

@@ -406,7 +406,7 @@ namespace TGC.Core.Geometry
 
             //Malla de TGC
             var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
-            tgcMesh.DiffuseMaps = new[] { Texture.clone() };
+            tgcMesh.DiffuseMaps = new[] { Texture.Clone() };
             tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
             tgcMesh.createBoundingBox();
             tgcMesh.Enabled = true;
@@ -428,7 +428,7 @@ namespace TGC.Core.Geometry
             cloneWall.VTile = VTile;
             cloneWall.AlphaBlendEnable = AlphaBlendEnable;
             cloneWall.UVOffset = UVOffset;
-            cloneWall.setTexture(Texture.clone());
+            cloneWall.setTexture(Texture.Clone());
 
             updateValues();
             return cloneWall;
