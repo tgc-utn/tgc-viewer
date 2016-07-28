@@ -201,7 +201,7 @@
     <Compile Include="Sound\PlayStaticSound.cs" />
     <Compile Include="Engine2D\Sprites2D\AnimatedSprite2D.cs" />
     <Compile Include="Engine2D\Sprites2D\Sprite2D.cs" />
-    <Compile Include="TextureMapping\EjemploTextureFiltering.cs" />
+    <Compile Include="Transformations\EjemploBrazoRobot.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
     <Compile Include="Transformations\Transformations.cs" />
@@ -316,11 +316,7 @@
     <Content Include="Shaders\WorkshopShaders\VolRender.fx" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Engine2D\Spaceship\" />
-    <Folder Include="Engine2D\Spaceship\Core\" />
-    <Folder Include="Animation\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
