@@ -29,43 +29,39 @@ namespace TGC.Examples.Transformations
         {
             var textureEuler = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg");
             boxEuler = TgcBox.fromSize(new Vector3(-50, 0, 0), new Vector3(50, 50, 50), textureEuler);
-            boxEuler.AutoTransformEnable = true;
 
             var textureQuat = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\paredMuyRugosa.jpg");
             boxQuaternion = TgcBox.fromSize(new Vector3(50, 0, 0), new Vector3(50, 50, 50), textureQuat);
             boxQuaternion.AutoTransformEnable = false;
 
-            Modifiers.addVertex3f("Rot-Euler", new Vector3(0, 0, 0), new Vector3(360, 360, 360), new Vector3(0, 0, 0));
-            Modifiers.addVertex3f("Rot-Quaternion", new Vector3(0, 0, 0), new Vector3(360, 360, 360),
-                new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("Rotacion", new Vector3(0, 0, 0), new Vector3(360, 360, 360), new Vector3(0, 0, 0));
 
-            Camara.setCamera(new Vector3(0f, 1f, -100f), new Vector3(0f, 1f, 500f));
+            Camara.setCamera(new Vector3(0f, 1f, -200f), new Vector3(0f, 1f, 500f));
         }
 
         public override void Update()
         {
             PreUpdate();
+
+           
+            var rot = (Vector3)Modifiers["Rotacion"];
+            rot.X = Geometry.DegreeToRadian(rot.X);
+            rot.Y = Geometry.DegreeToRadian(rot.Y);
+            rot.Z = Geometry.DegreeToRadian(rot.Z);
+
+            //Rotacion Euler
+            boxEuler.Transform = Matrix.RotationYawPitchRoll(rot.Y, rot.X, rot.Z) *
+                                    Matrix.Translation(boxEuler.Position);
+
+            //Rotacion Quaternion
+            var q = Quaternion.RotationYawPitchRoll(rot.Y, rot.X, rot.Z);
+            boxQuaternion.Transform = Matrix.RotationQuaternion(q) * Matrix.Translation(boxQuaternion.Position);
         }
 
         public override void Render()
         {
             PreRender();
-
-            //Rotacion Euler
-            var rotEuler = (Vector3)Modifiers["Rot-Euler"];
-            rotEuler.X = Geometry.DegreeToRadian(rotEuler.X);
-            rotEuler.Y = Geometry.DegreeToRadian(rotEuler.Y);
-            rotEuler.Z = Geometry.DegreeToRadian(rotEuler.Z);
-            boxEuler.Rotation = rotEuler;
-
-            //Rotacion Quaternion
-            var rotQuat = (Vector3)Modifiers["Rot-Quaternion"];
-            rotQuat.X = Geometry.DegreeToRadian(rotQuat.X);
-            rotQuat.Y = Geometry.DegreeToRadian(rotQuat.Y);
-            rotQuat.Z = Geometry.DegreeToRadian(rotQuat.Z);
-            var q = Quaternion.RotationYawPitchRoll(rotQuat.Y, rotQuat.X, rotQuat.Z);
-            boxQuaternion.Transform = Matrix.RotationQuaternion(q) * Matrix.Translation(boxQuaternion.Position);
 
             boxEuler.render();
             boxQuaternion.render();
