@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // asociada con un ensamblado.
 
 [assembly: AssemblyTitle("TGC.Examples")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Ejemplos de como aplicar técnicas de gráficos con TGC.Core")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TGC - UTN")]
-[assembly: AssemblyProduct("Examples")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCompany("TGC - UTN.BA")]
+[assembly: AssemblyProduct("TGC.Examples")]
+[assembly: AssemblyCopyright("Copyright © 2009 - 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 // a los componentes COM. Si necesita obtener acceso a un tipo en este ensamblado desde
 // COM, establezca el atributo ComVisible como true en este tipo.
 
-[assembly: ComVisible(false)]
+[assembly: ComVisible(true)]
 
 // El siguiente GUID sirve como identificador de la biblioteca de tipos si este proyecto se expone a COM
 
@@ -34,5 +34,5 @@ using System.Runtime.InteropServices;
 // Puede especificar todos los valores o puede establecer como valores predeterminados los números de revisión y generación
 // mediante el asterisco ('*'), como se muestra a continuación:
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2.2.2.2")]
+[assembly: AssemblyFileVersion("2.2.2.2")]
