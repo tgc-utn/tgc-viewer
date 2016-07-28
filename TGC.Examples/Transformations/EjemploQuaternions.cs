@@ -29,6 +29,7 @@ namespace TGC.Examples.Transformations
         {
             var textureEuler = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg");
             boxEuler = TgcBox.fromSize(new Vector3(-50, 0, 0), new Vector3(50, 50, 50), textureEuler);
+            boxEuler.AutoTransformEnable = true;
 
             var textureQuat = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\paredMuyRugosa.jpg");
