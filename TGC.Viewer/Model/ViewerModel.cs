@@ -129,22 +129,13 @@ namespace TGC.Viewer.Model
             StopCurrentExample();
 
             //Ejecutar Init
-            try
-            {
-                ExampleLoader.CurrentExample = example;
-                //TODO esto no me cierra mucho OnResetDevice
-                OnResetDevice(D3DDevice.Instance.Device, null);
-                example.ResetDefaultConfig();
-                example.DirectSound = DirectSound;
-                example.Input = Input;
-                example.Init();
-                //TODO esto no deberia ir aca pero por ahora queda
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Error en Init() de ejemplo: " + example.Name, MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
+            ExampleLoader.CurrentExample = example;
+            //TODO esto no me cierra mucho OnResetDevice
+            OnResetDevice(D3DDevice.Instance.Device, null);
+            example.ResetDefaultConfig();
+            example.DirectSound = DirectSound;
+            example.Input = Input;
+            example.Init();
         }
 
         /// <summary>
@@ -166,17 +157,14 @@ namespace TGC.Viewer.Model
         {
             ApplicationRunning = false;
 
-            if (ExampleLoader.CurrentExample != null)
-            {
-                ExampleLoader.CurrentExample.Dispose();
-            }
+            StopCurrentExample();
 
             //Liberar Device al finalizar la aplicacion
             D3DDevice.Instance.Dispose();
             TexturesPool.Instance.clearAll();
         }
 
-        internal void UpdateAspectRatio(System.Windows.Forms.Panel panel)
+        internal void UpdateAspectRatio(Panel panel)
         {
             D3DDevice.Instance.UpdateAspectRatioAndProjection(panel.Width, panel.Height);
         }
