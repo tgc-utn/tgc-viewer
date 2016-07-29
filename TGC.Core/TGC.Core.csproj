@@ -83,7 +83,6 @@
     <Compile Include="Geometry\TgcConvexPolyhedron.cs" />
     <Compile Include="Geometry\TgcCylinder.cs" />
     <Compile Include="Geometry\TgcDebugBox.cs" />
-    <Compile Include="Geometry\TgcEditableLand.cs" />
     <Compile Include="Geometry\TgcElipsoid.cs" />
     <Compile Include="Geometry\TgcFixedYBoundingCylinder.cs" />
     <Compile Include="Geometry\TgcFrustum.cs" />

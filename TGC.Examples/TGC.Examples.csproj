@@ -122,8 +122,7 @@
     <Compile Include="ShadersExamples\ToonShading.cs" />
     <Compile Include="ShadersExamples\VideoPostProcess.cs" />
     <Compile Include="GeometryBasics\EjemploCajas.cs" />
-    <Compile Include="GeometryBasics\Cilindro.cs" />
-    <Compile Include="GeometryBasics\CrearEditableLand.cs" />
+    <Compile Include="GeometryBasics\EjemploCilindro.cs" />
     <Compile Include="GeometryBasics\CrearFlecha.cs" />
     <Compile Include="GeometryBasics\CrearLineaConGrosor.cs" />
     <Compile Include="GeometryBasics\CrearQuad.cs" />

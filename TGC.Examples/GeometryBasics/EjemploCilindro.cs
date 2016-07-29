@@ -16,12 +16,12 @@ namespace TGC.Examples.GeometryBasics
     ///     Movimiento con mouse.
     ///     Esta es una vieja version, es recomendado utilizar trasnformaciones en vez de regenerar los triangulos en render.
     /// </summary>
-    public class Cilindro : TGCExampleViewer
+    public class EjemploCilindro : TGCExampleViewer
     {
         private string currentTexture;
         private TgcCylinder cylinder;
 
-        public Cilindro(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploCilindro(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Geometrias Basicas";

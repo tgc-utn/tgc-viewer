@@ -28,8 +28,8 @@ namespace TGC.Examples.GeometryBasics
         public Esfera(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "GeometryBasics";
-            Name = "Crear Esfera 3D";
+            Category = "Geometrias Basicas";
+            Name = "Esfera";
             Description =
                 "Muestra como crear una  esfera 3D con la herramienta TgcSphere, cuyos parámetros pueden ser modificados. Movimiento con mouse.";
         }
@@ -38,6 +38,8 @@ namespace TGC.Examples.GeometryBasics
         {
             //Crear esfera
             sphere = new TgcSphere();
+            //No recomendamos utilizar AutoTransformEnable, con juegos complejos se pierde el control.
+            sphere.AutoTransformEnable = true;
             currentTexture = null;
 
             //Modifiers para vararis sus parametros
@@ -45,7 +47,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addBoolean("inflate", "yes", true);
             Modifiers.addInterval("level of detail", new object[] { 0, 1, 2, 3, 4 }, 2);
             Modifiers.addBoolean("edges", "show", false);
-            Modifiers.addFloat("radius", 0, 100, 10);
+            Modifiers.addFloat("radius", 0, 100, 25);
             Modifiers.addVertex3f("position", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
                 new Vector3(0, 0, 0));
             Modifiers.addVertex3f("rotation", new Vector3(-180, -180, -180), new Vector3(180, 180, 180),
@@ -61,7 +63,7 @@ namespace TGC.Examples.GeometryBasics
             UserVars.addVar("Vertices");
             UserVars.addVar("Triangulos");
 
-            Camara = new TgcRotationalCamera(new Vector3(), 50f, Input);
+            Camara = new TgcRotationalCamera(Input);
         }
 
         public override void Update()

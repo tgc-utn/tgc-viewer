@@ -6,7 +6,7 @@ using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.GeometryBasics
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     Ejemplo CrearSkyBox.
@@ -24,7 +24,7 @@ namespace TGC.Examples.GeometryBasics
         public CrearSkyBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "GeometryBasics";
+            Category = "Mesh Examples";
             Name = "SkyBox";
             Description =
                 "Muestra como utilizar la herramienta TgcSkyBox para crear un cielo envolvente en la escena. Movimiento con mouse.";
@@ -55,7 +55,7 @@ namespace TGC.Examples.GeometryBasics
             //Inicializa todos los valores para crear el SkyBox
             skyBox.Init();
 
-            //Modifier para ver BoundingBox
+            //Modifier para mover el skybox con la posicion de la caja con traslaciones.
             Modifiers.addBoolean("moveWhitCamera", "Move Whit Camera", false);
 
             Camara = new TgcFpsCamera(Input);
@@ -65,7 +65,7 @@ namespace TGC.Examples.GeometryBasics
         {
             PreUpdate();
 
-            //Se cambia el valor por defecto del farplane
+            //Se cambia el valor por defecto del farplane para evitar cliping de farplane.
             D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView,
                     D3DDevice.Instance.AspectRatio,
