@@ -13,18 +13,20 @@ namespace TGC.Examples.GeometryBasics
     ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
     ///     Muestra como crear una flecha 3D, utilizando la herramienta TgcArrow.
+    ///     Muestra como crear una linea 3D con grosor configurable, utilizando la herramienta TgcBoxLine.
     ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class CrearFlecha : TGCExampleViewer
+    public class EjemploFlechaYLineaBox : TGCExampleViewer
     {
         private TgcArrow arrow;
+        private TgcBoxLine line;
 
-        public CrearFlecha(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploFlechaYLineaBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "GeometryBasics";
-            Name = "Flecha 3D";
-            Description = "Muestra como crear una flecha 3D, utilizando la herramienta TgcArrow. Movimiento con mouse.";
+            Category = "Geometry Basics";
+            Name = "Flecha y linea box";
+            Description = "Muestra como crear una flecha 3D, utilizando la herramienta TgcArrow y linea 3D con grosor configurable, utilizando la herramienta TgcBoxLine.";
         }
 
         public override void Init()
@@ -40,18 +42,19 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addColor("bodyColor", Color.Blue);
             Modifiers.addColor("headColor", Color.LightBlue);
 
+            //Crea linea generica
+            line = new TgcBoxLine();
+
+            //Crear modifiers
+            Modifiers.addColor("boxColor", Color.Red);
+
             //Camara FPS
-            Camara = new TgcFpsCamera(new Vector3(0.0302f, 5.842f, -18.97f), 10f, 10f, Input);
+            Camara = new TgcRotationalCamera(new Vector3(0,10f,0), 30f, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
-        }
-
-        public override void Render()
-        {
-            PreRender();
 
             var start = (Vector3)Modifiers["start"];
             var end = (Vector3)Modifiers["end"];
@@ -60,19 +63,40 @@ namespace TGC.Examples.GeometryBasics
             var bodyColor = (Color)Modifiers["bodyColor"];
             var headColor = (Color)Modifiers["headColor"];
 
+            var offset = new Vector3(10, 0, 0);
             //Cargar valores de la flecha
-            arrow.PStart = start;
-            arrow.PEnd = end;
+            arrow.PStart = start - offset;
+            arrow.PEnd = end - offset;
             arrow.Thickness = thickness;
             arrow.HeadSize = headSize;
             arrow.BodyColor = bodyColor;
             arrow.HeadColor = headColor;
 
-            //Actualizar valores para hacerlos efectivos
+            //Actualizar valores para hacerlos efectivos, ADVERTENCIA verificar que estemetodo crea los vertices nuevamente.
+            //Recomendado de ser posible realizar transformaciones!!!
             arrow.updateValues();
+            
+            var boxColor = (Color)Modifiers["boxColor"];
+
+            //Cargar valores de la linea
+            line.PStart = start + offset;
+            line.PEnd = end + offset;
+            line.Thickness = thickness;
+            line.Color = boxColor;
+
+            //Actualizar valores para hacerlos efectivos, ADVERTENCIA verificar que estemetodo crea los vertices nuevamente.
+            //Recomendado de ser posible realizar transformaciones!!!
+            line.updateValues();
+        }
+
+        public override void Render()
+        {
+            PreRender();
 
             //Render
             arrow.render();
+
+            line.render();
 
             PostRender();
         }

@@ -144,7 +144,7 @@
     </ProjectReference>
     <ProjectReference Include="..\TGC.Examples\TGC.Examples.csproj">
       <Project>{0a4e6948-ab74-48a5-99e1-6bd1c3949006}</Project>
-      <Name>TGC.Examples</Name>
+      <Name>TGC.Examples2</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

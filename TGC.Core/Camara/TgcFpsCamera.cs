@@ -45,6 +45,12 @@ namespace TGC.Core.Camara
             cameraRotation = Matrix.RotationX(updownRot) * Matrix.RotationY(leftrightRot);
         }
 
+        /// <summary>
+        ///  Crea una camara con una posicion y una direccion IMPORTANTE!!!! la direccion debe estar normalizada.
+        /// </summary>
+        /// <param name="positionEye"></param>
+        /// <param name="directionView"></param>
+        /// <param name="input"></param>
         public TgcFpsCamera(Vector3 positionEye, Vector3 directionView, TgcD3dInput input) : this(input)
         {
             this.positionEye = positionEye;
@@ -173,7 +179,7 @@ namespace TGC.Core.Camara
         ///     se hace override para actualizar las posiones internas, estas seran utilizadas en el proximo update.
         /// </summary>
         /// <param name="position"></param>
-        /// <param name="directionView"></param>
+        /// <param name="directionView"> debe ser normalizado.</param>
         public override void setCamera(Vector3 position, Vector3 directionView)
         {
             positionEye = position;
