@@ -24,7 +24,7 @@ namespace TGC.Examples.GeometryBasics
         public EjemploCilindro(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Geometrias Basicas";
+            Category = "Geometry Basics";
             Name = "Cilindro";
             Description =
                 "Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parametros pueden ser modificados. Movimiento con mouse.";

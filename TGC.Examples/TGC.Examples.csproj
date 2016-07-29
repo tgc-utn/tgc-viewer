@@ -126,7 +126,7 @@
     <Compile Include="GeometryBasics\CrearFlecha.cs" />
     <Compile Include="GeometryBasics\CrearLineaConGrosor.cs" />
     <Compile Include="GeometryBasics\CrearQuad.cs" />
-    <Compile Include="GeometryBasics\CrearSkyBox.cs" />
+    <Compile Include="MeshExamples\EjemploSkyBox.cs" />
     <Compile Include="GeometryBasics\EjemploPlaneWall.cs" />
     <Compile Include="GeometryBasics\EjemploSphere.cs" />
     <Compile Include="GeometryBasics\EjemploVerticalWall.cs" />

@@ -80,7 +80,7 @@ namespace TGC.Examples.MeshExamples
         public override void Render()
         {
             PreRender();
-
+            DrawText.drawText("Camera pos: " + Core.Utils.TgcParserUtils.printVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
             //Renderizar SkyBox
             skyBox.render();
 
