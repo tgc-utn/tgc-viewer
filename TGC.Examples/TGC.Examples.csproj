@@ -197,8 +197,6 @@
     <Compile Include="Sound\PlayMp3.cs" />
     <Compile Include="Sound\PlaySound3D.cs" />
     <Compile Include="Sound\PlayStaticSound.cs" />
-    <Compile Include="Engine2D\Sprites2D\AnimatedSprite2D.cs" />
-    <Compile Include="Engine2D\Sprites2D\Sprite2D.cs" />
     <Compile Include="Transformations\EjemploBrazoRobot.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
@@ -228,6 +226,7 @@
     <Compile Include="Animation\SkeletalAnimation.cs" />
     <Compile Include="MeshExamples\ModeloConAlpha.cs" />
     <Compile Include="Optimization\PortalRenderingFramework.cs" />
+    <Compile Include="Engine2D\Sprite2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">
