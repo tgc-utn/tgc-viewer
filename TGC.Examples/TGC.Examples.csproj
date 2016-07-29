@@ -121,8 +121,7 @@
     <Compile Include="ShadersExamples\ShadowMap.cs" />
     <Compile Include="ShadersExamples\ToonShading.cs" />
     <Compile Include="ShadersExamples\VideoPostProcess.cs" />
-    <Compile Include="GeometryBasics\Caja.cs" />
-    <Compile Include="GeometryBasics\CajaDebug.cs" />
+    <Compile Include="GeometryBasics\EjemploCajas.cs" />
     <Compile Include="GeometryBasics\Cilindro.cs" />
     <Compile Include="GeometryBasics\CrearEditableLand.cs" />
     <Compile Include="GeometryBasics\CrearFlecha.cs" />

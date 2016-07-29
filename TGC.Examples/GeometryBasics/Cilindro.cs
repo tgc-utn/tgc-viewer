@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using System.Drawing;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
@@ -13,6 +14,7 @@ namespace TGC.Examples.GeometryBasics
     /// <summary>
     ///     Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parametros pueden ser modificados.
     ///     Movimiento con mouse.
+    ///     Esta es una vieja version, es recomendado utilizar trasnformaciones en vez de regenerar los triangulos en render.
     /// </summary>
     public class Cilindro : TGCExampleViewer
     {
@@ -22,8 +24,8 @@ namespace TGC.Examples.GeometryBasics
         public Cilindro(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "GeometryBasics";
-            Name = "Crear Cilindro 3D";
+            Category = "Geometrias Basicas";
+            Name = "Cilindro";
             Description =
                 "Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parametros pueden ser modificados. Movimiento con mouse.";
         }
@@ -31,10 +33,7 @@ namespace TGC.Examples.GeometryBasics
         public override void Init()
         {
             cylinder = new TgcCylinder(new Vector3(0, 0, 0), 2, 4);
-
-            //cylinder.Transform = Matrix.Scaling(2, 1, 1) * Matrix.RotationYawPitchRoll(0, 0, 1);
-            //cylinder.AutoTransformEnable = false;
-            //cylinder.updateValues();
+            cylinder.AutoTransformEnable = true;
 
             cylinder.AlphaBlendEnable = true;
 
@@ -49,6 +48,8 @@ namespace TGC.Examples.GeometryBasics
             var angle = FastMath.TWO_PI;
             Modifiers.addVertex3f("rotation", new Vector3(-angle, -angle, -angle), new Vector3(angle, angle, angle),
                 new Vector3(0, 0, 0));
+
+            Camara = new TgcRotationalCamera(Input);
         }
 
         public override void Update()

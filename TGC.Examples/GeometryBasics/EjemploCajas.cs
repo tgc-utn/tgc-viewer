@@ -12,51 +12,64 @@ using TGC.Examples.Example;
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
-    ///     Ejemplo Caja
+    ///     Ejemplos con cajas
     ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
     ///     Muestra como crear una caja 3D con la herramienta TgcBox, cuyos parametros
     ///     pueden ser modificados.
+    ///     Muestra como crear una caja 3D WireFrame, en la cual solo se ven sus aristas, pero no sus caras.
+    ///     Se utiliza la herramienta TgcDebugBox.
+    ///     Cada arista es un Box rectangular.
+    ///     Es util para hacer debug de ciertas estructuras.
     ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class Caja : TGCExampleViewer
+    public class EjemploCajas : TGCExampleViewer
     {
         private TgcBox box;
+        private TgcDebugBox debugBox;
         private string currentTexture;
 
-        public Caja(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploCajas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "GeometryBasics";
-            Name = "Crear Caja 3D";
+            Category = "Geometrias Basicas";
+            Name = "Cajas";
             Description =
-                "Muestra como crear una caja 3D con la herramienta TgcBox, cuyos parametros pueden ser modificados. Movimiento con mouse.";
+                "Muestra como crear una caja 3D con la herramienta TgcBox y TgcDebugBox, cuyos parametros pueden ser modificados. Movimiento con mouse.";
         }
 
         public override void Init()
         {
             //Crear caja vacia
             box = new TgcBox();
+            box.AutoTransformEnable = true;
+            //Crear caja debug vacia
+            debugBox = new TgcDebugBox();
             currentTexture = null;
 
             //Modifiers para vararis sus parametros
+            Modifiers.addBoolean("box", "box", true);
+            Modifiers.addBoolean("boundingBox", "BoundingBox", false);
+            Modifiers.addBoolean("debugBox", "debugBox", true);
+            Modifiers.addFloat("thickness", 0.1f, 5, 0.2f);
+            Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
+            Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f), new Vector2(0, 0));
+            Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4), new Vector2(1, 1));
+            Modifiers.addColor("color", Color.BurlyWood);
             Modifiers.addVertex3f("size", new Vector3(0, 0, 0), new Vector3(100, 100, 100), new Vector3(20, 20, 20));
             Modifiers.addVertex3f("position", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
                 new Vector3(0, 0, 0));
             Modifiers.addVertex3f("rotation", new Vector3(-180, -180, -180), new Vector3(180, 180, 180),
                 new Vector3(0, 0, 0));
-            Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
-            Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f), new Vector2(0, 0));
-            Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4), new Vector2(1, 1));
-            Modifiers.addColor("color", Color.White);
-            Modifiers.addBoolean("boundingBox", "BoundingBox", false);
 
-            Camara = new TgcRotationalCamera(new Vector3(), 50f, Input);
+            Camara = new TgcRotationalCamera(new Vector3(), 200f, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
+            //Actualizar parametros de la caja
+            updateBox();
         }
 
         /// <summary>
@@ -72,10 +85,21 @@ namespace TGC.Examples.GeometryBasics
                 box.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
+            var size = (Vector3)Modifiers["size"];
+            var position = (Vector3)Modifiers["position"];
+            var thickness = (float)Modifiers["thickness"];
+            var color = (Color)Modifiers["color"];
+
             //Tamano, posicion y color
-            box.Size = (Vector3)Modifiers["size"];
-            box.Position = (Vector3)Modifiers["position"];
-            box.Color = (Color)Modifiers["color"];
+            box.Size = size;
+            box.Position = position + new Vector3(15f, 0, 0);
+            box.Color = color;
+
+            //Actualizar valores en la caja.
+            debugBox.setPositionSize(position - new Vector3(15f, 0, 0), size);
+            debugBox.Thickness = thickness;
+            debugBox.Color = color;
+            
 
             //Rotacion, converitr a radianes
             var rotaion = (Vector3)Modifiers["rotation"];
@@ -86,7 +110,10 @@ namespace TGC.Examples.GeometryBasics
             box.UVOffset = (Vector2)Modifiers["offset"];
             box.UVTiling = (Vector2)Modifiers["tiling"];
 
-            //Actualizar valores en la caja.
+            //Actualizar valores en la caja. IMPORTANTE, es mejor realizar transformaciones con matrices.
+            debugBox.updateValues();
+            //Actualizar valores en la caja. IMPORTANTE, es mejor realizar transformaciones con matrices.
+            //Otra cosa importante, las rotaciones no modifican el AABB. con lo cual hay que tener cuidado.
             box.updateValues();
         }
 
@@ -94,18 +121,23 @@ namespace TGC.Examples.GeometryBasics
         {
             PreRender();
 
-            //Actualizar parametros de la caja
-            updateBox();
-
             //Renderizar caja
-            box.render();
+            if ((bool)Modifiers["box"])
+            {
+                box.render();
+            }            
 
             //Mostrar BoundingBox de la caja
-            var boundingBox = (bool)Modifiers["boundingBox"];
-            if (boundingBox)
+            if ((bool)Modifiers["boundingBox"])
             {
                 box.BoundingBox.render();
             }
+
+            if ((bool)Modifiers["debugBox"])
+            {
+                debugBox.render();
+            }
+            
 
             PostRender();
         }
