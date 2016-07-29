@@ -26,8 +26,8 @@ namespace TGC.Examples.GeometryBasics
         public EjemploPlaneWall(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "GeometryBasics";
-            Name = "PlaneWall";
+            Category = "Geometry Basics";
+            Name = "Plane Wall";
             Description =
                 "Muestra como utilizar la herramienta TgcPlaneWall para crear paredes planas con textura. Permite editar su posicion, tamano, textura y mapeo de textura. Movimiento con mouse.";
         }
@@ -54,6 +54,10 @@ namespace TGC.Examples.GeometryBasics
 
             //Actualizar segun valores cargados
             updateWall();
+
+            //Ajustar camara segun tamano de la pared
+            Camara = new TgcRotationalCamera(wall.BoundingBox.calculateBoxCenter(),
+                wall.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
@@ -97,10 +101,6 @@ namespace TGC.Examples.GeometryBasics
 
             //Es necesario ejecutar updateValues() para que los cambios tomen efecto
             wall.updateValues();
-
-            //Ajustar camara segun tamano de la pared
-            Camara = new TgcRotationalCamera(wall.BoundingBox.calculateBoxCenter(),
-                wall.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Render()

@@ -32,7 +32,7 @@ namespace TGC.Examples.GeometryBasics
         public EjemploCajas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Geometrias Basicas";
+            Category = "Geometry Basics";
             Name = "Cajas";
             Description =
                 "Muestra como crear una caja 3D con la herramienta TgcBox y TgcDebugBox, cuyos parametros pueden ser modificados. Movimiento con mouse.";

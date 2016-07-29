@@ -16,16 +16,16 @@ namespace TGC.Examples.GeometryBasics
     ///     utilizando la herramienta TgcQuad.
     ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class CrearQuad : TGCExampleViewer
+    public class EjemploQuad : TGCExampleViewer
     {
         private TgcArrow normalArrow;
         private TgcQuad quad;
 
-        public CrearQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "GeometryBasics";
-            Name = "Crear Quad";
+            Category = "Geometry Basics";
+            Name = "Quad";
             Description =
                 "Muestra como crear una cara rectanglar 3D (Quad) orientable en base a un vector normal. Movimiento con mouse.";
         }
@@ -51,12 +51,14 @@ namespace TGC.Examples.GeometryBasics
         public override void Update()
         {
             PreUpdate();
+            //Actualizar parametros del quad
+            updateQuad();
         }
 
         /// <summary>
         ///     Actualiza los parametros de la caja en base a lo cargado por el usuario
         /// </summary>
-        private void updateQuad(bool showNormal)
+        private void updateQuad()
         {
             var size = (Vector2)Modifiers["size"];
             var normal = (Vector3)Modifiers["normal"];
@@ -70,10 +72,12 @@ namespace TGC.Examples.GeometryBasics
             quad.Color = color;
 
             //Actualizar valors para hacerlos efectivos
+            //Los quad actualizan el vertexBuffer, al ser solo 2 triangulos no tiene gran costo recalcular los valores, 
+            //pero es mas recomendado utilizar transformaciones
             quad.updateValues();
 
             //Actualizar valores de la flecha
-            if (showNormal)
+            if ((bool)Modifiers["showNormal"])
             {
                 normalArrow.PStart = quad.Center;
                 normalArrow.PEnd = quad.Center + quad.Normal * 10;
@@ -85,14 +89,9 @@ namespace TGC.Examples.GeometryBasics
         {
             PreRender();
 
-            var showNormal = (bool)Modifiers["showNormal"];
-
-            //Actualizar parametros de la caja
-            updateQuad(showNormal);
-
             quad.render();
 
-            if (showNormal)
+            if ((bool)Modifiers["showNormal"])
             {
                 normalArrow.render();
             }
