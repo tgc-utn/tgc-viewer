@@ -1,7 +1,7 @@
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
 using TGC.Examples.Engine2D.Spaceship.Core;
 
 namespace TGC.Examples.Engine2D.Spaceship

@@ -1,6 +1,6 @@
-using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using System.Drawing;
 using TGC.Core.Direct3D;
 
 namespace TGC.Examples.Engine2D.Spaceship.Core
@@ -10,7 +10,7 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
     /// </summary>
     public class Drawer2D
     {
-        private readonly Microsoft.DirectX.Direct3D.Sprite DxSprite;
+        private readonly Sprite DxSprite;
         private readonly Line line;
 
         private readonly CustomVertex.PositionColoredTextured[] LineVertexData =
@@ -18,7 +18,7 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
 
         public Drawer2D()
         {
-            DxSprite = new Microsoft.DirectX.Direct3D.Sprite(D3DDevice.Instance.Device);
+            DxSprite = new Sprite(D3DDevice.Instance.Device);
             line = new Line(D3DDevice.Instance.Device);
         }
 

@@ -114,7 +114,7 @@ namespace TGC.Core.SceneLoader
             initData(parentInstance.d3dMesh, name, parentInstance.renderType);
             //Si no se hace clone luego no pueden cambiar las texturas.
             diffuseMaps = new TgcTexture[parentInstance.diffuseMaps.Length];
-            for (int i = 0; i < diffuseMaps.Length; i++)
+            for (var i = 0; i < diffuseMaps.Length; i++)
             {
                 diffuseMaps[i] = parentInstance.diffuseMaps[i].Clone();
             }

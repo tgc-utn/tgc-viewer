@@ -1,6 +1,6 @@
+using Microsoft.DirectX;
 using System;
 using System.Drawing;
-using Microsoft.DirectX;
 
 namespace TGC.Examples.Engine2D.Spaceship.Core
 {
@@ -10,6 +10,18 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
         {
             initialize();
         }
+
+        #region Miembros de IDisposable
+
+        public void Dispose()
+        {
+            if (Bitmap != null)
+            {
+                Bitmap.Dispose();
+            }
+        }
+
+        #endregion Miembros de IDisposable
 
         private void initialize()
         {
@@ -132,17 +144,5 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
         }
 
         #endregion Public members
-
-        #region Miembros de IDisposable
-
-        public void Dispose()
-        {
-            if (Bitmap != null)
-            {
-                Bitmap.Dispose();
-            }
-        }
-
-        #endregion Miembros de IDisposable
     }
 }

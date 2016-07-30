@@ -55,7 +55,8 @@ namespace TGC.Viewer.Model
             var currentDirectory = Environment.CurrentDirectory + "\\";
 
             //Cargar shaders del framework
-            TgcShaders.Instance.loadCommonShaders(currentDirectory + Settings.Default.ShadersDirectory + Settings.Default.CommonShaders);
+            TgcShaders.Instance.loadCommonShaders(currentDirectory + Settings.Default.ShadersDirectory +
+                                                  Settings.Default.CommonShaders);
         }
 
         public void LoadExamples(TreeView treeViewExamples, FlowLayoutPanel flowLayoutPanelModifiers,

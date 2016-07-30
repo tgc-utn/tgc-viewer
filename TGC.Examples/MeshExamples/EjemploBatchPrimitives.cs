@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
@@ -7,7 +6,7 @@ using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.Others
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     EjemploBatchPrimitives
@@ -28,7 +27,8 @@ namespace TGC.Examples.Others
         {
             Category = "Mesh Examples";
             Name = "Texture Mesh render order";
-            Description = "En este ejemplo podemos ver como afecta el orden de renderisado cuando tenemos un mismo mesh" +
+            Description =
+                "En este ejemplo podemos ver como afecta el orden de renderisado cuando tenemos un mismo mesh" +
                 " con diferentes texturas. si realizamos multiples render set se nota el costo que tiene. en cambio si " +
                 "asignamos la textura y luego renderisamos todos los mesh de esa textura tiene menos costo.";
             //TO FIX IT, este ejemplo no funciona correctamente porque TGCMesh siempre setea las texturas,
@@ -43,7 +43,7 @@ namespace TGC.Examples.Others
 
             Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(25);
-            
+
             Camara.setCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
         }
 
@@ -80,8 +80,6 @@ namespace TGC.Examples.Others
 
         private void doRender(RenderMethod renderMethod)
         {
-           
-
             if (currentRenderMethod != renderMethod)
             {
                 currentRenderMethod = renderMethod;
@@ -139,7 +137,7 @@ namespace TGC.Examples.Others
         public override void Render()
         {
             PreRender();
-          
+
             var renderMethod = (RenderMethod)Modifiers["Render Method"];
             doRender(renderMethod);
 

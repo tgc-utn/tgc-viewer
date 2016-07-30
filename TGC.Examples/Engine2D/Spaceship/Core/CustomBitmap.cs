@@ -1,6 +1,6 @@
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using Microsoft.DirectX.Direct3D;
 
 namespace TGC.Examples.Engine2D.Spaceship.Core
 {

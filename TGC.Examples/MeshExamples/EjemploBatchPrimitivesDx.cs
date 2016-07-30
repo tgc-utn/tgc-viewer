@@ -1,6 +1,5 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
@@ -29,8 +28,9 @@ namespace TGC.Examples.MeshExamples
         {
             Category = "Mesh Examples";
             Name = "Texture primitive Mesh render order";
-            Description = "En este ejemplo podemos ver como afecta el orden de renderisado cuando tenemos un mismo mesh"+
-                " con diferentes texturas. si realizamos multiples render set se nota el costo que tiene. en cambio si "+
+            Description =
+                "En este ejemplo podemos ver como afecta el orden de renderisado cuando tenemos un mismo mesh" +
+                " con diferentes texturas. si realizamos multiples render set se nota el costo que tiene. en cambio si " +
                 "asignamos la textura y luego renderisamos todos los mesh de esa textura tiene menos costo.";
         }
 
