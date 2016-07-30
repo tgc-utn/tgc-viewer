@@ -34,7 +34,7 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
         /// <param name="frameSize">tamaño de un tile de la animacion</param>
         /// <param name="totalFrames">cantidad de frames que tiene la animacion</param>
         /// <param name="frameRate">velocidad en cuadros por segundo</param>
-        public AnimatedSprite(string texturePath, Size frameSize, int totalFrames, float frameRate) : base()
+        public AnimatedSprite(string texturePath, Size frameSize, int totalFrames, float frameRate)
         {
             enabled = true;
             currentFrame = 0;
@@ -44,11 +44,11 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
             playing = true;
 
             //Sprite
-            this.Bitmap = new CustomBitmap(texturePath, D3DDevice.Instance.Device);
+            Bitmap = new CustomBitmap(texturePath, D3DDevice.Instance.Device);
 
             //Calcular valores de frames de la textura
-            textureWidth = this.Bitmap.Width;
-            textureHeight = this.Bitmap.Height;
+            textureWidth = Bitmap.Width;
+            textureHeight = Bitmap.Height;
             framesPerColumn = (int)textureWidth / frameSize.Width;
             framesPerRow = (int)textureHeight / frameSize.Height;
             var realTotalFrames = framesPerRow * framesPerColumn;
@@ -134,7 +134,7 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
             srcRect.Width = frameSize.Width;
             srcRect.X = frameSize.Height * (currentFrame % framesPerColumn);
             srcRect.Height = frameSize.Height;
-            this.SrcRect = srcRect;
+            SrcRect = srcRect;
         }
     }
 }

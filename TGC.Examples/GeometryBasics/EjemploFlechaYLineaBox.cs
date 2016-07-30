@@ -26,7 +26,8 @@ namespace TGC.Examples.GeometryBasics
         {
             Category = "Geometry Basics";
             Name = "Flecha y linea box";
-            Description = "Muestra como crear una flecha 3D, utilizando la herramienta TgcArrow y linea 3D con grosor configurable, utilizando la herramienta TgcBoxLine.";
+            Description =
+                "Muestra como crear una flecha 3D, utilizando la herramienta TgcArrow y linea 3D con grosor configurable, utilizando la herramienta TgcBoxLine.";
         }
 
         public override void Init()
@@ -49,7 +50,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addColor("boxColor", Color.Red);
 
             //Camara FPS
-            Camara = new TgcRotationalCamera(new Vector3(0,10f,0), 30f, Input);
+            Camara = new TgcRotationalCamera(new Vector3(0, 10f, 0), 30f, Input);
         }
 
         public override void Update()
@@ -75,7 +76,7 @@ namespace TGC.Examples.GeometryBasics
             //Actualizar valores para hacerlos efectivos, ADVERTENCIA verificar que estemetodo crea los vertices nuevamente.
             //Recomendado de ser posible realizar transformaciones!!!
             arrow.updateValues();
-            
+
             var boxColor = (Color)Modifiers["boxColor"];
 
             //Cargar valores de la linea

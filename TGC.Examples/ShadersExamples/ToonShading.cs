@@ -88,7 +88,8 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addFloat("Specular", 0, 1, 0.5f);
             Modifiers.addFloat("SpecularPower", 1, 100, 16);
 
-            Camara = new TgcRotationalCamera(new Vector3(20, 20, 0), 300, TgcRotationalCamera.DEFAULT_ZOOM_FACTOR, 1.5f, Input);
+            Camara = new TgcRotationalCamera(new Vector3(20, 20, 0), 300, TgcRotationalCamera.DEFAULT_ZOOM_FACTOR, 1.5f,
+                Input);
 
             // Creo un depthbuffer sin multisampling, para que sea compatible con el render to texture
 

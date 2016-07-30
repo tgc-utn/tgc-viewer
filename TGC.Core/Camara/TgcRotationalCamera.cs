@@ -13,7 +13,6 @@ namespace TGC.Core.Camara
         public static float DEFAULT_CAMERA_DISTANCE = 10f;
         public static float DEFAULT_ROTATION_SPEED = 100f;
         public static Vector3 DEFAULT_DOWN = new Vector3(0f, -1f, 0f);
-        private TgcD3dInput Input { get; set; }
 
         /// <summary>
         ///     Crea camara con valores por defecto.
@@ -54,7 +53,8 @@ namespace TGC.Core.Camara
         /// <param name="cameraDistance"></param>
         /// <param name="zoomFactor"></param>
         /// <param name="rotationSpeed"></param>
-        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor, float rotationSpeed, TgcD3dInput input)
+        public TgcRotationalCamera(Vector3 cameraCenter, float cameraDistance, float zoomFactor, float rotationSpeed,
+            TgcD3dInput input)
             : this(input)
         {
             CameraCenter = cameraCenter;
@@ -83,6 +83,8 @@ namespace TGC.Core.Camara
             this(cameraCenter, cameraDistance, DEFAULT_ZOOM_FACTOR, input)
         {
         }
+
+        private TgcD3dInput Input { get; }
 
         /// <summary>
         ///     Actualiza los valores de la camara.

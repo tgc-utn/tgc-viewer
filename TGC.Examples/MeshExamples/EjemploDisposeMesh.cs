@@ -18,11 +18,11 @@ namespace TGC.Examples.MeshExamples
     /// </summary>
     public class EjemploDisposeMesh : TGCExampleViewer
     {
+        private TgcMesh boxMesh;
+        private float disposed;
         private List<TgcMesh> meshes;
         private TgcScene scene1;
-        private TgcMesh boxMesh;
-        private float time = 0;
-        private float disposed = 0;
+        private float time;
 
         public EjemploDisposeMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -44,7 +44,7 @@ namespace TGC.Examples.MeshExamples
             {
                 for (var j = 0; j < 50; j++)
                 {
-                    var mesh = baseMesh.clone(i+" - "+j);
+                    var mesh = baseMesh.clone(i + " - " + j);
                     mesh.AutoTransformEnable = true;
                     mesh.move(i * 100, 0, j * 100);
                     meshes.Add(mesh);
@@ -60,12 +60,11 @@ namespace TGC.Examples.MeshExamples
             boxMesh = box.toMesh("box");
             //Liberamos la caja pero nos quedamos con el mesh.
             box.dispose();
-            
+
             //Creamos una esena
             var loader1 = new TgcSceneLoader();
             scene1 =
                 loader1.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
-
 
             time = 0;
 
@@ -85,8 +84,8 @@ namespace TGC.Examples.MeshExamples
         public override void Render()
         {
             PreRender();
-            DrawText.drawText("Cantidad de elementos liberados: " + disposed, 5, 20, System.Drawing.Color.Red);
-            
+            DrawText.drawText("Cantidad de elementos liberados: " + disposed, 5, 20, Color.Red);
+
             //Renderisamos todo hasta que pase cierto tiempo y ahi liberamos todos los recursos.
             if (time >= 0f && time < 30f)
             {
@@ -124,18 +123,18 @@ namespace TGC.Examples.MeshExamples
                 boxMesh.render();
 
                 time += ElapsedTime;
-            } else {
+            }
+            else
+            {
                 //ATENCION ESTO QUE SIGUE es solo para el ejemplo este, no es buena practica invocar al dispose completo.
                 //En su lugar se puede invocar caso por caso segun las necidades.
                 //Hacemos el dispose 1 vez sola.
                 if (time != -1)
                 {
                     time = -1;
-                    this.Dispose();
+                    Dispose();
                 }
-                
             }
-
 
             PostRender();
         }

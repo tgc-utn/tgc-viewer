@@ -17,13 +17,11 @@ namespace TGC.Examples.GeometryBasics
     ///     Muestra como crear un triangulo 3D de la forma mas sencilla,
     ///     especificando vertice por vertice.
     ///     El triangulo se crea con colores por vertice.
-    ///     
     ///     Crea un triangulo 3D con textura y colores por vertice.
     ///     Posee Modifiers para variar las posiciones de los vertices,
     ///     las coordenadas UV y los colores de cada vertice.
     ///     El triangulo se vuelve a armar en cada loop de render en base
     ///     a los parametros configurados en los Modifiers.
-    ///     
     ///     Crea el mismo triangulo que el ejemplo TrianguloBasico.
     ///     Pero utiliza la herramienta de VertexBuffer para crearlo en forma mas optima.
     ///     En lugar de mandar a renderizar cada primitiva por separado, se envia
@@ -32,11 +30,14 @@ namespace TGC.Examples.GeometryBasics
     /// </summary>
     public class EjemploTriangulos : TGCExampleViewer
     {
-        //Para 1. Array de vertices para crear el triangulo
-        private CustomVertex.PositionColored[] simpleTriangleData;
         //Para 2. Triangulo editable.
         private string currentTexurePah;
+
+        //Para 1. Array de vertices para crear el triangulo
+        private CustomVertex.PositionColored[] simpleTriangleData;
+
         private Texture texture;
+
         //Para 3. Vertex buffer que se va a utilizar
         private VertexBuffer vertexBuffer;
 
@@ -45,7 +46,8 @@ namespace TGC.Examples.GeometryBasics
         {
             Category = "Geometry Basics";
             Name = "Triangulos";
-            Description = "Crea tres triangulos 3D, 1. basico con color. 2. acepta modificaciones de atributos basicos. 3. Utilizando Vertex Buffer";
+            Description =
+                "Crea tres triangulos 3D, 1. basico con color. 2. acepta modificaciones de atributos basicos. 3. Utilizando Vertex Buffer";
         }
 
         public override void Init()
@@ -108,7 +110,6 @@ namespace TGC.Examples.GeometryBasics
             UserVars.addVar("Triangle 3 vertices");
             UserVars.setValue("Triangle 3 vertices", data.Length);
 
-
             //Configurar camara en rotacion
             Camara = new TgcRotationalCamera(new Vector3(0, 0.5f, 0), 7.5f, Input);
         }
@@ -131,7 +132,7 @@ namespace TGC.Examples.GeometryBasics
 
             //Especificar formato de triangulo
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
-            D3DDevice.Instance.Device.Transform.World = Matrix.Translation(-2.5f, 0, 0); 
+            D3DDevice.Instance.Device.Transform.World = Matrix.Translation(-2.5f, 0, 0);
             //Dibujar 1 primitiva (nuestro triangulo)
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, simpleTriangleData);
 
@@ -199,7 +200,6 @@ namespace TGC.Examples.GeometryBasics
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColoredTextured.Format;
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, data);
 
-
             //Triangulo 3 se corre a la derecha.
             //Especificar formato de triangulos
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
@@ -208,7 +208,6 @@ namespace TGC.Examples.GeometryBasics
             D3DDevice.Instance.Device.Transform.World = Matrix.Translation(2.5f, 0, 0);
             //Dibujar 1 primitiva
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
-
 
             PostRender();
         }

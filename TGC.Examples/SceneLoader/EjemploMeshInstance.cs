@@ -1,12 +1,13 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
-using TGC.Core.Camara;
+using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Core.Utils;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.SceneLoader
@@ -64,8 +65,8 @@ namespace TGC.Examples.SceneLoader
         public override void Render()
         {
             PreRender();
-            DrawText.drawText("Camera pos: " + Core.Utils.TgcParserUtils.printVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
-            DrawText.drawText("Camera LookAt: " + Core.Utils.TgcParserUtils.printVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
+            DrawText.drawText("Camera pos: " + TgcParserUtils.printVector3(Camara.Position), 5, 20, Color.Red);
+            DrawText.drawText("Camera LookAt: " + TgcParserUtils.printVector3(Camara.LookAt), 5, 40, Color.Red);
 
             foreach (var mesh in meshes)
             {

@@ -1,8 +1,8 @@
+using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
 using TGC.Core.Input;
 using TGC.Examples.Engine2D.Spaceship.Core;
 

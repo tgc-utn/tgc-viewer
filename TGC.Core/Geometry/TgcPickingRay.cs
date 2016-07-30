@@ -9,13 +9,13 @@ namespace TGC.Core.Geometry
     /// </summary>
     public class TgcPickingRay
     {
-        private TgcD3dInput Input { get; set; }
-
         public TgcPickingRay(TgcD3dInput input)
         {
             Input = input;
             Ray = new TgcRay();
         }
+
+        private TgcD3dInput Input { get; }
 
         /// <summary>
         ///     Ray que representa la accion de Picking

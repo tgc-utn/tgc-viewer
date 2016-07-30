@@ -75,7 +75,9 @@ namespace TGC.Examples.MathExamples
             float velocidadMovimiento = 100; //Ojo que este valor deberia siempre multiplicarse por el elapsedTime
             var movimientoAdelante = new Vector3(componenteX * velocidadMovimiento, 0, componenteZ * velocidadMovimiento);
 
-            DrawText.drawText("Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.", 5, 50, Color.Yellow);
+            DrawText.drawText(
+                "Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.", 5, 50,
+                Color.Yellow);
 
             PostRender();
         }

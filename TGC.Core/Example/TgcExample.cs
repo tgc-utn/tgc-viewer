@@ -189,7 +189,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Limpia la pantalla y inicia la escena 3D
+        ///     Limpia la pantalla y inicia la escena 3D
         /// </summary>
         protected void BeginRenderScene()
         {
@@ -198,7 +198,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Inicia la escena 3D
+        ///     Inicia la escena 3D
         /// </summary>
         public void BeginScene()
         {
@@ -236,7 +236,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Finaliza y presenta (se debe hacer al final del render) la escena 3D
+        ///     Finaliza y presenta (se debe hacer al final del render) la escena 3D
         /// </summary>
         protected void EndRenderScene()
         {
@@ -245,7 +245,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Finaliza una escena que se inicio con un BeginScene()
+        ///     Finaliza una escena que se inicio con un BeginScene()
         /// </summary>
         private static void EndScene()
         {

@@ -52,7 +52,8 @@ namespace TGC.Viewer.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + settings.DefaultExampleName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + settings.DefaultExampleName,
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -62,10 +63,10 @@ namespace TGC.Viewer.UI
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "Error en RenderLoop del ejemplo: " + Modelo.ExampleLoader.CurrentExample.Name, MessageBoxButtons.OK,
+                MessageBox.Show(e.Message,
+                    "Error en RenderLoop del ejemplo: " + Modelo.ExampleLoader.CurrentExample.Name, MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
-
 
             panel3D.Focus();
         }

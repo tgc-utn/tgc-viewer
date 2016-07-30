@@ -1,8 +1,8 @@
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
-using Font = Microsoft.DirectX.Direct3D.Font;
+using Font = System.Drawing.Font;
 
 namespace TGC.Core.Text
 {
@@ -18,13 +18,12 @@ namespace TGC.Core.Text
             CENTER
         }
 
+        //font default.
+        public static readonly Font VERDANA_10 = new Font("Verdana", 10, FontStyle.Regular, GraphicsUnit.Pixel);
+
         private TextAlign align;
 
-        //font default.
-        public static readonly System.Drawing.Font VERDANA_10 = new System.Drawing.Font("Verdana", 10, FontStyle.Regular, GraphicsUnit.Pixel);
-
         private Rectangle rectangle;
-        private Sprite TextSprite { get; set; }
 
         public TgcText2D()
         {
@@ -37,10 +36,12 @@ namespace TGC.Core.Text
             rectangle = new Rectangle(0, 0, D3DDevice.Instance.Width, D3DDevice.Instance.Height);
         }
 
+        private Sprite TextSprite { get; }
+
         /// <summary>
         ///     Fuente de Direct3D para la letra del texto
         /// </summary>
-        public Font D3dFont { get; private set; }
+        public Microsoft.DirectX.Direct3D.Font D3dFont { get; private set; }
 
         /// <summary>
         ///     Color del texto
@@ -85,6 +86,11 @@ namespace TGC.Core.Text
             set { changeTextAlign(value); }
         }
 
+        public void Dispose()
+        {
+            D3dFont.Dispose();
+        }
+
         public void render()
         {
             TextSprite.Begin(SpriteFlags.AlphaBlend);
@@ -96,11 +102,11 @@ namespace TGC.Core.Text
         ///     Cambia la fuente del texto
         /// </summary>
         /// <param name="font">Fuente del sistema</param>
-        public void changeFont(System.Drawing.Font font)
+        public void changeFont(Font font)
         {
             if (D3dFont != null && !D3dFont.Disposed)
                 D3dFont.Dispose();
-            D3dFont = new Font(D3DDevice.Instance.Device, font);
+            D3dFont = new Microsoft.DirectX.Direct3D.Font(D3DDevice.Instance.Device, font);
         }
 
         /// <summary>
@@ -140,11 +146,6 @@ namespace TGC.Core.Text
             TextSprite.Begin(SpriteFlags.AlphaBlend);
             D3dFont.DrawText(TextSprite, text, x, y, color);
             TextSprite.End();
-        }
-
-        public void Dispose()
-        {
-            D3dFont.Dispose();
         }
     }
 }
