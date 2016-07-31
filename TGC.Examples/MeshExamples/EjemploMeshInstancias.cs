@@ -9,7 +9,7 @@ using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.SceneLoader
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     Ejemplo EjemploInstanciasPalmeras
@@ -20,17 +20,17 @@ namespace TGC.Examples.SceneLoader
     ///     De esta forma se reutiliza su informacion grafica (triangulos, vertices, textura, etc).
     ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploInstanciasPalmeras : TGCExampleViewer
+    public class EjemploMeshInstancias : TGCExampleViewer
     {
         private List<TgcMesh> meshes;
         private TgcMesh palmeraOriginal;
-        private TgcBox suelo;
+        private TgcPlane suelo;
 
-        public EjemploInstanciasPalmeras(string mediaDir, string shadersDir, TgcUserVars userVars,
+        public EjemploMeshInstancias(string mediaDir, string shadersDir, TgcUserVars userVars,
             TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "SceneLoader";
-            Name = "Instancias Palmeras";
+            Category = "Mesh Examples";
+            Name = "Crear Instancias Mesh";
             Description = "Muestra como crear varias instancias de un mismo TgcMesh.";
         }
 
@@ -38,8 +38,8 @@ namespace TGC.Examples.SceneLoader
         {
             //Crear suelo
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
-            suelo = TgcBox.fromSize(new Vector3(500, 0, 500), new Vector3(2000, 0, 2000), pisoTexture);
-
+            suelo = new TgcPlane(new Vector3(-500, 0, -500), new Vector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 10f, 10f);
+            
             //Cargar modelo de palmera original
             var loader = new TgcSceneLoader();
             var scene =
@@ -49,7 +49,7 @@ namespace TGC.Examples.SceneLoader
             //Crear varias instancias del modelo original, pero sin volver a cargar el modelo entero cada vez
             var rows = 5;
             var cols = 6;
-            float offset = 200;
+            float offset = 250;
             meshes = new List<TgcMesh>();
             for (var i = 0; i < rows; i++)
             {
@@ -57,17 +57,19 @@ namespace TGC.Examples.SceneLoader
                 {
                     //Crear instancia de modelo
                     var instance = palmeraOriginal.createMeshInstance(palmeraOriginal.Name + i + "_" + j);
-
+                    //No recomendamos utilizar AutoTransform, en juegos complejos se pierde el control. mejor utilizar Transformaciones con matrices.
+                    instance.AutoTransformEnable = true;
                     //Desplazarlo
-                    instance.move(i * offset, 70, j * offset);
-                    instance.Scale = new Vector3(0.25f, 0.25f, 0.25f);
+                    instance.move(i * offset, 0, j * offset);
+                    //instance.Scale = new Vector3(0.25f, 0.25f, 0.25f);
 
                     meshes.Add(instance);
                 }
             }
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(61.8657f, 403.7024f, -527.558f), Input);
+            Camara = new TgcFpsCamera(new Vector3(900f, 400f, 900f), Input);            
+
         }
 
         public override void Update()
@@ -79,6 +81,8 @@ namespace TGC.Examples.SceneLoader
         {
             PreRender();
 
+            DrawText.drawText("Camera pos: " + Core.Utils.TgcParserUtils.printVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
+            DrawText.drawText("Camera LookAt: " + Core.Utils.TgcParserUtils.printVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
             //Renderizar suelo
             suelo.render();
 

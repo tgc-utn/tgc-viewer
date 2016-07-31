@@ -7,7 +7,7 @@ using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.SceneLoader
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     Ejemplo EjemploMeshLoader:
@@ -30,8 +30,8 @@ namespace TGC.Examples.SceneLoader
         public EjemploMeshLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "SceneLoader";
-            Name = "MeshLoader";
+            Category = "Mesh Examples";
+            Name = "Mesh Loader";
             Description = "Ejemplo de como cargar una Malla estatica en formato TGC.";
         }
 

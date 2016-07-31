@@ -20,14 +20,15 @@ namespace TGC.Core.Camara
         //Se mantiene la matriz rotacion para no hacer este calculo cada vez.
         private Matrix cameraRotation;
 
-        private Vector3 directionView;
+        //Direction view se calcula a partir de donde se quiere ver con la camara inicialmente. por defecto se ve en -Z.
+        private Vector3 directionView;        
 
         //No hace falta la base ya que siempre es la misma, la base se arma segun las rotaciones de esto costados y updown.
-        private float leftrightRot = FastMath.PI_HALF;
+        private float leftrightRot;
+        private float updownRot;
 
         private bool lockCam;
-        private Vector3 positionEye;
-        private float updownRot = -FastMath.PI / 10.0f;
+        private Vector3 positionEye;        
 
         private TgcD3dInput Input { get; set; }
 
@@ -35,26 +36,16 @@ namespace TGC.Core.Camara
         {
             Input = input;
             positionEye = new Vector3();
-            directionView = new Vector3(0, 0, -1);
             mouseCenter = new Point(
                 D3DDevice.Instance.Device.Viewport.Width / 2,
                 D3DDevice.Instance.Device.Viewport.Height / 2);
             RotationSpeed = 0.1f;
             MovementSpeed = 500f;
             JumpSpeed = 500f;
+            directionView = new Vector3(0, 0, -1);
+            leftrightRot = FastMath.PI_HALF;
+            updownRot = -FastMath.PI / 10.0f;
             cameraRotation = Matrix.RotationX(updownRot) * Matrix.RotationY(leftrightRot);
-        }
-
-        /// <summary>
-        ///  Crea una camara con una posicion y una direccion IMPORTANTE!!!! la direccion debe estar normalizada.
-        /// </summary>
-        /// <param name="positionEye"></param>
-        /// <param name="directionView"></param>
-        /// <param name="input"></param>
-        public TgcFpsCamera(Vector3 positionEye, Vector3 directionView, TgcD3dInput input) : this(input)
-        {
-            this.positionEye = positionEye;
-            this.directionView = directionView;
         }
 
         public TgcFpsCamera(Vector3 positionEye, TgcD3dInput input) : this(input)

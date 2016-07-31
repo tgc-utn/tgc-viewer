@@ -29,8 +29,8 @@ namespace TGC.Examples.SceneLoader
         public Escenario4toPiso(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "SceneLoader";
-            Name = "4toPiso";
+            Category = "Optimization";
+            Name = "4to Piso Medrano";
             Description =
                 "Utiliza la herramienta TgcSceneLoader para cargar el 4to Piso de la facultado modelado en formato TGC. " +
                 "Muestra como utilizar FrustumCulling con fuerza bruta para acelerar la performance de renderizado.";
