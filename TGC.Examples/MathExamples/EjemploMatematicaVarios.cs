@@ -21,7 +21,7 @@ namespace TGC.Examples.MathExamples
         public EjemploMatematicaVarios(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Math";
+            Category = "Math Examples";
             Name = "Operaciones con vectores";
             Description =
                 "Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios. Muestra como hacer distintas operaciones matematicas que son comunes.";

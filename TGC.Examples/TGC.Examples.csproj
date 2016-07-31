@@ -181,12 +181,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SceneLoader\EjemploCustomMesh.cs" />
-    <Compile Include="SceneLoader\EjemploExportarMesh.cs" />
-    <Compile Include="SceneLoader\EjemploInstanciasPalmeras.cs" />
-    <Compile Include="SceneLoader\EjemploMeshInstance.cs" />
-    <Compile Include="SceneLoader\EjemploMeshLoader.cs" />
-    <Compile Include="SceneLoader\Escenario4toPiso.cs" />
+    <Compile Include="MeshExamples\EjemploCustomMesh.cs" />
+    <Compile Include="MeshExamples\EjemploExportarMesh.cs" />
+    <Compile Include="MeshExamples\EjemploMeshInstancias.cs" />
+    <Compile Include="MeshExamples\EjemploMeshLoader.cs" />
+    <Compile Include="Optimization\Escenario4toPiso.cs" />
     <Compile Include="Sound\PlayMp3.cs" />
     <Compile Include="Sound\PlaySound3D.cs" />
     <Compile Include="Sound\PlayStaticSound.cs" />

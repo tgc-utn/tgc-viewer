@@ -10,26 +10,26 @@ using TGC.Examples.Example;
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
-    ///     Ejemplo EjemploPlaneWall.
+    ///     Ejemplo EjemploPlane.
     ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
-    ///     Muestra como utilizar la herramienta TgcPlaneWall para crear
+    ///     Muestra como utilizar la herramienta TgcPlane para crear
     ///     paredes planas con textura.
     ///     Permite editar su posicion, tamano, textura y mapeo de textura.
     ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploPlaneWall : TGCExampleViewer
+    public class EjemploPlane : TGCExampleViewer
     {
         private TgcTexture currentTexture;
-        private TgcPlaneWall wall;
+        private TgcPlane plane;
 
-        public EjemploPlaneWall(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploPlane(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Geometry Basics";
-            Name = "Plane Wall";
+            Name = "Plane";
             Description =
-                "Muestra como utilizar la herramienta TgcPlaneWall para crear paredes planas con textura. Permite editar su posicion, tamano, textura y mapeo de textura. Movimiento con mouse.";
+                "Muestra como utilizar la herramienta TgcPlane para crear paredes planas con textura. Permite editar su posicion, tamano, textura y mapeo de textura. Movimiento con mouse.";
         }
 
         public override void Init()
@@ -49,15 +49,15 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addTexture("texture", currentTexture.FilePath);
 
             //Crear pared
-            wall = new TgcPlaneWall();
-            wall.setTexture(currentTexture);
+            plane = new TgcPlane();
+            plane.setTexture(currentTexture);
 
             //Actualizar segun valores cargados
-            updateWall();
+            updatePlane();
 
             //Ajustar camara segun tamano de la pared
-            Camara = new TgcRotationalCamera(wall.BoundingBox.calculateBoxCenter(),
-                wall.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camara = new TgcRotationalCamera(plane.BoundingBox.calculateBoxCenter(),
+                plane.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
@@ -68,7 +68,7 @@ namespace TGC.Examples.GeometryBasics
         /// <summary>
         ///     Actualizar parametros de la pared segun los valores cargados
         /// </summary>
-        private void updateWall()
+        private void updatePlane()
         {
             //Origen, dimensiones, tiling y AutoAdjust
             var origin = (Vector3)Modifiers["origin"];
@@ -78,29 +78,29 @@ namespace TGC.Examples.GeometryBasics
 
             //Cambiar orienacion
             var orientation = (string)Modifiers["orientation"];
-            TgcPlaneWall.Orientations or;
-            if (orientation == "XY") or = TgcPlaneWall.Orientations.XYplane;
-            else if (orientation == "XZ") or = TgcPlaneWall.Orientations.XZplane;
-            else or = TgcPlaneWall.Orientations.YZplane;
+            TgcPlane.Orientations or;
+            if (orientation == "XY") or = TgcPlane.Orientations.XYplane;
+            else if (orientation == "XZ") or = TgcPlane.Orientations.XZplane;
+            else or = TgcPlane.Orientations.YZplane;
 
             //Cambiar textura
             var text = (string)Modifiers["texture"];
             if (text != currentTexture.FilePath)
             {
                 currentTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, text);
-                wall.setTexture(currentTexture);
+                plane.setTexture(currentTexture);
             }
 
             //Aplicar valores en pared
-            wall.Origin = origin;
-            wall.Size = dimension;
-            wall.Orientation = or;
-            wall.AutoAdjustUv = autoAdjust;
-            wall.UTile = tiling.X;
-            wall.VTile = tiling.Y;
+            plane.Origin = origin;
+            plane.Size = dimension;
+            plane.Orientation = or;
+            plane.AutoAdjustUv = autoAdjust;
+            plane.UTile = tiling.X;
+            plane.VTile = tiling.Y;
 
             //Es necesario ejecutar updateValues() para que los cambios tomen efecto
-            wall.updateValues();
+            plane.updateValues();
         }
 
         public override void Render()
@@ -108,17 +108,17 @@ namespace TGC.Examples.GeometryBasics
             PreRender();
 
             //Actualizar valrores de pared
-            updateWall();
+            updatePlane();
 
             //Renderizar pared
-            wall.render();
+            plane.render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            wall.dispose();
+            plane.dispose();
         }
     }
 }

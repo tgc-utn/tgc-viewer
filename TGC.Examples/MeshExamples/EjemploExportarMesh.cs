@@ -7,7 +7,7 @@ using TGC.Examples.Example;
 using TGC.Core.Camara;
 using TGC.Core.Text;
 
-namespace TGC.Examples.SceneLoader
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     Exportar una malla a XML
@@ -19,8 +19,8 @@ namespace TGC.Examples.SceneLoader
         public EjemploExportarMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "SceneLoader";
-            Name = "MeshExporter";
+            Category = "Mesh Examples";
+            Name = "Guardar mesh en archivo";
             Description = "Exportar una malla a XML.";
         }
 

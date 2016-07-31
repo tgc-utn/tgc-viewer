@@ -208,7 +208,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             // Create a coordinate system for the capsule.  In this system, the
             // capsule segment center C is the origin and the capsule axis direction
             // W is the z-axis.  U and V are the other coordinate axis directions.
-            // If P = x*U+y*V+z*W, the cylinder containing the capsule wall is
+            // If P = x*U+y*V+z*W, the cylinder containing the capsule plane is
             // x^2 + y^2 = r^2, where r is the capsule radius.  The finite cylinder
             // that makes up the capsule minus its hemispherical end caps has z-values
             // |z| <= e, where e is the extent of the capsule segment.  The top
@@ -292,7 +292,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
 
                 if (quantity == 2)
                 {
-                    // Line intersects capsule wall in two places.
+                    // Line intersects capsule plane in two places.
                     return true;
                 }
             }

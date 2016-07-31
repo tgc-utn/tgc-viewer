@@ -11,7 +11,7 @@ namespace TGC.Core.Geometry
     /// <summary>
     ///     Pared 3D plana que solo crece en dos dimensiones.
     /// </summary>
-    public class TgcPlaneWall : IRenderObject
+    public class TgcPlane : IRenderObject
     {
         /// <summary>
         ///     Orientaciones posibles de la pared
@@ -43,7 +43,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crea una pared vacia.
         /// </summary>
-        public TgcPlaneWall()
+        public TgcPlane()
         {
             vertices = new CustomVertex.PositionTextured[6];
             AutoAdjustUv = false;
@@ -69,7 +69,7 @@ namespace TGC.Core.Geometry
         /// <param name="texture">Textura de la pared</param>
         /// <param name="uTile">Cantidad de tile de la textura en coordenada U</param>
         /// <param name="vTile">Cantidad de tile de la textura en coordenada V</param>
-        public TgcPlaneWall(Vector3 origin, Vector3 size, Orientations orientation, TgcTexture texture, float uTile,
+        public TgcPlane(Vector3 origin, Vector3 size, Orientations orientation, TgcTexture texture, float uTile,
             float vTile)
             : this()
         {
@@ -93,7 +93,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Dimensiones de la pared. Uno de los valores será ignorado, según la orientación elegida</param>
         /// <param name="orientation">Orientacion de la pared</param>
         /// <param name="texture">Textura de la pared</param>
-        public TgcPlaneWall(Vector3 origin, Vector3 size, Orientations orientation, TgcTexture texture)
+        public TgcPlane(Vector3 origin, Vector3 size, Orientations orientation, TgcTexture texture)
             : this()
         {
             setTexture(texture);
@@ -370,17 +370,17 @@ namespace TGC.Core.Geometry
                 for (var j = 0; j < vertices.Length; j++)
                 {
                     var v = new TgcSceneLoader.DiffuseMapVertex();
-                    var vWall = vertices[j];
+                    var vPlane = vertices[j];
 
                     //vertices
-                    v.Position = vWall.Position;
+                    v.Position = vPlane.Position;
 
                     //normals
                     v.Normal = ceroNormal;
 
                     //texture coordinates diffuseMap
-                    v.Tu = vWall.Tu;
-                    v.Tv = vWall.Tv;
+                    v.Tu = vPlane.Tu;
+                    v.Tv = vPlane.Tv;
 
                     //color
                     v.Color = whiteColor;
@@ -414,24 +414,24 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crear un nuevo Wall igual a este
+        ///     Crear un nuevo Plane igual a este
         /// </summary>
-        /// <returns>Wall clonado</returns>
-        public TgcPlaneWall clone()
+        /// <returns>Plane clonado</returns>
+        public TgcPlane clone()
         {
-            var cloneWall = new TgcPlaneWall();
-            cloneWall.Origin = Origin;
-            cloneWall.Size = Size;
-            cloneWall.Orientation = Orientation;
-            cloneWall.AutoAdjustUv = AutoAdjustUv;
-            cloneWall.UTile = UTile;
-            cloneWall.VTile = VTile;
-            cloneWall.AlphaBlendEnable = AlphaBlendEnable;
-            cloneWall.UVOffset = UVOffset;
-            cloneWall.setTexture(Texture.Clone());
+            var clonePlane = new TgcPlane();
+            clonePlane.Origin = Origin;
+            clonePlane.Size = Size;
+            clonePlane.Orientation = Orientation;
+            clonePlane.AutoAdjustUv = AutoAdjustUv;
+            clonePlane.UTile = UTile;
+            clonePlane.VTile = VTile;
+            clonePlane.AlphaBlendEnable = AlphaBlendEnable;
+            clonePlane.UVOffset = UVOffset;
+            clonePlane.setTexture(Texture.Clone());
 
             updateValues();
-            return cloneWall;
+            return clonePlane;
         }
     }
 }

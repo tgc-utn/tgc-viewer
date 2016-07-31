@@ -7,7 +7,7 @@ using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.SceneLoader
+namespace TGC.Examples.MeshExamples
 {
     /// <summary>
     ///     Ejemplo EjemploCustomMesh:
@@ -25,8 +25,8 @@ namespace TGC.Examples.SceneLoader
         public EjemploCustomMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "SceneLoader";
-            Name = "CustomMesh";
+            Category = "Mesh Examples";
+            Name = "Custom Mesh";
             Description =
                 "Muestra como extender la clase TgcMesh para agregarle comportamiento personalizado. En este ejemplo se renderiza en Wireframe.";
         }
@@ -105,9 +105,10 @@ namespace TGC.Examples.SceneLoader
             D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
 
             //Llamamos al metodo original del padre
+            base.render();
 
             //Restrablecemos modo solido
-            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;
+            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;            
         }
     }
 
