@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.DirectX;
+using System;
 using System.Collections.Generic;
-using Microsoft.DirectX;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.UserControls;

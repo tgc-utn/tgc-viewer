@@ -48,7 +48,7 @@ namespace TGC.Examples.MeshExamples
         {
             PreUpdate();
 
-            bool alpha = (bool)Modifiers["alpha"];
+            var alpha = (bool)Modifiers["alpha"];
 
             foreach (var mesh in scene.Meshes)
             {

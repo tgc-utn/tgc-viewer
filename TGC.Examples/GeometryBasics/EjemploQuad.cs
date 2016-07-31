@@ -72,7 +72,7 @@ namespace TGC.Examples.GeometryBasics
             quad.Color = color;
 
             //Actualizar valors para hacerlos efectivos
-            //Los quad actualizan el vertexBuffer, al ser solo 2 triangulos no tiene gran costo recalcular los valores, 
+            //Los quad actualizan el vertexBuffer, al ser solo 2 triangulos no tiene gran costo recalcular los valores,
             //pero es mas recomendado utilizar transformaciones
             quad.updateValues();
 

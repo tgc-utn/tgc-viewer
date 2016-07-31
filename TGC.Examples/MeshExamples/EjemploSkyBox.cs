@@ -1,9 +1,11 @@
 using Microsoft.DirectX;
+using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Core.Utils;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.MeshExamples
@@ -80,7 +82,7 @@ namespace TGC.Examples.MeshExamples
         public override void Render()
         {
             PreRender();
-            DrawText.drawText("Camera pos: " + Core.Utils.TgcParserUtils.printVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
+            DrawText.drawText("Camera pos: " + TgcParserUtils.printVector3(Camara.Position), 5, 20, Color.Red);
             //Renderizar SkyBox
             skyBox.render();
 

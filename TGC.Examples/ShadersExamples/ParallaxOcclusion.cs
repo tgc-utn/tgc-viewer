@@ -149,7 +149,9 @@ namespace TGC.Examples.ShadersExamples
             mesh.Technique = pom ? "ParallaxOcclusion" : "BumpMap";
             mesh.render();
 
-            DrawText.drawText((pom ? "ParallaxOcclusion" : "BumpMap") + "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0, 15, Color.Yellow);
+            DrawText.drawText(
+                (pom ? "ParallaxOcclusion" : "BumpMap") + "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0,
+                15, Color.Yellow);
 
             RenderFPS();
             RenderAxis();

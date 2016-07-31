@@ -51,7 +51,9 @@ namespace TGC.Examples.Sound
         {
             //Crear piso
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
-            piso = TgcBox.fromSize(new Vector3(0, -60, 0), new Vector3(5000, 5, 5000), pisoTexture);
+            piso = TgcBox.fromSize(new Vector3(5000, 5, 5000), pisoTexture);
+            piso.AutoTransformEnable = true;
+            piso.Position = new Vector3(0, -60, 0);
 
             //Cargar obstaculos y posicionarlos. Los obstaculos se crean con TgcBox en lugar de cargar un modelo.
             obstaculos = new List<TgcBox>();
@@ -60,10 +62,10 @@ namespace TGC.Examples.Sound
             Tgc3dSound sound;
 
             //Obstaculo 1
-            obstaculo = TgcBox.fromSize(
-                new Vector3(-200, 0, 0),
-                new Vector3(80, 150, 80),
+            obstaculo = TgcBox.fromSize(new Vector3(80, 150, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack3\\goo2.jpg"));
+            obstaculo.AutoTransformEnable = true;
+            obstaculo.Position = new Vector3(-250, 0, 0);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 1
@@ -75,11 +77,11 @@ namespace TGC.Examples.Sound
             sonidos.Add(sound);
 
             //Obstaculo 2
-            obstaculo = TgcBox.fromSize(
-                new Vector3(200, 0, 800),
-                new Vector3(80, 300, 80),
+            obstaculo = TgcBox.fromSize(new Vector3(80, 300, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\lun_dirt.jpg"));
+            obstaculo.AutoTransformEnable = true;
+            obstaculo.Position = new Vector3(250, 0, 800);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 2
@@ -88,11 +90,11 @@ namespace TGC.Examples.Sound
             sonidos.Add(sound);
 
             //Obstaculo 3
-            obstaculo = TgcBox.fromSize(
-                new Vector3(600, 0, 400),
-                new Vector3(80, 100, 150),
+            obstaculo = TgcBox.fromSize(new Vector3(80, 100, 150),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\Metal2_1.jpg"));
+            obstaculo.AutoTransformEnable = true;
+            obstaculo.Position = new Vector3(500, 0, -400);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 3
@@ -105,13 +107,14 @@ namespace TGC.Examples.Sound
             var scene =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
             personaje = scene.Meshes[0];
+            personaje.AutoTransformEnable = true;
             personaje.Position = new Vector3(0, -50, 0);
 
             //Hacer que el Listener del sonido 3D siga al personaje
             DirectSound.ListenerTracking = personaje;
 
             //Configurar camara en Tercer Persona
-            camaraInterna = new TgcThirdPersonCamera(personaje.Position, new Vector3(0, 100, 0), 200, 300);
+            camaraInterna = new TgcThirdPersonCamera(personaje.Position, 250, 500);
             Camara = camaraInterna;
 
             //Ejecutar en loop los sonidos
@@ -201,7 +204,6 @@ namespace TGC.Examples.Sound
             }
 
             //Hacer que la camara siga al personaje en su nueva posicion
-            Camara = new TgcThirdPersonCamera();
             camaraInterna.Target = personaje.Position;
 
             //Render piso
