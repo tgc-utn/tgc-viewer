@@ -44,7 +44,6 @@ namespace TGC.Examples.Transformations
         {
             PreUpdate();
 
-           
             var rot = (Vector3)Modifiers["Rotacion"];
             rot.X = Geometry.DegreeToRadian(rot.X);
             rot.Y = Geometry.DegreeToRadian(rot.Y);
@@ -52,7 +51,7 @@ namespace TGC.Examples.Transformations
 
             //Rotacion Euler
             boxEuler.Transform = Matrix.RotationYawPitchRoll(rot.Y, rot.X, rot.Z) *
-                                    Matrix.Translation(boxEuler.Position);
+                                 Matrix.Translation(boxEuler.Position);
 
             //Rotacion Quaternion
             var q = Quaternion.RotationYawPitchRoll(rot.Y, rot.X, rot.Z);

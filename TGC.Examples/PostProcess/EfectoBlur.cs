@@ -29,10 +29,10 @@ namespace TGC.Examples.PostProcess
     /// </summary>
     public class EfectoBlur : TGCExampleViewer
     {
+        private Surface depthStencil; // Depth-stencil buffer
         private Effect effect;
         private List<TgcMesh> meshes;
         private Surface pOldRT;
-        private Surface depthStencil; // Depth-stencil buffer
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
@@ -70,9 +70,11 @@ namespace TGC.Examples.PostProcess
                 Format.X8R8G8B8, Pool.Default);
 
             //Creamos un DepthStencil que debe ser compatible con nuestra definicion de renderTarget2D.
-            depthStencil = D3DDevice.Instance.Device.CreateDepthStencilSurface(D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
-                D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
-                DepthFormat.D24S8, MultiSampleType.None, 0, true);
+            depthStencil =
+                D3DDevice.Instance.Device.CreateDepthStencilSurface(
+                    D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                    D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
+                    DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             //Cargar shader con efectos de Post-Procesado
             effect = TgcShaders.loadEffect(ShadersDir + "PostProcess.fx");

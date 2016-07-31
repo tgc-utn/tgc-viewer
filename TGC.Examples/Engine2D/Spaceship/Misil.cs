@@ -1,5 +1,5 @@
-using System;
 using Microsoft.DirectX;
+using System;
 using TGC.Examples.Engine2D.Spaceship.Core;
 
 namespace TGC.Examples.Engine2D.Spaceship

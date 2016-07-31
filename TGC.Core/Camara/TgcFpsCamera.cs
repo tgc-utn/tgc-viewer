@@ -30,8 +30,6 @@ namespace TGC.Core.Camara
         private bool lockCam;
         private Vector3 positionEye;        
 
-        private TgcD3dInput Input { get; set; }
-
         public TgcFpsCamera(TgcD3dInput input)
         {
             Input = input;
@@ -53,17 +51,21 @@ namespace TGC.Core.Camara
             this.positionEye = positionEye;
         }
 
-        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed, TgcD3dInput input) : this(positionEye, input)
+        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed, TgcD3dInput input)
+            : this(positionEye, input)
         {
             MovementSpeed = moveSpeed;
             JumpSpeed = jumpSpeed;
         }
 
-        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed, float rotationSpeed, TgcD3dInput input)
+        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed, float rotationSpeed,
+            TgcD3dInput input)
             : this(positionEye, moveSpeed, jumpSpeed, input)
         {
             RotationSpeed = rotationSpeed;
         }
+
+        private TgcD3dInput Input { get; }
 
         public bool LockCam
         {

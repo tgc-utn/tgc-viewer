@@ -26,8 +26,8 @@ namespace TGC.Examples.GeometryBasics
     public class EjemploCajas : TGCExampleViewer
     {
         private TgcBox box;
-        private TgcDebugBox debugBox;
         private string currentTexture;
+        private TgcDebugBox debugBox;
 
         public EjemploCajas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -99,7 +99,6 @@ namespace TGC.Examples.GeometryBasics
             debugBox.setPositionSize(position - new Vector3(15f, 0, 0), size);
             debugBox.Thickness = thickness;
             debugBox.Color = color;
-            
 
             //Rotacion, converitr a radianes
             var rotaion = (Vector3)Modifiers["rotation"];
@@ -125,7 +124,7 @@ namespace TGC.Examples.GeometryBasics
             if ((bool)Modifiers["box"])
             {
                 box.render();
-            }            
+            }
 
             //Mostrar BoundingBox de la caja
             if ((bool)Modifiers["boundingBox"])
@@ -137,7 +136,6 @@ namespace TGC.Examples.GeometryBasics
             {
                 debugBox.render();
             }
-            
 
             PostRender();
         }
