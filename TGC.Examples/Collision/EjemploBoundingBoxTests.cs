@@ -24,15 +24,16 @@ namespace TGC.Examples.Collision
     ///     - BoundingBox vs otro BoundingBox
     ///     - BoundingBox vs Esfera
     ///     - BoundingBox vs OBB
-    ///     Autor: Matias Leone, Leandro Barbagallo
+    ///     Autor: Matias Leone, Leandro Barbagallo, Rodrigo Garcia
     /// </summary>
     public class EjemploBoundingBoxTests : TGCExampleViewer
     {
-        private TgcBox box;
+        private TgcMesh mesh;
+        private TgcMesh meshObb;
         private TgcBox box2;
         private TgcThirdPersonCamera camaraInterna;
         private TgcBoundingOrientedBox obb;
-        private TgcBoundingSphere sphere;
+        private TgcBoundingSphere boundingSphere;
         private TgcBoundingAxisAlignBox triagleAABB;
         private CustomVertex.PositionColored[] triangle;
 
@@ -47,14 +48,19 @@ namespace TGC.Examples.Collision
 
         public override void Init()
         {
+            var loader = new TgcSceneLoader();
+            var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Patrullero\\Patrullero-TgcScene.xml");
+            mesh = scene.Meshes[0];
+            mesh.Scale = new Vector3(0.25f, 0.25f, 0.25f);
+
             //Cuerpo principal que se controla con el teclado
-            box = TgcBox.fromSize(new Vector3(0, 10, 0), new Vector3(10, 10, 10), Color.Blue);
+            //mesh = TgcBox.fromSize(new Vector3(0, 10, 0), new Vector3(10, 10, 10), Color.Blue).toMesh("box");
 
             //triangulo
             triangle = new CustomVertex.PositionColored[3];
-            triangle[0] = new CustomVertex.PositionColored(-100, 0, 0, Color.Red.ToArgb());
+            triangle[0] = new CustomVertex.PositionColored(-100, 0, 0, Color.Green.ToArgb());
             triangle[1] = new CustomVertex.PositionColored(0, 0, 50, Color.Green.ToArgb());
-            triangle[2] = new CustomVertex.PositionColored(0, 100, 0, Color.Blue.ToArgb());
+            triangle[2] = new CustomVertex.PositionColored(0, 100, 0, Color.Green.ToArgb());
             triagleAABB =
                 TgcBoundingAxisAlignBox.computeFromPoints(new[]
                 {triangle[0].Position, triangle[1].Position, triangle[2].Position});
@@ -63,33 +69,30 @@ namespace TGC.Examples.Collision
             box2 = TgcBox.fromSize(new Vector3(-50, 10, -20), new Vector3(15, 15, 15), Color.Violet);
 
             //sphere
-            sphere = new TgcBoundingSphere(new Vector3(30, 20, -20), 15);
+            boundingSphere = new TgcBoundingSphere(new Vector3(30, 20, -20), 15);
 
             //OBB: computar OBB a partir del AABB del mesh.
-            var loader = new TgcSceneLoader();
-            var meshObb =
+             meshObb =
                 loader.loadSceneFromFile(MediaDir +
-                                         "MeshCreator\\Meshes\\Vehiculos\\StarWars-ATST\\StarWars-ATST-TgcScene.xml")
-                    .Meshes[0];
+                "MeshCreator\\Meshes\\Objetos\\Catapulta\\Catapulta-TgcScene.xml")
+                        .Meshes[0];
+            meshObb.Scale = new Vector3(0.1f, 0.1f, 0.1f);
+            meshObb.Position = new Vector3(100, 0, 30);
+            meshObb.updateBoundingBox();
             obb = TgcBoundingOrientedBox.computeFromAABB(meshObb.BoundingBox);
-            meshObb.dispose();
-            obb.move(new Vector3(100, 0, 30));
-            obb.setRotation(new Vector3(0, FastMath.PI / 4, 0));
+            meshObb.Rotation = new Vector3(0, FastMath.PI / 4, 0);
+            
+            //Los obb tienen una especie de autotransform aun.
+            obb.rotate(new Vector3(0, FastMath.PI / 4, 0));            
 
             //Configurar camara en Tercer Persona
-            camaraInterna = new TgcThirdPersonCamera(box.Position, 30, -75);
+            camaraInterna = new TgcThirdPersonCamera(mesh.Position, 30, -75);
             Camara = camaraInterna;
         }
 
         public override void Update()
         {
             PreUpdate();
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
             var velocidadCaminar = 50f * ElapsedTime;
 
             //Calcular proxima posicion de personaje segun Input
@@ -139,50 +142,89 @@ namespace TGC.Examples.Collision
             if (moving)
             {
                 //Aplicar movimiento
-                box.move(movement);
+                mesh.move(movement);
             }
             //Hacer que la camara siga al personaje en su nueva posicion
-            camaraInterna.Target = box.Position;
+            camaraInterna.Target = mesh.Position;
 
             //Detectar colision con triangulo
             if (TgcCollisionUtils.testTriangleAABB(triangle[0].Position, triangle[1].Position, triangle[2].Position,
-                box.BoundingBox))
+                mesh.BoundingBox))
             {
-                box.BoundingBox.render();
-                triagleAABB.render();
-            }
-            //Detectar colision con el otro AABB
-            if (TgcCollisionUtils.testAABBAABB(box.BoundingBox, box2.BoundingBox))
-            {
-                box.BoundingBox.render();
-                box2.BoundingBox.render();
-            }
-            //Detectar colision con la esfera
-            if (TgcCollisionUtils.testSphereAABB(sphere, box.BoundingBox))
-            {
-                box.BoundingBox.render();
-                sphere.setRenderColor(Color.Red);
+                triangle[0].Color = Color.Red.ToArgb();
+                triangle[1].Color = Color.Red.ToArgb();
+                triangle[2].Color = Color.Red.ToArgb();
             }
             else
             {
-                sphere.setRenderColor(Color.Yellow);
+                triangle[0].Color = Color.Green.ToArgb();
+                triangle[1].Color = Color.Green.ToArgb();
+                triangle[2].Color = Color.Green.ToArgb();
+            }
+            //Detectar colision con el otro AABB
+            if (TgcCollisionUtils.testAABBAABB(mesh.BoundingBox, box2.BoundingBox))
+            {
+                box2.Color = Color.Red;
+                box2.updateValues();
+            }
+            else
+            {
+                box2.Color = Color.Violet;
+                box2.updateValues();
+            }
+            //Detectar colision con la esfera
+            if (TgcCollisionUtils.testSphereAABB(boundingSphere, mesh.BoundingBox))
+            {
+               boundingSphere.setRenderColor(Color.Red);
+            }
+            else
+            {
+                boundingSphere.setRenderColor(Color.Yellow);
             }
 
             //Detectar colision con la obb
-            if (TgcCollisionUtils.testObbAABB(obb, box.BoundingBox))
+            if (TgcCollisionUtils.testObbAABB(obb, mesh.BoundingBox))
             {
-                box.BoundingBox.render();
                 obb.setRenderColor(Color.Red);
             }
             else
             {
                 obb.setRenderColor(Color.Yellow);
             }
+        }
 
-            //Dibujar
-            box.render();
+        public override void Render()
+        {
+            PreRender();
+            //Dibujar todo.
+            //Una vez actualizadas las diferentes posiciones internas solo debemos asignar la matriz de world.
+            mesh.Transform =
+                Matrix.Scaling(mesh.Scale)
+                            * Matrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
+                            * Matrix.Translation(mesh.Position);
+            mesh.render();
+            //Actualmente los bounding box se actualizan solos en momento de hacer render, esto no es recomendado ya que trae overhead
+            //Igualmente aqui podemos tener un objeto debug de nuestro mesh.
+            mesh.BoundingBox.render();
+
+            box2.Transform =
+                Matrix.Scaling(box2.Scale)
+                            * Matrix.RotationYawPitchRoll(box2.Rotation.Y, box2.Rotation.X, box2.Rotation.Z)
+                            * Matrix.Translation(box2.Position);
             box2.render();
-            sphere.render();
+                        
+            //Los bounding volume por la forma actual de framework no realizan transformaciones entonces podemos hacer esto:
+            //D3DDevice.Instance.Device.Transform.World =
+            //    Matrix.Scaling(new Vector3(sphere.Radius, sphere.Radius, sphere.Radius))
+            //                * Matrix.Identity //No tienen sentido las rotaciones con la esfera.
+            //                * Matrix.Translation(sphere.Position);
+            boundingSphere.render();
+            //Las mesh por defecto tienen el metodo updateMeshTransform que realiza el set por defecto.
+            //Esto es igual que utilizar AutoTransform en true, con lo cual no es recomendado para casos complejos.
+            meshObb.updateMeshTransform();
+            meshObb.render();
+
+            //La implementacion de Obb por el momento reconstruye el obb debug siempre. Practica no recomendada.
             obb.render();
 
             //triangulo
@@ -195,11 +237,12 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            box.dispose();
+            mesh.dispose();
             box2.dispose();
-            sphere.dispose();
-            triagleAABB.dispose();
+            boundingSphere.dispose();
+            meshObb.dispose();
             obb.dispose();
+            triangle = null;
         }
     }
 }
