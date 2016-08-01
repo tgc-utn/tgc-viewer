@@ -1,7 +1,10 @@
 # tgc-viewer
-
-[![GitHub release](https://img.shields.io/github/release/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/releases)
+[![Build status](https://ci.appveyor.com/api/projects/status/72r1a74noxa4t7c5?svg=true)](https://ci.appveyor.com/project/rejurime/tgc-viewer)
 [![GitHub issues](https://img.shields.io/github/issues/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/issues)
+[![GitHub stars](https://img.shields.io/github/stars/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/network)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/tgc-utn/tgc-viewer/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/releases)
 
 Es un motor de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA).
 
