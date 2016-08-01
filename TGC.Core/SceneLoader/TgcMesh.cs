@@ -300,9 +300,12 @@ namespace TGC.Core.SceneLoader
         {
             if (!enabled)
                 return;
-
-            //Aplicar transformaciones
-            updateMeshTransform();
+            
+            //Aplicar transformacion de malla
+            if (autoTransformEnable)
+            {
+                updateMeshTransform();
+            }
 
             //Cargar VertexDeclaration
             D3DDevice.Instance.Device.VertexDeclaration = vertexDeclaration;
@@ -614,15 +617,11 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Aplicar transformaciones del mesh
         /// </summary>
-        protected void updateMeshTransform()
+        public void updateMeshTransform()
         {
-            //Aplicar transformacion de malla
-            if (autoTransformEnable)
-            {
-                transform = Matrix.Scaling(scale)
+            transform = Matrix.Scaling(scale)
                             * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            * Matrix.Translation(translation);
-            }
+                            * Matrix.Translation(translation);            
         }
 
         /// <summary>
