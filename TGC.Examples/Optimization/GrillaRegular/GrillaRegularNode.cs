@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 
@@ -17,7 +18,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
         /// <summary>
         ///     BoundingBox de la celda
         /// </summary>
-        public TgcBoundingBox BoundingBox { get; set; }
+        public TgcBoundingAxisAlignBox BoundingBox { get; set; }
 
         /// <summary>
         ///     Activar todos los modelos de la celda

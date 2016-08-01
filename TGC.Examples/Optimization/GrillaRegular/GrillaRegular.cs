@@ -1,6 +1,8 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
@@ -18,18 +20,18 @@ namespace TGC.Examples.Optimization.GrillaRegular
         //Tamaños de celda de la grilla
         private readonly float CELL_WIDTH = 400;
 
-        private List<TgcDebugBox> debugBoxes;
+        private List<TgcBoxDebug> debugBoxes;
         private GrillaRegularNode[,,] grid;
 
         private List<TgcMesh> modelos;
-        private TgcBoundingBox sceneBounds;
+        private TgcBoundingAxisAlignBox sceneBounds;
 
         /// <summary>
         ///     Crear una nueva grilla
         /// </summary>
         /// <param name="modelos">Modelos a contemplar</param>
         /// <param name="sceneBounds">Límites del escenario</param>
-        public void create(List<TgcMesh> modelos, TgcBoundingBox sceneBounds)
+        public void create(List<TgcMesh> modelos, TgcBoundingAxisAlignBox sceneBounds)
         {
             this.modelos = modelos;
             this.sceneBounds = sceneBounds;
@@ -46,7 +48,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
         /// <summary>
         ///     Construye la grilla
         /// </summary>
-        private GrillaRegularNode[,,] buildGrid(List<TgcMesh> modelos, TgcBoundingBox sceneBounds, Vector3 cellDim)
+        private GrillaRegularNode[,,] buildGrid(List<TgcMesh> modelos, TgcBoundingAxisAlignBox sceneBounds, Vector3 cellDim)
         {
             var sceneSize = sceneBounds.calculateSize();
 
@@ -70,7 +72,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
                         var pMin = new Vector3(sceneBounds.PMin.X + x * cellDim.X, sceneBounds.PMin.Y + y * cellDim.Y,
                             sceneBounds.PMin.Z + z * cellDim.Z);
                         var pMax = Vector3.Add(pMin, cellDim);
-                        node.BoundingBox = new TgcBoundingBox(pMin, pMax);
+                        node.BoundingBox = new TgcBoundingAxisAlignBox(pMin, pMax);
 
                         //Cargar modelos en celda
                         node.Models = new List<TgcMesh>();
@@ -103,7 +105,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
         /// </summary>
         public void createDebugMeshes()
         {
-            debugBoxes = new List<TgcDebugBox>();
+            debugBoxes = new List<TgcBoxDebug>();
 
             for (var x = 0; x < grid.GetUpperBound(0); x++)
             {
@@ -112,7 +114,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
                     for (var z = 0; z < grid.GetUpperBound(2); z++)
                     {
                         var node = grid[x, y, z];
-                        var box = TgcDebugBox.fromExtremes(node.BoundingBox.PMin, node.BoundingBox.PMax, Color.Red);
+                        var box = TgcBoxDebug.fromExtremes(node.BoundingBox.PMin, node.BoundingBox.PMax, Color.Red);
 
                         debugBoxes.Add(box);
                     }

@@ -27,7 +27,7 @@ namespace TGC.Examples.GeometryBasics
     {
         private TgcBox box;
         private string currentTexture;
-        private TgcDebugBox debugBox;
+        private TgcBoxDebug debugBox;
 
         public EjemploCajas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -44,7 +44,7 @@ namespace TGC.Examples.GeometryBasics
             box = new TgcBox();
             box.AutoTransformEnable = true;
             //Crear caja debug vacia
-            debugBox = new TgcDebugBox();
+            debugBox = new TgcBoxDebug();
             currentTexture = null;
 
             //Modifiers para vararis sus parametros

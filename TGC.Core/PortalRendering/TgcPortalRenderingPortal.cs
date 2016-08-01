@@ -1,3 +1,4 @@
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 
 namespace TGC.Core.PortalRendering
@@ -7,7 +8,7 @@ namespace TGC.Core.PortalRendering
     /// </summary>
     public class TgcPortalRenderingPortal
     {
-        public TgcPortalRenderingPortal(string name, TgcBoundingBox boundingBox)
+        public TgcPortalRenderingPortal(string name, TgcBoundingAxisAlignBox boundingBox)
         {
             Name = name;
             BoundingBox = boundingBox;
@@ -21,7 +22,7 @@ namespace TGC.Core.PortalRendering
         /// <summary>
         ///     BoundingBox del Portal
         /// </summary>
-        public TgcBoundingBox BoundingBox { get; }
+        public TgcBoundingAxisAlignBox BoundingBox { get; }
 
         /// <summary>
         ///     Indica si la celda ya fue visitada por el algoritmo de visibilidad

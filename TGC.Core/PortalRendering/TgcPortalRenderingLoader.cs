@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
@@ -66,7 +67,7 @@ namespace TGC.Core.PortalRendering
             foreach (var portalData in portalRenderingData.portals)
             {
                 //BoundingBox del portal
-                var boundingBox = new TgcBoundingBox(
+                var boundingBox = new TgcBoundingAxisAlignBox(
                     new Vector3(portalData.pMin[0], portalData.pMin[1], portalData.pMin[2]),
                     new Vector3(portalData.pMax[0], portalData.pMax[1], portalData.pMax[2])
                     );

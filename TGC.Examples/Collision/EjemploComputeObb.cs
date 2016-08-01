@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using System;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -19,7 +20,7 @@ namespace TGC.Examples.Collision
     {
         private static readonly Random rand = new Random();
         private bool generate;
-        private TgcObb obb;
+        private TgcBoundingOrientedBox obb;
         private Vector3[] points;
         private TgcBox[] vertices;
 
@@ -34,7 +35,7 @@ namespace TGC.Examples.Collision
 
         public override void Init()
         {
-            obb = new TgcObb();
+            obb = new TgcBoundingOrientedBox();
             generateObb();
             generate = false;
 
@@ -94,7 +95,7 @@ namespace TGC.Examples.Collision
             }
 
             //Computar mejor OBB
-            obb = TgcObb.computeFromPoints(points);
+            obb = TgcBoundingOrientedBox.computeFromPoints(points);
 
             if (vertices != null)
             {

@@ -3,7 +3,9 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
+using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
@@ -35,7 +37,7 @@ namespace TGC.Examples.Collision.SphereCollision
     {
         private readonly List<TgcMesh> objectsBehind = new List<TgcMesh>();
         private readonly List<TgcMesh> objectsInFront = new List<TgcMesh>();
-        private readonly List<TgcBoundingBox> objetosColisionables = new List<TgcBoundingBox>();
+        private readonly List<TgcBoundingAxisAlignBox> objetosColisionables = new List<TgcBoundingAxisAlignBox>();
         private TgcThirdPersonCamera camaraInterna;
         private TgcBoundingSphere characterSphere;
         private SphereCollisionManager collisionManager;

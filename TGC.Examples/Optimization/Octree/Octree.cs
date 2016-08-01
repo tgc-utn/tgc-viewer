@@ -1,5 +1,7 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
@@ -12,10 +14,10 @@ namespace TGC.Examples.Optimization.Octree
     public class Octree
     {
         private readonly OctreeBuilder builder;
-        private List<TgcDebugBox> debugOctreeBoxes;
+        private List<TgcBoxDebug> debugOctreeBoxes;
         private List<TgcMesh> modelos;
         private OctreeNode octreeRootNode;
-        private TgcBoundingBox sceneBounds;
+        private TgcBoundingAxisAlignBox sceneBounds;
 
         public Octree()
         {
@@ -27,7 +29,7 @@ namespace TGC.Examples.Optimization.Octree
         /// </summary>
         /// <param name="modelos">Modelos a optimizar</param>
         /// <param name="sceneBounds">Límites del escenario</param>
-        public void create(List<TgcMesh> modelos, TgcBoundingBox sceneBounds)
+        public void create(List<TgcMesh> modelos, TgcBoundingAxisAlignBox sceneBounds)
         {
             this.modelos = modelos;
             this.sceneBounds = sceneBounds;
@@ -144,7 +146,7 @@ namespace TGC.Examples.Optimization.Octree
             }
 
             //test frustum-box intersection
-            var caja = new TgcBoundingBox(
+            var caja = new TgcBoundingAxisAlignBox(
                 new Vector3(boxLowerX, boxLowerY, boxLowerZ),
                 new Vector3(boxUpperX, boxUpperY, boxUpperZ));
             var c = TgcCollisionUtils.classifyFrustumAABB(frustum, caja);

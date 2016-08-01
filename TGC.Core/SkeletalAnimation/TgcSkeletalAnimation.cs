@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 
 namespace TGC.Core.SkeletalAnimation
@@ -9,7 +10,7 @@ namespace TGC.Core.SkeletalAnimation
     public class TgcSkeletalAnimation
     {
         public TgcSkeletalAnimation(string name, int frameRate, int framesCount,
-            List<TgcSkeletalAnimationFrame>[] boneFrames, TgcBoundingBox boundingBox)
+            List<TgcSkeletalAnimationFrame>[] boneFrames, TgcBoundingAxisAlignBox boundingBox)
         {
             Name = name;
             FrameRate = frameRate;
@@ -44,7 +45,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     BoundingBox para esta animacion particular
         /// </summary>
-        public TgcBoundingBox BoundingBox { get; }
+        public TgcBoundingAxisAlignBox BoundingBox { get; }
 
         /// <summary>
         ///     Indica si el hueso tiene algun KeyFrame

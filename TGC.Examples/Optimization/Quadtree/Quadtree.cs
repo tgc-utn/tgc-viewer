@@ -1,5 +1,7 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
@@ -12,10 +14,10 @@ namespace TGC.Examples.Optimization.Quadtree
     public class Quadtree
     {
         private readonly QuadtreeBuilder builder;
-        private List<TgcDebugBox> debugQuadtreeBoxes;
+        private List<TgcBoxDebug> debugQuadtreeBoxes;
         private List<TgcMesh> modelos;
         private QuadtreeNode quadtreeRootNode;
-        private TgcBoundingBox sceneBounds;
+        private TgcBoundingAxisAlignBox sceneBounds;
 
         public Quadtree()
         {
@@ -27,7 +29,7 @@ namespace TGC.Examples.Optimization.Quadtree
         /// </summary>
         /// <param name="modelos">Modelos a optimizar</param>
         /// <param name="sceneBounds">Límites del escenario</param>
-        public void create(List<TgcMesh> modelos, TgcBoundingBox sceneBounds)
+        public void create(List<TgcMesh> modelos, TgcBoundingAxisAlignBox sceneBounds)
         {
             this.modelos = modelos;
             this.sceneBounds = sceneBounds;
@@ -126,7 +128,7 @@ namespace TGC.Examples.Optimization.Quadtree
             float boxLowerX, float boxLowerY, float boxLowerZ, float boxUpperX, float boxUpperY, float boxUpperZ)
         {
             //test frustum-box intersection
-            var caja = new TgcBoundingBox(
+            var caja = new TgcBoundingAxisAlignBox(
                 new Vector3(boxLowerX, boxLowerY, boxLowerZ),
                 new Vector3(boxUpperX, boxUpperY, boxUpperZ));
             var c = TgcCollisionUtils.classifyFrustumAABB(frustum, caja);

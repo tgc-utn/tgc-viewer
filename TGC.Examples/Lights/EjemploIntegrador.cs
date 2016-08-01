@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -80,7 +81,7 @@ namespace TGC.Examples.Lights
                     var light = new LightData();
                     light.color = Color.FromArgb((int)meshData.color[0], (int)meshData.color[1],
                         (int)meshData.color[2]);
-                    light.aabb = new TgcBoundingBox(TgcParserUtils.float3ArrayToVector3(meshData.pMin),
+                    light.aabb = new TgcBoundingAxisAlignBox(TgcParserUtils.float3ArrayToVector3(meshData.pMin),
                         TgcParserUtils.float3ArrayToVector3(meshData.pMax));
                     light.pos = light.aabb.calculateBoxCenter();
                     lights.Add(light);
@@ -269,7 +270,7 @@ namespace TGC.Examples.Lights
         /// </summary>
         public class LightData
         {
-            public TgcBoundingBox aabb;
+            public TgcBoundingAxisAlignBox aabb;
             public Color color;
             public Vector3 pos;
         }

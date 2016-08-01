@@ -5,16 +5,16 @@ using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.BoundingVolumes
 {
     /// <summary>
     ///     Cilindro Bounding alineado a al eje Y, este puede ser utilizado por ejemplo para personajes.
     /// </summary>
-    public class TgcFixedYBoundingCylinder : IRenderObject
+    public class TgcBoundingCylinderFixedY : IRenderObject
     {
         private Vector3 center;
 
-        public TgcFixedYBoundingCylinder(Vector3 center, float radius, float halfLength)
+        public TgcBoundingCylinderFixedY(Vector3 center, float radius, float halfLength)
         {
             this.center = center;
             Radius = radius;

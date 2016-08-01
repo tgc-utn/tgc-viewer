@@ -7,7 +7,7 @@ using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.BoundingVolumes
 {
     /// <summary>
     ///     Representa un volumen de esfera con un centro y un radio

@@ -1,3 +1,4 @@
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 
 namespace TGC.Core.KeyFrameLoader
@@ -7,7 +8,7 @@ namespace TGC.Core.KeyFrameLoader
     /// </summary>
     public class TgcKeyFrameAnimation
     {
-        public TgcKeyFrameAnimation(TgcKeyFrameAnimationData data, TgcBoundingBox boundingBox)
+        public TgcKeyFrameAnimation(TgcKeyFrameAnimationData data, TgcBoundingAxisAlignBox boundingBox)
         {
             Data = data;
             BoundingBox = boundingBox;
@@ -16,7 +17,7 @@ namespace TGC.Core.KeyFrameLoader
         /// <summary>
         ///     BoundingBox de la animación
         /// </summary>
-        public TgcBoundingBox BoundingBox { get; }
+        public TgcBoundingAxisAlignBox BoundingBox { get; }
 
         /// <summary>
         ///     Datos de vértices de la animación

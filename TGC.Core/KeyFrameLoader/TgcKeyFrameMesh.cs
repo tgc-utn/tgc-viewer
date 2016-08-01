@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
@@ -34,7 +35,7 @@ namespace TGC.Core.KeyFrameLoader
 
         private float animationTimeLenght;
 
-        private TgcBoundingBox boundingBox;
+        private TgcBoundingAxisAlignBox boundingBox;
 
         //Variables de animacion
         private float currentTime;
@@ -58,7 +59,7 @@ namespace TGC.Core.KeyFrameLoader
         /// <summary>
         ///     BoundingBox de la malla sin ninguna animación.
         /// </summary>
-        private TgcBoundingBox staticMeshBoundingBox;
+        private TgcBoundingAxisAlignBox staticMeshBoundingBox;
 
         protected string technique;
 
@@ -165,7 +166,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     BoundingBox del Mesh.
         ///     Puede variar según la animación que tiene configurada en el momento.
         /// </summary>
-        public TgcBoundingBox BoundingBox
+        public TgcBoundingAxisAlignBox BoundingBox
         {
             get { return boundingBox; }
             set
@@ -877,11 +878,11 @@ namespace TGC.Core.KeyFrameLoader
         ///     Calcula el BoundingBox de la malla, en base a todos sus vertices.
         ///     Llamar a este metodo cuando ha cambiado la estructura interna de la malla.
         /// </summary>
-        public TgcBoundingBox createBoundingBox()
+        public TgcBoundingAxisAlignBox createBoundingBox()
         {
             //Obtener vertices en base al tipo de malla
             var points = getVertexPositions();
-            boundingBox = TgcBoundingBox.computeFromPoints(points);
+            boundingBox = TgcBoundingAxisAlignBox.computeFromPoints(points);
             return boundingBox;
         }
 
@@ -961,7 +962,7 @@ namespace TGC.Core.KeyFrameLoader
             var instance = new TgcKeyFrameMesh(name, this, translation, rotation, scale);
 
             //BoundingBox
-            instance.boundingBox = new TgcBoundingBox(boundingBox.PMin, boundingBox.PMax);
+            instance.boundingBox = new TgcBoundingAxisAlignBox(boundingBox.PMin, boundingBox.PMax);
             instance.updateBoundingBox();
 
             instance.Enabled = true;

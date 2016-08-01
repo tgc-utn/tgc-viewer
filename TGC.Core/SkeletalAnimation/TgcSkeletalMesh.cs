@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
@@ -58,7 +59,7 @@ namespace TGC.Core.SkeletalAnimation
         //Matrices final de transformacion de cada ueso
         private Matrix[] boneSpaceFinalTransforms;
 
-        protected TgcBoundingBox boundingBox;
+        protected TgcBoundingAxisAlignBox boundingBox;
 
         protected TgcSkeletalAnimation currentAnimation;
 
@@ -107,7 +108,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     BoundingBox de la malla sin ninguna animación.
         /// </summary>
-        protected TgcBoundingBox staticMeshBoundingBox;
+        protected TgcBoundingAxisAlignBox staticMeshBoundingBox;
 
         protected string technique;
 
@@ -247,7 +248,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     BoundingBox del Mesh.
         ///     Puede variar según la animación que tiene configurada en el momento.
         /// </summary>
-        public TgcBoundingBox BoundingBox
+        public TgcBoundingAxisAlignBox BoundingBox
         {
             get { return boundingBox; }
             set
@@ -1264,11 +1265,11 @@ namespace TGC.Core.SkeletalAnimation
         ///     Calcula el BoundingBox de la malla, en base a todos sus vertices.
         ///     Llamar a este metodo cuando ha cambiado la estructura interna de la malla.
         /// </summary>
-        public TgcBoundingBox createBoundingBox()
+        public TgcBoundingAxisAlignBox createBoundingBox()
         {
             //Obtener vertices en base al tipo de malla
             var points = getVertexPositions();
-            boundingBox = TgcBoundingBox.computeFromPoints(points);
+            boundingBox = TgcBoundingAxisAlignBox.computeFromPoints(points);
             return boundingBox;
         }
 
@@ -1386,7 +1387,7 @@ namespace TGC.Core.SkeletalAnimation
             var instance = new TgcSkeletalMesh(name, this, translation, rotation, scale);
 
             //BoundingBox
-            instance.boundingBox = new TgcBoundingBox(boundingBox.PMin, boundingBox.PMax);
+            instance.boundingBox = new TgcBoundingAxisAlignBox(boundingBox.PMin, boundingBox.PMax);
             instance.updateBoundingBox();
 
             instance.enabled = true;

@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 
@@ -23,7 +25,7 @@ namespace TGC.Examples.Optimization.KdtTree
 
         private readonly float MIN_VOL = 10;
 
-        public KdTreeNode crearKdTree(List<TgcMesh> modelos, TgcBoundingBox sceneBounds)
+        public KdTreeNode crearKdTree(List<TgcMesh> modelos, TgcBoundingAxisAlignBox sceneBounds)
         {
             var rootNode = new KdTreeNode();
 
@@ -353,12 +355,12 @@ namespace TGC.Examples.Optimization.KdtTree
         /// <summary>
         ///     Dibujar meshes que representan los sectores del KdTree
         /// </summary>
-        public List<TgcDebugBox> createDebugKdTreeMeshes(KdTreeNode rootNode, TgcBoundingBox sceneBounds)
+        public List<TgcBoxDebug> createDebugKdTreeMeshes(KdTreeNode rootNode, TgcBoundingAxisAlignBox sceneBounds)
         {
             var pMax = sceneBounds.PMax;
             var pMin = sceneBounds.PMin;
 
-            var debugBoxes = new List<TgcDebugBox>();
+            var debugBoxes = new List<TgcBoxDebug>();
             doCreateKdTreeDebugBox(rootNode, debugBoxes,
                 pMin.X, pMin.Y, pMin.Z,
                 pMax.X, pMax.Y, pMax.Z, 0);
@@ -366,7 +368,7 @@ namespace TGC.Examples.Optimization.KdtTree
             return debugBoxes;
         }
 
-        private void doCreateKdTreeDebugBox(KdTreeNode node, List<TgcDebugBox> debugBoxes,
+        private void doCreateKdTreeDebugBox(KdTreeNode node, List<TgcBoxDebug> debugBoxes,
             float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
         {
@@ -415,7 +417,7 @@ namespace TGC.Examples.Optimization.KdtTree
         /// <summary>
         ///     Construir caja debug
         /// </summary>
-        private TgcDebugBox createDebugBox(float boxLowerX, float boxLowerY, float boxLowerZ,
+        private TgcBoxDebug createDebugBox(float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
         {
             //Determinar color y grosor según profundidad
@@ -450,7 +452,7 @@ namespace TGC.Examples.Optimization.KdtTree
             }
 
             //Crear caja Debug
-            var box = TgcDebugBox.fromExtremes(
+            var box = TgcBoxDebug.fromExtremes(
                 new Vector3(boxLowerX, boxLowerY, boxLowerZ),
                 new Vector3(boxUpperX, boxUpperY, boxUpperZ),
                 c, thickness);

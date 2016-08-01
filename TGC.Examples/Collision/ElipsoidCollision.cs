@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
 using TGC.Core.Collision.ElipsoidCollision;
 using TGC.Core.Geometry;
@@ -37,7 +38,7 @@ namespace TGC.Examples.Collision
     {
         private readonly List<Collider> objetosColisionables = new List<Collider>();
         private TgcThirdPersonCamera camaraInterna;
-        private TgcElipsoid characterElipsoid;
+        private TgcBoundingElipsoid characterElipsoid;
         private ElipsoidCollisionManager collisionManager;
         private TgcArrow collisionNormalArrow;
         private TgcBox collisionPoint;
@@ -86,7 +87,7 @@ namespace TGC.Examples.Collision
 
             //BoundingSphere que va a usar el personaje
             personaje.AutoUpdateBoundingBox = false;
-            characterElipsoid = new TgcElipsoid(personaje.BoundingBox.calculateBoxCenter() + new Vector3(0, 0, 0),
+            characterElipsoid = new TgcBoundingElipsoid(personaje.BoundingBox.calculateBoxCenter() + new Vector3(0, 0, 0),
                 new Vector3(12, 28, 12));
             jumping = false;
 
