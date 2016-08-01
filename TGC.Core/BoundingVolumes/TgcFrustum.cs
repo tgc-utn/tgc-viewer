@@ -6,7 +6,7 @@ using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.BoundingVolumes
 {
     /// <summary>
     ///     Clase que representa el volumen del Frustum (vision actual).

@@ -8,12 +8,12 @@ using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.BoundingVolumes
 {
     /// <summary>
-    ///     Representa un BoundingBox
+    ///     Representa un Axis Aliang Bounding Box
     /// </summary>
-    public class TgcBoundingBox : IRenderObject
+    public class TgcBoundingAxisAlignBox : IRenderObject
     {
         private bool dirtyValues;
 
@@ -33,7 +33,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Construir AABB vacio
         /// </summary>
-        public TgcBoundingBox()
+        public TgcBoundingAxisAlignBox()
         {
             RenderColor = Color.Yellow.ToArgb();
             dirtyValues = true;
@@ -45,7 +45,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="pMin">Punto mínimo</param>
         /// <param name="pMax">Punto máximo</param>
-        public TgcBoundingBox(Vector3 pMin, Vector3 pMax)
+        public TgcBoundingAxisAlignBox(Vector3 pMin, Vector3 pMax)
             : this()
         {
             setExtremes(pMin, pMax);
@@ -58,7 +58,7 @@ namespace TGC.Core.Geometry
         /// <param name="pMax">Punto maximo escalado y/o trasladado</param>
         /// <param name="position">Traslacion</param>
         /// <param name="scale">Escala</param>
-        public TgcBoundingBox(Vector3 pMin, Vector3 pMax, Vector3 position, Vector3 scale)
+        public TgcBoundingAxisAlignBox(Vector3 pMin, Vector3 pMax, Vector3 position, Vector3 scale)
             : this()
         {
             //Seteo los extremos
@@ -481,9 +481,9 @@ namespace TGC.Core.Geometry
         ///     Crear un BoundingBox igual a este
         /// </summary>
         /// <returns>BoundingBox clonado</returns>
-        public TgcBoundingBox clone()
+        public TgcBoundingAxisAlignBox clone()
         {
-            var cloneBbox = new TgcBoundingBox();
+            var cloneBbox = new TgcBoundingAxisAlignBox();
             cloneBbox.pMin = pMin;
             cloneBbox.pMax = pMax;
             cloneBbox.pMinOriginal = pMinOriginal;
@@ -578,9 +578,9 @@ namespace TGC.Core.Geometry
             /// <summary>
             ///     Convertir a clase
             /// </summary>
-            public TgcBoundingBox toClass()
+            public TgcBoundingAxisAlignBox toClass()
             {
-                return new TgcBoundingBox(min, max);
+                return new TgcBoundingAxisAlignBox(min, max);
             }
         }
 
@@ -591,7 +591,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="boundingBoxes">Lista BoundingBoxes a contener</param>
         /// <returns>BoundingBox creado</returns>
-        public static TgcBoundingBox computeFromBoundingBoxes(List<TgcBoundingBox> boundingBoxes)
+        public static TgcBoundingAxisAlignBox computeFromBoundingBoxes(List<TgcBoundingAxisAlignBox> boundingBoxes)
         {
             var points = new Vector3[boundingBoxes.Count * 2];
             for (var i = 0; i < boundingBoxes.Count; i++)
@@ -607,7 +607,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="points">Puntos a conentener</param>
         /// <returns>BoundingBox creado</returns>
-        public static TgcBoundingBox computeFromPoints(Vector3[] points)
+        public static TgcBoundingAxisAlignBox computeFromPoints(Vector3[] points)
         {
             var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
             var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
@@ -643,7 +643,7 @@ namespace TGC.Core.Geometry
                 }
             }
 
-            return new TgcBoundingBox(min, max);
+            return new TgcBoundingAxisAlignBox(min, max);
         }
 
         #endregion Creacion

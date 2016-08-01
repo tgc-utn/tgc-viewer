@@ -7,12 +7,12 @@ using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.BoundingVolumes
 {
     /// <summary>
     ///     Representa un Orientend-BoundingBox (OBB)
     /// </summary>
-    public class TgcObb : IRenderObject
+    public class TgcBoundingOrientedBox : IRenderObject
     {
         private bool dirtyValues;
 
@@ -29,7 +29,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Construir OBB vacio
         /// </summary>
-        public TgcObb()
+        public TgcBoundingOrientedBox()
         {
             RenderColor = Color.Yellow.ToArgb();
             dirtyValues = true;
@@ -311,7 +311,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="points">puntos</param>
         /// <returns>OBB calculado</returns>
-        public static TgcObb computeFromPoints(Vector3[] points)
+        public static TgcBoundingOrientedBox computeFromPoints(Vector3[] points)
         {
             return computeFromPointsRecursive(points, new Vector3(0, 0, 0), new Vector3(360, 360, 360), 10f).toClass();
         }
@@ -362,7 +362,7 @@ namespace TGC.Core.Geometry
                         }
 
                         //Obtener el AABB de todos los puntos transformados
-                        var aabb = TgcBoundingBox.computeFromPoints(transformedPoints);
+                        var aabb = TgcBoundingAxisAlignBox.computeFromPoints(transformedPoints);
 
                         //Calcular volumen del AABB
                         var extents = aabb.calculateAxisRadius();
@@ -407,7 +407,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>OBB generado</returns>
-        public static TgcObb computeFromAABB(TgcBoundingBox aabb)
+        public static TgcBoundingOrientedBox computeFromAABB(TgcBoundingAxisAlignBox aabb)
         {
             return computeFromAABB(aabb.toStruct()).toClass();
         }
@@ -417,7 +417,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>OBB generado</returns>
-        public static OBBStruct computeFromAABB(TgcBoundingBox.AABBStruct aabb)
+        public static OBBStruct computeFromAABB(TgcBoundingAxisAlignBox.AABBStruct aabb)
         {
             var obb = new OBBStruct();
             obb.extents = (aabb.max - aabb.min) * 0.5f;
@@ -473,9 +473,9 @@ namespace TGC.Core.Geometry
             /// <summary>
             ///     Convertir a clase
             /// </summary>
-            public TgcObb toClass()
+            public TgcBoundingOrientedBox toClass()
             {
-                var obb = new TgcObb();
+                var obb = new TgcBoundingOrientedBox();
                 obb.Position = center;
                 obb.orientation = orientation;
                 obb.extents = extents;

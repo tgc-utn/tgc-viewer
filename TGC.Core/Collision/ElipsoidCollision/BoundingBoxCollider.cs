@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 using TGC.Core.Utils;
 
@@ -9,17 +10,17 @@ namespace TGC.Core.Collision.ElipsoidCollision
     /// </summary>
     public class BoundingBoxCollider : Collider
     {
-        private readonly TgcBoundingBox eAABB;
+        private readonly TgcBoundingAxisAlignBox eAABB;
 
         public BoundingBoxCollider()
         {
-            eAABB = new TgcBoundingBox();
+            eAABB = new TgcBoundingAxisAlignBox();
         }
 
         /// <summary>
         ///     BoundingBox
         /// </summary>
-        public TgcBoundingBox Aabb { get; set; }
+        public TgcBoundingAxisAlignBox Aabb { get; set; }
 
         /// <summary>
         ///     Crear Collider a partir de BoundingBox.
@@ -27,7 +28,7 @@ namespace TGC.Core.Collision.ElipsoidCollision
         /// </summary>
         /// <param name="mesh">BoundingBox</param>
         /// <returns>Collider creado</returns>
-        public static BoundingBoxCollider fromBoundingBox(TgcBoundingBox aabb)
+        public static BoundingBoxCollider fromBoundingBox(TgcBoundingAxisAlignBox aabb)
         {
             var collider = new BoundingBoxCollider();
             collider.Aabb = aabb;
@@ -474,7 +475,7 @@ namespace TGC.Core.Collision.ElipsoidCollision
         /// <param name="tmin">Instante minimo de colision</param>
         /// <param name="q">Punto minimo de colision</param>
         /// <returns>True si hay colision</returns>
-        private bool intersectRayAABB(TgcRay.RayStruct ray, TgcBoundingBox.AABBStruct aabb, out float tmin,
+        private bool intersectRayAABB(TgcRay.RayStruct ray, TgcBoundingAxisAlignBox.AABBStruct aabb, out float tmin,
             out Vector3 q)
         {
             var aabbMin = TgcCollisionUtils.toArray(aabb.min);

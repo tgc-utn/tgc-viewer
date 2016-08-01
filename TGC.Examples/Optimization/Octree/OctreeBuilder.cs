@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
@@ -19,7 +21,7 @@ namespace TGC.Examples.Optimization.Octree
 
         private readonly int MIN_MESH_PER_LEAVE_THRESHOLD = 5;
 
-        public OctreeNode crearOctree(List<TgcMesh> modelos, TgcBoundingBox sceneBounds)
+        public OctreeNode crearOctree(List<TgcMesh> modelos, TgcBoundingAxisAlignBox sceneBounds)
         {
             var rootNode = new OctreeNode();
 
@@ -332,12 +334,12 @@ namespace TGC.Examples.Optimization.Octree
         /// <summary>
         ///     Dibujar meshes que representan los sectores del Octree
         /// </summary>
-        public List<TgcDebugBox> createDebugOctreeMeshes(OctreeNode rootNode, TgcBoundingBox sceneBounds)
+        public List<TgcBoxDebug> createDebugOctreeMeshes(OctreeNode rootNode, TgcBoundingAxisAlignBox sceneBounds)
         {
             var pMax = sceneBounds.PMax;
             var pMin = sceneBounds.PMin;
 
-            var debugBoxes = new List<TgcDebugBox>();
+            var debugBoxes = new List<TgcBoxDebug>();
             doCreateOctreeDebugBox(rootNode, debugBoxes,
                 pMin.X, pMin.Y, pMin.Z,
                 pMax.X, pMax.Y, pMax.Z, 0);
@@ -345,7 +347,7 @@ namespace TGC.Examples.Optimization.Octree
             return debugBoxes;
         }
 
-        private void doCreateOctreeDebugBox(OctreeNode node, List<TgcDebugBox> debugBoxes,
+        private void doCreateOctreeDebugBox(OctreeNode node, List<TgcBoxDebug> debugBoxes,
             float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
         {
@@ -407,7 +409,7 @@ namespace TGC.Examples.Optimization.Octree
         /// <summary>
         ///     Construir caja debug
         /// </summary>
-        private TgcDebugBox createDebugBox(float boxLowerX, float boxLowerY, float boxLowerZ,
+        private TgcBoxDebug createDebugBox(float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
         {
             //Determinar color y grosor según profundidad
@@ -442,7 +444,7 @@ namespace TGC.Examples.Optimization.Octree
             }
 
             //Crear caja Debug
-            var box = TgcDebugBox.fromExtremes(
+            var box = TgcBoxDebug.fromExtremes(
                 new Vector3(boxLowerX, boxLowerY, boxLowerZ),
                 new Vector3(boxUpperX, boxUpperY, boxUpperZ),
                 c, thickness);

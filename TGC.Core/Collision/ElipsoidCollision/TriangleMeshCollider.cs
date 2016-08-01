@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;

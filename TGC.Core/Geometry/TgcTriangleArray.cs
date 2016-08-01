@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.Collision;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 

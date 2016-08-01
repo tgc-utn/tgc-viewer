@@ -3,6 +3,7 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using TGC.Core.Camara;
+using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;

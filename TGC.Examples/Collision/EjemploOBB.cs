@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
@@ -20,7 +21,7 @@ namespace TGC.Examples.Collision
     public class EjemploOBB : TGCExampleViewer
     {
         private TgcMesh mesh;
-        private TgcObb obb;
+        private TgcBoundingOrientedBox obb;
 
         public EjemploOBB(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -40,10 +41,10 @@ namespace TGC.Examples.Collision
             mesh = scene.Meshes[0];
 
             //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
-            obb = TgcObb.computeFromAABB(mesh.BoundingBox);
+            obb = TgcBoundingOrientedBox.computeFromAABB(mesh.BoundingBox);
 
             //Otra alternativa es computar OBB a partir de sus vertices. Esto genera un OBB lo mas apretado posible pero es una operacion costosa
-            //obb = TgcObb.computeFromPoints(mesh.getVertexPositions());
+            //obb = TgcBoundingOrientedBox.computeFromPoints(mesh.getVertexPositions());
 
             //Alejar camara rotacional segun tamano del BoundingBox del objeto
             Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),

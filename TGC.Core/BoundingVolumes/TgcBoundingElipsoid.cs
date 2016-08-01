@@ -7,12 +7,12 @@ using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.BoundingVolumes
 {
     /// <summary>
     ///     Representa un volumen de Elipsoide con un centro y un radio distinto para cada uno de los tres ejes
     /// </summary>
-    public class TgcElipsoid : IRenderObject
+    public class TgcBoundingElipsoid : IRenderObject
     {
         /// <summary>
         ///     Cantidad de tramos que tendrá el mesh del Elipsoid a dibujar
@@ -29,7 +29,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crear Elipsoid vacia
         /// </summary>
-        public TgcElipsoid()
+        public TgcBoundingElipsoid()
         {
             RenderColor = Color.Yellow.ToArgb();
             dirtyValues = true;
@@ -41,7 +41,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="center">Centro</param>
         /// <param name="radius">Radios para los 3 ejes</param>
-        public TgcElipsoid(Vector3 center, Vector3 radius)
+        public TgcBoundingElipsoid(Vector3 center, Vector3 radius)
             : this()
         {
             setValues(center, radius);
@@ -263,9 +263,9 @@ namespace TGC.Core.Geometry
             /// <summary>
             ///     Convertir a clase
             /// </summary>
-            public TgcElipsoid toClass()
+            public TgcBoundingElipsoid toClass()
             {
-                return new TgcElipsoid(center, radius);
+                return new TgcBoundingElipsoid(center, radius);
             }
         }
     }

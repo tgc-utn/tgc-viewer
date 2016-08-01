@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.PortalRendering;
@@ -169,7 +170,7 @@ namespace TGC.Core.SceneLoader
                 //Crear BoundingBox, aprovechar lo que viene del XML o crear uno por nuestra cuenta
                 if (meshData.pMin != null && meshData.pMax != null)
                 {
-                    tgcMesh.BoundingBox = new TgcBoundingBox(
+                    tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(
                         TgcParserUtils.float3ArrayToVector3(meshData.pMin),
                         TgcParserUtils.float3ArrayToVector3(meshData.pMax),
                         tgcMesh.Position,
@@ -198,19 +199,19 @@ namespace TGC.Core.SceneLoader
             //BoundingBox del escenario, utilizar el que viene del XML o crearlo nosotros
             if (sceneData.pMin != null && sceneData.pMax != null)
             {
-                tgcScene.BoundingBox = new TgcBoundingBox(
+                tgcScene.BoundingBox = new TgcBoundingAxisAlignBox(
                     new Vector3(sceneData.pMin[0], sceneData.pMin[1], sceneData.pMin[2]),
                     new Vector3(sceneData.pMax[0], sceneData.pMax[1], sceneData.pMax[2])
                     );
             }
             else
             {
-                var boundingBoxes = new List<TgcBoundingBox>();
+                var boundingBoxes = new List<TgcBoundingAxisAlignBox>();
                 foreach (var mesh in tgcScene.Meshes)
                 {
                     boundingBoxes.Add(mesh.BoundingBox);
                 }
-                tgcScene.BoundingBox = TgcBoundingBox.computeFromBoundingBoxes(boundingBoxes);
+                tgcScene.BoundingBox = TgcBoundingAxisAlignBox.computeFromBoundingBoxes(boundingBoxes);
             }
 
             //Cargar parte de PortalRendering, solo hay información

@@ -1,5 +1,7 @@
 using Microsoft.DirectX;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.UserControls;
@@ -19,9 +21,9 @@ namespace TGC.Examples.Collision
 
         private readonly Color noCollisionColor = Color.Yellow;
         private readonly Color pickingColor = Color.DarkGreen;
-        private TgcFixedYBoundingCylinder collider;
-        private TgcBoundingBox collisionableAABB;
-        private TgcFixedYBoundingCylinder collisionableCylinder;
+        private TgcBoundingCylinderFixedY collider;
+        private TgcBoundingAxisAlignBox collisionableAABB;
+        private TgcBoundingCylinderFixedY collisionableCylinder;
         private TgcBoundingSphere collisionableSphere;
 
         private float pickingTimeLeft;
@@ -37,10 +39,10 @@ namespace TGC.Examples.Collision
 
         public override void Init()
         {
-            collider = new TgcFixedYBoundingCylinder(new Vector3(0, 0, 0), 3, 3);
+            collider = new TgcBoundingCylinderFixedY(new Vector3(0, 0, 0), 3, 3);
             collisionableSphere = new TgcBoundingSphere(new Vector3(-6, 0, 0), 3);
-            collisionableAABB = new TgcBoundingBox(new Vector3(4, 0, -1), new Vector3(6, 2, 1));
-            collisionableCylinder = new TgcFixedYBoundingCylinder(new Vector3(0, 0, -6), 2, 2);
+            collisionableAABB = new TgcBoundingAxisAlignBox(new Vector3(4, 0, -1), new Vector3(6, 2, 1));
+            collisionableCylinder = new TgcBoundingCylinderFixedY(new Vector3(0, 0, -6), 2, 2);
 
             Modifiers.addVertex2f("size", new Vector2(1, 1), new Vector2(5, 10), new Vector2(2, 5));
             Modifiers.addVertex3f("position", new Vector3(-20, -20, -20), new Vector3(20, 20, 20), new Vector3(0, 0, 0));

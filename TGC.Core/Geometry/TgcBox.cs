@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -51,7 +52,7 @@ namespace TGC.Core.Geometry
             UVTiling = new Vector2(1, 1);
 
             //BoundingBox
-            BoundingBox = new TgcBoundingBox();
+            BoundingBox = new TgcBoundingAxisAlignBox();
 
             //Shader
             effect = TgcShaders.Instance.VariosShader;
@@ -112,7 +113,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     BoundingBox de la caja
         /// </summary>
-        public TgcBoundingBox BoundingBox { get; }
+        public TgcBoundingAxisAlignBox BoundingBox { get; }
 
         /// <summary>
         ///     Offset UV de textura

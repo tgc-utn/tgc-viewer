@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
@@ -139,10 +140,10 @@ namespace TGC.Core.KeyFrameLoader
         public TgcKeyFrameAnimation loadAnimation(TgcKeyFrameMesh mesh, TgcKeyFrameAnimationData animationData)
         {
             //BoundingBox de la animación, aprovechar lo que viene en el XML o utilizar el de la malla estática
-            TgcBoundingBox boundingBox = null;
+            TgcBoundingAxisAlignBox boundingBox = null;
             if (animationData.pMin != null && animationData.pMax != null)
             {
-                boundingBox = new TgcBoundingBox(
+                boundingBox = new TgcBoundingAxisAlignBox(
                     TgcParserUtils.float3ArrayToVector3(animationData.pMin),
                     TgcParserUtils.float3ArrayToVector3(animationData.pMax));
             }
@@ -208,7 +209,7 @@ namespace TGC.Core.KeyFrameLoader
             //Crear BoundingBox, aprovechar lo que viene del XML o crear uno por nuestra cuenta
             if (meshData.pMin != null && meshData.pMax != null)
             {
-                tgcMesh.BoundingBox = new TgcBoundingBox(
+                tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(
                     TgcParserUtils.float3ArrayToVector3(meshData.pMin),
                     TgcParserUtils.float3ArrayToVector3(meshData.pMax)
                     );

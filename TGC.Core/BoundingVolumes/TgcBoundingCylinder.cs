@@ -5,7 +5,7 @@ using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.BoundingVolumes
 {
     /// <summary>
     ///     Cilindro Bounding con posibilidad de orietar y rotar, este puede ser utilizado por ejemplo para personajes.

@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -48,7 +49,7 @@ namespace TGC.Core.Geometry
             vertices = new CustomVertex.PositionTextured[6];
             AutoAdjustUv = false;
             Enabled = true;
-            BoundingBox = new TgcBoundingBox();
+            BoundingBox = new TgcBoundingAxisAlignBox();
             UTile = 1;
             VTile = 1;
             AlphaBlendEnable = false;
@@ -181,7 +182,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     BoundingBox de la pared
         /// </summary>
-        public TgcBoundingBox BoundingBox { get; }
+        public TgcBoundingAxisAlignBox BoundingBox { get; }
 
         public Vector3 Position
         {

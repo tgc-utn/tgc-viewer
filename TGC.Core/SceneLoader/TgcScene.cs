@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 using TGC.Core.PortalRendering;
 
@@ -40,7 +41,7 @@ namespace TGC.Core.SceneLoader
         ///     BoundingBox de toda la escena, englobando todos los modelos.
         ///     No se actualiza con los movimientos particulares de cada modelo.
         /// </summary>
-        public TgcBoundingBox BoundingBox { get; set; }
+        public TgcBoundingAxisAlignBox BoundingBox { get; set; }
 
         /// <summary>
         ///     Herramienta de PortalRendering.

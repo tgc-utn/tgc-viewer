@@ -1,5 +1,7 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 
 namespace TGC.Examples.Collision.SphereCollision
@@ -17,7 +19,7 @@ namespace TGC.Examples.Collision.SphereCollision
     {
         private const float EPSILON = 0.05f;
 
-        private readonly List<TgcBoundingBox> objetosCandidatos = new List<TgcBoundingBox>();
+        private readonly List<TgcBoundingAxisAlignBox> objetosCandidatos = new List<TgcBoundingAxisAlignBox>();
 
         public SphereCollisionManager()
         {
@@ -51,7 +53,7 @@ namespace TGC.Examples.Collision.SphereCollision
         /// <param name="obstaculos">BoundingBox de obstáculos contra los cuales se puede colisionar</param>
         /// <returns>Desplazamiento relativo final efecutado al BoundingSphere</returns>
         public Vector3 moveCharacter(TgcBoundingSphere characterSphere, Vector3 movementVector,
-            List<TgcBoundingBox> obstaculos)
+            List<TgcBoundingAxisAlignBox> obstaculos)
         {
             var originalSphereCenter = characterSphere.Center;
 
@@ -71,7 +73,7 @@ namespace TGC.Examples.Collision.SphereCollision
         ///     Detección de colisiones, filtrando los obstaculos que se encuentran dentro del radio de movimiento
         /// </summary>
         private void collideWithWorld(TgcBoundingSphere characterSphere, Vector3 movementVector,
-            List<TgcBoundingBox> obstaculos)
+            List<TgcBoundingAxisAlignBox> obstaculos)
         {
             if (movementVector.LengthSq() < EPSILON)
             {
@@ -114,7 +116,7 @@ namespace TGC.Examples.Collision.SphereCollision
         ///     Detección de colisiones recursiva
         /// </summary>
         public void doCollideWithWorld(TgcBoundingSphere characterSphere, Vector3 movementVector,
-            List<TgcBoundingBox> obstaculos, int recursionDepth)
+            List<TgcBoundingAxisAlignBox> obstaculos, int recursionDepth)
         {
             //Limitar recursividad
             if (recursionDepth > 5)
@@ -136,8 +138,8 @@ namespace TGC.Examples.Collision.SphereCollision
             //Buscar el punto de colision mas cercano de todos los objetos candidatos
             var minCollisionDistSq = float.MaxValue;
             var realMovementVector = movementVector;
-            TgcBoundingBox.Face collisionFace = null;
-            TgcBoundingBox collisionObstacle = null;
+            TgcBoundingAxisAlignBox.Face collisionFace = null;
+            TgcBoundingAxisAlignBox collisionObstacle = null;
             var nearestPolygonIntersectionPoint = Vector3.Empty;
             foreach (var obstaculoBB in obstaculos)
             {
@@ -300,7 +302,7 @@ namespace TGC.Examples.Collision.SphereCollision
         ///     Ver si un punto pertenece a una cara de un BoundingBox
         /// </summary>
         /// <returns>True si pertenece</returns>
-        private bool pointInBounbingBoxFace(Vector3 p, TgcBoundingBox.Face bbFace)
+        private bool pointInBounbingBoxFace(Vector3 p, TgcBoundingAxisAlignBox.Face bbFace)
         {
             var min = bbFace.Extremes[0];
             var max = bbFace.Extremes[3];

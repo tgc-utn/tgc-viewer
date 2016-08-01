@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
@@ -19,7 +21,7 @@ namespace TGC.Examples.Optimization.Quadtree
 
         private readonly int MIN_MESH_PER_LEAVE_THRESHOLD = 5;
 
-        public QuadtreeNode crearQuadtree(List<TgcMesh> TgcMeshs, TgcBoundingBox sceneBounds)
+        public QuadtreeNode crearQuadtree(List<TgcMesh> TgcMeshs, TgcBoundingAxisAlignBox sceneBounds)
         {
             var rootNode = new QuadtreeNode();
 
@@ -250,12 +252,12 @@ namespace TGC.Examples.Optimization.Quadtree
         /// <summary>
         ///     Dibujar meshes que representan los sectores del Quadtree
         /// </summary>
-        public List<TgcDebugBox> createDebugQuadtreeMeshes(QuadtreeNode rootNode, TgcBoundingBox sceneBounds)
+        public List<TgcBoxDebug> createDebugQuadtreeMeshes(QuadtreeNode rootNode, TgcBoundingAxisAlignBox sceneBounds)
         {
             var pMax = sceneBounds.PMax;
             var pMin = sceneBounds.PMin;
 
-            var debugBoxes = new List<TgcDebugBox>();
+            var debugBoxes = new List<TgcBoxDebug>();
             doCreateQuadtreeDebugBox(rootNode, debugBoxes,
                 pMin.X, pMin.Y, pMin.Z,
                 pMax.X, pMax.Y, pMax.Z, 0);
@@ -263,7 +265,7 @@ namespace TGC.Examples.Optimization.Quadtree
             return debugBoxes;
         }
 
-        private void doCreateQuadtreeDebugBox(QuadtreeNode node, List<TgcDebugBox> debugBoxes,
+        private void doCreateQuadtreeDebugBox(QuadtreeNode node, List<TgcBoxDebug> debugBoxes,
             float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
         {
@@ -305,7 +307,7 @@ namespace TGC.Examples.Optimization.Quadtree
         /// <summary>
         ///     Construir caja debug
         /// </summary>
-        private TgcDebugBox createDebugBox(float boxLowerX, float boxLowerY, float boxLowerZ,
+        private TgcBoxDebug createDebugBox(float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
         {
             //Determinar color y grosor según profundidad
@@ -340,7 +342,7 @@ namespace TGC.Examples.Optimization.Quadtree
             }
 
             //Crear caja Debug
-            var box = TgcDebugBox.fromExtremes(
+            var box = TgcBoxDebug.fromExtremes(
                 new Vector3(boxLowerX, boxLowerY, boxLowerZ),
                 new Vector3(boxUpperX, boxUpperY, boxUpperZ),
                 c, thickness);

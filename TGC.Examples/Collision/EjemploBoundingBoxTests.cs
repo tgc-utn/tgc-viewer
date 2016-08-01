@@ -2,7 +2,9 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
+using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
@@ -29,9 +31,9 @@ namespace TGC.Examples.Collision
         private TgcBox box;
         private TgcBox box2;
         private TgcThirdPersonCamera camaraInterna;
-        private TgcObb obb;
+        private TgcBoundingOrientedBox obb;
         private TgcBoundingSphere sphere;
-        private TgcBoundingBox triagleAABB;
+        private TgcBoundingAxisAlignBox triagleAABB;
         private CustomVertex.PositionColored[] triangle;
 
         public EjemploBoundingBoxTests(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
@@ -54,7 +56,7 @@ namespace TGC.Examples.Collision
             triangle[1] = new CustomVertex.PositionColored(0, 0, 50, Color.Green.ToArgb());
             triangle[2] = new CustomVertex.PositionColored(0, 100, 0, Color.Blue.ToArgb());
             triagleAABB =
-                TgcBoundingBox.computeFromPoints(new[]
+                TgcBoundingAxisAlignBox.computeFromPoints(new[]
                 {triangle[0].Position, triangle[1].Position, triangle[2].Position});
 
             //box2
@@ -69,7 +71,7 @@ namespace TGC.Examples.Collision
                 loader.loadSceneFromFile(MediaDir +
                                          "MeshCreator\\Meshes\\Vehiculos\\StarWars-ATST\\StarWars-ATST-TgcScene.xml")
                     .Meshes[0];
-            obb = TgcObb.computeFromAABB(meshObb.BoundingBox);
+            obb = TgcBoundingOrientedBox.computeFromAABB(meshObb.BoundingBox);
             meshObb.dispose();
             obb.move(new Vector3(100, 0, 30));
             obb.setRotation(new Vector3(0, FastMath.PI / 4, 0));

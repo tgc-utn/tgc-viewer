@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Textures;
@@ -53,16 +54,16 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Crear BoundingBox para escena
         /// </summary>
-        private TgcBoundingBox createSceneBoundingBox(MeshExport[] meshesExport)
+        private TgcBoundingAxisAlignBox createSceneBoundingBox(MeshExport[] meshesExport)
         {
-            var boundingBoxes = new List<TgcBoundingBox>();
+            var boundingBoxes = new List<TgcBoundingAxisAlignBox>();
             foreach (var m in meshesExport)
             {
-                boundingBoxes.Add(new TgcBoundingBox(
+                boundingBoxes.Add(new TgcBoundingAxisAlignBox(
                     TgcParserUtils.float3ArrayToVector3(m.MeshData.pMin),
                     TgcParserUtils.float3ArrayToVector3(m.MeshData.pMax)));
             }
-            return TgcBoundingBox.computeFromBoundingBoxes(boundingBoxes);
+            return TgcBoundingAxisAlignBox.computeFromBoundingBoxes(boundingBoxes);
         }
 
         /// <summary>
@@ -773,12 +774,12 @@ namespace TGC.Core.SceneLoader
             meshExpAppended.MeshData.instanceType = TgcMeshData.ORIGINAL;
 
             //BoundingBox que une ambas
-            var bboxes = new List<TgcBoundingBox>();
-            bboxes.Add(new TgcBoundingBox(TgcParserUtils.float3ArrayToVector3(mExp1.MeshData.pMin),
+            var bboxes = new List<TgcBoundingAxisAlignBox>();
+            bboxes.Add(new TgcBoundingAxisAlignBox(TgcParserUtils.float3ArrayToVector3(mExp1.MeshData.pMin),
                 TgcParserUtils.float3ArrayToVector3(mExp1.MeshData.pMax)));
-            bboxes.Add(new TgcBoundingBox(TgcParserUtils.float3ArrayToVector3(mExp2.MeshData.pMin),
+            bboxes.Add(new TgcBoundingAxisAlignBox(TgcParserUtils.float3ArrayToVector3(mExp2.MeshData.pMin),
                 TgcParserUtils.float3ArrayToVector3(mExp2.MeshData.pMax)));
-            var appendenBbox = TgcBoundingBox.computeFromBoundingBoxes(bboxes);
+            var appendenBbox = TgcBoundingAxisAlignBox.computeFromBoundingBoxes(bboxes);
             meshExpAppended.MeshData.pMin = TgcParserUtils.vector3ToFloat3Array(appendenBbox.PMin);
             meshExpAppended.MeshData.pMax = TgcParserUtils.vector3ToFloat3Array(appendenBbox.PMax);
 
@@ -1268,7 +1269,7 @@ namespace TGC.Core.SceneLoader
         /// <param name="meshesExport">Array de datos de Mallas que se quieren exportar</param>
         /// <param name="saveFolderPath">Carpeta en la que se quiera guardar el XML</param>
         /// <returns>Resultado de exportacion</returns>
-        public ExportResult saveSceneToXml(string sceneName, TgcBoundingBox sceneBoundingBox, MeshExport[] meshesExport,
+        public ExportResult saveSceneToXml(string sceneName, TgcBoundingAxisAlignBox sceneBoundingBox, MeshExport[] meshesExport,
             string saveFolderPath)
         {
             var result = new ExportResult();

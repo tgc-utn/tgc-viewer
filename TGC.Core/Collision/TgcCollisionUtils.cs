@@ -1,9 +1,11 @@
 using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Geometry;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.Collision
 {
     /// <summary>
     ///     Utilidades para hacer detección de colisiones
@@ -22,7 +24,7 @@ namespace TGC.Core.Geometry
         ///         de la box2. Es un caso especial de que box2 esté afuera de box1
         ///     </para>
         /// </summary>
-        public static BoxBoxResult classifyBoxBox(TgcBoundingBox box1, TgcBoundingBox box2)
+        public static BoxBoxResult classifyBoxBox(TgcBoundingAxisAlignBox box1, TgcBoundingAxisAlignBox box2)
         {
             if (((box1.PMin.X <= box2.PMin.X && box1.PMax.X >= box2.PMax.X) ||
                  (box1.PMin.X >= box2.PMin.X && box1.PMin.X <= box2.PMax.X) ||
@@ -91,7 +93,7 @@ namespace TGC.Core.Geometry
         /// <param name="a">BoundingBox 1</param>
         /// <param name="b">BoundingBox 2</param>
         /// <returns>True si hay colisión</returns>
-        public static bool testAABBAABB(TgcBoundingBox a, TgcBoundingBox b)
+        public static bool testAABBAABB(TgcBoundingAxisAlignBox a, TgcBoundingAxisAlignBox b)
         {
             // Exit with no intersection if separated along an axis
             if (a.PMax.X < b.PMin.X || a.PMin.X > b.PMax.X) return false;
@@ -112,7 +114,7 @@ namespace TGC.Core.Geometry
         /// <param name="a">AABB</param>
         /// <param name="q">Punto de intersección</param>
         /// <returns>True si hay colisión</returns>
-        public static bool intersectRayAABB(TgcRay ray, TgcBoundingBox aabb, out Vector3 q)
+        public static bool intersectRayAABB(TgcRay ray, TgcBoundingAxisAlignBox aabb, out Vector3 q)
         {
             return intersectRayAABB(ray.toStruct(), aabb.toStruct(), out q);
         }
@@ -128,7 +130,7 @@ namespace TGC.Core.Geometry
         /// <param name="a">AABB</param>
         /// <param name="q">Punto de intersección</param>
         /// <returns>True si hay colisión</returns>
-        public static bool intersectRayAABB(TgcRay.RayStruct ray, TgcBoundingBox.AABBStruct aabb, out Vector3 q)
+        public static bool intersectRayAABB(TgcRay.RayStruct ray, TgcBoundingAxisAlignBox.AABBStruct aabb, out Vector3 q)
         {
             q = Vector3.Empty;
             var inside = true;
@@ -211,7 +213,7 @@ namespace TGC.Core.Geometry
         /// <param name="aabb">BoundingBox</param>
         /// <param name="q">Punto de intersección</param>
         /// <returns>True si hay colisión</returns>
-        public static bool intersectSegmentAABB(Vector3 p0, Vector3 p1, TgcBoundingBox aabb, out Vector3 q)
+        public static bool intersectSegmentAABB(Vector3 p0, Vector3 p1, TgcBoundingAxisAlignBox aabb, out Vector3 q)
         {
             var segmentDir = p1 - p0;
             var ray = new TgcRay(p0, segmentDir);
@@ -235,7 +237,7 @@ namespace TGC.Core.Geometry
         /// <param name="p">Punto a testear</param>
         /// <param name="aabb">BoundingBox a testear</param>
         /// <returns>Punto mas cercano a p del BoundingBox</returns>
-        public static Vector3 closestPointAABB(Vector3 p, TgcBoundingBox aabb)
+        public static Vector3 closestPointAABB(Vector3 p, TgcBoundingAxisAlignBox aabb)
         {
             var aabbMin = toArray(aabb.PMin);
             var aabbMax = toArray(aabb.PMax);
@@ -261,7 +263,7 @@ namespace TGC.Core.Geometry
         /// <param name="p">Punto a testear</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>Mínima distacia al cuadrado</returns>
-        public static float sqDistPointAABB(Vector3 p, TgcBoundingBox aabb)
+        public static float sqDistPointAABB(Vector3 p, TgcBoundingAxisAlignBox aabb)
         {
             return sqDistPointAABB(p, aabb.toStruct());
         }
@@ -273,7 +275,7 @@ namespace TGC.Core.Geometry
         /// <param name="p">Punto a testear</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>Mínima distacia al cuadrado</returns>
-        public static float sqDistPointAABB(Vector3 p, TgcBoundingBox.AABBStruct aabb)
+        public static float sqDistPointAABB(Vector3 p, TgcBoundingAxisAlignBox.AABBStruct aabb)
         {
             var aabbMin = toArray(aabb.min);
             var aabbMax = toArray(aabb.max);
@@ -296,7 +298,7 @@ namespace TGC.Core.Geometry
         /// <param name="sphere">BoundingSphere</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>True si hay colisión</returns>
-        public static bool testSphereAABB(TgcBoundingSphere sphere, TgcBoundingBox aabb)
+        public static bool testSphereAABB(TgcBoundingSphere sphere, TgcBoundingAxisAlignBox aabb)
         {
             return testSphereAABB(sphere.toStruct(), aabb.toStruct());
         }
@@ -307,7 +309,7 @@ namespace TGC.Core.Geometry
         /// <param name="sphere">BoundingSphere</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>True si hay colisión</returns>
-        public static bool testSphereAABB(TgcBoundingSphere.SphereStruct sphere, TgcBoundingBox.AABBStruct aabb)
+        public static bool testSphereAABB(TgcBoundingSphere.SphereStruct sphere, TgcBoundingAxisAlignBox.AABBStruct aabb)
         {
             //Compute squared distance between sphere center and AABB
             var sqDist = sqDistPointAABB(sphere.center, aabb);
@@ -322,7 +324,7 @@ namespace TGC.Core.Geometry
         /// <param name="sphere">BoundingSphere</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>True si hay colisión</returns>
-        public static bool testSphereOBB(TgcBoundingSphere sphere, TgcObb obb)
+        public static bool testSphereOBB(TgcBoundingSphere sphere, TgcBoundingOrientedBox obb)
         {
             return testSphereOBB(sphere.toStruct(), obb.toStruct());
         }
@@ -333,7 +335,7 @@ namespace TGC.Core.Geometry
         /// <param name="sphere">BoundingSphere</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>True si hay colisión</returns>
-        public static bool testSphereOBB(TgcBoundingSphere.SphereStruct sphere, TgcObb.OBBStruct obb)
+        public static bool testSphereOBB(TgcBoundingSphere.SphereStruct sphere, TgcBoundingOrientedBox.OBBStruct obb)
         {
             //Transformar esfera a OBB-Space
             var sphere2 = new TgcBoundingSphere.SphereStruct();
@@ -343,7 +345,7 @@ namespace TGC.Core.Geometry
             //Crear AABB que representa al OBB
             var min = -obb.extents;
             var max = obb.extents;
-            var aabb = new TgcBoundingBox.AABBStruct();
+            var aabb = new TgcBoundingAxisAlignBox.AABBStruct();
             aabb.min = min;
             aabb.max = max;
 
@@ -358,7 +360,7 @@ namespace TGC.Core.Geometry
         /// <returns>
         ///     Resultado de la clasificación.
         /// </returns>
-        public static PlaneBoxResult classifyPlaneAABB(Plane plane, TgcBoundingBox aabb)
+        public static PlaneBoxResult classifyPlaneAABB(Plane plane, TgcBoundingAxisAlignBox aabb)
         {
             var vmin = Vector3.Empty;
             var vmax = Vector3.Empty;
@@ -442,7 +444,7 @@ namespace TGC.Core.Geometry
         /// <param name="plane">Plano</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>True si hay colisión.</returns>
-        public static bool testPlaneAABB(Plane plane, TgcBoundingBox aabb)
+        public static bool testPlaneAABB(Plane plane, TgcBoundingAxisAlignBox aabb)
         {
             var c = (aabb.PMax + aabb.PMin) * 0.5f; // Compute AABB center
             var e = aabb.PMax - c; // Compute positive extents
@@ -465,7 +467,7 @@ namespace TGC.Core.Geometry
         /// <param name="vert2">Vertice 2 del triángulo</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>True si hay colisión.</returns>
-        public static bool testTriangleAABB(Vector3 vert0, Vector3 vert1, Vector3 vert2, TgcBoundingBox aabb)
+        public static bool testTriangleAABB(Vector3 vert0, Vector3 vert1, Vector3 vert2, TgcBoundingAxisAlignBox aabb)
         {
             /*   use separating axis theorem to test overlap between triangle and box need to test for overlap in these directions:
             *    1) the {x,y,z}-directions (actually, since we use the AABB of the triangle we do not even need to test these)
@@ -1291,7 +1293,7 @@ namespace TGC.Core.Geometry
         /// <param name="frustum">Frustum</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>Resultado de la clasificación</returns>
-        public static FrustumResult classifyFrustumAABB(TgcFrustum frustum, TgcBoundingBox aabb)
+        public static FrustumResult classifyFrustumAABB(TgcFrustum frustum, TgcBoundingAxisAlignBox aabb)
         {
             var totalIn = 0;
             var frustumPlanes = frustum.FrustumPlanes;
@@ -1346,7 +1348,7 @@ namespace TGC.Core.Geometry
         /// <param name="frustum">Frustum</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>Resultado de la colisión</returns>
-        public static FrustumResult classifyFrustumAABB(TgcFrustum frustum, TgcBoundingBox aabb)
+        public static FrustumResult classifyFrustumAABB(TgcFrustum frustum, TgcBoundingAxisAlignBox aabb)
         {
             bool intersect = false;
             FrustumResult result = FrustumResult.OUTSIDE;
@@ -1496,7 +1498,7 @@ namespace TGC.Core.Geometry
         /// <param name="aabb">BoundingBox</param>
         /// <returns>Resultado de la clasificación</returns>
         public static ConvexPolyhedronResult classifyConvexPolyhedronAABB(TgcConvexPolyhedron polyhedron,
-            TgcBoundingBox aabb)
+            TgcBoundingAxisAlignBox aabb)
         {
             var totalIn = 0;
             var polyhedronPlanes = polyhedron.Planes;
@@ -2118,7 +2120,7 @@ namespace TGC.Core.Geometry
         /// <param name="ray">Rayo</param>
         /// <param name="cylinder">Cilindro alineado</param>
         /// <returns>True si el rayo colisiona con el cilindro</returns>
-        public static bool testRayCylinder(TgcRay ray, TgcFixedYBoundingCylinder cylinder)
+        public static bool testRayCylinder(TgcRay ray, TgcBoundingCylinderFixedY cylinder)
         {
             var transformation = cylinder.AntiTransformationMatrix;
             var origin = Vector3.TransformCoordinate(ray.Origin, transformation);
@@ -2133,7 +2135,7 @@ namespace TGC.Core.Geometry
         /// <param name="p">Punto</param>
         /// <param name="cylinder">Cilindro alineado</param>
         /// <returns>True si el Punto esta adentro del Cilindro</returns>
-        private static bool testPointCylinder(Vector3 p, TgcFixedYBoundingCylinder cylinder)
+        private static bool testPointCylinder(Vector3 p, TgcBoundingCylinderFixedY cylinder)
         {
             return testPointCylinder(p, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
         }
@@ -2144,7 +2146,7 @@ namespace TGC.Core.Geometry
         /// <param name="p">Punto</param>
         /// <param name="cylinder">Cilindro alineado</param>
         /// <returns>Punto perteneciente al cilindro mas cercano a P</returns>
-        public static Vector3 closestPointCylinder(Vector3 p, TgcFixedYBoundingCylinder cylinder)
+        public static Vector3 closestPointCylinder(Vector3 p, TgcBoundingCylinderFixedY cylinder)
         {
             return closestPointCylinder(p, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
         }
@@ -2156,7 +2158,7 @@ namespace TGC.Core.Geometry
         /// <param name="sphere">Esfera</param>
         /// <param name="cylinder">Cilindro alineado</param>
         /// <returns>True si hay colision</returns>
-        public static bool testSphereCylinder(TgcBoundingSphere sphere, TgcFixedYBoundingCylinder cylinder)
+        public static bool testSphereCylinder(TgcBoundingSphere sphere, TgcBoundingCylinderFixedY cylinder)
         {
             return testSphereCylinder(
                 sphere.Center, sphere.Radius,
@@ -2170,7 +2172,7 @@ namespace TGC.Core.Geometry
         /// <param name="box">AABB</param>
         /// <param name="cylinder">Cilindro alineado</param>
         /// <returns>True si hay colision</returns>
-        public static bool testAABBCylinder(TgcBoundingBox box, TgcFixedYBoundingCylinder cylinder)
+        public static bool testAABBCylinder(TgcBoundingAxisAlignBox box, TgcBoundingCylinderFixedY cylinder)
         {
             //datos del aabb
             var boxCenter = box.calculateBoxCenter();
@@ -2212,8 +2214,8 @@ namespace TGC.Core.Geometry
         /// <param name="collider">Cilindro alineado que genera la colision</param>
         /// <param name="collisionable">Cilindro alineado estatico</param>
         /// <returns>True si hay colision</returns>
-        public static bool testCylinderCylinder(TgcFixedYBoundingCylinder collider,
-            TgcFixedYBoundingCylinder collisionable)
+        public static bool testCylinderCylinder(TgcBoundingCylinderFixedY collider,
+            TgcBoundingCylinderFixedY collisionable)
         {
             var centerToCenter = collider.Center - collisionable.Center;
             if (FastMath.Pow2(centerToCenter.X) + FastMath.Pow2(centerToCenter.Z) >
@@ -2362,7 +2364,7 @@ namespace TGC.Core.Geometry
         /// <param name="a">Primer OBB</param>
         /// <param name="b">Segundo OBB</param>
         /// <returns>True si hay colision</returns>
-        public static bool testObbObb(TgcObb a, TgcObb b)
+        public static bool testObbObb(TgcBoundingOrientedBox a, TgcBoundingOrientedBox b)
         {
             return testObbObb(a.toStruct(), b.toStruct());
         }
@@ -2373,7 +2375,7 @@ namespace TGC.Core.Geometry
         /// <param name="a">Primer OBB</param>
         /// <param name="b">Segundo OBB</param>
         /// <returns>True si hay colision</returns>
-        public static bool testObbObb(TgcObb.OBBStruct a, TgcObb.OBBStruct b)
+        public static bool testObbObb(TgcBoundingOrientedBox.OBBStruct a, TgcBoundingOrientedBox.OBBStruct b)
         {
             float ra, rb;
             var R = new float[3, 3];
@@ -2470,7 +2472,7 @@ namespace TGC.Core.Geometry
         ///     Interseccion Ray-OBB.
         ///     Devuelve true y el punto q de colision si hay interseccion.
         /// </summary>
-        public static bool intersectRayObb(TgcRay ray, TgcObb obb, out Vector3 q)
+        public static bool intersectRayObb(TgcRay ray, TgcBoundingOrientedBox obb, out Vector3 q)
         {
             //Transformar Ray a OBB-space
             var a = ray.Origin;
@@ -2484,7 +2486,7 @@ namespace TGC.Core.Geometry
             //Crear AABB que representa al OBB
             var min = -obb.Extents;
             var max = obb.Extents;
-            var aabb = new TgcBoundingBox.AABBStruct();
+            var aabb = new TgcBoundingAxisAlignBox.AABBStruct();
             aabb.min = min;
             aabb.max = max;
 
@@ -2505,7 +2507,7 @@ namespace TGC.Core.Geometry
         /// <param name="a">OBB</param>
         /// <param name="b">AABB</param>
         /// <returns>True si hay colision</returns>
-        public static bool testObbAABB(TgcObb obb, TgcBoundingBox aabb)
+        public static bool testObbAABB(TgcBoundingOrientedBox obb, TgcBoundingAxisAlignBox aabb)
         {
             return testObbAABB(obb.toStruct(), aabb.toStruct());
         }
@@ -2516,10 +2518,10 @@ namespace TGC.Core.Geometry
         /// <param name="a">OBB</param>
         /// <param name="b">AABB</param>
         /// <returns>True si hay colision</returns>
-        public static bool testObbAABB(TgcObb.OBBStruct obb, TgcBoundingBox.AABBStruct aabb)
+        public static bool testObbAABB(TgcBoundingOrientedBox.OBBStruct obb, TgcBoundingAxisAlignBox.AABBStruct aabb)
         {
             //Crear un OBB que represente al AABB
-            var obb2 = TgcObb.computeFromAABB(aabb);
+            var obb2 = TgcBoundingOrientedBox.computeFromAABB(aabb);
 
             //Hacer colision obb-obb
             return testObbObb(obb, obb2);

@@ -19,7 +19,7 @@ namespace TGC.Examples.GeometryBasics
     public class EjemploFlechaYLineaBox : TGCExampleViewer
     {
         private TgcArrow arrow;
-        private TgcBoxLine line;
+        private TgcBoxDebug box;
 
         public EjemploFlechaYLineaBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -44,7 +44,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addColor("headColor", Color.LightBlue);
 
             //Crea linea generica
-            line = new TgcBoxLine();
+            box = new TgcBoxDebug();
 
             //Crear modifiers
             Modifiers.addColor("boxColor", Color.Red);
@@ -80,14 +80,14 @@ namespace TGC.Examples.GeometryBasics
             var boxColor = (Color)Modifiers["boxColor"];
 
             //Cargar valores de la linea
-            line.PStart = start + offset;
-            line.PEnd = end + offset;
-            line.Thickness = thickness;
-            line.Color = boxColor;
+            box.PMin = start + offset;
+            box.PMax = end + offset;
+            box.Thickness = thickness;
+            box.Color = boxColor;
 
             //Actualizar valores para hacerlos efectivos, ADVERTENCIA verificar que estemetodo crea los vertices nuevamente.
             //Recomendado de ser posible realizar transformaciones!!!
-            line.updateValues();
+            box.updateValues();
         }
 
         public override void Render()
@@ -97,7 +97,7 @@ namespace TGC.Examples.GeometryBasics
             //Render
             arrow.render();
 
-            line.render();
+            box.render();
 
             PostRender();
         }

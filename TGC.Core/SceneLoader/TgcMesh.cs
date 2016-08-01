@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Shaders;
@@ -45,7 +46,7 @@ namespace TGC.Core.SceneLoader
 
         protected bool autoTransformEnable;
 
-        protected TgcBoundingBox boundingBox;
+        protected TgcBoundingAxisAlignBox boundingBox;
         protected Mesh d3dMesh;
 
         protected TgcTexture[] diffuseMaps;
@@ -221,7 +222,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     BoundingBox del Mesh
         /// </summary>
-        public TgcBoundingBox BoundingBox
+        public TgcBoundingAxisAlignBox BoundingBox
         {
             get { return boundingBox; }
             set { boundingBox = value; }
@@ -732,7 +733,7 @@ namespace TGC.Core.SceneLoader
         ///     Calcula el BoundingBox de la malla, en base a todos sus vertices.
         ///     Llamar a este metodo cuando ha cambiado la estructura interna de la malla.
         /// </summary>
-        public TgcBoundingBox createBoundingBox()
+        public TgcBoundingAxisAlignBox createBoundingBox()
         {
             if (boundingBox != null)
             {
@@ -741,7 +742,7 @@ namespace TGC.Core.SceneLoader
             }
             //Obtener vertices en base al tipo de malla
             var points = getVertexPositions();
-            boundingBox = TgcBoundingBox.computeFromPoints(points);
+            boundingBox = TgcBoundingAxisAlignBox.computeFromPoints(points);
             return boundingBox;
         }
 
@@ -918,7 +919,7 @@ namespace TGC.Core.SceneLoader
             var instance = new TgcMesh(name, this, translation, rotation, scale);
 
             //BoundingBox
-            instance.boundingBox = new TgcBoundingBox(boundingBox.PMin, boundingBox.PMax);
+            instance.boundingBox = new TgcBoundingAxisAlignBox(boundingBox.PMin, boundingBox.PMax);
             instance.updateBoundingBox();
 
             instance.enabled = true;

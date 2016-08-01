@@ -2,6 +2,7 @@
 using Microsoft.DirectX.Direct3D;
 using System.Diagnostics;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
