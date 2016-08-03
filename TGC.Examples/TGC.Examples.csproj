@@ -190,11 +190,6 @@
     <Compile Include="Transformations\EjemploBrazoRobot.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
-    <Compile Include="Tutorial\Tutorial8.cs" />
-    <Compile Include="Tutorial\Tutorial7.cs" />
-    <Compile Include="Tutorial\Tutorial6.cs" />
-    <Compile Include="Tutorial\Tutorial5.cs" />
-    <Compile Include="Tutorial\Tutorial4.cs" />
     <Compile Include="Tutorial\Tutorial3.cs" />
     <Compile Include="Tutorial\Tutorial2.cs" />
     <Compile Include="Tutorial\Tutorial1.cs" />
