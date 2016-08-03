@@ -41,7 +41,7 @@ namespace TGC.Examples.Collision
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "BoundingBox-Tests";
+            Name = "Bounding Box Tests";
             Description =
                 "Muestra como hacer colisiones entre un BoundingBox y distintas figuras geométricas (AABB, Triangle, Sphere, OBB). Movimiento con W, A, S, D.";
         }
