@@ -88,7 +88,6 @@
     <Compile Include="Collision\EjemploColisiones.cs" />
     <Compile Include="Collision\EjemploColisionesThirdPerson.cs" />
     <Compile Include="Collision\EjemploComputeObb.cs" />
-    <Compile Include="Collision\EjemploFixedYCylinder.cs" />
     <Compile Include="Collision\EjemploOBB.cs" />
     <Compile Include="Collision\EjemploPicking.cs" />
     <Compile Include="Collision\ElipsoidCollision.cs" />
