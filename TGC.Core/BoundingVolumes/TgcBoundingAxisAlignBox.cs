@@ -250,14 +250,13 @@ namespace TGC.Core.BoundingVolumes
             return size;
         }
 
-        /// <summary>
-        ///     <summary>
-        ///         Traslada y escala el BoundingBox.
-        ///         Si el BoundingBox tenia alguna rotación, se pierde.
-        ///     </summary>
-        ///     <param name="position">Nueva posición absoluta de referencia</param>
-        ///     <param name="scale">Nueva escala absoluta de referencia</param>
-        public void scaleTranslate(Vector3 position, Vector3 scale)
+		/// <summary>
+		/// Traslada y escala el BoundingBox.
+		/// Si el BoundingBox tenia alguna rotación, se pierde.
+		/// </summary>
+		/// <param name="position">Nueva posición absoluta de referencia</param>
+		/// <param name="scale">Nueva escala absoluta de referencia</param>
+		public void scaleTranslate(Vector3 position, Vector3 scale)
         {
             //actualizar puntos extremos
             pMin.X = pMinOriginal.X * scale.X + position.X;

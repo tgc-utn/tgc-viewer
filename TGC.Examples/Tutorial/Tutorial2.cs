@@ -1,54 +1,62 @@
 using Microsoft.DirectX;
 using TGC.Core.Camara;
-using TGC.Core.Geometry;
-using TGC.Core.Textures;
+using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Core.Utils;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.Tutorial
 {
-    /// <summary>
-    ///     Tutorial 2:
-    ///     Unidades Involucradas:
-    ///     # Unidad 4 - Texturas e iluminacion - Texturas
-    ///     Muestra como crear una caja 3D con una imagen 2D como textura para darle color.
-    ///     Autor: Matías Leone
-    /// </summary>
-    public class Tutorial2 : TGCExampleViewer
+	/// <summary>
+	///     Tutorial 2:
+	///     Unidades Involucradas:
+	///     # Unidad 3 - Conceptos Básicos de 3D - Mesh
+	///     Muestra como cargar un modelo 3D.
+	/// 	Muestra como cargar una escena 3D completa.
+	///     Autor: Matías Leone
+	/// </summary>
+	public class Tutorial2 : TGCExampleViewer
     {
-        private TgcBox box;
+        //Variable para el modelo 3D
+        private TgcMesh mesh;
+		//Variable para la escena 3D
+		private TgcScene scene;
 
         public Tutorial2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Tutorial";
             Name = "Tutorial 2";
-            Description = "Muestra como crear una caja 3D con una imagen 2D como textura para darle color.";
+            Description = "Muestra como cargar un modelo 3D y una escena 3D completa.";
         }
 
         public override void Init()
         {
-            //Cargamos una textura
-            //Una textura es una imágen 2D que puede dibujarse arriba de un polígono 3D para darle color.
-            //Es muy útil para generar efectos de relieves y superficies.
-            //Puede ser cualquier imágen 2D (jpg, png, gif, etc.) y puede ser editada con cualquier editor
-            //normal (photoshop, paint, descargada de goole images, etc).
-            //El framework viene con un montón de texturas incluidas y organizadas en categorias (texturas de
-            //madera, cemento, ladrillo, pasto, etc). Se encuentran en la carpeta del framework:
-            //  TgcViewer\Examples\Media\MeshCreator\Textures
-            //Podemos acceder al path de la carpeta "Media" utilizando la variable "this.MediaDir".
-            //Esto evita que tengamos que hardcodear el path de instalación del framework.
-            var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Madera\\cajaMadera3.jpg");
+            //El framework posee la clase TgcSceneLoader que permite cargar modelos 3D.
+            //Estos modelos 3D están almacenados en un archivo XML llamado TgcScene.xml.
+            //Este archivo es un formato a medida hecho para el framework. Y puede ser creado desde herramientas de
+            //diseño como 3Ds MAX (exportando a traves de un plugin) o con el editor MeshCreator que viene con el framework.
+            //El framework viene con varios modelos 3D incluidos en la carpeta: TgcViewer\Examples\Media\MeshCreator\Meshes.
+            //El formato especifica una escena, representada por la clase TgcScene. Una escena puede estar compuesta por varios
+            //modelos 3D. Cada modelo se representa con la clase TgcMesh.
+            //En este ejemplo vamos a cargar una escena con un único modelo.
+            var loader = new TgcSceneLoader();
 
-            //Creamos una caja 3D ubicada en (0, -3, 0), dimensiones (5, 10, 5) y la textura como color.
-            var center = new Vector3(0, -3, 0);
-            var size = new Vector3(5, 10, 5);
-            box = TgcBox.fromSize(center, size, texture);
+            //De toda la escena solo nos interesa guardarnos el primer modelo (el único que hay en este caso).
+            mesh = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml").Meshes[0];
+			mesh.AutoTransformEnable = true;
+			mesh.rotateY(FastMath.QUARTER_PI);
+			mesh.move(new Vector3(100, 40, -200));
+			//mesh.Transform = Matrix.RotationY(FastMath.QUARTER_PI) * Matrix.Translation(100,40,-200);
 
-            //Hacemos que la cámara esté centrada el box.
-            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),
-                box.BoundingBox.calculateBoxRadius() * 2, Input);
+			//En este ejemplo no cargamos un solo modelo 3D sino una escena completa, compuesta por varios modelos.
+			//El framework posee varias escenas ya hechas en la carpeta TgcViewer\Examples\Media\MeshCreator\Scenes.
+			scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Iglesia\\Iglesia-TgcScene.xml");
+
+			//Hacemos que la cámara esté centrada sobre el mesh.
+			Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
+                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
@@ -60,14 +68,22 @@ namespace TGC.Examples.Tutorial
         {
             PreRender();
 
-            box.render();
+            //Dibujar el modelo 3D
+            mesh.render();
 
-            PostRender();
+			//Dibujar la escena entera
+			scene.renderAll();
+
+			PostRender();
         }
 
         public override void Dispose()
         {
-            box.dispose();
+            //Liberar memoria del modelo 3D
+            mesh.dispose();
+
+			//Liberar memoria de toda la escena
+			scene.disposeAll();
         }
     }
 }

@@ -143,8 +143,8 @@
       <Name>TGC.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\TGC.Examples\TGC.Examples.csproj">
-      <Project>{0a4e6948-ab74-48a5-99e1-6bd1c3949006}</Project>
-      <Name>TGC.Examples2</Name>
+      <Project>{0A4E6948-AB74-48A5-99E1-6BD1C3949006}</Project>
+      <Name>TGC.Examples</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
