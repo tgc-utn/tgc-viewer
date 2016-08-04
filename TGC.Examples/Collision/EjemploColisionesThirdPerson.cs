@@ -28,7 +28,7 @@ namespace TGC.Examples.Collision
     ///     Se muestra como cambiarle la textura al modelo animado.
     ///     Los obstáculos son cargados utilizando TgcBox para crear cajas de tamaño dinámico, en lugar de utilizar
     ///     modelos estáticos como en el otro ejemplo.
-    ///     Autor: Matías Leone, Leandro Barbagallo
+    ///     Autor: Matías Leone, Leandro Barbagallo, Rodrigo Garcia.
     /// </summary>
     public class EjemploColisionesThirdPerson : TGCExampleViewer
     {

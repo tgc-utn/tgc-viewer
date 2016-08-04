@@ -64,6 +64,7 @@ namespace TGC.Core.Camara
         {
             Vector3 targetCenter;
             CalculatePositionTarget(out position, out targetCenter);
+            setCamera(position, targetCenter);
         }
 
         /// <summary>
