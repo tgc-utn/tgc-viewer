@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using System.Drawing;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
@@ -23,7 +24,7 @@ namespace TGC.Examples.Collision
     ///     y el objeto se traslada hasta ahí.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class MovimientoPorPicking : TGCExampleViewer
+    public class EjemploMovePicking : TGCExampleViewer
     {
         private bool applyMovement;
         private TgcThirdPersonCamera camaraInterna;
@@ -34,13 +35,13 @@ namespace TGC.Examples.Collision
         private Vector3 newPosition;
         private Vector3 originalMeshRot;
         private TgcPickingRay pickingRay;
-        private TgcBox suelo;
+        private TgcPlane suelo;
 
-        public MovimientoPorPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploMovePicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "Movimiento por Picking";
+            Name = "Colisiones con movimiento mouse";
             Description =
                 "Desplazamiento de un objeto por medio de Picking. Hacer clic sobre el suelo para desplazar la nave.";
         }
@@ -49,8 +50,8 @@ namespace TGC.Examples.Collision
         {
             //Cargar suelo
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg");
-            suelo = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(5000, 0.1f, 5000), texture);
-
+            suelo = new TgcPlane(new Vector3(-5000, 0, -5000), new Vector3(10000, 0f, 10000),TgcPlane.Orientations.XZplane, texture);
+            
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
 

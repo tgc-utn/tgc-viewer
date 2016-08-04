@@ -41,7 +41,7 @@ namespace TGC.Examples.Collision
             TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "Detección + 3ra Persona";
+            Name = "TODO Detección + 3ra Persona";
             Description =
                 "Ejemplo de Detección de Colisiones utilizando la cámara en Tercera Persona. Movimiento con W, A, S, D.";
         }

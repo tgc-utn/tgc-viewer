@@ -53,7 +53,7 @@ namespace TGC.Examples.Collision
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "Elipsoid collision";
+            Name = "TODO Elipsoid collision";
             Description =
                 "Colisión de un Elipsoide contra todo un escenario, aplicando gravedad y sliding. Movimiento con W, A, S, D, Space.";
         }

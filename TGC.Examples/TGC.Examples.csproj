@@ -86,12 +86,10 @@
     <Compile Include="Collision\EjemploBoundingBoxTests.cs" />
     <Compile Include="Collision\EjemploBoundingCylinder.cs" />
     <Compile Include="Collision\EjemploColisionesThirdPerson.cs" />
-    <Compile Include="Collision\EjemploComputeObb.cs" />
-    <Compile Include="Collision\EjemploOBB.cs" />
     <Compile Include="Collision\EjemploPicking.cs" />
     <Compile Include="Collision\ElipsoidCollision.cs" />
-    <Compile Include="Collision\MovimientoPorPicking.cs" />
-    <Compile Include="Collision\SeleccionMultiplePicking.cs" />
+    <Compile Include="Collision\EjemploMovePicking.cs" />
+    <Compile Include="Collision\EjemploMultipleSelectPicking.cs" />
     <Compile Include="Collision\SphereCollision\SphereCollision.cs" />
     <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
     <Compile Include="Collision\SphereTriangleCollision\BoundingBoxCollider.cs" />
