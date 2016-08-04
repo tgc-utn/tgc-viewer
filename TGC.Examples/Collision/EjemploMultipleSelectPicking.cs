@@ -23,7 +23,7 @@ namespace TGC.Examples.Collision
     ///     dentro.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class SeleccionMultiplePicking : TGCExampleViewer
+    public class EjemploMultipleSelectPicking : TGCExampleViewer
     {
         private const float SELECTION_BOX_HEIGHT = 50;
         private Vector3 initSelectionPoint;
@@ -33,13 +33,13 @@ namespace TGC.Examples.Collision
         private bool selecting;
         private TgcBox selectionBox;
 
-        private TgcBox suelo;
+        private TgcPlane suelo;
 
-        public SeleccionMultiplePicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploMultipleSelectPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "Seleccion Multiple";
+            Name = "Colisiones con mouse seleccion multiple";
             Description = "Muestra como seleccionar un objeto con el Mouse creando un rectángulo de selección.";
         }
 
@@ -48,7 +48,7 @@ namespace TGC.Examples.Collision
             //Crear suelo
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\Quake\\quakeWall3.jpg");
-            suelo = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(500, 0.1f, 500), texture);
+           suelo = new TgcPlane(new Vector3(-500, 0, -500), new Vector3(1000, 0f, 1000), TgcPlane.Orientations.XZplane, texture);
 
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
@@ -80,18 +80,12 @@ namespace TGC.Examples.Collision
             selectionBox.BoundingBox.setRenderColor(Color.Red);
             selecting = false;
 
-            Camara = new TgcRotationalCamera(new Vector3(0f, 100f, 0f), 300f, Input);
-            //FIXME esta camara deberia ser estatica y no rotacional, ya que sino trae problemas con el picking.
+            Camara.setCamera(new Vector3(250f, 250f, 250f), new Vector3(0f, 0f, 0f));
         }
 
         public override void Update()
         {
             PreUpdate();
-        }
-
-        public override void Render()
-        {
-            PreRender();
 
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
@@ -127,8 +121,7 @@ namespace TGC.Examples.Collision
                         //Configurar BOX
                         selectionBox.setExtremes(min, max);
                         selectionBox.updateValues();
-
-                        selectionBox.BoundingBox.render();
+               
                     }
                 }
             }
@@ -148,11 +141,24 @@ namespace TGC.Examples.Collision
                     }
                 }
             }
+        }
+
+        public override void Render()
+        {
+            PreRender();
+
+            //FIX IT SOLO CON COLISION.
+            if (selecting)
+                selectionBox.BoundingBox.render();
 
             //Render
             suelo.render();
             foreach (var mesh in modelos)
             {
+                mesh.Transform =
+                Matrix.Scaling(mesh.Scale)
+                            * Matrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
+                            * Matrix.Translation(mesh.Position);
                 mesh.render();
             }
 

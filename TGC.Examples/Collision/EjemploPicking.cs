@@ -38,7 +38,7 @@ namespace TGC.Examples.Collision
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "Picking";
+            Name = "Colisiones con mouse (Picking)";
             Description =
                 "Permite seleccionar un objeto de la escena haciendo clic con el mouse sobre la pantalla, utilizando Picking sobre el AABB de cada Mesh";
         }
@@ -57,18 +57,19 @@ namespace TGC.Examples.Collision
                 {
                     var center = new Vector3((boxSize.X + boxSize.X / 2) * i, (boxSize.Y + boxSize.Y / 2) * j, 0);
                     var box = TgcBox.fromSize(center, boxSize, texture);
+                    box.AutoTransformEnable = true;
                     boxes.Add(box);
                 }
             }
 
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
-
-            Camara = new TgcRotationalCamera(new Vector3(100f, 100f, -250f), 600f, Input);
-            //FIXME esta camara deberi ser estatica y no rotacional, ya que sino trae problemas con el picking.
+            
+            Camara.setCamera(new Vector3(100f, 100f, -500f), new Vector3(100f, 100f, -250f));
 
             //Crear caja para marcar en que lugar hubo colision
             collisionPointMesh = TgcBox.fromSize(new Vector3(3, 3, 3), Color.Red);
+            collisionPointMesh.AutoTransformEnable = true;
             selected = false;
 
             //UserVars para mostrar en que punto hubo colision

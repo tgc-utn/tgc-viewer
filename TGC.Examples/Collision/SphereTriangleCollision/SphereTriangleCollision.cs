@@ -51,7 +51,7 @@ namespace TGC.Examples.Collision.SphereTriangleCollision
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "Colision Esfera-Triangulos";
+            Name = "TODO Colision Esfera-Triangulos";
             Description =
                 "Estrategia integral de colisión: BoundingSphere contra triángulos + Gravedad + Sliding + Jump. Movimiento con W, A, S, D, Space.";
         }
