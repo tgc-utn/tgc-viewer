@@ -28,6 +28,8 @@ namespace TGC.Examples.Collision
     ///     - BoundingBox vs OBB
     ///     Ademas muestra como desplazar un modelo animado en base a la entrada de teclado. Usando move pero no autotransform.
     ///     El modelo animado utiliza la herramienta TgcKeyFrameLoader.
+    ///     tambien se crear un Oriented BoundingBox a partir de un mesh.
+    ///     El mesh se puede rotar el OBB acompana esta rotacion (cosa que el AABB no puede hacer)
     ///     Autor: Matias Leone, Leandro Barbagallo, Rodrigo Garcia
     /// </summary>
     public class EjemploBoundingBoxTests : TGCExampleViewer
@@ -86,9 +88,13 @@ namespace TGC.Examples.Collision
             meshObb.Scale = new Vector3(0.1f, 0.1f, 0.1f);
             meshObb.Position = new Vector3(100, 0, 30);
             meshObb.updateBoundingBox();
+            //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
             obb = TgcBoundingOrientedBox.computeFromAABB(meshObb.BoundingBox);
-            meshObb.Rotation = new Vector3(0, FastMath.PI / 4, 0);
+            //Otra alternativa es computar OBB a partir de sus vertices. Esto genera un OBB lo mas apretado posible pero es una operacion costosa
+            //obb = TgcBoundingOrientedBox.computeFromPoints(mesh.getVertexPositions());
             
+            //Rotar mesh y rotar OBB. A diferencia del AABB, nosotros tenemos que mantener el OBB actualizado segun cada movimiento del mesh
+            meshObb.Rotation = new Vector3(0, FastMath.PI / 4, 0);
             //Los obb tienen una especie de autotransform aun.
             obb.rotate(new Vector3(0, FastMath.PI / 4, 0));            
 
@@ -226,11 +232,11 @@ namespace TGC.Examples.Collision
             //                * Matrix.Identity //No tienen sentido las rotaciones con la esfera.
             //                * Matrix.Translation(sphere.Position);
             boundingSphere.render();
+           
             //Las mesh por defecto tienen el metodo updateMeshTransform que realiza el set por defecto.
             //Esto es igual que utilizar AutoTransform en true, con lo cual no es recomendado para casos complejos.
             meshObb.updateMeshTransform();
             meshObb.render();
-
             //La implementacion de Obb por el momento reconstruye el obb debug siempre. Practica no recomendada.
             obb.render();
 
