@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using System;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
+using TGC.Core.Camara;
 using TGC.Core.Geometry;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -40,6 +41,8 @@ namespace TGC.Examples.Collision
             generate = false;
 
             Modifiers.addButton("generate", "generate", random_clic);
+
+            Camara = new TgcRotationalCamera(Vector3.Empty, 100f, Input);
         }
 
         public override void Update()
@@ -109,6 +112,7 @@ namespace TGC.Examples.Collision
             for (var i = 0; i < vertices.Length; i++)
             {
                 vertices[i] = TgcBox.fromSize(points[i], new Vector3(1, 1, 1), Color.White);
+                vertices[i].AutoTransformEnable = true;
             }
         }
 

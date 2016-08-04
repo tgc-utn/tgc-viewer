@@ -85,7 +85,6 @@
     <Compile Include="Collision\EjemploColisionCamara.cs" />
     <Compile Include="Collision\EjemploBoundingBoxTests.cs" />
     <Compile Include="Collision\EjemploBoundingCylinder.cs" />
-    <Compile Include="Collision\EjemploColisiones.cs" />
     <Compile Include="Collision\EjemploColisionesThirdPerson.cs" />
     <Compile Include="Collision\EjemploComputeObb.cs" />
     <Compile Include="Collision\EjemploOBB.cs" />

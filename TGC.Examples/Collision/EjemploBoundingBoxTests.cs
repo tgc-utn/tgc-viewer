@@ -18,16 +18,23 @@ namespace TGC.Examples.Collision
     /// <summary>
     ///     Ejemplo EjemploBoundingBoxTests:
     ///     Unidades Involucradas:
+    ///     # Unidad 2 - Conceptos Avanzados de 2D - Ciclo acoplado vs Ciclo desacoplado
+    ///     # Unidad 5 - Animaciones - Skeletal Animation
     ///     # Unidad 6 - Deteccion de Colisiones - BoundingBox
     ///     Muestra como hacer colisiones entre un BoundingBox y distintas figuras geometricas:
     ///     - BoundingBox vs Triangulo
     ///     - BoundingBox vs otro BoundingBox
     ///     - BoundingBox vs Esfera
     ///     - BoundingBox vs OBB
+    ///     Ademas muestra como desplazar un modelo animado en base a la entrada de teclado. Usando move pero no autotransform.
+    ///     El modelo animado utiliza la herramienta TgcKeyFrameLoader.
     ///     Autor: Matias Leone, Leandro Barbagallo, Rodrigo Garcia
     /// </summary>
     public class EjemploBoundingBoxTests : TGCExampleViewer
     {
+        //Velocidad de desplazamiento
+        private const float VELOCIDAD_DESPLAZAMIENTO = 50f;
+
         private TgcMesh mesh;
         private TgcMesh meshObb;
         private TgcBox box2;
@@ -93,7 +100,7 @@ namespace TGC.Examples.Collision
         public override void Update()
         {
             PreUpdate();
-            var velocidadCaminar = 50f * ElapsedTime;
+            var velocidadCaminar = VELOCIDAD_DESPLAZAMIENTO * ElapsedTime;
 
             //Calcular proxima posicion de personaje segun Input
             var moving = false;
@@ -141,7 +148,7 @@ namespace TGC.Examples.Collision
             //Si hubo desplazamiento
             if (moving)
             {
-                //Aplicar movimiento
+                //Aplicar movimiento, internamente suma valores a la posicion actual del mesh.
                 mesh.move(movement);
             }
             //Hacer que la camara siga al personaje en su nueva posicion
