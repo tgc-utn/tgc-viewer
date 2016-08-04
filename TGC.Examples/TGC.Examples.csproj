@@ -82,7 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collision\DetectarColisionCamara.cs" />
+    <Compile Include="Collision\EjemploColisionCamara.cs" />
     <Compile Include="Collision\EjemploBoundingBoxTests.cs" />
     <Compile Include="Collision\EjemploBoundingCylinder.cs" />
     <Compile Include="Collision\EjemploColisiones.cs" />

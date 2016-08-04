@@ -63,7 +63,7 @@ namespace TGC.Core.Camara
         public override void updateCamera(float elapsedTime)
         {
             Vector3 targetCenter;
-            updatePositionTarget(out position, out targetCenter);
+            CalculatePositionTarget(out position, out targetCenter);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace TGC.Core.Camara
         /// </summary>
         /// <param name="pos">Futura posicion de camara generada</param>
         /// <param name="pos">Futuro centro de camara a generada</param>
-        public void updatePositionTarget(out Vector3 pos, out Vector3 targetCenter)
+        public void CalculatePositionTarget(out Vector3 pos, out Vector3 targetCenter)
         {
             //alejarse, luego rotar y lueg ubicar camara en el centro deseado
             targetCenter = Vector3.Add(Target, TargetDisplacement);
@@ -108,9 +108,6 @@ namespace TGC.Core.Camara
             pos.X = m.M41;
             pos.Y = m.M42;
             pos.Z = m.M43;
-
-            //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
-            setCamera(pos, targetCenter);
         }
 
         /// <summary>
