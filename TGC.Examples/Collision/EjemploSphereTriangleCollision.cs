@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
-using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
@@ -15,9 +14,10 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Collision.SphereCollision;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.Collision.SphereCollision
+namespace TGC.Examples.Collision.SphereTriangleCollision
 {
     /// <summary>
     ///     Ejemplo SphereCollision
@@ -33,33 +33,35 @@ namespace TGC.Examples.Collision.SphereCollision
     ///     El paper no ha sido implementado en su totalidad y aún existen muchos puntos por mejorar.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class SphereCollision : TGCExampleViewer
+    public class EjemploSphereTriangleCollision : TGCExampleViewer
     {
-        private readonly List<TgcMesh> objectsBehind = new List<TgcMesh>();
-        private readonly List<TgcMesh> objectsInFront = new List<TgcMesh>();
-        private readonly List<TgcBoundingAxisAlignBox> objetosColisionables = new List<TgcBoundingAxisAlignBox>();
+        private readonly List<Collider> objetosColisionables = new List<Collider>();
         private TgcThirdPersonCamera camaraInterna;
         private TgcBoundingSphere characterSphere;
-        private SphereCollisionManager collisionManager;
+        private SphereTriangleCollisionManager collisionManager;
+        private TgcArrow collisionNormalArrow;
+        private TgcBox collisionPoint;
         private TgcArrow directionArrow;
         private TgcScene escenario;
+        private bool jumping;
+        private float jumpingElapsedTime;
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
 
-        public SphereCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploSphereTriangleCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "TODO Colision con Esfera";
+            Name = "TODO Colision Esfera-Triangulos";
             Description =
-                "Estrategia integral de colisión: BoundingSphere + Gravedad + Sliding + Jump. Movimiento con W, A, S, D, Space.";
+                "Estrategia integral de colisión: BoundingSphere contra triángulos + Gravedad + Sliding + Jump. Movimiento con W, A, S, D, Space.";
         }
 
         public override void Init()
         {
             //Cargar escenario específico para este ejemplo
             var loader = new TgcSceneLoader();
-            escenario = loader.loadSceneFromFile(MediaDir + "PatioDeJuegos\\PatioDeJuegos-TgcScene.xml");
+            escenario = loader.loadSceneFromFile(MediaDir + "\\MeshCreator\\Scenes\\Mountains\\Mountains-TgcScene.xml");
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -83,7 +85,7 @@ namespace TGC.Examples.Collision.SphereCollision
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
             //Escalarlo porque es muy grande
-            personaje.Position = new Vector3(0, 500, -100);
+            personaje.Position = new Vector3(0, 2500, -150);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.rotateY(Geometry.DegreeToRadian(180f));
 
@@ -91,12 +93,22 @@ namespace TGC.Examples.Collision.SphereCollision
             personaje.AutoUpdateBoundingBox = false;
             characterSphere = new TgcBoundingSphere(personaje.BoundingBox.calculateBoxCenter(),
                 personaje.BoundingBox.calculateBoxRadius());
+            jumping = false;
 
             //Almacenar volumenes de colision del escenario
             objetosColisionables.Clear();
             foreach (var mesh in escenario.Meshes)
             {
-                objetosColisionables.Add(mesh.BoundingBox);
+                //Los objetos del layer "TriangleCollision" son colisiones a nivel de triangulo
+                if (mesh.Layer == "TriangleCollision")
+                {
+                    objetosColisionables.Add(TriangleMeshCollider.fromMesh(mesh));
+                }
+                //El resto de los objetos son colisiones de BoundingBox
+                else
+                {
+                    objetosColisionables.Add(BoundingBoxCollider.fromBoundingBox(mesh.BoundingBox));
+                }
             }
 
             //Crear linea para mostrar la direccion del movimiento del personaje
@@ -106,8 +118,18 @@ namespace TGC.Examples.Collision.SphereCollision
             directionArrow.Thickness = 1;
             directionArrow.HeadSize = new Vector2(10, 20);
 
+            //Linea para normal de colision
+            collisionNormalArrow = new TgcArrow();
+            collisionNormalArrow.BodyColor = Color.Blue;
+            collisionNormalArrow.HeadColor = Color.Yellow;
+            collisionNormalArrow.Thickness = 1;
+            collisionNormalArrow.HeadSize = new Vector2(5, 10);
+
+            //Caja para marcar punto de colision
+            collisionPoint = TgcBox.fromSize(new Vector3(20, 20, 20), Color.Red);
+
             //Crear manejador de colisiones
-            collisionManager = new SphereCollisionManager();
+            collisionManager = new SphereTriangleCollisionManager();
             collisionManager.GravityEnabled = true;
 
             //Configurar camara en Tercer Persona
@@ -128,17 +150,22 @@ namespace TGC.Examples.Collision.SphereCollision
             skyBox.Init();
 
             //Modifier para ver BoundingBox
+            Modifiers.addBoolean("Collisions", "Collisions", true);
             Modifiers.addBoolean("showBoundingBox", "Bouding Box", true);
 
             //Modifiers para desplazamiento del personaje
-            Modifiers.addFloat("VelocidadCaminar", 0, 100, 16);
+            Modifiers.addFloat("VelocidadCaminar", 0, 50, 10);
             Modifiers.addFloat("VelocidadRotacion", 1f, 360f, 150f);
             Modifiers.addBoolean("HabilitarGravedad", "Habilitar Gravedad", true);
             Modifiers.addVertex3f("Gravedad", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
-                new Vector3(0, -10, 0));
-            Modifiers.addFloat("SlideFactor", 1f, 2f, 1.3f);
+                new Vector3(0, -24, 0));
+            Modifiers.addFloat("SlideFactor", 0f, 2f, 1f);
+            Modifiers.addFloat("Pendiente", 0f, 1f, 0.7f);
+            Modifiers.addFloat("VelocidadSalto", 0f, 100f, 20f);
+            Modifiers.addFloat("TiempoSalto", 0f, 2f, 0.5f);
 
             UserVars.addVar("Movement");
+            UserVars.addVar("ySign");
         }
 
         public override void Update()
@@ -156,6 +183,8 @@ namespace TGC.Examples.Collision.SphereCollision
             //obtener velocidades de Modifiers
             var velocidadCaminar = (float)Modifiers.getValue("VelocidadCaminar");
             var velocidadRotacion = (float)Modifiers.getValue("VelocidadRotacion");
+            var velocidadSalto = (float)Modifiers.getValue("VelocidadSalto");
+            var tiempoSalto = (float)Modifiers.getValue("TiempoSalto");
 
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
@@ -193,10 +222,14 @@ namespace TGC.Examples.Collision.SphereCollision
             }
 
             //Jump
-            if (Input.keyDown(Key.Space))
+            if (!jumping && Input.keyPressed(Key.Space))
             {
-                jump = 30;
-                moving = true;
+                if (collisionManager.Collision)
+                {
+                    jumping = true;
+                    jumpingElapsedTime = 0f;
+                    jump = 0;
+                }
             }
 
             //Si hubo rotacion
@@ -221,23 +254,65 @@ namespace TGC.Examples.Collision.SphereCollision
                 personaje.playAnimation("Parado", true);
             }
 
+            //Actualizar salto
+            if (jumping)
+            {
+                jumpingElapsedTime += ElapsedTime;
+                if (jumpingElapsedTime > tiempoSalto)
+                {
+                    jumping = false;
+                }
+                else
+                {
+                    jump = velocidadSalto;
+                }
+            }
+
             //Vector de movimiento
             var movementVector = Vector3.Empty;
-            if (moving)
+            if (moving || jumping)
             {
                 //Aplicar movimiento, desplazarse en base a la rotacion actual del personaje
-                movementVector = new Vector3(FastMath.Sin(personaje.Rotation.Y) * moveForward, jump,
-                    FastMath.Cos(personaje.Rotation.Y) * moveForward);
+                //jump *= elapsedTime;
+                movementVector = new Vector3(
+                    FastMath.Sin(personaje.Rotation.Y) * moveForward,
+                    jump,
+                    FastMath.Cos(personaje.Rotation.Y) * moveForward
+                    );
             }
 
             //Actualizar valores de gravedad
             collisionManager.GravityEnabled = (bool)Modifiers["HabilitarGravedad"];
-            collisionManager.GravityForce = (Vector3)Modifiers["Gravedad"];
+            collisionManager.GravityForce = (Vector3)Modifiers["Gravedad"] /** elapsedTime*/;
             collisionManager.SlideFactor = (float)Modifiers["SlideFactor"];
+            collisionManager.OnGroundMinDotValue = (float)Modifiers["Pendiente"];
+
+            //Si esta saltando, desactivar gravedad
+            if (jumping)
+            {
+                collisionManager.GravityEnabled = false;
+            }
 
             //Mover personaje con detección de colisiones, sliding y gravedad
-            var realMovement = collisionManager.moveCharacter(characterSphere, movementVector, objetosColisionables);
-            personaje.move(realMovement);
+            if ((bool)Modifiers["Collisions"])
+            {
+                var realMovement = collisionManager.moveCharacter(characterSphere, movementVector, objetosColisionables);
+                personaje.move(realMovement);
+
+                //Cargar desplazamiento realizar en UserVar
+                UserVars.setValue("Movement", TgcParserUtils.printVector3(realMovement));
+                UserVars.setValue("ySign", realMovement.Y);
+            }
+            else
+            {
+                personaje.move(movementVector);
+            }
+
+            //Si estaba saltando y hubo colision de una superficie que mira hacia abajo, desactivar salto
+            if (jumping && collisionManager.Collision)
+            {
+                jumping = false;
+            }
 
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = personaje.Position;
@@ -247,40 +322,24 @@ namespace TGC.Examples.Collision.SphereCollision
             directionArrow.PEnd = characterSphere.Center + Vector3.Multiply(movementVector, 50);
             directionArrow.updateValues();
 
-            //Cargar desplazamiento realizar en UserVar
-            UserVars.setValue("Movement", TgcParserUtils.printVector3(realMovement));
+            //Actualizar valores de normal de colision
+            if (collisionManager.Collision)
+            {
+                collisionNormalArrow.PStart = collisionManager.LastCollisionPoint;
+                collisionNormalArrow.PEnd = collisionManager.LastCollisionPoint +
+                                            Vector3.Multiply(collisionManager.LastCollisionNormal, 200);
+                
+                collisionNormalArrow.updateValues();
+                collisionNormalArrow.render();
 
-            //Ver cual de las mallas se interponen en la visión de la cámara en 3ra persona.
-            objectsBehind.Clear();
-            objectsInFront.Clear();
+                collisionPoint.Position = collisionManager.LastCollisionPoint;
+                collisionPoint.render();
+            }
+
+            //Render de mallas
             foreach (var mesh in escenario.Meshes)
             {
-                Vector3 q;
-                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, camaraInterna.Target,
-                    mesh.BoundingBox, out q))
-                {
-                    objectsBehind.Add(mesh);
-                }
-                else
-                {
-                    objectsInFront.Add(mesh);
-                }
-            }
-
-            //Render mallas que no se interponen
-            foreach (var mesh in objectsInFront)
-            {
                 mesh.render();
-                if (showBB)
-                {
-                    mesh.BoundingBox.render();
-                }
-            }
-
-            //Para las mallas que se interponen a la cámara, solo renderizar su BoundingBox
-            foreach (var mesh in objectsBehind)
-            {
-                mesh.BoundingBox.render();
             }
 
             //Render personaje
@@ -304,6 +363,8 @@ namespace TGC.Examples.Collision.SphereCollision
             escenario.disposeAll();
             personaje.dispose();
             skyBox.dispose();
+            collisionNormalArrow.dispose();
+            directionArrow.dispose();
         }
     }
 }

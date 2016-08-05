@@ -90,13 +90,8 @@
     <Compile Include="Collision\ElipsoidCollision.cs" />
     <Compile Include="Collision\EjemploMovePicking.cs" />
     <Compile Include="Collision\EjemploMultipleSelectPicking.cs" />
-    <Compile Include="Collision\SphereCollision\SphereCollision.cs" />
-    <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
-    <Compile Include="Collision\SphereTriangleCollision\BoundingBoxCollider.cs" />
-    <Compile Include="Collision\SphereTriangleCollision\Collider.cs" />
-    <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollision.cs" />
-    <Compile Include="Collision\SphereTriangleCollision\SphereTriangleCollisionManager.cs" />
-    <Compile Include="Collision\SphereTriangleCollision\TriangleMeshCollider.cs" />
+    <Compile Include="Collision\EjemploSphereCollision.cs" />
+    <Compile Include="Collision\EjemploSphereTriangleCollision.cs" />
     <Compile Include="DirectX\DirectXBox.cs" />
     <Compile Include="DirectX\DirectXLight.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />

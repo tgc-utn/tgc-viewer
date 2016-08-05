@@ -4,7 +4,7 @@ using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.Utils;
 
-namespace TGC.Examples.Collision.SphereTriangleCollision
+namespace TGC.Examples.Collision.SphereCollision
 {
     /// <summary>
     ///     Collider BoundingBox

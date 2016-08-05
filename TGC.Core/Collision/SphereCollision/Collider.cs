@@ -2,7 +2,7 @@
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 
-namespace TGC.Examples.Collision.SphereTriangleCollision
+namespace TGC.Examples.Collision.SphereCollision
 {
     /// <summary>
     ///     Colisionador abstracto
