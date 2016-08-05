@@ -1,8 +1,7 @@
 ﻿using Microsoft.DirectX;
 using TGC.Core.BoundingVolumes;
-using TGC.Core.Geometry;
 
-namespace TGC.Core.Collision.ElipsoidCollision
+namespace TGC.Examples.Collision.ElipsoidCollision
 {
     /// <summary>
     ///     Colisionador abstracto

@@ -65,7 +65,7 @@ namespace TGC.Examples.Collision
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
             
-            Camara.setCamera(new Vector3(100f, 100f, -500f), new Vector3(100f, 100f, -250f));
+            Camara.SetCamera(new Vector3(100f, 100f, -500f), new Vector3(100f, 100f, -250f));
 
             //Crear caja para marcar en que lugar hubo colision
             collisionPointMesh = TgcBox.fromSize(new Vector3(3, 3, 3), Color.Red);

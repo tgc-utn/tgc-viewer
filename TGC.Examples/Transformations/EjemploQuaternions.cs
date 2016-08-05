@@ -37,7 +37,7 @@ namespace TGC.Examples.Transformations
 
             Modifiers.addVertex3f("Rotacion", new Vector3(0, 0, 0), new Vector3(360, 360, 360), new Vector3(0, 0, 0));
 
-            Camara.setCamera(new Vector3(0f, 1f, -200f), new Vector3(0f, 1f, 500f));
+            Camara.SetCamera(new Vector3(0f, 1f, -200f), new Vector3(0f, 1f, 500f));
         }
 
         public override void Update()

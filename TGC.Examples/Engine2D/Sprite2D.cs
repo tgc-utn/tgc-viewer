@@ -7,6 +7,7 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Camara;
 using TGC.Examples.Engine2D.Spaceship.Core;
 using TGC.Examples.Example;
 

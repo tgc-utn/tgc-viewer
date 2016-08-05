@@ -54,7 +54,7 @@ namespace TGC.Examples.MeshExamples
 
             sceneRecover = loader.loadSceneFromFile(r.filePath);
 
-            Camara.setCamera(new Vector3(-30f, 80f, -100f), new Vector3(0f, 75f, 180f));
+            Camara.SetCamera(new Vector3(-30f, 80f, -100f), new Vector3(0f, 75f, 180f));
         }
 
         public override void Update()

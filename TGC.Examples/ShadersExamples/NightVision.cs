@@ -11,6 +11,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
@@ -162,7 +163,7 @@ namespace TGC.Examples.ShadersExamples
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
                 // reset pos camara
-                Camara.setCamera(new Vector3(-1000, 250, -1000), new Vector3(0, 0, -1));
+                Camara.SetCamera(new Vector3(-1000, 250, -1000), new Vector3(0, 0, -1));
             }
 
             //Activar animacion de caminando

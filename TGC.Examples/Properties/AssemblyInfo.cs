@@ -34,5 +34,5 @@ using System.Runtime.InteropServices;
 // Puede especificar todos los valores o puede establecer como valores predeterminados los números de revisión y generación
 // mediante el asterisco ('*'), como se muestra a continuación:
 
-[assembly: AssemblyVersion("2.2.2.2")]
-[assembly: AssemblyFileVersion("2.2.2.2")]
+[assembly: AssemblyVersion("2.2.2.0")]
+[assembly: AssemblyFileVersion("2.2.2.0")]

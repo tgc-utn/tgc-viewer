@@ -4,8 +4,6 @@ using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
-using TGC.Core.Camara;
-using TGC.Core.Collision.ElipsoidCollision;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
@@ -13,12 +11,14 @@ using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Camara;
+using TGC.Examples.Collision.ElipsoidCollision;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
 {
     /// <summary>
-    ///     Ejemplo ElipsoidCollision
+    ///     Ejemplo EjemploElipsoidCollision
     ///     Unidades Involucradas:
     ///     # Unidad 4 - Texturas e Iluminación - SkyBox
     ///     # Unidad 6 - Detección de Colisiones - Estrategia Integral
@@ -34,7 +34,7 @@ namespace TGC.Examples.Collision
     ///     Aun esta en estado BETA.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class ElipsoidCollision : TGCExampleViewer
+    public class EjemploElipsoidCollision : TGCExampleViewer
     {
         private readonly List<Collider> objetosColisionables = new List<Collider>();
         private TgcThirdPersonCamera camaraInterna;
@@ -49,7 +49,7 @@ namespace TGC.Examples.Collision
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
 
-        public ElipsoidCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploElipsoidCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";

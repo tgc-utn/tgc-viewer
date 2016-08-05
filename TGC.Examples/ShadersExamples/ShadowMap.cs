@@ -9,6 +9,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.ShadersExamples
@@ -164,7 +165,7 @@ namespace TGC.Examples.ShadersExamples
             // Shadow maps:
             D3DDevice.Instance.Device.EndScene(); // termino el thread anterior
 
-            Camara.updateCamera(ElapsedTime);
+            Camara.UpdateCamera(ElapsedTime);
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Genero el shadow map

@@ -44,7 +44,7 @@ namespace TGC.Examples.MeshExamples
             Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(25);
 
-            Camara.setCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
+            Camara.SetCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
         }
 
         private void createMeshes(int cajasPorCuadrante)

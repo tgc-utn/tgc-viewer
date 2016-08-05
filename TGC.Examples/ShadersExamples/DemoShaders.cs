@@ -13,6 +13,7 @@ using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
@@ -379,7 +380,7 @@ namespace TGC.Examples.ShadersExamples
                 if (camara_rot)
                 {
                     CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
-                    CamaraRot.updateCamera(ElapsedTime); //FIXME, puede que no haga falta esto.
+                    CamaraRot.UpdateCamera(ElapsedTime); //FIXME, puede que no haga falta esto.
                     Camara = CamaraRot;
                 }
                 else
@@ -485,7 +486,7 @@ namespace TGC.Examples.ShadersExamples
             if (timer_preview > 0)
                 D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(LookFrom, LookAt, new Vector3(0, 1, 0));
             else
-                D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix();
+                D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix();
             // FIXME! esto no se bien para que lo hace aca.
 
             D3DDevice.Instance.Device.Transform.Projection =

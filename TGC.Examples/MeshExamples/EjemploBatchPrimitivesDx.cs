@@ -43,7 +43,7 @@ namespace TGC.Examples.MeshExamples
             Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(D3DDevice.Instance.Device);
 
-            Camara.setCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
+            Camara.SetCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
         }
 
         private void createMeshes(Device d3dDevice)

@@ -1,9 +1,10 @@
 ﻿using Microsoft.DirectX;
 using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Collision.ElipsoidCollision
+namespace TGC.Examples.Collision.ElipsoidCollision
 {
     /// <summary>
     ///     Collider a base de un BoundingBox

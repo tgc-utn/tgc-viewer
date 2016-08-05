@@ -11,6 +11,7 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.Collision
@@ -277,7 +278,7 @@ namespace TGC.Examples.Collision
 
             //Asignar la ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
             camaraInterna.CalculatePositionTarget(out position, out target);
-            camaraInterna.setCamera(position, target);
+            camaraInterna.SetCamera(position, target);
         }
 
         public override void Dispose()

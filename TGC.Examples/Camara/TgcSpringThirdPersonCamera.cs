@@ -1,7 +1,8 @@
 using Microsoft.DirectX;
+using TGC.Core.Camara;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Camara
+namespace TGC.Examples.Camara
 {
     /// <summary>
     ///     Camara en Tercera Persona que permite seguir a un objeto que se desplaza
@@ -33,7 +34,7 @@ namespace TGC.Core.Camara
         /// <summary>
         ///     Actualiza los valores de la camara
         /// </summary>
-        public override void updateCamera(float elapsedTime)
+        public override void UpdateCamera(float elapsedTime)
         {
             updateOrientation(elapsedTime);
 
@@ -46,7 +47,7 @@ namespace TGC.Core.Camara
                 updateViewMatrix();
             }
 
-            setCamera(Eye, Target);
+            SetCamera(Eye, Target);
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace TGC.Core.Camara
 
             m_viewMatrix = Matrix.Identity;
             m_orientation = Quaternion.Identity;
-            setCamera(Eye, Target);
+            SetCamera(Eye, Target);
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace TGC.Core.Camara
             m_pitchDegrees = 0.0f;
         }
 
-        public override Matrix getViewMatrix()
+        public override Matrix GetViewMatrix()
         {
             return m_viewMatrix;
         }
