@@ -9,6 +9,7 @@ using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.Lights

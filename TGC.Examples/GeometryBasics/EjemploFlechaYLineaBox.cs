@@ -4,6 +4,7 @@ using TGC.Core.Camara;
 using TGC.Core.Geometry;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.GeometryBasics

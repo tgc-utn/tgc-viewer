@@ -80,7 +80,7 @@ namespace TGC.Examples.Collision
             selectionBox.BoundingBox.setRenderColor(Color.Red);
             selecting = false;
 
-            Camara.setCamera(new Vector3(250f, 250f, 250f), new Vector3(0f, 0f, 0f));
+            Camara.SetCamera(new Vector3(250f, 250f, 250f), new Vector3(0f, 0f, 0f));
         }
 
         public override void Update()

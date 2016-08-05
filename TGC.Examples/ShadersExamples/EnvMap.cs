@@ -12,6 +12,7 @@ using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
@@ -331,7 +332,7 @@ namespace TGC.Examples.ShadersExamples
             //TextureLoader.Save("test.bmp", ImageFileFormat.Bmp, g_pCubeMap);
 
             // Restauro el estado de las transformaciones
-            D3DDevice.Instance.Device.Transform.View = Camara.getViewMatrix();
+            D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix();
             D3DDevice.Instance.Device.Transform.Projection =
                 Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
                     aspectRatio, 1f, 10000f);

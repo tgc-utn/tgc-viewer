@@ -25,13 +25,12 @@ namespace TGC.Core.Camara
         public Vector3 UpVector { get; protected set; }
 
         /// <summary>
-        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de
-        ///     view.
-        ///     estos vectores son utilizadas por getViewMatrix.
+        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de view.
+        ///     Los vectores son utilizadas por GetViewMatrix.
         /// </summary>
         /// <param name="pos">Posicion de la camara</param>
         /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
-        public virtual void setCamera(Vector3 pos, Vector3 lookAt)
+        public virtual void SetCamera(Vector3 pos, Vector3 lookAt)
         {
             Position = pos;
             LookAt = lookAt;
@@ -39,35 +38,33 @@ namespace TGC.Core.Camara
         }
 
         /// <summary>
-        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de
-        ///     view.
-        ///     estos vectores son utilizadas por getViewMatrix.
+        ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de view.
+        ///     Los vectores son utilizadas por GetViewMatrix.
         /// </summary>
         /// <param name="pos">Posicion de la camara</param>
         /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
-        public virtual void setCamera(Vector3 pos, Vector3 lookAt, Vector3 upVec)
+        /// <param name="upVector">Vector direccion hacia arriba</param>
+        public virtual void SetCamera(Vector3 pos, Vector3 lookAt, Vector3 upVector)
         {
             Position = pos;
             LookAt = lookAt;
-            UpVector = upVec;
+            UpVector = upVector;
         }
 
         /// <summary>
-        ///     Permite actualizar el estado interno de la camara si se sobrescribe este metodo. por defecto no realiza ninguna
-        ///     accion.
-        ///     Si se realiza procesamiento interno se puede invocar al metodo setCamera para actualizar posicion, lookAt y
-        ///     upVector.
+        ///     Permite actualizar el estado interno de la camara si se sobrescribe este metodo. por defecto no realiza ninguna accion.
+        ///     Si se realiza procesamiento interno se puede invocar al metodo SetCamera para actualizar posicion, lookAt y upVector.
         /// </summary>
-        public virtual void updateCamera(float elapsedTime)
+        public virtual void UpdateCamera(float elapsedTime)
         {
             //Esta camara no tienen movimiento, una vez inicializada con posicion y lookAt ya no es actualizada.
-            //Se puede invocar a setCamera para actualizar posicion, lookAt y upVector.
+            //Se puede invocar a SetCamera para actualizar posicion, lookAt y upVector.
         }
 
         /// <summary>
         ///     Devuelve la matriz View en base a los valores de la camara. Es invocado en cada update de render.
         /// </summary>
-        public virtual Matrix getViewMatrix()
+        public virtual Matrix GetViewMatrix()
         {
             return Matrix.LookAtLH(Position, LookAt, UpVector);
         }

@@ -1,8 +1,9 @@
 using Microsoft.DirectX;
+using TGC.Core.Camara;
 using TGC.Core.Input;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Camara
+namespace TGC.Examples.Camara
 {
     /// <summary>
     ///     Camara que permite rotar y hacer zoom alrededor de un objeto central
@@ -30,7 +31,7 @@ namespace TGC.Core.Camara
             DiffZ = 1f;
             PanSpeed = 0.01f;
             UpVector = new Vector3(0f, 1f, 0f);
-            base.setCamera(NextPos, LookAt, UpVector);
+            base.SetCamera(NextPos, LookAt, UpVector);
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace TGC.Core.Camara
         {
             NextPos = position;
             CameraCenter = target;
-            base.setCamera(NextPos, LookAt, UpVector);
+            base.SetCamera(NextPos, LookAt, UpVector);
         }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace TGC.Core.Camara
         /// <summary>
         ///     Actualiza los valores de la camara.
         /// </summary>
-        public override void updateCamera(float elapsedTime)
+        public override void UpdateCamera(float elapsedTime)
         {
             //Obtener variacion XY del mouse
             var mouseX = 0f;
@@ -175,14 +176,14 @@ namespace TGC.Core.Camara
             }
 
             //asigna las posiciones de la camara.
-            base.setCamera(NextPos, CameraCenter, UpVector);
+            base.SetCamera(NextPos, CameraCenter, UpVector);
         }
 
-        public override void setCamera(Vector3 position, Vector3 target)
+        public override void SetCamera(Vector3 position, Vector3 target)
         {
             NextPos = position;
             CameraCenter = target;
-            base.setCamera(NextPos, CameraCenter, UpVector);
+            base.SetCamera(NextPos, CameraCenter, UpVector);
         }
 
         #region Getters y Setters

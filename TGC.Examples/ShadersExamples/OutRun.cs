@@ -95,7 +95,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Configurar FPS Camara
-            Camara.setCamera(new Vector3(315.451f, 40, -464.28490f), new Vector3(315.451f, 40, -465.28490f));
+            Camara.SetCamera(new Vector3(315.451f, 40, -464.28490f), new Vector3(315.451f, 40, -465.28490f));
 
             reset_pos();
 
@@ -205,9 +205,9 @@ namespace TGC.Examples.ShadersExamples
             car.Transform = CalcularMatriz(pos, car_Scale, -dir);
 
             // actualizo la camara
-            Camara.setCamera(pos - dir * dist_cam + desf, pos + desf);
-            //this.Camara.setCamera(new Vector3(500, 4000, 500), new Vector3(0, 0, 0));
-            Camara.updateCamera(ElapsedTime);
+            Camara.SetCamera(pos - dir * dist_cam + desf, pos + desf);
+            //this.Camara.SetCamera(new Vector3(500, 4000, 500), new Vector3(0, 0, 0));
+            Camara.UpdateCamera(ElapsedTime);
         }
 
         public override void Render()

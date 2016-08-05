@@ -8,6 +8,7 @@ using TGC.Examples.Example;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 using Microsoft.DirectX.DirectInput;
+using TGC.Examples.Camara;
 
 namespace TGC.Examples.Tutorial
 {

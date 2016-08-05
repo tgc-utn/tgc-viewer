@@ -1,10 +1,9 @@
+using System.Collections.Generic;
+using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System.Collections.Generic;
-using System.Drawing;
 using TGC.Core.BoundingVolumes;
-using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -15,9 +14,11 @@ using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Camara;
+using TGC.Examples.Collision.SphereCollision;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.Collision.SphereCollision
+namespace TGC.Examples.Collision
 {
     /// <summary>
     ///     Ejemplo SphereCollision

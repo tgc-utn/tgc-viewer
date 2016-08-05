@@ -1,12 +1,13 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
+using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Camara
+namespace TGC.Examples.Camara
 {
     /// <summary>
     ///     Camara en primera persona que utiliza matrices de rotacion, solo almacena las rotaciones en updown y costados.
@@ -98,7 +99,7 @@ namespace TGC.Core.Camara
             LockCam = false;
         }
 
-        public override void updateCamera(float elapsedTime)
+        public override void UpdateCamera(float elapsedTime)
         {
             var moveVector = new Vector3(0, 0, 0);
             //Forward
@@ -165,7 +166,7 @@ namespace TGC.Core.Camara
             var cameraOriginalUpVector = DEFAULT_UP_VECTOR;
             var cameraRotatedUpVector = Vector3.TransformNormal(cameraOriginalUpVector, cameraRotation);
 
-            base.setCamera(positionEye, cameraFinalTarget, cameraRotatedUpVector);
+            base.SetCamera(positionEye, cameraFinalTarget, cameraRotatedUpVector);
         }
 
         /// <summary>
@@ -173,7 +174,7 @@ namespace TGC.Core.Camara
         /// </summary>
         /// <param name="position"></param>
         /// <param name="directionView"> debe ser normalizado.</param>
-        public override void setCamera(Vector3 position, Vector3 directionView)
+        public override void SetCamera(Vector3 position, Vector3 directionView)
         {
             positionEye = position;
             this.directionView = directionView;

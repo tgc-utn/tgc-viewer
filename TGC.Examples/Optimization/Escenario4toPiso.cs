@@ -1,13 +1,12 @@
 using Microsoft.DirectX;
-using TGC.Core.Camara;
 using TGC.Core.Collision;
-using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
-namespace TGC.Examples.SceneLoader
+namespace TGC.Examples.Optimization
 {
     /// <summary>
     ///     Ejemplo Escenario4toPiso:

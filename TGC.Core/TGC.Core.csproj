@@ -61,21 +61,8 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collision\SphereCollision\BoundingBoxCollider.cs" />
-    <Compile Include="Collision\SphereCollision\Collider.cs" />
-    <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
-    <Compile Include="Collision\SphereCollision\SphereTriangleCollisionManager.cs" />
-    <Compile Include="Collision\SphereCollision\TriangleMeshCollider.cs" />
     <Compile Include="Text\TgcText2D.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
-    <Compile Include="Camara\TgcFpsCamera.cs" />
-    <Compile Include="Camara\TgcRotationalCamera.cs" />
-    <Compile Include="Camara\TgcSpringThirdPersonCamera.cs" />
-    <Compile Include="Camara\TgcThirdPersonCamera.cs" />
-    <Compile Include="Collision\ElipsoidCollision\BoundingBoxCollider.cs" />
-    <Compile Include="Collision\ElipsoidCollision\Collider.cs" />
-    <Compile Include="Collision\ElipsoidCollision\ElipsoidCollisionManager.cs" />
-    <Compile Include="Collision\ElipsoidCollision\TriangleMeshCollider.cs" />
     <Compile Include="Direct3D\D3DDevice.cs" />
     <Compile Include="Example\TgcExample.cs" />
     <Compile Include="Fog\TgcFog.cs" />

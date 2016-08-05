@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
+using TGC.Core.Camara;
 
-namespace TGC.Core.Camara
+namespace TGC.Examples.Camara
 {
     /// <summary>
     ///     Camara en tercera persona que sigue a un objeto a un determinada distancia.
@@ -60,11 +61,11 @@ namespace TGC.Core.Camara
         /// </summary>
         public Vector3 Target { get; set; }
 
-        public override void updateCamera(float elapsedTime)
+        public override void UpdateCamera(float elapsedTime)
         {
             Vector3 targetCenter;
             CalculatePositionTarget(out position, out targetCenter);
-            setCamera(position, targetCenter);
+            SetCamera(position, targetCenter);
         }
 
         /// <summary>

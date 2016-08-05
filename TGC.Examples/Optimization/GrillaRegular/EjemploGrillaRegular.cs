@@ -5,6 +5,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.Optimization.GrillaRegular
