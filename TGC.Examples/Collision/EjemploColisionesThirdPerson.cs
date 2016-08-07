@@ -114,7 +114,7 @@ namespace TGC.Examples.Collision
 
             //Modifier para ver BoundingBox
             Modifiers.addBoolean("showBoundingBox", "Bouding Box", false);
-            Modifiers.addBoolean("activateSliding", "Activate Sliding", true);
+            Modifiers.addBoolean("activateSliding", "Activate Sliding", false);
 
             //Modifiers para desplazamiento del personaje
             Modifiers.addFloat("VelocidadCaminar", 1f, 400f, 250f);
@@ -209,7 +209,10 @@ namespace TGC.Examples.Collision
                 {
                     //si no esta activo el sliding es la solucion anterior de este ejemplo.
                     if (!(bool)Modifiers["activateSliding"])
+                    {
                         personaje.Position = lastPos; //Por como esta el framework actualmente esto actualiza el BoundingBox.
+                        text = "";
+                    }
                     else
                     {
                         //La idea del slinding es simplificar el problema, sabemos que estamos moviendo bounding box alineadas a los ejes.
@@ -220,38 +223,59 @@ namespace TGC.Examples.Collision
                         //Para todos los casos podemos deducir que la normal del plano cancela el movimiento en dicho plano.
                         //Esto quiere decir que podemos cancelar el movimiento en el plano y movernos en el otros.
                         var t = "";
-                        var rx = Vector3.Empty;
-                        var rz = Vector3.Empty;
-                        if (personaje.BoundingBox.PMax.X > collider.BoundingBox.PMax.X && movementRay.X > 0)
+                        var rs = Vector3.Empty;
+                        if (((personaje.BoundingBox.PMax.X > collider.BoundingBox.PMax.X && movementRay.X > 0) ||
+                            (personaje.BoundingBox.PMin.X < collider.BoundingBox.PMin.X && movementRay.X < 0)) &&
+                            ((personaje.BoundingBox.PMax.Z > collider.BoundingBox.PMax.Z && movementRay.Z > 0) ||
+                            (personaje.BoundingBox.PMin.Z < collider.BoundingBox.PMin.Z && movementRay.Z < 0)))
                         {
-                            t += "Colision X +";
-                            personaje.Position = new Vector3(lastPos.X, lastPos.Y - movementRay.Y, lastPos.Z - movementRay.Z);
+                            //Este primero es un caso particularse dan las dos condiciones simultaneamente entonces para saber de que lado moverse hay que hacer algunos calculos mas.
+                            //por el momento solo se esta verificando que la posicion actual este dentro de un bounding para moverlo en ese plano.
+                            t += "Coso conjunto!\n" +
+                                "PMin X: " + personaje.BoundingBox.PMin.X + " - " + collider.BoundingBox.PMin.X + "\n" +
+                                "PMax X: " + personaje.BoundingBox.PMax.X + " - " + collider.BoundingBox.PMax.X + "\n" +
+                                "PMin Z: " + personaje.BoundingBox.PMin.Z + " - " + collider.BoundingBox.PMin.Z + "\n" +
+                                "PMax Z: " + personaje.BoundingBox.PMax.Z + " - " + collider.BoundingBox.PMax.Z + "\n" +
+                                "Last X: " + (lastPos.X - rs.X) + " - Z: " + (lastPos.Z - rs.Z) + "\n" +
+                                "Actual X: " + (personaje.Position.X) + " - Z: " + (personaje.Position.Z) + "\n" +
+                                "move X: " + (movementRay.X) + " - Z: " + (movementRay.Z);
+                            if (personaje.Position.X > collider.BoundingBox.PMin.X &&
+                                personaje.Position.X < collider.BoundingBox.PMax.X)
+                            {
+                                //El personaje esta contenido en el bounding X
+                                t += "\n Sliding Z Dentro de X";
+                                rs = new Vector3(movementRay.X, movementRay.Y, 0);
+                            }
+                            if (personaje.Position.Z > collider.BoundingBox.PMin.Z &&
+                                personaje.Position.Z < collider.BoundingBox.PMax.Z)
+                            {
+                                //El personaje esta contenido en el bounding Z
+                                t += "\n Sliding X Dentro de Z";
+                                rs = new Vector3(0, movementRay.Y, movementRay.Z);
+                            }
+
+                            //Seria ideal sacar el punto mas proximo al bounding que colisiona y chequear con eso, en ves que con la posicion.
+
                         }
-                        else if (personaje.BoundingBox.PMin.X < collider.BoundingBox.PMin.X && movementRay.X < 0)
+                        else
                         {
-                            t += "Colision X -";
-                            personaje.Position = new Vector3(lastPos.X, lastPos.Y - movementRay.Y, lastPos.Z - movementRay.Z);
-                        } 
-                        if (personaje.BoundingBox.PMin.Z > collider.BoundingBox.PMin.Z && movementRay.Z > 0)
-                        {
-                            t += "Colision Z +";
-                            personaje.Position = new Vector3(lastPos.X - movementRay.X, lastPos.Y - movementRay.Y, lastPos.Z);
-                        }
-                        else if (personaje.BoundingBox.PMin.Z < collider.BoundingBox.PMin.Z && movementRay.Z < 0)
-                        {
-                            t += "Colision Z -";
-                            personaje.Position = new Vector3(lastPos.X - movementRay.X, lastPos.Y - movementRay.Y, lastPos.Z);
+                            if ((personaje.BoundingBox.PMax.X > collider.BoundingBox.PMax.X && movementRay.X > 0) ||
+                                (personaje.BoundingBox.PMin.X < collider.BoundingBox.PMin.X && movementRay.X < 0))
+                            {
+                                t += "Sliding X";
+                                rs = new Vector3(0, movementRay.Y, movementRay.Z);
+                            }
+                            if ((personaje.BoundingBox.PMax.Z > collider.BoundingBox.PMax.Z && movementRay.Z > 0) ||
+                                (personaje.BoundingBox.PMin.Z < collider.BoundingBox.PMin.Z && movementRay.Z < 0))
+                            {
+                                t += "Sliding Z";
+                                rs = new Vector3(movementRay.X, movementRay.Y, 0);
+                            }
                         }
                         text = t;
+                        personaje.Position = lastPos - rs;
                         //Este ejemplo solo se mueve en X y Z con lo cual realizar el test en el plano Y no tiene sentido.
-                        /*if (personaje.BoundingBox.PMax.Y > collider.BoundingBox.PMax.Y && movementRay.Y > 0)
-                        {
-                            personaje.Position = new Vector3(lastPos.X - movementRay.X, lastPos.Y, lastPos.Z - movementRay.Z);
-                        }
-                        else if (personaje.BoundingBox.PMin.Y < collider.BoundingBox.PMin.Y && movementRay.Y < 0)
-                        {
-                            personaje.Position = new Vector3(lastPos.X - movementRay.X, lastPos.Y, lastPos.Z - movementRay.Z);
-                        }*/
+
                     }
                 }
 
