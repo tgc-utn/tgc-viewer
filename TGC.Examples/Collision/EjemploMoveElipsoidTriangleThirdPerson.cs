@@ -34,7 +34,7 @@ namespace TGC.Examples.Collision
     ///     Aun esta en estado BETA.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploElipsoidCollision : TGCExampleViewer
+    public class EjemploMoveElipsoidTriangleThirdPerson : TGCExampleViewer
     {
         private readonly List<Collider> objetosColisionables = new List<Collider>();
         private TgcThirdPersonCamera camaraInterna;
@@ -49,11 +49,11 @@ namespace TGC.Examples.Collision
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
 
-        public EjemploElipsoidCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploMoveElipsoidTriangleThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "TODO Elipsoid collision";
+            Name = "Movimientos Elipsoid-Triangulos 3ra Persona";
             Description =
                 "Colisión de un Elipsoide contra todo un escenario, aplicando gravedad y sliding. Movimiento con W, A, S, D, Space.";
         }
@@ -78,13 +78,18 @@ namespace TGC.Examples.Collision
                         MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\Jump-TgcSkeletalAnim.xml"
                     });
 
+            //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform, 
+            //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta 
+            //perdiendo el control de las transformaciones del personaje.
+            personaje.AutoTransformEnable = true;
             //Configurar animacion inicial
             personaje.playAnimation("StandBy", true);
             //Escalarlo porque es muy grande
             personaje.Position = new Vector3(0, 1000, -150);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.rotateY(Geometry.DegreeToRadian(180f));
-
+            //escalamos un poco el personaje.
+            personaje.Scale = new Vector3(0.75f, 0.75f, 0.75f);
             //BoundingSphere que va a usar el personaje
             personaje.AutoUpdateBoundingBox = false;
             characterElipsoid = new TgcBoundingElipsoid(personaje.BoundingBox.calculateBoxCenter() + new Vector3(0, 0, 0),
@@ -154,7 +159,7 @@ namespace TGC.Examples.Collision
             Modifiers.addFloat("VelocidadCaminar", 0, 20, 2);
             Modifiers.addFloat("VelocidadRotacion", 1f, 360f, 150f);
             Modifiers.addBoolean("HabilitarGravedad", "Habilitar Gravedad", true);
-            Modifiers.addVertex3f("Gravedad", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
+            Modifiers.addVertex3f("Gravedad", new Vector3(-5, -5, -5), new Vector3(5, 5, 5),
                 new Vector3(0, -4, 0));
             Modifiers.addFloat("SlideFactor", 0f, 2f, 1f);
             Modifiers.addFloat("Pendiente", 0f, 1f, 0.72f);
@@ -167,14 +172,6 @@ namespace TGC.Examples.Collision
         public override void Update()
         {
             PreUpdate();
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
-            //Obtener boolean para saber si hay que mostrar Bounding Box
-            var showBB = (bool)Modifiers.getValue("showBoundingBox");
 
             //obtener velocidades de Modifiers
             var velocidadCaminar = (float)Modifiers.getValue("VelocidadCaminar");
@@ -334,11 +331,29 @@ namespace TGC.Examples.Collision
                 collisionNormalArrow.PStart = collisionManager.Result.collisionPoint;
                 collisionNormalArrow.PEnd = collisionManager.Result.collisionPoint +
                                             Vector3.Multiply(collisionManager.Result.collisionNormal, 80);
-                ;
+                
                 collisionNormalArrow.updateValues();
-                collisionNormalArrow.render();
+                
 
                 collisionPoint.Position = collisionManager.Result.collisionPoint;
+                collisionPoint.updateValues();
+
+
+            }
+        }
+
+        public override void Render()
+        {
+            PreRender();
+
+            //Obtener boolean para saber si hay que mostrar Bounding Box
+            var showBB = (bool)Modifiers.getValue("showBoundingBox");
+
+            if (collisionManager.Result.collisionFound)
+            {
+                collisionNormalArrow.render();
+                collisionPoint.Transform = Matrix.RotationYawPitchRoll(collisionPoint.Rotation.Y, collisionPoint.Rotation.X, collisionPoint.Rotation.Z) *
+                            Matrix.Translation(collisionPoint.Position);
                 collisionPoint.render();
             }
 

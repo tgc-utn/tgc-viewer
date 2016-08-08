@@ -91,6 +91,7 @@ namespace TGC.Examples.Collision
             personaje.Position = new Vector3(0, 500, -100);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.rotateY(Geometry.DegreeToRadian(180f));
+            //Escalamos el personaje ya que sino la escalera es demaciado grande.
             personaje.Scale = new Vector3(1.5f, 1.5f, 1.5f);
             //BoundingSphere que va a usar el personaje
             personaje.AutoUpdateBoundingBox = false;
