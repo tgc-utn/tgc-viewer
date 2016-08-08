@@ -64,28 +64,28 @@ namespace TGC.Examples.DirectX
             //El tipo de mesh para seleccionar.
             Modifiers.addInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
 
+            //Selecciona el modo de shading.
+            Modifiers.addInterval("ShaderMode", new[] { "Gouraud", "Flat" }, 1);
+
             //Habilito o deshabilito mostrar las normales
             Modifiers.addBoolean("Normales", "Mostrar normales", false);
-
-            //Los distintos colores e intensidades de cada uno de los tipos de iluminacion.
-            Modifiers.addColor("Ambient", Color.FromArgb(0, 0, 0));
-            Modifiers.addColor("Diffuse", Color.FromArgb(0, 0, 0));
-            Modifiers.addColor("Specular", Color.FromArgb(255, 255, 255));
 
             //El exponente del nivel de brillo de la iluminacion especular.
             Modifiers.addFloat("SpecularSharpness", 0, 500f, 100.00f);
 
             //Habilita o deshabilita el brillo especular.
-            Modifiers.addBoolean("SpecularEnabled", "Enable Specular", false);
+            Modifiers.addBoolean("SpecularEnabled", "Enable Specular", true);
+
+            //Los distintos colores e intensidades de cada uno de los tipos de iluminacion.
+            Modifiers.addColor("Ambient", Color.LightSlateGray);
+            Modifiers.addColor("Diffuse", Color.Gray);
+            Modifiers.addColor("Specular", Color.LightSteelBlue);
 
             //Habilita o deshabilita el remarcado de los bordes de cada triangulo.
             Modifiers.addBoolean("Wireframe", "Enable Wireframe", false);
 
             //Habilita o deshabilita el back face culling
-            Modifiers.addBoolean("BackFaceCull", "Enable BackFaceCulling", true);
-
-            //Selecciona el modo de shading.
-            Modifiers.addInterval("ShaderMode", new[] { "Gouraud", "Flat" }, 1);
+            Modifiers.addBoolean("BackFaceCull", "Enable BackFaceCulling", false);
 
             //Modifiers para angulos de rotacion de la luz
             Modifiers.addFloat("angleX", 0, 0.005f, 0.0f);
