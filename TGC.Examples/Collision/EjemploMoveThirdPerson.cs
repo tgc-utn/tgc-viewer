@@ -31,18 +31,18 @@ namespace TGC.Examples.Collision
     ///     modelos estáticos como en el otro ejemplo.
     ///     Autor: Matías Leone, Leandro Barbagallo, Rodrigo Garcia.
     /// </summary>
-    public class EjemploColisionesThirdPerson : TGCExampleViewer
+    public class EjemploMoveThirdPerson : TGCExampleViewer
     {
         private TgcThirdPersonCamera camaraInterna;
         private List<TgcBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcPlane piso;
 
-        public EjemploColisionesThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars,
+        public EjemploMoveThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars,
             TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "Movimientos 3ra Persona";
+            Name = "Movimientos AABB 3ra Persona";
             Description =
                 "Ejemplo de Detección de Colisiones de un personaje, utilizando la cámara en Tercera Persona. Movimiento con W, A, S, D.";
         }

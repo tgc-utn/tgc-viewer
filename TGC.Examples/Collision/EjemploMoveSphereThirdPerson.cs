@@ -31,10 +31,10 @@ namespace TGC.Examples.Collision
     ///     explicada en el apunte de Detección de Colisiones.
     ///     Utiliza la clase SphereCollisionManager para encapsular la estrategia de colisión. Esta clase se basa
     ///     en el paper: http://www.peroxide.dk/papers/collision/collision.pdf.
-    ///     El paper no ha sido implementado en su totalidad y aún existen muchos puntos por mejorar.
+    ///     El paper no ha sido implementado en su totalidad y aún existen muchos puntos por mejorar y algunos bugs.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploSphereCollision : TGCExampleViewer
+    public class EjemploMoveSphereThirdPerson : TGCExampleViewer
     {
         private readonly List<TgcMesh> objectsBehind = new List<TgcMesh>();
         private readonly List<TgcMesh> objectsInFront = new List<TgcMesh>();
@@ -47,13 +47,13 @@ namespace TGC.Examples.Collision
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
 
-        public EjemploSphereCollision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploMoveSphereThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Collision";
-            Name = "TODO Colision con Esfera";
+            Name = "Movimientos Esfera 3ra Persona";
             Description =
-                "Estrategia integral de colisión: BoundingSphere + Gravedad + Sliding + Jump. Movimiento con W, A, S, D, Space.";
+                "Estrategia integral de colisión: BoundingSphere + Gravedad + Sliding + Jump. Movimiento con W, A, S, D, Space. No ha sido implementado en su totalidad y aún existen muchos puntos por mejorar y algunos bugs.";
         }
 
         public override void Init()
@@ -80,14 +80,18 @@ namespace TGC.Examples.Collision
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
                     MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
             });
-
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
+
+            //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform, 
+            //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta 
+            //perdiendo el control de las transformaciones del personaje.
+            personaje.AutoTransformEnable = true;
             //Escalarlo porque es muy grande
             personaje.Position = new Vector3(0, 500, -100);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.rotateY(Geometry.DegreeToRadian(180f));
-
+            personaje.Scale = new Vector3(1.5f, 1.5f, 1.5f);
             //BoundingSphere que va a usar el personaje
             personaje.AutoUpdateBoundingBox = false;
             characterSphere = new TgcBoundingSphere(personaje.BoundingBox.calculateBoxCenter(),
@@ -132,7 +136,7 @@ namespace TGC.Examples.Collision
             Modifiers.addBoolean("showBoundingBox", "Bouding Box", true);
 
             //Modifiers para desplazamiento del personaje
-            Modifiers.addFloat("VelocidadCaminar", 0, 100, 16);
+            Modifiers.addFloat("VelocidadCaminar", 0, 20, 10);
             Modifiers.addFloat("VelocidadRotacion", 1f, 360f, 150f);
             Modifiers.addBoolean("HabilitarGravedad", "Habilitar Gravedad", true);
             Modifiers.addVertex3f("Gravedad", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
@@ -142,22 +146,14 @@ namespace TGC.Examples.Collision
             UserVars.addVar("Movement");
         }
 
+        float jumping = 0;
         public override void Update()
         {
             PreUpdate();
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
-            //Obtener boolean para saber si hay que mostrar Bounding Box
-            var showBB = (bool)Modifiers.getValue("showBoundingBox");
 
             //obtener velocidades de Modifiers
             var velocidadCaminar = (float)Modifiers.getValue("VelocidadCaminar");
             var velocidadRotacion = (float)Modifiers.getValue("VelocidadRotacion");
-
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
@@ -194,9 +190,14 @@ namespace TGC.Examples.Collision
             }
 
             //Jump
-            if (Input.keyDown(Key.Space))
+            if (Input.keyUp(Key.Space) && jumping < 30)
             {
-                jump = 30;
+                jumping = 30;
+            }
+            if (Input.keyUp(Key.Space) || jumping > 0)
+            {
+                jumping -= 30*ElapsedTime;
+                jump = jumping;
                 moving = true;
             }
 
@@ -267,6 +268,15 @@ namespace TGC.Examples.Collision
                     objectsInFront.Add(mesh);
                 }
             }
+
+        }
+
+        public override void Render()
+        {
+            PreRender();
+
+            //Obtener boolean para saber si hay que mostrar Bounding Box
+            var showBB = (bool)Modifiers.getValue("showBoundingBox");
 
             //Render mallas que no se interponen
             foreach (var mesh in objectsInFront)
