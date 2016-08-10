@@ -23,16 +23,16 @@ namespace TGC.Examples.ShadersExamples
     ///     en tiempo real.
     ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploPhongShading : TGCExampleViewer
+    public class PhongShadingTgc : TGCExampleViewer
     {
         private TgcBox lightMesh;
         private TgcMesh mesh;
 
-        public EjemploPhongShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public PhongShadingTgc(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "PhongShading";
+            Category = "Pixel Shaders";
+            Name = "Phong Shading framework";
             Description = "Muestra como utilizar un Shader para lograr iluminacion dinamica del tipo Phong-Shading.";
         }
 

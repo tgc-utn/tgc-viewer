@@ -42,8 +42,8 @@ namespace TGC.Examples.ShadersExamples
         public PhongShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-PhongShading";
+            Category = "Pixel Shaders";
+            Name = "Phong Shading custom ViewPorts";
             Description = "Ejemplo trivial de iluminación por Pixel. [BARRA] -> Cambia de vista única a 3 vistas";
         }
 
@@ -69,6 +69,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.Effect = effect;
             mesh.Technique = "DefaultTechnique";
 
+            Modifiers.addBoolean("viewports", "See Viewports", false);
             Modifiers.addVertex3f("LightPosition", new Vector3(-100, -100, -100),
                 new Vector3(100, 100, 100), new Vector3(0, 40, 0));
             Modifiers.addFloat("Ambient", 0, 1, 0.5f);
@@ -78,6 +79,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Crear caja para indicar ubicacion de la luz
             lightBox = TgcBox.fromSize(new Vector3(5, 5, 5), Color.Yellow);
+            lightBox.AutoTransformEnable = true;
 
             // Creo 3 viewport, para mostrar una comparativa entre los metodos de iluminacion
 
@@ -129,9 +131,6 @@ namespace TGC.Examples.ShadersExamples
 
             D3DDevice.Instance.Device.BeginScene();
 
-            if (Input.keyPressed(Key.Space))
-                vista_unica = !vista_unica;
-
             var lightPosition = (Vector3)Modifiers["LightPosition"];
 
             //Cargar variables de shader
@@ -145,7 +144,7 @@ namespace TGC.Examples.ShadersExamples
             //Mover mesh que representa la luz
             lightBox.Position = lightPosition;
 
-            if (vista_unica)
+            if (!(bool)Modifiers["viewports"])
             {
                 // solo una vista
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
@@ -154,6 +153,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     m.Effect = effect;
                     m.Technique = "DefaultTechnique";
+                    m.updateMeshTransform();
                     m.render();
                 }
                 lightBox.render();
@@ -168,6 +168,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     m.Effect = effect;
                     m.Technique = "DefaultTechnique";
+                    m.updateMeshTransform();
                     m.render();
                 }
                 lightBox.render();
@@ -182,7 +183,10 @@ namespace TGC.Examples.ShadersExamples
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 foreach (var m in scene.Meshes)
                 {
-                    m.Technique = "DefaultTechnique";
+                    m.Effect = TgcShaders.Instance.TgcMeshShader;
+                    m.RenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
+                    m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);               
+                    m.updateMeshTransform();
                     m.render();
                 }
 
@@ -194,7 +198,10 @@ namespace TGC.Examples.ShadersExamples
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 foreach (var m in scene.Meshes)
                 {
-                    m.Technique = "DefaultTechnique";
+                    m.Effect = TgcShaders.Instance.TgcMeshShader;
+                    m.RenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
+                    m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);
+                    m.updateMeshTransform();
                     m.render();
                 }
 
@@ -211,6 +218,8 @@ namespace TGC.Examples.ShadersExamples
             effect.Dispose();
             scene.disposeAll();
             lightBox.dispose();
+
+            D3DDevice.Instance.Device.Viewport = ViewF;            
         }
     }
 }
