@@ -26,7 +26,7 @@ namespace TGC.Examples.ShadersExamples
     ///     Muestra como reflejar un Enviroment Map en un mesh.
     ///     Autor: Mariano Banquiero
     /// </summary>
-    public class EnvMap : TGCExampleViewer
+    public class EnviromentMap : TGCExampleViewer
     {
         private List<TgcMesh> bosque;
         private TgcRotationalCamera CamaraRot;
@@ -58,11 +58,11 @@ namespace TGC.Examples.ShadersExamples
         private float vel_tanque; // grados x segundo
         private bool volar;
 
-        public EnvMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EnviromentMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-EnviromentMap";
+            Category = "Pixel Shaders";
+            Name = "Enviroment Map";
             Description =
                 "Ejemplo de Reflexion y Refraccion con CubeMap. [BARRA]->cambia velocidad del tanque. [X]->volar [S]->Tanque o Esfera";
         }
@@ -110,10 +110,12 @@ namespace TGC.Examples.ShadersExamples
 
             sceneX = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml");
             meshX = sceneX.Meshes[0];
+            meshX.AutoTransformEnable = true;
 
             scene2 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
             palmera = scene2.Meshes[0];
+            palmera.AutoTransformEnable = true;
 
             scene3 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
@@ -121,13 +123,11 @@ namespace TGC.Examples.ShadersExamples
 
             mesh.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             mesh.Position = new Vector3(0f, 0f, 0f);
-            mesh.AutoTransformEnable = false;
             var size = mesh.BoundingBox.calculateSize();
             largo_tanque = Math.Abs(size.Z);
             alto_tanque = Math.Abs(size.Y) * mesh.Scale.Y;
             avion.Scale = new Vector3(1f, 1f, 1f);
             avion.Position = new Vector3(3000f, 550f, 0f);
-            avion.AutoTransformEnable = false;
             dir_avion = new Vector3(0, 0, 1);
             size = palmera.BoundingBox.calculateSize();
             var alto_palmera = Math.Abs(size.Y);
@@ -138,6 +138,7 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = 0; j < 15; j++)
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
+                    instance.AutoTransformEnable = true;
                     instance.Scale = new Vector3(0.5f, 1.5f, 0.5f);
                     var x = r[i] * (float)Math.Cos(Geometry.DegreeToRadian(180 + 10.0f * j));
                     var z = r[i] * (float)Math.Sin(Geometry.DegreeToRadian(180 + 10.0f * j));
@@ -247,8 +248,6 @@ namespace TGC.Examples.ShadersExamples
             dir_avion = new Vector3(-(float)Math.Sin(beta), 0, (float)Math.Cos(beta));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
-            CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
-
             // --------------------------------------------------------------------
             D3DDevice.Instance.Device.EndScene();
             var g_pCubeMap = new CubeTexture(D3DDevice.Instance.Device, 256, 1, Usage.RenderTarget,
@@ -313,9 +312,11 @@ namespace TGC.Examples.ShadersExamples
                         break;
                 }
 
+                //como queremos usar la camara rotacional pero siguendo a un objetivo comentamos el seteo del view.
                 //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
-                var Pos = mesh.Position;
-                D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
+                //var Pos = mesh.Position;
+                //D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
+                CamaraRot.CameraCenter = mesh.Position;
 
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
                 D3DDevice.Instance.Device.BeginScene();

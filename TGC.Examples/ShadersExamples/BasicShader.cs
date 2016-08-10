@@ -29,9 +29,9 @@ namespace TGC.Examples.ShadersExamples
         public BasicShader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-BasicShader";
-            Description = "Ejemplo de Shader Basico";
+            Category = "Shaders Integrador";
+            Name = "Shader Basico";
+            Description = "Ejemplo de Shader Basico. Animacion por VS y coloracion por PS.";
         }
 
         public override void Init()
@@ -60,7 +60,7 @@ namespace TGC.Examples.ShadersExamples
             //Centrar camara rotacional respecto a este mesh
 
             Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
+                mesh.BoundingBox.calculateBoxRadius() * 5, Input);
 
             time = 0;
         }

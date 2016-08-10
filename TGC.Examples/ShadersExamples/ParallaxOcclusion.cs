@@ -35,8 +35,8 @@ namespace TGC.Examples.ShadersExamples
         public ParallaxOcclusion(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-ParallaxOcclusion";
+            Category = "Pixel Shaders";
+            Name = "Parallax Occlusion";
             Description = "Parallax Occlusion. L->Luz Space->Metodo S->Malla";
         }
 
