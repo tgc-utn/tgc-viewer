@@ -111,7 +111,7 @@
     <Compile Include="ShadersExamples\DemoShaders.cs" />
     <Compile Include="ShadersExamples\PhongShadingTgc.cs" />
     <Compile Include="ShadersExamples\EjemploShaderTgcMesh.cs" />
-    <Compile Include="ShadersExamples\EnvMap.cs" />
+    <Compile Include="ShadersExamples\EnviromentMap.cs" />
     <Compile Include="ShadersExamples\F1Circuit.cs" />
     <Compile Include="ShadersExamples\FullQuad.cs" />
     <Compile Include="ShadersExamples\GaussianBlur.cs" />
@@ -211,7 +211,7 @@
     <Compile Include="Engine2D\Spaceship\Misil.cs" />
     <Compile Include="Engine2D\Spaceship\Spaceship.cs" />
     <Compile Include="PostProcess\EjemploGetZBuffer.cs" />
-    <Compile Include="PostProcess\EfectoNiebla.cs" />
+    <Compile Include="ShadersExamples\EfectoNiebla.cs" />
     <Compile Include="Animation\KeyFrameAnimation.cs" />
     <Compile Include="Animation\SkeletalAnimation.cs" />
     <Compile Include="MeshExamples\ModeloConAlpha.cs" />

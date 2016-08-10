@@ -37,13 +37,12 @@ namespace TGC.Examples.ShadersExamples
         private string MyShaderDir;
         private TgcScene scene;
         private Viewport View1, View2, View3, ViewF;
-        private bool vista_unica = true;
 
         public PhongShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Pixel Shaders";
-            Name = "Phong Shading custom ViewPorts";
+            Name = "Phong Shading Custom con ViewPorts";
             Description = "Ejemplo trivial de iluminación por Pixel. [BARRA] -> Cambia de vista única a 3 vistas";
         }
 

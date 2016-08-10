@@ -32,7 +32,7 @@ namespace TGC.Examples.PostProcess
         public EfectoNiebla(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "PostProcess";
+            Category = "Pixel Shaders";
             Name = "Efecto Niebla";
             Description = "Muestra como utilizar el efecto niebla y como configurar sus diversos atributos.";
         }
@@ -137,7 +137,7 @@ namespace TGC.Examples.PostProcess
                     mesh.Effect = TgcShaders.Instance.TgcMeshShader;
                     mesh.Technique = "DIFFUSE_MAP";
                 }
-
+                mesh.updateMeshTransform();
                 mesh.render();
             }
 
