@@ -109,7 +109,7 @@
     <Compile Include="DirectX\DirectXLight.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />
     <Compile Include="ShadersExamples\DemoShaders.cs" />
-    <Compile Include="ShadersExamples\EjemploPhongShading.cs" />
+    <Compile Include="ShadersExamples\PhongShadingTgc.cs" />
     <Compile Include="ShadersExamples\EjemploShaderTgcMesh.cs" />
     <Compile Include="ShadersExamples\EnvMap.cs" />
     <Compile Include="ShadersExamples\F1Circuit.cs" />
