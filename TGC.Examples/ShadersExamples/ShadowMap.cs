@@ -50,8 +50,8 @@ namespace TGC.Examples.ShadersExamples
         public ShadowMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-ShadowMap";
+            Category = "Pixel y Vertex Shaders";
+            Name = "ShadowMap";
             Description = "Image Space Shadows con Shadow Map.";
         }
 

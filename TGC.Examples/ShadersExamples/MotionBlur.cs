@@ -28,8 +28,8 @@ namespace TGC.Examples.ShadersExamples
         public MotionBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-MotionBlur";
+            Category = "Post Process Shaders";
+            Name = "MotionBlur";
             Description = "Motion Effect";
         }
 
@@ -153,6 +153,7 @@ namespace TGC.Examples.ShadersExamples
 
             // Ultima pasada vertical va sobre la pantalla pp dicha
             device.SetRenderTarget(0, pOldRT);
+            device.DepthStencilSurface = pOldDS;
 
             device.BeginScene();
             effect.Technique = "PostProcessMotionBlur";

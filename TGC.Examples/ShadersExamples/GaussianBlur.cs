@@ -13,6 +13,17 @@ using TGC.Examples.Example;
 
 namespace TGC.Examples.ShadersExamples
 {
+    /// <summary>
+    ///     Ejemplo EfectoGaussianBlur:
+    ///     Unidades Involucradas:
+    ///     # Unidad 8 - Adaptadores de Video - Shaders
+    ///     Ejemplo avanzado. Ver primero ejemplo "PostProcess/EfectoBlur"
+    ///     Muestra como utilizar la tenica de Render Target para lograr efectos de Post-Procesado.
+    ///     Toda la escena no se dibuja a pantalla sino que se dibuja a una textura auxiliar.
+    ///     Luego esa textura es renderizada con una pasada de Gaussian blur horizontal.
+    ///     Y por ultimo se hace otra pasada mas de Gaussian blur pero vertical.
+    ///     Autor: Mariano, Banquiero.
+    /// </summary>
     public class GaussianBlur : TGCExampleViewer
     {
         private Effect effect;
@@ -27,7 +38,7 @@ namespace TGC.Examples.ShadersExamples
         {
             Category = "Post Process Shaders";
             Name = "Gaussian Blur";
-            Description = "Gaussin blur filter.";
+            Description = "Graba la escena a un Render Target y luego con un pixel shader se borronea la imagen con Gaussian Blur.";
         }
 
         public override void Init()
@@ -77,6 +88,7 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
             effect.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
 
+            //Creamos un FullScreen Quad
             CustomVertex.PositionTextured[] vertices =
             {
                 new CustomVertex.PositionTextured(-1, 1, 1, 0, 0),
@@ -133,7 +145,8 @@ namespace TGC.Examples.ShadersExamples
                 m.render();
             }
             device.EndScene();
-
+            //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
+            //TextureLoader.Save(this.ShadersDir + "render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
             pSurf.Dispose();
 
             if (activar_efecto)
@@ -164,6 +177,7 @@ namespace TGC.Examples.ShadersExamples
 
                     device.EndScene();
 
+                    //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
                     // TextureLoader.Save("scene.bmp", ImageFileFormat.Bmp, g_pRenderTarget4);
                     device.DepthStencilSurface = pOldDS;
 
@@ -191,6 +205,7 @@ namespace TGC.Examples.ShadersExamples
                         pSurf.Dispose();
 
                         device.EndScene();
+                        //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
                         //TextureLoader.Save("blurH.bmp", ImageFileFormat.Bmp, g_pRenderTarget4Aux);
 
                         if (P < cant_pasadas - 1)
@@ -222,7 +237,7 @@ namespace TGC.Examples.ShadersExamples
                         {
                             device.EndScene();
                         }
-
+                        //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
                         //TextureLoader.Save("blurV.bmp", ImageFileFormat.Bmp, g_pRenderTarget4);
                     }
                 }

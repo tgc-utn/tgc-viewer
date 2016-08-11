@@ -29,7 +29,7 @@ namespace TGC.Examples.ShadersExamples
         public BasicShader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders Integrador";
+            Category = "Pixel y Vertex Shaders";
             Name = "Shader Basico";
             Description = "Ejemplo de Shader Basico. Animacion por VS y coloracion por PS.";
         }
