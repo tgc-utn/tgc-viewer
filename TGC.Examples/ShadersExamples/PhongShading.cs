@@ -152,7 +152,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     m.Effect = effect;
                     m.Technique = "DefaultTechnique";
-                    m.updateMeshTransform();
+                    m.UpdateMeshTransform();
                     m.render();
                 }
                 lightBox.render();
@@ -167,7 +167,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     m.Effect = effect;
                     m.Technique = "DefaultTechnique";
-                    m.updateMeshTransform();
+                    m.UpdateMeshTransform();
                     m.render();
                 }
                 lightBox.render();
@@ -185,7 +185,7 @@ namespace TGC.Examples.ShadersExamples
                     m.Effect = TgcShaders.Instance.TgcMeshShader;
                     m.RenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
                     m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);               
-                    m.updateMeshTransform();
+                    m.UpdateMeshTransform();
                     m.render();
                 }
 
@@ -200,7 +200,7 @@ namespace TGC.Examples.ShadersExamples
                     m.Effect = TgcShaders.Instance.TgcMeshShader;
                     m.RenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
                     m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);
-                    m.updateMeshTransform();
+                    m.UpdateMeshTransform();
                     m.render();
                 }
 

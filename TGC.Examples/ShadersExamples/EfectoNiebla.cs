@@ -137,7 +137,7 @@ namespace TGC.Examples.PostProcess
                     mesh.Effect = TgcShaders.Instance.TgcMeshShader;
                     mesh.Technique = "DIFFUSE_MAP";
                 }
-                mesh.updateMeshTransform();
+                mesh.UpdateMeshTransform();
                 mesh.render();
             }
 

@@ -39,7 +39,7 @@ namespace TGC.Examples.Lights
         public EjemploMultipleLights(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Lights";
+            Category = "Pixel Shaders";
             Name = "Multiple Lights";
             Description = "Escenario con muchas luces dinamicas.";
         }
@@ -58,7 +58,7 @@ namespace TGC.Examples.Lights
             for (var i = 0; i < sceneData.meshesData.Length; i++)
             {
                 var meshData = sceneData.meshesData[i];
-
+                
                 //Es una luz, no cargar mesh, solo importan sus datos
                 if (meshData.layerName == "Lights")
                 {
@@ -74,6 +74,7 @@ namespace TGC.Examples.Lights
                 //Es un mesh real, agregar a array definitivo
                 else
                 {
+                    
                     realMeshData.Add(meshData);
                 }
             }
