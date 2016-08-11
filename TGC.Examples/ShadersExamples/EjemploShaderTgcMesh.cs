@@ -26,8 +26,8 @@ namespace TGC.Examples.ShadersExamples
         public EjemploShaderTgcMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Shader con TgcMesh";
+            Category = "Pixel y Vertex Shaders";
+            Name = "TgcMesh Shaders Basicos";
             Description = "Muestra como utilizar shaders en un TgcMesh.";
         }
 

@@ -255,6 +255,7 @@ namespace TGC.Examples.ShadersExamples
                             var pos = pt_ruta[i] - n * 300 * K[j];
                             pos.Y = 0;
                             arbol[j].Position = pos;
+                            arbol[j].UpdateMeshTransform();
                             arbol[j].render();
                             K[j] *= -1;
                         }

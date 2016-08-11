@@ -79,8 +79,8 @@ namespace TGC.Examples.ShadersExamples
         public DemoShaders(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-DemoShaders";
+            Category = "Pixel y Vertex Shaders";
+            Name = "Demo Shaders";
             Description =
                 "Demostracion de distintos Effectos Vs Fixed Pipeline. C->Camara, F->Fixed Pipeline, D->Dos Vistas al mismo tiempo [SPACE]->Parar/Arrancar Tanque";
         }
@@ -547,7 +547,10 @@ namespace TGC.Examples.ShadersExamples
                 skyBox.render();
                 // dibujo el bosque
                 foreach (var instance in bosque)
+                {
+                    instance.UpdateMeshTransform();
                     instance.render();
+                }
                 // canoa
                 canoa.render();
                 // tanque
@@ -590,7 +593,10 @@ namespace TGC.Examples.ShadersExamples
             // dibujo el bosque
             var total = cubemap ? cant_palmeras : bosque.Count;
             for (var i = 0; i < total; ++i)
+            {
+                bosque[i].UpdateMeshTransform();
                 bosque[i].render();
+            }
 
             // canoa
             canoa.render();
@@ -686,7 +692,10 @@ namespace TGC.Examples.ShadersExamples
                     skyBox.render();
                     // dibujo el bosque
                     foreach (var instance in bosque)
+                    {
+                        instance.UpdateMeshTransform();
                         instance.render();
+                    }
                 }
                 var fname = string.Format("face{0:D}.bmp", nFace);
                 //SurfaceLoader.Save(fname, ImageFileFormat.Bmp, pFace);
@@ -726,6 +735,7 @@ namespace TGC.Examples.ShadersExamples
             // dibujo el bosque
             foreach (var instance in bosque)
             {
+                instance.UpdateMeshTransform();
                 instance.render();
             }
 
