@@ -48,8 +48,8 @@ namespace TGC.Examples.Lights
         public EjemploIntegrador(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Lights";
-            Name = "Integrador";
+            Category = "Pixel y Vertex Shaders";
+            Name = "BumpMap + EnvMap + 1 Point Light por Proximidad";
             Description = "Ejemplo que muestra un escenario con BumpMapping, EnvironmentMap y varias Point Lights.";
         }
 
@@ -136,7 +136,6 @@ namespace TGC.Examples.Lights
             Camara = new TgcFpsCamera(new Vector3(0, 50, 100), Input);
 
             //Modifiers
-            Modifiers.addBoolean("lightEnable", "lightEnable", true);
             Modifiers.addFloat("reflection", 0, 1, 0.2f);
             Modifiers.addFloat("bumpiness", 0, 2, 1f);
             Modifiers.addFloat("lightIntensity", 0, 150, 20);
@@ -158,23 +157,13 @@ namespace TGC.Examples.Lights
         {
             PreRender();
 
-            //Habilitar luz
-            var lightEnable = (bool)Modifiers["lightEnable"];
             Effect currentShader;
             string currentTechnique;
-            if (lightEnable)
-            {
-                //Shader personalizado de iluminacion
-                currentShader = effect;
-                currentTechnique = "EnvironmentMapTechnique";
-            }
-            else
-            {
-                //Sin luz: Restaurar shader default
-                currentShader = TgcShaders.Instance.TgcMeshShader;
-                currentTechnique = TgcShaders.Instance.getTgcMeshTechnique(TgcMesh.MeshRenderType.DIFFUSE_MAP);
-            }
-
+            
+            //Shader personalizado de iluminacion
+            currentShader = effect;
+            currentTechnique = "EnvironmentMapTechnique";
+            
             //Aplicar a cada mesh el shader actual
             foreach (TgcMesh mesh in bumpMeshes)
             {
@@ -218,6 +207,7 @@ namespace TGC.Examples.Lights
                     mesh.Effect.SetValue("texCubeMap", cubeMap);
                 }
 
+                mesh.UpdateMeshTransform();
                 //Renderizar modelo
                 mesh.render();
             }
@@ -225,6 +215,7 @@ namespace TGC.Examples.Lights
             //Renderizar meshes comunes
             foreach (var mesh in commonMeshes)
             {
+                mesh.UpdateMeshTransform();
                 mesh.render();
             }
 

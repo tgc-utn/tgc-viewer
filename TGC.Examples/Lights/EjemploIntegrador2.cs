@@ -39,8 +39,8 @@ namespace TGC.Examples.Lights
         public EjemploIntegrador2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Lights";
-            Name = "Integrador 2";
+            Category = "Pixel y Vertex Shaders";
+            Name = "BumpMap + EnvMap + 3 Point Light por Proximidad";
             Description = "Ejemplo que muestra un escenario con BumpMapping, EnvironmentMap y varias Point Lights.";
         }
 
