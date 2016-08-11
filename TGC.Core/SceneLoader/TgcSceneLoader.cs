@@ -159,12 +159,15 @@ namespace TGC.Core.SceneLoader
                             tgcMesh = crearMeshDiffuseMap(materialsArray, meshData);
                         }
                     }
+                    //Fixloader
+                    tgcMesh.AutoTransformEnable = true;
                 }
 
                 //Crear malla instancia
                 else if (meshData.instanceType.Equals(TgcMeshData.INSTANCE))
                 {
                     tgcMesh = crearMeshInstance(meshData, tgcScene.Meshes);
+                    tgcMesh.AutoTransformEnable = true;
                 }
 
                 //Crear BoundingBox, aprovechar lo que viene del XML o crear uno por nuestra cuenta

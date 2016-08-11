@@ -25,14 +25,14 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class PhongShadingTgc : TGCExampleViewer
     {
-        private TgcBox lightMesh;
+        private TgcMesh lightMesh;
         private TgcMesh mesh;
 
         public PhongShadingTgc(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Pixel Shaders";
-            Name = "Phong Shading framework";
+            Name = "TGC Phong Shading";
             Description = "Muestra como utilizar un Shader para lograr iluminacion dinamica del tipo Phong-Shading.";
         }
 
@@ -46,7 +46,7 @@ namespace TGC.Examples.ShadersExamples
             mesh = scene.Meshes[0];
 
             //Crear caja para indicar ubicacion de la luz
-            lightMesh = TgcBox.fromSize(new Vector3(20, 20, 20), Color.Yellow);
+            lightMesh = TgcBox.fromSize(new Vector3(20, 20, 20), Color.Yellow).toMesh("Box");
 
             //Modifiers de la luz
             Modifiers.addBoolean("lightEnable", "lightEnable", true);
@@ -85,6 +85,7 @@ namespace TGC.Examples.ShadersExamples
                 currentShader = TgcShaders.Instance.TgcMeshShader;
             }
 
+            
             //Aplicar al mesh el shader actual
             mesh.Effect = currentShader;
             //El Technique depende del tipo RenderType del mesh
@@ -105,9 +106,10 @@ namespace TGC.Examples.ShadersExamples
                 mesh.Effect.SetValue("specularExp", (float)Modifiers["specularEx"]);
             }
 
+            //No hace falta actualizar la matriz de transformacion ya que es un objeto estatico.
             //Renderizar modelo
             mesh.render();
-
+            lightMesh.UpdateMeshTransform();
             //Renderizar mesh de luz
             lightMesh.render();
 

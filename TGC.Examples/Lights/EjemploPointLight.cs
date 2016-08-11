@@ -38,8 +38,8 @@ namespace TGC.Examples.Lights
         public EjemploPointLight(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Lights";
-            Name = "Point light";
+            Category = "Pixel Shaders";
+            Name = "TGC Point light skeletal pong shading";
             Description = "Iluminacion dinamica por PhongShading de una luz del tipo Point Light.";
         }
 

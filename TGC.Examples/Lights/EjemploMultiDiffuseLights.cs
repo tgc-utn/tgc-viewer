@@ -37,8 +37,8 @@ namespace TGC.Examples.Lights
         public EjemploMultiDiffuseLights(string mediaDir, string shadersDir, TgcUserVars userVars,
             TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Lights";
-            Name = "Multi-DiffuseLights";
+            Category = "Pixel Shaders";
+            Name = "Multiple Diffuse Lights";
             Description = "Iluminacion dinamicas con 4 luces Diffuse a la vez para un mismo mesh.";
         }
 
@@ -50,7 +50,7 @@ namespace TGC.Examples.Lights
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(-210.0958f, 114.911f, -109.2159f), 400f, 300f, Input);
+            Camara = new TgcFpsCamera(new Vector3(260f, 170f, 390f), 400f, 300f, Input);
 
             //Cargar Shader personalizado de MultiDiffuseLights
             /*
@@ -69,6 +69,7 @@ namespace TGC.Examples.Lights
             {
                 var co = c[i % c.Length];
                 lightMeshes[i] = TgcBox.fromSize(new Vector3(10, 10, 10), co);
+                lightMeshes[i].AutoTransformEnable = true;
                 origLightPos[i] = new Vector3(-40, 20 + i * 20, 400);
             }
 
@@ -143,6 +144,7 @@ namespace TGC.Examples.Lights
             //Renderizar meshes
             foreach (var mesh in scene.Meshes)
             {
+                mesh.UpdateMeshTransform();
                 if (lightEnable)
                 {
                     //Cargar variables de shader

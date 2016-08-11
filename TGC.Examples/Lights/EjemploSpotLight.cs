@@ -34,8 +34,8 @@ namespace TGC.Examples.Lights
         public EjemploSpotLight(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Lights";
-            Name = "Spot light";
+            Category = "Pixel Shaders";
+            Name = "TGC Spot light";
             Description = "Iluminacion dinamica por PhongShading de una luz del tipo Spot Light.";
         }
 
@@ -47,7 +47,7 @@ namespace TGC.Examples.Lights
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f, Input);
+            Camara = new TgcFpsCamera(new Vector3(200, 250, 175), 400f, 300f, Input);
 
             //Mesh para la luz
             lightMesh = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
@@ -56,7 +56,7 @@ namespace TGC.Examples.Lights
             Modifiers.addBoolean("lightEnable", "lightEnable", true);
             Modifiers.addVertex3f("lightPos", new Vector3(-200, -100, -200), new Vector3(200, 200, 300),
                 new Vector3(-60, 90, 175));
-            Modifiers.addVertex3f("lightDir", new Vector3(-1, -1, -1), new Vector3(1, 1, 1), new Vector3(0, -1, 0));
+            Modifiers.addVertex3f("lightDir", new Vector3(-1, -1, -1), new Vector3(1, 1, 1), new Vector3(-0.05f, 0, 0));
             Modifiers.addColor("lightColor", Color.White);
             Modifiers.addFloat("lightIntensity", 0, 150, 35);
             Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);

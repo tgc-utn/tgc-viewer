@@ -304,7 +304,7 @@ namespace TGC.Core.SceneLoader
             //Aplicar transformacion de malla
             if (autoTransformEnable)
             {
-                updateMeshTransform();
+                UpdateMeshTransform();
             }
 
             //Cargar VertexDeclaration
@@ -615,9 +615,9 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Aplicar transformaciones del mesh
+        ///     Actualiza la matriz de transformacion con los datos internos del mesh (scale. rotation, traslation) para casos complejos es mejor no utilizar este metodo.
         /// </summary>
-        public void updateMeshTransform()
+        public void UpdateMeshTransform()
         {
             transform = Matrix.Scaling(scale)
                             * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)

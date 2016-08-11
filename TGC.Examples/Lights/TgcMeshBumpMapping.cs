@@ -70,7 +70,7 @@ namespace TGC.Examples.Lights
                 return;
 
             //Aplicar transformacion de malla
-            updateMeshTransform();
+            UpdateMeshTransform();
 
             //Cargar VertexDeclaration
             D3DDevice.Instance.Device.VertexDeclaration = vertexDeclaration;
