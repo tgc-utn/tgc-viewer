@@ -28,6 +28,7 @@ namespace TGC.Examples.ShadersExamples
         private Effect effect;
         public float ftime; // frame time
         private Surface g_pDepthStencil; // Depth-stencil buffer
+        private Surface g_pDepthStencilOld; // Depth-stencil buffer
         private Texture g_pRenderTarget, g_pRenderTarget2, g_pRenderTarget3, g_pRenderTarget4, g_pRenderTarget5;
 
         private VertexBuffer g_pVBV3D;
@@ -46,9 +47,9 @@ namespace TGC.Examples.ShadersExamples
         public OutRun(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-OutRun";
-            Description = "OutRun Circuit Demo";
+            Category = "Pixel y Vertex Shaders";
+            Name = "Demo OutRun Avanzado";
+            Description = "OutRun Circuit Demo, [P]-> pause, [M]->cursor lock";
         }
 
         public override void Init()
@@ -109,7 +110,7 @@ namespace TGC.Examples.ShadersExamples
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
                 DepthFormat.D24S8, MultiSampleType.None, 0, true);
-
+            g_pDepthStencilOld = d3dDevice.DepthStencilSurface;
             // inicializo el render target
             g_pRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
                 , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
@@ -159,7 +160,7 @@ namespace TGC.Examples.ShadersExamples
         {
             PreUpdate();
 
-            if (Input.keyPressed(Key.F1))
+            if (Input.keyPressed(Key.P))
                 paused = !paused;
 
             if (paused)
@@ -176,7 +177,7 @@ namespace TGC.Examples.ShadersExamples
 
             vel += Input.WheelPos * acel_mouse_wheel;
 
-            if (mouseCaptured && Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (mouseCaptured || Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 //float pitch = d3dInput.YposRelative * rotationSpeed;
                 var heading = Input.XposRelative * rotationSpeed;
@@ -250,6 +251,7 @@ namespace TGC.Examples.ShadersExamples
 
             // Ultima pasada vertical va sobre la pantalla pp dicha
             device.SetRenderTarget(0, pOldRT);
+            device.DepthStencilSurface = g_pDepthStencilOld;
             device.BeginScene();
 
             effect.Technique = "FrameMotionBlur";
