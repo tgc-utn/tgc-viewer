@@ -44,8 +44,8 @@ namespace TGC.Examples.PostProcess
         public EfectoAlarma(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "PostProcess";
-            Name = "Efecto Alarma";
+            Category = "Post Process Shaders";
+            Name = "Texture Merge Alarma";
             Description = "Graba la escena a un Render Target y luego la combina con una textura de efecto de alarma.";
         }
 
@@ -103,7 +103,7 @@ namespace TGC.Examples.PostProcess
             meshes = scene.Meshes;
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f), Input);
+            Camara = new TgcFpsCamera(new Vector3(250, 160, -570), Input);
 
             //Modifier para activar/desactivar efecto de alarma
             Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
@@ -126,6 +126,17 @@ namespace TGC.Examples.PostProcess
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             var pSurf = renderTarget2D.GetSurfaceLevel(0);
             D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);
+            // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
+            // por no soportar usualmente el multisampling en el render to texture (en nuevas placas de video)
+            var activar_stencil = (bool)Modifiers["activar_stencil"];
+            if (activar_stencil)
+            {
+                D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
+            }
+            else
+            {
+                D3DDevice.Instance.Device.DepthStencilSurface = depthStencilOld;
+            }
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
@@ -139,17 +150,7 @@ namespace TGC.Examples.PostProcess
 
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
-            // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
-            // por no soportar usualmente el multisampling en el render to texture (en nuevas placas de video)
-            var activar_efecto = (bool)Modifiers["activar_stencil"];
-            if (activar_efecto)
-            {
-                D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
-            }
-            else
-            {
-                D3DDevice.Instance.Device.DepthStencilSurface = depthStencilOld;
-            }
+            D3DDevice.Instance.Device.DepthStencilSurface = depthStencilOld;            
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcess(D3DDevice.Instance.Device, ElapsedTime);

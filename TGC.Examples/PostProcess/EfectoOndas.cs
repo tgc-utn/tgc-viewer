@@ -32,14 +32,15 @@ namespace TGC.Examples.PostProcess
         private Effect effect;
         private List<TgcMesh> meshes;
         private Surface pOldRT;
+        private Surface pOldDS;
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
         public EfectoOndas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "PostProcess";
-            Name = "Efecto Ondas";
+            Category = "Post Process Shaders";
+            Name = "Texture Distortion Ondas";
             Description =
                 "Graba la escena a un Render Target y luego con un pixel shader distorsiona la imagen con ondas de senos.";
         }
@@ -88,7 +89,7 @@ namespace TGC.Examples.PostProcess
             meshes = scene.Meshes;
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f), Input);
+            Camara = new TgcFpsCamera(new Vector3(250, 160, -570), Input);
 
             //Modifier para variar tamano de ondas
             Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
@@ -108,8 +109,10 @@ namespace TGC.Examples.PostProcess
             //Cargamos el Render Targer al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
             //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro Render Target.
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
+            pOldDS = D3DDevice.Instance.Device.DepthStencilSurface;
             var pSurf = renderTarget2D.GetSurfaceLevel(0);
             D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);
+            D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
@@ -123,9 +126,7 @@ namespace TGC.Examples.PostProcess
 
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
-            // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
-            // por no soportar usualmente el multisampling en el render to texture (en nuevas placas de video)
-            D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
+            D3DDevice.Instance.Device.DepthStencilSurface = pOldDS;
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcess(D3DDevice.Instance.Device);

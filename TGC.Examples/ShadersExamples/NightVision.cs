@@ -41,7 +41,7 @@ namespace TGC.Examples.ShadersExamples
         public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "PostProcess Shaders";
+            Category = "Post Process Shaders";
             Name = "NightVision";
             Description = "NightVision Effect";
         }
