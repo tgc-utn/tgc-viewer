@@ -29,12 +29,14 @@ namespace TGC.Examples.PostProcess
         private Effect effect;
         private List<TgcMesh> meshes;
         private Surface pOldRT;
+        private Surface pOldDS;
         private Texture zBufferTexture;
+        private Surface depthStencil;
 
         public EjemploGetZBuffer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "PostProcess";
+            Category = "Post Process Shaders";
             Name = "Get Z Buffer";
             Description =
                 "Muestra como hacer un primer render de un escenario a una textura guardando ahi el valor de Z.";
@@ -60,6 +62,9 @@ namespace TGC.Examples.PostProcess
             zBufferTexture = new Texture(D3DDevice.Instance.Device, D3DDevice.Instance.Device.Viewport.Width,
                 D3DDevice.Instance.Device.Viewport.Height, 1,
                 Usage.RenderTarget, Format.R32F, Pool.Default);
+            depthStencil = D3DDevice.Instance.Device.CreateDepthStencilSurface(D3DDevice.Instance.Device.Viewport.Width,
+                D3DDevice.Instance.Device.Viewport.Height,
+                DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f, Input);
@@ -75,12 +80,14 @@ namespace TGC.Examples.PostProcess
             ClearTextures();
             //Guardar render target original
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
-
+            pOldDS = D3DDevice.Instance.Device.DepthStencilSurface;
             // 1) Mandar a dibujar todos los mesh para que se genere la textura de ZBuffer
             D3DDevice.Instance.Device.BeginScene();
 
             //Seteamos la textura de zBuffer como render  target (en lugar de dibujar a la pantalla)
             var zBufferSurface = zBufferTexture.GetSurfaceLevel(0);
+            D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
+
             D3DDevice.Instance.Device.SetRenderTarget(0, zBufferSurface);
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
@@ -100,6 +107,7 @@ namespace TGC.Examples.PostProcess
 
             //Restaurar render target original
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
+            D3DDevice.Instance.Device.DepthStencilSurface = pOldDS;
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Cargar textura de zBuffer al shader
@@ -124,6 +132,7 @@ namespace TGC.Examples.PostProcess
         {
             pOldRT.Dispose();
             zBufferTexture.Dispose();
+            depthStencil.Dispose();
             foreach (var mesh in meshes)
             {
                 mesh.dispose();

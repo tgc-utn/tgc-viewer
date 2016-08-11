@@ -63,7 +63,7 @@ namespace TGC.Examples.Lights
 
             //Convertir TgcMesh a TgcMeshBumpMapping
             meshes = new List<TgcMeshBumpMapping>();
-            meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m1, normalMapArray));
+            meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m1, normalMapArray)); 
             meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m2, normalMapArray));
             meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m3, normalMapArray));
             meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m4, normalMapArray));

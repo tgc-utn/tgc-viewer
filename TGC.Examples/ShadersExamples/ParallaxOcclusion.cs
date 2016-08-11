@@ -15,6 +15,21 @@ using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
 {
+    /// <summary>
+    ///     Ejemplo EjemploBumpMapping:
+    ///     Unidades Involucradas:
+    ///     # Unidad 4 - Texturas e Iluminacion - Iluminacion dinamica
+    ///     # Unidad 8 - Adaptadores de Video - Shaders
+    ///     Ejemplo avanzado. Ver primero ejemplo "Lights/EjemploPointLight"
+    ///     Muestra como dibujar un mesh con efecto de BumpMapping, utilizando iluminacion dinamica con una luz PointLight
+    ///     BumpMapping no usa la normal de cada vertice para iluminar, sino que utiliza una textura auxiliar denominada
+    ///     NormalMap.
+    ///     El NormalMap es una textura que cada pixel RGB corresponde a un vector normal (XYZ)
+    ///     Crear un buen NormalMap para un mesh es una tarea de diseno. Existen herramientas para generar automaticamente un
+    ///     NormalMap a partir de una textura. Ejemplo: http://sourceforge.net/projects/ssbumpgenerator/
+    ///     Pero no se logra el mismo resultado que con una textura hecha por un artista.
+    ///     Se puede cambiar el metodo para ver como se ve con paralax oclusion se notara la gran diferencia.
+    /// </summary>
     public class ParallaxOcclusion : TGCExampleViewer
     {
         private Effect effect;
@@ -36,7 +51,7 @@ namespace TGC.Examples.ShadersExamples
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Pixel Shaders";
-            Name = "Parallax Occlusion";
+            Name = "Bump Mapping vs Parallax Occlusion";
             Description = "Parallax Occlusion. L->Luz Space->Metodo S->Malla";
         }
 
@@ -152,7 +167,7 @@ namespace TGC.Examples.ShadersExamples
 
             DrawText.drawText(
                 (pom ? "ParallaxOcclusion" : "BumpMap") + "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0,
-                15, Color.Yellow);
+                20, Color.Yellow);
 
             RenderFPS();
             RenderAxis();

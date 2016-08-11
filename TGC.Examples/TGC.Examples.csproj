@@ -107,6 +107,7 @@
     <Compile Include="Collision\SphereCollision\TriangleMeshCollider.cs" />
     <Compile Include="DirectX\DirectXBox.cs" />
     <Compile Include="DirectX\DirectXLight.cs" />
+    <Compile Include="Lights\TgcMeshBumpMapping.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />
     <Compile Include="ShadersExamples\DemoShaders.cs" />
     <Compile Include="ShadersExamples\PhongShadingTgc.cs" />
@@ -133,16 +134,13 @@
     <Compile Include="GeometryBasics\EjemploSphere.cs" />
     <Compile Include="GeometryBasics\EjemploTriangulos.cs" />
     <Compile Include="Lights\BilateralFiltering.cs" />
-    <Compile Include="Lights\EjemploBumpMapping.cs" />
     <Compile Include="Lights\EjemploEnvironmentMap.cs" />
-    <Compile Include="Lights\EjemploHDR.cs" />
     <Compile Include="Lights\EjemploIntegrador.cs" />
     <Compile Include="Lights\EjemploIntegrador2.cs" />
     <Compile Include="Lights\EjemploMultiDiffuseLights.cs" />
     <Compile Include="Lights\EjemploMultipleLights.cs" />
     <Compile Include="Lights\EjemploPointLight.cs" />
     <Compile Include="Lights\EjemploSpotLight.cs" />
-    <Compile Include="Lights\TgcMeshBumpMapping.cs" />
     <Compile Include="MathExamples\EjemploMatematicaVarios.cs" />
     <Compile Include="Transformations\EjemploTransformaciones.cs" />
     <Compile Include="MeshExamples\EjemploTriangulosYPlanos.cs" />
@@ -174,10 +172,7 @@
     <Compile Include="MeshExamples\CrearHeightmapBasico.cs" />
     <Compile Include="Particles\EmisorDeParticulas.cs" />
     <Compile Include="PostProcess\EfectoAlarma.cs" />
-    <Compile Include="PostProcess\EfectoBlur.cs" />
-    <Compile Include="PostProcess\EfectoGaussianBlur.cs" />
     <Compile Include="PostProcess\EfectoOndas.cs" />
-    <Compile Include="PostProcess\EfectoOscurecer.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
