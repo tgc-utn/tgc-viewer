@@ -41,8 +41,8 @@ namespace TGC.Examples.ShadersExamples
         public EjemploVideoPostProcess(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-VideoPostProcess";
+            Category = "Post Process Shaders";
+            Name = "Video Edge detection";
             Description = "Procesamiento de imagenes";
         }
 

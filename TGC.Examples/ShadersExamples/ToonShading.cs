@@ -26,7 +26,6 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class ToonShading : TGCExampleViewer
     {
-        private bool efecto_blur;
         private Effect effect;
         private Surface g_pDepthStencil; // Depth-stencil buffer
         private Texture g_pNormals;
@@ -40,9 +39,9 @@ namespace TGC.Examples.ShadersExamples
         public ToonShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-ToonShading";
-            Description = "Ejemplo de Render no-realistico. [BARRA]->Activa/Desactiva efecto Blur.";
+            Category = "Post Process Shaders";
+            Name = "Toon Shading";
+            Description = "Ejemplo de Render no-realistico.";
         }
 
         public override void Init()
@@ -82,6 +81,7 @@ namespace TGC.Examples.ShadersExamples
                     instances.Add(instance);
                 }
 
+            Modifiers.addBoolean("blurActivated", "activar blur", false);
             Modifiers.addVertex3f("LightPosition", new Vector3(-100, -100, -100),
                 new Vector3(100, 100, 100), new Vector3(0, 40, 0));
             Modifiers.addFloat("Ambient", 0, 1, 0.5f);
@@ -169,8 +169,6 @@ namespace TGC.Examples.ShadersExamples
                 4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
                 CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
-
-            efecto_blur = false;
         }
 
         public override void Update()
@@ -183,9 +181,6 @@ namespace TGC.Examples.ShadersExamples
             PreRender();
 
             var lightPosition = (Vector3)Modifiers["LightPosition"];
-
-            if (Input.keyPressed(Key.Space))
-                efecto_blur = !efecto_blur;
 
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(lightPosition));
@@ -215,6 +210,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var instance in instances)
             {
                 instance.Technique = "DefaultTechnique";
+                instance.UpdateMeshTransform();
                 instance.render();
             }
             D3DDevice.Instance.Device.EndScene();
@@ -228,6 +224,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var instance in instances)
             {
                 instance.Technique = "NormalMap";
+                instance.UpdateMeshTransform();
                 instance.render();
             }
 
@@ -239,7 +236,7 @@ namespace TGC.Examples.ShadersExamples
 
             // dibujo el quad pp dicho :
             D3DDevice.Instance.Device.BeginScene();
-            effect.Technique = efecto_blur ? "CopyScreen" : "EdgeDetect";
+            effect.Technique = (bool)Modifiers["blurActivated"] ? "CopyScreen" : "EdgeDetect";
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
             D3DDevice.Instance.Device.SetStreamSource(0, g_pVBV3D, 0);
             effect.SetValue("g_Normals", g_pNormals);

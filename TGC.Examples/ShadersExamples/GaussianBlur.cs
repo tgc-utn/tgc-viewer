@@ -25,7 +25,7 @@ namespace TGC.Examples.ShadersExamples
         public GaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "PostProcess Shaders";
+            Category = "Post Process Shaders";
             Name = "Gaussian Blur";
             Description = "Gaussin blur filter.";
         }
