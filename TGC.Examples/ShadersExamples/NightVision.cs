@@ -41,8 +41,8 @@ namespace TGC.Examples.ShadersExamples
         public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-NightVision";
+            Category = "PostProcess Shaders";
+            Name = "NightVision";
             Description = "NightVision Effect";
         }
 
@@ -60,13 +60,16 @@ namespace TGC.Examples.ShadersExamples
             var scene2 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pasto\\Pasto-TgcScene.xml");
             pasto = scene2.Meshes[0];
+            pasto.AutoTransformEnable = true;
             var scene3 =
                 loader.loadSceneFromFile(MediaDir +
                                          "MeshCreator\\Meshes\\Vegetacion\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml");
             arbol = scene3.Meshes[0];
+            arbol.AutoTransformEnable = true;
             var scene4 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Arbusto2\\Arbusto2-TgcScene.xml");
             arbusto = scene4.Meshes[0];
+            arbusto.AutoTransformEnable = true;
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -86,7 +89,7 @@ namespace TGC.Examples.ShadersExamples
                 enemigos[t].playAnimation("StandBy", true);
                 enemigos[t].Position = new Vector3(-rnd.Next(0, 1500) - 250, 0, -rnd.Next(0, 1500) - 250);
                 enemigos[t].Scale = new Vector3(2f, 2f, 2f);
-
+                enemigos[t].UpdateMeshTransform();
                 bot_status[t] = 0;
             }
 
@@ -294,9 +297,12 @@ namespace TGC.Examples.ShadersExamples
             renderScene(elapsedTime, "DefaultTechnique");
             //Render personames enemigos
             foreach (var m in enemigos)
+            {
+                m.UpdateMeshTransform();//Transformacion default
                 m.render();
+            }
 
-            DrawText.drawText("Pos: " + Camara.Position, 0, 0, Color.Yellow);
+            DrawText.drawText("Pos: " + Camara.Position, 5, 20, Color.Yellow);
 
             device.EndScene();
         }
@@ -321,7 +327,10 @@ namespace TGC.Examples.ShadersExamples
             renderScene(elapsedTime, "DefaultTechnique");
             //Render personames enemigos
             foreach (var m in enemigos)
+            {
+                m.UpdateMeshTransform();
                 m.render();
+            }
 
             device.EndScene();
 
@@ -339,7 +348,10 @@ namespace TGC.Examples.ShadersExamples
             //Render personaje brillante
             //Render personames enemigos
             foreach (var m in enemigos)
+            {
+                m.UpdateMeshTransform();
                 m.render();
+            }
 
             if (Input.keyDown(Key.F))
                 for (var i = 0; i < cant_balas; ++i)
@@ -462,11 +474,12 @@ namespace TGC.Examples.ShadersExamples
         public void renderScene(float elapsedTime, string Technique)
         {
             //Dibujamos todos los meshes del escenario
-            /*
-            foreach (TgcMesh m in meshes)
+            
+            /*foreach (TgcMesh m in meshes)
             {
                 m.Effect = effect;
                 m.Technique = Technique;
+                m.UpdateMeshTransform();
                 m.render();
             }*/
 
@@ -478,6 +491,8 @@ namespace TGC.Examples.ShadersExamples
                 {
                     pasto.Position = new Vector3(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
                     pasto.Scale = new Vector3(3, 4 + rnd.Next(0, 4), 5);
+                    pasto.UpdateMeshTransform();
+                    //pasto.Transform = Matrix.Identity*Matrix.Scaling(3, 4 + rnd.Next(0, 4), 5) * Matrix.Translation(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
                     pasto.render();
                 }
 
@@ -487,6 +502,8 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = 0; j < 5; ++j)
                 {
                     arbusto.Position = new Vector3(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
+                    //arbusto.Transform = Matrix.Identity*Matrix.Translation(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
+                    arbusto.UpdateMeshTransform();
                     arbusto.render();
                 }
 
@@ -496,6 +513,8 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = 0; j < 3; ++j)
                 {
                     arbol.Position = new Vector3(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
+                    //arbol.Transform = Matrix.Identity*Matrix.Translation(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
+                    arbol.UpdateMeshTransform();
                     arbol.render();
                 }
         }
