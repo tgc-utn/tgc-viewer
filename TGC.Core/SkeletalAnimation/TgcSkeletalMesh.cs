@@ -411,8 +411,11 @@ namespace TGC.Core.SkeletalAnimation
             if (!enabled)
                 return;
 
-            //Actualizar transformacion de malla
-            updateMeshTransform();
+            //Actualizar transformacion de malla con el default.
+            if (autoTransformEnable)
+            {
+                UpdateMeshTransform();
+            }
 
             //Cargar VertexDeclaration
             D3DDevice.Instance.Device.VertexDeclaration = vertexDeclaration;
@@ -1079,16 +1082,13 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Actualizar transformacion actual de la malla
+        ///     Actualiza la matriz de transformacion con los datos internos del mesh (scale. rotation, traslation) para casos complejos es mejor no utilizar este metodo.
         /// </summary>
-        protected void updateMeshTransform()
+        public void UpdateMeshTransform()
         {
-            if (autoTransformEnable)
-            {
-                transform = Matrix.Scaling(scale)
+            transform = Matrix.Scaling(scale)
                             * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            * Matrix.Translation(translation);
-            }
+                            * Matrix.Translation(translation);            
         }
 
         /// <summary>

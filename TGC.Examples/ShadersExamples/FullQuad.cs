@@ -26,8 +26,8 @@ namespace TGC.Examples.ShadersExamples
         public FullScreenQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            Category = "Shaders";
-            Name = "Workshop-FullScreenQuad";
+            Category = "PostProcess Shaders";
+            Name = "Full Screen Quad";
             Description = "Full screen quad";
         }
 
@@ -55,7 +55,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(-182.3816f, 82.3252f, -811.9061f), Input);
+            Camara = new TgcFpsCamera(new Vector3(250, 160, -570), Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
