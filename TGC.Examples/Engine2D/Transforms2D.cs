@@ -128,18 +128,15 @@ namespace TGC.Examples.Engine2D
         public override void Render()
         {
             PreRender();
-            //Unos ejes especiales, para orientarnos. Estos no corresponden al origen en 2D, sino al centro de la pantalla.
-            //axis.render();
-
-
+            
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
             drawer2D.BeginDrawSprite();
 
-            //Aplicar las transformaciones necesarias y luego invocar al render.
+            //Aplicar las transformaciones necesarias y luego invocar al render. (ir comentando y descomentando para ver en pantalla.)
 
             //Ninguna transformación.
             sprite.TransformationMatrix = matrixIdentity;
-            //drawer2D.DrawSprite(sprite);
+            drawer2D.DrawSprite(sprite);
 
             //Rotamos y trasladamos.
             sprite.TransformationMatrix = rotation * traslation;
@@ -172,7 +169,7 @@ namespace TGC.Examples.Engine2D
             sprite.TransformationMatrix = pivotCentro * scaling * rotation * invPivotCentro * traslation;
             //drawer2D.DrawSprite(sprite);
             
-            //Como se puede apreciar las ultimas dos transformaciones dan igual resultado, 
+            //Como se puede apreciar las ultimas dos transformaciones dan igual resultado.
             
             //¿que pasaría si el escalado no es uniforme?
             sprite.TransformationMatrix = pivotCentro * Matrix.Scaling(1f,0.5f,1) * rotation * invPivotCentro * traslation;
@@ -182,9 +179,16 @@ namespace TGC.Examples.Engine2D
             //drawer2D.DrawSprite(sprite);
 
             //Nos adelantamos un poco ..... ¿¿¿Animaciones????
+
+            sprite.TransformationMatrix = pivotCentro * scaling * rotationAnimateFrameDepend * invPivotCentro * traslation;
+            //drawer2D.DrawSprite(sprite);
+
+            //Cada un segundo se actualiza la matriz.
+            sprite.TransformationMatrix = pivotCentro * scaling * rotationAnimateOneSec * invPivotCentro * traslation;
+            //drawer2D.DrawSprite(sprite);
+
             sprite.TransformationMatrix = pivotCentro * scaling * rotationAnimate * invPivotCentro * traslation;
-            
-                drawer2D.DrawSprite(sprite);
+            //drawer2D.DrawSprite(sprite);
             
                 
 
