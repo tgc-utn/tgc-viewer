@@ -107,6 +107,7 @@
     <Compile Include="Collision\SphereCollision\TriangleMeshCollider.cs" />
     <Compile Include="DirectX\DirectXBox.cs" />
     <Compile Include="DirectX\DirectXLight.cs" />
+    <Compile Include="Engine2D\Transforms2D.cs" />
     <Compile Include="Lights\TgcMeshBumpMapping.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />
     <Compile Include="ShadersExamples\DemoShaders.cs" />
