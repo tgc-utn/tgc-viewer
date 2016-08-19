@@ -167,7 +167,6 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateView()
         {
-            //FIXME esto deberia ir en el update.
             Camara.UpdateCamera(ElapsedTime);
             D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix();
         }

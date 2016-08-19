@@ -51,7 +51,7 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
         /// <summary>
         ///     The transformation matrix.
         /// </summary>
-        public Matrix TransformationMatrix { get; private set; }
+        public Matrix TransformationMatrix { get; set; }
 
         /// <summary>
         ///     The source rectangle to be drawn from the bitmap.
