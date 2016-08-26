@@ -1,4 +1,4 @@
-﻿using Microsoft.DirectX.Direct3D;
+﻿using SharpDX.Direct3D9;
 using TGC.Core.Direct3D;
 
 namespace TGC.Core.Textures

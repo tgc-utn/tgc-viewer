@@ -1,7 +1,5 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using System;
-using System.Drawing;
+using SharpDX;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;

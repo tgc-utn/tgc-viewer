@@ -1,7 +1,7 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Forms;
+using SharpDX;
+using SharpDX.Direct3D9;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 

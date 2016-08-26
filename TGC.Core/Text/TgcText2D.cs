@@ -1,6 +1,6 @@
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using SharpDX.Direct3D9;
 using TGC.Core.Direct3D;
 using Font = System.Drawing.Font;
 
@@ -9,7 +9,7 @@ namespace TGC.Core.Text
     public class TgcText2D : IDisposable
     {
         /// <summary>
-        ///     Alternativas de alineación del texto
+        ///     Alternativas de alineacion del texto
         /// </summary>
         public enum TextAlign
         {
@@ -58,7 +58,7 @@ namespace TGC.Core.Text
         }
 
         /// <summary>
-        ///     Tamaño maximo del recuadro del texto
+        ///     Tamano maximo del recuadro del texto
         /// </summary>
         public Size Size
         {
@@ -78,7 +78,7 @@ namespace TGC.Core.Text
         public DrawTextFormat Format { get; set; }
 
         /// <summary>
-        ///     Alineación del texto
+        ///     Alineacion del texto
         /// </summary>
         public TextAlign Align
         {
@@ -134,12 +134,12 @@ namespace TGC.Core.Text
         }
 
         /// <summary>
-        ///     Dibujar un texto en la posición indicada, con el color indicado.
+        ///     Dibujar un texto en la posicion indicada, con el color indicado.
         ///     Utilizar la fuente default del Framework.
         /// </summary>
         /// <param name="text">Texto a dibujar</param>
-        /// <param name="x">Posición X de la pantalla</param>
-        /// <param name="y">Posición Y de la pantalla</param>
+        /// <param name="x">Posicion X de la pantalla</param>
+        /// <param name="y">Posicion Y de la pantalla</param>
         /// <param name="color">Color del texto</param>
         public void drawText(string text, int x, int y, Color color)
         {

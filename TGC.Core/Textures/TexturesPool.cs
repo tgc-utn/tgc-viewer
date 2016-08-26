@@ -1,5 +1,5 @@
-﻿using Microsoft.DirectX.Direct3D;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SharpDX.Direct3D9;
 
 namespace TGC.Core.Textures
 {

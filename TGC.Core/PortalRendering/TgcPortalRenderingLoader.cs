@@ -1,5 +1,5 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
+using SharpDX;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;

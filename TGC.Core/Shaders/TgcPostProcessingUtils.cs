@@ -1,4 +1,4 @@
-﻿using Microsoft.DirectX;
+﻿using SharpDX;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Shaders

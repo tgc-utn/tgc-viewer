@@ -1,8 +1,8 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using SharpDX;
+using SharpDX.Direct3D9;
 using TGC.Core.Direct3D;
 using TGC.Core.Textures;
 
@@ -127,7 +127,7 @@ namespace TGC.Core.Particle
         }
 
         /// <summary>
-        ///     Minimo tamaño que puede tener una particula.
+        ///     Minimo tamano que puede tener una particula.
         /// </summary>
         public float MinSizeParticle
         {
@@ -136,7 +136,7 @@ namespace TGC.Core.Particle
         }
 
         /// <summary>
-        ///     Maximo tamaño que puede tener una particula.
+        ///     Maximo tamano que puede tener una particula.
         /// </summary>
         public float MaxSizeParticle
         {
@@ -268,19 +268,19 @@ namespace TGC.Core.Particle
             if (particlesDead.Count > 0)
             {
                 var p = particlesDead.Pop();
-                //Agrego la partícula a la lista de partículas vivas.
+                //Agrego la particula a la lista de particulas vivas.
                 particlesAlive.enqueue(p);
 
-                //Seteo valores iniciales de la partícula.
+                //Seteo valores iniciales de la particula.
                 p.TotalTimeToLive = particleTimeToLive;
                 p.TimeToLive = particleTimeToLive;
                 p.Position = position;
                 p.Color = Particle.DEFAULT_COLOR.ToArgb();
 
                 float faux;
-                var pSpeed = Vector3.Empty;
+				var pSpeed = Vector3.Zero;
 
-                // Según la dispersion asigno una velocidad inicial.
+                // Segun la dispersion asigno una velocidad inicial.
                 //(Si la dispersion es 0 la velocidad inicial sera (0,1,0)).
                 faux = random.Next(dispersion) / 1000.0f;
                 faux *= faux * 1000 % 2 == 0 ? 1.0f : -1.0f;
@@ -295,7 +295,7 @@ namespace TGC.Core.Particle
 
                 p.Speed = pSpeed;
 
-                //Modifico el tamaño de manera aleatoria.
+                //Modifico el tamano de manera aleatoria.
                 var size = (float)random.NextDouble() * maxSizeParticle;
                 if (size < minSizeParticle) size = minSizeParticle;
                 p.PointSize = size;

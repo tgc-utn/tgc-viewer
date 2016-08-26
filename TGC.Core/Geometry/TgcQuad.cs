@@ -1,6 +1,5 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
+using SharpDX;
+using SharpDX.Direct3D9;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -32,7 +31,7 @@ namespace TGC.Core.Geometry
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 6, D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
-            Center = Vector3.Empty;
+            Center = Vector3.Zero;
             normal = new Vector3(0, 1, 0);
             Size = new Vector2(10, 10);
             Enabled = true;

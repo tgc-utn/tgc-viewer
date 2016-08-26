@@ -1,8 +1,7 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using SharpDX;
+using SharpDX.Direct3D9;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -1404,7 +1403,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <param name="name">Nombre de la malla</param>
         public TgcSkeletalMesh createMeshInstance(string name)
         {
-            return createMeshInstance(name, Vector3.Empty, Vector3.Empty, new Vector3(1, 1, 1));
+            return createMeshInstance(name, Vector3.Zero, Vector3.Zero, new Vector3(1, 1, 1));
         }
 
         public override string ToString()

@@ -1,7 +1,6 @@
-using Microsoft.DirectX;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
+using SharpDX;
 
 namespace TGC.Core.Utils
 {

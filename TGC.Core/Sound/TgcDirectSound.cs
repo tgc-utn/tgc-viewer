@@ -1,6 +1,5 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectSound;
 using System.Windows.Forms;
+using SharpDX.DirectSound;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.Sound

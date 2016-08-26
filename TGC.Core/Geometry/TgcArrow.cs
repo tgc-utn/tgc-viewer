@@ -1,6 +1,5 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
+using SharpDX;
+using SharpDX.Direct3D9;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -308,10 +307,10 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crea una flecha en base a su punto de inicio y dirección
+        ///     Crea una flecha en base a su punto de inicio y direccion
         /// </summary>
         /// <param name="start">Punto de inicio</param>
-        /// <param name="direction">Dirección de la flecha</param>
+        /// <param name="direction">Direccion de la flecha</param>
         /// <returns>Flecha creada</returns>
         public static TgcArrow fromDirection(Vector3 start, Vector3 direction)
         {
@@ -323,10 +322,10 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crea una flecha en base a su punto de inicio y dirección, con el color y el grosor especificado
+        ///     Crea una flecha en base a su punto de inicio y direccion, con el color y el grosor especificado
         /// </summary>
         /// <param name="start">Punto de inicio</param>
-        /// <param name="direction">Dirección de la flecha</param>
+        /// <param name="direction">Direccion de la flecha</param>
         /// <param name="bodyColor">Color del cuerpo de la flecha</param>
         /// <param name="headColor">Color de la punta de la flecha</param>
         /// <param name="thickness">Grosor del cuerpo de la flecha</param>

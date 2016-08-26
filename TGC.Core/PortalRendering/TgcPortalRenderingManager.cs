@@ -1,6 +1,5 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
-using System.Drawing;
+using SharpDX;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;

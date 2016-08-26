@@ -1,14 +1,13 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
+using SharpDX;
+using SharpDX.Direct3D9;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 

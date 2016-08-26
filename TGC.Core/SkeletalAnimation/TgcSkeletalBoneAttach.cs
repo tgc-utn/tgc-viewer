@@ -1,4 +1,4 @@
-using Microsoft.DirectX;
+using SharpDX;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.SkeletalAnimation

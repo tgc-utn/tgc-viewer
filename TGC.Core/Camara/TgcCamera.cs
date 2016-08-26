@@ -1,4 +1,4 @@
-using Microsoft.DirectX;
+using SharpDX;
 
 namespace TGC.Core.Camara
 {

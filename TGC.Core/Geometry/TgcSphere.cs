@@ -1,9 +1,8 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
+using SharpDX;
+using SharpDX.Direct3D9;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;

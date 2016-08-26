@@ -1,6 +1,5 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectSound;
 using System;
+using SharpDX;
 
 namespace TGC.Core.Sound
 {

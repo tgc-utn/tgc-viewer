@@ -1,6 +1,5 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using System.Drawing;
+﻿using SharpDX;
+using SharpDX.Direct3D9;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
@@ -327,8 +326,8 @@ namespace TGC.Core.BoundingVolumes
         {
             var minObb = new OBBStruct();
             var minVolume = float.MaxValue;
-            var minInitValues = Vector3.Empty;
-            var minEndValues = Vector3.Empty;
+            var minInitValues = Vector3.Zero;
+            var minEndValues = Vector3.Zero;
             var transformedPoints = new Vector3[points.Length];
             float x, y, z;
 

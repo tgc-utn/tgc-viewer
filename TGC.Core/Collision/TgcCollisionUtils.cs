@@ -1,6 +1,6 @@
-using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
+using SharpDX;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 using TGC.Core.Utils;
@@ -88,11 +88,11 @@ namespace TGC.Core.Collision
 
         /// <summary>
         ///     Indica si un BoundingBox colisiona con otro.
-        ///     Solo indica si hay colisión o no. No va mas en detalle.
+        ///     Solo indica si hay colision o no. No va mas en detalle.
         /// </summary>
         /// <param name="a">BoundingBox 1</param>
         /// <param name="b">BoundingBox 2</param>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool testAABBAABB(TgcBoundingAxisAlignBox a, TgcBoundingAxisAlignBox b)
         {
             // Exit with no intersection if separated along an axis
@@ -108,12 +108,12 @@ namespace TGC.Core.Collision
         ///     Si hay intersección devuelve True, q contiene
         ///     el punto de intesección.
         ///     Basado en el código de: http://www.codercorner.com/RayAABB.cpp
-        ///     La dirección del Ray puede estar sin normalizar.
+        ///     La direccion del Ray puede estar sin normalizar.
         /// </summary>
         /// <param name="ray">Ray</param>
         /// <param name="a">AABB</param>
         /// <param name="q">Punto de intersección</param>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool intersectRayAABB(TgcRay ray, TgcBoundingAxisAlignBox aabb, out Vector3 q)
         {
             return intersectRayAABB(ray.toStruct(), aabb.toStruct(), out q);
@@ -124,15 +124,15 @@ namespace TGC.Core.Collision
         ///     Si hay intersección devuelve True, q contiene
         ///     el punto de intesección.
         ///     Basado en el código de: http://www.codercorner.com/RayAABB.cpp
-        ///     La dirección del Ray puede estar sin normalizar.
+        ///     La direccion del Ray puede estar sin normalizar.
         /// </summary>
         /// <param name="ray">Ray</param>
         /// <param name="a">AABB</param>
         /// <param name="q">Punto de intersección</param>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool intersectRayAABB(TgcRay.RayStruct ray, TgcBoundingAxisAlignBox.AABBStruct aabb, out Vector3 q)
         {
-            q = Vector3.Empty;
+            q = Vector3.Zero;
             var inside = true;
             var aabbMin = toArray(aabb.min);
             var aabbMax = toArray(aabb.max);
@@ -212,7 +212,7 @@ namespace TGC.Core.Collision
         /// <param name="p1">Punto final del segmento</param>
         /// <param name="aabb">BoundingBox</param>
         /// <param name="q">Punto de intersección</param>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool intersectSegmentAABB(Vector3 p0, Vector3 p1, TgcBoundingAxisAlignBox aabb, out Vector3 q)
         {
             var segmentDir = p1 - p0;
@@ -258,7 +258,7 @@ namespace TGC.Core.Collision
 
         /// <summary>
         ///     Calcula la mínima distancia al cuadrado entre el punto p y el BoundingBox.
-        ///     Si no se necesita saber el punto exacto de colisión es más ágil que utilizar closestPointAABB().
+        ///     Si no se necesita saber el punto exacto de colision es mas agil que utilizar closestPointAABB().
         /// </summary>
         /// <param name="p">Punto a testear</param>
         /// <param name="aabb">BoundingBox</param>
@@ -270,7 +270,7 @@ namespace TGC.Core.Collision
 
         /// <summary>
         ///     Calcula la mínima distancia al cuadrado entre el punto p y el BoundingBox.
-        ///     Si no se necesita saber el punto exacto de colisión es más ágil que utilizar closestPointAABB().
+        ///     Si no se necesita saber el punto exacto de colision es mas agil que utilizar closestPointAABB().
         /// </summary>
         /// <param name="p">Punto a testear</param>
         /// <param name="aabb">BoundingBox</param>
@@ -297,7 +297,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="sphere">BoundingSphere</param>
         /// <param name="aabb">BoundingBox</param>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool testSphereAABB(TgcBoundingSphere sphere, TgcBoundingAxisAlignBox aabb)
         {
             return testSphereAABB(sphere.toStruct(), aabb.toStruct());
@@ -308,7 +308,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="sphere">BoundingSphere</param>
         /// <param name="aabb">BoundingBox</param>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool testSphereAABB(TgcBoundingSphere.SphereStruct sphere, TgcBoundingAxisAlignBox.AABBStruct aabb)
         {
             //Compute squared distance between sphere center and AABB
@@ -323,7 +323,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="sphere">BoundingSphere</param>
         /// <param name="aabb">BoundingBox</param>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool testSphereOBB(TgcBoundingSphere sphere, TgcBoundingOrientedBox obb)
         {
             return testSphereOBB(sphere.toStruct(), obb.toStruct());
@@ -334,7 +334,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="sphere">BoundingSphere</param>
         /// <param name="aabb">BoundingBox</param>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool testSphereOBB(TgcBoundingSphere.SphereStruct sphere, TgcBoundingOrientedBox.OBBStruct obb)
         {
             //Transformar esfera a OBB-Space
@@ -362,10 +362,10 @@ namespace TGC.Core.Collision
         /// </returns>
         public static PlaneBoxResult classifyPlaneAABB(Plane plane, TgcBoundingAxisAlignBox aabb)
         {
-            var vmin = Vector3.Empty;
-            var vmax = Vector3.Empty;
+            var vmin = Vector3.Zero;
+            var vmax = Vector3.Zero;
 
-            //Obtener puntos minimos y maximos en base a la dirección de la normal del plano
+            //Obtener puntos minimos y maximos en base a la direccion de la normal del plano
             if (plane.A >= 0f)
             {
                 vmin.X = aabb.PMin.X;
@@ -443,7 +443,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="plane">Plano</param>
         /// <param name="aabb">BoundingBox</param>
-        /// <returns>True si hay colisión.</returns>
+        /// <returns>True si hay colision.</returns>
         public static bool testPlaneAABB(Plane plane, TgcBoundingAxisAlignBox aabb)
         {
             var c = (aabb.PMax + aabb.PMin) * 0.5f; // Compute AABB center
@@ -466,7 +466,7 @@ namespace TGC.Core.Collision
         /// <param name="vert1">Vertice 1 del triángulo</param>
         /// <param name="vert2">Vertice 2 del triángulo</param>
         /// <param name="aabb">BoundingBox</param>
-        /// <returns>True si hay colisión.</returns>
+        /// <returns>True si hay colision.</returns>
         public static bool testTriangleAABB(Vector3 vert0, Vector3 vert1, Vector3 vert2, TgcBoundingAxisAlignBox aabb)
         {
             /*   use separating axis theorem to test overlap between triangle and box need to test for overlap in these directions:
@@ -728,7 +728,7 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Indica si un BoundingSphere colisiona con otro.
         /// </summary>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool testSphereSphere(TgcBoundingSphere a, TgcBoundingSphere b)
         {
             // Calculate squared distance between centers
@@ -742,7 +742,7 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Idica si un BoundingSphere colisiona con un plano
         /// </summary>
-        /// <returns>True si hay colisión</returns>
+        /// <returns>True si hay colision</returns>
         public static bool testSpherePlane(TgcBoundingSphere s, Plane plane)
         {
             var p = toVector3(plane);
@@ -770,7 +770,7 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Indica si un Ray colisiona con un BoundingSphere.
         ///     Si el resultado es True se carga el punto de colision (q) y la distancia de colision en el Ray (t).
-        ///     La dirección del Ray debe estar normalizada.
+        ///     La direccion del Ray debe estar normalizada.
         /// </summary>
         /// <param name="ray">Ray</param>
         /// <param name="sphere">BoundingSphere</param>
@@ -780,7 +780,7 @@ namespace TGC.Core.Collision
         public static bool intersectRaySphere(TgcRay ray, TgcBoundingSphere sphere, out float t, out Vector3 q)
         {
             t = -1;
-            q = Vector3.Empty;
+            q = Vector3.Zero;
 
             var m = ray.Origin - sphere.Center;
             var b = Vector3.Dot(m, ray.Direction);
@@ -801,7 +801,7 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Indica si un segmento de recta colisiona con un BoundingSphere.
         ///     Si el resultado es True se carga el punto de colision (q) y la distancia de colision en el t.
-        ///     La dirección del Ray debe estar normalizada.
+        ///     La direccion del Ray debe estar normalizada.
         /// </summary>
         /// <param name="p0">Punto inicial del segmento</param>
         /// <param name="p1">Punto final del segmento</param>
@@ -831,7 +831,7 @@ namespace TGC.Core.Collision
         //
         /// <summary>
         ///     Indica si un BoundingSphere colisiona con un Ray (sin indicar su punto de colision)
-        ///     La dirección del Ray debe estar normalizada.
+        ///     La direccion del Ray debe estar normalizada.
         /// </summary>
         /// <param name="ray">Ray</param>
         /// <param name="sphere">BoundingSphere</param>
@@ -895,7 +895,7 @@ namespace TGC.Core.Collision
             {
                 // No intersection as sphere moving parallel to or away from plane
                 t = -1;
-                q = Vector3.Empty;
+                q = Vector3.Zero;
                 return false;
             }
             // Sphere is moving towards the plane
@@ -1009,7 +1009,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="q">Punto a clasificar</param>
         /// <param name="p">Plano</param>
-        /// <returns>Resultado de la colisión</returns>
+        /// <returns>Resultado de la colision</returns>
         public static PointPlaneResult classifyPointPlane(Vector3 q, Plane p)
         {
             var distance = distPointPlane(q, p);
@@ -1087,13 +1087,13 @@ namespace TGC.Core.Collision
 
         /// <summary>
         ///     Indica si un Ray colisiona con un Plano.
-        ///     Tanto la normal del plano como la dirección del Ray se asumen normalizados.
+        ///     Tanto la normal del plano como la direccion del Ray se asumen normalizados.
         /// </summary>
         /// <param name="ray">Ray a testear</param>
         /// <param name="plane">Plano a testear</param>
-        /// <param name="t">Instante de colisión</param>
-        /// <param name="q">Punto de colisión con el plano</param>
-        /// <returns>True si hubo colisión</returns>
+        /// <param name="t">Instante de colision</param>
+        /// <param name="q">Punto de colision con el plano</param>
+        /// <returns>True si hubo colision</returns>
         public static bool intersectRayPlane(TgcRay ray, Plane plane, out float t, out Vector3 q)
         {
             var planeNormal = getPlaneNormal(plane);
@@ -1107,7 +1107,7 @@ namespace TGC.Core.Collision
                 return true;
             }
 
-            q = Vector3.Empty;
+            q = Vector3.Zero;
             return false;
         }
 
@@ -1118,9 +1118,9 @@ namespace TGC.Core.Collision
         /// <param name="a">Punto inicial del segmento</param>
         /// <param name="b">Punto final del segmento</param>
         /// <param name="plane">Plano a testear</param>
-        /// <param name="t">Instante de colisión</param>
-        /// <param name="q">Punto de colisión</param>
-        /// <returns>True si hay colisión</returns>
+        /// <param name="t">Instante de colision</param>
+        /// <param name="q">Punto de colision</param>
+        /// <returns>True si hay colision</returns>
         public static bool intersectSegmentPlane(Vector3 a, Vector3 b, Plane plane, out float t, out Vector3 q)
         {
             var planeNormal = getPlaneNormal(plane);
@@ -1136,7 +1136,7 @@ namespace TGC.Core.Collision
                 return true;
             }
 
-            q = Vector3.Empty;
+            q = Vector3.Zero;
             return false;
         }
 
@@ -1347,7 +1347,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="frustum">Frustum</param>
         /// <param name="aabb">BoundingBox</param>
-        /// <returns>Resultado de la colisión</returns>
+        /// <returns>Resultado de la colision</returns>
         public static FrustumResult classifyFrustumAABB(TgcFrustum frustum, TgcBoundingAxisAlignBox aabb)
         {
             bool intersect = false;
@@ -1417,7 +1417,7 @@ namespace TGC.Core.Collision
         */
 
         /// <summary>
-        ///     Resultado de una colisión entre un objeto y el Frustum
+        ///     Resultado de una colision entre un objeto y el Frustum
         /// </summary>
         public enum FrustumResult
         {
@@ -1463,7 +1463,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="frustum">Frustum</param>
         /// <param name="sphere">BoundingSphere</param>
-        /// <returns>Resultado de la colisión</returns>
+        /// <returns>Resultado de la colision</returns>
         public static FrustumResult classifyFrustumSphere(TgcFrustum frustum, TgcBoundingSphere sphere)
         {
             float distance;
@@ -1545,7 +1545,7 @@ namespace TGC.Core.Collision
         }
 
         /// <summary>
-        ///     Resultado de una colisión entre un objeto y un Cuerpo Convexo
+        ///     Resultado de una colision entre un objeto y un Cuerpo Convexo
         /// </summary>
         public enum ConvexPolyhedronResult
         {
@@ -1608,7 +1608,7 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Indica si un punto se encuentra dentro de un Cuerpo Convexo.
         ///     Los planos del Cuerpo Convexo deben apuntar hacia adentro.
-        ///     Es más ágil que llamar a classifyPointConvexPolyhedron()
+        ///     Es mas agil que llamar a classifyPointConvexPolyhedron()
         /// </summary>
         /// <param name="q">Punto a clasificar</param>
         /// <param name="polyhedron">Cuerpo Convexo</param>
@@ -1728,7 +1728,7 @@ namespace TGC.Core.Collision
         public static bool intersectRayConvexPolygon(TgcRay ray, Vector3[] polyVertices, out float t, out Vector3 q)
         {
             t = -1;
-            q = Vector3.Empty;
+            q = Vector3.Zero;
             var v0 = polyVertices[0];
             var v1 = polyVertices[1];
             for (var i = 2; i < polyVertices.Length; i++)
@@ -1795,8 +1795,8 @@ namespace TGC.Core.Collision
             float u;
             float v;
             float w;
-            uvw = Vector3.Empty;
-            col = Vector3.Empty;
+            uvw = Vector3.Zero;
+            col = Vector3.Zero;
             t = -1;
 
             var ab = b - a;
@@ -1858,7 +1858,7 @@ namespace TGC.Core.Collision
         public static bool intersectRayTriangle(TgcRay ray, Vector3 v1, Vector3 v2, Vector3 v3, out float t,
             out Vector3 q)
         {
-            q = Vector3.Empty;
+            q = Vector3.Zero;
             t = -1;
             Vector3 e1, e2; //Edge1, Edge2
             Vector3 P, Q, T;
@@ -1925,8 +1925,8 @@ namespace TGC.Core.Collision
             float u;
             float v;
             float w;
-            uvw = Vector3.Empty;
-            col = Vector3.Empty;
+            uvw = Vector3.Zero;
+            col = Vector3.Zero;
             t = -1;
 
             var pq = q - p;
@@ -2057,7 +2057,7 @@ namespace TGC.Core.Collision
             var radius = cylinder.Radius;
 
             t = -1;
-            q = Vector3.Empty;
+            q = Vector3.Zero;
 
             Vector3 d = cylinderEnd - cylinderInit, m = segmentInit - cylinderInit, n = segmentEnd - segmentInit;
             var md = Vector3.Dot(m, d);

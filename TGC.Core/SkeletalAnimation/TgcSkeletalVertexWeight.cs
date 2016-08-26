@@ -1,5 +1,5 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
+using SharpDX;
 
 namespace TGC.Core.SkeletalAnimation
 {

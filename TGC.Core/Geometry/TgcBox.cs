@@ -1,8 +1,7 @@
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using System;
 using System.Diagnostics;
-using System.Drawing;
+using SharpDX;
+using SharpDX.Direct3D9;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.SceneLoader;
@@ -480,7 +479,7 @@ namespace TGC.Core.Geometry
                         v.Position = Vector3.TransformCoordinate(vBox.Position, Transform);
 
                         //normals
-                        v.Normal = Vector3.Empty;
+                        v.Normal = Vector3.Zero;
 
                         //texture coordinates diffuseMap
                         v.Tu = vBox.Tu;
@@ -538,7 +537,7 @@ namespace TGC.Core.Geometry
                         v.Position = Vector3.TransformCoordinate(vBox.Position, Transform);
 
                         //normals
-                        v.Normal = Vector3.Empty;
+                        v.Normal = Vector3.Zero;
 
                         //color
                         v.Color = vBox.Color;

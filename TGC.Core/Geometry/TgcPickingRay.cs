@@ -1,4 +1,4 @@
-using Microsoft.DirectX;
+using SharpDX;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
 
