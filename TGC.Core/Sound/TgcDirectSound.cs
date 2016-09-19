@@ -1,5 +1,7 @@
 using System.Windows.Forms;
+using SharpDX;
 using SharpDX.DirectSound;
+using SharpDX.Multimedia;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.Sound
@@ -9,18 +11,18 @@ namespace TGC.Core.Sound
     /// </summary>
     public class TgcDirectSound
     {
-        private Buffer primaryBuffer;
+        private PrimarySoundBuffer primaryBuffer;
 
         /// <summary>
         ///     Device de DirectSound
         /// </summary>
-        public Device DsDevice { get; set; }
+        public DirectSound DsDevice { get; set; }
 
         /// <summary>
         ///     Representa el objeto central del universo 3D que escucha todos los demás sonidos.
         ///     En base a su posición varía la captación de todos los demas sonidos 3D.
         /// </summary>
-        public Listener3D Listener3d { get; set; }
+        public SoundListener3D Listener3d { get; set; }
 
         /// <summary>
         ///     Objeto al cual el Listener3D va a seguir para variar su posición en cada cuadro.
@@ -44,17 +46,16 @@ namespace TGC.Core.Sound
         public void InitializeD3DDevice(Control control)
         {
             //Crear device de DirectSound
-            DsDevice = new Device();
-            DsDevice.SetCooperativeLevel(control, CooperativeLevel.Normal);
+            DsDevice = new DirectSound();
+            DsDevice.SetCooperativeLevel(control.Handle, CooperativeLevel.Normal);
 
             //Crear Listener3D
-            var primaryBufferDesc = new BufferDescription();
-            primaryBufferDesc.Control3D = true;
-            primaryBufferDesc.PrimaryBuffer = true;
-            primaryBuffer = new Buffer(primaryBufferDesc, DsDevice);
-            Listener3d = new Listener3D(primaryBuffer);
+            var primaryBufferDesc = new SoundBufferDescription();
+            primaryBufferDesc.Flags = BufferFlags.Control3D | BufferFlags.PrimaryBuffer;
+            primaryBuffer = new PrimarySoundBuffer(DsDevice, primaryBufferDesc);
+            Listener3d = new SoundListener3D(primaryBuffer);
             Listener3d.Position = new Vector3(0f, 0f, 0f);
-            Listener3d.Orientation = new Listener3DOrientation(new Vector3(1, 0, 0), new Vector3(0, 1, 0));
+            Listener3d.FrontOrientation = Vector3.Cross(new Vector3(1, 0, 0), new Vector3(0, 1, 0));
         }
-    }
+    } 
 }

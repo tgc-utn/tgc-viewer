@@ -1,4 +1,8 @@
 using System;
+using System.IO;
+using SharpDX;
+using SharpDX.DirectSound;
+using SharpDX.Multimedia;
 
 namespace TGC.Core.Sound
 {
@@ -10,26 +14,26 @@ namespace TGC.Core.Sound
         /// <summary>
         ///     Buffer con la información del sonido cargado
         /// </summary>
-        public SecondaryBuffer SoundBuffer { get; private set; }
+        public SecondarySoundBuffer SoundBuffer { get; private set; }
 
         /// <summary>
         ///     Carga un archivo WAV de audio, indicando el volumen del mismo
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="volume">Volumen del mismo</param>
-        public void loadSound(string soundPath, int volume, Device device)
+        public void loadSound(string soundPath, int volume, DirectSound device)
         {
             try
             {
                 dispose();
 
-                var bufferDescription = new BufferDescription();
+                var bufferDescription = new SoundBufferDescription();
                 if (volume != -1)
                 {
-                    bufferDescription.ControlVolume = true;
+                    bufferDescription.Flags = BufferFlags.ControlVolume;
                 }
 
-                SoundBuffer = new SecondaryBuffer(soundPath, bufferDescription, device);
+                SoundBuffer = new SecondarySoundBuffer(device, bufferDescription);
 
                 if (volume != -1)
                 {
@@ -46,7 +50,7 @@ namespace TGC.Core.Sound
         ///     Carga un archivo WAV de audio, con el volumen default del mismo
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
-        public void loadSound(string soundPath, Device device)
+        public void loadSound(string soundPath, DirectSound device)
         {
             loadSound(soundPath, -1, device);
         }
@@ -58,7 +62,7 @@ namespace TGC.Core.Sound
         /// <param name="playLoop">TRUE para reproducir en loop</param>
         public void play(bool playLoop)
         {
-            SoundBuffer.Play(0, playLoop ? BufferPlayFlags.Looping : BufferPlayFlags.Default);
+            SoundBuffer.Play(0, playLoop ? PlayFlags.Looping : PlayFlags.None);
         }
 
         /// <summary>
@@ -85,7 +89,7 @@ namespace TGC.Core.Sound
         /// </summary>
         public void dispose()
         {
-            if (SoundBuffer != null && !SoundBuffer.Disposed)
+            if (SoundBuffer != null) // && !SoundBuffer.Disposed
             {
                 SoundBuffer.Dispose();
                 SoundBuffer = null;
