@@ -42,45 +42,46 @@ namespace TGC.Core.Direct3D
         public void DefaultValues()
         {
             //Frustum values
-            Device.Transform.Projection = Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
-                ZFarPlaneDistance);
+            Device.SetTransform(TransformState.Projection, Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
+                ZFarPlaneDistance) );
 
             //Render state
-            Device.RenderState.SpecularEnable = false;
-            Device.RenderState.FillMode = FillMode.Solid;
-            Device.RenderState.CullMode = Cull.None;
-            Device.RenderState.ShadeMode = ShadeMode.Gouraud;
-            Device.RenderState.MultiSampleAntiAlias = true;
-            Device.RenderState.SlopeScaleDepthBias = -0.1f;
-            Device.RenderState.DepthBias = 0f;
-            Device.RenderState.ColorVertex = true;
-            Device.RenderState.Lighting = false;
-            Device.RenderState.ZBufferEnable = true;
-            Device.RenderState.FogEnable = false;
+            Device.SetRenderState(RenderState.SpecularEnable, false);
+            Device.SetRenderState(RenderState.FillMode, FillMode.Solid);
+            Device.SetRenderState(RenderState.CullMode, Cull.None);
+            Device.SetRenderState(RenderState.ShadeMode, ShadeMode.Gouraud);
+            Device.SetRenderState(RenderState.MultisampleAntialias, true);
+            Device.SetRenderState(RenderState.SlopeScaleDepthBias, -0.1f);
+            Device.SetRenderState(RenderState.DepthBias, 0f);
+            Device.SetRenderState(RenderState.ColorVertex, true);
+            Device.SetRenderState(RenderState.Lighting, false);
+            Device.SetRenderState(RenderState.ZEnable, true); //TODO: Averiguar si es el mismo valor que ZBufferEnable
+            Device.SetRenderState(RenderState.FogEnable, false);
 
             //Alpha Blending
-            Device.RenderState.AlphaBlendEnable = false;
-            Device.RenderState.AlphaTestEnable = false;
-            Device.RenderState.ReferenceAlpha = 50; //verificar un valor optimo.
-            Device.RenderState.AlphaFunction = Compare.Greater;
-            Device.RenderState.BlendOperation = BlendOperation.Add;
-            Device.RenderState.SourceBlend = Blend.SourceAlpha;
-            Device.RenderState.DestinationBlend = Blend.InvSourceAlpha;
-
+            Device.SetRenderState(RenderState.AlphaBlendEnable, false);
+            Device.SetRenderState(RenderState.AlphaTestEnable, false);
+            Device.SetRenderState(RenderState.AlphaRef, 50); //verificar un valor optimo.
+            Device.SetRenderState(RenderState.AlphaFunc, Compare.Greater);
+            Device.SetRenderState(RenderState.BlendOperation, BlendOperation.Add);
+            Device.SetRenderState(RenderState.SourceBlend, Blend.SourceAlpha);
+            Device.SetRenderState(RenderState.DestinationBlend, Blend.InverseSourceAlpha);
+            
             //Texture Filtering
-            Device.SetSamplerState(0, SamplerStageStates.MinFilter, (int)TextureFilter.Linear);
-            Device.SetSamplerState(0, SamplerStageStates.MagFilter, (int)TextureFilter.Linear);
-            Device.SetSamplerState(0, SamplerStageStates.MipFilter, (int)TextureFilter.Linear);
-
-            Device.SetSamplerState(1, SamplerStageStates.MinFilter, (int)TextureFilter.Linear);
-            Device.SetSamplerState(1, SamplerStageStates.MagFilter, (int)TextureFilter.Linear);
-            Device.SetSamplerState(1, SamplerStageStates.MipFilter, (int)TextureFilter.Linear);
+            Device.SetSamplerState(0, SamplerState.MinFilter, (int)TextureFilter.Linear);
+            Device.SetSamplerState(0, SamplerState.MagFilter, (int)TextureFilter.Linear);
+            Device.SetSamplerState(0, SamplerState.MipFilter, (int)TextureFilter.Linear);
+                                      
+            Device.SetSamplerState(1, SamplerState.MinFilter, (int)TextureFilter.Linear);
+            Device.SetSamplerState(1, SamplerState.MagFilter, (int)TextureFilter.Linear);
+            Device.SetSamplerState(1, SamplerState.MipFilter, (int)TextureFilter.Linear);
 
             //Clear lights
-            foreach (Light light in Device.Lights)
-            {
-                light.Enabled = false;
-            }
+            
+            //foreach (Light light in Device.Lights)
+            //{
+            //    light.Enabled = false;
+            //}
 
             //Limpiar todas las texturas
             TexturesManager.Instance.clearAll();
@@ -104,11 +105,11 @@ namespace TGC.Core.Direct3D
             if (ParticlesEnabled)
             {
                 //PointSprite
-                Device.RenderState.PointSpriteEnable = true;
-                Device.RenderState.PointScaleEnable = true;
-                Device.RenderState.PointScaleA = 1.0f;
-                Device.RenderState.PointScaleB = 1.0f;
-                Device.RenderState.PointScaleC = 0.0f;
+                Device.SetRenderState(RenderState.PointSpriteEnable, true);
+                Device.SetRenderState(RenderState.PointScaleEnable, true);
+                Device.SetRenderState(RenderState.PointScaleA, 1.0f);
+                Device.SetRenderState(RenderState.PointScaleB, 1.0f);
+                Device.SetRenderState(RenderState.PointScaleC, 0.0f);
             }
         }
 
@@ -117,20 +118,21 @@ namespace TGC.Core.Direct3D
             AspectRatio = (float)panel.Width / panel.Height;
             Width = panel.Width;
             Height = panel.Height;
-
-            var caps = Manager.GetDeviceCaps(Manager.Adapters.Default.Adapter, DeviceType.Hardware);
+            
+            var caps = Device.Direct3D.GetDeviceCaps(Device.Capabilities.AdapterOrdinal, DeviceType.Hardware);//TODO: Manager.Adapters.Default.Adapter = 0 ??
             Debug.WriteLine("Max primitive count:" + caps.MaxPrimitiveCount);
 
             CreateFlags flags;
-            if (caps.DeviceCaps.SupportsHardwareTransformAndLight)
+            
+            //if (caps.DeviceCaps.HWTransformAndLight)
                 flags = CreateFlags.HardwareVertexProcessing;
-            else
-                flags = CreateFlags.SoftwareVertexProcessing;
+            //else
+            //    flags = CreateFlags.SoftwareVertexProcessing;
             d3dpp = CreatePresentationParameters();
 
             //Crear Graphics Device
-            Device.IsUsingEventHandlers = false;
-            Device = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
+            //Device.IsUsingEventHandlers = false;
+            Device = new Device(Device.Direct3D, Device.Capabilities.AdapterOrdinal, DeviceType.Hardware, panel.Handle, flags, d3dpp);
         }
 
         private PresentParameters CreatePresentationParameters()
@@ -140,19 +142,19 @@ namespace TGC.Core.Direct3D
             d3dpp.SwapEffect = SwapEffect.Discard;
             d3dpp.Windowed = true;
             d3dpp.EnableAutoDepthStencil = true;
-            d3dpp.AutoDepthStencilFormat = DepthFormat.D24S8;
+            d3dpp.AutoDepthStencilFormat = Format.D24S8;
             d3dpp.PresentationInterval = PresentInterval.Immediate;
 
             //Antialiasing
-            if (Manager.CheckDeviceMultiSampleType(Manager.Adapters.Default.Adapter, DeviceType.Hardware,
-                Manager.Adapters.Default.CurrentDisplayMode.Format, true, MultiSampleType.NonMaskable))
+            if (Device.Direct3D.CheckDeviceMultisampleType(Device.Capabilities.AdapterOrdinal, DeviceType.Hardware,
+                Format.Unknown, true, MultisampleType.NonMaskable))
             {
-                d3dpp.MultiSample = MultiSampleType.NonMaskable;
+                d3dpp.MultiSampleType = MultisampleType.NonMaskable;
                 d3dpp.MultiSampleQuality = 0;
             }
             else
             {
-                d3dpp.MultiSample = MultiSampleType.None;
+                d3dpp.MultiSampleType = MultisampleType.None;
             }
 
             return d3dpp;
@@ -163,31 +165,31 @@ namespace TGC.Core.Direct3D
             AspectRatio = (float)width / height;
             Width = width;
             Height = height;
-            //hay que actualizar tambien la matriz de proyeccion, sino sigue viendo mal.
-            Device.Transform.Projection = Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
-                ZFarPlaneDistance);
-            //FALTA TODO ESTO DE ABAJO....
-            //DefaultValues();
-            //Device.Reset(d3dpp);
+            //TODO: hay que actualizar tambien la matriz de proyeccion, sino sigue viendo mal. cc: revisar puede estar fallando
+            Device.SetTransform(TransformState.Projection, Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
+                ZFarPlaneDistance) );
+            //TODO: FALTA TODO ESTO DE ABAJO.... cc: No se si habia que sacarlo o dejarlo
+            DefaultValues();
+            Device.Reset(d3dpp);
 
-            /*Viewport v = new Viewport();
-            v.MaxZ = Device.Viewport.MaxZ;
-            v.MinZ = Device.Viewport.MinZ;
+            Viewport v = new Viewport();
+            v.MaxDepth = Device.Viewport.MaxDepth;
+            v.MinDepth = Device.Viewport.MinDepth;
             v.X = Device.Viewport.X;
             v.Y = Device.Viewport.Y;
             v.Width = Width;
             v.Height = Height;
-            Device.Viewport = v;*/
+            Device.Viewport = v;
         }
 
         public void FillModeWireFrame()
         {
-            Device.RenderState.FillMode = FillMode.WireFrame;
+            Device.SetRenderState(RenderState.FillMode, FillMode.Wireframe);
         }
 
         public void FillModeWireSolid()
         {
-            Device.RenderState.FillMode = FillMode.Solid;
+            Device.SetRenderState(RenderState.FillMode, FillMode.Solid);
         }
 
         public void Dispose()

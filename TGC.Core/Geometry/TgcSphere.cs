@@ -1213,9 +1213,9 @@ namespace TGC.Core.Geometry
                 return new Vector3(NX, NY, NZ);
             }
 
-            public static VertexFormats Format
+            public static VertexFormat Format
             {
-                get { return VertexFormats.PositionNormal | VertexFormats.Texture1 | VertexFormats.Diffuse; }
+                get { return VertexFormat.Position | VertexFormat.Texture1 | VertexFormat.Diffuse; }
             }
 
             public override string ToString()

@@ -34,7 +34,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         public TgcBoundingAxisAlignBox()
         {
-            RenderColor = Color.Yellow.ToArgb();
+            RenderColor = Color.Yellow.ToRgba();
             dirtyValues = true;
             AlphaBlendEnable = false;
         }
