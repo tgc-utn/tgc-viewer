@@ -173,13 +173,24 @@ namespace TGC.Viewer.UI
 
         private void ExecuteExample(TgcExample example)
         {
-            Modelo.ExecuteExample(example);
-            ContadorFPS();
-            AxisLines();
-            Wireframe();
+            try
+            {
+                Modelo.ExecuteExample(example);
+                ContadorFPS();
+                AxisLines();
+                Wireframe();
 
-            toolStripStatusCurrentExample.Text = "Ejemplo actual: " + example.Name;
-            panel3D.Focus();
+                toolStripStatusCurrentExample.Text = "Ejemplo actual: " + example.Name;
+                panel3D.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + example.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                //TODO mejorar esta llamada con un metodo de model
+                Modelo.ExampleLoader.CurrentExample = null;
+                return;
+            }
         }
 
         private void FullExample()
