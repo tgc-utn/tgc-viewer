@@ -123,6 +123,11 @@ namespace TGC.Viewer.Model
             {
                 try
                 {
+					if (!Path.GetFileName(file).StartsWith("TGC", StringComparison.Ordinal))
+					{
+						continue;
+					}
+
                     var assembly = Assembly.LoadFile(file);
                     foreach (var type in assembly.GetTypes())
                     {
