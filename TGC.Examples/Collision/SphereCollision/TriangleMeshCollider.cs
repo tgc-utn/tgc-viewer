@@ -1,6 +1,7 @@
 ﻿using Microsoft.DirectX;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
@@ -57,16 +58,16 @@ namespace TGC.Examples.Collision.SphereCollision
         /// <param name="q">Punto mas cercano de colision</param>
         /// <param name="n">Normal del triangulo colisionado</param>
         /// <returns>True si hay colision</returns>
-        public override bool intersectMovingSphere(TgcBoundingSphere sphere, Vector3 movementVector,
-            TgcBoundingSphere movementSphere, out float minT, out Vector3 minQ, out Vector3 n)
+        public override bool intersectMovingSphere(TgcBoundingSphere sphere, TGCVector3 movementVector,
+            TgcBoundingSphere movementSphere, out float minT, out TGCVector3 minQ, out TGCVector3 n)
         {
-            minQ = Vector3.Empty;
+            minQ = TGCVector3.Empty;
             minT = float.MaxValue;
-            n = Vector3.Empty;
-            var collisionPlane = Plane.Empty;
+            n = TGCVector3.Empty;
+            var collisionPlane = TGCPlane.Empty;
 
             //Colision contra cada triangulo del collider, quedarse con el menor
-            Vector3 q;
+            TGCVector3 q;
             float t;
             for (var i = 0; i < Triangles.Length; i++)
             {
@@ -105,12 +106,12 @@ namespace TGC.Examples.Collision.SphereCollision
         /// <param name="triangle">Triangulo</param>
         /// <param name="collisionPoint">Menor punto de colision encontrado</param>
         /// <returns>True si hay colision</returns>
-        private bool intersectMovingSphereTriangle(TgcBoundingSphere sphere, Vector3 movementVector, Triangle triangle,
-            out float minT, out Vector3 collisionPoint)
+        private bool intersectMovingSphereTriangle(TgcBoundingSphere sphere, TGCVector3 movementVector, Triangle triangle,
+            out float minT, out TGCVector3 collisionPoint)
         {
             float t;
-            Vector3 q;
-            collisionPoint = Vector3.Empty;
+            TGCVector3 q;
+            collisionPoint = TGCVector3.Empty;
             minT = float.MaxValue;
 
             //Ver si la esfera en movimiento colisiona con el plano del triangulo
@@ -211,22 +212,22 @@ namespace TGC.Examples.Collision.SphereCollision
         /// <param name="radius">Radio del cilindro</param>
         /// <param name="t">Instante de colision</param>
         /// <returns>True si hay colision</returns>
-        private static bool intersectSegmentCylinderNoEndcap(Vector3 segmentInit, Vector3 segmentEnd,
-            Vector3 cylinderInit, Vector3 cylinderEnd, float radius, out float t)
+        private static bool intersectSegmentCylinderNoEndcap(TGCVector3 segmentInit, TGCVector3 segmentEnd,
+            TGCVector3 cylinderInit, TGCVector3 cylinderEnd, float radius, out float t)
         {
             t = -1;
 
-            Vector3 d = cylinderEnd - cylinderInit, m = segmentInit - cylinderInit, n = segmentEnd - segmentInit;
-            var md = Vector3.Dot(m, d);
-            var nd = Vector3.Dot(n, d);
-            var dd = Vector3.Dot(d, d);
+            TGCVector3 d = cylinderEnd - cylinderInit, m = segmentInit - cylinderInit, n = segmentEnd - segmentInit;
+            var md = TGCVector3.Dot(m, d);
+            var nd = TGCVector3.Dot(n, d);
+            var dd = TGCVector3.Dot(d, d);
             // Test if segment fully outside either endcap of cylinder
             if (md < 0.0f && md + nd < 0.0f) return false; // Segment outside ’p’ side of cylinder
             if (md > dd && md + nd > dd) return false; // Segment outside ’q’ side of cylinder
-            var nn = Vector3.Dot(n, n);
-            var mn = Vector3.Dot(m, n);
+            var nn = TGCVector3.Dot(n, n);
+            var mn = TGCVector3.Dot(m, n);
             var a = dd * nn - nd * nd;
-            var k = Vector3.Dot(m, m) - radius * radius;
+            var k = TGCVector3.Dot(m, m) - radius * radius;
             var c = dd * k - md * md;
             if (FastMath.Abs(a) < float.Epsilon)
             {
@@ -274,34 +275,34 @@ namespace TGC.Examples.Collision.SphereCollision
             ///     Crear triangulo.
             ///     Calcula su plano y BoundingSphere
             /// </summary>
-            public Triangle(Vector3 a, Vector3 b, Vector3 c)
+            public Triangle(TGCVector3 a, TGCVector3 b, TGCVector3 c)
             {
                 A = a;
                 B = b;
                 C = c;
-                Plane = Plane.FromPoints(a, b, c);
+                Plane = TGCPlane.FromPoints(a, b, c);
                 BoundingSphere = TgcBoundingSphere.computeFromPoints(new[] { a, b, c }).toClass();
             }
 
             /// <summary>
             ///     Vertice A
             /// </summary>
-            public Vector3 A { get; set; }
+            public TGCVector3 A { get; set; }
 
             /// <summary>
             ///     Vertice B
             /// </summary>
-            public Vector3 B { get; set; }
+            public TGCVector3 B { get; set; }
 
             /// <summary>
             ///     Vertice C
             /// </summary>
-            public Vector3 C { get; set; }
+            public TGCVector3 C { get; set; }
 
             /// <summary>
             ///     Ecuacion del plano del triangulo
             /// </summary>
-            public Plane Plane { get; set; }
+            public TGCPlane Plane { get; set; }
 
             /// <summary>
             ///     BoundingSphere

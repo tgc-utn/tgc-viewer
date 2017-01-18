@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.SkeletalAnimation
@@ -24,7 +25,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <param name="model">Modelo a adjuntar</param>
         /// <param name="bone">Hueso al cual adjuntarse</param>
         /// <param name="offset">Offset desde el cual el modelo sigue al hueso</param>
-        public TgcSkeletalBoneAttach(TgcMesh mesh, TgcSkeletalBone bone, Matrix offset)
+        public TgcSkeletalBoneAttach(TgcMesh mesh, TgcSkeletalBone bone, TGCMatrix offset)
         {
             Bone = bone;
             Mesh = mesh;
@@ -45,7 +46,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Desplazamiento desde el cual el modelo sigue al hueso
         /// </summary>
-        public Matrix Offset { get; set; }
+        public TGCMatrix Offset { get; set; }
 
         /// <summary>
         ///     Configurar modelo
@@ -64,14 +65,14 @@ namespace TGC.Core.SkeletalAnimation
         public void updateValues()
         {
             Mesh.AutoTransformEnable = false;
-            updateMeshTransform(Matrix.Identity);
+            updateMeshTransform(TGCMatrix.Identity);
         }
 
         /// <summary>
         ///     Actualiza la transformacion del modelo en base al a transformacion actual
         ///     del hueso y el offset configurado
         /// </summary>
-        internal void updateMeshTransform(Matrix meshTransform)
+        internal void updateMeshTransform(TGCMatrix meshTransform)
         {
             Mesh.Transform = Offset * Bone.MatFinal * meshTransform;
         }

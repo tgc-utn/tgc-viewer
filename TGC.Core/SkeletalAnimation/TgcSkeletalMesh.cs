@@ -6,6 +6,7 @@ using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -57,7 +58,7 @@ namespace TGC.Core.SkeletalAnimation
         protected TgcSkeletalBone[] bones;
 
         //Matrices final de transformacion de cada ueso
-        private Matrix[] boneSpaceFinalTransforms;
+        private TGCMatrix[] boneSpaceFinalTransforms;
 
         protected TgcBoundingAxisAlignBox boundingBox;
 
@@ -96,9 +97,9 @@ namespace TGC.Core.SkeletalAnimation
 
         protected MeshRenderType renderType;
 
-        protected Vector3 rotation;
+        protected TGCVector3 rotation;
 
-        protected Vector3 scale;
+        protected TGCVector3 scale;
 
         protected TgcLine[] skeletonRenderBones;
 
@@ -112,9 +113,9 @@ namespace TGC.Core.SkeletalAnimation
 
         protected string technique;
 
-        protected Matrix transform;
+        protected TGCMatrix transform;
 
-        protected Vector3 translation;
+        protected TGCVector3 translation;
 
         protected VertexDeclaration vertexDeclaration;
 
@@ -146,8 +147,8 @@ namespace TGC.Core.SkeletalAnimation
         /// <param name="translation">Traslación respecto de la malla original</param>
         /// <param name="rotation">Rotación respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcSkeletalMesh(string name, TgcSkeletalMesh parentInstance, Vector3 translation, Vector3 rotation,
-            Vector3 scale)
+        public TgcSkeletalMesh(string name, TgcSkeletalMesh parentInstance, TGCVector3 translation, TGCVector3 rotation,
+            TGCVector3 scale)
         {
             //Cargar iniciales datos en base al original
             initData(parentInstance.d3dMesh, name, parentInstance.renderType, parentInstance.bones);
@@ -427,7 +428,7 @@ namespace TGC.Core.SkeletalAnimation
             setShaderMatrix();
 
             //Enviar al shader el array de matrices de huesos para poder hacer skinning en el Vertex Shader
-            effect.SetValue("bonesMatWorldArray", boneSpaceFinalTransforms);
+            effect.SetValue("bonesMatWorldArray", TGCMatrix.ToMatrixArray(boneSpaceFinalTransforms));
 
             //Renderizar malla
             if (!renderSkeleton)
@@ -576,7 +577,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     en base a los valores de: Position, Rotation, Scale.
         ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
-        public Matrix Transform
+        public TGCMatrix Transform
         {
             get { return transform; }
             set { transform = value; }
@@ -597,7 +598,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Posicion absoluta de la Malla
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return translation; }
             set
@@ -610,7 +611,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Rotación absoluta de la malla
         /// </summary>
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
@@ -619,7 +620,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Escalado absoluto de la malla;
         /// </summary>
-        public Vector3 Scale
+        public TGCVector3 Scale
         {
             get { return scale; }
             set
@@ -632,7 +633,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(Vector3 v)
+        public void move(TGCVector3 v)
         {
             move(v.X, v.Y, v.Z);
         }
@@ -667,7 +668,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
+        public void getPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -719,10 +720,10 @@ namespace TGC.Core.SkeletalAnimation
 
             //variables de movimiento
             AutoTransformEnable = false;
-            translation = new Vector3(0f, 0f, 0f);
-            rotation = new Vector3(0f, 0f, 0f);
-            scale = new Vector3(1f, 1f, 1f);
-            transform = Matrix.Identity;
+            translation = new TGCVector3(0f, 0f, 0f);
+            rotation = new TGCVector3(0f, 0f, 0f);
+            scale = new TGCVector3(1f, 1f, 1f);
+            transform = TGCMatrix.Identity;
 
             //variables de animacion
             isAnimating = false;
@@ -735,7 +736,7 @@ namespace TGC.Core.SkeletalAnimation
             animations = new Dictionary<string, TgcSkeletalAnimation>();
 
             //Matrices de huesos
-            boneSpaceFinalTransforms = new Matrix[MAX_BONE_COUNT];
+            boneSpaceFinalTransforms = new TGCMatrix[MAX_BONE_COUNT];
 
             //Shader
             vertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
@@ -768,7 +769,7 @@ namespace TGC.Core.SkeletalAnimation
                 }
 
                 //Almacenar la inversa de la posicion original del hueso, para la referencia inicial de los vertices
-                bone.MatInversePose = Matrix.Invert(bone.MatFinal);
+                bone.MatInversePose = TGCMatrix.Invert(bone.MatFinal);
             }
         }
 
@@ -780,8 +781,8 @@ namespace TGC.Core.SkeletalAnimation
             //Crear array para dibujar los huesos y joints
             var jointsColor = Color.Violet;
             var bonesColor = Color.Yellow;
-            var jointsSize = new Vector3(2, 2, 2);
-            var ceroVec = new Vector3(0, 0, 0);
+            var jointsSize = new TGCVector3(2, 2, 2);
+            var ceroVec = TGCVector3.Empty;
             skeletonRenderJoints = new TgcBox[bones.Length];
             skeletonRenderBones = new TgcLine[bones.Length];
             var boneColor = Color.Yellow.ToArgb();
@@ -800,8 +801,8 @@ namespace TGC.Core.SkeletalAnimation
                 {
                     //Crear linea de hueso para renderziar esqueleto
                     var boneLine = new TgcLine();
-                    boneLine.PStart = TgcVectorUtils.transform(ceroVec, bone.MatFinal);
-                    boneLine.PEnd = TgcVectorUtils.transform(ceroVec, bone.ParentBone.MatFinal);
+                    boneLine.PStart = TGCVector3.transform(ceroVec, bone.MatFinal);
+                    boneLine.PEnd = TGCVector3.transform(ceroVec, bone.ParentBone.MatFinal);
                     boneLine.Color = bonesColor;
                     skeletonRenderBones[i] = boneLine;
                 }
@@ -915,7 +916,7 @@ namespace TGC.Core.SkeletalAnimation
 
                 //Determinar matriz local inicial
                 var firstFrame = currentAnimation.BoneFrames[i][0];
-                bone.MatLocal = Matrix.RotationQuaternion(firstFrame.Rotation) * Matrix.Translation(firstFrame.Position);
+                bone.MatLocal = TGCMatrix.RotationQuaternion(firstFrame.Rotation) * TGCMatrix.Translation(firstFrame.Position);
 
                 //Multiplicar por matriz del padre, si tiene
                 if (bone.ParentBone != null)
@@ -1029,7 +1030,7 @@ namespace TGC.Core.SkeletalAnimation
                 var quatFrameRotation = Quaternion.Slerp(frame1.Rotation, frame2.Rotation, interpolationValue);
 
                 //Unir ambas transformaciones de este frame
-                var frameMatrix = Matrix.RotationQuaternion(quatFrameRotation) * Matrix.Translation(frameTranslation);
+                var frameMatrix = TGCMatrix.RotationQuaternion(quatFrameRotation) * TGCMatrix.Translation(frameTranslation);
 
                 //Multiplicar por la matriz del padre, si tiene
                 if (bone.ParentBone != null)
@@ -1086,9 +1087,9 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         public void UpdateMeshTransform()
         {
-            transform = Matrix.Scaling(scale)
-                            * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            * Matrix.Translation(translation);            
+            transform = TGCMatrix.Scaling(scale)
+                            * TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
+                            * TGCMatrix.Translation(translation);            
         }
 
         /// <summary>
@@ -1117,7 +1118,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         protected void renderSkeletonMesh()
         {
-            var ceroVec = new Vector3(0, 0, 0);
+            var ceroVec = TGCVector3.Empty;
 
             //Dibujar huesos y joints
             for (var i = 0; i < bones.Length; i++)
@@ -1134,8 +1135,8 @@ namespace TGC.Core.SkeletalAnimation
                 {
                     var boneLine = skeletonRenderBones[i];
 
-                    boneLine.PStart = TgcVectorUtils.transform(ceroVec, bone.MatFinal * transform);
-                    boneLine.PEnd = TgcVectorUtils.transform(ceroVec, bone.ParentBone.MatFinal * transform);
+                    boneLine.PStart = TGCVector3.transform(ceroVec, bone.MatFinal * transform);
+                    boneLine.PEnd = TGCVector3.transform(ceroVec, bone.ParentBone.MatFinal * transform);
                     boneLine.updateValues();
                 }
             }
@@ -1167,15 +1168,15 @@ namespace TGC.Core.SkeletalAnimation
         ///     Devuelve un array con todas las posiciones de los vértices de la malla, en el estado actual
         /// </summary>
         /// <returns>Array creado</returns>
-        public Vector3[] getVertexPositions()
+        public TGCVector3[] getVertexPositions()
         {
-            Vector3[] points = null;
+            TGCVector3[] points = null;
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
                     var verts1 = (TgcSkeletalLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts1.Length];
+                    points = new TGCVector3[verts1.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts1[i].Position;
@@ -1186,7 +1187,7 @@ namespace TGC.Core.SkeletalAnimation
                 case MeshRenderType.DIFFUSE_MAP:
                     var verts2 = (TgcSkeletalLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts2.Length];
+                    points = new TGCVector3[verts2.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts2[i].Position;
@@ -1220,10 +1221,10 @@ namespace TGC.Core.SkeletalAnimation
 
                     //Calcular normales recorriendo los triangulos
                     var triCount = origVertexBuffer.Length / 3;
-                    var normals = new Vector3[origVertexBuffer.Length];
+                    var normals = new TGCVector3[origVertexBuffer.Length];
                     for (var i = 0; i < normals.Length; i++)
                     {
-                        normals[i] = new Vector3(0, 0, 0);
+                        normals[i] = TGCVector3.Empty;
                     }
                     for (var i = 0; i < triCount; i++)
                     {
@@ -1234,9 +1235,9 @@ namespace TGC.Core.SkeletalAnimation
                         TgcSkeletalLoader.DiffuseMapVertex v3 = origVertexBuffer[i * 3 + 2];
 
                         //Face-normal (left-handend)
-                        Vector3 a = v2.Position - v1.Position;
-                        Vector3 b = v3.Position - v1.Position;
-                        Vector3 n = Vector3.Cross(b,a);
+                        TGCVector3 a = v2.Position - v1.Position;
+                        TGCVector3 b = v3.Position - v1.Position;
+                        TGCVector3 n = TGCVector3.Cross(b,a);
 
                         //Normalizar
                         n.Normalize();
@@ -1375,7 +1376,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <param name="translation">Traslación respecto de la malla original</param>
         /// <param name="rotation">Rotación respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcSkeletalMesh createMeshInstance(string name, Vector3 translation, Vector3 rotation, Vector3 scale)
+        public TgcSkeletalMesh createMeshInstance(string name, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
         {
             if (parentInstance != null)
             {
@@ -1404,7 +1405,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <param name="name">Nombre de la malla</param>
         public TgcSkeletalMesh createMeshInstance(string name)
         {
-            return createMeshInstance(name, Vector3.Empty, Vector3.Empty, new Vector3(1, 1, 1));
+            return createMeshInstance(name, TGCVector3.Empty, TGCVector3.Empty, TGCVector3.One);
         }
 
         public override string ToString()

@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -45,7 +46,7 @@ namespace TGC.Examples.Optimization
             scene.setMeshesEnabled(false);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(0, 0, 0), 800f, 600f, Input);
+            Camara = new TgcFpsCamera(TGCVector3.Empty, 800f, 600f, Input);
 
             //Modifiers
             Modifiers.addBoolean("portalRendering", "PortalRendering", true);

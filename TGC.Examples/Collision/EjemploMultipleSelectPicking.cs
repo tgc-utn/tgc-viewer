@@ -6,6 +6,7 @@ using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
@@ -26,7 +27,7 @@ namespace TGC.Examples.Collision
     public class EjemploMultipleSelectPicking : TGCExampleViewer
     {
         private const float SELECTION_BOX_HEIGHT = 50;
-        private Vector3 initSelectionPoint;
+        private TGCVector3 initSelectionPoint;
         private List<TgcMesh> modelos;
         private List<TgcMesh> modelosSeleccionados;
         private TgcPickingRay pickingRay;
@@ -48,7 +49,7 @@ namespace TGC.Examples.Collision
             //Crear suelo
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\Quake\\quakeWall3.jpg");
-           suelo = new TgcPlane(new Vector3(-500, 0, -500), new Vector3(1000, 0f, 1000), TgcPlane.Orientations.XZplane, texture);
+           suelo = new TgcPlane(new TGCVector3(-500, 0, -500), new TGCVector3(1000, 0f, 1000), TgcPlane.Orientations.XZplane, texture);
 
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
@@ -66,21 +67,21 @@ namespace TGC.Examples.Collision
             modelos.Add(modeloOrignal);
 
             //Modelos instancias del original
-            modelos.Add(modeloOrignal.createMeshInstance("Carretilla2", new Vector3(100, 0, 0), Vector3.Empty,
-                new Vector3(1, 1, 1)));
-            modelos.Add(modeloOrignal.createMeshInstance("Carretilla3", new Vector3(50, 0, -70), Vector3.Empty,
-                new Vector3(1, 1, 1)));
-            modelos.Add(modeloOrignal.createMeshInstance("Carretilla4", new Vector3(-100, 0, -30), Vector3.Empty,
-                new Vector3(1, 1, 1)));
-            modelos.Add(modeloOrignal.createMeshInstance("Carretilla5", new Vector3(-70, 0, -80), Vector3.Empty,
-                new Vector3(1, 1, 1)));
+            modelos.Add(modeloOrignal.createMeshInstance("Carretilla2", new TGCVector3(100, 0, 0), TGCVector3.Empty,
+                TGCVector3.One));
+            modelos.Add(modeloOrignal.createMeshInstance("Carretilla3", new TGCVector3(50, 0, -70), TGCVector3.Empty,
+                TGCVector3.One));
+            modelos.Add(modeloOrignal.createMeshInstance("Carretilla4", new TGCVector3(-100, 0, -30), TGCVector3.Empty,
+                TGCVector3.One));
+            modelos.Add(modeloOrignal.createMeshInstance("Carretilla5", new TGCVector3(-70, 0, -80), TGCVector3.Empty,
+                TGCVector3.One));
 
             //Crear caja para marcar en que lugar hubo colision
-            selectionBox = TgcBox.fromSize(new Vector3(3, SELECTION_BOX_HEIGHT, 3), Color.Red);
+            selectionBox = TgcBox.fromSize(new TGCVector3(3, SELECTION_BOX_HEIGHT, 3), Color.Red);
             selectionBox.BoundingBox.setRenderColor(Color.Red);
             selecting = false;
 
-            Camara.SetCamera(new Vector3(250f, 250f, 250f), new Vector3(0f, 0f, 0f));
+            Camara.SetCamera(new TGCVector3(250f, 250f, 250f), new TGCVector3(0f, 0f, 0f));
         }
 
         public override void Update()
@@ -109,17 +110,17 @@ namespace TGC.Examples.Collision
                 {
                     //Detectar nuevo punto de colision con el piso
                     pickingRay.updateRay();
-                    Vector3 collisionPoint;
+                    TGCVector3 collisionPoint;
                     if (TgcCollisionUtils.intersectRayAABB(pickingRay.Ray, suelo.BoundingBox, out collisionPoint))
                     {
                         //Obtener extremos del rectángulo de selección
-                        var min = Vector3.Minimize(initSelectionPoint, collisionPoint);
-                        var max = Vector3.Maximize(initSelectionPoint, collisionPoint);
+                        var min = TGCVector3.Minimize(initSelectionPoint, collisionPoint);
+                        var max = TGCVector3.Maximize(initSelectionPoint, collisionPoint);
                         min.Y = 0;
                         max.Y = SELECTION_BOX_HEIGHT;
 
                         //Configurar BOX
-                        selectionBox.setExtremes(min, max);
+                        selectionBox.setExtremes(TGCVector3.FromVector3(min), max);
                         selectionBox.updateValues();
                
                     }
@@ -156,9 +157,7 @@ namespace TGC.Examples.Collision
             foreach (var mesh in modelos)
             {
                 mesh.Transform =
-                Matrix.Scaling(mesh.Scale)
-                            * Matrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
-                            * Matrix.Translation(mesh.Position);
+                TGCMatrix.Scaling(mesh.Scale) * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z) * TGCMatrix.Translation(mesh.Position);
                 mesh.render();
             }
 

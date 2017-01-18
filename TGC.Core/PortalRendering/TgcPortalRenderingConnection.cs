@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.PortalRendering
 {
@@ -9,7 +10,7 @@ namespace TGC.Core.PortalRendering
     public class TgcPortalRenderingConnection
     {
         public TgcPortalRenderingConnection(TgcPortalRenderingPortal portal, TgcPortalRenderingCell nextCell,
-            TgcConvexPolygon polygon, Plane plane)
+            TgcConvexPolygon polygon, TGCPlane plane)
         {
             Portal = portal;
             NextCell = nextCell;
@@ -36,7 +37,7 @@ namespace TGC.Core.PortalRendering
         /// <summary>
         ///     Plano del portal, apuntando hacia la celda origen
         /// </summary>
-        public Plane Plane { get; }
+        public TGCPlane Plane { get; }
 
         public override string ToString()
         {

@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
@@ -29,11 +30,11 @@ namespace TGC.Core.BoundingVolumes
             Far = 5
         }
 
-        private static readonly Vector3 UP_VECTOR = new Vector3(0, 1, 0);
+        private static readonly TGCVector3 UP_VECTOR = TGCVector3.Up;
 
         public TgcFrustum()
         {
-            FrustumPlanes = new Plane[6];
+            FrustumPlanes = new TGCPlane[6];
 
             Color = Color.Green;
             AlphaBlendingValue = 0.7f;
@@ -51,7 +52,7 @@ namespace TGC.Core.BoundingVolumes
         ///     Estan normalizados.
         ///     Sus normales hacia adentro.
         /// </summary>
-        public Plane[] FrustumPlanes { get; } = new Plane[6];
+        public TGCPlane[] FrustumPlanes { get; } = new TGCPlane[6];
 
         /// <summary>
         ///     Shader del mesh
@@ -67,7 +68,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Left plane
         /// </summary>
-        public Plane LeftPlane
+        public TGCPlane LeftPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Left]; }
         }
@@ -75,7 +76,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Right plane
         /// </summary>
-        public Plane RightPlane
+        public TGCPlane RightPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Right]; }
         }
@@ -83,7 +84,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Top plane
         /// </summary>
-        public Plane TopPlane
+        public TGCPlane TopPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Top]; }
         }
@@ -91,7 +92,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Bottom plane
         /// </summary>
-        public Plane BottomPlane
+        public TGCPlane BottomPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Bottom]; }
         }
@@ -99,7 +100,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Near plane
         /// </summary>
-        public Plane NearPlane
+        public TGCPlane NearPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Near]; }
         }
@@ -107,7 +108,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Far plane
         /// </summary>
-        public Plane FarPlane
+        public TGCPlane FarPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Far]; }
         }
@@ -128,7 +129,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="viewMatrix">View matrix</param>
         /// <param name="projectionMatrix">Projection matrix</param>
-        public void updateVolume(Matrix viewMatrix, Matrix projectionMatrix)
+        public void updateVolume(TGCMatrix viewMatrix, TGCMatrix projectionMatrix)
         {
             var viewProjection = viewMatrix * projectionMatrix;
 
@@ -171,7 +172,7 @@ namespace TGC.Core.BoundingVolumes
             //Normalize planes
             for (var i = 0; i < 6; i++)
             {
-                FrustumPlanes[i] = Plane.Normalize(FrustumPlanes[i]);
+                FrustumPlanes[i] = TGCPlane.Normalize(FrustumPlanes[i]);
             }
         }
 
@@ -186,10 +187,10 @@ namespace TGC.Core.BoundingVolumes
         /// <param name="farDistance"></param>
         /// <param name="fieldOfViewY"></param>
         /// <returns>Los 8 vertices del Frustum</returns>
-        private Vector3[] computeFrustumCorners(Vector3 position, Vector3 lookAt, float aspectRatio, float nearDistance,
+        private TGCVector3[] computeFrustumCorners(TGCVector3 position, TGCVector3 lookAt, float aspectRatio, float nearDistance,
             float farDistance, float fieldOfViewY)
         {
-            var corners = new Vector3[8];
+            var corners = new TGCVector3[8];
             /*
              (ntl)0 ---- 1(ntr)
                   |      |   Near-face
@@ -209,15 +210,15 @@ namespace TGC.Core.BoundingVolumes
             // compute the Z axis of camera
             // this axis points in the opposite direction from
             // the looking direction
-            var Z = Vector3.Subtract(position, lookAt);
+            var Z = TGCVector3.Subtract(position, lookAt);
             Z.Normalize();
 
             // X axis of camera with given "up" vector and Z axis
-            var X = Vector3.Cross(UP_VECTOR, Z);
+            var X = TGCVector3.Cross(UP_VECTOR, Z);
             X.Normalize();
 
             // the real "up" vector is the cross product of Z and X
-            var Y = Vector3.Cross(Z, X);
+            var Y = TGCVector3.Cross(Z, X);
 
             // compute the centers of the near and far planes
             var nc = position - Z * nearDistance;
@@ -243,7 +244,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="position"></param>
         /// <param name="lookAt"></param>
-        public void updateMesh(Vector3 position, Vector3 lookAt)
+        public void updateMesh(TGCVector3 position, TGCVector3 lookAt)
         {
             updateMesh(position, lookAt, D3DDevice.Instance.AspectRatio, D3DDevice.Instance.ZNearPlaneDistance,
                 D3DDevice.Instance.ZFarPlaneDistance, D3DDevice.Instance.FieldOfView);
@@ -259,7 +260,7 @@ namespace TGC.Core.BoundingVolumes
         /// <param name="nearDistance"></param>
         /// <param name="farDistance"></param>
         /// <param name="fieldOfViewY"></param>
-        public void updateMesh(Vector3 position, Vector3 lookAt, float aspectRatio, float nearDistance,
+        public void updateMesh(TGCVector3 position, TGCVector3 lookAt, float aspectRatio, float nearDistance,
             float farDistance, float fieldOfViewY)
         {
             //Calcular los 8 vertices extremos
@@ -277,52 +278,52 @@ namespace TGC.Core.BoundingVolumes
             var color = Color.ToArgb();
 
             // Front face
-            vertices[0] = new CustomVertex.PositionColored(corners[0], color);
-            vertices[1] = new CustomVertex.PositionColored(corners[2], color);
-            vertices[2] = new CustomVertex.PositionColored(corners[3], color);
-            vertices[3] = new CustomVertex.PositionColored(corners[0], color);
-            vertices[4] = new CustomVertex.PositionColored(corners[3], color);
-            vertices[5] = new CustomVertex.PositionColored(corners[2], color);
+            vertices[0] = new CustomVertex.PositionColored(corners[0].ToVector3(), color);
+            vertices[1] = new CustomVertex.PositionColored(corners[2].ToVector3(), color);
+            vertices[2] = new CustomVertex.PositionColored(corners[3].ToVector3(), color);
+            vertices[3] = new CustomVertex.PositionColored(corners[0].ToVector3(), color);
+            vertices[4] = new CustomVertex.PositionColored(corners[3].ToVector3(), color);
+            vertices[5] = new CustomVertex.PositionColored(corners[2].ToVector3(), color);
 
             // Back face
-            vertices[6] = new CustomVertex.PositionColored(corners[5], color);
-            vertices[7] = new CustomVertex.PositionColored(corners[4], color);
-            vertices[8] = new CustomVertex.PositionColored(corners[6], color);
-            vertices[9] = new CustomVertex.PositionColored(corners[6], color);
-            vertices[10] = new CustomVertex.PositionColored(corners[7], color);
-            vertices[11] = new CustomVertex.PositionColored(corners[5], color);
+            vertices[6] = new CustomVertex.PositionColored(corners[5].ToVector3(), color);
+            vertices[7] = new CustomVertex.PositionColored(corners[4].ToVector3(), color);
+            vertices[8] = new CustomVertex.PositionColored(corners[6].ToVector3(), color);
+            vertices[9] = new CustomVertex.PositionColored(corners[6].ToVector3(), color);
+            vertices[10] = new CustomVertex.PositionColored(corners[7].ToVector3(), color);
+            vertices[11] = new CustomVertex.PositionColored(corners[5].ToVector3(), color);
 
             // Top face
-            vertices[12] = new CustomVertex.PositionColored(corners[4], color);
-            vertices[13] = new CustomVertex.PositionColored(corners[5], color);
-            vertices[14] = new CustomVertex.PositionColored(corners[1], color);
-            vertices[15] = new CustomVertex.PositionColored(corners[4], color);
-            vertices[16] = new CustomVertex.PositionColored(corners[1], color);
-            vertices[17] = new CustomVertex.PositionColored(corners[0], color);
+            vertices[12] = new CustomVertex.PositionColored(corners[4].ToVector3(), color);
+            vertices[13] = new CustomVertex.PositionColored(corners[5].ToVector3(), color);
+            vertices[14] = new CustomVertex.PositionColored(corners[1].ToVector3(), color);
+            vertices[15] = new CustomVertex.PositionColored(corners[4].ToVector3(), color);
+            vertices[16] = new CustomVertex.PositionColored(corners[1].ToVector3(), color);
+            vertices[17] = new CustomVertex.PositionColored(corners[0].ToVector3(), color);
 
             // Bottom face
-            vertices[18] = new CustomVertex.PositionColored(corners[2], color);
-            vertices[19] = new CustomVertex.PositionColored(corners[3], color);
-            vertices[20] = new CustomVertex.PositionColored(corners[7], color);
-            vertices[21] = new CustomVertex.PositionColored(corners[2], color);
-            vertices[22] = new CustomVertex.PositionColored(corners[7], color);
-            vertices[23] = new CustomVertex.PositionColored(corners[6], color);
+            vertices[18] = new CustomVertex.PositionColored(corners[2].ToVector3(), color);
+            vertices[19] = new CustomVertex.PositionColored(corners[3].ToVector3(), color);
+            vertices[20] = new CustomVertex.PositionColored(corners[7].ToVector3(), color);
+            vertices[21] = new CustomVertex.PositionColored(corners[2].ToVector3(), color);
+            vertices[22] = new CustomVertex.PositionColored(corners[7].ToVector3(), color);
+            vertices[23] = new CustomVertex.PositionColored(corners[6].ToVector3(), color);
 
             // Left face
-            vertices[24] = new CustomVertex.PositionColored(corners[4], color);
-            vertices[25] = new CustomVertex.PositionColored(corners[0], color);
-            vertices[26] = new CustomVertex.PositionColored(corners[2], color);
-            vertices[27] = new CustomVertex.PositionColored(corners[4], color);
-            vertices[28] = new CustomVertex.PositionColored(corners[2], color);
-            vertices[29] = new CustomVertex.PositionColored(corners[6], color);
+            vertices[24] = new CustomVertex.PositionColored(corners[4].ToVector3(), color);
+            vertices[25] = new CustomVertex.PositionColored(corners[0].ToVector3(), color);
+            vertices[26] = new CustomVertex.PositionColored(corners[2].ToVector3(), color);
+            vertices[27] = new CustomVertex.PositionColored(corners[4].ToVector3(), color);
+            vertices[28] = new CustomVertex.PositionColored(corners[2].ToVector3(), color);
+            vertices[29] = new CustomVertex.PositionColored(corners[6].ToVector3(), color);
 
             // Right face
-            vertices[30] = new CustomVertex.PositionColored(corners[1], color);
-            vertices[31] = new CustomVertex.PositionColored(corners[5], color);
-            vertices[32] = new CustomVertex.PositionColored(corners[7], color);
-            vertices[33] = new CustomVertex.PositionColored(corners[1], color);
-            vertices[34] = new CustomVertex.PositionColored(corners[7], color);
-            vertices[35] = new CustomVertex.PositionColored(corners[3], color);
+            vertices[30] = new CustomVertex.PositionColored(corners[1].ToVector3(), color);
+            vertices[31] = new CustomVertex.PositionColored(corners[5].ToVector3(), color);
+            vertices[32] = new CustomVertex.PositionColored(corners[7].ToVector3(), color);
+            vertices[33] = new CustomVertex.PositionColored(corners[1].ToVector3(), color);
+            vertices[34] = new CustomVertex.PositionColored(corners[7].ToVector3(), color);
+            vertices[35] = new CustomVertex.PositionColored(corners[3].ToVector3(), color);
 
             //Actualizar vertexBuffer
             VertexBuffer.SetData(vertices, 0, LockFlags.None);

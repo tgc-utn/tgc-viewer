@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -63,15 +64,15 @@ namespace TGC.Examples.MeshExamples
                 var c = vertices[i * 3 + 2];
 
                 //Obtener normal del triangulo. El orden influye en si obtenemos el vector normal hacia adentro o hacia afuera del mesh
-                var normal = Vector3.Cross(c - a, b - a);
+                var normal = TGCVector3.Cross(c - a, b - a);
                 normal.Normalize();
 
                 //Crear plano que contiene el triangulo a partir un vertice y la normal
-                var plane = Plane.FromPointNormal(a, normal);
+                var plane = TGCPlane.FromPointNormal(a, normal);
 
                 //Calcular el centro del triangulo. Hay muchos tipos de centros para un triangulo (http://www.mathopenref.com/trianglecenters.html)
                 //Aca calculamos el mas simple
-                var center = Vector3.Scale(a + b + c, 1 / 3f);
+                var center = TGCVector3.Scale(a + b + c, 1 / 3f);
 
                 ///////////// Creacion de elementos para poder dibujar a pantalla (propios de este ejemplo) ///////////////
 
@@ -85,7 +86,7 @@ namespace TGC.Examples.MeshExamples
                 planes.Add(quad);
 
                 //Creamos una flecha con la clase TgcArrow para poder dibujar la normal (la normal la estiramos un poco para que se pueda ver)
-                normals.Add(TgcArrow.fromDirection(center, Vector3.Scale(normal, 10f)));
+                normals.Add(TgcArrow.fromDirection(center, TGCVector3.Scale(normal, 10f)));
 
                 //Creamos la clase TgcTriangle que es un helper para dibujar triangulos sueltos
                 var t = new TgcTriangle();

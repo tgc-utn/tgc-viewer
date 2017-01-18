@@ -7,6 +7,7 @@ using System.IO.Compression;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.PortalRendering;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
@@ -174,8 +175,8 @@ namespace TGC.Core.SceneLoader
                 if (meshData.pMin != null && meshData.pMax != null)
                 {
                     tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(
-                        TgcParserUtils.float3ArrayToVector3(meshData.pMin),
-                        TgcParserUtils.float3ArrayToVector3(meshData.pMax),
+                        TGCVector3.Float3ArrayToVector3(meshData.pMin),
+                        TGCVector3.Float3ArrayToVector3(meshData.pMax),
                         tgcMesh.Position,
                         tgcMesh.Scale
                         );
@@ -203,8 +204,8 @@ namespace TGC.Core.SceneLoader
             if (sceneData.pMin != null && sceneData.pMax != null)
             {
                 tgcScene.BoundingBox = new TgcBoundingAxisAlignBox(
-                    new Vector3(sceneData.pMin[0], sceneData.pMin[1], sceneData.pMin[2]),
-                    new Vector3(sceneData.pMax[0], sceneData.pMax[1], sceneData.pMax[2])
+                    new TGCVector3(sceneData.pMin[0], sceneData.pMin[1], sceneData.pMin[2]),
+                    new TGCVector3(sceneData.pMax[0], sceneData.pMax[1], sceneData.pMax[2])
                     );
             }
             else
@@ -248,7 +249,7 @@ namespace TGC.Core.SceneLoader
 
                     //vertices
                     var coordIdx = meshData.coordinatesIndices[j] * 3;
-                    v.Position = new Vector3(
+                    v.Position = new TGCVector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
                         meshData.verticesCoordinates[coordIdx + 2]
@@ -258,7 +259,7 @@ namespace TGC.Core.SceneLoader
                     //puede haber una normal compartida para cada vertice del mesh
                     if (meshData.verticesNormals.Length == meshData.verticesCoordinates.Length)
                     {
-                        v.Normal = new Vector3(
+                        v.Normal = new TGCVector3(
                             meshData.verticesNormals[coordIdx],
                             meshData.verticesNormals[coordIdx + 1],
                             meshData.verticesNormals[coordIdx + 2]
@@ -268,7 +269,7 @@ namespace TGC.Core.SceneLoader
                     else
                     {
                         var normalIdx = j * 3;
-                        v.Normal = new Vector3(
+                        v.Normal = new TGCVector3(
                             meshData.verticesNormals[normalIdx],
                             meshData.verticesNormals[normalIdx + 1],
                             meshData.verticesNormals[normalIdx + 2]
@@ -368,7 +369,7 @@ namespace TGC.Core.SceneLoader
 
                     //vertices
                     var coordIdx = meshData.coordinatesIndices[j] * 3;
-                    v.Position = new Vector3(
+                    v.Position = new TGCVector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
                         meshData.verticesCoordinates[coordIdx + 2]
@@ -378,7 +379,7 @@ namespace TGC.Core.SceneLoader
                     //puede haber una normal compartida para cada vertice del mesh
                     if (meshData.verticesNormals.Length == meshData.verticesCoordinates.Length)
                     {
-                        v.Normal = new Vector3(
+                        v.Normal = new TGCVector3(
                             meshData.verticesNormals[coordIdx],
                             meshData.verticesNormals[coordIdx + 1],
                             meshData.verticesNormals[coordIdx + 2]
@@ -388,7 +389,7 @@ namespace TGC.Core.SceneLoader
                     else
                     {
                         var normalIdx = j * 3;
-                        v.Normal = new Vector3(
+                        v.Normal = new TGCVector3(
                             meshData.verticesNormals[normalIdx],
                             meshData.verticesNormals[normalIdx + 1],
                             meshData.verticesNormals[normalIdx + 2]
@@ -478,7 +479,7 @@ namespace TGC.Core.SceneLoader
 
                     //vertices
                     var coordIdx = meshData.coordinatesIndices[j] * 3;
-                    v.Position = new Vector3(
+                    v.Position = new TGCVector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
                         meshData.verticesCoordinates[coordIdx + 2]
@@ -488,7 +489,7 @@ namespace TGC.Core.SceneLoader
                     //puede haber una normal compartida para cada vertice del mesh
                     if (meshData.verticesNormals.Length == meshData.verticesCoordinates.Length)
                     {
-                        v.Normal = new Vector3(
+                        v.Normal = new TGCVector3(
                             meshData.verticesNormals[coordIdx],
                             meshData.verticesNormals[coordIdx + 1],
                             meshData.verticesNormals[coordIdx + 2]
@@ -498,7 +499,7 @@ namespace TGC.Core.SceneLoader
                     else
                     {
                         var normalIdx = j * 3;
-                        v.Normal = new Vector3(
+                        v.Normal = new TGCVector3(
                             meshData.verticesNormals[normalIdx],
                             meshData.verticesNormals[normalIdx + 1],
                             meshData.verticesNormals[normalIdx + 2]
@@ -536,11 +537,11 @@ namespace TGC.Core.SceneLoader
         private TgcMesh crearMeshInstance(TgcMeshData meshData, List<TgcMesh> meshes)
         {
             var originalMesh = meshes[meshData.originalMesh];
-            var translation = new Vector3(meshData.position[0], meshData.position[1], meshData.position[2]);
+            var translation = new TGCVector3(meshData.position[0], meshData.position[1], meshData.position[2]);
             var rotationQuat = new Quaternion(meshData.rotation[0], meshData.rotation[1], meshData.rotation[2],
                 meshData.rotation[3]);
             var rotation = quaternionToEuler(rotationQuat);
-            var scale = new Vector3(meshData.scale[0], meshData.scale[1], meshData.scale[2]);
+            var scale = new TGCVector3(meshData.scale[0], meshData.scale[1], meshData.scale[2]);
 
             var tgcMesh = new TgcMesh(meshData.name, originalMesh, translation, rotation, scale);
             return tgcMesh;
@@ -549,12 +550,12 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Convierte un Quaternion a rotación de Euler
         /// </summary>
-        private Vector3 quaternionToEuler(Quaternion quat)
+        private TGCVector3 quaternionToEuler(Quaternion quat)
         {
             //TODO revisar que esta conversion a Euler ande bien
 
-            var mat = Matrix.RotationQuaternion(quat);
-            var matrixGetRotation = new Vector3();
+            var mat = TGCMatrix.RotationQuaternion(quat);
+            var matrixGetRotation = new TGCVector3();
 
             //gets the x axis rotation from the matrix
             matrixGetRotation.X = (float)Math.Asin(mat.M32);
@@ -661,8 +662,8 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         public struct VertexColorVertex
         {
-            public Vector3 Position;
-            public Vector3 Normal;
+            public TGCVector3 Position;
+            public TGCVector3 Normal;
             public int Color;
         }
 
@@ -691,8 +692,8 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         public struct DiffuseMapVertex
         {
-            public Vector3 Position;
-            public Vector3 Normal;
+            public TGCVector3 Position;
+            public TGCVector3 Normal;
             public int Color;
             public float Tu;
             public float Tv;
@@ -726,8 +727,8 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         public struct DiffuseMapAndLightmapVertex
         {
-            public Vector3 Position;
-            public Vector3 Normal;
+            public TGCVector3 Position;
+            public TGCVector3 Normal;
             public int Color;
             public float Tu0;
             public float Tv0;
@@ -764,8 +765,8 @@ namespace TGC.Core.SceneLoader
             /// <param name="rotation">Rotación respecto de la malla original</param>
             /// <param name="scale">Escala respecto de la malla original</param>
             /// <returns>Instancia de TgcMesh creada</returns>
-            TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, Vector3 translation, Vector3 rotation,
-                Vector3 scale);
+            TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, TGCVector3 translation, TGCVector3 rotation,
+                TGCVector3 scale);
         }
 
         /// <summary>
@@ -778,8 +779,8 @@ namespace TGC.Core.SceneLoader
                 return new TgcMesh(d3dMesh, meshName, renderType);
             }
 
-            public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, Vector3 translation,
-                Vector3 rotation, Vector3 scale)
+            public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, TGCVector3 translation,
+                TGCVector3 rotation, TGCVector3 scale)
             {
                 return new TgcMesh(meshName, originalMesh, translation, rotation, scale);
             }

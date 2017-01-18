@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.UserControls.Modifier
 {
@@ -17,19 +18,19 @@ namespace TGC.Core.UserControls.Modifier
         private readonly TrackBar trackBarY;
         private readonly TrackBar trackBarZ;
         private readonly FlowLayoutPanel vertexValuesPanel;
-        private Vector3 maxValue;
-        private Vector3 minValue;
+        private TGCVector3 maxValue;
+        private TGCVector3 minValue;
 
         private bool numericUpDownChangeX;
         private bool numericUpDownChangeY;
         private bool numericUpDownChangeZ;
 
-        private Vector3 result = new Vector3();
+        private TGCVector3 result = new TGCVector3();
         private bool trackBarChangeX;
         private bool trackBarChangeY;
         private bool trackBarChangeZ;
 
-        public TgcVertex3fModifier(string varName, Vector3 minValue, Vector3 maxValue, Vector3 defaultValue)
+        public TgcVertex3fModifier(string varName, TGCVector3 minValue, TGCVector3 maxValue, TGCVector3 defaultValue)
             : base(varName)
         {
             this.minValue = minValue;

@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -44,7 +45,7 @@ namespace TGC.Examples.MeshExamples
             Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(25);
 
-            Camara.SetCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
+            Camara.SetCamera(new TGCVector3(40f, 20f, -70f), new TGCVector3(40f, 20f, -60f));
         }
 
         private void createMeshes(int cajasPorCuadrante)
@@ -62,16 +63,16 @@ namespace TGC.Examples.MeshExamples
                 for (var j = 0; j < cajasPorCuadrante; j++)
                 {
                     //Crear tres niveles de caja, una abajo y otra arriba, con texturas diferentes
-                    cajasNivel1[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, 0, j * boxSize * 1.5f),
-                        new Vector3(boxSize, boxSize, boxSize), box1Texture);
+                    cajasNivel1[cajas] = TgcBox.fromSize(new TGCVector3(i * boxSize, 0, j * boxSize * 1.5f),
+                        new TGCVector3(boxSize, boxSize, boxSize), box1Texture);
                     cajasNivel1[cajas].AutoTransformEnable = true;
 
-                    cajasNivel2[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, boxSize, j * boxSize * 1.5f),
-                        new Vector3(boxSize, boxSize, boxSize), box2Texture);
+                    cajasNivel2[cajas] = TgcBox.fromSize(new TGCVector3(i * boxSize, boxSize, j * boxSize * 1.5f),
+                        new TGCVector3(boxSize, boxSize, boxSize), box2Texture);
                     cajasNivel2[cajas].AutoTransformEnable = true;
 
-                    cajasNivel3[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
-                        new Vector3(boxSize, boxSize, boxSize), box3Texture);
+                    cajasNivel3[cajas] = TgcBox.fromSize(new TGCVector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
+                        new TGCVector3(boxSize, boxSize, boxSize), box3Texture);
                     cajasNivel3[cajas].AutoTransformEnable = true;
                     cajas++;
                 }

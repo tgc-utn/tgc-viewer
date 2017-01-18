@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
@@ -19,11 +20,11 @@ namespace TGC.Examples.ShadersExamples
     {
         public float acel_mouse_wheel = 20f;
         private TgcMesh car;
-        public Vector3 car_Scale = new Vector3(0.5f, 0.5f, 0.5f);
+        public TGCVector3 car_Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
         private F1Circuit circuito;
 
-        public Vector3 desf = new Vector3(0, 20, 0); // 40
-        public Vector3 dir;
+        public TGCVector3 desf = new TGCVector3(0, 20, 0); // 40
+        public TGCVector3 dir;
         public float dist_cam = 13; //130;
         private Effect effect;
         public float ftime; // frame time
@@ -37,7 +38,7 @@ namespace TGC.Examples.ShadersExamples
         private string MyShaderDir;
 
         public bool paused;
-        public Vector3 pos;
+        public TGCVector3 pos;
         public float rotationSpeed = 0.1f;
         private TgcSkyBox skyBox;
 
@@ -63,13 +64,13 @@ namespace TGC.Examples.ShadersExamples
             //Cargar terreno: cargar heightmap y textura de color
             terrain = new TgcSimpleTerrain();
             terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg",
-                20, 0.1f, new Vector3(0, -125, 0));
+                20, 0.1f, new TGCVector3(0, -125, 0));
             terrain.loadTexture(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg");
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 500, 0);
-            skyBox.Size = new Vector3(10000, 10000, 10000);
+            skyBox.Center = new TGCVector3(0, 500, 0);
+            skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
@@ -96,7 +97,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Configurar FPS Camara
-            Camara.SetCamera(new Vector3(315.451f, 40, -464.28490f), new Vector3(315.451f, 40, -465.28490f));
+            Camara.SetCamera(new TGCVector3(315.451f, 40, -464.28490f), new TGCVector3(315.451f, 40, -465.28490f));
 
             reset_pos();
 
@@ -207,7 +208,7 @@ namespace TGC.Examples.ShadersExamples
 
             // actualizo la camara
             Camara.SetCamera(pos - dir * dist_cam + desf, pos + desf);
-            //this.Camara.SetCamera(new Vector3(500, 4000, 500), new Vector3(0, 0, 0));
+            //this.Camara.SetCamera(new TGCVector3(500, 4000, 500), TGCVector3.Empty);
             Camara.UpdateCamera(ElapsedTime);
         }
 
@@ -314,16 +315,16 @@ namespace TGC.Examples.ShadersExamples
         }
 
         // helper
-        public Matrix CalcularMatriz(Vector3 Pos, Vector3 Scale, Vector3 Dir)
+        public TGCMatrix CalcularMatriz(TGCVector3 Pos, TGCVector3 Scale, TGCVector3 Dir)
         {
-            var VUP = new Vector3(0, 1, 0);
+            var VUP = TGCVector3.Up;
 
-            var matWorld = Matrix.Scaling(Scale);
+            var matWorld = TGCMatrix.Scaling(Scale);
             // determino la orientacion
-            var U = Vector3.Cross(VUP, Dir);
+            var U = TGCVector3.Cross(VUP, Dir);
             U.Normalize();
-            var V = Vector3.Cross(Dir, U);
-            Matrix Orientacion;
+            var V = TGCVector3.Cross(Dir, U);
+            TGCMatrix Orientacion = new TGCMatrix();
             Orientacion.M11 = U.X;
             Orientacion.M12 = U.Y;
             Orientacion.M13 = U.Z;
@@ -346,13 +347,13 @@ namespace TGC.Examples.ShadersExamples
             matWorld = matWorld * Orientacion;
 
             // traslado
-            matWorld = matWorld * Matrix.Translation(Pos);
+            matWorld = matWorld * TGCMatrix.Translation(Pos);
             return matWorld;
         }
 
-        public Vector3 rotar_xz(Vector3 v, float an)
+        public TGCVector3 rotar_xz(TGCVector3 v, float an)
         {
-            return new Vector3((float)(v.X * Math.Cos(an) - v.Z * Math.Sin(an)), v.Y,
+            return new TGCVector3((float)(v.X * Math.Cos(an) - v.Z * Math.Sin(an)), v.Y,
                 (float)(v.X * Math.Sin(an) + v.Z * Math.Cos(an)));
         }
     }

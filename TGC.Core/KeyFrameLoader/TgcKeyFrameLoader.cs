@@ -6,6 +6,7 @@ using System.IO;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
@@ -144,8 +145,8 @@ namespace TGC.Core.KeyFrameLoader
             if (animationData.pMin != null && animationData.pMax != null)
             {
                 boundingBox = new TgcBoundingAxisAlignBox(
-                    TgcParserUtils.float3ArrayToVector3(animationData.pMin),
-                    TgcParserUtils.float3ArrayToVector3(animationData.pMax));
+                    TGCVector3.Float3ArrayToVector3(animationData.pMin),
+                    TGCVector3.Float3ArrayToVector3(animationData.pMax));
             }
             else
             {
@@ -209,10 +210,7 @@ namespace TGC.Core.KeyFrameLoader
             //Crear BoundingBox, aprovechar lo que viene del XML o crear uno por nuestra cuenta
             if (meshData.pMin != null && meshData.pMax != null)
             {
-                tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(
-                    TgcParserUtils.float3ArrayToVector3(meshData.pMin),
-                    TgcParserUtils.float3ArrayToVector3(meshData.pMax)
-                    );
+                tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(meshData.pMin), TGCVector3.Float3ArrayToVector3(meshData.pMax));
             }
             else
             {
@@ -244,7 +242,7 @@ namespace TGC.Core.KeyFrameLoader
 
                     //vertices
                     var coordIdx = meshData.coordinatesIndices[j] * 3;
-                    v.Position = new Vector3(
+                    v.Position = new TGCVector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
                         meshData.verticesCoordinates[coordIdx + 2]
@@ -339,7 +337,7 @@ namespace TGC.Core.KeyFrameLoader
 
                     //vertices
                     var coordIdx = meshData.coordinatesIndices[j] * 3;
-                    v.Position = new Vector3(
+                    v.Position = new TGCVector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
                         meshData.verticesCoordinates[coordIdx + 2]
@@ -465,7 +463,7 @@ namespace TGC.Core.KeyFrameLoader
         /// </summary>
         public struct VertexColorVertex
         {
-            public Vector3 Position;
+            public TGCVector3 Position;
             public int Color;
         }
 
@@ -491,7 +489,7 @@ namespace TGC.Core.KeyFrameLoader
         /// </summary>
         public struct DiffuseMapVertex
         {
-            public Vector3 Position;
+            public TGCVector3 Position;
             public int Color;
             public float Tu;
             public float Tv;

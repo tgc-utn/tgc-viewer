@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -91,7 +92,7 @@ namespace TGC.Examples.MeshExamples
         ///     Segundo constructor de TgcMesh.
         ///     No se hace nada, solo se llama al constructor del padre.
         /// </summary>
-        public MyCustomMesh(string name, TgcMesh parentInstance, Vector3 translation, Vector3 rotation, Vector3 scale)
+        public MyCustomMesh(string name, TgcMesh parentInstance, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
             : base(name, parentInstance, translation, rotation, scale)
         {
         }
@@ -125,8 +126,8 @@ namespace TGC.Examples.MeshExamples
             return new MyCustomMesh(d3dMesh, meshName, renderType);
         }
 
-        public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, Vector3 translation,
-            Vector3 rotation, Vector3 scale)
+        public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, TGCVector3 translation,
+            TGCVector3 rotation, TGCVector3 scale)
         {
             return new MyCustomMesh(meshName, originalMesh, translation, rotation, scale);
         }

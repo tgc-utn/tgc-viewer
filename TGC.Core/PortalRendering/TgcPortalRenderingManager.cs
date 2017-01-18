@@ -4,6 +4,7 @@ using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.PortalRendering
@@ -48,11 +49,11 @@ namespace TGC.Core.PortalRendering
         ///     resto se deshabilita.
         /// </summary>
         /// <param name="cameraPos">Posición de la cámara</param>
-        public void updateVisibility(Vector3 cameraPos, TgcFrustum frustum)
+        public void updateVisibility(TGCVector3 cameraPos, TgcFrustum frustum)
         {
             //Armar Frustum para uso internor, en base al Frustum actual
-            var currentFrustumPlanes = new Plane[6];
-            currentFrustumPlanes = new Plane[6];
+            var currentFrustumPlanes = new TGCPlane[6];
+            currentFrustumPlanes = new TGCPlane[6];
             currentFrustumPlanes[0] = frustum.NearPlane;
             currentFrustumPlanes[1] = frustum.FarPlane;
             currentFrustumPlanes[2] = frustum.LeftPlane;
@@ -99,7 +100,7 @@ namespace TGC.Core.PortalRendering
         /// <summary>
         ///     Recorrer el grafo de celdas y portales
         /// </summary>
-        private void traverseCellGraph(Vector3 cameraPos, Plane[] currentFrustumPlanes, TgcPortalRenderingCell cell)
+        private void traverseCellGraph(TGCVector3 cameraPos, TGCPlane[] currentFrustumPlanes, TgcPortalRenderingCell cell)
         {
             //Habilitar modelos visibles de esta celda
             findVisibleMeshes(cell, currentFrustumPlanes);
@@ -137,11 +138,11 @@ namespace TGC.Core.PortalRendering
         ///     La cantidad de planos del nuevo Frustum no tiene por qué ser 6.
         ///     Depende de la forma que haya quedado en el portal recortado.
         /// </summary>
-        private Plane[] createFrustumPlanes(Vector3 cameraPos, Plane[] currentFrustumPlanes, Vector3[] portalVerts,
-            Plane portalPlane)
+        private TGCPlane[] createFrustumPlanes(TGCVector3 cameraPos, TGCPlane[] currentFrustumPlanes, TGCVector3[] portalVerts,
+            TGCPlane portalPlane)
         {
             //Hay un plano por cada vértice del polígono + 2 por el near y far plane
-            var frustumPlanes = new Plane[2 + portalVerts.Length];
+            var frustumPlanes = new TGCPlane[2 + portalVerts.Length];
 
             //Cargar near y far plane originales
             //TODO: habria que usar el portalPlane para acercar el NearPlane hasta el portal
@@ -158,7 +159,7 @@ namespace TGC.Core.PortalRendering
                 //Armar el plano para que la normal apunte hacia adentro del Frustum
                 var a = lastP - cameraPos;
                 var b = nextP - cameraPos;
-                var plane = Plane.FromPointNormal(cameraPos, Vector3.Cross(b, a));
+                var plane = TGCPlane.FromPointNormal(cameraPos, TGCVector3.Cross(b, a));
 
                 //Guardar después del near y far plane
                 frustumPlanes[i + 2] = plane;
@@ -178,7 +179,7 @@ namespace TGC.Core.PortalRendering
         ///     Ver Capítulo 13 - Portal Rendering, del libro Core Techniques and Algorithms in Game Programming, para optimizar la
         ///     estrategia.
         /// </summary>
-        private Vector3[] doPortalClipping(Plane[] frustumPlanes, TgcConvexPolygon portalPoly)
+        private TGCVector3[] doPortalClipping(TGCPlane[] frustumPlanes, TgcConvexPolygon portalPoly)
         {
             var clippedPortalVerts = portalPoly.BoundingVertices;
             foreach (var plane in frustumPlanes)
@@ -196,7 +197,7 @@ namespace TGC.Core.PortalRendering
         /// <summary>
         ///     Habilitar los modelos visibles de esta celda, según el Frustum restringido
         /// </summary>
-        private void findVisibleMeshes(TgcPortalRenderingCell cell, Plane[] currentFrustumPlanes)
+        private void findVisibleMeshes(TgcPortalRenderingCell cell, TGCPlane[] currentFrustumPlanes)
         {
             //El Frustum puede tener más de 6 planos, asi que lo tratamos como un cuerpo convexo general.
             frustumConvexPolyhedon.Planes = currentFrustumPlanes;
@@ -219,7 +220,7 @@ namespace TGC.Core.PortalRendering
         /// </summary>
         /// <param name="q">Punto buscado</param>
         /// <returns>Celda que lo contiene o null</returns>
-        public TgcPortalRenderingCell findCellFromPoint(Vector3 q)
+        public TgcPortalRenderingCell findCellFromPoint(TGCVector3 q)
         {
             foreach (var cell in Cells)
             {

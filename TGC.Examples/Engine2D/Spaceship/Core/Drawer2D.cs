@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Engine2D.Spaceship.Core
 {
@@ -44,8 +45,8 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
         /// <param name="sprite">The sprite.</param>
         public void DrawSprite(CustomSprite sprite)
         {
-            DxSprite.Transform = sprite.TransformationMatrix;
-            DxSprite.Draw(sprite.Bitmap.D3dTexture, sprite.SrcRect, Vector3.Empty, Vector3.Empty, sprite.Color);
+            DxSprite.Transform = sprite.TransformationMatrix.ToMatrix();
+            DxSprite.Draw(sprite.Bitmap.D3dTexture, sprite.SrcRect, TGCVector3.Empty.ToVector3(), TGCVector3.Empty.ToVector3(), sprite.Color);
         }
 
         /// <summary>

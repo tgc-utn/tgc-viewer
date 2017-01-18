@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -16,13 +17,13 @@ namespace TGC.Core.Geometry
         private const int END_CAPS_RESOLUTION = 40;
         private int color;
 
-        private Matrix manualTransformation;
+        private TGCMatrix manualTransformation;
         private CustomVertex.PositionColoredTextured[] sideTrianglesVertices; //triangle strip
         private TgcTexture texture;
 
         private bool useTexture;
 
-        public TgcCylinder(Vector3 _center, float _topRadius, float _bottomRadius, float _halfLength)
+        public TgcCylinder(TGCVector3 _center, float _topRadius, float _bottomRadius, float _halfLength)
         {
             TopRadius = _topRadius;
             BottomRadius = _bottomRadius;
@@ -30,13 +31,13 @@ namespace TGC.Core.Geometry
 
             color = Color.Red.ToArgb();
 
-            manualTransformation = Matrix.Identity;
+            manualTransformation = TGCMatrix.Identity;
             AutoTransformEnable = false;
 
             initialize();
         }
 
-        public TgcCylinder(Vector3 _center, float _radius, float _halfLength)
+        public TgcCylinder(TGCVector3 _center, float _radius, float _halfLength)
             : this(_center, _radius, _radius, _halfLength)
         {
             //nothing to do
@@ -113,7 +114,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Centro del cilindro
         /// </summary>
-        public Vector3 Center
+        public TGCVector3 Center
         {
             get { return BoundingCylinder.Center; }
             set { BoundingCylinder.Center = value; }
@@ -186,14 +187,14 @@ namespace TGC.Core.Geometry
         private void updateDraw()
         {
             //vectores utilizados para el dibujado
-            var upVector = new Vector3(0, 1, 0);
-            var n = new Vector3(1, 0, 0);
+            var upVector = TGCVector3.Up;
+            var n = new TGCVector3(1, 0, 0);
 
             var capsResolution = END_CAPS_RESOLUTION;
 
             //matriz de rotacion del vector de dibujado
             var angleStep = FastMath.TWO_PI / capsResolution;
-            var rotationMatrix = Matrix.RotationAxis(-upVector, angleStep);
+            var rotationMatrix = TGCMatrix.RotationAxis(-upVector, angleStep);
             float angle = 0;
 
             //transformacion que se le aplicara a cada vertice
@@ -201,8 +202,8 @@ namespace TGC.Core.Geometry
             var bcInverseRadius = 1 / BoundingCylinder.Radius;
 
             //arrays donde guardamos los puntos dibujados
-            var topCapDraw = new Vector3[capsResolution];
-            var bottomCapDraw = new Vector3[capsResolution];
+            var topCapDraw = new TGCVector3[capsResolution];
+            var bottomCapDraw = new TGCVector3[capsResolution];
 
             //variables temporales utilizadas para el texture mapping
             float u;
@@ -216,8 +217,8 @@ namespace TGC.Core.Geometry
                 u = angle / FastMath.TWO_PI;
 
                 //triangulos de la cara lateral (strip)
-                sideTrianglesVertices[2 * i] = new CustomVertex.PositionColoredTextured(topCapDraw[i], color, u, 0);
-                sideTrianglesVertices[2 * i + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[i], color, u, 1);
+                sideTrianglesVertices[2 * i] = new CustomVertex.PositionColoredTextured(topCapDraw[i].ToVector3(), color, u, 0);
+                sideTrianglesVertices[2 * i + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[i].ToVector3(), color, u, 1);
 
                 //rotamos el vector de dibujado
                 n.TransformNormal(rotationMatrix);
@@ -225,9 +226,9 @@ namespace TGC.Core.Geometry
             }
 
             //cerramos la cara lateral
-            sideTrianglesVertices[2 * capsResolution] = new CustomVertex.PositionColoredTextured(topCapDraw[0], color, 1,
+            sideTrianglesVertices[2 * capsResolution] = new CustomVertex.PositionColoredTextured(topCapDraw[0].ToVector3(), color, 1,
                 0);
-            sideTrianglesVertices[2 * capsResolution + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[0],
+            sideTrianglesVertices[2 * capsResolution + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[0].ToVector3(),
                 color, 1, 1);
         }
 
@@ -256,7 +257,7 @@ namespace TGC.Core.Geometry
 
         public bool AutoTransformEnable { get; set; }
 
-        public Matrix Transform
+        public TGCMatrix Transform
         {
             get
             {
@@ -266,25 +267,25 @@ namespace TGC.Core.Geometry
             set { manualTransformation = value; }
         }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return BoundingCylinder.Center; }
             set { BoundingCylinder.Center = value; }
         }
 
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return BoundingCylinder.Rotation; }
             set { BoundingCylinder.Rotation = value; }
         }
 
-        public Vector3 Scale
+        public TGCVector3 Scale
         {
-            get { return new Vector3(1, 1, 1); }
+            get { return TGCVector3.One; }
             set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
         }
 
-        public void move(Vector3 v)
+        public void move(TGCVector3 v)
         {
             BoundingCylinder.move(v);
         }
@@ -301,7 +302,7 @@ namespace TGC.Core.Geometry
             move(x, 0, z);
         }
 
-        public void getPosition(Vector3 pos)
+        public void getPosition(TGCVector3 pos)
         {
             pos.X = Position.X;
             pos.Y = Position.Y;

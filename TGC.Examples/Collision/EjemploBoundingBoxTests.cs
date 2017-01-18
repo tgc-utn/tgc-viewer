@@ -7,6 +7,7 @@ using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -61,10 +62,10 @@ namespace TGC.Examples.Collision
             var loader = new TgcSceneLoader();
             var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Patrullero\\Patrullero-TgcScene.xml");
             mesh = scene.Meshes[0];
-            mesh.Scale = new Vector3(0.25f, 0.25f, 0.25f);
+            mesh.Scale = new TGCVector3(0.25f, 0.25f, 0.25f);
 
             //Cuerpo principal que se controla con el teclado
-            //mesh = TgcBox.fromSize(new Vector3(0, 10, 0), new Vector3(10, 10, 10), Color.Blue).toMesh("box");
+            //mesh = TgcBox.fromSize(new TGCVector3(0, 10, 0), new TGCVector3(10, 10, 10), Color.Blue).toMesh("box");
 
             //triangulo
             triangle = new CustomVertex.PositionColored[3];
@@ -73,21 +74,21 @@ namespace TGC.Examples.Collision
             triangle[2] = new CustomVertex.PositionColored(0, 100, 0, Color.Green.ToArgb());
             triagleAABB =
                 TgcBoundingAxisAlignBox.computeFromPoints(new[]
-                {triangle[0].Position, triangle[1].Position, triangle[2].Position});
+                {TGCVector3.FromVector3(triangle[0].Position), TGCVector3.FromVector3(triangle[1].Position), TGCVector3.FromVector3(triangle[2].Position)});
 
             //box2
-            box2 = TgcBox.fromSize(new Vector3(-50, 10, -20), new Vector3(15, 15, 15), Color.Violet);
+            box2 = TgcBox.fromSize(new TGCVector3(-50, 10, -20), new TGCVector3(15, 15, 15), Color.Violet);
 
             //sphere
-            boundingSphere = new TgcBoundingSphere(new Vector3(30, 20, -20), 15);
+            boundingSphere = new TgcBoundingSphere(new TGCVector3(30, 20, -20), 15);
 
             //OBB: computar OBB a partir del AABB del mesh.
              meshObb =
                 loader.loadSceneFromFile(MediaDir +
                 "MeshCreator\\Meshes\\Objetos\\Catapulta\\Catapulta-TgcScene.xml")
                         .Meshes[0];
-            meshObb.Scale = new Vector3(0.1f, 0.1f, 0.1f);
-            meshObb.Position = new Vector3(100, 0, 30);
+            meshObb.Scale = new TGCVector3(0.1f, 0.1f, 0.1f);
+            meshObb.Position = new TGCVector3(100, 0, 30);
             meshObb.updateBoundingBox();
             //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
             obb = TgcBoundingOrientedBox.computeFromAABB(meshObb.BoundingBox);
@@ -95,9 +96,9 @@ namespace TGC.Examples.Collision
             //obb = TgcBoundingOrientedBox.computeFromPoints(mesh.getVertexPositions());
             
             //Rotar mesh y rotar OBB. A diferencia del AABB, nosotros tenemos que mantener el OBB actualizado segun cada movimiento del mesh
-            meshObb.Rotation = new Vector3(0, FastMath.PI / 4, 0);
+            meshObb.Rotation = new TGCVector3(0, FastMath.PI / 4, 0);
             //Los obb tienen una especie de autotransform aun.
-            obb.rotate(new Vector3(0, FastMath.PI / 4, 0));            
+            obb.rotate(new TGCVector3(0, FastMath.PI / 4, 0));            
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(mesh.Position, 30, -75);
@@ -111,7 +112,7 @@ namespace TGC.Examples.Collision
 
             //Calcular proxima posicion de personaje segun Input
             var moving = false;
-            var movement = new Vector3(0, 0, 0);
+            var movement = TGCVector3.Empty;
 
             //Adelante
             if (Input.keyDown(Key.W))
@@ -162,7 +163,7 @@ namespace TGC.Examples.Collision
             camaraInterna.Target = mesh.Position;
 
             //Detectar colision con triangulo
-            if (TgcCollisionUtils.testTriangleAABB(triangle[0].Position, triangle[1].Position, triangle[2].Position,
+            if (TgcCollisionUtils.testTriangleAABB(TGCVector3.FromVector3(triangle[0].Position), TGCVector3.FromVector3(triangle[1].Position), TGCVector3.FromVector3(triangle[2].Position),
                 mesh.BoundingBox))
             {
                 triangle[0].Color = Color.Red.ToArgb();
@@ -213,25 +214,25 @@ namespace TGC.Examples.Collision
             //Dibujar todo.
             //Una vez actualizadas las diferentes posiciones internas solo debemos asignar la matriz de world.
             mesh.Transform =
-                Matrix.Scaling(mesh.Scale)
-                            * Matrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
-                            * Matrix.Translation(mesh.Position);
+                TGCMatrix.Scaling(mesh.Scale)
+                            * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
+                            * TGCMatrix.Translation(mesh.Position);
             mesh.render();
             //Actualmente los bounding box se actualizan solos en momento de hacer render, esto no es recomendado ya que trae overhead
             //Igualmente aqui podemos tener un objeto debug de nuestro mesh.
             mesh.BoundingBox.render();
 
             box2.Transform =
-                Matrix.Scaling(box2.Scale)
-                            * Matrix.RotationYawPitchRoll(box2.Rotation.Y, box2.Rotation.X, box2.Rotation.Z)
-                            * Matrix.Translation(box2.Position);
+                TGCMatrix.Scaling(box2.Scale)
+                            * TGCMatrix.RotationYawPitchRoll(box2.Rotation.Y, box2.Rotation.X, box2.Rotation.Z)
+                            * TGCMatrix.Translation(box2.Position);
             box2.render();
                         
             //Los bounding volume por la forma actual de framework no realizan transformaciones entonces podemos hacer esto:
             //D3DDevice.Instance.Device.Transform.World =
-            //    Matrix.Scaling(new Vector3(sphere.Radius, sphere.Radius, sphere.Radius))
-            //                * Matrix.Identity //No tienen sentido las rotaciones con la esfera.
-            //                * Matrix.Translation(sphere.Position);
+            //    TGCMatrix.Scaling(new TGCVector3(sphere.Radius, sphere.Radius, sphere.Radius))
+            //                * TGCMatrix.Identity //No tienen sentido las rotaciones con la esfera.
+            //                * TGCMatrix.Translation(sphere.Position);
             boundingSphere.render();
            
             //Las mesh por defecto tienen el metodo UpdateMeshTransform que realiza el set por defecto.
@@ -242,7 +243,7 @@ namespace TGC.Examples.Collision
             obb.render();
 
             //triangulo
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, triangle);
 

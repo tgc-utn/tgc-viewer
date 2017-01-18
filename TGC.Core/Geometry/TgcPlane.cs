@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -70,7 +71,7 @@ namespace TGC.Core.Geometry
         /// <param name="texture">Textura de la pared</param>
         /// <param name="uTile">Cantidad de tile de la textura en coordenada U</param>
         /// <param name="vTile">Cantidad de tile de la textura en coordenada V</param>
-        public TgcPlane(Vector3 origin, Vector3 size, Orientations orientation, TgcTexture texture, float uTile,
+        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture, float uTile,
             float vTile)
             : this()
         {
@@ -94,7 +95,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Dimensiones de la pared. Uno de los valores será ignorado, según la orientación elegida</param>
         /// <param name="orientation">Orientacion de la pared</param>
         /// <param name="texture">Textura de la pared</param>
-        public TgcPlane(Vector3 origin, Vector3 size, Orientations orientation, TgcTexture texture)
+        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture)
             : this()
         {
             setTexture(texture);
@@ -113,13 +114,13 @@ namespace TGC.Core.Geometry
         ///     Origen de coordenadas de la pared.
         ///     Llamar a updateValues() para aplicar cambios.
         /// </summary>
-        public Vector3 Origin { get; set; }
+        public TGCVector3 Origin { get; set; }
 
         /// <summary>
         ///     Dimensiones de la pared.
         ///     Llamar a updateValues() para aplicar cambios.
         /// </summary>
-        public Vector3 Size { get; set; }
+        public TGCVector3 Size { get; set; }
 
         /// <summary>
         ///     Orientación de la pared.
@@ -184,7 +185,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public TgcBoundingAxisAlignBox BoundingBox { get; }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return Origin; }
         }
@@ -237,10 +238,10 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="min">Min</param>
         /// <param name="max">Max</param>
-        public void setExtremes(Vector3 min, Vector3 max)
+        public void setExtremes(TGCVector3 min, TGCVector3 max)
         {
             Origin = min;
-            Size = Vector3.Subtract(max, min);
+            Size = TGCVector3.Subtract(max, min);
         }
 
         /// <summary>
@@ -252,13 +253,13 @@ namespace TGC.Core.Geometry
             float autoHeight;
 
             //Calcular los 4 corners de la pared, segun el tipo de orientacion
-            Vector3 bLeft, tLeft, bRight, tRight;
+            TGCVector3 bLeft, tLeft, bRight, tRight;
             if (Orientation == Orientations.XYplane)
             {
                 bLeft = Origin;
-                tLeft = new Vector3(Origin.X + Size.X, Origin.Y, Origin.Z);
-                bRight = new Vector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
-                tRight = new Vector3(Origin.X + Size.X, Origin.Y + Size.Y, Origin.Z);
+                tLeft = new TGCVector3(Origin.X + Size.X, Origin.Y, Origin.Z);
+                bRight = new TGCVector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
+                tRight = new TGCVector3(Origin.X + Size.X, Origin.Y + Size.Y, Origin.Z);
 
                 autoWidth = Size.X / Texture.Width;
                 autoHeight = Size.Y / Texture.Height;
@@ -266,9 +267,9 @@ namespace TGC.Core.Geometry
             else if (Orientation == Orientations.YZplane)
             {
                 bLeft = Origin;
-                tLeft = new Vector3(Origin.X, Origin.Y, Origin.Z + Size.Z);
-                bRight = new Vector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
-                tRight = new Vector3(Origin.X, Origin.Y + Size.Y, Origin.Z + Size.Z);
+                tLeft = new TGCVector3(Origin.X, Origin.Y, Origin.Z + Size.Z);
+                bRight = new TGCVector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
+                tRight = new TGCVector3(Origin.X, Origin.Y + Size.Y, Origin.Z + Size.Z);
 
                 autoWidth = Size.Y / Texture.Width;
                 autoHeight = Size.Z / Texture.Height;
@@ -276,9 +277,9 @@ namespace TGC.Core.Geometry
             else
             {
                 bLeft = Origin;
-                tLeft = new Vector3(Origin.X + Size.X, Origin.Y, Origin.Z);
-                bRight = new Vector3(Origin.X, Origin.Y, Origin.Z + Size.Z);
-                tRight = new Vector3(Origin.X + Size.X, Origin.Y, Origin.Z + Size.Z);
+                tLeft = new TGCVector3(Origin.X + Size.X, Origin.Y, Origin.Z);
+                bRight = new TGCVector3(Origin.X, Origin.Y, Origin.Z + Size.Z);
+                tRight = new TGCVector3(Origin.X + Size.X, Origin.Y, Origin.Z + Size.Z);
 
                 autoWidth = Size.X / Texture.Width;
                 autoHeight = Size.Z / Texture.Height;
@@ -294,14 +295,14 @@ namespace TGC.Core.Geometry
             var offsetV = UVOffset.Y;
 
             //Primer triangulo
-            vertices[0] = new CustomVertex.PositionTextured(bLeft, offsetU + UTile, offsetV + VTile);
-            vertices[1] = new CustomVertex.PositionTextured(tLeft, offsetU, offsetV + VTile);
-            vertices[2] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
+            vertices[0] = new CustomVertex.PositionTextured(bLeft.ToVector3(), offsetU + UTile, offsetV + VTile);
+            vertices[1] = new CustomVertex.PositionTextured(tLeft.ToVector3(), offsetU, offsetV + VTile);
+            vertices[2] = new CustomVertex.PositionTextured(tRight.ToVector3(), offsetU, offsetV);
 
             //Segundo triangulo
-            vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + UTile, offsetV + VTile);
-            vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
-            vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + UTile, offsetV);
+            vertices[3] = new CustomVertex.PositionTextured(bLeft.ToVector3(), offsetU + UTile, offsetV + VTile);
+            vertices[4] = new CustomVertex.PositionTextured(tRight.ToVector3(), offsetU, offsetV);
+            vertices[5] = new CustomVertex.PositionTextured(bRight.ToVector3(), offsetU + UTile, offsetV);
 
             /*Versión con triángulos para el otro sentido
             //Primer triangulo
@@ -366,7 +367,7 @@ namespace TGC.Core.Geometry
             using (var vb = d3dMesh.VertexBuffer)
             {
                 var data = vb.Lock(0, 0, LockFlags.None);
-                var ceroNormal = new Vector3(0, 0, 0);
+                var ceroNormal = TGCVector3.Empty;
                 var whiteColor = Color.White.ToArgb();
                 for (var j = 0; j < vertices.Length; j++)
                 {
@@ -374,7 +375,7 @@ namespace TGC.Core.Geometry
                     var vPlane = vertices[j];
 
                     //vertices
-                    v.Position = vPlane.Position;
+                    v.Position = TGCVector3.FromVector3(vPlane.Position);
 
                     //normals
                     v.Normal = ceroNormal;
@@ -415,9 +416,9 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crear un nuevo Plane igual a este
+        ///     Crear un nuevo TgcPlane igual a este
         /// </summary>
-        /// <returns>Plane clonado</returns>
+        /// <returns>TgcPlane clonado</returns>
         public TgcPlane clone()
         {
             var clonePlane = new TgcPlane();
