@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using System.Drawing;
 using System.IO;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -54,7 +55,7 @@ namespace TGC.Examples.MeshExamples
 
             sceneRecover = loader.loadSceneFromFile(r.filePath);
 
-            Camara.SetCamera(new Vector3(-30f, 80f, -100f), new Vector3(0f, 75f, 180f));
+            Camara.SetCamera(new TGCVector3(-30f, 80f, -100f), new TGCVector3(0f, 75f, 180f));
         }
 
         public override void Update()
@@ -67,8 +68,8 @@ namespace TGC.Examples.MeshExamples
             PreRender();
 
             sceneRecover.renderAll();
-            DrawText.drawText("Camera pos: " + TgcParserUtils.printVector3(Camara.Position), 5, 20, Color.Red);
-            DrawText.drawText("Camera LookAt: " + TgcParserUtils.printVector3(Camara.LookAt), 5, 40, Color.Red);
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, Color.Red);
+            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintVector3(Camara.LookAt), 5, 40, Color.Red);
             PostRender();
         }
 

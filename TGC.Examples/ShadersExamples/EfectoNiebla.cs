@@ -4,6 +4,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Fog;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Terrain;
@@ -41,8 +42,8 @@ namespace TGC.Examples.PostProcess
         {
             //Crear SkyBox
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 500, 0);
-            skyBox.Size = new Vector3(10000, 10000, 10000);
+            skyBox.Center = new TGCVector3(0, 500, 0);
+            skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
@@ -60,7 +61,7 @@ namespace TGC.Examples.PostProcess
             effect = TgcShaders.loadEffect(ShadersDir + "TgcViewer\\TgcFogShader.fx");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(1500, 800, 0), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
             //Modifiers para configurar valores de niebla
             Modifiers.addBoolean("FogShader", "FogShader", true);
@@ -100,7 +101,7 @@ namespace TGC.Examples.PostProcess
             {
                 // Cargamos las variables de shader, color del fog.
                 effect.SetValue("ColorFog", fog.Color.ToArgb());
-                effect.SetValue("CameraPos", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
+                effect.SetValue("CameraPos", TGCVector3.Vector3ToFloat4Array(Camara.Position));
                 effect.SetValue("StartFogDistance", fog.StartDistance);
                 effect.SetValue("EndFogDistance", fog.EndDistance);
                 effect.SetValue("Density", fog.Density);

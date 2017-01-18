@@ -5,6 +5,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Interpolation;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -103,7 +104,7 @@ namespace TGC.Examples.PostProcess
             meshes = scene.Meshes;
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new Vector3(250, 160, -570), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
 
             //Modifier para activar/desactivar efecto de alarma
             Modifiers.addBoolean("activar_efecto", "Activar efecto", true);

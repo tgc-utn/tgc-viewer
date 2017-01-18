@@ -3,6 +3,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -78,8 +79,8 @@ namespace TGC.Examples.Engine2D
             Modifiers.addFloat("rotationAnimated", 0, 360, 0);
 
             //Creamos un Box3D para que se vea como el Sprite es en 2D y se dibuja siempre arriba de la escena 3D
-            box = TgcBox.fromSize(new Vector3(10, 10, 10), TgcTexture.createTexture(MediaDir + "\\Texturas\\pasto.jpg"));
-            box.Transform = Matrix.RotationX(FastMath.QUARTER_PI);
+            box = TgcBox.fromSize(new TGCVector3(10, 10, 10), TgcTexture.createTexture(MediaDir + "\\Texturas\\pasto.jpg"));
+            box.Transform = TGCMatrix.RotationX(FastMath.QUARTER_PI);
 
             //Hacer que la camara se centre en el box3D
             Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(),

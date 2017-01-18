@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Collision
@@ -114,7 +115,7 @@ namespace TGC.Core.Collision
         /// <param name="a">AABB</param>
         /// <param name="q">Punto de intersección</param>
         /// <returns>True si hay colisión</returns>
-        public static bool intersectRayAABB(TgcRay ray, TgcBoundingAxisAlignBox aabb, out Vector3 q)
+        public static bool intersectRayAABB(TgcRay ray, TgcBoundingAxisAlignBox aabb, out TGCVector3 q)
         {
             return intersectRayAABB(ray.toStruct(), aabb.toStruct(), out q);
         }
@@ -130,9 +131,9 @@ namespace TGC.Core.Collision
         /// <param name="a">AABB</param>
         /// <param name="q">Punto de intersección</param>
         /// <returns>True si hay colisión</returns>
-        public static bool intersectRayAABB(TgcRay.RayStruct ray, TgcBoundingAxisAlignBox.AABBStruct aabb, out Vector3 q)
+        public static bool intersectRayAABB(TgcRay.RayStruct ray, TgcBoundingAxisAlignBox.AABBStruct aabb, out TGCVector3 q)
         {
-            q = Vector3.Empty;
+            q = TGCVector3.Empty;
             var inside = true;
             var aabbMin = toArray(aabb.min);
             var aabbMax = toArray(aabb.max);
@@ -213,7 +214,7 @@ namespace TGC.Core.Collision
         /// <param name="aabb">BoundingBox</param>
         /// <param name="q">Punto de intersección</param>
         /// <returns>True si hay colisión</returns>
-        public static bool intersectSegmentAABB(Vector3 p0, Vector3 p1, TgcBoundingAxisAlignBox aabb, out Vector3 q)
+        public static bool intersectSegmentAABB(TGCVector3 p0, TGCVector3 p1, TgcBoundingAxisAlignBox aabb, out TGCVector3 q)
         {
             var segmentDir = p1 - p0;
             var ray = new TgcRay(p0, segmentDir);
@@ -237,7 +238,7 @@ namespace TGC.Core.Collision
         /// <param name="p">Punto a testear</param>
         /// <param name="aabb">BoundingBox a testear</param>
         /// <returns>Punto mas cercano a p del BoundingBox</returns>
-        public static Vector3 closestPointAABB(Vector3 p, TgcBoundingAxisAlignBox aabb)
+        public static TGCVector3 closestPointAABB(TGCVector3 p, TgcBoundingAxisAlignBox aabb)
         {
             var aabbMin = toArray(aabb.PMin);
             var aabbMax = toArray(aabb.PMax);
@@ -263,7 +264,7 @@ namespace TGC.Core.Collision
         /// <param name="p">Punto a testear</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>Mínima distacia al cuadrado</returns>
-        public static float sqDistPointAABB(Vector3 p, TgcBoundingAxisAlignBox aabb)
+        public static float sqDistPointAABB(TGCVector3 p, TgcBoundingAxisAlignBox aabb)
         {
             return sqDistPointAABB(p, aabb.toStruct());
         }
@@ -275,7 +276,7 @@ namespace TGC.Core.Collision
         /// <param name="p">Punto a testear</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>Mínima distacia al cuadrado</returns>
-        public static float sqDistPointAABB(Vector3 p, TgcBoundingAxisAlignBox.AABBStruct aabb)
+        public static float sqDistPointAABB(TGCVector3 p, TgcBoundingAxisAlignBox.AABBStruct aabb)
         {
             var aabbMin = toArray(aabb.min);
             var aabbMax = toArray(aabb.max);
@@ -360,10 +361,10 @@ namespace TGC.Core.Collision
         /// <returns>
         ///     Resultado de la clasificación.
         /// </returns>
-        public static PlaneBoxResult classifyPlaneAABB(Plane plane, TgcBoundingAxisAlignBox aabb)
+        public static PlaneBoxResult classifyPlaneAABB(TGCPlane plane, TgcBoundingAxisAlignBox aabb)
         {
-            var vmin = Vector3.Empty;
-            var vmax = Vector3.Empty;
+            var vmin = TGCVector3.Empty;
+            var vmax = TGCVector3.Empty;
 
             //Obtener puntos minimos y maximos en base a la dirección de la normal del plano
             if (plane.A >= 0f)
@@ -444,7 +445,7 @@ namespace TGC.Core.Collision
         /// <param name="plane">Plano</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>True si hay colisión.</returns>
-        public static bool testPlaneAABB(Plane plane, TgcBoundingAxisAlignBox aabb)
+        public static bool testPlaneAABB(TGCPlane plane, TgcBoundingAxisAlignBox aabb)
         {
             var c = (aabb.PMax + aabb.PMin) * 0.5f; // Compute AABB center
             var e = aabb.PMax - c; // Compute positive extents
@@ -467,7 +468,7 @@ namespace TGC.Core.Collision
         /// <param name="vert2">Vertice 2 del triángulo</param>
         /// <param name="aabb">BoundingBox</param>
         /// <returns>True si hay colisión.</returns>
-        public static bool testTriangleAABB(Vector3 vert0, Vector3 vert1, Vector3 vert2, TgcBoundingAxisAlignBox aabb)
+        public static bool testTriangleAABB(TGCVector3 vert0, TGCVector3 vert1, TGCVector3 vert2, TgcBoundingAxisAlignBox aabb)
         {
             /*   use separating axis theorem to test overlap between triangle and box need to test for overlap in these directions:
             *    1) the {x,y,z}-directions (actually, since we use the AABB of the triangle we do not even need to test these)
@@ -480,18 +481,18 @@ namespace TGC.Core.Collision
             var boxhalfsize = aabb.calculateAxisRadius();
 
             //Aux vars
-            var triverts = new Vector3[3] { vert0, vert1, vert2 };
+            var triverts = new TGCVector3[3] { vert0, vert1, vert2 };
             float min, max, p0, p1, p2, rad, fex, fey, fez;
 
             //move everything so that the boxcenter is in (0,0,0)
-            var v0 = Vector3.Subtract(triverts[0], boxcenter);
-            var v1 = Vector3.Subtract(triverts[1], boxcenter);
-            var v2 = Vector3.Subtract(triverts[2], boxcenter);
+            var v0 = TGCVector3.Subtract(triverts[0], boxcenter);
+            var v1 = TGCVector3.Subtract(triverts[1], boxcenter);
+            var v2 = TGCVector3.Subtract(triverts[2], boxcenter);
 
             //compute triangle edges
-            var e0 = Vector3.Subtract(v1, v0); //tri edge 0
-            var e1 = Vector3.Subtract(v2, v1); //tri edge 1
-            var e2 = Vector3.Subtract(v0, v2); //tri edge 2
+            var e0 = TGCVector3.Subtract(v1, v0); //tri edge 0
+            var e1 = TGCVector3.Subtract(v2, v1); //tri edge 1
+            var e2 = TGCVector3.Subtract(v0, v2); //tri edge 2
 
             //Bullet 3:
             //test the 9 tests first (this was faster)
@@ -677,7 +678,7 @@ namespace TGC.Core.Collision
             /*  test if the box intersects the plane of the triangle
             *  compute plane equation of triangle: normal*x+d=0
             */
-            var normal = Vector3.Cross(e0, e1);
+            var normal = TGCVector3.Cross(e0, e1);
             if (!testTriangleAABB_planeBoxOverlap(toArray(normal), toArray(v0), toArray(boxhalfsize))) return false;
 
             //box and triangle overlaps
@@ -733,7 +734,7 @@ namespace TGC.Core.Collision
         {
             // Calculate squared distance between centers
             var d = a.Center - b.Center;
-            var dist2 = Vector3.Dot(d, d);
+            var dist2 = TGCVector3.Dot(d, d);
             // Spheres intersect if squared distance is less than squared sum of radii
             var radiusSum = a.Radius + b.Radius;
             return dist2 <= radiusSum * radiusSum;
@@ -743,13 +744,13 @@ namespace TGC.Core.Collision
         ///     Idica si un BoundingSphere colisiona con un plano
         /// </summary>
         /// <returns>True si hay colisión</returns>
-        public static bool testSpherePlane(TgcBoundingSphere s, Plane plane)
+        public static bool testSpherePlane(TgcBoundingSphere s, TGCPlane plane)
         {
             var p = toVector3(plane);
 
             // For a normalized plane (|p.n| = 1), evaluating the plane equation
             // for a point gives the signed distance of the point to the plane
-            var dist = Vector3.Dot(s.Center, p) - plane.D;
+            var dist = TGCVector3.Dot(s.Center, p) - plane.D;
             // If sphere center within +/-radius from plane, plane intersects sphere
             return FastMath.Abs(dist) <= s.Radius;
         }
@@ -759,11 +760,11 @@ namespace TGC.Core.Collision
         ///     Indica si un BoundingSphere se encuentra completamente en el lado negativo del plano
         /// </summary>
         /// <returns>True si se encuentra completamente en el lado negativo del plano</returns>
-        public static bool insideSpherePlane(TgcBoundingSphere s, Plane plane)
+        public static bool insideSpherePlane(TgcBoundingSphere s, TGCPlane plane)
         {
             var p = toVector3(plane);
 
-            var dist = Vector3.Dot(s.Center, p) - plane.D;
+            var dist = TGCVector3.Dot(s.Center, p) - plane.D;
             return dist < -s.Radius;
         }
 
@@ -777,14 +778,14 @@ namespace TGC.Core.Collision
         /// <param name="t">Distancia de colision del Ray</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectRaySphere(TgcRay ray, TgcBoundingSphere sphere, out float t, out Vector3 q)
+        public static bool intersectRaySphere(TgcRay ray, TgcBoundingSphere sphere, out float t, out TGCVector3 q)
         {
             t = -1;
-            q = Vector3.Empty;
+            q = TGCVector3.Empty;
 
             var m = ray.Origin - sphere.Center;
-            var b = Vector3.Dot(m, ray.Direction);
-            var c = Vector3.Dot(m, m) - sphere.Radius * sphere.Radius;
+            var b = TGCVector3.Dot(m, ray.Direction);
+            var c = TGCVector3.Dot(m, m) - sphere.Radius * sphere.Radius;
             // Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
             if (c > 0.0f && b > 0.0f) return false;
             var discr = b * b - c;
@@ -809,8 +810,8 @@ namespace TGC.Core.Collision
         /// <param name="t">Distancia de colision del segmento</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectSegmentSphere(Vector3 p0, Vector3 p1, TgcBoundingSphere sphere, out float t,
-            out Vector3 q)
+        public static bool intersectSegmentSphere(TGCVector3 p0, TGCVector3 p1, TgcBoundingSphere sphere, out float t,
+            out TGCVector3 q)
         {
             var segmentDir = p1 - p0;
             var ray = new TgcRay(p0, segmentDir);
@@ -839,10 +840,10 @@ namespace TGC.Core.Collision
         public static bool testRaySphere(TgcRay ray, TgcBoundingSphere sphere)
         {
             var m = ray.Origin - sphere.Center;
-            var c = Vector3.Dot(m, m) - sphere.Radius * sphere.Radius;
+            var c = TGCVector3.Dot(m, m) - sphere.Radius * sphere.Radius;
             // If there is definitely at least one real root, there must be an intersection
             if (c <= 0.0f) return true;
-            var b = Vector3.Dot(m, ray.Direction);
+            var b = TGCVector3.Dot(m, ray.Direction);
             // Early exit if ray origin outside sphere and ray pointing away from sphere
             if (b > 0.0f) return false;
             var disc = b * b - c;
@@ -858,7 +859,7 @@ namespace TGC.Core.Collision
         /// <param name="sphere">BoundingSphere</param>
         /// <param name="p">Punto a testear</param>
         /// <returns>True si p está dentro de la esfera</returns>
-        public static bool testPointSphere(TgcBoundingSphere sphere, Vector3 p)
+        public static bool testPointSphere(TgcBoundingSphere sphere, TGCVector3 p)
         {
             var cp = p - sphere.Center;
             var d = cp.LengthSq();
@@ -876,8 +877,8 @@ namespace TGC.Core.Collision
         /// <param name="t">Instante de colision en el intervalo [0, 1]</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectMovingSpherePlane(TgcBoundingSphere sphere, Vector3 velocity, Plane plane,
-            out float t, out Vector3 q)
+        public static bool intersectMovingSpherePlane(TgcBoundingSphere sphere, TGCVector3 velocity, TGCPlane plane,
+            out float t, out TGCVector3 q)
         {
             // Compute distance of sphere center to plane
             var dist = plane.Dot(sphere.Center);
@@ -890,12 +891,12 @@ namespace TGC.Core.Collision
                 return true;
             }
             var p_n = getPlaneNormal(plane);
-            var denom = Vector3.Dot(p_n, velocity);
+            var denom = TGCVector3.Dot(p_n, velocity);
             if (denom * dist >= 0.0f)
             {
                 // No intersection as sphere moving parallel to or away from plane
                 t = -1;
-                q = Vector3.Empty;
+                q = TGCVector3.Empty;
                 return false;
             }
             // Sphere is moving towards the plane
@@ -916,7 +917,7 @@ namespace TGC.Core.Collision
         /// <param name="velocity">Vector de movimiento de la esfera</param>
         /// <param name="plane">Plano</param>
         /// <returns>True si hay colision</returns>
-        public static bool testMovingSpherePlane(TgcBoundingSphere sphere, Vector3 velocity, Plane plane)
+        public static bool testMovingSpherePlane(TgcBoundingSphere sphere, TGCVector3 velocity, TGCPlane plane)
         {
             var a = sphere.Center;
             var b = sphere.Center + velocity;
@@ -945,14 +946,14 @@ namespace TGC.Core.Collision
         /// <param name="c">Vertice C del triangulo</param>
         /// <param name="p">Punto mas cercano de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool testSphereTriangle(TgcBoundingSphere sphere, Vector3 a, Vector3 b, Vector3 c, out Vector3 p)
+        public static bool testSphereTriangle(TgcBoundingSphere sphere, TGCVector3 a, TGCVector3 b, TGCVector3 c, out TGCVector3 p)
         {
             // Find point P on triangle ABC closest to sphere center
             p = closestPointTriangle(sphere.Center, a, b, c);
             // Sphere and triangle intersect if the (squared) distance from sphere
             // center to point p is less than the (squared) sphere radius
             var v = p - sphere.Center;
-            return Vector3.Dot(v, v) <= sphere.Radius * sphere.Radius;
+            return TGCVector3.Dot(v, v) <= sphere.Radius * sphere.Radius;
         }
 
         #endregion BoundingSphere
@@ -966,11 +967,11 @@ namespace TGC.Core.Collision
         /// <param name="q">Punto a testear</param>
         /// <param name="p">Plano</param>
         /// <returns>Punto del plano que mas cerca esta de q</returns>
-        public static Vector3 closestPointPlane(Vector3 q, Plane p)
+        public static TGCVector3 closestPointPlane(TGCVector3 q, TGCPlane p)
         {
             var p_n = toVector3(p);
 
-            var t = (Vector3.Dot(p_n, q) + p.D) / Vector3.Dot(p_n, p_n);
+            var t = (TGCVector3.Dot(p_n, q) + p.D) / TGCVector3.Dot(p_n, p_n);
             return q - t * p_n;
         }
 
@@ -981,11 +982,11 @@ namespace TGC.Core.Collision
         /// <param name="q">Punto a testear</param>
         /// <param name="p">Plano</param>
         /// <returns>Punto del plano que mas cerca esta de q</returns>
-        public static Vector3 closestPointPlaneNorm(Vector3 q, Plane p)
+        public static TGCVector3 closestPointPlaneNorm(TGCVector3 q, TGCPlane p)
         {
             var p_n = toVector3(p);
 
-            var t = Vector3.Dot(p_n, q) + p.D;
+            var t = TGCVector3.Dot(p_n, q) + p.D;
             return q - t * p_n;
         }
 
@@ -995,11 +996,11 @@ namespace TGC.Core.Collision
         /// <param name="q">Punto a testear</param>
         /// <param name="p">Plano</param>
         /// <returns>Distancia del punto al plano</returns>
-        public static float distPointPlane(Vector3 q, Plane p)
+        public static float distPointPlane(TGCVector3 q, TGCPlane p)
         {
             /*
-            Vector3 p_n = toVector3(p);
-            return (Vector3.Dot(p_n, q) + p.D) / Vector3.Dot(p_n, p_n);
+            TGCVector3 p_n = toVector3(p);
+            return (TGCVector3.Dot(p_n, q) + p.D) / TGCVector3.Dot(p_n, p_n);
             */
             return p.Dot(q);
         }
@@ -1010,7 +1011,7 @@ namespace TGC.Core.Collision
         /// <param name="q">Punto a clasificar</param>
         /// <param name="p">Plano</param>
         /// <returns>Resultado de la colisión</returns>
-        public static PointPlaneResult classifyPointPlane(Vector3 q, Plane p)
+        public static PointPlaneResult classifyPointPlane(TGCVector3 q, TGCPlane p)
         {
             var distance = distPointPlane(q, p);
 
@@ -1054,11 +1055,11 @@ namespace TGC.Core.Collision
         /// <param name="b">Fin del segmento ab</param>
         /// <param name="t">Valor que cumple la ecuacion d(t) = a + t*(b - a)</param>
         /// <returns>Punto sobre ab que esta mas cerca de p</returns>
-        public static Vector3 closestPointSegment(Vector3 p, Vector3 a, Vector3 b, out float t)
+        public static TGCVector3 closestPointSegment(TGCVector3 p, TGCVector3 a, TGCVector3 b, out float t)
         {
             var ab = b - a;
             // Project c onto ab, computing parameterized position d(t) = a + t*(b – a)
-            t = Vector3.Dot(p - a, ab) / Vector3.Dot(ab, ab);
+            t = TGCVector3.Dot(p - a, ab) / TGCVector3.Dot(ab, ab);
             // If outside segment, clamp t (and therefore d) to the closest endpoint
             if (t < 0.0f) t = 0.0f;
             if (t > 1.0f) t = 1.0f;
@@ -1073,16 +1074,16 @@ namespace TGC.Core.Collision
         /// <param name="b">Fin del segmento ab</param>
         /// <param name="c">Punto a testear</param>
         /// <returns>Distancia al cuadrado entre c y ab</returns>
-        public static float sqDistPointSegment(Vector3 a, Vector3 b, Vector3 c)
+        public static float sqDistPointSegment(TGCVector3 a, TGCVector3 b, TGCVector3 c)
         {
-            Vector3 ab = b - a, ac = c - a, bc = c - b;
-            var e = Vector3.Dot(ac, ab);
+            TGCVector3 ab = b - a, ac = c - a, bc = c - b;
+            var e = TGCVector3.Dot(ac, ab);
             // Handle cases where c projects outside ab
-            if (e <= 0.0f) return Vector3.Dot(ac, ac);
-            var f = Vector3.Dot(ab, ab);
-            if (e >= f) return Vector3.Dot(bc, bc);
+            if (e <= 0.0f) return TGCVector3.Dot(ac, ac);
+            var f = TGCVector3.Dot(ab, ab);
+            if (e >= f) return TGCVector3.Dot(bc, bc);
             // Handle cases where c projects onto ab
-            return Vector3.Dot(ac, ac) - e * e / f;
+            return TGCVector3.Dot(ac, ac) - e * e / f;
         }
 
         /// <summary>
@@ -1094,11 +1095,11 @@ namespace TGC.Core.Collision
         /// <param name="t">Instante de colisión</param>
         /// <param name="q">Punto de colisión con el plano</param>
         /// <returns>True si hubo colisión</returns>
-        public static bool intersectRayPlane(TgcRay ray, Plane plane, out float t, out Vector3 q)
+        public static bool intersectRayPlane(TgcRay ray, TGCPlane plane, out float t, out TGCVector3 q)
         {
             var planeNormal = getPlaneNormal(plane);
             var numer = plane.Dot(ray.Origin);
-            var denom = Vector3.Dot(planeNormal, ray.Direction);
+            var denom = TGCVector3.Dot(planeNormal, ray.Direction);
             t = -numer / denom;
 
             if (t > 0.0f)
@@ -1107,7 +1108,7 @@ namespace TGC.Core.Collision
                 return true;
             }
 
-            q = Vector3.Empty;
+            q = TGCVector3.Empty;
             return false;
         }
 
@@ -1121,13 +1122,13 @@ namespace TGC.Core.Collision
         /// <param name="t">Instante de colisión</param>
         /// <param name="q">Punto de colisión</param>
         /// <returns>True si hay colisión</returns>
-        public static bool intersectSegmentPlane(Vector3 a, Vector3 b, Plane plane, out float t, out Vector3 q)
+        public static bool intersectSegmentPlane(TGCVector3 a, TGCVector3 b, TGCPlane plane, out float t, out TGCVector3 q)
         {
             var planeNormal = getPlaneNormal(plane);
 
             //t = -(n.A + d / n.(B - A))
             var ab = b - a;
-            t = -plane.Dot(a) / Vector3.Dot(planeNormal, ab);
+            t = -plane.Dot(a) / TGCVector3.Dot(planeNormal, ab);
 
             // If t in [0..1] compute and return intersection point
             if (t >= 0.0f && t <= 1.0f)
@@ -1136,7 +1137,7 @@ namespace TGC.Core.Collision
                 return true;
             }
 
-            q = Vector3.Empty;
+            q = TGCVector3.Empty;
             return false;
         }
 
@@ -1148,19 +1149,19 @@ namespace TGC.Core.Collision
         /// <param name="b">Vértice B del triángulo</param>
         /// <param name="c">Vértice C del triángulo</param>
         /// <returns>Punto mas cercano al triángulo</returns>
-        public static Vector3 closestPointTriangle(Vector3 p, Vector3 a, Vector3 b, Vector3 c)
+        public static TGCVector3 closestPointTriangle(TGCVector3 p, TGCVector3 a, TGCVector3 b, TGCVector3 c)
         {
             // Check if P in vertex region outside A
             var ab = b - a;
             var ac = c - a;
             var ap = p - a;
-            var d1 = Vector3.Dot(ab, ap);
-            var d2 = Vector3.Dot(ac, ap);
+            var d1 = TGCVector3.Dot(ab, ap);
+            var d2 = TGCVector3.Dot(ac, ap);
             if (d1 <= 0.0f && d2 <= 0.0f) return a; // barycentric coordinates (1,0,0)
             // Check if P in vertex region outside B
             var bp = p - b;
-            var d3 = Vector3.Dot(ab, bp);
-            var d4 = Vector3.Dot(ac, bp);
+            var d3 = TGCVector3.Dot(ab, bp);
+            var d4 = TGCVector3.Dot(ac, bp);
             if (d3 >= 0.0f && d4 <= d3) return b; // barycentric coordinates (0,1,0)
             // Check if P in edge region of AB, if so return projection of P onto AB
             var vc = d1 * d4 - d3 * d2;
@@ -1171,8 +1172,8 @@ namespace TGC.Core.Collision
             }
             // Check if P in vertex region outside C
             var cp = p - c;
-            var d5 = Vector3.Dot(ab, cp);
-            var d6 = Vector3.Dot(ac, cp);
+            var d5 = TGCVector3.Dot(ab, cp);
+            var d6 = TGCVector3.Dot(ac, cp);
             if (d6 >= 0.0f && d5 <= d6) return c; // barycentric coordinates (0,0,1)
 
             // Check if P in edge region of AC, if so return projection of P onto AC
@@ -1207,11 +1208,11 @@ namespace TGC.Core.Collision
         /// <param name="c">Vértice C del rectángulo</param>
         /// <param name="c">Vértice D del rectángulo</param>
         /// <returns>Punto mas cercano al rectángulo</returns>
-        public static Vector3 closestPointRectangle3d(Vector3 p, Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        public static TGCVector3 closestPointRectangle3d(TGCVector3 p, TGCVector3 a, TGCVector3 b, TGCVector3 c, TGCVector3 d)
         {
             //Buscar el punto mas cercano a cada uno de los 4 segmentos de recta que forman el rectángulo
             float t;
-            Vector3[] points = new Vector3[4];
+            TGCVector3[] points = new TGCVector3[4];
             points[0] = closestPointSegment(p, a, b, out t);
             points[1] = closestPointSegment(p, b, c, out t);
             points[2] = closestPointSegment(p, c, d, out t);
@@ -1231,7 +1232,7 @@ namespace TGC.Core.Collision
         /// <param name="b">Vértice B del rectángulo</param>
         /// <param name="c">Vértice C del rectángulo</param>
         /// <returns></returns>
-        public static Vector3 closestPointRectangle3d(Vector3 p, Vector3 a, Vector3 b, Vector3 c)
+        public static TGCVector3 closestPointRectangle3d(TGCVector3 p, TGCVector3 a, TGCVector3 b, TGCVector3 c)
         {
             var ab = b - a; // vector across rect
             var ac = c - a; // vector down rect
@@ -1239,15 +1240,15 @@ namespace TGC.Core.Collision
             // Start result at top-left corner of rect; make steps from there
             var q = a;
             // Clamp p’ (projection of p to plane of r) to rectangle in the across direction
-            var dist = Vector3.Dot(d, ab);
-            var maxdist = Vector3.Dot(ab, ab);
+            var dist = TGCVector3.Dot(d, ab);
+            var maxdist = TGCVector3.Dot(ab, ab);
             if (dist >= maxdist)
                 q += ab;
             else if (dist > 0.0f)
                 q += dist / maxdist * ab;
             // Clamp p’ (projection of p to plane of r) to rectangle in the down direction
-            dist = Vector3.Dot(d, ac);
-            maxdist = Vector3.Dot(ac, ac);
+            dist = TGCVector3.Dot(d, ac);
+            maxdist = TGCVector3.Dot(ac, ac);
             if (dist >= maxdist)
                 q += ac;
             else if (dist > 0.0f)
@@ -1263,7 +1264,7 @@ namespace TGC.Core.Collision
         /// <param name="points">Array de puntos del cual se quiere buscar el mas cercano</param>
         /// <param name="minDistSq">Distancia al cuadrado del punto mas cercano</param>
         /// <returns>Punto más cercano a p del array</returns>
-        public static Vector3 closestPoint(Vector3 p, Vector3[] points, out float minDistSq)
+        public static TGCVector3 closestPoint(TGCVector3 p, TGCVector3[] points, out float minDistSq)
         {
             var min = points[0];
             var diffVec = points[0] - p;
@@ -1352,9 +1353,9 @@ namespace TGC.Core.Collision
         {
             bool intersect = false;
             FrustumResult result = FrustumResult.OUTSIDE;
-            Vector3 minExtreme;
-            Vector3 maxExtreme;
-            Plane[] m_frustumPlanes = frustum.FrustumPlanes;
+            TGCVector3 minExtreme;
+            TGCVector3 maxExtreme;
+            TGCPlane[] m_frustumPlanes = frustum.FrustumPlanes;
 
             for (int i = 0; i < 6 ; i++ )
             {
@@ -1443,7 +1444,7 @@ namespace TGC.Core.Collision
         /// <param name="frustum">Frustum</param>
         /// <param name="p">Punto</param>
         /// <returns>True si el Punto está adentro del Frustum</returns>
-        public static bool testPointFrustum(TgcFrustum frustum, Vector3 p)
+        public static bool testPointFrustum(TgcFrustum frustum, TGCVector3 p)
         {
             var result = true;
             var frustumPlanes = frustum.FrustumPlanes;
@@ -1573,7 +1574,7 @@ namespace TGC.Core.Collision
         /// <param name="q">Punto a clasificar</param>
         /// <param name="polyhedron">Cuerpo Convexo</param>
         /// <returns>Resultado de la clasificación</returns>
-        public static ConvexPolyhedronResult classifyPointConvexPolyhedron(Vector3 q, TgcConvexPolyhedron polyhedron)
+        public static ConvexPolyhedronResult classifyPointConvexPolyhedron(TGCVector3 q, TgcConvexPolyhedron polyhedron)
         {
             var fistTime = true;
             var lastC = PointPlaneResult.BEHIND;
@@ -1613,7 +1614,7 @@ namespace TGC.Core.Collision
         /// <param name="q">Punto a clasificar</param>
         /// <param name="polyhedron">Cuerpo Convexo</param>
         /// <returns>True si se encuentra adentro.</returns>
-        public static bool testPointConvexPolyhedron(Vector3 q, TgcConvexPolyhedron polyhedron)
+        public static bool testPointConvexPolyhedron(TGCVector3 q, TgcConvexPolyhedron polyhedron)
         {
             for (var i = 0; i < polyhedron.Planes.Length; i++)
             {
@@ -1640,11 +1641,11 @@ namespace TGC.Core.Collision
         /// <param name="p">Plano con el cual se recorta</param>
         /// <param name="clippedPoly">Vértices del polígono recortado></param>
         /// <returns>True si el polígono recortado es válido. False si está degenerado</returns>
-        public static bool clipConvexPolygon(Vector3[] polyVertices, Plane p, out Vector3[] clippedPolyVertices)
+        public static bool clipConvexPolygon(TGCVector3[] polyVertices, TGCPlane p, out TGCVector3[] clippedPolyVertices)
         {
             var thisInd = polyVertices.Length - 1;
             var thisRes = classifyPointPlane(polyVertices[thisInd], p);
-            var outVert = new List<Vector3>(polyVertices.Length);
+            var outVert = new List<TGCVector3>(polyVertices.Length);
             float t;
 
             for (var nextInd = 0; nextInd < polyVertices.Length; nextInd++)
@@ -1660,7 +1661,7 @@ namespace TGC.Core.Collision
                     thisRes == PointPlaneResult.IN_FRONT_OF && nextRes == PointPlaneResult.BEHIND)
                 {
                     // Add the split point
-                    Vector3 q;
+                    TGCVector3 q;
                     intersectSegmentPlane(polyVertices[thisInd], polyVertices[nextInd], p, out t, out q);
                     outVert.Add(q);
                 }
@@ -1691,7 +1692,7 @@ namespace TGC.Core.Collision
         /// <param name="polyNormal">Normal del poligono</param>
         /// <param name="q">Punto a testear</param>
         /// <returns>True si el punto se encuentra dentro del poligono</returns>
-        public static bool testPointInConvexPolygon(Vector3[] polyVertices, Vector3 polyNormal, Vector3 q)
+        public static bool testPointInConvexPolygon(TGCVector3[] polyVertices, TGCVector3 polyNormal, TGCVector3 q)
         {
             var a = polyVertices[polyVertices.Length - 1];
             var lastR = PointPlaneResult.COINCIDENT;
@@ -1700,8 +1701,8 @@ namespace TGC.Core.Collision
             {
                 var b = polyVertices[i];
                 var ab = b - a;
-                var n = Vector3.Cross(ab, polyNormal);
-                var halfPlane = Plane.FromPointNormal(a, n);
+                var n = TGCVector3.Cross(ab, polyNormal);
+                var halfPlane = TGCPlane.FromPointNormal(a, n);
                 var r = classifyPointPlane(q, halfPlane);
                 if (first)
                 {
@@ -1725,10 +1726,10 @@ namespace TGC.Core.Collision
         /// <param name="t">Instante de tiempo de colision</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectRayConvexPolygon(TgcRay ray, Vector3[] polyVertices, out float t, out Vector3 q)
+        public static bool intersectRayConvexPolygon(TgcRay ray, TGCVector3[] polyVertices, out float t, out TGCVector3 q)
         {
             t = -1;
-            q = Vector3.Empty;
+            q = TGCVector3.Empty;
             var v0 = polyVertices[0];
             var v1 = polyVertices[1];
             for (var i = 2; i < polyVertices.Length; i++)
@@ -1755,21 +1756,21 @@ namespace TGC.Core.Collision
         /// <param name="b">Vertice B del triangulo</param>
         /// <param name="c">Vertice C del triangulo</param>
         /// <returns>True si el punto pertenece al triangulo</returns>
-        public static bool testPointInTriangle(Vector3 p, Vector3 a, Vector3 b, Vector3 c)
+        public static bool testPointInTriangle(TGCVector3 p, TGCVector3 a, TGCVector3 b, TGCVector3 c)
         {
             // Translate point and triangle so that point lies at origin
             a -= p;
             b -= p;
             c -= p;
             // Compute normal vectors for triangles pab and pbc
-            var u = Vector3.Cross(b, c);
-            var v = Vector3.Cross(c, a);
+            var u = TGCVector3.Cross(b, c);
+            var v = TGCVector3.Cross(c, a);
             // Make sure they are both pointing in the same direction
-            if (Vector3.Dot(u, v) < 0.0f) return false;
+            if (TGCVector3.Dot(u, v) < 0.0f) return false;
             // Compute normal vector for triangle pca
-            var w = Vector3.Cross(a, b);
+            var w = TGCVector3.Cross(a, b);
             // Make sure it points in the same direction as the first two
-            if (Vector3.Dot(u, w) < 0.0f) return false;
+            if (TGCVector3.Dot(u, w) < 0.0f) return false;
             // Otherwise P must be in (or on) the triangle
             return true;
         }
@@ -1789,14 +1790,14 @@ namespace TGC.Core.Collision
         /// <param name="t">Instante de colision</param>
         /// <param name="col">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectSegmentTriangle(Vector3 p, Vector3 q, Vector3 a, Vector3 b, Vector3 c,
-            out Vector3 uvw, out float t, out Vector3 col)
+        public static bool intersectSegmentTriangle(TGCVector3 p, TGCVector3 q, TGCVector3 a, TGCVector3 b, TGCVector3 c,
+            out TGCVector3 uvw, out float t, out TGCVector3 col)
         {
             float u;
             float v;
             float w;
-            uvw = Vector3.Empty;
-            col = Vector3.Empty;
+            uvw = TGCVector3.Empty;
+            col = TGCVector3.Empty;
             t = -1;
 
             var ab = b - a;
@@ -1805,26 +1806,26 @@ namespace TGC.Core.Collision
 
             // Compute triangle normal. Can be precalculated or cached if
             // intersecting multiple segments against the same triangle
-            var n = Vector3.Cross(ab, ac);
+            var n = TGCVector3.Cross(ab, ac);
 
             // Compute denominator d. If d <= 0, segment is parallel to or points
             // away from triangle, so exit early
-            var d = Vector3.Dot(qp, n);
+            var d = TGCVector3.Dot(qp, n);
             if (d <= 0.0f) return false;
 
             // Compute intersection t value of pq with plane of triangle. A ray
             // intersects iff 0 <= t. Segment intersects iff 0 <= t <= 1. Delay
             // dividing by d until intersection has been found to pierce triangle
             var ap = p - a;
-            t = Vector3.Dot(ap, n);
+            t = TGCVector3.Dot(ap, n);
             if (t < 0.0f) return false;
             if (t > d) return false; // For segment; exclude this code line for a ray test
 
             // Compute barycentric coordinate components and test if within bounds
-            var e = Vector3.Cross(qp, ap);
-            v = Vector3.Dot(ac, e);
+            var e = TGCVector3.Cross(qp, ap);
+            v = TGCVector3.Dot(ac, e);
             if (v < 0.0f || v > d) return false;
-            w = -Vector3.Dot(ab, e);
+            w = -TGCVector3.Dot(ab, e);
             if (w < 0.0f || v + w > d) return false;
 
             // Segment/ray intersects triangle. Perform delayed division and
@@ -1855,22 +1856,22 @@ namespace TGC.Core.Collision
         /// <param name="t">Instante de colision</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectRayTriangle(TgcRay ray, Vector3 v1, Vector3 v2, Vector3 v3, out float t,
-            out Vector3 q)
+        public static bool intersectRayTriangle(TgcRay ray, TGCVector3 v1, TGCVector3 v2, TGCVector3 v3, out float t,
+            out TGCVector3 q)
         {
-            q = Vector3.Empty;
+            q = TGCVector3.Empty;
             t = -1;
-            Vector3 e1, e2; //Edge1, Edge2
-            Vector3 P, Q, T;
+            TGCVector3 e1, e2; //Edge1, Edge2
+            TGCVector3 P, Q, T;
             float det, inv_det, u, v;
 
             //Find vectors for two edges sharing V1
             e1 = v2 - v1;
             e2 = v3 - v1;
             //Begin calculating determinant - also used to calculate u parameter
-            P = Vector3.Cross(ray.Direction, e2);
+            P = TGCVector3.Cross(ray.Direction, e2);
             //if determinant is near zero, ray lies in plane of triangle
-            det = Vector3.Dot(e1, P);
+            det = TGCVector3.Dot(e1, P);
             //NOT CULLING
             if (det > -float.Epsilon && det < float.Epsilon) return false;
             inv_det = 1.0f / det;
@@ -1879,19 +1880,19 @@ namespace TGC.Core.Collision
             T = ray.Origin - v1;
 
             //Calculate u parameter and test bound
-            u = Vector3.Dot(T, P) * inv_det;
+            u = TGCVector3.Dot(T, P) * inv_det;
             //The intersection lies outside of the triangle
             if (u < 0.0f || u > 1.0f) return false;
 
             //Prepare to test v parameter
-            Q = Vector3.Cross(T, e1);
+            Q = TGCVector3.Cross(T, e1);
 
             //Calculate V parameter and test bound
-            v = Vector3.Dot(ray.Direction, Q) * inv_det;
+            v = TGCVector3.Dot(ray.Direction, Q) * inv_det;
             //The intersection lies outside of the triangle
             if (v < 0.0f || u + v > 1.0f) return false;
 
-            t = Vector3.Dot(e2, Q) * inv_det;
+            t = TGCVector3.Dot(e2, Q) * inv_det;
 
             if (t > float.Epsilon)
             {
@@ -1919,14 +1920,14 @@ namespace TGC.Core.Collision
         /// <param name="t">Instante de colision</param>
         /// <param name="col">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectLineTriangle(Vector3 p, Vector3 q, Vector3 a, Vector3 b, Vector3 c, out Vector3 uvw,
-            out float t, out Vector3 col)
+        public static bool intersectLineTriangle(TGCVector3 p, TGCVector3 q, TGCVector3 a, TGCVector3 b, TGCVector3 c, out TGCVector3 uvw,
+            out float t, out TGCVector3 col)
         {
             float u;
             float v;
             float w;
-            uvw = Vector3.Empty;
-            col = Vector3.Empty;
+            uvw = TGCVector3.Empty;
+            col = TGCVector3.Empty;
             t = -1;
 
             var pq = q - p;
@@ -1947,9 +1948,9 @@ namespace TGC.Core.Collision
             */
 
             //For a double-sided test the same code would instead read:
-            var m = Vector3.Cross(pq, pc);
-            u = Vector3.Dot(pb, m); // scalarTriple(pq, pc, pb);
-            v = -Vector3.Dot(pa, m); // scalarTriple(pq, pa, pc);
+            var m = TGCVector3.Cross(pq, pc);
+            u = TGCVector3.Dot(pb, m); // scalarTriple(pq, pc, pb);
+            v = -TGCVector3.Dot(pa, m); // scalarTriple(pq, pa, pc);
             if (!sameSign(u, v)) return false;
             w = scalarTriple(pq, pb, pa);
             if (!sameSign(u, w)) return false;
@@ -1981,8 +1982,8 @@ namespace TGC.Core.Collision
         public static bool testRayCylinder(TgcRay ray, TgcBoundingCylinder cylinder)
         {
             var transformation = cylinder.AntiTransformationMatrix;
-            var origin = Vector3.TransformCoordinate(ray.Origin, transformation);
-            var direction = Vector3.TransformNormal(ray.Direction, transformation);
+            var origin = TGCVector3.TransformCoordinate(ray.Origin, transformation);
+            var direction = TGCVector3.TransformNormal(ray.Direction, transformation);
 
             return testRayCylinder(origin, direction);
         }
@@ -1993,9 +1994,9 @@ namespace TGC.Core.Collision
         /// <param name="p">Punto</param>
         /// <param name="cylinder">Cilindro</param>
         /// <returns>True si el Punto esta adentro del Cilindro</returns>
-        public static bool testPointCylinder(Vector3 p, TgcBoundingCylinder cylinder)
+        public static bool testPointCylinder(TGCVector3 p, TgcBoundingCylinder cylinder)
         {
-            var uvwPoint = Vector3.TransformCoordinate(p, cylinder.AntiRotationMatrix);
+            var uvwPoint = TGCVector3.TransformCoordinate(p, cylinder.AntiRotationMatrix);
             return testPointCylinder(uvwPoint, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
         }
 
@@ -2005,16 +2006,16 @@ namespace TGC.Core.Collision
         /// <param name="p">Punto</param>
         /// <param name="cylinder">Cilindro orientable</param>
         /// <returns>Punto del cilindro que esta mas cerca de p</returns>
-        public static Vector3 closestPointCylinder(Vector3 p, TgcBoundingCylinder cylinder)
+        public static TGCVector3 closestPointCylinder(TGCVector3 p, TgcBoundingCylinder cylinder)
         {
             //transformamos el punto a coordenadas uvw del cilindro
             var transformation = cylinder.AntiRotationMatrix;
-            var uvwPoint = Vector3.TransformCoordinate(p, transformation);
+            var uvwPoint = TGCVector3.TransformCoordinate(p, transformation);
             //buscamos el punto mas cercano en uvw
             var uvwResult = closestPointCylinder(uvwPoint, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
             //transformamos ese resultado a xyz
             transformation.Invert();
-            return Vector3.TransformCoordinate(uvwResult, transformation);
+            return TGCVector3.TransformCoordinate(uvwResult, transformation);
         }
 
         /// <summary>
@@ -2027,7 +2028,7 @@ namespace TGC.Core.Collision
         public static bool testSphereCylinder(TgcBoundingSphere sphere, TgcBoundingCylinder cylinder)
         {
             //transformamos la posicion de la esfera a coordenadas uvw
-            var uvwSphereCenter = Vector3.TransformCoordinate(sphere.Center, cylinder.AntiRotationMatrix);
+            var uvwSphereCenter = TGCVector3.TransformCoordinate(sphere.Center, cylinder.AntiRotationMatrix);
             //nos fijamos si hay colision en el espacio uvw
             return testSphereCylinder(
                 uvwSphereCenter, sphere.Radius,
@@ -2048,8 +2049,8 @@ namespace TGC.Core.Collision
         /// <param name="t">Instante de colision</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectSegmentCylinder(Vector3 segmentInit, Vector3 segmentEnd,
-            TgcBoundingCylinder cylinder, out float t, out Vector3 q)
+        public static bool intersectSegmentCylinder(TGCVector3 segmentInit, TGCVector3 segmentEnd,
+            TgcBoundingCylinder cylinder, out float t, out TGCVector3 q)
         {
             var hh = cylinder.HalfHeight;
             var cylinderInit = cylinder.Center - hh;
@@ -2057,19 +2058,19 @@ namespace TGC.Core.Collision
             var radius = cylinder.Radius;
 
             t = -1;
-            q = Vector3.Empty;
+            q = TGCVector3.Empty;
 
-            Vector3 d = cylinderEnd - cylinderInit, m = segmentInit - cylinderInit, n = segmentEnd - segmentInit;
-            var md = Vector3.Dot(m, d);
-            var nd = Vector3.Dot(n, d);
-            var dd = Vector3.Dot(d, d);
+            TGCVector3 d = cylinderEnd - cylinderInit, m = segmentInit - cylinderInit, n = segmentEnd - segmentInit;
+            var md = TGCVector3.Dot(m, d);
+            var nd = TGCVector3.Dot(n, d);
+            var dd = TGCVector3.Dot(d, d);
             // Test if segment fully outside either endcap of cylinder
             if (md < 0.0f && md + nd < 0.0f) return false; // Segment outside ’p’ side of cylinder
             if (md > dd && md + nd > dd) return false; // Segment outside ’q’ side of cylinder
-            var nn = Vector3.Dot(n, n);
-            var mn = Vector3.Dot(m, n);
+            var nn = TGCVector3.Dot(n, n);
+            var mn = TGCVector3.Dot(m, n);
             var a = dd * nn - nd * nd;
-            var k = Vector3.Dot(m, m) - radius * radius;
+            var k = TGCVector3.Dot(m, m) - radius * radius;
             var c = dd * k - md * md;
             if (FastMath.Abs(a) < float.Epsilon)
             {
@@ -2123,8 +2124,8 @@ namespace TGC.Core.Collision
         public static bool testRayCylinder(TgcRay ray, TgcBoundingCylinderFixedY cylinder)
         {
             var transformation = cylinder.AntiTransformationMatrix;
-            var origin = Vector3.TransformCoordinate(ray.Origin, transformation);
-            var direction = Vector3.TransformNormal(ray.Direction, transformation);
+            var origin = TGCVector3.TransformCoordinate(ray.Origin, transformation);
+            var direction = TGCVector3.TransformNormal(ray.Direction, transformation);
 
             return testRayCylinder(origin, direction);
         }
@@ -2135,7 +2136,7 @@ namespace TGC.Core.Collision
         /// <param name="p">Punto</param>
         /// <param name="cylinder">Cilindro alineado</param>
         /// <returns>True si el Punto esta adentro del Cilindro</returns>
-        private static bool testPointCylinder(Vector3 p, TgcBoundingCylinderFixedY cylinder)
+        private static bool testPointCylinder(TGCVector3 p, TgcBoundingCylinderFixedY cylinder)
         {
             return testPointCylinder(p, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
         }
@@ -2146,7 +2147,7 @@ namespace TGC.Core.Collision
         /// <param name="p">Punto</param>
         /// <param name="cylinder">Cilindro alineado</param>
         /// <returns>Punto perteneciente al cilindro mas cercano a P</returns>
-        public static Vector3 closestPointCylinder(Vector3 p, TgcBoundingCylinderFixedY cylinder)
+        public static TGCVector3 closestPointCylinder(TGCVector3 p, TgcBoundingCylinderFixedY cylinder)
         {
             return closestPointCylinder(p, cylinder.Center, cylinder.HalfLength, cylinder.Radius);
         }
@@ -2184,7 +2185,7 @@ namespace TGC.Core.Collision
             var cylRadius = cylinder.Radius;
 
             //vector de distancias
-            var distances = new Vector3(
+            var distances = new TGCVector3(
                 FastMath.Abs(boxCenter.X - cylCenter.X),
                 FastMath.Abs(boxCenter.Y - cylCenter.Y),
                 FastMath.Abs(boxCenter.Z - cylCenter.Z));
@@ -2230,7 +2231,7 @@ namespace TGC.Core.Collision
         /// <param name="origin">Origen del rayo</param>
         /// <param name="direction">Vector director del rayo</param>
         /// <returns>True si el rayo colisiona con el cilindro</returns>
-        private static bool testRayCylinder(Vector3 origin, Vector3 direction)
+        private static bool testRayCylinder(TGCVector3 origin, TGCVector3 direction)
         {
             float x0 = origin.X, xt = direction.X;
             float y0 = origin.Y, yt = direction.Y;
@@ -2289,7 +2290,7 @@ namespace TGC.Core.Collision
         /// <param name="cylHalfLength">Media altura del cilindro</param>
         /// <param name="cylRadius">Radio del cilindro</param>
         /// <returns>True si el Punto esta adentro del Cilindro</returns>
-        private static bool testPointCylinder(Vector3 p, Vector3 cylCenter, float cylHalfLength, float cylRadius)
+        private static bool testPointCylinder(TGCVector3 p, TGCVector3 cylCenter, float cylHalfLength, float cylRadius)
         {
             if (FastMath.Abs(cylCenter.Y - p.Y) > cylHalfLength) return false;
             var centerToPoint = p - cylCenter;
@@ -2304,7 +2305,7 @@ namespace TGC.Core.Collision
         /// <param name="cylHalfLength">Media altura del cilindro</param>
         /// <param name="cylRadius">Radio del cilindro</param>
         /// <returns>Punto perteneciente al cilindro mas cercano a P</returns>
-        private static Vector3 closestPointCylinder(Vector3 p, Vector3 cylCenter, float cylHalfLength, float cylRadius)
+        private static TGCVector3 closestPointCylinder(TGCVector3 p, TGCVector3 cylCenter, float cylHalfLength, float cylRadius)
         {
             var direction = p - cylCenter;
             direction.Y = 0;
@@ -2316,8 +2317,8 @@ namespace TGC.Core.Collision
 
             var distanceY = p.Y - cylCenter.Y;
             if (FastMath.Abs(distanceY) > cylHalfLength)
-                return cylCenter + new Vector3(0, cylHalfLength, 0) * Math.Sign(distanceY) + direction;
-            return cylCenter + new Vector3(0, distanceY, 0) + direction;
+                return cylCenter + new TGCVector3(0, cylHalfLength, 0) * Math.Sign(distanceY) + direction;
+            return cylCenter + new TGCVector3(0, distanceY, 0) + direction;
         }
 
         /// <summary>
@@ -2329,7 +2330,7 @@ namespace TGC.Core.Collision
         /// <param name="cylHalfLength">Media altura del cilindro</param>
         /// <param name="cylRadius">Radio del cilindro</param>
         /// <returns>True si hay colision</returns>
-        private static bool testSphereCylinder(Vector3 sphereCenter, float sphereRadius, Vector3 cylCenter,
+        private static bool testSphereCylinder(TGCVector3 sphereCenter, float sphereRadius, TGCVector3 cylCenter,
             float cylHalfLength, float cylRadius)
         {
             var distanceY = FastMath.Abs(sphereCenter.Y - cylCenter.Y);
@@ -2386,15 +2387,15 @@ namespace TGC.Core.Collision
             // Compute rotation matrix expressing b in a’s coordinate frame
             for (var i = 0; i < 3; i++)
                 for (var j = 0; j < 3; j++)
-                    R[i, j] = Vector3.Dot(a.orientation[i], b.orientation[j]);
+                    R[i, j] = TGCVector3.Dot(a.orientation[i], b.orientation[j]);
 
             // Compute translation vector t
             var tVec = b.center - a.center;
             // Bring translation into a’s coordinate frame
             var t = new float[3];
-            t[0] = Vector3.Dot(tVec, a.orientation[0]);
-            t[1] = Vector3.Dot(tVec, a.orientation[1]);
-            t[2] = Vector3.Dot(tVec, a.orientation[2]);
+            t[0] = TGCVector3.Dot(tVec, a.orientation[0]);
+            t[1] = TGCVector3.Dot(tVec, a.orientation[1]);
+            t[2] = TGCVector3.Dot(tVec, a.orientation[2]);
 
             // Compute common subexpressions. Add in an epsilon term to
             // counteract arithmetic errors when two edges are parallel and
@@ -2472,7 +2473,7 @@ namespace TGC.Core.Collision
         ///     Interseccion Ray-OBB.
         ///     Devuelve true y el punto q de colision si hay interseccion.
         /// </summary>
-        public static bool intersectRayObb(TgcRay ray, TgcBoundingOrientedBox obb, out Vector3 q)
+        public static bool intersectRayObb(TgcRay ray, TgcBoundingOrientedBox obb, out TGCVector3 q)
         {
             //Transformar Ray a OBB-space
             var a = ray.Origin;
@@ -2481,7 +2482,7 @@ namespace TGC.Core.Collision
             b = obb.toObbSpace(b);
             var ray2 = new TgcRay.RayStruct();
             ray2.origin = a;
-            ray2.direction = Vector3.Normalize(b - a);
+            ray2.direction = TGCVector3.Normalize(b - a);
 
             //Crear AABB que representa al OBB
             var min = -obb.Extents;
@@ -2534,15 +2535,15 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Crea un vector en base a los valores A, B y C de un plano
         /// </summary>
-        public static Vector3 toVector3(Plane p)
+        public static TGCVector3 toVector3(TGCPlane p)
         {
-            return new Vector3(p.A, p.B, p.C);
+            return new TGCVector3(p.A, p.B, p.C);
         }
 
         /// <summary>
         ///     Crea un array de floats con X,Y,Z
         /// </summary>
-        public static float[] toArray(Vector3 v)
+        public static float[] toArray(TGCVector3 v)
         {
             return new[] { v.X, v.Y, v.Z };
         }
@@ -2550,9 +2551,9 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Crea un vector en base a un array de floats con X,Y,Z
         /// </summary>
-        public static Vector3 toVector3(float[] a)
+        public static TGCVector3 toVector3(float[] a)
         {
-            return new Vector3(a[0], a[1], a[2]);
+            return new TGCVector3(a[0], a[1], a[2]);
         }
 
         /// <summary>
@@ -2566,11 +2567,11 @@ namespace TGC.Core.Collision
         }
 
         /// <summary>
-        ///     Devuelve un Vector3 con la normal del plano (sin normalizar)
+        ///     Devuelve un TGCVector3 con la normal del plano (sin normalizar)
         /// </summary>
-        public static Vector3 getPlaneNormal(Plane p)
+        public static TGCVector3 getPlaneNormal(TGCPlane p)
         {
-            return new Vector3(p.A, p.B, p.C);
+            return new TGCVector3(p.A, p.B, p.C);
         }
 
         /// <summary>
@@ -2638,9 +2639,9 @@ namespace TGC.Core.Collision
         ///     Expresion: (u x v) . w
         ///     Devuelve un escalar
         /// </summary>
-        public static float scalarTriple(Vector3 u, Vector3 v, Vector3 w)
+        public static float scalarTriple(TGCVector3 u, TGCVector3 v, TGCVector3 w)
         {
-            return Vector3.Dot(Vector3.Cross(u, v), w);
+            return TGCVector3.Dot(TGCVector3.Cross(u, v), w);
         }
 
         #endregion Herramientas generales

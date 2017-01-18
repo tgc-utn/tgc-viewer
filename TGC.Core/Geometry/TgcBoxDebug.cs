@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -49,12 +50,12 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Punto mínimo de la caja
         /// </summary>
-        public Vector3 PMin { get; set; }
+        public TGCVector3 PMin { get; set; }
 
         /// <summary>
         ///     Punto máximo de la caja
         /// </summary>
-        public Vector3 PMax { get; set; }
+        public TGCVector3 PMax { get; set; }
 
         /// <summary>
         ///     Color de la caja
@@ -75,7 +76,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public float Thickness { get; set; }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             //Lo correcto sería calcular el centro, pero con un extremo es suficiente.
             get { return PMin; }
@@ -154,53 +155,53 @@ namespace TGC.Core.Geometry
             //Botton Face
             idx = 0;
             createLineZ(vertices, idx, c,
-                PMin, new Vector3(PMin.X, PMin.Y, PMax.Z));
+                PMin, new TGCVector3(PMin.X, PMin.Y, PMax.Z));
 
             idx += LINE_VERTICES_COUNT;
             createLineX(vertices, idx, c,
-                new Vector3(PMin.X, PMin.Y, PMax.Z), new Vector3(PMax.X, PMin.Y, PMax.Z));
+                new TGCVector3(PMin.X, PMin.Y, PMax.Z), new TGCVector3(PMax.X, PMin.Y, PMax.Z));
 
             idx += LINE_VERTICES_COUNT;
             createLineZ(vertices, idx, c,
-                new Vector3(PMax.X, PMin.Y, PMax.Z), new Vector3(PMax.X, PMin.Y, PMin.Z));
+                new TGCVector3(PMax.X, PMin.Y, PMax.Z), new TGCVector3(PMax.X, PMin.Y, PMin.Z));
 
             idx += LINE_VERTICES_COUNT;
             createLineX(vertices, idx, c,
-                new Vector3(PMax.X, PMin.Y, PMin.Z), PMin);
+                new TGCVector3(PMax.X, PMin.Y, PMin.Z), PMin);
 
             //Top Face
             idx += LINE_VERTICES_COUNT;
             createLineZ(vertices, idx, c,
-                new Vector3(PMin.X, PMax.Y, PMin.Z), new Vector3(PMin.X, PMax.Y, PMax.Z));
+                new TGCVector3(PMin.X, PMax.Y, PMin.Z), new TGCVector3(PMin.X, PMax.Y, PMax.Z));
 
             idx += LINE_VERTICES_COUNT;
             createLineX(vertices, idx, c,
-                new Vector3(PMin.X, PMax.Y, PMax.Z), PMax);
+                new TGCVector3(PMin.X, PMax.Y, PMax.Z), PMax);
 
             idx += LINE_VERTICES_COUNT;
             createLineZ(vertices, idx, c,
-                PMax, new Vector3(PMax.X, PMax.Y, PMin.Z));
+                PMax, new TGCVector3(PMax.X, PMax.Y, PMin.Z));
 
             idx += LINE_VERTICES_COUNT;
             createLineX(vertices, idx, c,
-                new Vector3(PMax.X, PMax.Y, PMin.Z), new Vector3(PMin.X, PMax.Y, PMin.Z));
+                new TGCVector3(PMax.X, PMax.Y, PMin.Z), new TGCVector3(PMin.X, PMax.Y, PMin.Z));
 
             //Conexión Bottom-Top
             idx += LINE_VERTICES_COUNT;
             createLineY(vertices, idx, c,
-                PMin, new Vector3(PMin.X, PMax.Y, PMin.Z));
+                PMin, new TGCVector3(PMin.X, PMax.Y, PMin.Z));
 
             idx += LINE_VERTICES_COUNT;
             createLineY(vertices, idx, c,
-                new Vector3(PMin.X, PMin.Y, PMax.Z), new Vector3(PMin.X, PMax.Y, PMax.Z));
+                new TGCVector3(PMin.X, PMin.Y, PMax.Z), new TGCVector3(PMin.X, PMax.Y, PMax.Z));
 
             idx += LINE_VERTICES_COUNT;
             createLineY(vertices, idx, c,
-                new Vector3(PMax.X, PMin.Y, PMax.Z), PMax);
+                new TGCVector3(PMax.X, PMin.Y, PMax.Z), PMax);
 
             idx += LINE_VERTICES_COUNT;
             createLineY(vertices, idx, c,
-                new Vector3(PMax.X, PMin.Y, PMin.Z), new Vector3(PMax.X, PMax.Y, PMin.Z));
+                new TGCVector3(PMax.X, PMin.Y, PMin.Z), new TGCVector3(PMax.X, PMax.Y, PMin.Z));
 
             //Cargar VertexBuffer
             vertexBuffer.SetData(vertices, 0, LockFlags.None);
@@ -209,37 +210,37 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crear linea en X
         /// </summary>
-        private void createLineX(CustomVertex.PositionColored[] vertices, int idx, int color, Vector3 min, Vector3 max)
+        private void createLineX(CustomVertex.PositionColored[] vertices, int idx, int color, TGCVector3 min, TGCVector3 max)
         {
-            var min2 = new Vector3(min.X, min.Y - Thickness, min.Z - Thickness);
-            var max2 = new Vector3(max.X, max.Y + Thickness, max.Z + Thickness);
+            var min2 = new TGCVector3(min.X, min.Y - Thickness, min.Z - Thickness);
+            var max2 = new TGCVector3(max.X, max.Y + Thickness, max.Z + Thickness);
             createLineVertices(vertices, idx, min2, max2, color);
         }
 
         /// <summary>
         ///     Crear linea en Y
         /// </summary>
-        private void createLineY(CustomVertex.PositionColored[] vertices, int idx, int color, Vector3 min, Vector3 max)
+        private void createLineY(CustomVertex.PositionColored[] vertices, int idx, int color, TGCVector3 min, TGCVector3 max)
         {
-            var min2 = new Vector3(min.X - Thickness, min.Y, min.Z - Thickness);
-            var max2 = new Vector3(max.X + Thickness, max.Y, max.Z + Thickness);
+            var min2 = new TGCVector3(min.X - Thickness, min.Y, min.Z - Thickness);
+            var max2 = new TGCVector3(max.X + Thickness, max.Y, max.Z + Thickness);
             createLineVertices(vertices, idx, min2, max2, color);
         }
 
         /// <summary>
         ///     Crear linea en Z
         /// </summary>
-        private void createLineZ(CustomVertex.PositionColored[] vertices, int idx, int color, Vector3 min, Vector3 max)
+        private void createLineZ(CustomVertex.PositionColored[] vertices, int idx, int color, TGCVector3 min, TGCVector3 max)
         {
-            var min2 = new Vector3(min.X - Thickness, min.Y - Thickness, min.Z);
-            var max2 = new Vector3(max.X + Thickness, max.Y + Thickness, max.Z);
+            var min2 = new TGCVector3(min.X - Thickness, min.Y - Thickness, min.Z);
+            var max2 = new TGCVector3(max.X + Thickness, max.Y + Thickness, max.Z);
             createLineVertices(vertices, idx, min2, max2, color);
         }
 
         /// <summary>
         ///     Crear los vértices de la línea con valores extremos especificados
         /// </summary>
-        private void createLineVertices(CustomVertex.PositionColored[] vertices, int idx, Vector3 min, Vector3 max,
+        private void createLineVertices(CustomVertex.PositionColored[] vertices, int idx, TGCVector3 min, TGCVector3 max,
             int c)
         {
             // Front face
@@ -296,11 +297,11 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="position">Centro de la caja</param>
         /// <param name="size">Tamaño de la caja</param>
-        public void setPositionSize(Vector3 position, Vector3 size)
+        public void setPositionSize(TGCVector3 position, TGCVector3 size)
         {
-            var radius = Vector3.Scale(size, 0.5f);
-            PMin = Vector3.Subtract(position, radius);
-            PMax = Vector3.Add(position, radius);
+            var radius = TGCVector3.Scale(size, 0.5f);
+            PMin = TGCVector3.Subtract(position, radius);
+            PMax = TGCVector3.Add(position, radius);
         }
 
         #region Creacion
@@ -311,7 +312,7 @@ namespace TGC.Core.Geometry
         /// <param name="center">Centro de la caja</param>
         /// <param name="size">Tamaño de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromSize(Vector3 center, Vector3 size)
+        public static TgcBoxDebug fromSize(TGCVector3 center, TGCVector3 size)
         {
             var box = new TgcBoxDebug();
             box.setPositionSize(center, size);
@@ -326,7 +327,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromSize(Vector3 center, Vector3 size, Color color)
+        public static TgcBoxDebug fromSize(TGCVector3 center, TGCVector3 size, Color color)
         {
             var box = new TgcBoxDebug();
             box.setPositionSize(center, size);
@@ -343,7 +344,7 @@ namespace TGC.Core.Geometry
         /// <param name="color">Color de la caja</param>
         /// <param name="thickness">Grosor de las aristas de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromSize(Vector3 center, Vector3 size, Color color, float thickness)
+        public static TgcBoxDebug fromSize(TGCVector3 center, TGCVector3 size, Color color, float thickness)
         {
             var box = new TgcBoxDebug();
             box.setPositionSize(center, size);
@@ -359,7 +360,7 @@ namespace TGC.Core.Geometry
         /// <param name="pMin">Punto mínimo</param>
         /// <param name="pMax">Punto máximo</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromExtremes(Vector3 pMin, Vector3 pMax)
+        public static TgcBoxDebug fromExtremes(TGCVector3 pMin, TGCVector3 pMax)
         {
             var box = new TgcBoxDebug();
             box.PMin = pMin;
@@ -375,7 +376,7 @@ namespace TGC.Core.Geometry
         /// <param name="pMax">Punto máximo</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromExtremes(Vector3 pMin, Vector3 pMax, Color color)
+        public static TgcBoxDebug fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color)
         {
             var box = new TgcBoxDebug();
             box.PMin = pMin;
@@ -393,7 +394,7 @@ namespace TGC.Core.Geometry
         /// <param name="color">Color de la caja</param>
         /// <param name="thickness">Grosor de las aristas de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromExtremes(Vector3 pMin, Vector3 pMax, Color color, float thickness)
+        public static TgcBoxDebug fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color, float thickness)
         {
             var box = new TgcBoxDebug();
             box.PMin = pMin;

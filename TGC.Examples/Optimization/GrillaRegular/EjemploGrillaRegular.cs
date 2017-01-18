@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using System.Collections.Generic;
 using TGC.Core.Camara;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
@@ -38,8 +39,8 @@ namespace TGC.Examples.Optimization.GrillaRegular
         {
             //Crear SkyBox
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 500, 0);
-            skyBox.Size = new Vector3(10000, 10000, 10000);
+            skyBox.Center = new TGCVector3(0, 500, 0);
+            skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
@@ -65,7 +66,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
             grilla.createDebugMeshes();
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(1500, 800, 0), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
             Modifiers.addBoolean("showGrid", "Show Grid", false);
             Modifiers.addBoolean("showTerrain", "Show Terrain", true);

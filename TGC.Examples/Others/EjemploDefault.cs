@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Text;
@@ -60,7 +61,7 @@ namespace TGC.Examples.Others
             helpForm = new EjemploDefaultHelpForm(helpRtf);
 
             //Camara
-            Camara = new TgcRotationalCamera(new Vector3(), 150f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(), 150f, Input);
         }
 
         public override void Update()
@@ -81,8 +82,7 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("specularColor", ColorValue.FromColor(Color.White));
             mesh.Effect.SetValue("specularExp", 10f);
             mesh.Effect.SetValue("lightPosition", lightPos);
-            mesh.Effect.SetValue("eyePosition",
-                TgcParserUtils.vector3ToFloat4Array(Camara.Position));
+            mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
 
             mesh.rotateY(-ElapsedTime / 2);
             mesh.render();

@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
@@ -37,8 +38,8 @@ namespace TGC.Examples.GeometryBasics
             arrow = new TgcArrow();
 
             //Crear modifiers
-            Modifiers.addVertex3f("start", new Vector3(-50, -50, -50), new Vector3(50, 50, 50), new Vector3(0, 0, 0));
-            Modifiers.addVertex3f("end", new Vector3(-50, -50, -50), new Vector3(50, 50, 50), new Vector3(0, 10, 0));
+            Modifiers.addVertex3f("start", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50), TGCVector3.Empty);
+            Modifiers.addVertex3f("end", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50), new TGCVector3(0, 10, 0));
             Modifiers.addFloat("thickness", 0.01f, 1, 0.06f);
             Modifiers.addVertex2f("headSize", new Vector2(0.01f, 0.01f), new Vector2(1, 1), new Vector2(0.3f, 0.6f));
             Modifiers.addColor("bodyColor", Color.Blue);
@@ -51,21 +52,21 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addColor("boxColor", Color.Red);
 
             //Camara FPS
-            Camara = new TgcRotationalCamera(new Vector3(0, 10f, 0), 30f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(0, 10f, 0), 30f, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
 
-            var start = (Vector3)Modifiers["start"];
-            var end = (Vector3)Modifiers["end"];
+            var start = (TGCVector3)Modifiers["start"];
+            var end = (TGCVector3)Modifiers["end"];
             var thickness = (float)Modifiers["thickness"];
             var headSize = (Vector2)Modifiers["headSize"];
             var bodyColor = (Color)Modifiers["bodyColor"];
             var headColor = (Color)Modifiers["headColor"];
 
-            var offset = new Vector3(10, 0, 0);
+            var offset = new TGCVector3(10, 0, 0);
             //Cargar valores de la flecha
             arrow.PStart = start - offset;
             arrow.PEnd = end - offset;

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Terrain;
@@ -35,7 +36,7 @@ namespace TGC.Examples.ShadersExamples
         private float currentScaleXZ;
         private float currentScaleY;
         private string currentTexture;
-        private Vector3 dir_avion;
+        private TGCVector3 dir_avion;
         private Effect effect;
 
         //private bool fresnel = true; // combinar kx y kc s/ factor de fresnel
@@ -77,7 +78,7 @@ namespace TGC.Examples.ShadersExamples
 
             // ------------------------------------------------------------
             // Creo el Heightmap para el terreno:
-            var PosTerrain = new Vector3(0, 0, 0);
+            var PosTerrain = TGCVector3.Empty;
             currentHeightmap = MyMediaDir + "Heighmaps\\Heightmap2.jpg";
             currentScaleXZ = 100f;
             currentScaleY = 2f;
@@ -89,8 +90,8 @@ namespace TGC.Examples.ShadersExamples
             // ------------------------------------------------------------
             // Crear SkyBox:
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 0, 0);
-            skyBox.Size = new Vector3(8000, 8000, 8000);
+            skyBox.Center = TGCVector3.Empty;
+            skyBox.Size = new TGCVector3(8000, 8000, 8000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox1\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
@@ -121,14 +122,14 @@ namespace TGC.Examples.ShadersExamples
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
             avion = scene3.Meshes[0];
 
-            mesh.Scale = new Vector3(0.5f, 0.5f, 0.5f);
-            mesh.Position = new Vector3(0f, 0f, 0f);
+            mesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
+            mesh.Position = new TGCVector3(0f, 0f, 0f);
             var size = mesh.BoundingBox.calculateSize();
             largo_tanque = Math.Abs(size.Z);
             alto_tanque = Math.Abs(size.Y) * mesh.Scale.Y;
-            avion.Scale = new Vector3(1f, 1f, 1f);
-            avion.Position = new Vector3(3000f, 550f, 0f);
-            dir_avion = new Vector3(0, 0, 1);
+            avion.Scale = new TGCVector3(1f, 1f, 1f);
+            avion.Position = new TGCVector3(3000f, 550f, 0f);
+            dir_avion = new TGCVector3(0, 0, 1);
             size = palmera.BoundingBox.calculateSize();
             var alto_palmera = Math.Abs(size.Y);
             int i;
@@ -139,10 +140,10 @@ namespace TGC.Examples.ShadersExamples
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
                     instance.AutoTransformEnable = true;
-                    instance.Scale = new Vector3(0.5f, 1.5f, 0.5f);
+                    instance.Scale = new TGCVector3(0.5f, 1.5f, 0.5f);
                     var x = r[i] * (float)Math.Cos(Geometry.DegreeToRadian(180 + 10.0f * j));
                     var z = r[i] * (float)Math.Sin(Geometry.DegreeToRadian(180 + 10.0f * j));
-                    instance.Position = new Vector3(x, CalcularAltura(x, z) /*+ alto_palmera / 2 * instance.Scale.Y*/, z);
+                    instance.Position = new TGCVector3(x, CalcularAltura(x, z) /*+ alto_palmera / 2 * instance.Scale.Y*/, z);
                     bosque.Add(instance);
                 }
 
@@ -211,8 +212,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", new Vector4(0, 400, 0, 0));
-            effect.SetValue("fvEyePosition",
-                TgcParserUtils.vector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
             effect.SetValue("kx", (float)Modifiers["Reflexion"]);
             effect.SetValue("kc", (float)Modifiers["Refraccion"]);
             effect.SetValue("usar_fresnel", (bool)Modifiers["Fresnel"]);
@@ -226,7 +226,7 @@ namespace TGC.Examples.ShadersExamples
             var H = CalcularAltura(x0, z0) + alto_tanque / 2 - offset_rueda;
             if (volar)
                 H += 300;
-            mesh.Position = new Vector3(x0, H, z0);
+            mesh.Position = new TGCVector3(x0, H, z0);
             // direccion tangente sobre el piso:
             var dir_tanque = new Vector2(-(float)Math.Sin(alfa), (float)Math.Cos(alfa));
             dir_tanque.Normalize();
@@ -236,16 +236,16 @@ namespace TGC.Examples.ShadersExamples
             var H_frente = CalcularAltura(pos2d.X, pos2d.Y) + alto_tanque / 2 - offset_rueda;
             if (volar)
                 H_frente += 300;
-            var pos_frente = new Vector3(pos2d.X, H_frente, pos2d.Y);
+            var pos_frente = new TGCVector3(pos2d.X, H_frente, pos2d.Y);
             var Vel = pos_frente - mesh.Position;
             Vel.Normalize();
 
             mesh.Transform = CalcularMatriz(mesh.Position, mesh.Scale, Vel);
 
             var beta = -time * Geometry.DegreeToRadian(120.0f);
-            avion.Position = new Vector3(x0 + 300f * (float)Math.Cos(beta),
+            avion.Position = new TGCVector3(x0 + 300f * (float)Math.Cos(beta),
                 400 + H, z0 + 300f * (float)Math.Sin(alfa));
-            dir_avion = new Vector3(-(float)Math.Sin(beta), 0, (float)Math.Cos(beta));
+            dir_avion = new TGCVector3(-(float)Math.Sin(beta), 0, (float)Math.Cos(beta));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
             // --------------------------------------------------------------------
@@ -256,58 +256,57 @@ namespace TGC.Examples.ShadersExamples
             // ojo: es fundamental que el fov sea de 90 grados.
             // asi que re-genero la matriz de proyeccion
             D3DDevice.Instance.Device.Transform.Projection =
-                Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f),
-                    1f, 1f, 10000f);
+                TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f), 1f, 1f, 10000f).ToMatrix();
 
             // Genero las caras del enviroment map
             for (var nFace = CubeMapFace.PositiveX; nFace <= CubeMapFace.NegativeZ; ++nFace)
             {
                 var pFace = g_pCubeMap.GetCubeMapSurface(nFace, 0);
                 D3DDevice.Instance.Device.SetRenderTarget(0, pFace);
-                Vector3 Dir, VUP;
+                TGCVector3 Dir, VUP;
                 Color color;
                 switch (nFace)
                 {
                     default:
                     case CubeMapFace.PositiveX:
                         // Left
-                        Dir = new Vector3(1, 0, 0);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(1, 0, 0);
+                        VUP = TGCVector3.Up;
                         color = Color.Black;
                         break;
 
                     case CubeMapFace.NegativeX:
                         // Right
-                        Dir = new Vector3(-1, 0, 0);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(-1, 0, 0);
+                        VUP = TGCVector3.Up;
                         color = Color.Red;
                         break;
 
                     case CubeMapFace.PositiveY:
                         // Up
-                        Dir = new Vector3(0, 1, 0);
-                        VUP = new Vector3(0, 0, -1);
+                        Dir = TGCVector3.Up;
+                        VUP = new TGCVector3(0, 0, -1);
                         color = Color.Gray;
                         break;
 
                     case CubeMapFace.NegativeY:
                         // Down
-                        Dir = new Vector3(0, -1, 0);
-                        VUP = new Vector3(0, 0, 1);
+                        Dir = TGCVector3.Down;
+                        VUP = new TGCVector3(0, 0, 1);
                         color = Color.Yellow;
                         break;
 
                     case CubeMapFace.PositiveZ:
                         // Front
-                        Dir = new Vector3(0, 0, 1);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(0, 0, 1);
+                        VUP = TGCVector3.Up;
                         color = Color.Green;
                         break;
 
                     case CubeMapFace.NegativeZ:
                         // Back
-                        Dir = new Vector3(0, 0, -1);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(0, 0, -1);
+                        VUP = TGCVector3.Up;
                         color = Color.Blue;
                         break;
                 }
@@ -315,7 +314,7 @@ namespace TGC.Examples.ShadersExamples
                 //como queremos usar la camara rotacional pero siguendo a un objetivo comentamos el seteo del view.
                 //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
                 //var Pos = mesh.Position;
-                //D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
+                //D3DDevice.Instance.Device.Transform.View = TGCMatrix.LookAtLH(Pos, Pos + Dir, VUP);
                 CamaraRot.CameraCenter = mesh.Position;
 
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
@@ -333,10 +332,9 @@ namespace TGC.Examples.ShadersExamples
             //TextureLoader.Save("test.bmp", ImageFileFormat.Bmp, g_pCubeMap);
 
             // Restauro el estado de las transformaciones
-            D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix();
+            D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix().ToMatrix();
             D3DDevice.Instance.Device.Transform.Projection =
-                Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
-                    aspectRatio, 1f, 10000f);
+                TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, 1f, 10000f).ToMatrix();
 
             // dibujo pp dicho
             D3DDevice.Instance.Device.BeginScene();
@@ -374,16 +372,16 @@ namespace TGC.Examples.ShadersExamples
         }
 
         // helper
-        public Matrix CalcularMatriz(Vector3 Pos, Vector3 Scale, Vector3 Dir)
+        public TGCMatrix CalcularMatriz(TGCVector3 Pos, TGCVector3 Scale, TGCVector3 Dir)
         {
-            var VUP = new Vector3(0, 1, 0);
+            var VUP = TGCVector3.Up;
 
-            var matWorld = Matrix.Scaling(Scale);
+            var matWorld = TGCMatrix.Scaling(Scale);
             // determino la orientacion
-            var U = Vector3.Cross(VUP, Dir);
+            var U = TGCVector3.Cross(VUP, Dir);
             U.Normalize();
-            var V = Vector3.Cross(Dir, U);
-            Matrix Orientacion;
+            var V = TGCVector3.Cross(Dir, U);
+            TGCMatrix Orientacion = new TGCMatrix();
             Orientacion.M11 = U.X;
             Orientacion.M12 = U.Y;
             Orientacion.M13 = U.Z;
@@ -406,18 +404,18 @@ namespace TGC.Examples.ShadersExamples
             matWorld = matWorld * Orientacion;
 
             // traslado
-            matWorld = matWorld * Matrix.Translation(Pos);
+            matWorld = matWorld * TGCMatrix.Translation(Pos);
             return matWorld;
         }
 
-        public Matrix CalcularMatrizUp(Vector3 Pos, Vector3 Scale, Vector3 Dir, Vector3 VUP)
+        public TGCMatrix CalcularMatrizUp(TGCVector3 Pos, TGCVector3 Scale, TGCVector3 Dir, TGCVector3 VUP)
         {
-            var matWorld = Matrix.Scaling(Scale);
+            var matWorld = TGCMatrix.Scaling(Scale);
             // determino la orientacion
-            var U = Vector3.Cross(VUP, Dir);
+            var U = TGCVector3.Cross(VUP, Dir);
             U.Normalize();
-            var V = Vector3.Cross(Dir, U);
-            Matrix Orientacion;
+            var V = TGCVector3.Cross(Dir, U);
+            TGCMatrix Orientacion = new TGCMatrix();
             Orientacion.M11 = U.X;
             Orientacion.M12 = U.Y;
             Orientacion.M13 = U.Z;
@@ -440,7 +438,7 @@ namespace TGC.Examples.ShadersExamples
             matWorld = matWorld * Orientacion;
 
             // traslado
-            matWorld = matWorld * Matrix.Translation(Pos);
+            matWorld = matWorld * TGCMatrix.Translation(Pos);
             return matWorld;
         }
 

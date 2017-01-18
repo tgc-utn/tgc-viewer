@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Collision;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.Geometry
@@ -87,7 +88,7 @@ namespace TGC.Core.Geometry
         {
             pickingRay.updateRay();
             var segmentA = pickingRay.Ray.Origin;
-            var segmentB = segmentA + Vector3.Scale(pickingRay.Ray.Direction, 10000f);
+            var segmentB = segmentA + TGCVector3.Scale(pickingRay.Ray.Direction, 10000f);
             var minDist = float.MaxValue;
             triangle = null;
             triangleIndex = -1;
@@ -98,12 +99,12 @@ namespace TGC.Core.Geometry
                 var tri = Triangles[i];
 
                 float t;
-                Vector3 uvw;
-                Vector3 col;
+                TGCVector3 uvw;
+                TGCVector3 col;
                 if (TgcCollisionUtils.intersectLineTriangle(segmentA, segmentB, tri.A, tri.B, tri.C, out uvw, out t,
                     out col))
                 {
-                    var dist = Vector3.Length(col - segmentA);
+                    var dist = TGCVector3.Length(col - segmentA);
                     if (dist < minDist)
                     {
                         minDist = dist;

@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using System;
 using System.Drawing;
+using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Engine2D.Spaceship.Core
 {
@@ -26,7 +27,7 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
         private void initialize()
         {
             //Set the identity matrix.
-            TransformationMatrix = Matrix.Identity;
+            TransformationMatrix = TGCMatrix.Identity;
 
             //Set an empty rectangle to indicate the entire bitmap.
             SrcRect = Rectangle.Empty;
@@ -43,7 +44,7 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
 
         private void UpdateTransformationMatrix()
         {
-            TransformationMatrix = Matrix.Transformation2D(scalingCenter, 0, scaling, rotationCenter, rotation, position);
+            TransformationMatrix = TGCMatrix.Transformation2D(scalingCenter, 0, scaling, rotationCenter, rotation, position);
         }
 
         #region Public members
@@ -51,7 +52,7 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
         /// <summary>
         ///     The transformation matrix.
         /// </summary>
-        public Matrix TransformationMatrix { get; set; }
+        public TGCMatrix TransformationMatrix { get; set; }
 
         /// <summary>
         ///     The source rectangle to be drawn from the bitmap.

@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -37,8 +38,8 @@ namespace TGC.Examples.MeshExamples
         {
             //Crear SkyBox
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 0, 0);
-            skyBox.Size = new Vector3(10000, 10000, 10000);
+            skyBox.Center = TGCVector3.Empty;
+            skyBox.Size = new TGCVector3(10000, 10000, 10000);
 
             //Configurar color
             //skyBox.Color = Color.OrangeRed;
@@ -70,10 +71,8 @@ namespace TGC.Examples.MeshExamples
 
             //Se cambia el valor por defecto del farplane para evitar cliping de farplane.
             D3DDevice.Instance.Device.Transform.Projection =
-                Matrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView,
-                    D3DDevice.Instance.AspectRatio,
-                    D3DDevice.Instance.ZNearPlaneDistance,
-                    D3DDevice.Instance.ZFarPlaneDistance * 2f);
+                TGCMatrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView, D3DDevice.Instance.AspectRatio,
+                    D3DDevice.Instance.ZNearPlaneDistance, D3DDevice.Instance.ZFarPlaneDistance * 2f).ToMatrix();
 
             //Se actualiza la posicion del skybox.
             if ((bool)Modifiers.getValue("moveWhitCamera"))
@@ -83,7 +82,7 @@ namespace TGC.Examples.MeshExamples
         public override void Render()
         {
             PreRender();
-            DrawText.drawText("Camera pos: " + TgcParserUtils.printVector3(Camara.Position), 5, 20, Color.Red);
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, Color.Red);
             //Renderizar SkyBox
             skyBox.render();
 

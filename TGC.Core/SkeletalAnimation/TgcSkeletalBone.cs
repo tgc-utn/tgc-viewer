@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.SkeletalAnimation
 {
@@ -7,20 +8,20 @@ namespace TGC.Core.SkeletalAnimation
     /// </summary>
     public class TgcSkeletalBone
     {
-        public TgcSkeletalBone(int index, string name, Vector3 startPosition, Quaternion startRotation)
+        public TgcSkeletalBone(int index, string name, TGCVector3 startPosition, Quaternion startRotation)
         {
             Index = index;
             Name = name;
             StartPosition = startPosition;
             StartRotation = startRotation;
 
-            MatLocal = Matrix.RotationQuaternion(StartRotation) * Matrix.Translation(StartPosition);
+            MatLocal = TGCMatrix.RotationQuaternion(StartRotation) * TGCMatrix.Translation(StartPosition);
         }
 
         /// <summary>
         ///     Posicion inicial del hueso
         /// </summary>
-        public Vector3 StartPosition { get; }
+        public TGCVector3 StartPosition { get; }
 
         /// <summary>
         ///     Rotacion inicial del hueso
@@ -30,17 +31,17 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Matriz local de transformacion
         /// </summary>
-        public Matrix MatLocal { get; set; }
+        public TGCMatrix MatLocal { get; set; }
 
         /// <summary>
         ///     Matriz final de transformacion
         /// </summary>
-        public Matrix MatFinal { get; set; }
+        public TGCMatrix MatFinal { get; set; }
 
         /// <summary>
         ///     Matriz de transformacion inversa de la posicion inicial del hueso, para la animacion actual
         /// </summary>
-        public Matrix MatInversePose { get; set; }
+        public TGCMatrix MatInversePose { get; set; }
 
         /// <summary>
         ///     Posición del hueso dentro del array de huesos de todo el esqueleto

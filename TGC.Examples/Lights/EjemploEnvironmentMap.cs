@@ -5,6 +5,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
@@ -50,10 +51,10 @@ namespace TGC.Examples.Lights
             var normalMap = TgcTexture.createTexture(MediaDir + "Texturas//BM_NormalMap.jpg");
             TgcTexture[] normalMapArray = { normalMap };
 
-            var paredSur = TgcBox.fromExtremes(new Vector3(-200, 0, -210), new Vector3(200, 100, -200), diffuseMap);
-            var paredOeste = TgcBox.fromExtremes(new Vector3(-210, 0, -200), new Vector3(-200, 100, 200), diffuseMap);
-            var paredEste = TgcBox.fromExtremes(new Vector3(200, 0, -200), new Vector3(210, 100, 200), diffuseMap);
-            var piso = TgcBox.fromExtremes(new Vector3(-200, -1, -200), new Vector3(200, 0, 200), diffuseMap);
+            var paredSur = TgcBox.fromExtremes(new TGCVector3(-200, 0, -210), new TGCVector3(200, 100, -200), diffuseMap);
+            var paredOeste = TgcBox.fromExtremes(new TGCVector3(-210, 0, -200), new TGCVector3(-200, 100, 200), diffuseMap);
+            var paredEste = TgcBox.fromExtremes(new TGCVector3(200, 0, -200), new TGCVector3(210, 100, 200), diffuseMap);
+            var piso = TgcBox.fromExtremes(new TGCVector3(-200, -1, -200), new TGCVector3(200, 0, 200), diffuseMap);
 
             //Convertir TgcBox a TgcMesh
             var m1 = paredSur.toMesh("paredSur");
@@ -79,7 +80,7 @@ namespace TGC.Examples.Lights
             m4.dispose();
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(0, 50, 100), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(0, 50, 100), Input);
 
             //Cargar Shader personalizado para EnviromentMap
             effect = TgcShaders.loadEffect(ShadersDir + "EnvironmentMap.fx");
@@ -92,11 +93,11 @@ namespace TGC.Examples.Lights
             }
 
             //Mesh para la luz
-            lightMesh = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
+            lightMesh = TgcBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
             Modifiers.addFloat("reflection", 0, 1, 0.35f);
             Modifiers.addFloat("bumpiness", 0, 1, 1f);
-            Modifiers.addVertex3f("lightPos", new Vector3(-200, 0, -200), new Vector3(200, 100, 200),
-                new Vector3(0, 80, 0));
+            Modifiers.addVertex3f("lightPos", new TGCVector3(-200, 0, -200), new TGCVector3(200, 100, 200),
+                new TGCVector3(0, 80, 0));
             Modifiers.addColor("lightColor", Color.White);
             Modifiers.addFloat("lightIntensity", 0, 150, 20);
             Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
@@ -118,7 +119,7 @@ namespace TGC.Examples.Lights
             PreRender();
 
             //Actualzar posicion de la luz
-            var lightPos = (Vector3)Modifiers["lightPos"];
+            var lightPos = (TGCVector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
             var eyePosition = Camara.Position;
 
@@ -128,8 +129,8 @@ namespace TGC.Examples.Lights
                 //Cargar variables shader de la luz
                 mesh.Effect.SetValue("lightColor",
                     ColorValue.FromColor((Color)Modifiers["lightColor"]));
-                mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
-                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(eyePosition));
+                mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightPos));
+                mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(eyePosition));
                 mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
                 mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
                 mesh.Effect.SetValue("bumpiness", (float)Modifiers["bumpiness"]);

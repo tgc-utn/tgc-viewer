@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using TGC.Core.Camara;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -48,8 +49,8 @@ namespace TGC.Examples.Tutorial
             mesh = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml").Meshes[0];
 			mesh.AutoTransformEnable = true;
 			mesh.rotateY(FastMath.QUARTER_PI);
-			mesh.move(new Vector3(100, 40, -200));
-			//mesh.Transform = Matrix.RotationY(FastMath.QUARTER_PI) * Matrix.Translation(100,40,-200);
+			mesh.move(new TGCVector3(100, 40, -200));
+			//mesh.Transform = TGCMatrix.RotationY(FastMath.QUARTER_PI) * TGCMatrix.Translation(100,40,-200);
 
 			//En este ejemplo no cargamos un solo modelo 3D sino una escena completa, compuesta por varios modelos.
 			//El framework posee varias escenas ya hechas en la carpeta TgcViewer\Examples\Media\MeshCreator\Scenes.

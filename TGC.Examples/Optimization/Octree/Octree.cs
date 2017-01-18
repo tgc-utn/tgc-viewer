@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
@@ -147,8 +148,8 @@ namespace TGC.Examples.Optimization.Octree
 
             //test frustum-box intersection
             var caja = new TgcBoundingAxisAlignBox(
-                new Vector3(boxLowerX, boxLowerY, boxLowerZ),
-                new Vector3(boxUpperX, boxUpperY, boxUpperZ));
+                new TGCVector3(boxLowerX, boxLowerY, boxLowerZ),
+                new TGCVector3(boxUpperX, boxUpperY, boxUpperZ));
             var c = TgcCollisionUtils.classifyFrustumAABB(frustum, caja);
 
             //complementamente adentro: cargar todos los hijos directamente, sin testeos

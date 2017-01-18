@@ -7,6 +7,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
@@ -27,7 +28,7 @@ namespace TGC.Examples.ShadersExamples
         private readonly float total_timer_firing = 2f;
         private readonly float vel_bala = 300;
         private readonly float vel_bot = 100;
-        private Vector3[] dir_bala;
+        private TGCVector3[] dir_bala;
         private Effect effect;
         private Surface g_pDepthStencil; // Depth-stencil buffer
         private Texture g_pRenderTarget, g_pGlowMap, g_pRenderTarget4, g_pRenderTarget4Aux;
@@ -35,7 +36,7 @@ namespace TGC.Examples.ShadersExamples
         private List<TgcMesh> meshes;
         private string MyShaderDir;
         private TgcMesh pasto, arbol, arbusto;
-        private Vector3[] pos_bala;
+        private TGCVector3[] pos_bala;
         private float[] timer_firing;
 
         public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
@@ -87,8 +88,8 @@ namespace TGC.Examples.ShadersExamples
 
                 //Configurar animacion inicial
                 enemigos[t].playAnimation("StandBy", true);
-                enemigos[t].Position = new Vector3(-rnd.Next(0, 1500) - 250, 0, -rnd.Next(0, 1500) - 250);
-                enemigos[t].Scale = new Vector3(2f, 2f, 2f);
+                enemigos[t].Position = new TGCVector3(-rnd.Next(0, 1500) - 250, 0, -rnd.Next(0, 1500) - 250);
+                enemigos[t].Scale = new TGCVector3(2f, 2f, 2f);
                 enemigos[t].UpdateMeshTransform();
                 bot_status[t] = 0;
             }
@@ -105,7 +106,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new Vector3(-1000, 250, -1000), 1000f, 600f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(-1000, 250, -1000), 1000f, 600f, Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
@@ -150,8 +151,8 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
 
             timer_firing = new float[100];
-            pos_bala = new Vector3[100];
-            dir_bala = new Vector3[100];
+            pos_bala = new TGCVector3[100];
+            dir_bala = new TGCVector3[100];
 
             for (var i = 0; i < cant_balas; ++i)
             {
@@ -166,7 +167,7 @@ namespace TGC.Examples.ShadersExamples
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
                 // reset pos camara
-                Camara.SetCamera(new Vector3(-1000, 250, -1000), new Vector3(0, 0, -1));
+                Camara.SetCamera(new TGCVector3(-1000, 250, -1000), new TGCVector3(0, 0, -1));
             }
 
             //Activar animacion de caminando
@@ -226,7 +227,7 @@ namespace TGC.Examples.ShadersExamples
                             Z = -1000;
                         if (Z > 0)
                             Z = -1000;
-                        m.Position = new Vector3(X, m.Position.Y, Z);
+                        m.Position = new TGCVector3(X, m.Position.Y, Z);
                         m.playAnimation("Run", true, 20);
                         break;
 
@@ -257,7 +258,7 @@ namespace TGC.Examples.ShadersExamples
                 if (timer_firing[i] < 0)
                 {
                     timer_firing[i] += total_timer_firing;
-                    pos_bala[i] = pos + new Vector3(rnd.Next(-10, 10), rnd.Next(-10, 10), rnd.Next(-10, 10));
+                    pos_bala[i] = pos + new TGCVector3(rnd.Next(-10, 10), rnd.Next(-10, 10), rnd.Next(-10, 10));
                     dir_bala[i] = Camara.LookAt - pos;
                     dir_bala[i].Normalize();
                 }
@@ -489,10 +490,10 @@ namespace TGC.Examples.ShadersExamples
             for (var i = 0; i < 10; ++i)
                 for (var j = 0; j < 10; ++j)
                 {
-                    pasto.Position = new Vector3(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
-                    pasto.Scale = new Vector3(3, 4 + rnd.Next(0, 4), 5);
+                    pasto.Position = new TGCVector3(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
+                    pasto.Scale = new TGCVector3(3, 4 + rnd.Next(0, 4), 5);
                     pasto.UpdateMeshTransform();
-                    //pasto.Transform = Matrix.Identity*Matrix.Scaling(3, 4 + rnd.Next(0, 4), 5) * Matrix.Translation(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
+                    //pasto.Transform = TGCMatrix.Identity*TGCMatrix.Scaling(3, 4 + rnd.Next(0, 4), 5) * TGCMatrix.Translation(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
                     pasto.render();
                 }
 
@@ -501,8 +502,8 @@ namespace TGC.Examples.ShadersExamples
             for (var i = 0; i < 5; ++i)
                 for (var j = 0; j < 5; ++j)
                 {
-                    arbusto.Position = new Vector3(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
-                    //arbusto.Transform = Matrix.Identity*Matrix.Translation(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
+                    arbusto.Position = new TGCVector3(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
+                    //arbusto.Transform = TGCMatrix.Identity*TGCMatrix.Translation(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
                     arbusto.UpdateMeshTransform();
                     arbusto.render();
                 }
@@ -512,8 +513,8 @@ namespace TGC.Examples.ShadersExamples
             for (var i = 0; i < 3; ++i)
                 for (var j = 0; j < 3; ++j)
                 {
-                    arbol.Position = new Vector3(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
-                    //arbol.Transform = Matrix.Identity*Matrix.Translation(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
+                    arbol.Position = new TGCVector3(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
+                    //arbol.Transform = TGCMatrix.Identity*TGCMatrix.Translation(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
                     arbol.UpdateMeshTransform();
                     arbol.render();
                 }

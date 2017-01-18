@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
@@ -55,8 +56,8 @@ namespace TGC.Examples.ShadersExamples
             scene = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Teapot\\Teapot-TgcScene.xml");
 
             mesh = scene.Meshes[0];
-            mesh.Scale = new Vector3(1f, 1f, 1f);
-            mesh.Position = new Vector3(-100f, -5f, 0f);
+            mesh.Scale = new TGCVector3(1f, 1f, 1f);
+            mesh.Position = new TGCVector3(-100f, -5f, 0f);
 
             // Arreglo las normales
             var adj = new int[mesh.D3dMesh.NumberFaces * 3];
@@ -82,14 +83,14 @@ namespace TGC.Examples.ShadersExamples
                 }
 
             Modifiers.addBoolean("blurActivated", "activar blur", false);
-            Modifiers.addVertex3f("LightPosition", new Vector3(-100, -100, -100),
-                new Vector3(100, 100, 100), new Vector3(0, 40, 0));
+            Modifiers.addVertex3f("LightPosition", new TGCVector3(-100, -100, -100),
+                new TGCVector3(100, 100, 100), new TGCVector3(0, 40, 0));
             Modifiers.addFloat("Ambient", 0, 1, 0.5f);
             Modifiers.addFloat("Diffuse", 0, 1, 0.6f);
             Modifiers.addFloat("Specular", 0, 1, 0.5f);
             Modifiers.addFloat("SpecularPower", 1, 100, 16);
 
-            Camara = new TgcRotationalCamera(new Vector3(20, 20, 0), 300, TgcRotationalCamera.DEFAULT_ZOOM_FACTOR, 1.5f,
+            Camara = new TgcRotationalCamera(new TGCVector3(20, 20, 0), 300, TgcRotationalCamera.DEFAULT_ZOOM_FACTOR, 1.5f,
                 Input);
 
             // Creo un depthbuffer sin multisampling, para que sea compatible con el render to texture
@@ -180,12 +181,11 @@ namespace TGC.Examples.ShadersExamples
         {
             PreRender();
 
-            var lightPosition = (Vector3)Modifiers["LightPosition"];
+            var lightPosition = (TGCVector3)Modifiers["LightPosition"];
 
             //Cargar variables de shader
-            effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(lightPosition));
-            effect.SetValue("fvEyePosition",
-                TgcParserUtils.vector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvLightPosition", TGCVector3.Vector3ToFloat3Array(lightPosition));
+            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
             effect.SetValue("k_la", (float)Modifiers["Ambient"]);
             effect.SetValue("k_ld", (float)Modifiers["Diffuse"]);
             effect.SetValue("k_ls", (float)Modifiers["Specular"]);

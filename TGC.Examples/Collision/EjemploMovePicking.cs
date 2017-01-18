@@ -6,6 +6,7 @@ using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
@@ -32,9 +33,9 @@ namespace TGC.Examples.Collision
         private TgcBox collisionPointMesh;
         private TgcArrow directionArrow;
         private TgcMesh mesh;
-        private Matrix meshRotationMatrix;
-        private Vector3 newPosition;
-        private Vector3 originalMeshRot;
+        private TGCMatrix meshRotationMatrix;
+        private TGCVector3 newPosition;
+        private TGCVector3 originalMeshRot;
         private TgcPickingRay pickingRay;
         private TgcPlane suelo;
 
@@ -51,7 +52,7 @@ namespace TGC.Examples.Collision
         {
             //Cargar suelo
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg");
-            suelo = new TgcPlane(new Vector3(-5000, 0, -5000), new Vector3(10000, 0f, 10000),TgcPlane.Orientations.XZplane, texture);
+            suelo = new TgcPlane(new TGCVector3(-5000, 0, -5000), new TGCVector3(10000, 0f, 10000),TgcPlane.Orientations.XZplane, texture);
             
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
@@ -64,17 +65,17 @@ namespace TGC.Examples.Collision
             mesh = scene.Meshes[0];
 
             //Rotación original de la malla, hacia -Z
-            originalMeshRot = new Vector3(0, 0, -1);
+            originalMeshRot = new TGCVector3(0, 0, -1);
 
             //Manipulamos los movimientos del mesh a mano
             mesh.AutoTransformEnable = false;
-            meshRotationMatrix = Matrix.Identity;
+            meshRotationMatrix = TGCMatrix.Identity;
 
             newPosition = mesh.Position;
             applyMovement = false;
 
             //Crear caja para marcar en que lugar hubo colision
-            collisionPointMesh = TgcBox.fromSize(new Vector3(3, 100, 3), Color.Red);
+            collisionPointMesh = TgcBox.fromSize(new TGCVector3(3, 100, 3), Color.Red);
 
             //Flecha para marcar la dirección
             directionArrow = new TgcArrow();
@@ -109,13 +110,13 @@ namespace TGC.Examples.Collision
                     applyMovement = true;
 
                     collisionPointMesh.Position = newPosition;
-                    directionArrow.PEnd = new Vector3(newPosition.X, 30f, newPosition.Z);
+                    directionArrow.PEnd = new TGCVector3(newPosition.X, 30f, newPosition.Z);
 
                     //Rotar modelo en base a la nueva dirección a la que apunta
-                    var direction = Vector3.Normalize(newPosition - mesh.Position);
-                    var angle = FastMath.Acos(Vector3.Dot(originalMeshRot, direction));
-                    var axisRotation = Vector3.Cross(originalMeshRot, direction);
-                    meshRotationMatrix = Matrix.RotationAxis(axisRotation, angle);
+                    var direction = TGCVector3.Normalize(newPosition - mesh.Position);
+                    var angle = FastMath.Acos(TGCVector3.Dot(originalMeshRot, direction));
+                    var axisRotation = TGCVector3.Cross(originalMeshRot, direction);
+                    meshRotationMatrix = TGCMatrix.RotationAxis(axisRotation, angle);
                 }
             }
 
@@ -142,14 +143,14 @@ namespace TGC.Examples.Collision
                     }
 
                     //Actualizar flecha de movimiento
-                    directionArrow.PStart = new Vector3(mesh.Position.X, 30f, mesh.Position.Z);
+                    directionArrow.PStart = new TGCVector3(mesh.Position.X, 30f, mesh.Position.Z);
                     directionArrow.updateValues();
 
                     //Actualizar posicion del mesh
                     mesh.Position = newPos;
 
                     //Como desactivamos la transformacion automatica, tenemos que armar nosotros la matriz de transformacion
-                    mesh.Transform = meshRotationMatrix * Matrix.Translation(mesh.Position);
+                    mesh.Transform = meshRotationMatrix * TGCMatrix.Translation(mesh.Position);
 
                     //Actualizar camara
                     camaraInterna.Target = mesh.Position;

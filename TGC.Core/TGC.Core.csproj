@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TGC.Core</RootNamespace>
     <AssemblyName>TGC.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,6 +65,10 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mathematica\TGCMatrix.cs" />
+    <Compile Include="Mathematica\TGCPlane.cs" />
+    <Compile Include="Mathematica\TGCVector2.cs" />
+    <Compile Include="Mathematica\TGCVector3.cs" />
     <Compile Include="Text\TgcText2D.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
     <Compile Include="Direct3D\D3DDevice.cs" />
@@ -205,10 +210,9 @@
     <Compile Include="UserControls\Networking\TgcSocketServer.cs" />
     <Compile Include="UserControls\Networking\TgcSocketServerInfo.cs" />
     <Compile Include="UserControls\TgcUserVars.cs" />
-    <Compile Include="Utils\FastMath.cs" />
+    <Compile Include="Mathematica\FastMath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\TgcParserUtils.cs" />
-    <Compile Include="Utils\TgcVectorUtils.cs" />
     <Compile Include="Utils\ValidationUtils.cs" />
   </ItemGroup>
   <ItemGroup>

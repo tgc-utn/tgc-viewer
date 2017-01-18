@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using TGC.Core.Mathematica;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Geometry
@@ -8,7 +9,7 @@ namespace TGC.Core.Geometry
     /// </summary>
     public class TgcRay
     {
-        private Vector3 direction;
+        private TGCVector3 direction;
 
         public TgcRay()
         {
@@ -17,7 +18,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Se normaliza la direccion
         /// </summary>
-        public TgcRay(Vector3 origin, Vector3 direction)
+        public TgcRay(TGCVector3 origin, TGCVector3 direction)
         {
             Origin = origin;
             this.direction = direction;
@@ -27,12 +28,12 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Punto de origen del Ray
         /// </summary>
-        public Vector3 Origin { get; set; }
+        public TGCVector3 Origin { get; set; }
 
         /// <summary>
         ///     Direccion del Ray
         /// </summary>
-        public Vector3 Direction
+        public TGCVector3 Direction
         {
             get { return direction; }
             set
@@ -66,8 +67,8 @@ namespace TGC.Core.Geometry
         /// </summary>
         public struct RayStruct
         {
-            public Vector3 origin;
-            public Vector3 direction;
+            public TGCVector3 origin;
+            public TGCVector3 direction;
 
             /// <summary>
             ///     Convertir a clase

@@ -6,6 +6,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -57,7 +58,7 @@ namespace TGC.Examples.MeshExamples
             scene.disposeAll();
 
             //Se crea una box y se convierte en mesh.
-            var box = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
+            var box = TgcBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
             boxMesh = box.toMesh("box");
             //Liberamos la caja pero nos quedamos con el mesh.
             box.dispose();
@@ -69,7 +70,7 @@ namespace TGC.Examples.MeshExamples
 
             time = 0;
 
-            Camara = new TgcRotationalCamera(new Vector3(100f, 300f, 100f), 1500f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(100f, 300f, 100f), 1500f, Input);
         }
 
         private void D3dMesh_Disposing(object sender, EventArgs e)
