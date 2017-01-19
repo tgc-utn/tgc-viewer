@@ -310,8 +310,8 @@ namespace TGC.Examples.Lights
             //
             // texEdge1 is the vector from texture coordinates texCoord1 to texCoord2.
             // texEdge2 is the vector from texture coordinates texCoord1 to texCoord3.
-            var texEdge1 = new Vector2(v2.Tu - v1.Tu, v2.Tv - v1.Tv);
-            var texEdge2 = new Vector2(v3.Tu - v1.Tu, v3.Tv - v1.Tv);
+            var texEdge1 = new TGCVector2(v2.Tu - v1.Tu, v2.Tv - v1.Tv);
+            var texEdge2 = new TGCVector2(v3.Tu - v1.Tu, v3.Tv - v1.Tv);
             texEdge1.Normalize();
             texEdge2.Normalize();
 

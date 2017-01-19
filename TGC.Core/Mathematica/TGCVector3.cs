@@ -15,6 +15,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public TGCVector3()
         {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -25,6 +26,7 @@ namespace TGC.Core.Mathematica
         /// <param name="z">Initial Z value.</param>
         public TGCVector3(float x, float y, float z)
         {
+            throw new NotImplementedException();
         }
 
         private Vector3 DXVector3 { get; set; }
@@ -134,9 +136,24 @@ namespace TGC.Core.Mathematica
             throw new NotImplementedException();
         }
 
-        //TODO ver si hace falta redefinir o no el equals y hashcode
-        //public override bool Equals(object compare);
-        //public override int GetHashCode();
+        /// <summary>
+        /// Returns a value that indicates whether the current instance is equal to a specified object.
+        /// </summary>
+        /// <param name="compare">Object with which to make the comparison.</param>
+        /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
+        public override bool Equals(object compare)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the hash code for the current instance.
+        /// </summary>
+        /// <returns>Hash code for the instance.</returns>
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Performs a Hermite spline interpolation using the specified 3-D vectors.
@@ -422,8 +439,14 @@ namespace TGC.Core.Mathematica
             throw new NotImplementedException();
         }
 
-        //TODO ver si hace falta redefinir toString
-        //public override string ToString();
+        /// <summary>
+        /// Obtains a string representation of the current instance.
+        /// </summary>
+        /// <returns>String that represents the object.</returns>
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Transforms a 3-D vector or an array of 3-D vectors by a given matrix.

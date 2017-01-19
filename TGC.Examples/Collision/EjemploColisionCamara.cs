@@ -113,7 +113,7 @@ namespace TGC.Examples.Collision
             //Modifiers para modificar propiedades de la camara
             Modifiers.addFloat("offsetHeight", 0, 300, 100);
             Modifiers.addFloat("offsetForward", -400, 0, -220);
-            Modifiers.addVertex2f("displacement", new Vector2(0, 0), new Vector2(100, 200), new Vector2(0, 100));
+            Modifiers.addVertex2f("displacement", TGCVector2.Empty, new TGCVector2(100, 200), new TGCVector2(0, 100));
         }
 
         public override void Update()
@@ -244,7 +244,7 @@ namespace TGC.Examples.Collision
             //Actualizar valores de camara segun modifiers
             camaraInterna.OffsetHeight = (float)Modifiers["offsetHeight"];
             camaraInterna.OffsetForward = (float)Modifiers["offsetForward"];
-            var displacement = (Vector2)Modifiers["displacement"];
+            var displacement = (TGCVector2)Modifiers["displacement"];
             camaraInterna.TargetDisplacement = new TGCVector3(displacement.X, displacement.Y, 0);
 
             //Pedirle a la camara cual va a ser su proxima posicion

@@ -360,12 +360,12 @@ namespace TGC.Core.Geometry
             set { alphaBlendEnable = value; }
         }
 
-        private Vector2 uvOffset;
+        private TGCVector2 uvOffset;
 
         /// <summary>
         ///     Offset UV de textura
         /// </summary>
-        public Vector2 UVOffset
+        public TGCVector2 UVOffset
         {
             get { return uvOffset; }
             set
@@ -378,12 +378,12 @@ namespace TGC.Core.Geometry
             }
         }
 
-        private Vector2 uvTiling;
+        private TGCVector2 uvTiling;
 
         /// <summary>
         ///     Tiling UV de textura
         /// </summary>
-        public Vector2 UVTiling
+        public TGCVector2 UVTiling
         {
             get { return uvTiling; }
             set
@@ -524,7 +524,7 @@ namespace TGC.Core.Geometry
             enabled = true;
             scale = TGCVector3.One;
             alphaBlendEnable = false;
-            uvOffset = new Vector2(0, 0);
+            uvOffset = TGCVector2.Empty;
 
             //BoundingSphere
             boundingSphere = new TgcBoundingSphere();
@@ -540,7 +540,7 @@ namespace TGC.Core.Geometry
             levelOfDetail = 2;
             inflate = true;
             ForceUpdate = false;
-            uvTiling = new Vector2(1, 1);
+            uvTiling = TGCVector2.One;
         }
 
         #endregion CONSTRUCTORS

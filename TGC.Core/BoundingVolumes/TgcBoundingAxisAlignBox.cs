@@ -511,8 +511,8 @@ namespace TGC.Core.BoundingVolumes
             }
 
             //Buscar los puntos extremos
-            var min = new Vector2(float.MaxValue, float.MaxValue);
-            var max = new Vector2(float.MinValue, float.MinValue);
+            var min = new TGCVector2(float.MaxValue, float.MaxValue);
+            var max = new TGCVector2(float.MinValue, float.MinValue);
             foreach (var v in projVertices)
             {
                 if (v.X < min.X)

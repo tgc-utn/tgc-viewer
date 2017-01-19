@@ -49,8 +49,8 @@ namespace TGC.Core.Geometry
             Enabled = true;
             color = Color.White;
             AlphaBlendEnable = false;
-            UVOffset = new Vector2(0, 0);
-            UVTiling = new Vector2(1, 1);
+            UVOffset = TGCVector2.Empty;
+            UVTiling = TGCVector2.One;
 
             //BoundingBox
             BoundingBox = new TgcBoundingAxisAlignBox();
@@ -119,12 +119,12 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Offset UV de textura
         /// </summary>
-        public Vector2 UVOffset { get; set; }
+        public TGCVector2 UVOffset { get; set; }
 
         /// <summary>
         ///     Tiling UV de textura
         /// </summary>
-        public Vector2 UVTiling { get; set; }
+        public TGCVector2 UVTiling { get; set; }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos

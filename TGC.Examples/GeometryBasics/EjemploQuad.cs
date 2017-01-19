@@ -38,7 +38,7 @@ namespace TGC.Examples.GeometryBasics
             quad = new TgcQuad();
 
             //Modifiers para vararia sus parametros
-            Modifiers.addVertex2f("size", new Vector2(0, 0), new Vector2(100, 100), new Vector2(20, 20));
+            Modifiers.addVertex2f("size", TGCVector2.Empty, new TGCVector2(100, 100), new TGCVector2(20, 20));
             Modifiers.addVertex3f("normal", new TGCVector3(-10, -10, -10), new TGCVector3(10, 10, 10), new TGCVector3(0, 1, 1));
             Modifiers.addVertex3f("center", new TGCVector3(-10, -10, -10), new TGCVector3(10, 10, 10), TGCVector3.Empty);
             Modifiers.addColor("color", Color.Coral);
@@ -62,7 +62,7 @@ namespace TGC.Examples.GeometryBasics
         /// </summary>
         private void updateQuad()
         {
-            var size = (Vector2)Modifiers["size"];
+            var size = (TGCVector2)Modifiers["size"];
             var normal = (TGCVector3)Modifiers["normal"];
             var center = (TGCVector3)Modifiers["center"];
             var color = (Color)Modifiers["color"];

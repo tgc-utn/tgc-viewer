@@ -123,10 +123,10 @@ namespace TGC.Examples.ShadersExamples
                         }
 
                         //Coordendas de textura
-                        var t1 = new Vector2(ftex * i / width, ftex * j / length);
-                        var t2 = new Vector2(ftex * i / width, ftex * (j + 1) / length);
-                        var t3 = new Vector2(ftex * (i + 1) / width, ftex * j / length);
-                        var t4 = new Vector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
+                        var t1 = new TGCVector2(ftex * i / width, ftex * j / length);
+                        var t2 = new TGCVector2(ftex * i / width, ftex * (j + 1) / length);
+                        var t3 = new TGCVector2(ftex * (i + 1) / width, ftex * j / length);
+                        var t4 = new TGCVector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
 
                         //Cargar triangulo 1
                         data[dataIdx] = new CustomVertex.PositionTextured(v1.ToVector3(), t1.X, t1.Y);
@@ -159,10 +159,10 @@ namespace TGC.Examples.ShadersExamples
                             center.Z + (j + 1) * scaleXZ);
 
                         //Coordendas de textura
-                        var t1 = new Vector2(ftex * i / width, ftex * j / length);
-                        var t2 = new Vector2(ftex * i / width, ftex * (j + 1) / length);
-                        var t3 = new Vector2(ftex * (i + 1) / width, ftex * j / length);
-                        var t4 = new Vector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
+                        var t1 = new TGCVector2(ftex * i / width, ftex * j / length);
+                        var t2 = new TGCVector2(ftex * i / width, ftex * (j + 1) / length);
+                        var t3 = new TGCVector2(ftex * (i + 1) / width, ftex * j / length);
+                        var t4 = new TGCVector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
 
                         //Cargar triangulo 1
                         data[dataIdx] = new CustomVertex.PositionTextured(v1.ToVector3(), t1.X, t1.Y);

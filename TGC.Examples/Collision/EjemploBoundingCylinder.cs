@@ -88,7 +88,7 @@ namespace TGC.Examples.Collision
             Modifiers.addBoolean("fixedY", "use fixed Y", true);
             //Modifier para ver BoundingBox del personaje
             Modifiers.addBoolean("showBoundingBox", "Personaje Bouding Box", false);
-            Modifiers.addVertex2f("size", new Vector2(1, 1), new Vector2(5, 10), new Vector2(2, 5));
+            Modifiers.addVertex2f("size", TGCVector2.One, new TGCVector2(5, 10), new TGCVector2(2, 5));
             var angle = FastMath.TWO_PI;
             Modifiers.addVertex3f("rotation", new TGCVector3(-angle, -angle, -angle), new TGCVector3(angle, angle, angle),
                 new TGCVector3(FastMath.TWO_PI / 8, 0, FastMath.TWO_PI / 8));
@@ -150,7 +150,7 @@ namespace TGC.Examples.Collision
                 personaje.playAnimation("Parado", true);
             }
 
-            var size = (Vector2)Modifiers.getValue("size");
+            var size = (TGCVector2)Modifiers.getValue("size");
             var rotation = (TGCVector3)Modifiers.getValue("rotation");
             //Se tienen dos coliders, un cilindro con rotacion y otro orientado al eje Y.
             colliderCylinder.Rotation = rotation;

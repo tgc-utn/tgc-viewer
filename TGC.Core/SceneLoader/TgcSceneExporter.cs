@@ -329,7 +329,7 @@ namespace TGC.Core.SceneLoader
             var coordinatesIndices = new List<int>();
             var texCoordinatesIndices = new List<int>();
             var verticesCoordinates = new List<TGCVector3>();
-            var textureCoordinates = new List<Vector2>();
+            var textureCoordinates = new List<TGCVector2>();
             var verticesNormals = new List<TGCVector3>();
             var colorIndices = new List<int>();
             var verticesColors = new List<int>();
@@ -342,7 +342,7 @@ namespace TGC.Core.SceneLoader
                 var coordIdx = addVertex(coordinatesIndices, verticesCoordinates, position);
                 addNormal(verticesNormals, coordIdx, vertexData.Normal);
                 addTextureCoordinates(texCoordinatesIndices, textureCoordinates,
-                    new Vector2(vertexData.Tu, vertexData.Tv));
+                    new TGCVector2(vertexData.Tu, vertexData.Tv));
                 addColor(colorIndices, verticesColors, vertexData.Color);
             }
 
@@ -419,8 +419,8 @@ namespace TGC.Core.SceneLoader
             var texCoordinatesIndices = new List<int>();
             var texCoordinatesIndicesLightMap = new List<int>();
             var verticesCoordinates = new List<TGCVector3>();
-            var textureCoordinates = new List<Vector2>();
-            var textureCoordinatesLightMap = new List<Vector2>();
+            var textureCoordinates = new List<TGCVector2>();
+            var textureCoordinatesLightMap = new List<TGCVector2>();
             var verticesNormals = new List<TGCVector3>();
             var colorIndices = new List<int>();
             var verticesColors = new List<int>();
@@ -433,9 +433,9 @@ namespace TGC.Core.SceneLoader
                 var coordIdx = addVertex(coordinatesIndices, verticesCoordinates, position);
                 addNormal(verticesNormals, coordIdx, vertexData.Normal);
                 addTextureCoordinates(texCoordinatesIndices, textureCoordinates,
-                    new Vector2(vertexData.Tu0, vertexData.Tv0));
+                    new TGCVector2(vertexData.Tu0, vertexData.Tv0));
                 addTextureCoordinates(texCoordinatesIndicesLightMap, textureCoordinatesLightMap,
-                    new Vector2(vertexData.Tu1, vertexData.Tv1));
+                    new TGCVector2(vertexData.Tu1, vertexData.Tv1));
                 addColor(colorIndices, verticesColors, vertexData.Color);
             }
 
@@ -630,8 +630,8 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Agregar una coordenada de textura sin repetir
         /// </summary>
-        private int addTextureCoordinates(List<int> texCoordinatesIndices, List<Vector2> textureCoordinates,
-            Vector2 texCoord)
+        private int addTextureCoordinates(List<int> texCoordinatesIndices, List<TGCVector2> textureCoordinates,
+            TGCVector2 texCoord)
         {
             for (var i = 0; i < textureCoordinates.Count; i++)
             {
@@ -690,9 +690,9 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Compara que dos Vector2 sean iguales, o casi
+        ///     Compara que dos TGCVector2 sean iguales, o casi
         /// </summary>
-        private bool equalsVector2(Vector2 v1, Vector2 v2)
+        private bool equalsVector2(TGCVector2 v1, TGCVector2 v2)
         {
             return equalsFloat(v1.X, v2.X) && equalsFloat(v1.Y, v2.Y);
         }

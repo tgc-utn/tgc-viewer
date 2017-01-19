@@ -362,7 +362,7 @@ namespace TGC.Examples.ShadersExamples
                         bala.PStart = pos_bala[i];
                         bala.PEnd = pos_bala[i] + dir_bala[i] * 3;
                         bala.Thickness = 0.05f;
-                        bala.HeadSize = new Vector2(0.01f, 0.01f);
+                        bala.HeadSize = new TGCVector2(0.01f, 0.01f);
                         bala.Effect = effect;
                         bala.Technique = "DefaultTechnique";
                         bala.updateValues();

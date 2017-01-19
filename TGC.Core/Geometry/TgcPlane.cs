@@ -54,7 +54,7 @@ namespace TGC.Core.Geometry
             UTile = 1;
             VTile = 1;
             AlphaBlendEnable = false;
-            UVOffset = new Vector2(0, 0);
+            UVOffset = TGCVector2.Empty;
 
             //Shader
             effect = TgcShaders.Instance.VariosShader;
@@ -173,7 +173,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Offset UV de textura
         /// </summary>
-        public Vector2 UVOffset { get; set; }
+        public TGCVector2 UVOffset { get; set; }
 
         /// <summary>
         ///     Indica si la pared esta habilitada para ser renderizada

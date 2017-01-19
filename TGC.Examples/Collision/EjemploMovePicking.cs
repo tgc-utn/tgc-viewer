@@ -80,7 +80,7 @@ namespace TGC.Examples.Collision
             //Flecha para marcar la dirección
             directionArrow = new TgcArrow();
             directionArrow.Thickness = 5;
-            directionArrow.HeadSize = new Vector2(10, 10);
+            directionArrow.HeadSize = new TGCVector2(10, 10);
 
             //Camara en tercera persona
             camaraInterna = new TgcThirdPersonCamera(mesh.Position, 800, 1500);

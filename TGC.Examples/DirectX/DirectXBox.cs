@@ -32,7 +32,7 @@ namespace TGC.Examples.DirectX
         /// <summary>
         ///     Vertex declaration para el vertice customizado. Hay que tener cuidado con la suma de bytes
         ///     1 float = 4 bytes
-        ///     Vector2 = 8 bytes
+        ///     TGCVector2 = 8 bytes
         ///     TGCVector3 = 12 bytes
         ///     Color = 4 bytes (es un int)
         /// </summary>
@@ -337,10 +337,10 @@ namespace TGC.Examples.DirectX
             public int Color;
 
             //Varias coordenadas de textura (se puede guardar cualquier cosa ahi adentro)
-            public Vector2 texcoord0;
+            public TGCVector2 texcoord0;
 
-            public Vector2 texcoord1;
-            public Vector2 texcoord2;
+            public TGCVector2 texcoord1;
+            public TGCVector2 texcoord2;
 
             //Varios TGCVector3 auxiliares para guardar cualquier cosa
             public TGCVector3 auxValue1;
@@ -354,9 +354,9 @@ namespace TGC.Examples.DirectX
                 Color = color;
 
                 //Los demas valores los llenamos con cualquier cosa porque para este ejemplo no se usan para nada
-                texcoord0 = new Vector2(0, 1);
-                texcoord1 = new Vector2(1, 1);
-                texcoord2 = new Vector2(0.5f, 0.75f);
+                texcoord0 = new TGCVector2(0, 1);
+                texcoord1 = TGCVector2.One;
+                texcoord2 = new TGCVector2(0.5f, 0.75f);
                 auxValue1 = new TGCVector3(10, 10, 10);
                 auxValue2 = new TGCVector3(0, 0, 5);
             }

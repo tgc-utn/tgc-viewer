@@ -41,7 +41,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addVertex3f("start", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50), TGCVector3.Empty);
             Modifiers.addVertex3f("end", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50), new TGCVector3(0, 10, 0));
             Modifiers.addFloat("thickness", 0.01f, 1, 0.06f);
-            Modifiers.addVertex2f("headSize", new Vector2(0.01f, 0.01f), new Vector2(1, 1), new Vector2(0.3f, 0.6f));
+            Modifiers.addVertex2f("headSize", new TGCVector2(0.01f, 0.01f), TGCVector2.One, new TGCVector2(0.3f, 0.6f));
             Modifiers.addColor("bodyColor", Color.Blue);
             Modifiers.addColor("headColor", Color.LightBlue);
 
@@ -62,7 +62,7 @@ namespace TGC.Examples.GeometryBasics
             var start = (TGCVector3)Modifiers["start"];
             var end = (TGCVector3)Modifiers["end"];
             var thickness = (float)Modifiers["thickness"];
-            var headSize = (Vector2)Modifiers["headSize"];
+            var headSize = (TGCVector2)Modifiers["headSize"];
             var bodyColor = (Color)Modifiers["bodyColor"];
             var headColor = (Color)Modifiers["headColor"];
 

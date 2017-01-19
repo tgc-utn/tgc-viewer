@@ -250,7 +250,7 @@ namespace TGC.Examples.ShadersExamples
 
             arrow = new TgcArrow();
             arrow.Thickness = 1f;
-            arrow.HeadSize = new Vector2(2f, 2f);
+            arrow.HeadSize = new TGCVector2(2f, 2f);
             arrow.BodyColor = Color.Blue;
 
             ant_vista = tipo_vista = 0;
@@ -336,10 +336,10 @@ namespace TGC.Examples.ShadersExamples
                 H = nivel_mar;
             mesh.Position = new TGCVector3(x0, H, z0);
             // direccion tangente sobre el piso:
-            var dir_tanque = new Vector2(-(float)Math.Sin(alfa), (float)Math.Cos(alfa));
+            var dir_tanque = new TGCVector2(-(float)Math.Sin(alfa), (float)Math.Cos(alfa));
             dir_tanque.Normalize();
             // Posicion de la parte de adelante del tanque
-            var pos2d = new Vector2(x0, z0);
+            var pos2d = new TGCVector2(x0, z0);
             pos2d = pos2d + dir_tanque * (largo_tanque / 2);
             var H_frente = terrain.CalcularAltura(pos2d.X, pos2d.Y) + alto_tanque / 2 - offset_rueda;
             if (H_frente < nivel_mar - 15)

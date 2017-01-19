@@ -111,7 +111,7 @@ namespace TGC.Examples.Collision
             directionArrow.BodyColor = Color.Red;
             directionArrow.HeadColor = Color.Green;
             directionArrow.Thickness = 1;
-            directionArrow.HeadSize = new Vector2(10, 20);
+            directionArrow.HeadSize = new TGCVector2(10, 20);
 
             //Crear manejador de colisiones
             collisionManager = new SphereCollisionManager();

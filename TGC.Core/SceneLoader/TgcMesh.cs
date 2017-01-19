@@ -696,9 +696,9 @@ namespace TGC.Core.SceneLoader
         ///     Solo puede hacerse para meshes del tipo DIFFUSE_MAP y DIFFUSE_MAP_AND_LIGHTMAP.
         /// </summary>
         /// <returns>Array creado</returns>
-        public Vector2[] getTextureCoordinates()
+        public TGCVector2[] getTextureCoordinates()
         {
-            Vector2[] uvCoords = null;
+            TGCVector2[] uvCoords = null;
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
@@ -707,10 +707,10 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP:
                     var verts2 = (TgcSceneLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    uvCoords = new Vector2[verts2.Length];
+                    uvCoords = new TGCVector2[verts2.Length];
                     for (var i = 0; i < uvCoords.Length; i++)
                     {
-                        uvCoords[i] = new Vector2(verts2[i].Tu, verts2[i].Tv);
+                        uvCoords[i] = new TGCVector2(verts2[i].Tu, verts2[i].Tv);
                     }
                     d3dMesh.UnlockVertexBuffer();
                     break;
@@ -718,10 +718,10 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                     var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    uvCoords = new Vector2[verts3.Length];
+                    uvCoords = new TGCVector2[verts3.Length];
                     for (var i = 0; i < uvCoords.Length; i++)
                     {
-                        uvCoords[i] = new Vector2(verts3[i].Tu0, verts3[i].Tv0);
+                        uvCoords[i] = new TGCVector2(verts3[i].Tu0, verts3[i].Tv0);
                     }
                     d3dMesh.UnlockVertexBuffer();
                     break;
