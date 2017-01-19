@@ -13,6 +13,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public TGCMatrix()
         {
+            throw new NotImplementedException();
         }
 
         private Matrix DXMatrix { get; set; }
@@ -130,7 +131,7 @@ namespace TGC.Core.Mathematica
         /// <param name="rotationCenter">A TGCVector3 that indicates the point at the center of rotation.</param>
         /// <param name="rotation">A 
         /// structure that specifies the rotation. Use Quaternion.Identity to specify no rotation.</param>
-        /// <param name="translation">A TGCVector3 that represents the translation. Use Vector2.Empty to specify no translation.</param>
+        /// <param name="translation">A TGCVector3 that represents the translation. Use TGCVector3.Empty to specify no translation.</param>
         public void AffineTransformation(float scaling, TGCVector3 rotationCenter, Quaternion rotation, TGCVector3 translation)
         {
             throw new NotImplementedException();
@@ -140,18 +141,33 @@ namespace TGC.Core.Mathematica
         /// Builds a 2-D affine transformation matrix in the xy plane.
         /// </summary>
         /// <param name="scaling">Scaling factor. A value of zero indicates no scaling.</param>
-        /// <param name="rotationCenter">A Vector2 structure that represents a point identifying the center of rotation. Use an empty Vector2 for no rotation.</param>
+        /// <param name="rotationCenter">A TGCVector2 structure that represents a point identifying the center of rotation. Use an empty TGCVector2 for no rotation.</param>
         /// <param name="rotation">Angle of rotation. A value of zero indicates no rotation.</param>
-        /// <param name="translation">A Vector2 structure that represents the translation. Use Vector2.Empty to specify no translation.</param>
+        /// <param name="translation">A TGCVector2 structure that represents the translation. Use TGCVector2.Empty to specify no translation.</param>
         /// <returns>A TGCMatrix that is an affine transformation matrix.</returns>
-        public static TGCMatrix AffineTransformation2D(float scaling, Vector2 rotationCenter, float rotation, Vector2 translation)
+        public static TGCMatrix AffineTransformation2D(float scaling, TGCVector2 rotationCenter, float rotation, TGCVector2 translation)
         {
             throw new NotImplementedException();
         }
 
-        //TODO ver si hace falta redefinir o no el equals y hashcode
-        //public override bool Equals(object compare);
-        //public override int GetHashCode();
+        /// <summary>
+        /// Returns a value that indicates whether the current instance is equal to a specified object.
+        /// </summary>
+        /// <param name="compare">Object with which to make the comparison.</param>
+        /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
+        public override bool Equals(object compare)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the hash code for the current instance.
+        /// </summary>
+        /// <returns>Hash code for the instance.</returns>
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Calculates the inverse of a matrix.
@@ -619,8 +635,14 @@ namespace TGC.Core.Mathematica
             throw new NotImplementedException();
         }
 
-        //TODO ver si hace falta redefinir toString
-        //public override string ToString();
+        /// <summary>
+        /// Obtains a string representation of the current instance.
+        /// </summary>
+        /// <returns>String that represents the object.</returns>
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Transforms the matrix.
@@ -654,14 +676,14 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Builds a 2-D transformation matrix in the xy plane.
         /// </summary>
-        /// <param name="scalingCenter">A Vector2 structure that is a point identifying the scaling center.</param>
+        /// <param name="scalingCenter">A TGCVector2 structure that is a point identifying the scaling center.</param>
         /// <param name="scalingRotation">Scaling rotation factor. Use a zero value to specify no rotation.</param>
-        /// <param name="scaling">A Vector2 structure that is a point identifying the scale. Use Vector2.Empty to specify no scaling.</param>
-        /// <param name="rotationCenter">A Vector2 structure that is a point identifying the rotation center.</param>
+        /// <param name="scaling">A TGCVector2 structure that is a point identifying the scale. Use TGCVector2.Empty to specify no scaling.</param>
+        /// <param name="rotationCenter">A TGCVector2 structure that is a point identifying the rotation center.</param>
         /// <param name="rotation">Angle of rotation, in radians.</param>
-        /// <param name="translation">A Vector2 structure that identifies the translation. Use Vector2.Empty to specify no translation.</param>
+        /// <param name="translation">A TGCVector2 structure that identifies the translation. Use TGCVector2.Empty to specify no translation.</param>
         /// <returns>A TGCMatrix that contains the transformation matrix.</returns>
-        public static TGCMatrix Transformation2D(Vector2 scalingCenter, float scalingRotation, Vector2 scaling, Vector2 rotationCenter, float rotation, Vector2 translation)
+        public static TGCMatrix Transformation2D(TGCVector2 scalingCenter, float scalingRotation, TGCVector2 scaling, TGCVector2 rotationCenter, float rotation, TGCVector2 translation)
         {
             throw new NotImplementedException();
         }

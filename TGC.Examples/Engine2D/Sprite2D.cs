@@ -51,7 +51,7 @@ namespace TGC.Examples.Engine2D
 
             //Ubicarlo centrado en la pantalla
             var textureSize = sprite.Bitmap.Size;
-            sprite.Position = new Vector2(FastMath.Max(D3DDevice.Instance.Width / 2 - textureSize.Width / 2, 0),
+            sprite.Position = new TGCVector2(FastMath.Max(D3DDevice.Instance.Width / 2 - textureSize.Width / 2, 0),
                 FastMath.Max(D3DDevice.Instance.Height / 2 - textureSize.Height / 2, 0));
 
             //Crear Sprite animado
@@ -62,20 +62,20 @@ namespace TGC.Examples.Engine2D
 
             //Ubicarlo centrado en la pantalla
             var textureSizeAnimado = animatedSprite.Bitmap.Size;
-            animatedSprite.Position = new Vector2(D3DDevice.Instance.Width / 2 - textureSizeAnimado.Width / 2,
+            animatedSprite.Position = new TGCVector2(D3DDevice.Instance.Width / 2 - textureSizeAnimado.Width / 2,
                 D3DDevice.Instance.Height / 2 - textureSizeAnimado.Height / 2);
 
             //Modifiers para variar parametros del sprite
-            Modifiers.addVertex2f("position", new Vector2(0, 0),
-                new Vector2(D3DDevice.Instance.Width, D3DDevice.Instance.Height), sprite.Position);
-            Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4), sprite.Scaling);
+            Modifiers.addVertex2f("position", TGCVector2.Empty,
+                new TGCVector2(D3DDevice.Instance.Width, D3DDevice.Instance.Height), sprite.Position);
+            Modifiers.addVertex2f("scaling", TGCVector2.Empty, new TGCVector2(4, 4), sprite.Scaling);
             Modifiers.addFloat("rotation", 0, 360, 0);
 
             //Modifiers para variar parametros del sprite
             Modifiers.addFloat("frameRateAnimated", 1, 30, 10);
-            Modifiers.addVertex2f("positionAnimated", new Vector2(0, 0),
-                new Vector2(D3DDevice.Instance.Width, D3DDevice.Instance.Height), animatedSprite.Position);
-            Modifiers.addVertex2f("scalingAnimated", new Vector2(0, 0), new Vector2(4, 4), animatedSprite.Scaling);
+            Modifiers.addVertex2f("positionAnimated", TGCVector2.Empty,
+                new TGCVector2(D3DDevice.Instance.Width, D3DDevice.Instance.Height), animatedSprite.Position);
+            Modifiers.addVertex2f("scalingAnimated", TGCVector2.Empty, new TGCVector2(4, 4), animatedSprite.Scaling);
             Modifiers.addFloat("rotationAnimated", 0, 360, 0);
 
             //Creamos un Box3D para que se vea como el Sprite es en 2D y se dibuja siempre arriba de la escena 3D
@@ -92,14 +92,14 @@ namespace TGC.Examples.Engine2D
             PreUpdate();
 
             //Actualizar valores cargados en modifiers
-            sprite.Position = (Vector2)Modifiers["position"];
-            sprite.Scaling = (Vector2)Modifiers["scaling"];
+            sprite.Position = (TGCVector2)Modifiers["position"];
+            sprite.Scaling = (TGCVector2)Modifiers["scaling"];
             sprite.Rotation = FastMath.ToRad((float)Modifiers["rotation"]);
 
             //Actualizar valores cargados en modifiers
             animatedSprite.setFrameRate((float)Modifiers["frameRateAnimated"]);
-            animatedSprite.Position = (Vector2)Modifiers["positionAnimated"];
-            animatedSprite.Scaling = (Vector2)Modifiers["scalingAnimated"];
+            animatedSprite.Position = (TGCVector2)Modifiers["positionAnimated"];
+            animatedSprite.Scaling = (TGCVector2)Modifiers["scalingAnimated"];
             animatedSprite.Rotation = FastMath.ToRad((float)Modifiers["rotationAnimated"]);
 
             //Actualizamos el estado de la animacion y renderizamos

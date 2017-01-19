@@ -123,14 +123,14 @@ namespace TGC.Examples.Collision
             directionArrow.BodyColor = Color.Red;
             directionArrow.HeadColor = Color.Green;
             directionArrow.Thickness = 0.4f;
-            directionArrow.HeadSize = new Vector2(5, 10);
+            directionArrow.HeadSize = new TGCVector2(5, 10);
 
             //Linea para normal de colision
             collisionNormalArrow = new TgcArrow();
             collisionNormalArrow.BodyColor = Color.Blue;
             collisionNormalArrow.HeadColor = Color.Yellow;
             collisionNormalArrow.Thickness = 0.4f;
-            collisionNormalArrow.HeadSize = new Vector2(2, 5);
+            collisionNormalArrow.HeadSize = new TGCVector2(2, 5);
 
             //Caja para marcar punto de colision
             collisionPoint = TgcBox.fromSize(new TGCVector3(4, 4, 4), Color.Red);

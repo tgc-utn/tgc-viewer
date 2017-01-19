@@ -33,7 +33,7 @@ namespace TGC.Core.Geometry
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             Thickness = 0.06f;
-            HeadSize = new Vector2(0.3f, 0.6f);
+            HeadSize = new TGCVector2(0.3f, 0.6f);
             Enabled = true;
             bodyColor = Color.Blue;
             headColor = Color.LightBlue;
@@ -85,7 +85,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Tamaño de la cabeza de la flecha. Debe ser mayor a cero.
         /// </summary>
-        public Vector2 HeadSize { get; set; }
+        public TGCVector2 HeadSize { get; set; }
 
         public TGCVector3 Position
         {
@@ -295,7 +295,7 @@ namespace TGC.Core.Geometry
         /// <param name="headSize">Tamaño de la punta de la flecha</param>
         /// <returns>Flecha creada</returns>
         public static TgcArrow fromExtremes(TGCVector3 start, TGCVector3 end, Color bodyColor, Color headColor,
-            float thickness, Vector2 headSize)
+            float thickness, TGCVector2 headSize)
         {
             var arrow = new TgcArrow();
             arrow.PStart = start;
@@ -334,7 +334,7 @@ namespace TGC.Core.Geometry
         /// <param name="headSize">Tamaño de la punta de la flecha</param>
         /// <returns>Flecha creada</returns>
         public static TgcArrow fromDirection(TGCVector3 start, TGCVector3 direction, Color bodyColor, Color headColor,
-            float thickness, Vector2 headSize)
+            float thickness, TGCVector2 headSize)
         {
             var arrow = new TgcArrow();
             arrow.PStart = start;

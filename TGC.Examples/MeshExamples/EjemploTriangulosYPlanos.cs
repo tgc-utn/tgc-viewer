@@ -81,7 +81,7 @@ namespace TGC.Examples.MeshExamples
                 quad.Center = center;
                 quad.Normal = normal;
                 quad.Color = adaptColorRandom(Color.DarkGreen);
-                quad.Size = new Vector2(10, 10);
+                quad.Size = new TGCVector2(10, 10);
                 quad.updateValues();
                 planes.Add(quad);
 

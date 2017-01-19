@@ -169,10 +169,10 @@ namespace TGC.Core.Terrain
                         center.Z + (j + 1) * scaleXZ);
 
                     //Coordendas de textura
-                    var t1 = new Vector2(i / width, j / length);
-                    var t2 = new Vector2(i / width, (j + 1) / length);
-                    var t3 = new Vector2((i + 1) / width, j / length);
-                    var t4 = new Vector2((i + 1) / width, (j + 1) / length);
+                    var t1 = new TGCVector2(i / width, j / length);
+                    var t2 = new TGCVector2(i / width, (j + 1) / length);
+                    var t3 = new TGCVector2((i + 1) / width, j / length);
+                    var t4 = new TGCVector2((i + 1) / width, (j + 1) / length);
 
                     //Cargar triangulo 1
                     data[dataIdx] = new CustomVertex.PositionTextured(v1.ToVector3(), t1.X, t1.Y);

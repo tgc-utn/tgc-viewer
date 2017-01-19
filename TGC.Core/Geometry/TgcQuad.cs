@@ -35,7 +35,7 @@ namespace TGC.Core.Geometry
 
             Center = TGCVector3.Empty;
             normal = TGCVector3.Up;
-            Size = new Vector2(10, 10);
+            Size = new TGCVector2(10, 10);
             Enabled = true;
             color = Color.Blue;
             AlphaBlendEnable = false;
@@ -62,7 +62,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Tamaño del plano, en ancho y longitud
         /// </summary>
-        public Vector2 Size { get; set; }
+        public TGCVector2 Size { get; set; }
 
         /// <summary>
         ///     Color del plano

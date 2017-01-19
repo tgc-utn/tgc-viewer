@@ -313,17 +313,17 @@ namespace TGC.Examples.ShadersExamples
 
             var dr = ancho_ruta / 2;
             float H = 0;
-            var p = new Vector2(x, z);
+            var p = new TGCVector2(x, z);
             for (var t = 0; t < cant_p; ++t)
             {
                 var i = ndx[t];
 
-                var r0 = new Vector2(pt_ruta[i].X, pt_ruta[i].Z);
-                var r1 = new Vector2(pt_ruta[i + 1].X, pt_ruta[i + 1].Z);
+                var r0 = new TGCVector2(pt_ruta[i].X, pt_ruta[i].Z);
+                var r1 = new TGCVector2(pt_ruta[i + 1].X, pt_ruta[i + 1].Z);
                 var r = r1 - r0;
                 var rm = r.Length();
                 r.Normalize();
-                var d = Vector2.Dot(p - r0, r);
+                var d = TGCVector2.Dot(p - r0, r);
                 // d ==0 , rm
 
                 if (d >= -0.5 && d <= rm + 0.5)
@@ -371,15 +371,15 @@ namespace TGC.Examples.ShadersExamples
             var aux_tramo = -1;
             var dr = ancho_ruta / 2;
             //float H = 0;
-            var p = new Vector2(x, z);
+            var p = new TGCVector2(x, z);
             for (var i = 0; i < cant_ptos_ruta; ++i)
             {
-                var r0 = new Vector2(pt_ruta[i].X, pt_ruta[i].Z);
-                var r1 = new Vector2(pt_ruta[i + 1].X, pt_ruta[i + 1].Z);
+                var r0 = new TGCVector2(pt_ruta[i].X, pt_ruta[i].Z);
+                var r1 = new TGCVector2(pt_ruta[i + 1].X, pt_ruta[i + 1].Z);
                 var r = r1 - r0;
                 var rm = r.Length();
                 r.Normalize();
-                var d = Vector2.Dot(p - r0, r);
+                var d = TGCVector2.Dot(p - r0, r);
                 // d ==0 , rm
 
                 if (d >= -0.5 && d <= rm + 0.5)

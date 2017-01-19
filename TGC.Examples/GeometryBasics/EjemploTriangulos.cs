@@ -74,20 +74,20 @@ namespace TGC.Examples.GeometryBasics
             //Modifiers
             Modifiers.addVertex3f("vertex1", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
                 new TGCVector3(-1, 0, 0));
-            Modifiers.addVertex2f("texCoord1", new Vector2(0, 0), new Vector2(1, 1),
-                new Vector2(1, 0));
+            Modifiers.addVertex2f("texCoord1", TGCVector2.Empty, TGCVector2.One,
+                new TGCVector2(1, 0));
             Modifiers.addColor("color1", Color.White);
 
             Modifiers.addVertex3f("vertex2", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
                 new TGCVector3(1, 0, 0));
-            Modifiers.addVertex2f("texCoord2", new Vector2(0, 0), new Vector2(1, 1),
-                new Vector2(0, 1));
+            Modifiers.addVertex2f("texCoord2", TGCVector2.Empty, TGCVector2.One,
+                new TGCVector2(0, 1));
             Modifiers.addColor("color2", Color.White);
 
             Modifiers.addVertex3f("vertex3", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
                 TGCVector3.Up);
-            Modifiers.addVertex2f("texCoord3", new Vector2(0, 0), new Vector2(1, 1),
-                new Vector2(1, 1));
+            Modifiers.addVertex2f("texCoord3", TGCVector2.Empty, TGCVector2.One,
+                TGCVector2.One);
             Modifiers.addColor("color3", Color.White);
 
             Modifiers.addFloat("rotation", -2, 2f, 0f);
@@ -152,7 +152,7 @@ namespace TGC.Examples.GeometryBasics
 
             //vertice 1
             var v1 = (TGCVector3)Modifiers["vertex1"];
-            var t1 = (Vector2)Modifiers["texCoord1"];
+            var t1 = (TGCVector2)Modifiers["texCoord1"];
             data[0] = new CustomVertex.PositionColoredTextured(
                 v1.X,
                 v1.Y,
@@ -163,7 +163,7 @@ namespace TGC.Examples.GeometryBasics
 
             //vertice 2
             var v2 = (TGCVector3)Modifiers["vertex2"];
-            var t2 = (Vector2)Modifiers["texCoord2"];
+            var t2 = (TGCVector2)Modifiers["texCoord2"];
             data[1] = new CustomVertex.PositionColoredTextured(
                 v2.X,
                 v2.Y,
@@ -174,7 +174,7 @@ namespace TGC.Examples.GeometryBasics
 
             //vertice 3
             var v3 = (TGCVector3)Modifiers["vertex3"];
-            var t3 = (Vector2)Modifiers["texCoord3"];
+            var t3 = (TGCVector2)Modifiers["texCoord3"];
             data[2] = new CustomVertex.PositionColoredTextured(
                 v3.X,
                 v3.Y,

@@ -56,8 +56,8 @@ namespace TGC.Examples.GeometryBasics
                 TGCVector3.Empty);
             Modifiers.addBoolean("Use texture", "yes", true);
             Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
-            Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f), new Vector2(0, 0));
-            Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4), new Vector2(1, 1));
+            Modifiers.addVertex2f("offset", new TGCVector2(-0.5f, -0.5f), new TGCVector2(0.9f, 0.9f), TGCVector2.Empty);
+            Modifiers.addVertex2f("tiling", new TGCVector2(0.1f, 0.1f), new TGCVector2(4, 4), TGCVector2.One);
 
             Modifiers.addColor("color", Color.White);
             Modifiers.addBoolean("boundingsphere", "show", false);
@@ -110,10 +110,10 @@ namespace TGC.Examples.GeometryBasics
                 Geometry.DegreeToRadian(rotation.Z));
 
             //Offset de textura
-            sphere.UVOffset = (Vector2)Modifiers["offset"];
+            sphere.UVOffset = (TGCVector2)Modifiers["offset"];
 
             //Tiling de textura
-            sphere.UVTiling = (Vector2)Modifiers["tiling"];
+            sphere.UVTiling = (TGCVector2)Modifiers["tiling"];
 
             //Actualizar valores en la caja.
             sphere.updateValues();

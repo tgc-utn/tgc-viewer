@@ -33,11 +33,11 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
             SrcRect = Rectangle.Empty;
 
             //Initialize transformation properties.
-            position = new Vector2(0, 0);
-            scaling = new Vector2(1, 1);
-            scalingCenter = new Vector2(0, 0);
+            position = TGCVector2.Empty;
+            scaling = TGCVector2.One;
+            scalingCenter = TGCVector2.Empty;
             rotation = 0;
-            rotationCenter = new Vector2(0, 0);
+            rotationCenter = TGCVector2.Empty;
 
             Color = Color.White;
         }
@@ -69,12 +69,12 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
         /// </summary>
         public Color Color { get; set; }
 
-        private Vector2 position;
+        private TGCVector2 position;
 
         /// <summary>
         ///     The sprite position in the 2D plane.
         /// </summary>
-        public Vector2 Position
+        public TGCVector2 Position
         {
             get { return position; }
             set
@@ -99,12 +99,12 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
             }
         }
 
-        private Vector2 rotationCenter;
+        private TGCVector2 rotationCenter;
 
         /// <summary>
         ///     The position of the centre of rotation
         /// </summary>
-        public Vector2 RotationCenter
+        public TGCVector2 RotationCenter
         {
             get { return rotationCenter; }
             set
@@ -114,12 +114,12 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
             }
         }
 
-        private Vector2 scalingCenter;
+        private TGCVector2 scalingCenter;
 
         /// <summary>
         ///     The position of the centre of scaling
         /// </summary>
-        public Vector2 ScalingCenter
+        public TGCVector2 ScalingCenter
         {
             get { return scalingCenter; }
             set
@@ -129,12 +129,12 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
             }
         }
 
-        private Vector2 scaling;
+        private TGCVector2 scaling;
 
         /// <summary>
         ///     The scaling factors in the x and y axes.
         /// </summary>
-        public Vector2 Scaling
+        public TGCVector2 Scaling
         {
             get { return scaling; }
             set

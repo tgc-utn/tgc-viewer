@@ -118,7 +118,7 @@ namespace TGC.Examples.ShadersExamples
 
             arrow = new TgcArrow();
             arrow.Thickness = 1f;
-            arrow.HeadSize = new Vector2(2f, 2f);
+            arrow.HeadSize = new TGCVector2(2f, 2f);
             arrow.BodyColor = Color.Blue;
 
             float K = 300;

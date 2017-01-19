@@ -164,7 +164,7 @@ namespace TGC.Core.UserControls.Modifier
         /// <param name="minValue">Valor minimo</param>
         /// <param name="maxValue">Valor maximo</param>
         /// <param name="defaultValue">Valor default</param>
-        public void addVertex2f(string varName, Vector2 minValue, Vector2 maxValue, Vector2 defaultValue)
+        public void addVertex2f(string varName, TGCVector2 minValue, TGCVector2 maxValue, TGCVector2 defaultValue)
         {
             add(new TgcVertex2fModifier(varName, minValue, maxValue, defaultValue));
         }

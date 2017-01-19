@@ -27,12 +27,12 @@ namespace TGC.Examples.Engine2D
     {
        private Drawer2D drawer2D;
        private CustomSprite sprite;
-        private Vector2 centerScreen;
+        private TGCVector2 centerScreen;
         private TGCMatrix matrixIdentity;
         private TGCMatrix scaling;
         private TGCMatrix rotation;
         private TGCMatrix traslation;
-        private Vector2 centroSprite;
+        private TGCVector2 centroSprite;
         private TGCMatrix rotationAnimate;
         private float acumlatedTime;
         private TGCMatrix rotationAnimateFrameDepend;
@@ -56,11 +56,11 @@ namespace TGC.Examples.Engine2D
 
             //Ubicar centrado en la pantalla
             var textureSize = sprite.Bitmap.Size;
-            centerScreen = new Vector2(FastMath.Max(D3DDevice.Instance.Width / 2 - textureSize.Width / 2, 0),
+            centerScreen = new TGCVector2(FastMath.Max(D3DDevice.Instance.Width / 2 - textureSize.Width / 2, 0),
                 FastMath.Max(D3DDevice.Instance.Height / 2 - textureSize.Height / 2, 0));
 
             //Calculo el centro de la imagen.
-            centroSprite = new Vector2(textureSize.Width / 2, textureSize.Height / 2);
+            centroSprite = new TGCVector2(textureSize.Width / 2, textureSize.Height / 2);
 
             //Rotaciones animadas iniciales.
             rotationAnimateFrameDepend = TGCMatrix.Identity;
@@ -80,8 +80,8 @@ namespace TGC.Examples.Engine2D
             PreUpdate();
 
             //Actualizar valores al sprite interno.
-            sprite.Position = new Vector2(0f, 0f);
-            sprite.Scaling = new Vector2(0.5f, 0.5f);
+            sprite.Position = new TGCVector2(0f, 0f);
+            sprite.Scaling = new TGCVector2(0.5f, 0.5f);
             sprite.Rotation = 0f;
             //Internamente realiza TGCMatrix.Transformation2D(scalingCenter, 0, scaling, rotationCenter, rotation, position); 
             /*El método Transformation2D calcula la matriz de transformación afín por medio de la fórmula siguiente, evaluando la concatenación de la matriz de izquierda a derecha.

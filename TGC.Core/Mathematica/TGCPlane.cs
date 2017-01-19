@@ -13,6 +13,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public TGCPlane()
         {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -24,10 +25,7 @@ namespace TGC.Core.Mathematica
         /// <param name="valuePointD">A Single value used to set the initial value of the D field.</param>
         public TGCPlane(float valuePointA, float valuePointB, float valuePointC, float valuePointD)
         {
-            this.A = valuePointA;
-            this.B = valuePointB;
-            this.C = valuePointC;
-            this.D = valuePointD;
+            throw new NotImplementedException();
         }
 
         private Plane DXPlane { get; set; }
