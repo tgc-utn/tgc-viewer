@@ -698,24 +698,6 @@ namespace TGC.Core.Mathematica
         }
 
         /// <summary>
-        ///     Convierte un float[4] a un Quaternion
-        /// </summary>
-        public static Quaternion Float4ArrayToQuaternion(float[] f)
-        {
-            return new Quaternion(f[0], f[1], f[2], f[3]);
-        }
-
-        /// <summary>
-        ///     convierte un color base(255,255,255,255) a un Vector4(1f,1f,1f,1f).
-        /// </summary>
-        /// <param name="color"></param>
-        /// <returns></returns>
-        public static Vector4 ColorToVector4(Color color)
-        {
-            return Vector4.Normalize(new Vector4(color.R, color.G, color.B, color.A));
-        }
-
-        /// <summary>
         ///     Imprime un TGCVector3 de la forma [150.0,150.0,150.0]
         /// </summary>
         /// <returns></returns>

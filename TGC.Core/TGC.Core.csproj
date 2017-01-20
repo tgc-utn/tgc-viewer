@@ -67,8 +67,10 @@
   <ItemGroup>
     <Compile Include="Mathematica\TGCMatrix.cs" />
     <Compile Include="Mathematica\TGCPlane.cs" />
+    <Compile Include="Mathematica\TGCQuaternion.cs" />
     <Compile Include="Mathematica\TGCVector2.cs" />
     <Compile Include="Mathematica\TGCVector3.cs" />
+    <Compile Include="Mathematica\TGCVector4.cs" />
     <Compile Include="Text\TgcText2D.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
     <Compile Include="Direct3D\D3DDevice.cs" />
