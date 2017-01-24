@@ -2,6 +2,7 @@
 using Microsoft.DirectX.DirectInput;
 using TGC.Core.Camara;
 using TGC.Core.Collision;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -64,7 +65,7 @@ namespace TGC.Examples.Tutorial
 			//Declaramos un vector de movimiento inicializado en cero.
 			//El movimiento sobre el suelo es sobre el plano XZ.
 			//Sobre XZ nos movemos con las flechas del teclado o con las letas WASD.
-			var movement = new Vector3(0, 0, 0);
+			var movement = TGCVector3.Empty;
 
 			//Movernos de izquierda a derecha, sobre el eje X.
 			if (input.keyDown(Key.Left) || input.keyDown(Key.A))

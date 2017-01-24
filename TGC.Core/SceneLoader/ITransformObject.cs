@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.SceneLoader
 {
@@ -13,7 +14,7 @@ namespace TGC.Core.SceneLoader
         ///     en base a los valores de: Position, Rotation, Scale.
         ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
-        Matrix Transform { get; set; }
+        TGCMatrix Transform { get; set; }
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) del objeto se actualiza en
@@ -26,22 +27,22 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Posicion absoluta del objeto
         /// </summary>
-        Vector3 Position { get; set; }
+        TGCVector3 Position { get; set; }
 
         /// <summary>
         ///     Rotación absoluta del objeto
         /// </summary>
-        Vector3 Rotation { get; set; }
+        TGCVector3 Rotation { get; set; }
 
         /// <summary>
         ///     Escalado absoluto del objeto
         /// </summary>
-        Vector3 Scale { get; set; }
+        TGCVector3 Scale { get; set; }
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        void move(Vector3 v);
+        void move(TGCVector3 v);
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
@@ -60,7 +61,7 @@ namespace TGC.Core.SceneLoader
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        void getPosition(Vector3 pos);
+        void getPosition(TGCVector3 pos);
 
         /// <summary>
         ///     Rota la malla respecto del eje X

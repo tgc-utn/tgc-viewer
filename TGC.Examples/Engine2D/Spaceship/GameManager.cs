@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.UserControls;
 using TGC.Examples.Engine2D.Spaceship.Core;
 
@@ -62,7 +63,7 @@ namespace TGC.Examples.Engine2D.Spaceship
             }
         }
 
-        public void fireMissile(Vector2 position, float angle)
+        public void fireMissile(TGCVector2 position, float angle)
         {
             var newMisil = new Misil();
 

@@ -6,6 +6,7 @@ using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -52,9 +53,9 @@ namespace TGC.Core.KeyFrameLoader
         /// </summary>
         private OriginalData originalData;
 
-        private Vector3 rotation;
+        private TGCVector3 rotation;
 
-        private Vector3 scale;
+        private TGCVector3 scale;
 
         /// <summary>
         ///     BoundingBox de la malla sin ninguna animación.
@@ -63,7 +64,7 @@ namespace TGC.Core.KeyFrameLoader
 
         protected string technique;
 
-        private Vector3 translation;
+        private TGCVector3 translation;
 
         /// <summary>
         ///     Crea una nueva malla.
@@ -86,8 +87,8 @@ namespace TGC.Core.KeyFrameLoader
         /// <param name="translation">Traslación respecto de la malla original</param>
         /// <param name="rotation">Rotación respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcKeyFrameMesh(string name, TgcKeyFrameMesh parentInstance, Vector3 translation, Vector3 rotation,
-            Vector3 scale)
+        public TgcKeyFrameMesh(string name, TgcKeyFrameMesh parentInstance, TGCVector3 translation, TGCVector3 rotation,
+            TGCVector3 scale)
         {
             //Cargar iniciales datos en base al original
             initData(parentInstance.d3dMesh, name, parentInstance.RenderType, parentInstance.originalData);
@@ -376,7 +377,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     en base a los valores de: Position, Rotation, Scale.
         ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
-        public Matrix Transform { get; set; }
+        public TGCMatrix Transform { get; set; }
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
@@ -389,7 +390,7 @@ namespace TGC.Core.KeyFrameLoader
         /// <summary>
         ///     Posicion absoluta de la Malla
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return translation; }
             set
@@ -402,7 +403,7 @@ namespace TGC.Core.KeyFrameLoader
         /// <summary>
         ///     Rotación absoluta de la malla
         /// </summary>
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
@@ -411,7 +412,7 @@ namespace TGC.Core.KeyFrameLoader
         /// <summary>
         ///     Escalado absoluto de la malla;
         /// </summary>
-        public Vector3 Scale
+        public TGCVector3 Scale
         {
             get { return scale; }
             set
@@ -424,7 +425,7 @@ namespace TGC.Core.KeyFrameLoader
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(Vector3 v)
+        public void move(TGCVector3 v)
         {
             move(v.X, v.Y, v.Z);
         }
@@ -459,7 +460,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
+        public void getPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -511,10 +512,10 @@ namespace TGC.Core.KeyFrameLoader
 
             //variables de movimiento
             AutoTransformEnable = false;
-            translation = new Vector3(0f, 0f, 0f);
-            rotation = new Vector3(0f, 0f, 0f);
-            scale = new Vector3(1f, 1f, 1f);
-            Transform = Matrix.Identity;
+            translation = new TGCVector3(0f, 0f, 0f);
+            rotation = new TGCVector3(0f, 0f, 0f);
+            scale = new TGCVector3(1f, 1f, 1f);
+            Transform = TGCMatrix.Identity;
 
             //variables de animacion
             IsAnimating = false;
@@ -718,7 +719,7 @@ namespace TGC.Core.KeyFrameLoader
 
                         //vertices
                         var coordIdx = originalData.coordinatesIndices[i] * 3;
-                        v.Position = new Vector3(
+                        v.Position = new TGCVector3(
                             verticesCoordinates[coordIdx],
                             verticesCoordinates[coordIdx + 1],
                             verticesCoordinates[coordIdx + 2]
@@ -741,7 +742,7 @@ namespace TGC.Core.KeyFrameLoader
 
                         //vertices
                         var coordIdx = originalData.coordinatesIndices[i] * 3;
-                        v.Position = new Vector3(
+                        v.Position = new TGCVector3(
                             verticesCoordinates[coordIdx],
                             verticesCoordinates[coordIdx + 1],
                             verticesCoordinates[coordIdx + 2]
@@ -799,10 +800,10 @@ namespace TGC.Core.KeyFrameLoader
             //Aplicar transformacion de malla
             if (AutoTransformEnable)
             {
-                Transform = Matrix.Identity
-                            * Matrix.Scaling(scale)
-                            * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            * Matrix.Translation(translation);
+                Transform = TGCMatrix.Identity
+                            * TGCMatrix.Scaling(scale)
+                            * TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
+                            * TGCMatrix.Translation(translation);
             }
         }
 
@@ -844,15 +845,15 @@ namespace TGC.Core.KeyFrameLoader
         ///     Devuelve un array con todas las posiciones de los vértices de la malla, en el estado actual
         /// </summary>
         /// <returns>Array creado</returns>
-        public Vector3[] getVertexPositions()
+        public TGCVector3[] getVertexPositions()
         {
-            Vector3[] points = null;
+            TGCVector3[] points = null;
             switch (RenderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
                     var verts1 = (TgcKeyFrameLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcKeyFrameLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts1.Length];
+                    points = new TGCVector3[verts1.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts1[i].Position;
@@ -863,7 +864,7 @@ namespace TGC.Core.KeyFrameLoader
                 case MeshRenderType.DIFFUSE_MAP:
                     var verts2 = (TgcKeyFrameLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcKeyFrameLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts2.Length];
+                    points = new TGCVector3[verts2.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts2[i].Position;
@@ -950,7 +951,7 @@ namespace TGC.Core.KeyFrameLoader
         /// <param name="translation">Traslación respecto de la malla original</param>
         /// <param name="rotation">Rotación respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcKeyFrameMesh createMeshInstance(string name, Vector3 translation, Vector3 rotation, Vector3 scale)
+        public TgcKeyFrameMesh createMeshInstance(string name, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
         {
             if (ParentInstance != null)
             {
@@ -978,7 +979,7 @@ namespace TGC.Core.KeyFrameLoader
         /// <param name="name">Nombre de la malla</param>
         public TgcKeyFrameMesh createMeshInstance(string name)
         {
-            return createMeshInstance(name, Vector3.Empty, Vector3.Empty, new Vector3(1, 1, 1));
+            return createMeshInstance(name, TGCVector3.Empty, TGCVector3.Empty, TGCVector3.One);
         }
 
         public override string ToString()

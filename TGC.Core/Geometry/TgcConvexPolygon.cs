@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -25,7 +26,7 @@ namespace TGC.Core.Geometry
         ///     Vertices que definen el contorno polígono.
         ///     Están dados en clockwise-order.
         /// </summary>
-        public Vector3[] BoundingVertices { get; set; }
+        public TGCVector3[] BoundingVertices { get; set; }
 
         /// <summary>
         ///     Indica si la flecha esta habilitada para ser renderizada
@@ -81,7 +82,7 @@ namespace TGC.Core.Geometry
             var vertices = new CustomVertex.PositionColored[BoundingVertices.Length];
             for (var i = 0; i < BoundingVertices.Length; i++)
             {
-                vertices[i] = new CustomVertex.PositionColored(BoundingVertices[i], c);
+                vertices[i] = new CustomVertex.PositionColored(BoundingVertices[i].ToVector3(), c);
             }
 
             //Cargar vertexBuffer
@@ -123,7 +124,7 @@ namespace TGC.Core.Geometry
             }
         }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             //Lo correcto sería calcular el centro, pero con un extremo es suficiente.
             get { return BoundingVertices[0]; }

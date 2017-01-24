@@ -6,6 +6,7 @@ using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.Sound;
 using TGC.Core.Text;
 using TGC.Core.Textures;
@@ -168,7 +169,7 @@ namespace TGC.Core.Example
         protected void UpdateView()
         {
             Camara.UpdateCamera(ElapsedTime);
-            D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix();
+            D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix().ToMatrix();
         }
 
         /// <summary>
@@ -176,8 +177,8 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateFrustum()
         {
-            Frustum.updateVolume(D3DDevice.Instance.Device.Transform.View,
-                D3DDevice.Instance.Device.Transform.Projection);
+            Frustum.updateVolume(TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.View),
+                TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.Projection));
         }
 
         /// <summary>
@@ -274,7 +275,7 @@ namespace TGC.Core.Example
         public virtual void ResetDefaultConfig()
         {
             D3DDevice.Instance.DefaultValues();
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
             ElapsedTime = -1;
         }
     }

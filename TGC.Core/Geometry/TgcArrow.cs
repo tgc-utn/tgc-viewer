@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -14,7 +15,7 @@ namespace TGC.Core.Geometry
     /// </summary>
     public class TgcArrow : IRenderObject
     {
-        private readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
+        private readonly TGCVector3 ORIGINAL_DIR = TGCVector3.Up;
 
         private readonly VertexBuffer vertexBuffer;
 
@@ -32,7 +33,7 @@ namespace TGC.Core.Geometry
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             Thickness = 0.06f;
-            HeadSize = new Vector2(0.3f, 0.6f);
+            HeadSize = new TGCVector2(0.3f, 0.6f);
             Enabled = true;
             bodyColor = Color.Blue;
             headColor = Color.LightBlue;
@@ -46,12 +47,12 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Punto de inicio de la linea
         /// </summary>
-        public Vector3 PStart { get; set; }
+        public TGCVector3 PStart { get; set; }
 
         /// <summary>
         ///     Punto final de la linea
         /// </summary>
-        public Vector3 PEnd { get; set; }
+        public TGCVector3 PEnd { get; set; }
 
         /// <summary>
         ///     Color del cuerpo de la flecha
@@ -84,9 +85,9 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Tamaño de la cabeza de la flecha. Debe ser mayor a cero.
         /// </summary>
-        public Vector2 HeadSize { get; set; }
+        public TGCVector2 HeadSize { get; set; }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             //Lo correcto sería calcular el centro, pero con un extremo es suficiente.
             get { return PStart; }
@@ -161,10 +162,10 @@ namespace TGC.Core.Geometry
             var vertices = new CustomVertex.PositionColored[54];
 
             //Crear caja en vertical en Y con longitud igual al módulo de la recta.
-            var lineVec = Vector3.Subtract(PEnd, PStart);
+            var lineVec = TGCVector3.Subtract(PEnd, PStart);
             var lineLength = lineVec.Length();
-            var min = new Vector3(-Thickness, 0, -Thickness);
-            var max = new Vector3(Thickness, lineLength, Thickness);
+            var min = new TGCVector3(-Thickness, 0, -Thickness);
+            var max = new TGCVector3(Thickness, lineLength, Thickness);
 
             //Vertices del cuerpo de la flecha
             var bc = bodyColor.ToArgb();
@@ -218,8 +219,8 @@ namespace TGC.Core.Geometry
 
             //Vertices del cuerpo de la flecha
             var hc = headColor.ToArgb();
-            var hMin = new Vector3(-HeadSize.X, lineLength, -HeadSize.X);
-            var hMax = new Vector3(HeadSize.X, lineLength + HeadSize.Y, HeadSize.X);
+            var hMin = new TGCVector3(-HeadSize.X, lineLength, -HeadSize.X);
+            var hMax = new TGCVector3(HeadSize.X, lineLength + HeadSize.Y, HeadSize.X);
 
             //Bottom face
             vertices[36] = new CustomVertex.PositionColored(hMin.X, hMin.Y, hMax.Z, hc);
@@ -251,15 +252,15 @@ namespace TGC.Core.Geometry
 
             //Obtener matriz de rotacion respecto del vector de la linea
             lineVec.Normalize();
-            var angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, lineVec));
-            var axisRotation = Vector3.Cross(ORIGINAL_DIR, lineVec);
+            var angle = FastMath.Acos(TGCVector3.Dot(ORIGINAL_DIR, lineVec));
+            var axisRotation = TGCVector3.Cross(ORIGINAL_DIR, lineVec);
             axisRotation.Normalize();
-            var t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(PStart);
+            var t = TGCMatrix.RotationAxis(axisRotation, angle) * TGCMatrix.Translation(PStart);
 
             //Transformar todos los puntos
             for (var i = 0; i < vertices.Length; i++)
             {
-                vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, t);
+                vertices[i].Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vertices[i].Position), t).ToVector3();
             }
 
             //Cargar vertexBuffer
@@ -274,7 +275,7 @@ namespace TGC.Core.Geometry
         /// <param name="start">Punto de inicio</param>
         /// <param name="end">Punto de fin</param>
         /// <returns>Flecha creada</returns>
-        public static TgcArrow fromExtremes(Vector3 start, Vector3 end)
+        public static TgcArrow fromExtremes(TGCVector3 start, TGCVector3 end)
         {
             var arrow = new TgcArrow();
             arrow.PStart = start;
@@ -293,8 +294,8 @@ namespace TGC.Core.Geometry
         /// <param name="thickness">Grosor del cuerpo de la flecha</param>
         /// <param name="headSize">Tamaño de la punta de la flecha</param>
         /// <returns>Flecha creada</returns>
-        public static TgcArrow fromExtremes(Vector3 start, Vector3 end, Color bodyColor, Color headColor,
-            float thickness, Vector2 headSize)
+        public static TgcArrow fromExtremes(TGCVector3 start, TGCVector3 end, Color bodyColor, Color headColor,
+            float thickness, TGCVector2 headSize)
         {
             var arrow = new TgcArrow();
             arrow.PStart = start;
@@ -313,7 +314,7 @@ namespace TGC.Core.Geometry
         /// <param name="start">Punto de inicio</param>
         /// <param name="direction">Dirección de la flecha</param>
         /// <returns>Flecha creada</returns>
-        public static TgcArrow fromDirection(Vector3 start, Vector3 direction)
+        public static TgcArrow fromDirection(TGCVector3 start, TGCVector3 direction)
         {
             var arrow = new TgcArrow();
             arrow.PStart = start;
@@ -332,8 +333,8 @@ namespace TGC.Core.Geometry
         /// <param name="thickness">Grosor del cuerpo de la flecha</param>
         /// <param name="headSize">Tamaño de la punta de la flecha</param>
         /// <returns>Flecha creada</returns>
-        public static TgcArrow fromDirection(Vector3 start, Vector3 direction, Color bodyColor, Color headColor,
-            float thickness, Vector2 headSize)
+        public static TgcArrow fromDirection(TGCVector3 start, TGCVector3 direction, Color bodyColor, Color headColor,
+            float thickness, TGCVector2 headSize)
         {
             var arrow = new TgcArrow();
             arrow.PStart = start;

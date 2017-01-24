@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.Geometry
 {
@@ -12,11 +13,11 @@ namespace TGC.Core.Geometry
         ///     Planos que definen el cuerpo convexo.
         ///     Apuntan hacia adentro del cuerpo
         /// </summary>
-        public Plane[] Planes { get; set; }
+        public TGCPlane[] Planes { get; set; }
 
         /// <summary>
         ///     Vertices que definen el contorno del cuerpo convexo
         /// </summary>
-        public Vector3[] BoundingVertices { get; set; }
+        public TGCVector3[] BoundingVertices { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.IO;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
@@ -58,7 +59,7 @@ namespace TGC.Examples.Lights
             for (var i = 0; i < sceneData.meshesData.Length; i++)
             {
                 var meshData = sceneData.meshesData[i];
-                
+
                 //Es una luz, no cargar mesh, solo importan sus datos
                 if (meshData.layerName == "Lights")
                 {
@@ -66,15 +67,14 @@ namespace TGC.Examples.Lights
                     var light = new LightData();
                     light.color = Color.FromArgb((int)meshData.color[0], (int)meshData.color[1],
                         (int)meshData.color[2]);
-                    light.aabb = new TgcBoundingAxisAlignBox(TgcParserUtils.float3ArrayToVector3(meshData.pMin),
-                        TgcParserUtils.float3ArrayToVector3(meshData.pMax));
+                    light.aabb = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(meshData.pMin), TGCVector3.Float3ArrayToVector3(meshData.pMax));
                     light.pos = light.aabb.calculateBoxCenter();
                     lights.Add(light);
                 }
                 //Es un mesh real, agregar a array definitivo
                 else
                 {
-                    
+
                     realMeshData.Add(meshData);
                 }
             }
@@ -87,7 +87,7 @@ namespace TGC.Examples.Lights
             scene = loader.loadScene(sceneData, mediaPath);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(-20, 80, 450), 400f, 300f, Input);
 
             //Modifiers para variables de luz
             Modifiers.addBoolean("lightEnable", "lightEnable", true);
@@ -176,8 +176,8 @@ namespace TGC.Examples.Lights
 
                     //Cargar variables shader de la luz
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(light.color));
-                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(light.pos));
-                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
+                    mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(light.pos));
+                    mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
                     mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
                     mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
 
@@ -198,14 +198,14 @@ namespace TGC.Examples.Lights
         /// <summary>
         ///     Devuelve la luz mas cercana a la posicion especificada
         /// </summary>
-        private LightData getClosestLight(Vector3 pos)
+        private LightData getClosestLight(TGCVector3 pos)
         {
             var minDist = float.MaxValue;
             LightData minLight = null;
 
             foreach (var light in lights)
             {
-                var distSq = Vector3.LengthSq(pos - light.pos);
+                var distSq = TGCVector3.LengthSq(pos - light.pos);
                 if (distSq < minDist)
                 {
                     minDist = distSq;
@@ -228,7 +228,7 @@ namespace TGC.Examples.Lights
         {
             public TgcBoundingAxisAlignBox aabb;
             public Color color;
-            public Vector3 pos;
+            public TGCVector3 pos;
         }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.KeyFrameLoader;
+using TGC.Core.Mathematica;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
@@ -91,7 +92,7 @@ namespace TGC.Examples.Animation
             mesh.playAnimation(selectedAnim, true);
 
             //Configurar camara
-            Camara = new TgcRotationalCamera(new Vector3(0, 70, 0), 200, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(0, 70, 0), 200, Input);
         }
 
         public override void Update()

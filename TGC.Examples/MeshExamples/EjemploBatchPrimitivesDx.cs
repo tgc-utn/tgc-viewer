@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -43,7 +44,7 @@ namespace TGC.Examples.MeshExamples
             Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(D3DDevice.Instance.Device);
 
-            Camara.SetCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
+            Camara.SetCamera(new TGCVector3(40f, 20f, -70f), new TGCVector3(40f, 20f, -60f));
         }
 
         private void createMeshes(Device d3dDevice)
@@ -94,7 +95,7 @@ namespace TGC.Examples.MeshExamples
 
                     D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3dTexture);
 
-                    D3DDevice.Instance.Device.Transform.World = Matrix.Translation(boxSize * 2 * i, 0, boxSize * 2 * j);
+                    D3DDevice.Instance.Device.Transform.World = TGCMatrix.Translation(boxSize * 2 * i, 0, boxSize * 2 * j).ToMatrix();
                     meshes[i].DrawSubset(0);
                 }
             }
@@ -114,7 +115,7 @@ namespace TGC.Examples.MeshExamples
             {
                 for (var j = 0; j < boxPerSquare; j++)
                 {
-                    D3DDevice.Instance.Device.Transform.World = Matrix.Translation(boxSize * 2 * i, 0, boxSize * 2 * j);
+                    D3DDevice.Instance.Device.Transform.World = TGCMatrix.Translation(boxSize * 2 * i, 0, boxSize * 2 * j).ToMatrix();
                     meshes[i].DrawSubset(0);
                 }
             }

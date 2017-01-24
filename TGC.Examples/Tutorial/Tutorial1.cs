@@ -8,6 +8,7 @@ using TGC.Examples.Example;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 using Microsoft.DirectX.DirectInput;
+using TGC.Core.Mathematica;
 using TGC.Examples.Camara;
 
 namespace TGC.Examples.Tutorial
@@ -55,11 +56,11 @@ namespace TGC.Examples.Tutorial
 			//Crearlos cada vez en el metodo render() es un error grave. Destruye la performance y suele provocar memory leaks.
 
 			//Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
-			var center = new Vector3(0, 0, 0);
-            var size = new Vector3(10, 10, 10);
+			var center = TGCVector3.Empty;
+            var size = new TGCVector3(10, 10, 10);
             var color = Color.Red;
             box1 = TgcBox.fromSize(size, color);
-			box1.Transform = Matrix.Translation(center);
+			box1.Transform = TGCMatrix.Translation(center);
 
 			//Cargamos una textura una textura es una imágen 2D que puede dibujarse arriba de un polígono 3D para darle color.
 			//Es muy útil para generar efectos de relieves y superficies.
@@ -72,12 +73,12 @@ namespace TGC.Examples.Tutorial
 			var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Madera\\cajaMadera3.jpg");
 
 			//Creamos una caja 3D ubicada en (10, 0, 0) y la textura como color.
-			center = new Vector3(15, 0, 0);
+			center = new TGCVector3(15, 0, 0);
 			box2 = TgcBox.fromSize(size, texture);
-			box2.Transform = Matrix.Translation(center);
+			box2.Transform = TGCMatrix.Translation(center);
 
 			//Creamos una caja 3D con textura
-			center = new Vector3(-15, 0, 0);
+			center = new TGCVector3(-15, 0, 0);
 			texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\cajaMetal.jpg");
 			box3 = TgcBox.fromSize(center, size, texture);
 			box3.AutoTransformEnable = true;

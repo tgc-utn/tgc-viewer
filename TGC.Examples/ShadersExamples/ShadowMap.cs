@@ -5,6 +5,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
@@ -33,12 +34,12 @@ namespace TGC.Examples.ShadersExamples
         private TgcArrow arrow;
         private TgcMesh avion;
 
-        private Vector3 dir_avion;
+        private TGCVector3 dir_avion;
         private Effect effect;
-        private Vector3 g_LightDir; // direccion de la luz actual
-        private Vector3 g_LightPos; // posicion de la luz actual (la que estoy analizando)
-        private Matrix g_LightView; // matriz de view del light
-        private Matrix g_mShadowProj; // Projection matrix for shadow map
+        private TGCVector3 g_LightDir; // direccion de la luz actual
+        private TGCVector3 g_LightPos; // posicion de la luz actual (la que estoy analizando)
+        private TGCMatrix g_LightView; // matriz de view del light
+        private TGCMatrix g_mShadowProj; // Projection matrix for shadow map
         private Surface g_pDSShadow; // Depth-stencil buffer for rendering to shadow map
 
         private Texture g_pShadowMap; // Texture to which the shadow map is rendered
@@ -71,10 +72,10 @@ namespace TGC.Examples.ShadersExamples
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
             avion = scene2.Meshes[0];
 
-            avion.Scale = new Vector3(0.1f, 0.1f, 0.1f);
-            avion.Position = new Vector3(100f, 100f, 0f);
+            avion.Scale = new TGCVector3(0.1f, 0.1f, 0.1f);
+            avion.Position = new TGCVector3(100f, 100f, 0f);
             avion.AutoTransformEnable = false;
-            dir_avion = new Vector3(0, 0, 1);
+            dir_avion = new TGCVector3(0, 0, 1);
 
             //Cargar Shader personalizado
             effect =
@@ -83,7 +84,7 @@ namespace TGC.Examples.ShadersExamples
             // le asigno el efecto a las mallas
             foreach (var T in scene.Meshes)
             {
-                T.Scale = new Vector3(1f, 1f, 1f);
+                T.Scale = new TGCVector3(1f, 1f, 1f);
                 T.Effect = effect;
             }
             avion.Effect = effect;
@@ -111,25 +112,25 @@ namespace TGC.Examples.ShadersExamples
             // de hecho, un valor mayor a 90 todavia es mejor, porque hasta con 90 grados es muy dificil
             // lograr que los objetos del borde generen sombras
             var aspectRatio = D3DDevice.Instance.AspectRatio;
-            g_mShadowProj = Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(80), aspectRatio, 50, 5000);
+            g_mShadowProj = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(80), aspectRatio, 50, 5000);
             D3DDevice.Instance.Device.Transform.Projection =
-                Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, near_plane, far_plane);
+                TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, near_plane, far_plane).ToMatrix();
 
             arrow = new TgcArrow();
             arrow.Thickness = 1f;
-            arrow.HeadSize = new Vector2(2f, 2f);
+            arrow.HeadSize = new TGCVector2(2f, 2f);
             arrow.BodyColor = Color.Blue;
 
             float K = 300;
-            Modifiers.addVertex3f("LightLookFrom", new Vector3(-K, -K, -K), new Vector3(K, K, K),
-                new Vector3(80, 120, 0));
-            Modifiers.addVertex3f("LightLookAt", new Vector3(-K, -K, -K), new Vector3(K, K, K),
-                new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("LightLookFrom", new TGCVector3(-K, -K, -K), new TGCVector3(K, K, K),
+                new TGCVector3(80, 120, 0));
+            Modifiers.addVertex3f("LightLookAt", new TGCVector3(-K, -K, -K), new TGCVector3(K, K, K),
+                TGCVector3.Empty);
 
             var rotCamera = new TgcRotationalCamera(scene.Meshes[0].BoundingBox.calculateBoxCenter(),
                 scene.Meshes[0].BoundingBox.calculateBoxRadius() * 2, Input);
             rotCamera.CameraCenter = rotCamera.CameraCenter +
-                                     new Vector3(0, 50f, 0);
+                                     new TGCVector3(0, 50f, 0);
             rotCamera.CameraDistance = 300;
             rotCamera.RotationSpeed = 50f;
             Camara = rotCamera;
@@ -150,13 +151,13 @@ namespace TGC.Examples.ShadersExamples
             time += ElapsedTime;
             // animo la pos del avion
             var alfa = -time * Geometry.DegreeToRadian(15.0f);
-            avion.Position = new Vector3(80f * (float)Math.Cos(alfa), 40 - 20 * (float)Math.Sin(alfa),
+            avion.Position = new TGCVector3(80f * (float)Math.Cos(alfa), 40 - 20 * (float)Math.Sin(alfa),
                 80f * (float)Math.Sin(alfa));
-            dir_avion = new Vector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
+            dir_avion = new TGCVector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
-            g_LightPos = (Vector3)Modifiers["LightLookFrom"];
-            g_LightDir = (Vector3)Modifiers["LightLookAt"] - g_LightPos;
+            g_LightPos = (TGCVector3)Modifiers["LightLookFrom"];
+            g_LightDir = (TGCVector3)Modifiers["LightLookAt"] - g_LightPos;
             g_LightDir.Normalize();
 
             arrow.PStart = g_LightPos;
@@ -188,15 +189,15 @@ namespace TGC.Examples.ShadersExamples
             // Calculo la matriz de view de la luz
             effect.SetValue("g_vLightPos", new Vector4(g_LightPos.X, g_LightPos.Y, g_LightPos.Z, 1));
             effect.SetValue("g_vLightDir", new Vector4(g_LightDir.X, g_LightDir.Y, g_LightDir.Z, 1));
-            g_LightView = Matrix.LookAtLH(g_LightPos, g_LightPos + g_LightDir, new Vector3(0, 0, 1));
+            g_LightView = TGCMatrix.LookAtLH(g_LightPos, g_LightPos + g_LightDir, new TGCVector3(0, 0, 1));
 
             arrow.PStart = g_LightPos;
             arrow.PEnd = g_LightPos + g_LightDir * 20f;
             arrow.updateValues();
 
             // inicializacion standard:
-            effect.SetValue("g_mProjLight", g_mShadowProj);
-            effect.SetValue("g_mViewLightProj", g_LightView * g_mShadowProj);
+            effect.SetValue("g_mProjLight", g_mShadowProj.ToMatrix());
+            effect.SetValue("g_mViewLightProj", (g_LightView * g_mShadowProj).ToMatrix());
 
             // Primero genero el shadow map, para ello dibujo desde el pto de vista de luz
             // a una textura, con el VS y PS que generan un mapa de profundidades.
@@ -251,16 +252,16 @@ namespace TGC.Examples.ShadersExamples
         }
 
         // helper
-        public Matrix CalcularMatriz(Vector3 Pos, Vector3 Scale, Vector3 Dir)
+        public TGCMatrix CalcularMatriz(TGCVector3 Pos, TGCVector3 Scale, TGCVector3 Dir)
         {
-            var VUP = new Vector3(0, 1, 0);
+            var VUP = TGCVector3.Up;
 
-            var matWorld = Matrix.Scaling(Scale);
+            var matWorld = TGCMatrix.Scaling(Scale);
             // determino la orientacion
-            var U = Vector3.Cross(VUP, Dir);
+            var U = TGCVector3.Cross(VUP, Dir);
             U.Normalize();
-            var V = Vector3.Cross(Dir, U);
-            Matrix Orientacion;
+            var V = TGCVector3.Cross(Dir, U);
+            TGCMatrix Orientacion = new TGCMatrix();
             Orientacion.M11 = U.X;
             Orientacion.M12 = U.Y;
             Orientacion.M13 = U.Z;
@@ -283,7 +284,7 @@ namespace TGC.Examples.ShadersExamples
             matWorld = matWorld * Orientacion;
 
             // traslado
-            matWorld = matWorld * Matrix.Translation(Pos);
+            matWorld = matWorld * TGCMatrix.Translation(Pos);
             return matWorld;
         }
 

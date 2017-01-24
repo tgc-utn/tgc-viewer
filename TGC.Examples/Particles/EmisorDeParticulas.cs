@@ -3,6 +3,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Particle;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -55,18 +56,18 @@ namespace TGC.Examples.Particles
             Modifiers.addFloat("timeToLive", 0.25f, 2, 1);
             Modifiers.addFloat("frecuencia", 0.25f, 4, 1);
             Modifiers.addInt("dispersion", 50, 400, 100);
-            Modifiers.addVertex3f("speedDir", new Vector3(-50, -50, -50), new Vector3(50, 50, 50),
-                new Vector3(30, 30, 30));
+            Modifiers.addVertex3f("speedDir", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50),
+                new TGCVector3(30, 30, 30));
 
             //Crear emisor de particulas
             selectedTextureName = textureNames[0];
             selectedParticleCount = 10;
             emitter = new ParticleEmitter(texturePath + selectedTextureName, selectedParticleCount);
-            emitter.Position = new Vector3(0, 0, 0);
+            emitter.Position = TGCVector3.Empty;
 
-            box = TgcBox.fromSize(new Vector3(0, -30, 0), new Vector3(10, 10, 10), Color.Blue);
+            box = TgcBox.fromSize(new TGCVector3(0, -30, 0), new TGCVector3(10, 10, 10), Color.Blue);
 
-            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 300f, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 300f, Input);
         }
 
         public override void Update()
@@ -105,7 +106,7 @@ namespace TGC.Examples.Particles
             emitter.ParticleTimeToLive = (float)Modifiers["timeToLive"];
             emitter.CreationFrecuency = (float)Modifiers["frecuencia"];
             emitter.Dispersion = (int)Modifiers["dispersion"];
-            emitter.Speed = (Vector3)Modifiers["speedDir"];
+            emitter.Speed = (TGCVector3)Modifiers["speedDir"];
 
             //Render de emisor
             emitter.render(ElapsedTime);

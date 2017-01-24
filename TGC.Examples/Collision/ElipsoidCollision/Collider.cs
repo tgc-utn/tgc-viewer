@@ -1,5 +1,6 @@
 ﻿using Microsoft.DirectX;
 using TGC.Core.BoundingVolumes;
+using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Collision.ElipsoidCollision
 {
@@ -53,7 +54,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
         /// <param name="q">Punto mas cercano de colision, en Elipsoid space</param>
         /// <param name="n">Vector normal de la superficie contra la que se colisiona</param>
         /// <returns>True si hay colision</returns>
-        public abstract bool intersectMovingElipsoid(TgcBoundingSphere eSphere, Vector3 eMovementVector, Vector3 eRadius,
-            TgcBoundingSphere movementSphere, out float t, out Vector3 q, out Vector3 n);
+        public abstract bool intersectMovingElipsoid(TgcBoundingSphere eSphere, TGCVector3 eMovementVector, TGCVector3 eRadius,
+            TgcBoundingSphere movementSphere, out float t, out TGCVector3 q, out TGCVector3 n);
     }
 }

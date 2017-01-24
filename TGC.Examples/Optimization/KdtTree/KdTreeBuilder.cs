@@ -6,6 +6,7 @@ using System.Text;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Examples.Optimization.KdtTree
@@ -47,7 +48,7 @@ namespace TGC.Examples.Optimization.KdtTree
         /// <summary>
         ///     Corte con plano X
         /// </summary>
-        private void doSectorKdTreeX(KdTreeNode parent, Vector3 pMin, Vector3 pMax,
+        private void doSectorKdTreeX(KdTreeNode parent, TGCVector3 pMin, TGCVector3 pMax,
             int step, List<TgcMesh> meshes)
         {
             //Crear listas para realizar corte
@@ -56,26 +57,26 @@ namespace TGC.Examples.Optimization.KdtTree
 
             //X-cut
             float cutValue = 0;
-            var xCutPlane = getCutPlane(meshes, new Vector3(1, 0, 0), pMin.X, pMax.X, ref cutValue);
+            var xCutPlane = getCutPlane(meshes, new TGCVector3(1, 0, 0), pMin.X, pMax.X, ref cutValue);
             splitByPlane(xCutPlane, meshes, possitiveList, negativeList);
 
             //recursividad de positivos con plano Y, usando resultados positivos y childIndex 0
             doSectorKdTreeY(parent,
-                new Vector3(cutValue, pMin.Y, pMin.Z),
+                new TGCVector3(cutValue, pMin.Y, pMin.Z),
                 pMax,
                 step, possitiveList, 0, cutValue);
 
             //recursividad de negativos con plano Y, usando resultados negativos y childIndex 4
             doSectorKdTreeY(parent,
                 pMin,
-                new Vector3(cutValue, pMax.Y, pMax.Z),
+                new TGCVector3(cutValue, pMax.Y, pMax.Z),
                 step, negativeList, 4, cutValue);
         }
 
         /// <summary>
         ///     Corte con plano Y
         /// </summary>
-        private void doSectorKdTreeY(KdTreeNode parent, Vector3 pMin, Vector3 pMax, int step,
+        private void doSectorKdTreeY(KdTreeNode parent, TGCVector3 pMin, TGCVector3 pMax, int step,
             List<TgcMesh> meshes, int childIndex, float xCutValue)
         {
             //Crear listas para realizar corte
@@ -84,26 +85,26 @@ namespace TGC.Examples.Optimization.KdtTree
 
             //Y-cut
             float cutValue = 0;
-            var yCutPlane = getCutPlane(meshes, new Vector3(0, 1, 0), pMin.Y, pMax.Y, ref cutValue);
+            var yCutPlane = getCutPlane(meshes, TGCVector3.Up, pMin.Y, pMax.Y, ref cutValue);
             splitByPlane(yCutPlane, meshes, possitiveList, negativeList);
 
             //recursividad de positivos con plano Z, usando resultados positivos y childIndex 0
             doSectorKdTreeZ(parent,
-                new Vector3(pMin.X, cutValue, pMin.Z),
+                new TGCVector3(pMin.X, cutValue, pMin.Z),
                 pMax,
                 step, possitiveList, childIndex + 0, xCutValue, cutValue);
 
             //recursividad de negativos con plano Z, usando plano X negativo y childIndex 2
             doSectorKdTreeZ(parent,
                 pMin,
-                new Vector3(pMax.X, cutValue, pMax.Z),
+                new TGCVector3(pMax.X, cutValue, pMax.Z),
                 step, negativeList, childIndex + 2, xCutValue, cutValue);
         }
 
         /// <summary>
         ///     Corte de plano Z
         /// </summary>
-        private void doSectorKdTreeZ(KdTreeNode parent, Vector3 pMin, Vector3 pMax, int step,
+        private void doSectorKdTreeZ(KdTreeNode parent, TGCVector3 pMin, TGCVector3 pMax, int step,
             List<TgcMesh> meshes, int childIndex, float xCutValue, float yCutValue)
         {
             //Crear listas para realizar corte
@@ -112,7 +113,7 @@ namespace TGC.Examples.Optimization.KdtTree
 
             //Z-cut
             float cutValue = 0;
-            var zCutPlane = getCutPlane(meshes, new Vector3(0, 0, 1), pMin.Z, pMax.Z, ref cutValue);
+            var zCutPlane = getCutPlane(meshes, new TGCVector3(0, 0, 1), pMin.Z, pMax.Z, ref cutValue);
             splitByPlane(zCutPlane, meshes, possitiveList, negativeList);
 
             //obtener lista de children del parent, con iniciacion lazy
@@ -135,8 +136,8 @@ namespace TGC.Examples.Optimization.KdtTree
             parent.zCut = cutValue;
 
             //nuevos limites
-            var v1 = new Vector3(pMax.X - pMin.X, pMax.Y - pMin.Y, pMax.Z - cutValue);
-            var v2 = new Vector3(pMax.X - pMin.X, pMax.Y - pMin.Y, cutValue - pMin.Z);
+            var v1 = new TGCVector3(pMax.X - pMin.X, pMax.Y - pMin.Y, pMax.Z - cutValue);
+            var v2 = new TGCVector3(pMax.X - pMin.X, pMax.Y - pMin.Y, cutValue - pMin.Z);
 
             //condicion de corte
             if (step >= MAX_SECTOR_KDTREE_RECURSION || meshes.Count <= MIN_MESH_PER_LEAVE_THRESHOLD
@@ -157,14 +158,14 @@ namespace TGC.Examples.Optimization.KdtTree
 
                 //recursividad de positivos con plano X, usando resultados positivos
                 doSectorKdTreeX(posNode,
-                    new Vector3(pMin.X, pMin.Y, cutValue),
+                    new TGCVector3(pMin.X, pMin.Y, cutValue),
                     pMax,
                     step, possitiveList);
 
                 //recursividad de negativos con plano Y, usando resultados negativos
                 doSectorKdTreeX(negNode,
                     pMin,
-                    new Vector3(pMax.X, pMax.Y, cutValue),
+                    new TGCVector3(pMax.X, pMax.Y, cutValue),
                     step, negativeList);
             }
         }
@@ -172,18 +173,18 @@ namespace TGC.Examples.Optimization.KdtTree
         /// <summary>
         ///     Obtiene el mejor plano de corte recto, en el volumen dado, en la direccion dada
         /// </summary>
-        private Plane getCutPlane(List<TgcMesh> modelos, Vector3 n, float pMin, float pMax, ref float cutValue)
+        private TGCPlane getCutPlane(List<TgcMesh> modelos, TGCVector3 n, float pMin, float pMax, ref float cutValue)
         {
             var vueltas = (int)((pMax - pMin) / D_DESPLAZAMIENTO);
             var bestBalance = int.MaxValue;
-            var bestPlane = Plane.Empty;
+            var bestPlane = TGCPlane.Empty;
             cutValue = 0;
 
             for (var i = 0; i < vueltas; i++)
             {
                 //crear plano de corte
                 var currentCutValue = pMin + D_DESPLAZAMIENTO * i;
-                var p = new Plane(n.X, n.Y, n.Z, -currentCutValue);
+                var p = new TGCPlane(n.X, n.Y, n.Z, -currentCutValue);
 
                 //clasificar todos los modelos contra ese plano
                 var possitiveList = new List<TgcMesh>();
@@ -208,7 +209,7 @@ namespace TGC.Examples.Optimization.KdtTree
         /// <summary>
         ///     Separa los modelos en dos listas, segun el testo contra el plano de corte
         /// </summary>
-        private void splitByPlane(Plane cutPlane, List<TgcMesh> modelos,
+        private void splitByPlane(TGCPlane cutPlane, List<TgcMesh> modelos,
             List<TgcMesh> possitiveList, List<TgcMesh> negativeList)
         {
             TgcCollisionUtils.PlaneBoxResult c;
@@ -241,7 +242,7 @@ namespace TGC.Examples.Optimization.KdtTree
         ///     Separa los modelos en dos listas, segun el testo contra el plano de corte.
         ///     No tiene en cuenta los que estan atravezando
         /// </summary>
-        private void splitByPlaneWithoutRepeating(Plane cutPlane, List<TgcMesh> modelos,
+        private void splitByPlaneWithoutRepeating(TGCPlane cutPlane, List<TgcMesh> modelos,
             List<TgcMesh> possitiveList, List<TgcMesh> negativeList)
         {
             TgcCollisionUtils.PlaneBoxResult c;
@@ -453,8 +454,8 @@ namespace TGC.Examples.Optimization.KdtTree
 
             //Crear caja Debug
             var box = TgcBoxDebug.fromExtremes(
-                new Vector3(boxLowerX, boxLowerY, boxLowerZ),
-                new Vector3(boxUpperX, boxUpperY, boxUpperZ),
+                new TGCVector3(boxLowerX, boxLowerY, boxLowerZ),
+                new TGCVector3(boxUpperX, boxUpperY, boxUpperZ),
                 c, thickness);
 
             return box;

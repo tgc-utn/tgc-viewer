@@ -2,6 +2,7 @@
 using Microsoft.DirectX.DirectInput;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -28,19 +29,19 @@ namespace TGC.Examples.Transformations
         private readonly float brazoDx = 0.5f;
         private readonly float brazoDY = 1f;
         private readonly float brazoDZ = 0.5f;
-        private Matrix escalaAntebrazo;
-        private Matrix escalaBase;
-        private Matrix escalaBrazo;
-        private Matrix escalaPinza;
+        private TGCMatrix escalaAntebrazo;
+        private TGCMatrix escalaBase;
+        private TGCMatrix escalaBrazo;
+        private TGCMatrix escalaPinza;
         private float pinzaDang;
         private readonly float pinzaDX = 0.15f;
         private readonly float pinzaDY = 0.5f;
         private readonly float pinzaDZ = 0.15f;
         private float pinzaTraslacion;
-        private Matrix transformacionAntebrazo;
-        private Matrix transformacionBrazo;
-        private Matrix transformacionPinzaDerecha;
-        private Matrix transformacionPinzaIzquierda;
+        private TGCMatrix transformacionAntebrazo;
+        private TGCMatrix transformacionBrazo;
+        private TGCMatrix transformacionPinzaDerecha;
+        private TGCMatrix transformacionPinzaIzquierda;
 
         public EjemploBrazoRobot(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -54,13 +55,13 @@ namespace TGC.Examples.Transformations
         public override void Init()
         {
             var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\floor1.jpg");
-            var center = new Vector3(0, 0, 0);
-            var size = new Vector3(1f, 1f, 1f);
+            var center = TGCVector3.Empty;
+            var size = new TGCVector3(1f, 1f, 1f);
             box = TgcBox.fromSize(center, size, texture);
             //Por defecto se deshabilito esto, cada uno debe implementar su modelo de transformaciones.
             //box.AutoTransformEnable = false;
-            box.Transform = Matrix.Identity;
-            Camara = new TgcRotationalCamera(new Vector3(0f, 1.5f, 0f), 5f, Input);
+            box.Transform = TGCMatrix.Identity;
+            Camara = new TgcRotationalCamera(new TGCVector3(0f, 1.5f, 0f), 5f, Input);
         }
 
         public override void Update()
@@ -106,61 +107,61 @@ namespace TGC.Examples.Transformations
             // 1- Base del brazo
             // ajusto a la medida fija
             // Estas medidas fijas de escalas podrian calcularse en Init, a fines didacticos se hacen en cada update.
-            escalaBase = Matrix.Scaling(baseDX, baseDY, baseDZ);
+            escalaBase = TGCMatrix.Scaling(baseDX, baseDY, baseDZ);
 
             // 2- Brazo
             // ajusto a la medida fija
-            escalaBrazo = Matrix.Scaling(brazoDx, brazoDY, brazoDZ);
+            escalaBrazo = TGCMatrix.Scaling(brazoDx, brazoDY, brazoDZ);
             // y lo traslado un poco para arriba, para que quede ubicado arriba de la base
-            var T = Matrix.Translation(0, brazoDY / 2.0f + baseDY / 2.0f, 0);
+            var T = TGCMatrix.Translation(0, brazoDY / 2.0f + baseDY / 2.0f, 0);
             // Guardo el punto donde tiene que girar el brazo = en la parte de abajo del brazo
             // le aplico la misma transformacion que al brazo (sin tener en cuenta el escalado)
-            var pivoteBrazo = Vector3.TransformCoordinate(new Vector3(0, -brazoDY / 2.0f, 0.0f), T);
+            var pivoteBrazo = TGCVector3.TransformCoordinate(new TGCVector3(0, -brazoDY / 2.0f, 0.0f), T);
             // Ahora giro el brazo sobre el pivote, para ello, primero traslado el centro del mesh al pivote,
             // ahi aplico la rotacion, y luego vuelvo a trasladar a la posicion original
-            var Rot = Matrix.RotationZ(brazoDAng);
-            var A = Matrix.Translation(-pivoteBrazo.X, -pivoteBrazo.Y, -pivoteBrazo.Z);
-            var B = Matrix.Translation(pivoteBrazo.X, pivoteBrazo.Y, pivoteBrazo.Z);
+            var Rot = TGCMatrix.RotationZ(brazoDAng);
+            var A = TGCMatrix.Translation(-pivoteBrazo.X, -pivoteBrazo.Y, -pivoteBrazo.Z);
+            var B = TGCMatrix.Translation(pivoteBrazo.X, pivoteBrazo.Y, pivoteBrazo.Z);
             // Se calcula la matriz resultante, para utilizarse en render.
             transformacionBrazo = T * A * Rot * B;
 
             // 3- ante brazo
             // ajusto a la medida fija
-            escalaAntebrazo = Matrix.Scaling(antebrazoDX, antebrazoDY, antebrazoDZ);
-            T = Matrix.Translation(0, brazoDY / 2 + antebrazoDY / 2.0f, 0) * transformacionBrazo;
+            escalaAntebrazo = TGCMatrix.Scaling(antebrazoDX, antebrazoDY, antebrazoDZ);
+            T = TGCMatrix.Translation(0, brazoDY / 2 + antebrazoDY / 2.0f, 0) * transformacionBrazo;
             // Guardo el punto donde tiene que girar el antebrazo
-            var pivoteAntebrazo = Vector3.TransformCoordinate(new Vector3(0, -antebrazoDY / 2.0f, 0.0f), T);
+            var pivoteAntebrazo = TGCVector3.TransformCoordinate(new TGCVector3(0, -antebrazoDY / 2.0f, 0.0f), T);
             // orientacion del antebrazo
-            Rot = Matrix.RotationZ(antebrazoDAng);
-            A = Matrix.Translation(-pivoteAntebrazo.X, -pivoteAntebrazo.Y, -pivoteAntebrazo.Z);
-            B = Matrix.Translation(pivoteAntebrazo.X, pivoteAntebrazo.Y, pivoteAntebrazo.Z);
+            Rot = TGCMatrix.RotationZ(antebrazoDAng);
+            A = TGCMatrix.Translation(-pivoteAntebrazo.X, -pivoteAntebrazo.Y, -pivoteAntebrazo.Z);
+            B = TGCMatrix.Translation(pivoteAntebrazo.X, pivoteAntebrazo.Y, pivoteAntebrazo.Z);
             // Se calcula la matriz resultante, para utilizarse en render.
             transformacionAntebrazo = T * A * Rot * B;
 
             // 4- pinza izquierda
-            escalaPinza = Matrix.Scaling(pinzaDX, pinzaDY, pinzaDZ);
-            var C = Matrix.Translation(pinzaTraslacion, 0f, 0f);
-            T = C * Matrix.Translation(pinzaDX / 2 - antebrazoDX / 2, antebrazoDY / 2.0f + pinzaDY / 2.0f, 0) *
+            escalaPinza = TGCMatrix.Scaling(pinzaDX, pinzaDY, pinzaDZ);
+            var C = TGCMatrix.Translation(pinzaTraslacion, 0f, 0f);
+            T = C * TGCMatrix.Translation(pinzaDX / 2 - antebrazoDX / 2, antebrazoDY / 2.0f + pinzaDY / 2.0f, 0) *
                 transformacionAntebrazo;
             // Guardo el punto donde tiene que girar la pinza
-            var pivotePinzaIzquierda = Vector3.TransformCoordinate(new Vector3(0, -pinzaDY / 2.0f, 0.0f), T);
+            var pivotePinzaIzquierda = TGCVector3.TransformCoordinate(new TGCVector3(0, -pinzaDY / 2.0f, 0.0f), T);
             // orientacion de la pinza
-            Rot = Matrix.RotationZ(pinzaDang);
-            A = Matrix.Translation(-pivotePinzaIzquierda.X, -pivotePinzaIzquierda.Y, -pivotePinzaIzquierda.Z);
-            B = Matrix.Translation(pivotePinzaIzquierda.X, pivotePinzaIzquierda.Y, pivotePinzaIzquierda.Z);
+            Rot = TGCMatrix.RotationZ(pinzaDang);
+            A = TGCMatrix.Translation(-pivotePinzaIzquierda.X, -pivotePinzaIzquierda.Y, -pivotePinzaIzquierda.Z);
+            B = TGCMatrix.Translation(pivotePinzaIzquierda.X, pivotePinzaIzquierda.Y, pivotePinzaIzquierda.Z);
             // Se calcula la matriz resultante, para utilizarse en render.
             transformacionPinzaIzquierda = T * A * Rot * B;
 
             // mano derecha
-            escalaPinza = Matrix.Scaling(pinzaDX, pinzaDY, pinzaDZ);
-            C = Matrix.Translation(-pinzaTraslacion, 0f, 0f);
-            T = C * Matrix.Translation(antebrazoDX / 2 - pinzaDX / 2, antebrazoDY / 2 + pinzaDY / 2.0f, 0) * transformacionAntebrazo;
+            escalaPinza = TGCMatrix.Scaling(pinzaDX, pinzaDY, pinzaDZ);
+            C = TGCMatrix.Translation(-pinzaTraslacion, 0f, 0f);
+            T = C * TGCMatrix.Translation(antebrazoDX / 2 - pinzaDX / 2, antebrazoDY / 2 + pinzaDY / 2.0f, 0) * transformacionAntebrazo;
             // Guardo el punto donde tiene que girar la pinza
-            var pivotePinzaDerecha = Vector3.TransformCoordinate(new Vector3(0, -pinzaDY / 2.0f, 0.0f), T);
+            var pivotePinzaDerecha = TGCVector3.TransformCoordinate(new TGCVector3(0, -pinzaDY / 2.0f, 0.0f), T);
             // orientacion de la pinza
-            Rot = Matrix.RotationZ(-pinzaDang);
-            A = Matrix.Translation(-pivotePinzaDerecha.X, -pivotePinzaDerecha.Y, -pivotePinzaDerecha.Z);
-            B = Matrix.Translation(pivotePinzaDerecha.X, pivotePinzaDerecha.Y, pivotePinzaDerecha.Z);
+            Rot = TGCMatrix.RotationZ(-pinzaDang);
+            A = TGCMatrix.Translation(-pivotePinzaDerecha.X, -pivotePinzaDerecha.Y, -pivotePinzaDerecha.Z);
+            B = TGCMatrix.Translation(pivotePinzaDerecha.X, pivotePinzaDerecha.Y, pivotePinzaDerecha.Z);
             // Se calcula la matriz resultante, para utilizarse en render.
             transformacionPinzaDerecha = T * A * Rot * B;
         }

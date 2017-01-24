@@ -2,6 +2,7 @@
 using Microsoft.DirectX.Direct3D;
 using System;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
@@ -48,8 +49,8 @@ namespace TGC.Examples.Lights
         {
         }
 
-        public TgcMeshBumpMapping(string name, TgcMesh parentInstance, Vector3 translation, Vector3 rotation,
-            Vector3 scale)
+        public TgcMeshBumpMapping(string name, TgcMesh parentInstance, TGCVector3 translation, TGCVector3 rotation,
+            TGCVector3 scale)
             : base(name, parentInstance, translation, rotation, scale)
         {
         }
@@ -154,10 +155,10 @@ namespace TGC.Examples.Lights
                 D3DDevice.Instance.Device);
 
             //Calcular normales recorriendo los triangulos
-            var normals = new Vector3[origVertexBuffer.Length];
+            var normals = new TGCVector3[origVertexBuffer.Length];
             for (var i = 0; i < normals.Length; i++)
             {
-                normals[i] = new Vector3(0, 0, 0);
+                normals[i] = TGCVector3.Empty;
             }
             for (var i = 0; i < triCount; i++)
             {
@@ -169,7 +170,7 @@ namespace TGC.Examples.Lights
                 //Face-normal (left-handend)
                 var a = v2.Position - v1.Position;
                 var b = v3.Position - v1.Position;
-                var n = Vector3.Cross(a, b);
+                var n = TGCVector3.Cross(a, b);
 
                 //Acumular normal del vertice segun todas sus Face-normal
                 normals[i * 3] += n;
@@ -180,7 +181,7 @@ namespace TGC.Examples.Lights
             //Normalizar normales
             for (var i = 0; i < normals.Length; i++)
             {
-                normals[i] = Vector3.Normalize(normals[i]);
+                normals[i] = TGCVector3.Normalize(normals[i]);
             }
 
             //Crear nuevo VertexBuffer
@@ -220,8 +221,8 @@ namespace TGC.Examples.Lights
                     v3.Normal = normals[i * 3 + 2];
 
                     //Calcular tangente y binormal para todo el triangulo y cargarlas en cada vertice
-                    Vector3 tangent;
-                    Vector3 binormal;
+                    TGCVector3 tangent;
+                    TGCVector3 binormal;
                     computeTangentBinormal(v1, v2, v3, out tangent, out binormal);
                     v1.Tangent = tangent;
                     v1.Binormal = binormal;
@@ -288,7 +289,7 @@ namespace TGC.Examples.Lights
         ///     Basado en: http://www.dhpoware.com/demos/d3d9NormalMapping.html
         /// </summary>
         public static void computeTangentBinormal(BumpMappingVertex v1, BumpMappingVertex v2, BumpMappingVertex v3,
-            out Vector3 tangent, out Vector3 binormal)
+            out TGCVector3 tangent, out TGCVector3 binormal)
         {
             // Given the 3 vertices (position and texture coordinates) of a triangle
             // calculate and return the triangle's tangent vector. The handedness of
@@ -309,8 +310,8 @@ namespace TGC.Examples.Lights
             //
             // texEdge1 is the vector from texture coordinates texCoord1 to texCoord2.
             // texEdge2 is the vector from texture coordinates texCoord1 to texCoord3.
-            var texEdge1 = new Vector2(v2.Tu - v1.Tu, v2.Tv - v1.Tv);
-            var texEdge2 = new Vector2(v3.Tu - v1.Tu, v3.Tv - v1.Tv);
+            var texEdge1 = new TGCVector2(v2.Tu - v1.Tu, v2.Tv - v1.Tv);
+            var texEdge2 = new TGCVector2(v3.Tu - v1.Tu, v3.Tv - v1.Tv);
             texEdge1.Normalize();
             texEdge2.Normalize();
 
@@ -348,23 +349,20 @@ namespace TGC.Examples.Lights
 
             if (FastMath.Abs(det) < 0.0001f) // almost equal to zero
             {
-                tangent.X = 1.0f;
-                tangent.Y = 0.0f;
-                tangent.Z = 0.0f;
-
-                binormal.X = 0.0f;
-                binormal.Y = 1.0f;
-                binormal.Z = 0.0f;
+                tangent = new TGCVector3(1.0f, 0.0f, 0.0f);
+                binormal = new TGCVector3(0.0f, 1.0f, 0.0f);
             }
             else
             {
                 det = 1.0f / det;
 
+                tangent = new TGCVector3();
                 tangent.X = (texEdge2.Y * edge1.X - texEdge1.Y * edge2.X) * det;
                 tangent.Y = (texEdge2.Y * edge1.Y - texEdge1.Y * edge2.Y) * det;
                 tangent.Z = (texEdge2.Y * edge1.Z - texEdge1.Y * edge2.Z) * det;
                 //tangent.W = 0.0f;
 
+                binormal = new TGCVector3();
                 binormal.X = (-texEdge2.X * edge1.X + texEdge1.X * edge2.X) * det;
                 binormal.Y = (-texEdge2.X * edge1.Y + texEdge1.X * edge2.Y) * det;
                 binormal.Z = (-texEdge2.X * edge1.Z + texEdge1.X * edge2.Z) * det;
@@ -379,8 +377,8 @@ namespace TGC.Examples.Lights
             // vector should be the same as the bitangent vector calculated from the
             // set of linear equations above. If they point in different directions
             // then we need to invert the cross product calculated bitangent vector.
-            var b = Vector3.Cross(v1.Normal, tangent);
-            var w = Vector3.Dot(b, binormal) < 0.0f ? -1.0f : 1.0f;
+            var b = TGCVector3.Cross(v1.Normal, tangent);
+            var w = TGCVector3.Dot(b, binormal) < 0.0f ? -1.0f : 1.0f;
             binormal = b * w;
         }
 
@@ -389,13 +387,13 @@ namespace TGC.Examples.Lights
         /// </summary>
         public struct BumpMappingVertex
         {
-            public Vector3 Position;
-            public Vector3 Normal;
+            public TGCVector3 Position;
+            public TGCVector3 Normal;
             public int Color;
             public float Tu;
             public float Tv;
-            public Vector3 Tangent;
-            public Vector3 Binormal;
+            public TGCVector3 Tangent;
+            public TGCVector3 Binormal;
         }
     }
 
@@ -409,8 +407,8 @@ namespace TGC.Examples.Lights
             return new TgcMeshBumpMapping(d3dMesh, meshName, renderType);
         }
 
-        public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, Vector3 translation,
-            Vector3 rotation, Vector3 scale)
+        public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, TGCVector3 translation,
+            TGCVector3 rotation, TGCVector3 scale)
         {
             return new TgcMeshBumpMapping(meshName, originalMesh, translation, rotation, scale);
         }

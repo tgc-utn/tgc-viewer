@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.SkeletalAnimation;
@@ -64,22 +65,22 @@ namespace TGC.Examples.Lights
 
             //Pongo al mesh en posicion, activo e AutoTransform
             skeletalMesh.AutoTransformEnable = true;
-            skeletalMesh.Position = new Vector3(0, 0, 100);
+            skeletalMesh.Position = new TGCVector3(0, 0, 100);
             skeletalMesh.rotateY(FastMath.PI);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(250, 140, 150), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(250, 140, 150), Input);
 
             //Mesh para la luz
-            lightMesh = TgcBox.fromSize(new Vector3(10, 10, 10));
+            lightMesh = TgcBox.fromSize(new TGCVector3(10, 10, 10));
 
             //Pongo al mesh en posicion, activo e AutoTransform
             lightMesh.AutoTransformEnable = true;
-            lightMesh.Position = new Vector3(0, 150, 150);
+            lightMesh.Position = new TGCVector3(0, 150, 150);
 
             //Modifiers de la luz
             Modifiers.addBoolean("lightEnable", "lightEnable", lightMesh.Enabled);
-            Modifiers.addVertex3f("lightPos", new Vector3(-200, -100, -200), new Vector3(200, 200, 300),
+            Modifiers.addVertex3f("lightPos", new TGCVector3(-200, -100, -200), new TGCVector3(200, 200, 300),
                 lightMesh.Position);
             Modifiers.addColor("lightColor", lightMesh.Color);
             Modifiers.addFloat("lightIntensity", 0, 150, 20);
@@ -99,7 +100,7 @@ namespace TGC.Examples.Lights
 
             //Actualizo los valores de la luz
             lightMesh.Enabled = (bool)Modifiers["lightEnable"];
-            lightMesh.Position = (Vector3)Modifiers["lightPos"];
+            lightMesh.Position = (TGCVector3)Modifiers["lightPos"];
             lightMesh.Color = (Color)Modifiers["lightColor"];
             lightMesh.updateValues();
         }
@@ -145,8 +146,8 @@ namespace TGC.Examples.Lights
                 {
                     //Cargar variables shader de la luz
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(lightMesh.Color));
-                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightMesh.Position));
-                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
+                    mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightMesh.Position));
+                    mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
                     mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
                     mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
 
@@ -167,8 +168,8 @@ namespace TGC.Examples.Lights
             {
                 //Cargar variables shader de la luz
                 skeletalMesh.Effect.SetValue("lightColor", ColorValue.FromColor(lightMesh.Color));
-                skeletalMesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightMesh.Position));
-                skeletalMesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
+                skeletalMesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightMesh.Position));
+                skeletalMesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
                 skeletalMesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
                 skeletalMesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
 

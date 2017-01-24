@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
@@ -39,7 +40,7 @@ namespace TGC.Examples.MeshExamples
         {
             //Crear suelo
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
-            suelo = new TgcPlane(new Vector3(-500, 0, -500), new Vector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 10f, 10f);
+            suelo = new TgcPlane(new TGCVector3(-500, 0, -500), new TGCVector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 10f, 10f);
             
             //Cargar modelo de palmera original
             var loader = new TgcSceneLoader();
@@ -62,14 +63,14 @@ namespace TGC.Examples.MeshExamples
                     instance.AutoTransformEnable = true;
                     //Desplazarlo
                     instance.move(i * offset, 0, j * offset);
-                    //instance.Scale = new Vector3(0.25f, 0.25f, 0.25f);
+                    //instance.Scale = new TGCVector3(0.25f, 0.25f, 0.25f);
 
                     meshes.Add(instance);
                 }
             }
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(900f, 400f, 900f), Input);            
+            Camara = new TgcFpsCamera(new TGCVector3(900f, 400f, 900f), Input);            
 
         }
 
@@ -82,8 +83,8 @@ namespace TGC.Examples.MeshExamples
         {
             PreRender();
 
-            DrawText.drawText("Camera pos: " + Core.Utils.TgcParserUtils.printVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
-            DrawText.drawText("Camera LookAt: " + Core.Utils.TgcParserUtils.printVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
+            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
             //Renderizar suelo
             suelo.render();
 

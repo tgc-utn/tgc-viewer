@@ -1,7 +1,7 @@
 using System;
 using D3DGeometry = Microsoft.DirectX.Direct3D;
 
-namespace TGC.Core.Utils
+namespace TGC.Core.Mathematica
 {
     /// <summary>
     ///     Funciones matemáticas rápidas y optimizadas
