@@ -213,6 +213,7 @@
     <Compile Include="MeshExamples\ModeloConAlpha.cs" />
     <Compile Include="Optimization\PortalRenderingFramework.cs" />
     <Compile Include="Engine2D\Sprite2D.cs" />
+    <Compile Include="Transformations\EjemploAvion.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">
