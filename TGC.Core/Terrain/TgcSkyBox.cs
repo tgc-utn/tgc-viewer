@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 
@@ -29,7 +30,7 @@ namespace TGC.Core.Terrain
             Left = 5
         }
 
-        private Vector3 center;
+        private TGCVector3 center;
 
         /// <summary>
         ///     Crear un SkyBox vacio
@@ -40,8 +41,8 @@ namespace TGC.Core.Terrain
             FaceTextures = new string[6];
             SkyEpsilon = 25f;
             Color = Color.White;
-            Center = new Vector3(0, 0, 0);
-            Size = new Vector3(1000, 1000, 1000);
+            Center = TGCVector3.Empty;
+            Size = new TGCVector3(1000, 1000, 1000);
         }
 
         /// <summary>
@@ -54,19 +55,19 @@ namespace TGC.Core.Terrain
         ///     Tamaño del SkyBox.
         ///     Llamar a InitSkyBox() para aplicar cambios.
         /// </summary>
-        public Vector3 Size { get; set; }
+        public TGCVector3 Size { get; set; }
 
         /// <summary>
         ///     Centro del SkyBox al cambiar el centro se cambia la matriz traslacion.
         ///     Esto hace que en render se trasladen las caras, utilizado para que un skybox siga al personaje.
         /// </summary>
-        public Vector3 Center
+        public TGCVector3 Center
         {
             get { return center; }
             set
             {
                 center = value;
-                Traslation = Matrix.Translation(center);
+                Traslation = TGCMatrix.Translation(center);
             }
         }
 
@@ -76,7 +77,7 @@ namespace TGC.Core.Terrain
         /// </summary>
         public Color Color { get; set; }
 
-        private Matrix Traslation { get; set; }
+        private TGCMatrix Traslation { get; set; }
 
         /// <summary>
         ///     Meshes de cada una de las 6 caras del cubo, en el orden en que se enumeran en SkyFaces.
@@ -114,7 +115,7 @@ namespace TGC.Core.Terrain
         {
             foreach (var face in Faces)
             {
-                face.Transform = Matrix.Identity * Traslation;
+                face.Transform = TGCMatrix.Identity * Traslation;
                 face.render();
             }
         }
@@ -226,10 +227,10 @@ namespace TGC.Core.Terrain
         private void cargarVerticesUp(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
-            var n = new Vector3(0, 1, 0);
+            var n = TGCVector3.Up;
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2 - SkyEpsilon,
                 Center.Y + Size.Y / 2,
                 Center.Z - Size.Z / 2 - SkyEpsilon
@@ -241,7 +242,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2 - SkyEpsilon,
                 Center.Y + Size.Y / 2,
                 Center.Z + Size.Z / 2 + SkyEpsilon
@@ -253,7 +254,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2 + SkyEpsilon,
                 Center.Y + Size.Y / 2,
                 Center.Z + Size.Z / 2 + SkyEpsilon
@@ -265,7 +266,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2 + SkyEpsilon,
                 Center.Y + Size.Y / 2,
                 Center.Z - Size.Z / 2 - SkyEpsilon
@@ -283,10 +284,10 @@ namespace TGC.Core.Terrain
         private void cargarVerticesDown(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
-            var n = new Vector3(0, -1, 0);
+            var n = TGCVector3.Down;
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2 - SkyEpsilon,
                 Center.Y - Size.Y / 2,
                 Center.Z + Size.Z / 2 + SkyEpsilon
@@ -298,7 +299,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2 - SkyEpsilon,
                 Center.Y - Size.Y / 2,
                 Center.Z - Size.Z / 2 - SkyEpsilon
@@ -310,7 +311,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2 + SkyEpsilon,
                 Center.Y - Size.Y / 2,
                 Center.Z - Size.Z / 2 - SkyEpsilon
@@ -322,7 +323,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2 + SkyEpsilon,
                 Center.Y - Size.Y / 2,
                 Center.Z + Size.Z / 2 + SkyEpsilon
@@ -340,10 +341,10 @@ namespace TGC.Core.Terrain
         private void cargarVerticesFront(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
-            var n = new Vector3(0, -1, 0);
+            var n = TGCVector3.Down;
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2 - SkyEpsilon,
                 Center.Y + Size.Y / 2 + SkyEpsilon,
                 Center.Z + Size.Z / 2
@@ -355,7 +356,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2 - SkyEpsilon,
                 Center.Y - Size.Y / 2 - SkyEpsilon,
                 Center.Z + Size.Z / 2
@@ -367,7 +368,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2 + SkyEpsilon,
                 Center.Y - Size.Y / 2 - SkyEpsilon,
                 Center.Z + Size.Z / 2
@@ -379,7 +380,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2 + SkyEpsilon,
                 Center.Y + Size.Y / 2 + SkyEpsilon,
                 Center.Z + Size.Z / 2
@@ -397,10 +398,10 @@ namespace TGC.Core.Terrain
         private void cargarVerticesBack(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
-            var n = new Vector3(0, -1, 0);
+            var n = TGCVector3.Down;
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2 + SkyEpsilon,
                 Center.Y + Size.Y / 2 + SkyEpsilon,
                 Center.Z - Size.Z / 2
@@ -412,7 +413,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2 + SkyEpsilon,
                 Center.Y - Size.Y / 2 - SkyEpsilon,
                 Center.Z - Size.Z / 2
@@ -424,7 +425,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2 - SkyEpsilon,
                 Center.Y - Size.Y / 2 - SkyEpsilon,
                 Center.Z - Size.Z / 2
@@ -436,7 +437,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2 - SkyEpsilon,
                 Center.Y + Size.Y / 2 + SkyEpsilon,
                 Center.Z - Size.Z / 2
@@ -454,10 +455,10 @@ namespace TGC.Core.Terrain
         private void cargarVerticesRight(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
-            var n = new Vector3(0, -1, 0);
+            var n = TGCVector3.Down;
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2,
                 Center.Y + Size.Y / 2 + SkyEpsilon,
                 Center.Z + Size.Z / 2 + SkyEpsilon
@@ -469,7 +470,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2,
                 Center.Y - Size.Y / 2 - SkyEpsilon,
                 Center.Z + Size.Z / 2 + SkyEpsilon
@@ -481,7 +482,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2,
                 Center.Y - Size.Y / 2 - SkyEpsilon,
                 Center.Z - Size.Z / 2 - SkyEpsilon
@@ -493,7 +494,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X + Size.X / 2,
                 Center.Y + Size.Y / 2 + SkyEpsilon,
                 Center.Z - Size.Z / 2 - SkyEpsilon
@@ -511,10 +512,10 @@ namespace TGC.Core.Terrain
         private void cargarVerticesLeft(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
-            var n = new Vector3(0, -1, 0);
+            var n = TGCVector3.Down;
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2,
                 Center.Y + Size.Y / 2 + SkyEpsilon,
                 Center.Z - Size.Z / 2 - SkyEpsilon
@@ -526,7 +527,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2,
                 Center.Y - Size.Y / 2 - SkyEpsilon,
                 Center.Z - Size.Z / 2 - SkyEpsilon
@@ -538,7 +539,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2,
                 Center.Y - Size.Y / 2 - SkyEpsilon,
                 Center.Z + Size.Z / 2 + SkyEpsilon
@@ -550,7 +551,7 @@ namespace TGC.Core.Terrain
             data.Write(v);
 
             v = new TgcSceneLoader.DiffuseMapVertex();
-            v.Position = new Vector3(
+            v.Position = new TGCVector3(
                 Center.X - Size.X / 2,
                 Center.Y + Size.Y / 2 + SkyEpsilon,
                 Center.Z + Size.Z / 2 + SkyEpsilon

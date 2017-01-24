@@ -4,6 +4,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -49,14 +50,14 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addInterval("level of detail", new object[] { 0, 1, 2, 3, 4 }, 2);
             Modifiers.addBoolean("edges", "show", false);
             Modifiers.addFloat("radius", 0, 100, 10);
-            Modifiers.addVertex3f("position", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
-                new Vector3(0, 0, 0));
-            Modifiers.addVertex3f("rotation", new Vector3(-180, -180, -180), new Vector3(180, 180, 180),
-                new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("position", new TGCVector3(-100, -100, -100), new TGCVector3(100, 100, 100),
+                TGCVector3.Empty);
+            Modifiers.addVertex3f("rotation", new TGCVector3(-180, -180, -180), new TGCVector3(180, 180, 180),
+                TGCVector3.Empty);
             Modifiers.addBoolean("Use texture", "yes", true);
             Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
-            Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f), new Vector2(0, 0));
-            Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4), new Vector2(1, 1));
+            Modifiers.addVertex2f("offset", new TGCVector2(-0.5f, -0.5f), new TGCVector2(0.9f, 0.9f), TGCVector2.Empty);
+            Modifiers.addVertex2f("tiling", new TGCVector2(0.1f, 0.1f), new TGCVector2(4, 4), TGCVector2.One);
 
             Modifiers.addColor("color", Color.White);
             Modifiers.addBoolean("boundingsphere", "show", false);
@@ -64,7 +65,7 @@ namespace TGC.Examples.GeometryBasics
             UserVars.addVar("Vertices");
             UserVars.addVar("Triangulos");
 
-            Camara = new TgcRotationalCamera(Vector3.Empty, 50f, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 50f, Input);
         }
 
         public override void Update()
@@ -100,19 +101,19 @@ namespace TGC.Examples.GeometryBasics
 
             //Radio, posición y color
             sphere.Radius = (float)Modifiers["radius"];
-            sphere.Position = (Vector3)Modifiers["position"];
+            sphere.Position = (TGCVector3)Modifiers["position"];
             sphere.LevelOfDetail = (int)Modifiers["level of detail"];
 
             //Rotación, converitr a radianes
-            var rotation = (Vector3)Modifiers["rotation"];
-            sphere.Rotation = new Vector3(Geometry.DegreeToRadian(rotation.X), Geometry.DegreeToRadian(rotation.Y),
+            var rotation = (TGCVector3)Modifiers["rotation"];
+            sphere.Rotation = new TGCVector3(Geometry.DegreeToRadian(rotation.X), Geometry.DegreeToRadian(rotation.Y),
                 Geometry.DegreeToRadian(rotation.Z));
 
             //Offset de textura
-            sphere.UVOffset = (Vector2)Modifiers["offset"];
+            sphere.UVOffset = (TGCVector2)Modifiers["offset"];
 
             //Tiling de textura
-            sphere.UVTiling = (Vector2)Modifiers["tiling"];
+            sphere.UVTiling = (TGCVector2)Modifiers["tiling"];
 
             //Actualizar valores en la caja.
             sphere.updateValues();

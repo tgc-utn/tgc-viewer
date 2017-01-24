@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
@@ -37,16 +38,16 @@ namespace TGC.Examples.GeometryBasics
             quad = new TgcQuad();
 
             //Modifiers para vararia sus parametros
-            Modifiers.addVertex2f("size", new Vector2(0, 0), new Vector2(100, 100), new Vector2(20, 20));
-            Modifiers.addVertex3f("normal", new Vector3(-10, -10, -10), new Vector3(10, 10, 10), new Vector3(0, 1, 1));
-            Modifiers.addVertex3f("center", new Vector3(-10, -10, -10), new Vector3(10, 10, 10), new Vector3(0, 0, 0));
+            Modifiers.addVertex2f("size", TGCVector2.Empty, new TGCVector2(100, 100), new TGCVector2(20, 20));
+            Modifiers.addVertex3f("normal", new TGCVector3(-10, -10, -10), new TGCVector3(10, 10, 10), new TGCVector3(0, 1, 1));
+            Modifiers.addVertex3f("center", new TGCVector3(-10, -10, -10), new TGCVector3(10, 10, 10), TGCVector3.Empty);
             Modifiers.addColor("color", Color.Coral);
 
             //Flecha para mostrar el sentido del vector normal
             normalArrow = new TgcArrow();
             Modifiers.addBoolean("showNormal", "Show normal", true);
 
-            Camara = new TgcRotationalCamera(new Vector3(), 50f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(), 50f, Input);
         }
 
         public override void Update()
@@ -61,9 +62,9 @@ namespace TGC.Examples.GeometryBasics
         /// </summary>
         private void updateQuad()
         {
-            var size = (Vector2)Modifiers["size"];
-            var normal = (Vector3)Modifiers["normal"];
-            var center = (Vector3)Modifiers["center"];
+            var size = (TGCVector2)Modifiers["size"];
+            var normal = (TGCVector3)Modifiers["normal"];
+            var center = (TGCVector3)Modifiers["center"];
             var color = (Color)Modifiers["color"];
 
             //Cargar valores del quad.

@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
@@ -60,7 +61,7 @@ namespace TGC.Examples.MeshExamples
             loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
 
             //Configurar FPS Camara
-            Camara = new TgcFpsCamera(new Vector3(3200f, 450f, 1500f), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(3200f, 450f, 1500f), Input);
 
             //UserVars para cantidad de vertices
             UserVars.addVar("Vertices", totalVertices);
@@ -95,26 +96,26 @@ namespace TGC.Examples.MeshExamples
                 for (var j = 0; j < heightmap.GetLength(1) - 1; j++)
                 {
                     //Crear los cuatro vertices que conforman este cuadrante, aplicando la escala correspondiente
-                    var v1 = new Vector3(i * scaleXZ, heightmap[i, j] * scaleY, j * scaleXZ);
-                    var v2 = new Vector3(i * scaleXZ, heightmap[i, j + 1] * scaleY, (j + 1) * scaleXZ);
-                    var v3 = new Vector3((i + 1) * scaleXZ, heightmap[i + 1, j] * scaleY, j * scaleXZ);
-                    var v4 = new Vector3((i + 1) * scaleXZ, heightmap[i + 1, j + 1] * scaleY, (j + 1) * scaleXZ);
+                    var v1 = new TGCVector3(i * scaleXZ, heightmap[i, j] * scaleY, j * scaleXZ);
+                    var v2 = new TGCVector3(i * scaleXZ, heightmap[i, j + 1] * scaleY, (j + 1) * scaleXZ);
+                    var v3 = new TGCVector3((i + 1) * scaleXZ, heightmap[i + 1, j] * scaleY, j * scaleXZ);
+                    var v4 = new TGCVector3((i + 1) * scaleXZ, heightmap[i + 1, j + 1] * scaleY, (j + 1) * scaleXZ);
 
                     //Crear las coordenadas de textura para los cuatro vertices del cuadrante
-                    var t1 = new Vector2(i / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
-                    var t2 = new Vector2(i / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
-                    var t3 = new Vector2((i + 1) / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
-                    var t4 = new Vector2((i + 1) / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
+                    var t1 = new TGCVector2(i / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
+                    var t2 = new TGCVector2(i / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
+                    var t3 = new TGCVector2((i + 1) / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
+                    var t4 = new TGCVector2((i + 1) / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
 
                     //Cargar triangulo 1
-                    data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
-                    data[dataIdx + 1] = new CustomVertex.PositionTextured(v2, t2.X, t2.Y);
-                    data[dataIdx + 2] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
+                    data[dataIdx] = new CustomVertex.PositionTextured(v1.ToVector3(), t1.X, t1.Y);
+                    data[dataIdx + 1] = new CustomVertex.PositionTextured(v2.ToVector3(), t2.X, t2.Y);
+                    data[dataIdx + 2] = new CustomVertex.PositionTextured(v4.ToVector3(), t4.X, t4.Y);
 
                     //Cargar triangulo 2
-                    data[dataIdx + 3] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
-                    data[dataIdx + 4] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
-                    data[dataIdx + 5] = new CustomVertex.PositionTextured(v3, t3.X, t3.Y);
+                    data[dataIdx + 3] = new CustomVertex.PositionTextured(v1.ToVector3(), t1.X, t1.Y);
+                    data[dataIdx + 4] = new CustomVertex.PositionTextured(v4.ToVector3(), t4.X, t4.Y);
+                    data[dataIdx + 5] = new CustomVertex.PositionTextured(v3.ToVector3(), t3.X, t3.Y);
 
                     dataIdx += 6;
                 }
@@ -167,8 +168,8 @@ namespace TGC.Examples.MeshExamples
         public override void Render()
         {
             PreRender();
-            DrawText.drawText("Camera pos: " + TgcParserUtils.printVector3(Camara.Position), 5, 20, Color.Red);
-            DrawText.drawText("Camera LookAt: " + TgcParserUtils.printVector3(Camara.LookAt), 5, 40, Color.Red);
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, Color.Red);
+            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintVector3(Camara.LookAt), 5, 40, Color.Red);
 
             //Ver si cambio el heightmap
             var selectedHeightmap = (string)Modifiers["heightmap"];

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -63,7 +64,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(250, 160, -570), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,

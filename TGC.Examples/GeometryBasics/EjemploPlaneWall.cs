@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -11,37 +12,37 @@ using TGC.Examples.Example;
 namespace TGC.Examples.GeometryBasics
 {
     /// <summary>
-    ///     Ejemplo EjemploPlane.
+    ///     Ejemplo EjemploTGCPlane.
     ///     Unidades Involucradas:
     ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
-    ///     Muestra como utilizar la herramienta TgcPlane para crear
+    ///     Muestra como utilizar la herramienta TGCPlane para crear
     ///     paredes planas con textura.
     ///     Permite editar su posicion, tamano, textura y mapeo de textura.
     ///     Autor: Matias Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploPlane : TGCExampleViewer
+    public class EjemploTGCPlane : TGCExampleViewer
     {
         private TgcTexture currentTexture;
         private TgcPlane plane;
 
-        public EjemploPlane(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploTGCPlane(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Geometry Basics";
-            Name = "Plane";
+            Name = "TGCPlane";
             Description =
-                "Muestra como utilizar la herramienta TgcPlane para crear paredes planas con textura. Permite editar su posicion, tamano, textura y mapeo de textura. Movimiento con mouse.";
+                "Muestra como utilizar la herramienta TgcTGCPlane para crear paredes planas con textura. Permite editar su posicion, tamano, textura y mapeo de textura. Movimiento con mouse.";
         }
 
         public override void Init()
         {
             //Modifiers para variar parametros de la pared
-            Modifiers.addVertex3f("origin", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
-                new Vector3(0, 0, 0));
-            Modifiers.addVertex3f("dimension", new Vector3(-100, -100, -100), new Vector3(1000, 1000, 100),
-                new Vector3(100, 100, 100));
+            Modifiers.addVertex3f("origin", new TGCVector3(-100, -100, -100), new TGCVector3(100, 100, 100),
+                TGCVector3.Empty);
+            Modifiers.addVertex3f("dimension", new TGCVector3(-100, -100, -100), new TGCVector3(1000, 1000, 100),
+                new TGCVector3(100, 100, 100));
             Modifiers.addInterval("orientation", new[] { "XY", "XZ", "YZ" }, 0);
-            Modifiers.addVertex2f("tiling", new Vector2(0, 0), new Vector2(10, 10), new Vector2(1, 1));
+            Modifiers.addVertex2f("tiling", TGCVector2.Empty, new TGCVector2(10, 10), TGCVector2.One);
             Modifiers.addBoolean("autoAdjust", "autoAdjust", false);
 
             //Modifier de textura
@@ -54,7 +55,7 @@ namespace TGC.Examples.GeometryBasics
             plane.setTexture(currentTexture);
 
             //Actualizar segun valores cargados
-            updatePlane();
+            updateTGCPlane();
 
             //Ajustar camara segun tamano de la pared
             Camara = new TgcRotationalCamera(plane.BoundingBox.calculateBoxCenter(),
@@ -69,12 +70,12 @@ namespace TGC.Examples.GeometryBasics
         /// <summary>
         ///     Actualizar parametros de la pared segun los valores cargados
         /// </summary>
-        private void updatePlane()
+        private void updateTGCPlane()
         {
             //Origen, dimensiones, tiling y AutoAdjust
-            var origin = (Vector3)Modifiers["origin"];
-            var dimension = (Vector3)Modifiers["dimension"];
-            var tiling = (Vector2)Modifiers["tiling"];
+            var origin = (TGCVector3)Modifiers["origin"];
+            var dimension = (TGCVector3)Modifiers["dimension"];
+            var tiling = (TGCVector2)Modifiers["tiling"];
             var autoAdjust = (bool)Modifiers["autoAdjust"];
 
             //Cambiar orienacion
@@ -109,7 +110,7 @@ namespace TGC.Examples.GeometryBasics
             PreRender();
 
             //Actualizar valrores de pared
-            updatePlane();
+            updateTGCPlane();
 
             //Renderizar pared
             plane.render();

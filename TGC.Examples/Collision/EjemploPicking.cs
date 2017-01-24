@@ -6,6 +6,7 @@ using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
@@ -28,7 +29,7 @@ namespace TGC.Examples.Collision
     public class EjemploPicking : TGCExampleViewer
     {
         private List<TgcBox> boxes;
-        private Vector3 collisionPoint;
+        private TGCVector3 collisionPoint;
         private TgcBox collisionPointMesh;
         private TgcPickingRay pickingRay;
         private bool selected;
@@ -50,12 +51,12 @@ namespace TGC.Examples.Collision
             boxes = new List<TgcBox>();
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\granito.jpg");
-            var boxSize = new Vector3(30, 30, 30);
+            var boxSize = new TGCVector3(30, 30, 30);
             for (var i = 0; i < 5; i++)
             {
                 for (var j = 0; j < 5; j++)
                 {
-                    var center = new Vector3((boxSize.X + boxSize.X / 2) * i, (boxSize.Y + boxSize.Y / 2) * j, 0);
+                    var center = new TGCVector3((boxSize.X + boxSize.X / 2) * i, (boxSize.Y + boxSize.Y / 2) * j, 0);
                     var box = TgcBox.fromSize(center, boxSize, texture);
                     box.AutoTransformEnable = true;
                     boxes.Add(box);
@@ -65,10 +66,10 @@ namespace TGC.Examples.Collision
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
             
-            Camara.SetCamera(new Vector3(100f, 100f, -500f), new Vector3(100f, 100f, -250f));
+            Camara.SetCamera(new TGCVector3(100f, 100f, -500f), new TGCVector3(100f, 100f, -250f));
 
             //Crear caja para marcar en que lugar hubo colision
-            collisionPointMesh = TgcBox.fromSize(new Vector3(3, 3, 3), Color.Red);
+            collisionPointMesh = TgcBox.fromSize(new TGCVector3(3, 3, 3), Color.Red);
             collisionPointMesh.AutoTransformEnable = true;
             selected = false;
 

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -45,9 +46,9 @@ namespace TGC.Core.Geometry
             //Obtener matriz para transformar vertices
             if (AutoTransformEnable)
             {
-                Transform = Matrix.Scaling(radius, radius, radius) * Matrix.Scaling(Scale) *
-                            Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
-                            Matrix.Translation(translation);
+                Transform = TGCMatrix.Scaling(radius, radius, radius) * TGCMatrix.Scaling(Scale) *
+                            TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
+                            TGCMatrix.Translation(translation);
             }
 
             //Crear mesh con DiffuseMap
@@ -67,7 +68,7 @@ namespace TGC.Core.Geometry
                         var vSphere = vertices[indices[j]];
 
                         //vertices
-                        v.Position = Vector3.TransformCoordinate(vSphere.getPosition(), Transform);
+                        v.Position = TGCVector3.TransformCoordinate(vSphere.getPosition(), Transform);
 
                         //normals
                         v.Normal = vSphere.getNormal();
@@ -124,7 +125,7 @@ namespace TGC.Core.Geometry
                         var vSphere = vertices[indices[j]];
 
                         //vertices
-                        v.Position = Vector3.TransformCoordinate(vSphere.getPosition(), Transform);
+                        v.Position = TGCVector3.TransformCoordinate(vSphere.getPosition(), Transform);
 
                         //normals
                         v.Normal = vSphere.getNormal();
@@ -234,12 +235,12 @@ namespace TGC.Core.Geometry
             }
         }
 
-        protected Vector3 scale;
+        protected TGCVector3 scale;
 
         /// <summary>
         ///     Escala de la esfera. Siempre es (1,1,1)
         /// </summary>
-        public virtual Vector3 Scale
+        public virtual TGCVector3 Scale
         {
             get { return scale; }
             set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
@@ -289,7 +290,7 @@ namespace TGC.Core.Geometry
         ///     en base a los valores de: Position, Rotation, Scale.
         ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
-        public Matrix Transform { get; set; }
+        public TGCMatrix Transform { get; set; }
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
@@ -299,12 +300,12 @@ namespace TGC.Core.Geometry
         /// </summary>
         public bool AutoTransformEnable { get; set; }
 
-        protected Vector3 translation;
+        protected TGCVector3 translation;
 
         /// <summary>
         ///     Posicion absoluta del centro de la esfera
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return translation; }
             set
@@ -314,12 +315,12 @@ namespace TGC.Core.Geometry
             }
         }
 
-        protected Vector3 rotation;
+        protected TGCVector3 rotation;
 
         /// <summary>
         ///     Rotación absoluta de la esfera
         /// </summary>
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
@@ -359,12 +360,12 @@ namespace TGC.Core.Geometry
             set { alphaBlendEnable = value; }
         }
 
-        private Vector2 uvOffset;
+        private TGCVector2 uvOffset;
 
         /// <summary>
         ///     Offset UV de textura
         /// </summary>
-        public Vector2 UVOffset
+        public TGCVector2 UVOffset
         {
             get { return uvOffset; }
             set
@@ -377,12 +378,12 @@ namespace TGC.Core.Geometry
             }
         }
 
-        private Vector2 uvTiling;
+        private TGCVector2 uvTiling;
 
         /// <summary>
         ///     Tiling UV de textura
         /// </summary>
-        public Vector2 UVTiling
+        public TGCVector2 UVTiling
         {
             get { return uvTiling; }
             set
@@ -473,7 +474,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="position">Centro de la esfera</param>
         /// <param name="size">Radio de la esfera</param>
-        protected virtual void setPositionRadius(Vector3 position, float radius)
+        protected virtual void setPositionRadius(TGCVector3 position, float radius)
         {
             translation = position;
             this.radius = radius;
@@ -488,7 +489,7 @@ namespace TGC.Core.Geometry
         ///     Crea una esfera vacia
         /// </summary>
         public TgcSphere()
-            : this(1, Color.White, new Vector3(0, 0, 0))
+            : this(1, Color.White, TGCVector3.Empty)
         {
         }
 
@@ -498,7 +499,7 @@ namespace TGC.Core.Geometry
         /// <param name="radius"></param>
         /// <param name="color"></param>
         /// <param name="center"></param>
-        public TgcSphere(float radius, Color color, Vector3 center)
+        public TgcSphere(float radius, Color color, TGCVector3 center)
         {
             configure(radius, color, null, center);
         }
@@ -509,21 +510,21 @@ namespace TGC.Core.Geometry
         /// <param name="radius"></param>
         /// <param name="texture"></param>
         /// <param name="center"></param>
-        public TgcSphere(float radius, TgcTexture texture, Vector3 center)
+        public TgcSphere(float radius, TgcTexture texture, TGCVector3 center)
         {
             configure(radius, Color.White, texture, center);
         }
 
-        protected void configure(float radius, Color color, TgcTexture texture, Vector3 center)
+        protected void configure(float radius, Color color, TgcTexture texture, TGCVector3 center)
         {
             AutoTransformEnable = false;
-            Transform = Matrix.Identity;
+            Transform = TGCMatrix.Identity;
             translation = center;
-            rotation = new Vector3(0, 0, 0);
+            rotation = TGCVector3.Empty;
             enabled = true;
-            scale = new Vector3(1, 1, 1);
+            scale = TGCVector3.One;
             alphaBlendEnable = false;
-            uvOffset = new Vector2(0, 0);
+            uvOffset = TGCVector2.Empty;
 
             //BoundingSphere
             boundingSphere = new TgcBoundingSphere();
@@ -539,7 +540,7 @@ namespace TGC.Core.Geometry
             levelOfDetail = 2;
             inflate = true;
             ForceUpdate = false;
-            uvTiling = new Vector2(1, 1);
+            uvTiling = TGCVector2.One;
         }
 
         #endregion CONSTRUCTORS
@@ -558,7 +559,7 @@ namespace TGC.Core.Geometry
             if (vertexBuffer != null && !vertexBuffer.Disposed) vertexBuffer.Dispose();
 
             //Obtengo las posiciones de los vertices e indices de la esfera
-            List<Vector3> positions;
+            List<TGCVector3> positions;
 
             createSphereSubdividingAPolyhedron(out positions, out indices);
 
@@ -615,10 +616,10 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="indices"></param>
-        protected void createSphereSubdividingAPolyhedron(out List<Vector3> vertices, out List<int> indices)
+        protected void createSphereSubdividingAPolyhedron(out List<TGCVector3> vertices, out List<int> indices)
         {
             indices = new List<int>();
-            vertices = new List<Vector3>();
+            vertices = new List<TGCVector3>();
 
             switch (basePoly)
             {
@@ -636,7 +637,7 @@ namespace TGC.Core.Geometry
 
             if (Inflate)
                 for (var i = 0; i < vertices.Count; i++)
-                    vertices[i] = Vector3.Normalize(vertices[i]);
+                    vertices[i] = TGCVector3.Normalize(vertices[i]);
         }
 
         protected bool esPolo(Vertex.PositionColoredTexturedNormal v)
@@ -800,9 +801,9 @@ namespace TGC.Core.Geometry
             //transformacion
             if (AutoTransformEnable)
             {
-                Transform = Matrix.Scaling(radius, radius, radius) * Matrix.Scaling(Scale) *
-                            Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
-                            Matrix.Translation(translation);
+                Transform = TGCMatrix.Scaling(radius, radius, radius) * TGCMatrix.Scaling(Scale) *
+                            TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
+                            TGCMatrix.Translation(translation);
             }
 
             //Activar AlphaBlending
@@ -898,7 +899,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(Vector3 v)
+        public void move(TGCVector3 v)
         {
             move(v.X, v.Y, v.Z);
         }
@@ -933,7 +934,7 @@ namespace TGC.Core.Geometry
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
+        public void getPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -991,7 +992,7 @@ namespace TGC.Core.Geometry
         /// </remarks>
         /// <param name="vectors"></param>
         /// <param name="indices"></param>
-        public static void Subdivide(List<Vector3> vectors, List<int> indices)
+        public static void Subdivide(List<TGCVector3> vectors, List<int> indices)
         {
             var midpointIndices = new Dictionary<string, int>();
 
@@ -1033,7 +1034,7 @@ namespace TGC.Core.Geometry
         /// <param name="i0"></param>
         /// <param name="i1"></param>
         /// <returns></returns>
-        private static int GetMidpointIndex(Dictionary<string, int> midpointIndices, List<Vector3> vertices, int i0,
+        private static int GetMidpointIndex(Dictionary<string, int> midpointIndices, List<TGCVector3> vertices, int i0,
             int i1)
         {
             var edgeKey = string.Format("{0}_{1}", Math.Min(i0, i1), Math.Max(i0, i1));
@@ -1064,18 +1065,18 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="indices"></param>
-        public static void Cube(List<Vector3> vertices, List<int> indices)
+        public static void Cube(List<TGCVector3> vertices, List<int> indices)
         {
             vertices.AddRange(new[]
             {
-                new Vector3(-0.65f, -0.65f, -0.65f),
-                new Vector3(-0.65f, -0.65f, 0.65f),
-                new Vector3(-0.65f, 0.65f, -0.65f),
-                new Vector3(-0.65f, 0.65f, 0.65f),
-                new Vector3(0.65f, -0.65f, -0.65f),
-                new Vector3(0.65f, -0.65f, 0.65f),
-                new Vector3(0.65f, 0.65f, -0.65f),
-                new Vector3(0.65f, 0.65f, 0.65f)
+                new TGCVector3(-0.65f, -0.65f, -0.65f),
+                new TGCVector3(-0.65f, -0.65f, 0.65f),
+                new TGCVector3(-0.65f, 0.65f, -0.65f),
+                new TGCVector3(-0.65f, 0.65f, 0.65f),
+                new TGCVector3(0.65f, -0.65f, -0.65f),
+                new TGCVector3(0.65f, -0.65f, 0.65f),
+                new TGCVector3(0.65f, 0.65f, -0.65f),
+                new TGCVector3(0.65f, 0.65f, 0.65f)
             });
             indices.AddRange(new[]
             {
@@ -1099,7 +1100,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="indices"></param>
-        public static void Icosahedron(List<Vector3> vertices, List<int> indices)
+        public static void Icosahedron(List<TGCVector3> vertices, List<int> indices)
         {
             indices.AddRange(
                 new[]
@@ -1134,18 +1135,18 @@ namespace TGC.Core.Geometry
             vertices.AddRange(
                 new[]
                 {
-                    new Vector3(-X, 0f, Z),
-                    new Vector3(X, 0f, Z),
-                    new Vector3(-X, 0f, -Z),
-                    new Vector3(X, 0f, -Z),
-                    new Vector3(0f, Z, X),
-                    new Vector3(0f, Z, -X),
-                    new Vector3(0f, -Z, X),
-                    new Vector3(0f, -Z, -X),
-                    new Vector3(Z, X, 0f),
-                    new Vector3(-Z, X, 0f),
-                    new Vector3(Z, -X, 0f),
-                    new Vector3(-Z, -X, 0f)
+                    new TGCVector3(-X, 0f, Z),
+                    new TGCVector3(X, 0f, Z),
+                    new TGCVector3(-X, 0f, -Z),
+                    new TGCVector3(X, 0f, -Z),
+                    new TGCVector3(0f, Z, X),
+                    new TGCVector3(0f, Z, -X),
+                    new TGCVector3(0f, -Z, X),
+                    new TGCVector3(0f, -Z, -X),
+                    new TGCVector3(Z, X, 0f),
+                    new TGCVector3(-Z, X, 0f),
+                    new TGCVector3(Z, -X, 0f),
+                    new TGCVector3(-Z, -X, 0f)
                 }
                 );
         }
@@ -1185,7 +1186,7 @@ namespace TGC.Core.Geometry
             public float NY;
             public float NZ;
 
-            public PositionColoredTexturedNormal(Vector3 pos, int color, float u, float v, Vector3 normal)
+            public PositionColoredTexturedNormal(TGCVector3 pos, int color, float u, float v, TGCVector3 normal)
                 : this(pos.X, pos.Y, pos.Z, color, u, v, normal.X, normal.Y, normal.Z)
             {
             }
@@ -1204,14 +1205,14 @@ namespace TGC.Core.Geometry
                 this.NZ = NZ;
             }
 
-            public Vector3 getPosition()
+            public TGCVector3 getPosition()
             {
-                return new Vector3(X, Y, Z);
+                return new TGCVector3(X, Y, Z);
             }
 
-            public Vector3 getNormal()
+            public TGCVector3 getNormal()
             {
-                return new Vector3(NX, NY, NZ);
+                return new TGCVector3(NX, NY, NZ);
             }
 
             public static VertexFormats Format

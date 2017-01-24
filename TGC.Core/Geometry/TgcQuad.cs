@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -15,7 +16,7 @@ namespace TGC.Core.Geometry
     /// </summary>
     public class TgcQuad : IRenderObject
     {
-        private readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
+        private readonly TGCVector3 ORIGINAL_DIR = TGCVector3.Up;
 
         private readonly VertexBuffer vertexBuffer;
 
@@ -23,7 +24,7 @@ namespace TGC.Core.Geometry
 
         protected Effect effect;
 
-        private Vector3 normal;
+        private TGCVector3 normal;
 
         protected string technique;
 
@@ -32,9 +33,9 @@ namespace TGC.Core.Geometry
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 6, D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
-            Center = Vector3.Empty;
-            normal = new Vector3(0, 1, 0);
-            Size = new Vector2(10, 10);
+            Center = TGCVector3.Empty;
+            normal = TGCVector3.Up;
+            Size = new TGCVector2(10, 10);
             Enabled = true;
             color = Color.Blue;
             AlphaBlendEnable = false;
@@ -47,12 +48,12 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Centro del plano
         /// </summary>
-        public Vector3 Center { get; set; }
+        public TGCVector3 Center { get; set; }
 
         /// <summary>
         ///     Normal del plano
         /// </summary>
-        public Vector3 Normal
+        public TGCVector3 Normal
         {
             get { return normal; }
             set { normal = value; }
@@ -61,7 +62,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Tamaño del plano, en ancho y longitud
         /// </summary>
-        public Vector2 Size { get; set; }
+        public TGCVector2 Size { get; set; }
 
         /// <summary>
         ///     Color del plano
@@ -77,7 +78,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public bool Enabled { get; set; }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return Center; }
         }
@@ -151,29 +152,29 @@ namespace TGC.Core.Geometry
             var vertices = new CustomVertex.PositionColored[6];
 
             //Crear un Quad con dos triángulos sobre XZ con normal default (0, 1, 0)
-            var min = new Vector3(-Size.X / 2, 0, -Size.Y / 2);
-            var max = new Vector3(Size.X / 2, 0, Size.Y / 2);
+            var min = new TGCVector3(-Size.X / 2, 0, -Size.Y / 2);
+            var max = new TGCVector3(Size.X / 2, 0, Size.Y / 2);
             var c = color.ToArgb();
 
-            vertices[0] = new CustomVertex.PositionColored(min, c);
+            vertices[0] = new CustomVertex.PositionColored(min.ToVector3(), c);
             vertices[1] = new CustomVertex.PositionColored(min.X, 0, max.Z, c);
-            vertices[2] = new CustomVertex.PositionColored(max, c);
+            vertices[2] = new CustomVertex.PositionColored(max.ToVector3(), c);
 
-            vertices[3] = new CustomVertex.PositionColored(min, c);
-            vertices[4] = new CustomVertex.PositionColored(max, c);
+            vertices[3] = new CustomVertex.PositionColored(min.ToVector3(), c);
+            vertices[4] = new CustomVertex.PositionColored(max.ToVector3(), c);
             vertices[5] = new CustomVertex.PositionColored(max.X, 0, min.Z, c);
 
             //Obtener matriz de rotacion respecto de la normal del plano
             normal.Normalize();
-            var angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, normal));
-            var axisRotation = Vector3.Cross(ORIGINAL_DIR, normal);
+            var angle = FastMath.Acos(TGCVector3.Dot(ORIGINAL_DIR, normal));
+            var axisRotation = TGCVector3.Cross(ORIGINAL_DIR, normal);
             axisRotation.Normalize();
-            var t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(Center);
+            var t = TGCMatrix.RotationAxis(axisRotation, angle) * TGCMatrix.Translation(Center);
 
             //Transformar todos los puntos
             for (var i = 0; i < vertices.Length; i++)
             {
-                vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, t);
+                vertices[i].Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vertices[i].Position), t).ToVector3();
             }
 
             //Cargar vertexBuffer

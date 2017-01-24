@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -90,7 +91,7 @@ namespace TGC.Examples.ShadersExamples
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
             }
 
-            Modifiers.addVertex3f("LightDir", new Vector3(-1, -1, -1), new Vector3(1, 1, 1), new Vector3(0, -1, 0));
+            Modifiers.addVertex3f("LightDir", new TGCVector3(-1, -1, -1), TGCVector3.One, TGCVector3.Down);
             Modifiers.addFloat("minSample", 1f, 10f, 10f);
             Modifiers.addFloat("maxSample", 11f, 50f, 50f);
             Modifiers.addFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
@@ -98,7 +99,7 @@ namespace TGC.Examples.ShadersExamples
             //Centrar camara rotacional respecto a este mesh
             var rotCamera = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
                 mesh.BoundingBox.calculateBoxRadius() * 2, Input);
-            rotCamera.CameraCenter = rotCamera.CameraCenter + new Vector3(0, 20f, 0);
+            rotCamera.CameraCenter = rotCamera.CameraCenter + new TGCVector3(0, 20f, 0);
             rotCamera.CameraDistance = 75;
             rotCamera.RotationSpeed = 50f;
             Camara = rotCamera;
@@ -130,12 +131,12 @@ namespace TGC.Examples.ShadersExamples
                     nro_textura = 0;
             }
 
-            var lightDir = (Vector3)Modifiers["LightDir"];
-            effect.SetValue("g_LightDir", TgcParserUtils.vector3ToFloat3Array(lightDir));
+            var lightDir = (TGCVector3)Modifiers["LightDir"];
+            effect.SetValue("g_LightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
             effect.SetValue("min_cant_samples", (float)Modifiers["minSample"]);
             effect.SetValue("max_cant_samples", (float)Modifiers["maxSample"]);
             effect.SetValue("fHeightMapScale", (float)Modifiers["HeightMapScale"]);
-            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
 
             device.EndScene();
             effect.SetValue("time", time);

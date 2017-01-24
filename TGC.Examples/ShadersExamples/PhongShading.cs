@@ -5,6 +5,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
@@ -69,20 +70,20 @@ namespace TGC.Examples.ShadersExamples
             mesh.Technique = "DefaultTechnique";
 
             Modifiers.addBoolean("viewports", "See Viewports", false);
-            Modifiers.addVertex3f("LightPosition", new Vector3(-100, -100, -100),
-                new Vector3(100, 100, 100), new Vector3(0, 40, 0));
+            Modifiers.addVertex3f("LightPosition", new TGCVector3(-100, -100, -100),
+                new TGCVector3(100, 100, 100), new TGCVector3(0, 40, 0));
             Modifiers.addFloat("Ambient", 0, 1, 0.5f);
             Modifiers.addFloat("Diffuse", 0, 1, 0.6f);
             Modifiers.addFloat("Specular", 0, 1, 0.5f);
             Modifiers.addFloat("SpecularPower", 1, 100, 16);
 
             //Crear caja para indicar ubicacion de la luz
-            lightBox = TgcBox.fromSize(new Vector3(5, 5, 5), Color.Yellow);
+            lightBox = TgcBox.fromSize(new TGCVector3(5, 5, 5), Color.Yellow);
             lightBox.AutoTransformEnable = true;
 
             // Creo 3 viewport, para mostrar una comparativa entre los metodos de iluminacion
 
-            Camara = new TgcRotationalCamera(new Vector3(20, 20, 0), 200, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(20, 20, 0), 200, Input);
 
             View1 = new Viewport();
             View1.X = 0;
@@ -130,11 +131,11 @@ namespace TGC.Examples.ShadersExamples
 
             D3DDevice.Instance.Device.BeginScene();
 
-            var lightPosition = (Vector3)Modifiers["LightPosition"];
+            var lightPosition = (TGCVector3)Modifiers["LightPosition"];
 
             //Cargar variables de shader
-            effect.SetValue("fvLightPosition", TgcParserUtils.vector3ToFloat3Array(lightPosition));
-            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvLightPosition", TGCVector3.Vector3ToFloat3Array(lightPosition));
+            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
             effect.SetValue("k_la", (float)Modifiers["Ambient"]);
             effect.SetValue("k_ld", (float)Modifiers["Diffuse"]);
             effect.SetValue("k_ls", (float)Modifiers["Specular"]);
@@ -176,7 +177,7 @@ namespace TGC.Examples.ShadersExamples
                 D3DDevice.Instance.Device.Viewport = View2;
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.Lighting, true);
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.SpecularEnable, true);
-                D3DDevice.Instance.Device.Lights[0].Position = lightPosition;
+                D3DDevice.Instance.Device.Lights[0].Position = lightPosition.ToVector3();
                 D3DDevice.Instance.Device.Lights[0].Update();
 
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);

@@ -4,6 +4,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
 using TGC.Core.Interpolation;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
@@ -31,7 +32,7 @@ namespace TGC.Examples.Lights
         private Effect effect;
         private InterpoladorVaiven interp;
         private TgcBox[] lightMeshes;
-        private Vector3[] origLightPos;
+        private TGCVector3[] origLightPos;
         private TgcScene scene;
 
         public EjemploMultiDiffuseLights(string mediaDir, string shadersDir, TgcUserVars userVars,
@@ -50,7 +51,7 @@ namespace TGC.Examples.Lights
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(260f, 170f, 390f), 400f, 300f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(260f, 170f, 390f), 400f, 300f, Input);
 
             //Cargar Shader personalizado de MultiDiffuseLights
             /*
@@ -63,14 +64,14 @@ namespace TGC.Examples.Lights
 
             //Crear 4 mesh para representar las 4 para la luces. Las ubicamos en distintas posiciones del escenario, cada una con un color distinto.
             lightMeshes = new TgcBox[4];
-            origLightPos = new Vector3[lightMeshes.Length];
+            origLightPos = new TGCVector3[lightMeshes.Length];
             var c = new Color[4] { Color.Red, Color.Blue, Color.Green, Color.Yellow };
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var co = c[i % c.Length];
-                lightMeshes[i] = TgcBox.fromSize(new Vector3(10, 10, 10), co);
+                lightMeshes[i] = TgcBox.fromSize(new TGCVector3(10, 10, 10), co);
                 lightMeshes[i].AutoTransformEnable = true;
-                origLightPos[i] = new Vector3(-40, 20 + i * 20, 400);
+                origLightPos[i] = new TGCVector3(-40, 20 + i * 20, 400);
             }
 
             //Modifiers
@@ -124,7 +125,7 @@ namespace TGC.Examples.Lights
             }
 
             //Configurar los valores de cada luz
-            var move = new Vector3(0, 0,
+            var move = new TGCVector3(0, 0,
                 (bool)Modifiers["lightMove"] ? interp.update(ElapsedTime) : 0);
             var lightColors = new ColorValue[lightMeshes.Length];
             var pointLightPositions = new Vector4[lightMeshes.Length];
@@ -133,10 +134,10 @@ namespace TGC.Examples.Lights
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var lightMesh = lightMeshes[i];
-                lightMesh.Position = origLightPos[i] + Vector3.Scale(move, i + 1);
+                lightMesh.Position = origLightPos[i] + TGCVector3.Scale(move, i + 1);
 
                 lightColors[i] = ColorValue.FromColor(lightMesh.Color);
-                pointLightPositions[i] = TgcParserUtils.vector3ToVector4(lightMesh.Position);
+                pointLightPositions[i] = TGCVector3.Vector3ToVector4(lightMesh.Position);
                 pointLightIntensity[i] = (float)Modifiers["lightIntensity"];
                 pointLightAttenuation[i] = (float)Modifiers["lightAttenuation"];
             }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -23,13 +24,13 @@ namespace TGC.Core.Geometry
 
         protected Effect effect;
 
-        private Vector3 rotation;
+        private TGCVector3 rotation;
 
-        private Vector3 size;
+        private TGCVector3 size;
 
         protected string technique;
 
-        private Vector3 translation;
+        private TGCVector3 translation;
 
         /// <summary>
         ///     Crea una caja vacia
@@ -42,14 +43,14 @@ namespace TGC.Core.Geometry
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColoredTextured.Format, Pool.Default);
 
             AutoTransformEnable = false;
-            Transform = Matrix.Identity;
-            translation = new Vector3(0, 0, 0);
-            rotation = new Vector3(0, 0, 0);
+            Transform = TGCMatrix.Identity;
+            translation = TGCVector3.Empty;
+            rotation = TGCVector3.Empty;
             Enabled = true;
             color = Color.White;
             AlphaBlendEnable = false;
-            UVOffset = new Vector2(0, 0);
-            UVTiling = new Vector2(1, 1);
+            UVOffset = TGCVector2.Empty;
+            UVTiling = TGCVector2.One;
 
             //BoundingBox
             BoundingBox = new TgcBoundingAxisAlignBox();
@@ -62,7 +63,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Dimensiones de la caja
         /// </summary>
-        public Vector3 Size
+        public TGCVector3 Size
         {
             get { return size; }
             set
@@ -118,12 +119,12 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Offset UV de textura
         /// </summary>
-        public Vector2 UVOffset { get; set; }
+        public TGCVector2 UVOffset { get; set; }
 
         /// <summary>
         ///     Tiling UV de textura
         /// </summary>
-        public Vector2 UVTiling { get; set; }
+        public TGCVector2 UVTiling { get; set; }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
@@ -143,8 +144,8 @@ namespace TGC.Core.Geometry
             //transformacion
             if (AutoTransformEnable)
             {
-                Transform = Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
-                            Matrix.Translation(translation);
+                Transform = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
+                            TGCMatrix.Translation(translation);
             }
 
             //Activar AlphaBlending
@@ -197,9 +198,9 @@ namespace TGC.Core.Geometry
         ///     Escala de la caja. Siempre es (1, 1, 1).
         ///     Utilizar Size
         /// </summary>
-        public Vector3 Scale
+        public TGCVector3 Scale
         {
-            get { return new Vector3(1, 1, 1); }
+            get { return TGCVector3.One; }
             set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
         }
 
@@ -209,7 +210,7 @@ namespace TGC.Core.Geometry
         ///     en base a los valores de: Position, Rotation, Scale.
         ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
-        public Matrix Transform { get; set; }
+        public TGCMatrix Transform { get; set; }
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
@@ -222,7 +223,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Posicion absoluta del centro de la caja
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return translation; }
             set
@@ -235,7 +236,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Rotación absoluta de la caja
         /// </summary>
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
@@ -244,7 +245,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(Vector3 v)
+        public void move(TGCVector3 v)
         {
             move(v.X, v.Y, v.Z);
         }
@@ -279,7 +280,7 @@ namespace TGC.Core.Geometry
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
+        public void getPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -417,7 +418,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="position">Centro de la caja</param>
         /// <param name="size">Tamaño de la caja</param>
-        public void setPositionSize(Vector3 position, Vector3 size)
+        public void setPositionSize(TGCVector3 position, TGCVector3 size)
         {
             translation = position;
             this.size = size;
@@ -429,10 +430,10 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="min">Min</param>
         /// <param name="max">Max</param>
-        public void setExtremes(Vector3 min, Vector3 max)
+        public void setExtremes(TGCVector3 min, TGCVector3 max)
         {
-            var size = Vector3.Subtract(max, min);
-            var midSize = Vector3.Scale(size, 0.5f);
+            var size = TGCVector3.Subtract(max, min);
+            var midSize = TGCVector3.Scale(size, 0.5f);
             var center = min + midSize;
             setPositionSize(center, size);
         }
@@ -443,8 +444,8 @@ namespace TGC.Core.Geometry
         /// </summary>
         private void updateBoundingBox()
         {
-            var midSize = Vector3.Scale(size, 0.5f);
-            BoundingBox.setExtremes(Vector3.Subtract(translation, midSize), Vector3.Add(translation, midSize));
+            var midSize = TGCVector3.Scale(size, 0.5f);
+            BoundingBox.setExtremes(TGCVector3.Subtract(translation, midSize), TGCVector3.Add(translation, midSize));
         }
 
         /// <summary>
@@ -456,8 +457,8 @@ namespace TGC.Core.Geometry
             //Obtener matriz para transformar vertices
             if (AutoTransformEnable)
             {
-                Transform = Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
-                            Matrix.Translation(translation);
+                Transform = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
+                            TGCMatrix.Translation(translation);
             }
 
             //Crear mesh con DiffuseMap
@@ -477,10 +478,10 @@ namespace TGC.Core.Geometry
                         var vBox = vertices[j];
 
                         //vertices
-                        v.Position = Vector3.TransformCoordinate(vBox.Position, Transform);
+                        v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), Transform);
 
                         //normals
-                        v.Normal = Vector3.Empty;
+                        v.Normal = TGCVector3.Empty;
 
                         //texture coordinates diffuseMap
                         v.Tu = vBox.Tu;
@@ -535,10 +536,10 @@ namespace TGC.Core.Geometry
                         var vBox = vertices[j];
 
                         //vertices
-                        v.Position = Vector3.TransformCoordinate(vBox.Position, Transform);
+                        v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), Transform);
 
                         //normals
-                        v.Normal = Vector3.Empty;
+                        v.Normal = TGCVector3.Empty;
 
                         //color
                         v.Color = vBox.Color;
@@ -600,7 +601,7 @@ namespace TGC.Core.Geometry
         /// <param name="center">Centro de la caja</param>
         /// <param name="size">Tamaño de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 center, Vector3 size)
+        public static TgcBox fromSize(TGCVector3 center, TGCVector3 size)
         {
             var box = new TgcBox();
             box.setPositionSize(center, size);
@@ -615,7 +616,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 center, Vector3 size, Color color)
+        public static TgcBox fromSize(TGCVector3 center, TGCVector3 size, Color color)
         {
             var box = new TgcBox();
             box.setPositionSize(center, size);
@@ -631,7 +632,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 center, Vector3 size, TgcTexture texture)
+        public static TgcBox fromSize(TGCVector3 center, TGCVector3 size, TgcTexture texture)
         {
             var box = fromSize(center, size);
             box.setTexture(texture);
@@ -643,9 +644,9 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="size">Tamaño de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 size)
+        public static TgcBox fromSize(TGCVector3 size)
         {
-            return fromSize(new Vector3(0, 0, 0), size);
+            return fromSize(TGCVector3.Empty, size);
         }
 
         /// <summary>
@@ -654,9 +655,9 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 size, Color color)
+        public static TgcBox fromSize(TGCVector3 size, Color color)
         {
-            return fromSize(new Vector3(0, 0, 0), size, color);
+            return fromSize(TGCVector3.Empty, size, color);
         }
 
         /// <summary>
@@ -665,9 +666,9 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 size, TgcTexture texture)
+        public static TgcBox fromSize(TGCVector3 size, TgcTexture texture)
         {
-            return fromSize(new Vector3(0, 0, 0), size, texture);
+            return fromSize(TGCVector3.Empty, size, texture);
         }
 
         /// <summary>
@@ -676,10 +677,10 @@ namespace TGC.Core.Geometry
         /// <param name="pMin">Punto mínimo</param>
         /// <param name="pMax">Punto máximo</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromExtremes(Vector3 pMin, Vector3 pMax)
+        public static TgcBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax)
         {
-            var size = Vector3.Subtract(pMax, pMin);
-            var midSize = Vector3.Scale(size, 0.5f);
+            var size = TGCVector3.Subtract(pMax, pMin);
+            var midSize = TGCVector3.Scale(size, 0.5f);
             var center = pMin + midSize;
             return fromSize(center, size);
         }
@@ -691,7 +692,7 @@ namespace TGC.Core.Geometry
         /// <param name="pMax">Punto máximo</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromExtremes(Vector3 pMin, Vector3 pMax, Color color)
+        public static TgcBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color)
         {
             var box = fromExtremes(pMin, pMax);
             box.color = color;
@@ -706,7 +707,7 @@ namespace TGC.Core.Geometry
         /// <param name="pMax">Punto máximo</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromExtremes(Vector3 pMin, Vector3 pMax, TgcTexture texture)
+        public static TgcBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, TgcTexture texture)
         {
             var box = fromExtremes(pMin, pMax);
             box.setTexture(texture);

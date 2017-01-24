@@ -6,6 +6,7 @@ using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
@@ -45,7 +46,7 @@ namespace TGC.Examples.Collision
         {
             //Crear piso
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
-            piso = new TgcPlane(new Vector3(), new Vector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 50f, 50f);
+            piso = new TgcPlane(new TGCVector3(), new TGCVector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 50f, 50f);
             //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
             obstaculos = new List<TgcBox>();
             TgcBox obstaculo;
@@ -54,34 +55,34 @@ namespace TGC.Examples.Collision
             float wallHeight = 500;
 
             //Obstaculo 1
-            obstaculo = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(wallSize, wallHeight, 10),
+            obstaculo = TgcBox.fromExtremes(TGCVector3.Empty, new TGCVector3(wallSize, wallHeight, 10),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
-            obstaculo = TgcBox.fromExtremes(new Vector3(0, 0, 0), new Vector3(10, wallHeight, wallSize),
+            obstaculo = TgcBox.fromExtremes(TGCVector3.Empty, new TGCVector3(10, wallHeight, wallSize),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
-            obstaculo = TgcBox.fromExtremes(new Vector3(0, 0, wallSize),
-                new Vector3(wallSize, wallHeight, wallSize + 10),
+            obstaculo = TgcBox.fromExtremes(new TGCVector3(0, 0, wallSize),
+                new TGCVector3(wallSize, wallHeight, wallSize + 10),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 4
-            obstaculo = TgcBox.fromExtremes(new Vector3(wallSize, 0, 0),
-                new Vector3(wallSize + 10, wallHeight, wallSize),
+            obstaculo = TgcBox.fromExtremes(new TGCVector3(wallSize, 0, 0),
+                new TGCVector3(wallSize + 10, wallHeight, wallSize),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 5
-            obstaculo = TgcBox.fromExtremes(new Vector3(wallSize / 2, 0, wallSize - 400),
-                new Vector3(wallSize + 10, wallHeight, wallSize - 400 + 10),
+            obstaculo = TgcBox.fromExtremes(new TGCVector3(wallSize / 2, 0, wallSize - 400),
+                new TGCVector3(wallSize + 10, wallHeight, wallSize - 400 + 10),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
@@ -100,8 +101,8 @@ namespace TGC.Examples.Collision
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
             //Escalarlo porque es muy grande
-            personaje.Position = new Vector3(100, 0, 100);
-            personaje.Scale = new Vector3(0.75f, 0.75f, 0.75f);
+            personaje.Position = new TGCVector3(100, 0, 100);
+            personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.rotateY(Geometry.DegreeToRadian(180f));
 
@@ -112,7 +113,7 @@ namespace TGC.Examples.Collision
             //Modifiers para modificar propiedades de la camara
             Modifiers.addFloat("offsetHeight", 0, 300, 100);
             Modifiers.addFloat("offsetForward", -400, 0, -220);
-            Modifiers.addVertex2f("displacement", new Vector2(0, 0), new Vector2(100, 200), new Vector2(0, 100));
+            Modifiers.addVertex2f("displacement", TGCVector2.Empty, new TGCVector2(100, 200), new TGCVector2(0, 100));
         }
 
         public override void Update()
@@ -224,9 +225,9 @@ namespace TGC.Examples.Collision
                 obstaculo.render();
             }
 
-            personaje.Transform = Matrix.Scaling(personaje.Scale)
-                            * Matrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z)
-                            * Matrix.Translation(personaje.Position);
+            personaje.Transform = TGCMatrix.Scaling(personaje.Scale)
+                            * TGCMatrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z)
+                            * TGCMatrix.Translation(personaje.Position);
             //Render personaje
             personaje.animateAndRender(ElapsedTime);
 
@@ -243,16 +244,16 @@ namespace TGC.Examples.Collision
             //Actualizar valores de camara segun modifiers
             camaraInterna.OffsetHeight = (float)Modifiers["offsetHeight"];
             camaraInterna.OffsetForward = (float)Modifiers["offsetForward"];
-            var displacement = (Vector2)Modifiers["displacement"];
-            camaraInterna.TargetDisplacement = new Vector3(displacement.X, displacement.Y, 0);
+            var displacement = (TGCVector2)Modifiers["displacement"];
+            camaraInterna.TargetDisplacement = new TGCVector3(displacement.X, displacement.Y, 0);
 
             //Pedirle a la camara cual va a ser su proxima posicion
-            Vector3 position;
-            Vector3 target;
+            TGCVector3 position;
+            TGCVector3 target;
             camaraInterna.CalculatePositionTarget(out position, out target);
 
             //Detectar colisiones entre el segmento de recta camara-personaje y todos los objetos del escenario
-            Vector3 q;
+            TGCVector3 q;
             var minDistSq = FastMath.Pow2(camaraInterna.OffsetForward);
             foreach (var obstaculo in obstaculos)
             {
@@ -260,7 +261,7 @@ namespace TGC.Examples.Collision
                 if (TgcCollisionUtils.intersectSegmentAABB(target, position, obstaculo.BoundingBox, out q))
                 {
                     //Si hay colision, guardar la que tenga menor distancia
-                    var distSq = Vector3.Subtract(q, target).LengthSq();
+                    var distSq = TGCVector3.Subtract(q, target).LengthSq();
                     //Hay dos casos singulares, puede que tengamos mas de una colision hay que quedarse con el menor offset.
                     //Si no dividimos la distancia por 2 se acerca mucho al target.
                     minDistSq = FastMath.Min(distSq/2, minDistSq);

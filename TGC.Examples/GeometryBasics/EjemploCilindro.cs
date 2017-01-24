@@ -3,6 +3,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -33,7 +34,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Init()
         {
-            cylinder = new TgcCylinder(new Vector3(0, 0, 0), 2, 4);
+            cylinder = new TgcCylinder(TGCVector3.Empty, 2, 4);
             cylinder.AutoTransformEnable = true;
 
             cylinder.AlphaBlendEnable = true;
@@ -44,11 +45,11 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
             Modifiers.addBoolean("useTexture", "useTexture", true);
 
-            Modifiers.addVertex3f("size", new Vector3(-3, -3, 1), new Vector3(7, 7, 10), new Vector3(2, 2, 5));
-            Modifiers.addVertex3f("position", new Vector3(-20, -20, -20), new Vector3(20, 20, 20), new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("size", new TGCVector3(-3, -3, 1), new TGCVector3(7, 7, 10), new TGCVector3(2, 2, 5));
+            Modifiers.addVertex3f("position", new TGCVector3(-20, -20, -20), new TGCVector3(20, 20, 20), TGCVector3.Empty);
             var angle = FastMath.TWO_PI;
-            Modifiers.addVertex3f("rotation", new Vector3(-angle, -angle, -angle), new Vector3(angle, angle, angle),
-                new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("rotation", new TGCVector3(-angle, -angle, -angle), new TGCVector3(angle, angle, angle),
+                TGCVector3.Empty);
 
             Camara = new TgcRotationalCamera(Input);
         }
@@ -63,9 +64,9 @@ namespace TGC.Examples.GeometryBasics
             PreRender();
 
             var modifiers = Modifiers;
-            var size = (Vector3)modifiers.getValue("size");
-            var position = (Vector3)modifiers.getValue("position");
-            var rotation = (Vector3)modifiers.getValue("rotation");
+            var size = (TGCVector3)modifiers.getValue("size");
+            var position = (TGCVector3)modifiers.getValue("position");
+            var rotation = (TGCVector3)modifiers.getValue("rotation");
 
             var texturePath = (string)modifiers.getValue("texture");
             if (texturePath != currentTexture)

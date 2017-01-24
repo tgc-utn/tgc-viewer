@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 
@@ -23,7 +24,7 @@ namespace TGC.Examples.ShadersExamples
         public float M_PI = 3.14151f;
         public int pos_carteles;
         public int pos_en_ruta;
-        public Vector3[] pt_ruta = new Vector3[500];
+        public TGCVector3[] pt_ruta = new TGCVector3[500];
         public float scaleXZ = 20;
         public float scaleY = 15;
         public Texture textura_cartel;
@@ -47,19 +48,19 @@ namespace TGC.Examples.ShadersExamples
             arbol[cant_arboles] =
                 loader.loadSceneFromFile(mediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera3\\Palmera3-TgcScene.xml")
                     .Meshes[0];
-            arbol[cant_arboles].Scale = new Vector3(2, 2, 2);
+            arbol[cant_arboles].Scale = new TGCVector3(2, 2, 2);
             ++cant_arboles;
 
             arbol[cant_arboles] =
                 loader.loadSceneFromFile(mediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera2\\Palmera2-TgcScene.xml")
                     .Meshes[0];
-            arbol[cant_arboles].Scale = new Vector3(1, 1, 1);
+            arbol[cant_arboles].Scale = TGCVector3.One;
             ++cant_arboles;
 
             arbol[cant_arboles] =
                 loader.loadSceneFromFile(mediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pino\\Pino-TgcScene.xml").Meshes[0
                     ];
-            arbol[cant_arboles].Scale = new Vector3(4, 4, 4);
+            arbol[cant_arboles].Scale = new TGCVector3(4, 4, 4);
             ++cant_arboles;
         }
 
@@ -115,12 +116,12 @@ namespace TGC.Examples.ShadersExamples
             {
                 var dir = pt_ruta[i + 1] - pt_ruta[i];
                 dir.Normalize();
-                var n = Vector3.Cross(dir, new Vector3(0, 1, 0));
+                var n = TGCVector3.Cross(dir, TGCVector3.Up);
                 var p0 = pt_ruta[i] - n * dr;
                 var p1 = pt_ruta[i] + n * dr;
 
-                data[dataIdx++] = new CustomVertex.PositionTextured(p0, 1, i * Kr);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p1, 0, i * Kr);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p0.ToVector3(), 1, i * Kr);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p1.ToVector3(), 0, i * Kr);
             }
 
             // pared izquierda
@@ -128,15 +129,15 @@ namespace TGC.Examples.ShadersExamples
             {
                 var dir = pt_ruta[i + 1] - pt_ruta[i];
                 dir.Normalize();
-                var n = Vector3.Cross(dir, new Vector3(0, 1, 0));
-                var u = Vector3.Cross(n, dir);
+                var n = TGCVector3.Cross(dir, TGCVector3.Up);
+                var u = TGCVector3.Cross(n, dir);
                 var p0 = pt_ruta[i] - n * (dr + ancho_guarray);
                 var p1 = pt_ruta[i] - n * dr;
                 p0.Y -= 25;
                 p1.Y += 25;
 
-                data[dataIdx++] = new CustomVertex.PositionTextured(p0, i * Kr, 1);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p1, i * Kr, 0);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p0.ToVector3(), i * Kr, 1);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p1.ToVector3(), i * Kr, 0);
             }
 
             // pared derecha
@@ -144,15 +145,15 @@ namespace TGC.Examples.ShadersExamples
             {
                 var dir = pt_ruta[i + 1] - pt_ruta[i];
                 dir.Normalize();
-                var n = Vector3.Cross(dir, new Vector3(0, 1, 0));
-                var u = Vector3.Cross(n, dir);
+                var n = TGCVector3.Cross(dir, TGCVector3.Up);
+                var u = TGCVector3.Cross(n, dir);
                 var p0 = pt_ruta[i] + n * (dr + ancho_guarray);
                 var p1 = pt_ruta[i] + n * dr;
                 p0.Y -= 25;
                 p1.Y += 25;
 
-                data[dataIdx++] = new CustomVertex.PositionTextured(p0, i * Kr, 1);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p1, i * Kr, 0);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p0.ToVector3(), i * Kr, 1);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p1.ToVector3(), i * Kr, 0);
             }
 
             // Carteles
@@ -162,16 +163,16 @@ namespace TGC.Examples.ShadersExamples
                 var i = t * dc;
                 var dir = pt_ruta[i + 1] - pt_ruta[i];
                 dir.Normalize();
-                var up = new Vector3(0, 1, 0);
-                var n = Vector3.Cross(dir, up);
+                var up = TGCVector3.Up;
+                var n = TGCVector3.Cross(dir, up);
                 var p0 = pt_ruta[i] - n * (dr + 50) + up * 0;
                 var p1 = pt_ruta[i] - n * (dr + 50) + up * 170;
                 var p2 = pt_ruta[i] + n * (dr + 50) + up * 170;
                 var p3 = pt_ruta[i] + n * (dr + 50) + up * 0;
-                data[dataIdx++] = new CustomVertex.PositionTextured(p0, 1, 1);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p3, 0, 1);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p1, 1, 0);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p2, 0, 0);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p0.ToVector3(), 1, 1);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p3.ToVector3(), 0, 1);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p1.ToVector3(), 1, 0);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p2.ToVector3(), 0, 0);
             }
 
             vb.SetData(data, 0, LockFlags.None);
@@ -244,7 +245,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     var dir = pt_ruta[i + 1] - pt_ruta[i];
                     dir.Normalize();
-                    var n = Vector3.Cross(dir, new Vector3(0, 1, 0));
+                    var n = TGCVector3.Cross(dir, TGCVector3.Up);
                     var p0 = pt_ruta[i] - n * dr;
                     var p1 = pt_ruta[i] + n * dr;
 
@@ -312,17 +313,17 @@ namespace TGC.Examples.ShadersExamples
 
             var dr = ancho_ruta / 2;
             float H = 0;
-            var p = new Vector2(x, z);
+            var p = new TGCVector2(x, z);
             for (var t = 0; t < cant_p; ++t)
             {
                 var i = ndx[t];
 
-                var r0 = new Vector2(pt_ruta[i].X, pt_ruta[i].Z);
-                var r1 = new Vector2(pt_ruta[i + 1].X, pt_ruta[i + 1].Z);
+                var r0 = new TGCVector2(pt_ruta[i].X, pt_ruta[i].Z);
+                var r1 = new TGCVector2(pt_ruta[i + 1].X, pt_ruta[i + 1].Z);
                 var r = r1 - r0;
                 var rm = r.Length();
                 r.Normalize();
-                var d = Vector2.Dot(p - r0, r);
+                var d = TGCVector2.Dot(p - r0, r);
                 // d ==0 , rm
 
                 if (d >= -0.5 && d <= rm + 0.5)
@@ -364,21 +365,21 @@ namespace TGC.Examples.ShadersExamples
         }
 
         // se fue de la ruta, devuelve que posicion mas  cercana en el centro de la ruta
-        public Vector3 que_pos_buena(float x, float z)
+        public TGCVector3 que_pos_buena(float x, float z)
         {
             var mdist = 10000000000f;
             var aux_tramo = -1;
             var dr = ancho_ruta / 2;
             //float H = 0;
-            var p = new Vector2(x, z);
+            var p = new TGCVector2(x, z);
             for (var i = 0; i < cant_ptos_ruta; ++i)
             {
-                var r0 = new Vector2(pt_ruta[i].X, pt_ruta[i].Z);
-                var r1 = new Vector2(pt_ruta[i + 1].X, pt_ruta[i + 1].Z);
+                var r0 = new TGCVector2(pt_ruta[i].X, pt_ruta[i].Z);
+                var r1 = new TGCVector2(pt_ruta[i + 1].X, pt_ruta[i + 1].Z);
                 var r = r1 - r0;
                 var rm = r.Length();
                 r.Normalize();
-                var d = Vector2.Dot(p - r0, r);
+                var d = TGCVector2.Dot(p - r0, r);
                 // d ==0 , rm
 
                 if (d >= -0.5 && d <= rm + 0.5)
@@ -399,7 +400,7 @@ namespace TGC.Examples.ShadersExamples
                 z = pt_ruta[aux_tramo].Z;
             }
 
-            return new Vector3(x, updatePos(x, z), z);
+            return new TGCVector3(x, updatePos(x, z), z);
         }
 
         public void dispose()

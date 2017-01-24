@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using TGC.Core.Collision;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -39,7 +40,7 @@ namespace TGC.Examples.Optimization
         public override void Init()
         {
             //FPS Camara
-            Camara = new TgcFpsCamera(new Vector3(-140f, 40f, -50f), 200f, 200f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(-140f, 40f, -50f), 200f, 200f, Input);
 
             //Modifier para habilitar o deshabilitar FrustumCulling
             Modifiers.addBoolean("culling", "Frustum culling", true);

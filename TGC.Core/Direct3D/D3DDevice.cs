@@ -2,6 +2,7 @@
 using Microsoft.DirectX.Direct3D;
 using System.Diagnostics;
 using System.Windows.Forms;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
@@ -42,8 +43,8 @@ namespace TGC.Core.Direct3D
         public void DefaultValues()
         {
             //Frustum values
-            Device.Transform.Projection = Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
-                ZFarPlaneDistance);
+            Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
+                ZFarPlaneDistance).ToMatrix();
 
             //Render state
             Device.RenderState.SpecularEnable = false;
@@ -164,8 +165,8 @@ namespace TGC.Core.Direct3D
             Width = width;
             Height = height;
             //hay que actualizar tambien la matriz de proyeccion, sino sigue viendo mal.
-            Device.Transform.Projection = Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
-                ZFarPlaneDistance);
+            Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
+                ZFarPlaneDistance).ToMatrix();
             //FALTA TODO ESTO DE ABAJO....
             //DefaultValues();
             //Device.Reset(d3dpp);

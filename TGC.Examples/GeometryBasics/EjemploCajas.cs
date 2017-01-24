@@ -4,6 +4,7 @@ using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -54,16 +55,16 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addBoolean("debugBox", "debugBox", true);
             Modifiers.addFloat("thickness", 0.1f, 5, 0.2f);
             Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
-            Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f), new Vector2(0, 0));
-            Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4), new Vector2(1, 1));
+            Modifiers.addVertex2f("offset", new TGCVector2(-0.5f, -0.5f), new TGCVector2(0.9f, 0.9f), TGCVector2.Empty);
+            Modifiers.addVertex2f("tiling", new TGCVector2(0.1f, 0.1f), new TGCVector2(4, 4), TGCVector2.One);
             Modifiers.addColor("color", Color.BurlyWood);
-            Modifiers.addVertex3f("size", new Vector3(0, 0, 0), new Vector3(100, 100, 100), new Vector3(20, 20, 20));
-            Modifiers.addVertex3f("position", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
-                new Vector3(0, 0, 0));
-            Modifiers.addVertex3f("rotation", new Vector3(-180, -180, -180), new Vector3(180, 180, 180),
-                new Vector3(0, 0, 0));
+            Modifiers.addVertex3f("size", TGCVector3.Empty, new TGCVector3(100, 100, 100), new TGCVector3(20, 20, 20));
+            Modifiers.addVertex3f("position", new TGCVector3(-100, -100, -100), new TGCVector3(100, 100, 100),
+                TGCVector3.Empty);
+            Modifiers.addVertex3f("rotation", new TGCVector3(-180, -180, -180), new TGCVector3(180, 180, 180),
+                TGCVector3.Empty);
 
-            Camara = new TgcRotationalCamera(new Vector3(), 200f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(), 200f, Input);
         }
 
         public override void Update()
@@ -86,29 +87,29 @@ namespace TGC.Examples.GeometryBasics
                 box.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
-            var size = (Vector3)Modifiers["size"];
-            var position = (Vector3)Modifiers["position"];
+            var size = (TGCVector3)Modifiers["size"];
+            var position = (TGCVector3)Modifiers["position"];
             var thickness = (float)Modifiers["thickness"];
             var color = (Color)Modifiers["color"];
 
             //Tamano, posicion y color
             box.Size = size;
-            box.Position = position + new Vector3(15f, 0, 0);
+            box.Position = position + new TGCVector3(15f, 0, 0);
             box.Color = color;
 
             //Actualizar valores en la caja.
-            debugBox.setPositionSize(position - new Vector3(15f, 0, 0), size);
+            debugBox.setPositionSize(position - new TGCVector3(15f, 0, 0), size);
             debugBox.Thickness = thickness;
             debugBox.Color = color;
 
             //Rotacion, converitr a radianes
-            var rotaion = (Vector3)Modifiers["rotation"];
-            box.Rotation = new Vector3(Geometry.DegreeToRadian(rotaion.X), Geometry.DegreeToRadian(rotaion.Y),
+            var rotaion = (TGCVector3)Modifiers["rotation"];
+            box.Rotation = new TGCVector3(Geometry.DegreeToRadian(rotaion.X), Geometry.DegreeToRadian(rotaion.Y),
                 Geometry.DegreeToRadian(rotaion.Z));
 
             //Offset y Tiling de textura
-            box.UVOffset = (Vector2)Modifiers["offset"];
-            box.UVTiling = (Vector2)Modifiers["tiling"];
+            box.UVOffset = (TGCVector2)Modifiers["offset"];
+            box.UVTiling = (TGCVector2)Modifiers["tiling"];
 
             //Actualizar valores en la caja. IMPORTANTE, es mejor realizar transformaciones con matrices.
             debugBox.updateValues();
