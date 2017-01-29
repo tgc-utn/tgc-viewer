@@ -8,15 +8,13 @@ namespace TGC.Core.Mathematica
     /// <summary>
     /// Describes and manipulates a vector in three-dimensional (3-D) space.
     /// </summary>
-    public class TGCVector3
+    public struct TGCVector3
     {
-        /// <summary>
-        /// Initializes a new instance of the TGCVector3 class
-        /// </summary>
-        public TGCVector3()
-        {
-            throw new NotImplementedException();
-        }
+
+        private static TGCVector3 ZERO = new TGCVector3(0f, 0f, 0f);
+        private static TGCVector3 ONE = new TGCVector3(1f, 1f, 1f);
+        private static TGCVector3 UP = new TGCVector3(0f, 1f, 0f);
+        private static TGCVector3 DOWN = new TGCVector3(0f, -1f, 0f);
 
         /// <summary>
         /// Initializes a new instance of the TGCVector3 class.
@@ -26,7 +24,22 @@ namespace TGC.Core.Mathematica
         /// <param name="z">Initial Z value.</param>
         public TGCVector3(float x, float y, float z)
         {
-            throw new NotImplementedException();
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
+            this.DXVector3 = new Vector3(x,y,z);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the TGCVector3 class.
+        /// </summary>
+        /// <param name="dxVector3">Vector3 from value.</param>        
+        public TGCVector3(Vector3 dxVector3)
+        {
+            this.X = dxVector3.X;
+            this.Y = dxVector3.Y;
+            this.Z = dxVector3.Z;
+            this.DXVector3 = dxVector3;
         }
 
         private Vector3 DXVector3 { get; set; }
@@ -49,22 +62,22 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves a 3-D vector (0,0,0).
         /// </summary>
-        public static TGCVector3 Empty { get; }
+        public static TGCVector3 Empty { get { return ZERO; } }
 
         /// <summary>
         /// Retrieves a 3-D vector (1,1,1).
         /// </summary>
-        public static TGCVector3 One { get; }
+        public static TGCVector3 One { get { return ONE; } }
 
         /// <summary>
         /// Retrieves a 3-D vector (0,1,0).
         /// </summary>
-        public static TGCVector3 Up { get; }
+        public static TGCVector3 Up { get { return UP; } }
 
         /// <summary>
         /// Retrieves a 3-D vector (0,-1,0).
         /// </summary>
-        public static TGCVector3 Down { get; }
+        public static TGCVector3 Down { get { return DOWN; } }
 
         /// <summary>
         /// Adds two 3-D vectors.
@@ -72,7 +85,10 @@ namespace TGC.Core.Mathematica
         /// <param name="source">Source TGCVector3.</param>
         public void Add(TGCVector3 source)
         {
-            throw new NotImplementedException();
+            this.X += source.X;
+            this.Y += source.Y;
+            this.Z += source.Y;
+            DXVector3 = new Vector3(this.X, this.Y, this.Z);
         }
 
         /// <summary>
@@ -83,7 +99,11 @@ namespace TGC.Core.Mathematica
         /// <returns>Sum of the two TGCVector3 structures.</returns>
         public static TGCVector3 Add(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            left.X += right.X;
+            left.Y += right.Y;
+            left.Z += right.Z;
+            left.DXVector3 += right.DXVector3;
+            return left;
         }
 
         /// <summary>
@@ -97,7 +117,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure in barycentric coordinates.</returns>
         public static TGCVector3 BaryCentric(TGCVector3 v1, TGCVector3 v2, TGCVector3 v3, float f, float g)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.BaryCentric(v1.ToVector3(), v2.ToVector3(), v3.ToVector3(), f, g));
         }
 
         /// <summary>
@@ -111,7 +131,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure that is the result of the Catmull-Rom interpolation.</returns>
         public static TGCVector3 CatmullRom(TGCVector3 position1, TGCVector3 position2, TGCVector3 position3, TGCVector3 position4, float weightingFactor)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.CatmullRom(position1.ToVector3(), position2.ToVector3(), position3.ToVector3(), position4.ToVector3(), weightingFactor));
         }
 
         /// <summary>
@@ -122,7 +142,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Vector3 structure that is the cross product of two 3-D vectors.</returns>
         public static TGCVector3 Cross(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.Cross(left.ToVector3(), right.ToVector3()));
         }
 
         /// <summary>
@@ -133,7 +153,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Single value that is the dot product.</returns>
         public static float Dot(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            return Vector3.Dot(left.ToVector3(), right.ToVector3());
         }
 
         /// <summary>
@@ -143,7 +163,13 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
         public override bool Equals(object compare)
         {
-            throw new NotImplementedException();
+            if (compare is TGCVector3)
+            {
+                TGCVector3 other = ((TGCVector3)compare);
+                return (X == other.X) && (Y == other.Y) && (Z == other.Z);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -152,7 +178,14 @@ namespace TGC.Core.Mathematica
         /// <returns>Hash code for the instance.</returns>
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + X.GetHashCode();
+                hash = hash * 23 + Y.GetHashCode();
+                hash = hash * 23 + Z.GetHashCode();
+                return hash;
+            }
         }
 
         /// <summary>
@@ -166,7 +199,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure that is the result of the Hermite spline interpolation.</returns>
         public static TGCVector3 Hermite(TGCVector3 position, TGCVector3 tangent, TGCVector3 position2, TGCVector3 tangent2, float weightingFactor)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.Hermite(position.ToVector3(), tangent.ToVector3(), position2.ToVector3(), tangent2.ToVector3(), weightingFactor));
         }
 
         /// <summary>
@@ -175,7 +208,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Single value that contains the vector's length.</returns>
         public float Length()
         {
-            throw new NotImplementedException();
+            return DXVector3.Length();
         }
 
         /// <summary>
@@ -185,7 +218,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Returns the length of a 3-D vector.</returns>
         public static float Length(TGCVector3 source)
         {
-            throw new NotImplementedException();
+            return Vector3.Length(source.ToVector3());
         }
 
         /// <summary>
@@ -194,7 +227,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Single value that contains the vector's squared length.</returns>
         public float LengthSq()
         {
-            throw new NotImplementedException();
+            return DXVector3.LengthSq();
         }
 
         /// <summary>
@@ -204,7 +237,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Single value that contains the vector's squared length.</returns>
         public static float LengthSq(TGCVector3 source)
         {
-            throw new NotImplementedException();
+            return Vector3.LengthSq(source.ToVector3());
         }
 
         /// <summary>
@@ -216,16 +249,17 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure that is the result of the linear interpolation.</returns>
         public static TGCVector3 Lerp(TGCVector3 left, TGCVector3 right, float interpolater)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.Lerp(left.ToVector3(), right.ToVector3(), interpolater));
         }
 
         /// <summary>
         /// Returns a 3-D vector that is made up of the largest components of two 3-D vectors.
         /// </summary>
         /// <param name="source">Source TGCVector3.</param>
-        public void Maximize(TGCVector3 source)
+        public TGCVector3 Maximize(TGCVector3 source)
         {
-            throw new NotImplementedException();
+            //TODO validar cambio de firma. este no retornaba nada.
+            return new TGCVector3(Vector3.Maximize(this.ToVector3(), source.ToVector3()));
         }
 
         /// <summary>
@@ -236,16 +270,17 @@ namespace TGC.Core.Mathematica
         /// <returns>A Vector3 structure that is made up of the largest components of the two vectors.</returns>
         public static TGCVector3 Maximize(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.Maximize(left.ToVector3(), right.ToVector3()));
         }
 
         /// <summary>
         /// Returns a 3-D vector that is made up of the smallest components of two 3-D vectors.
         /// </summary>
         /// <param name="source">Source TGCVector3.</param>
-        public void Minimize(TGCVector3 source)
+        public TGCVector3 Minimize(TGCVector3 source)
         {
-            throw new NotImplementedException();
+            //TODO validar cambio de firma. este no retornaba nada.
+            return new TGCVector3(Vector3.Minimize(this.ToVector3(), source.ToVector3()));
         }
 
         /// <summary>
@@ -254,9 +289,9 @@ namespace TGC.Core.Mathematica
         /// <param name="left">Source TGCVector3.</param>
         /// <param name="right">Source TGCVector3.</param>
         /// <returns>A Vector3 structure that is made up of the smallest components of the two vectors.</returns>
-        public static Vector3 Minimize(TGCVector3 left, TGCVector3 right)
+        public static TGCVector3 Minimize(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.Minimize(left.ToVector3(), right.ToVector3()));
         }
 
         /// <summary>
@@ -265,7 +300,10 @@ namespace TGC.Core.Mathematica
         /// <param name="s">Source Single value used as a multiplier.</param>
         public void Multiply(float s)
         {
-            throw new NotImplementedException();
+            this.DXVector3.Multiply(s);
+            this.X = DXVector3.X;
+            this.Y = DXVector3.Y;
+            this.Z = DXVector3.Y;
         }
 
         /// <summary>
@@ -276,7 +314,11 @@ namespace TGC.Core.Mathematica
         /// <returns>A Vector3 structure that is multiplied by the Single value.</returns>
         public static TGCVector3 Multiply(TGCVector3 source, float f)
         {
-            throw new NotImplementedException();
+            source.X *= f;
+            source.Y *= f;
+            source.Z *= f;
+            source.DXVector3.Multiply(f);
+            return source;
         }
 
         /// <summary>
@@ -284,7 +326,10 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public void Normalize()
         {
-            throw new NotImplementedException();
+            this.DXVector3 = Vector3.Normalize(this.ToVector3());
+            this.X = DXVector3.X;
+            this.Y = DXVector3.Y;
+            this.Z = DXVector3.Z;
         }
 
         /// <summary>
@@ -294,7 +339,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure that is the normalized version of the specified vector.</returns>
         public static TGCVector3 Normalize(TGCVector3 source)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.Normalize(source.ToVector3()));
         }
 
         /// <summary>
@@ -305,7 +350,8 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure that contains the sum of the parameters.</returns>
         public static TGCVector3 operator +(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            return TGCVector3.Add(left, right);
+            
         }
 
         /// <summary>
@@ -316,7 +362,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Compares the current instance of a class to another instance to determine whether they are the same.</returns>
         public static bool operator ==(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            return left.Equals(right);
         }
 
         /// <summary>
@@ -327,7 +373,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the objects are different, or false if they are the same.</returns>
         public static bool operator !=(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            return !left.Equals(right);
         }
 
         /// <summary>
@@ -338,7 +384,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure that is the product of the right and left parameters.</returns>
         public static TGCVector3 operator *(float right, TGCVector3 left)
         {
-            throw new NotImplementedException();
+            return TGCVector3.Multiply(left, right);
         }
 
         /// <summary>
@@ -349,7 +395,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure that is the product of the right and left parameters.</returns>
         public static TGCVector3 operator *(TGCVector3 left, float right)
         {
-            throw new NotImplementedException();
+            return TGCVector3.Multiply(left, right);
         }
 
         /// <summary>
@@ -360,7 +406,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Resulting Vector3 structure.</returns>
         public static TGCVector3 operator -(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            return TGCVector3.Add(left, -right);
         }
 
         /// <summary>
@@ -370,7 +416,8 @@ namespace TGC.Core.Mathematica
         /// <returns>The Vector3 structure that is the result of the operation.</returns>
         public static TGCVector3 operator -(TGCVector3 vec)
         {
-            throw new NotImplementedException();
+            //TODO asi o mejor el *-1???
+            return new TGCVector3(-vec.X, -vec.Y, -vec.Z);
         }
 
         /// <summary>
@@ -382,7 +429,10 @@ namespace TGC.Core.Mathematica
         /// <param name="world">A TGCMatrix structure that represents the world matrix.</param>
         public void Project(object viewport, TGCMatrix projection, TGCMatrix view, TGCMatrix world)
         {
-            throw new NotImplementedException();
+            this.DXVector3 = Vector3.Project(this.ToVector3(), viewport, projection.ToMatrix(), view.ToMatrix(), world.ToMatrix());
+            this.X = DXVector3.X;
+            this.Y = DXVector3.Y;
+            this.Z = DXVector3.Z;
         }
 
         /// <summary>
@@ -396,7 +446,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure that is the vector projected from object space into screen space.</returns>
         public static TGCVector3 Project(TGCVector3 v, object viewport, TGCMatrix projection, TGCMatrix view, TGCMatrix world)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.Project(v.ToVector3(), viewport, projection.ToMatrix(), view.ToMatrix(), world.ToMatrix()));
         }
 
         /// <summary>
@@ -405,7 +455,8 @@ namespace TGC.Core.Mathematica
         /// <param name="scalingFactor">Scaling value.</param>
         public void Scale(float scalingFactor)
         {
-            throw new NotImplementedException();
+            //TODO validar diferencia entre scale y multiply
+            this.Multiply(scalingFactor);
         }
 
         /// <summary>
@@ -416,7 +467,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Vector3 structure that is the scaled vector.</returns>
         public static TGCVector3 Scale(TGCVector3 source, float scalingFactor)
         {
-            throw new NotImplementedException();
+            return TGCVector3.Multiply(source, scalingFactor);
         }
 
         /// <summary>
@@ -425,7 +476,7 @@ namespace TGC.Core.Mathematica
         /// <param name="source">Source TGCVector3 structure to subtract from the current instance.</param>
         public void Subtract(TGCVector3 source)
         {
-            throw new NotImplementedException();
+            this.Add(-source);
         }
 
         /// <summary>
@@ -436,7 +487,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Vector3 structure that is the result of the operation.</returns>
         public static TGCVector3 Subtract(TGCVector3 left, TGCVector3 right)
         {
-            throw new NotImplementedException();
+            return TGCVector3.Add(left, -right);
         }
 
         /// <summary>
@@ -445,7 +496,9 @@ namespace TGC.Core.Mathematica
         /// <returns>String that represents the object.</returns>
         public override string ToString()
         {
-            throw new NotImplementedException();
+            return "[" + string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", X) + "," +
+                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", Y) + "," +
+                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", X) + "]";
         }
 
         /// <summary>
@@ -454,9 +507,9 @@ namespace TGC.Core.Mathematica
         /// <param name="source">Source TGCVector3.</param>
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
         /// <returns>A Vector4 structure that is the result of the method.</returns>
-        public static Vector4 Transform(TGCVector3 source, TGCMatrix sourceMatrix)
+        public static TGCVector4 Transform(TGCVector3 source, TGCMatrix sourceMatrix)
         {
-            throw new NotImplementedException();
+            return new TGCVector4(Vector3.Transform(source.ToVector3(), sourceMatrix.ToMatrix()));
         }
 
         /// <summary>
@@ -465,9 +518,14 @@ namespace TGC.Core.Mathematica
         /// <param name="vector">Array of source TGCVector3 structures.</param>
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
         /// <returns>Array of Vector4 structures that are the result of the method.</returns>
-        public static Vector4[] Transform(TGCVector3[] vector, TGCMatrix sourceMatrix)
+        public static TGCVector4[] Transform(TGCVector3[] vector, TGCMatrix sourceMatrix)
         {
-            throw new NotImplementedException();
+            TGCVector4[] ret = new TGCVector4[vector.Length];
+            for (int i = 0; i < vector.Length; i++)
+            {
+                ret[i] = new TGCVector4(Vector3.Transform(vector[i].ToVector3(), sourceMatrix.ToMatrix()));
+            }
+            return ret;
         }
 
         /// <summary>
@@ -476,7 +534,10 @@ namespace TGC.Core.Mathematica
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
         public void TransformCoordinate(TGCMatrix sourceMatrix)
         {
-            throw new NotImplementedException();
+            this.DXVector3 = Vector3.TransformCoordinate(this.ToVector3(), sourceMatrix.ToMatrix());
+            this.X = DXVector3.X;
+            this.Y = DXVector3.Y;
+            this.Z = DXVector3.Z;
         }
 
         /// <summary>
@@ -487,7 +548,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 structure that represents the results of the method.</returns>
         public static TGCVector3 TransformCoordinate(TGCVector3 source, TGCMatrix sourceMatrix)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.TransformCoordinate(source.ToVector3(), sourceMatrix.ToMatrix()));
         }
 
         /// <summary>
@@ -498,7 +559,12 @@ namespace TGC.Core.Mathematica
         /// <returns>Array of TGCVector3 structures that represent the results of the method.</returns>
         public static TGCVector3[] TransformCoordinate(TGCVector3[] vector, TGCMatrix sourceMatrix)
         {
-            throw new NotImplementedException();
+            TGCVector3[] ret = new TGCVector3[vector.Length];
+            for (int i = 0; i < vector.Length; i++)
+            {
+                ret[i] = new TGCVector3(Vector3.TransformCoordinate(vector[i].ToVector3(), sourceMatrix.ToMatrix()));
+            }
+            return ret;
         }
 
         /// <summary>
@@ -507,7 +573,10 @@ namespace TGC.Core.Mathematica
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
         public void TransformNormal(TGCMatrix sourceMatrix)
         {
-            throw new NotImplementedException();
+            this.DXVector3 = Vector3.TransformNormal(this.ToVector3(), sourceMatrix.ToMatrix());
+            this.X = DXVector3.X;
+            this.Y = DXVector3.Y;
+            this.Z = DXVector3.Z;
         }
 
 
@@ -519,7 +588,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Vector3 structure that contains the results of this method.</returns>
         public static TGCVector3 TransformNormal(TGCVector3 source, TGCMatrix sourceMatrix)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.TransformNormal(source.ToVector3(), sourceMatrix.ToMatrix()));
         }
 
         /// <summary>
@@ -530,7 +599,12 @@ namespace TGC.Core.Mathematica
         /// <returns>Array of Vector3 structures that contain the results of this method.</returns>
         public static TGCVector3[] TransformNormal(TGCVector3[] vector, TGCMatrix sourceMatrix)
         {
-            throw new NotImplementedException();
+            TGCVector3[] ret = new TGCVector3[vector.Length];
+            for (int i = 0; i < vector.Length; i++)
+            {
+                ret[i] = new TGCVector3(Vector3.TransformNormal(vector[i].ToVector3(), sourceMatrix.ToMatrix()));
+            }
+            return ret;
         }
 
         /// <summary>
@@ -542,7 +616,10 @@ namespace TGC.Core.Mathematica
         /// <param name="world">A TGCMatrix structure that represents the world matrix.</param>
         public void Unproject(object viewport, TGCMatrix projection, TGCMatrix view, TGCMatrix world)
         {
-            throw new NotImplementedException();
+            this.DXVector3 = Vector3.Unproject(this.ToVector3(), viewport, projection.ToMatrix(), view.ToMatrix(), world.ToMatrix());
+            this.X = DXVector3.X;
+            this.Y = DXVector3.Y;
+            this.Z = DXVector3.Z;
         }
 
         /// <summary>
@@ -554,9 +631,9 @@ namespace TGC.Core.Mathematica
         /// <param name="view">A TGCMatrix structure that represents the view matrix.</param>
         /// <param name="world">A TGCMatrix structure that represents the world matrix.</param>
         /// <returns>A TGCVector3 structure that is the vector projected from screen space into object space.</returns>
-        public static TGCVector3 Unproject(Vector3 v, object viewport, TGCMatrix projection, TGCMatrix view, TGCMatrix world)
+        public static TGCVector3 Unproject(TGCVector3 v, object viewport, TGCMatrix projection, TGCMatrix view, TGCMatrix world)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Vector3.Unproject(v.ToVector3(), viewport, projection.ToMatrix(), view.ToMatrix(), world.ToMatrix()));
         }
 
         /// <summary>
@@ -572,10 +649,11 @@ namespace TGC.Core.Mathematica
         /// New TGCVector3 from DX Vector3
         /// </summary>
         /// <param name="vector">Source Vector3.</param>
-        /// <returns>Initializes a new instance of the TGCVector3 class.</returns>
+        /// <returns>Initializes a new instance of the TGCVector3 class.</returns>        
         public static TGCVector3 FromVector3(Vector3 vector)
         {
-            return new TGCVector3(vector.X, vector.Y, vector.Z);
+            //TODO DEPRECAR
+            return new TGCVector3(vector);
         }
 
         #region Old TGCVectorUtils
