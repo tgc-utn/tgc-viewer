@@ -120,7 +120,7 @@ namespace TGC.Examples.Collision
                         max.Y = SELECTION_BOX_HEIGHT;
 
                         //Configurar BOX
-                        selectionBox.setExtremes(TGCVector3.FromVector3(min), max);
+                        selectionBox.setExtremes(min, max);
                         selectionBox.updateValues();
                
                     }
