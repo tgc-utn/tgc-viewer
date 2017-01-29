@@ -3,6 +3,10 @@ using Microsoft.DirectX;
 
 namespace TGC.Core.Mathematica
 {
+
+    /// <summary>
+    /// Describes and manipulates a vector in four-dimensional (4-D) space.
+    /// </summary>
     public class TGCVector4
     {
 
