@@ -6,16 +6,10 @@ namespace TGC.Core.Mathematica
     /// <summary>
     /// Describes and manipulates a plane.
     /// </summary>
-    public class TGCPlane
+    public struct TGCPlane
     {
-        /// <summary>
-        /// Initializes a new instance of the Plane class.
-        /// </summary>
-        public TGCPlane()
-        {
-            throw new NotImplementedException();
-        }
-
+        private static TGCPlane EMPTY = new TGCPlane(0f, 0f, 0f, 0f);
+        
         /// <summary>
         /// Initializes a new instance of the Plane class.
         /// </summary>
@@ -25,7 +19,24 @@ namespace TGC.Core.Mathematica
         /// <param name="valuePointD">A Single value used to set the initial value of the D field.</param>
         public TGCPlane(float valuePointA, float valuePointB, float valuePointC, float valuePointD)
         {
-            throw new NotImplementedException();
+            this.DXPlane = new Plane(valuePointA, valuePointB, valuePointC, valuePointD);
+            this.A = this.DXPlane.A;
+            this.B = this.DXPlane.B;
+            this.C = this.DXPlane.C;
+            this.D = this.DXPlane.D;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the Plane class.
+        /// </summary>
+        /// <param name="dxPlane">A plane DXPlane.</param>
+        public TGCPlane(Plane dxPlane)
+        {
+            this.DXPlane = dxPlane;
+            this.A = this.DXPlane.A;
+            this.B = this.DXPlane.B;
+            this.C = this.DXPlane.C;
+            this.D = this.DXPlane.D;
         }
 
         private Plane DXPlane { get; set; }
@@ -33,7 +44,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves an empty plane.
         /// </summary>
-        public static TGCPlane Empty { get; }
+        public static TGCPlane Empty { get { return EMPTY; } }
 
         /// <summary>
         /// Retrieves or sets the 'A' coefficient of the clipping plane in the general plane equation.
@@ -55,6 +66,16 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public float D { get; set; }
 
+
+        /// <summary>        
+        /// Retrieves the DXPlane.
+        /// </summary>
+        /// <returns></returns>
+        public Plane ToPlane()
+        {
+            return this.DXPlane;
+        }
+
         /// <summary>
         /// Computes the dot product of a plane and a vector.
         /// </summary>
@@ -62,17 +83,17 @@ namespace TGC.Core.Mathematica
         /// <returns>A Single value that is the dot product of the plane and the vector.</returns>
         public float Dot(TGCVector3 v)
         {
-            throw new NotImplementedException();
+            return this.DXPlane.Dot(v.ToVector3());            
         }
-
+        
         /// <summary>
         /// Computes the dot product of a plane and a vector.
         /// </summary>
         /// <param name="v">Source Vector4 structure.</param>
         /// <returns>A Single value that is the dot product of the plane and the vector.</returns>
-        public float Dot(Vector4 v)
+        public float Dot(TGCVector4 v)
         {
-            throw new NotImplementedException();
+            return this.DXPlane.Dot(v.ToVector4());
         }
 
         /// <summary>
@@ -83,7 +104,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Single value that represents the dot product of the plane and the 3-D vector.</returns>
         public static float DotNormal(TGCPlane p, TGCVector3 v)
         {
-            throw new NotImplementedException();
+            return Plane.DotNormal(p.ToPlane(), v.ToVector3());
         }
 
         /// <summary>
@@ -93,7 +114,13 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
         public override bool Equals(object compare)
         {
-            throw new NotImplementedException();
+            if (compare is TGCPlane)
+            {
+                TGCPlane other = ((TGCPlane)compare);
+                return (A == other.A) && (B == other.B) && (C == other.C) && (D == other.D);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -102,7 +129,15 @@ namespace TGC.Core.Mathematica
         /// <returns>Hash code for the instance.</returns>
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + A.GetHashCode();
+                hash = hash * 23 + B.GetHashCode();
+                hash = hash * 23 + C.GetHashCode();
+                hash = hash * 23 + D.GetHashCode();
+                return hash;
+            }
         }
 
         /// <summary>
@@ -113,7 +148,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCPlane constructed from the point and the normal.</returns>
         public static TGCPlane FromPointNormal(TGCVector3 point, TGCVector3 normal)
         {
-            throw new NotImplementedException();
+            return new TGCPlane(Plane.FromPointNormal(point.ToVector3(), normal.ToVector3()));
         }
 
         /// <summary>
@@ -125,7 +160,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCPlane constructed from the given points.</returns>
         public static TGCPlane FromPoints(TGCVector3 p1, TGCVector3 p2, TGCVector3 p3)
         {
-            throw new NotImplementedException();
+            return new TGCPlane(Plane.FromPoints(p1.ToVector3(), p1.ToVector3(), p3.ToVector3()));
         }
 
         /// <summary>
@@ -137,7 +172,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector3 that is the intersection between the specified plane and line.</returns>
         public static TGCVector3 IntersectLine(TGCPlane p, TGCVector3 v1, TGCVector3 v2)
         {
-            throw new NotImplementedException();
+            return new TGCVector3(Plane.IntersectLine(p.ToPlane(), v1.ToVector3(), v2.ToVector3()));
         }
 
         /// <summary>
@@ -145,7 +180,11 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public void Normalize()
         {
-            throw new NotImplementedException();
+            this.DXPlane.Normalize();
+            this.A = this.DXPlane.A;
+            this.B = this.DXPlane.B;
+            this.C = this.DXPlane.C;
+            this.D = this.DXPlane.D;
         }
 
         /// <summary>
@@ -155,7 +194,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCPlane that represents the normal of the plane.</returns>
         public static TGCPlane Normalize(TGCPlane p)
         {
-            throw new NotImplementedException();
+            return new TGCPlane(Plane.Normalize(p.ToPlane()));
         }
 
         /// <summary>
@@ -166,7 +205,8 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the objects are the same, or false if they are different.</returns>
         public static bool operator ==(TGCPlane left, TGCPlane right)
         {
-            throw new NotImplementedException();
+            //TODO NPE???? deveriamos validar?
+            return left.Equals(right);
         }
 
         /// <summary>
@@ -177,7 +217,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the objects are different, or false if they are the same.</returns>
         public static bool operator !=(TGCPlane left, TGCPlane right)
         {
-            throw new NotImplementedException();
+            return !left.Equals(right);
         }
 
         /// <summary>
@@ -186,7 +226,11 @@ namespace TGC.Core.Mathematica
         /// <param name="s">Scale factor.</param>
         public void Scale(float s)
         {
-            throw new NotImplementedException();
+            this.DXPlane.Scale(s);
+            this.A = this.DXPlane.A;
+            this.B = this.DXPlane.B;
+            this.C = this.DXPlane.C;
+            this.D = this.DXPlane.D;
         }
 
         /// <summary>
@@ -197,7 +241,7 @@ namespace TGC.Core.Mathematica
         /// <returns>The Plane structure that represents the scaled plane.</returns>
         public static TGCPlane Scale(TGCPlane p, float s)
         {
-            throw new NotImplementedException();
+            return new TGCPlane(Plane.Scale(p.ToPlane(), s));            
         }
 
         /// <summary>
@@ -206,7 +250,10 @@ namespace TGC.Core.Mathematica
         /// <returns>String that represents the object.</returns>
         public override string ToString()
         {
-            throw new NotImplementedException();
+            return "[" + string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", A) + "," +
+                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", B) + "," +
+                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", C) + "," +
+                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", D) + "]";
         }
 
         /// <summary>
@@ -215,7 +262,11 @@ namespace TGC.Core.Mathematica
         /// <param name="m">Source TGCMatrix, which contains the transformation values. This matrix must contain the inverse transpose of the transformation values.</param>
         public void Transform(TGCMatrix m)
         {
-            throw new NotImplementedException();
+            this.DXPlane = Plane.Transform(this.ToPlane(), m.ToMatrix());
+            this.A = this.DXPlane.A;
+            this.B = this.DXPlane.B;
+            this.C = this.DXPlane.C;
+            this.D = this.DXPlane.D;
         }
 
         /// <summary>
@@ -226,7 +277,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCPlane that represents the transformed plane.</returns>
         public static TGCPlane Transform(TGCPlane p, TGCMatrix m)
         {
-            throw new NotImplementedException();
+            return new TGCPlane(Plane.Transform(p.ToPlane(), m.ToMatrix()));
         }
 
         #region Old TGCVectorUtils
