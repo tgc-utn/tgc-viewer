@@ -450,10 +450,10 @@ namespace TGC.Core.Mathematica
         /// </summary>
         /// <param name="source">Source TGCVector2.</param>
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
-        /// <returns>A Vector4 structure that is the result of the method.</returns>
-        public static Vector4 Transform(TGCVector2 source, TGCMatrix sourceMatrix)
+        /// <returns>A TGCVector4 structure that is the result of the method.</returns>
+        public static TGCVector4 Transform(TGCVector2 source, TGCMatrix sourceMatrix)
         {
-            return Vector2.Transform(source.ToVector2(), sourceMatrix.ToMatrix());
+            return new TGCVector4(Vector2.Transform(source.ToVector2(), sourceMatrix.ToMatrix()));
         }
 
         /// <summary>
@@ -462,12 +462,12 @@ namespace TGC.Core.Mathematica
         /// <param name="vector">Array of source TGCVector2.</param>
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
         /// <returns>Array of Vector4 structures that are the result of the method.</returns>
-        public static Vector4[] Transform(TGCVector2[] vector, TGCMatrix sourceMatrix)
+        public static TGCVector4[] Transform(TGCVector2[] vector, TGCMatrix sourceMatrix)
         {
-            Vector4[] ret = new Vector4[vector.Length];
+            TGCVector4[] ret = new TGCVector4[vector.Length];
             for (int i = 0; i < vector.Length; i++)
             {
-                ret[i] = Vector2.Transform(vector[i].ToVector2(), sourceMatrix.ToMatrix());
+                ret[i] = new TGCVector4(Vector2.Transform(vector[i].ToVector2(), sourceMatrix.ToMatrix()));
             }
             return ret;
         }
