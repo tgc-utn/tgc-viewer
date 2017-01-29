@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using Microsoft.DirectX;
 
 namespace TGC.Core.Mathematica
@@ -49,6 +50,15 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public float W { get; set; }
 
+        /// <summary>
+        /// Retrieves the DirectX of a 4-D vector
+        /// </summary>
+        /// <returns></returns>
+        public Vector4 ToVector4()
+        {
+            return DXVector4;
+        }
+
         #region Old TGCVectorUtils
 
         /// <summary>
@@ -60,6 +70,7 @@ namespace TGC.Core.Mathematica
         {
             return Vector4.Normalize(new Vector4(color.R, color.G, color.B, color.A));
         }
+               
 
         #endregion
     }
