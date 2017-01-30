@@ -6,14 +6,35 @@ namespace TGC.Core.Mathematica
     /// <summary>
     /// Describes and manipulates a matrix.
     /// </summary>
-    public class TGCMatrix
+    public struct TGCMatrix
     {
+
+        private static TGCMatrix IDENTITY = new TGCMatrix(Matrix.Identity);
+        private static TGCMatrix ZERO = new TGCMatrix(Matrix.Zero);
+
         /// <summary>
         /// Initializes a new instance of the TGCMatrix class.
         /// </summary>
-        public TGCMatrix()
+        /// <param name="dxMatrix">Matrix from value.</param>        
+        public TGCMatrix(Matrix dxMatrix)
         {
-            throw new NotImplementedException();
+            this.M11 = dxMatrix.M11;
+            this.M12 = dxMatrix.M12;
+            this.M13 = dxMatrix.M13;
+            this.M14 = dxMatrix.M14;
+            this.M21 = dxMatrix.M21;
+            this.M22 = dxMatrix.M22;
+            this.M23 = dxMatrix.M23;
+            this.M24 = dxMatrix.M24;
+            this.M31 = dxMatrix.M31;
+            this.M32 = dxMatrix.M32;
+            this.M33 = dxMatrix.M33;
+            this.M34 = dxMatrix.M34;
+            this.M41 = dxMatrix.M41;
+            this.M42 = dxMatrix.M42;
+            this.M43 = dxMatrix.M43;
+            this.M44 = dxMatrix.M44;
+            this.DXMatrix = dxMatrix;
         }
 
         private Matrix DXMatrix { get; set; }
@@ -21,17 +42,17 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves the determinant of the matrix.
         /// </summary>
-        public float Determinant { get; }
+        public float Determinant { get { return DXMatrix.Determinant; } }
 
         /// <summary>
         /// Retrieves the identity of the matrix.
         /// </summary>
-        public static TGCMatrix Identity { get; }
+        public static TGCMatrix Identity { get { return IDENTITY; } }
 
         /// <summary>
         /// Retrieves an empty matrix.
         /// </summary>
-        public static TGCMatrix Zero { get; }
+        public static TGCMatrix Zero { get { return ZERO; } }
 
         /// <summary>
         /// Retrieves or sets the element in the first row and the first column of the matrix.
@@ -121,7 +142,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix instance that represents the result of the addition.</returns>
         public static TGCMatrix Add(TGCMatrix left, TGCMatrix right)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Add(left.ToMatrix(), right.ToMatrix()));
         }
 
         /// <summary>
@@ -134,7 +155,32 @@ namespace TGC.Core.Mathematica
         /// <param name="translation">A TGCVector3 that represents the translation. Use TGCVector3.Empty to specify no translation.</param>
         public void AffineTransformation(float scaling, TGCVector3 rotationCenter, Quaternion rotation, TGCVector3 translation)
         {
-            throw new NotImplementedException();
+
+            this.DXMatrix.AffineTransformation(scaling, rotationCenter.ToVector3(), rotation, translation.ToVector3());
+            AssingAllDXMatrix();
+        }
+
+        /// <summary>
+        /// Luego de cambiar valores de DXMatrix deberian llamar a este metodo.
+        /// </summary>
+        private void AssingAllDXMatrix()
+        {
+            this.M11 = DXMatrix.M11;
+            this.M12 = DXMatrix.M12;
+            this.M13 = DXMatrix.M13;
+            this.M14 = DXMatrix.M14;
+            this.M21 = DXMatrix.M21;
+            this.M22 = DXMatrix.M22;
+            this.M23 = DXMatrix.M23;
+            this.M24 = DXMatrix.M24;
+            this.M31 = DXMatrix.M31;
+            this.M32 = DXMatrix.M32;
+            this.M33 = DXMatrix.M33;
+            this.M34 = DXMatrix.M34;
+            this.M41 = DXMatrix.M41;
+            this.M42 = DXMatrix.M42;
+            this.M43 = DXMatrix.M43;
+            this.M44 = DXMatrix.M44;
         }
 
         /// <summary>
@@ -147,7 +193,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is an affine transformation matrix.</returns>
         public static TGCMatrix AffineTransformation2D(float scaling, TGCVector2 rotationCenter, float rotation, TGCVector2 translation)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.AffineTransformation2D(scaling, rotationCenter.ToVector2(), rotation, translation.ToVector2()));
         }
 
         /// <summary>
@@ -157,7 +203,13 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
         public override bool Equals(object compare)
         {
-            throw new NotImplementedException();
+            if (compare is TGCMatrix)
+            {
+                TGCMatrix other = ((TGCMatrix)compare);
+                return this.DXMatrix.Equals(other.DXMatrix);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -166,7 +218,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Hash code for the instance.</returns>
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            return DXMatrix.GetHashCode();
         }
 
         /// <summary>
@@ -174,7 +226,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public void Invert()
         {
-            throw new NotImplementedException();
+            DXMatrix.Invert();
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -184,7 +237,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is the result of the operation.</returns>
         public static TGCMatrix Invert(TGCMatrix source)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Invert(source.ToMatrix()));
         }
 
         /// <summary>
@@ -195,7 +248,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is the result of the operation.</returns>
         public static TGCMatrix Invert(ref float determinant, TGCMatrix source)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Invert(ref determinant, source.ToMatrix()));
         }
 
         /// <summary>
@@ -207,7 +260,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a left-handed look-at matrix.</returns>
         public static TGCMatrix LookAtLH(TGCVector3 cameraPosition, TGCVector3 cameraTarget, TGCVector3 cameraUpVector)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.LookAtLH(cameraPosition.ToVector3(), cameraTarget.ToVector3(), cameraUpVector.ToVector3()));
         }
 
         /// <summary>
@@ -219,7 +272,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a right-handed look-at matrix.</returns>
         public static TGCMatrix LookAtRH(TGCVector3 cameraPosition, TGCVector3 cameraTarget, TGCVector3 cameraUpVector)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.LookAtRH(cameraPosition.ToVector3(), cameraTarget.ToVector3(), cameraUpVector.ToVector3()));
         }
 
         /// <summary>
@@ -228,7 +281,8 @@ namespace TGC.Core.Mathematica
         /// <param name="source">Source TGCMatrix to multiply by the current instance.</param>
         public void Multiply(TGCMatrix source)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.Multiply(source.ToMatrix());
+            this.AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -239,7 +293,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is the product of two matrices.</returns>
         public static TGCMatrix Multiply(TGCMatrix left, TGCMatrix right)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Multiply(left.ToMatrix(), right.ToMatrix()));
         }
 
         /// <summary>
@@ -248,7 +302,8 @@ namespace TGC.Core.Mathematica
         /// <param name="source">Source TGCMatrix to multiply and transpose with the current instance.</param>
         public void MultiplyTranspose(TGCMatrix source)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.MultiplyTranspose(source.ToMatrix());
+            this.AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -259,7 +314,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is the product and transposition of two matrices.</returns>
         public static TGCMatrix MultiplyTranspose(TGCMatrix left, TGCMatrix right)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.MultiplyTranspose(left.ToMatrix(), right.ToMatrix()));
         }
 
         /// <summary>
@@ -270,7 +325,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Resulting TGCMatrix.</returns>
         public static TGCMatrix operator +(TGCMatrix left, TGCMatrix right)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(left.ToMatrix() + right.ToMatrix());
         }
 
         /// <summary>
@@ -281,7 +336,8 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the objects are the same, or false if they are different.</returns>
         public static bool operator ==(TGCMatrix left, TGCMatrix right)
         {
-            throw new NotImplementedException();
+            //TODO validar NPE????
+            return left.ToMatrix() == right.ToMatrix();
         }
 
         /// <summary>
@@ -292,7 +348,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the objects are different, or false if they are the same.</returns>
         public static bool operator !=(TGCMatrix left, TGCMatrix right)
         {
-            throw new NotImplementedException();
+            return left.ToMatrix() != right.ToMatrix();
         }
 
         /// <summary>
@@ -303,7 +359,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Matrix structure that is the product of two matrices.</returns>
         public static TGCMatrix operator *(TGCMatrix left, TGCMatrix right)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(left.ToMatrix() * right.ToMatrix());
         }
 
         /// <summary>
@@ -314,7 +370,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Resulting TGCMatrix.</returns>
         public static TGCMatrix operator -(TGCMatrix left, TGCMatrix right)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(left.ToMatrix() - right.ToMatrix());
         }
 
         /// <summary>
@@ -327,7 +383,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Pointer to a TGCMatrix that is a left-handed orthogonal projection matrix.</returns>
         public static TGCMatrix OrthoLH(float width, float height, float znearPlane, float zfarPlane)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.OrthoLH(width, height, znearPlane, zfarPlane));
         }
 
         /// <summary>
@@ -342,7 +398,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a customized, left-handed orthogonal projection matrix.</returns>
         public static TGCMatrix OrthoOffCenterLH(float left, float right, float bottom, float top, float znearPlane, float zfarPlane)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.OrthoOffCenterLH(left, right, bottom, top, znearPlane, zfarPlane));
         }
 
         /// <summary>
@@ -357,7 +413,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a customized, right-handed orthogonal projection matrix.</returns>
         public static TGCMatrix OrthoOffCenterRH(float left, float right, float bottom, float top, float znearPlane, float zfarPlane)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.OrthoOffCenterRH(left, right, bottom, top, znearPlane, zfarPlane));
         }
 
         /// <summary>
@@ -370,7 +426,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a left-handed perspective projection matrix.</returns>
         public static TGCMatrix PerspectiveFovLH(float fieldOfViewY, float aspectRatio, float znearPlane, float zfarPlane)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.PerspectiveFovLH(fieldOfViewY, aspectRatio, znearPlane, zfarPlane));
         }
 
         /// <summary>
@@ -383,7 +439,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a right-handed perspective projection matrix.</returns>
         public static TGCMatrix PerspectiveFovRH(float fieldOfViewY, float aspectRatio, float znearPlane, float zfarPlane)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.PerspectiveFovRH(fieldOfViewY, aspectRatio, znearPlane, zfarPlane));
         }
 
 
@@ -397,7 +453,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a left-handed perspective projection matrix.</returns>
         public static TGCMatrix PerspectiveLH(float width, float height, float znearPlane, float zfarPlane)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.PerspectiveLH(width, height, znearPlane, zfarPlane));
         }
 
         /// <summary>
@@ -412,7 +468,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a customized, left-handed perspective projection matrix.</returns>
         public static TGCMatrix PerspectiveOffCenterLH(float left, float right, float bottom, float top, float znearPlane, float zfarPlane)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.PerspectiveOffCenterLH(left, right, bottom, top, znearPlane, zfarPlane));
         }
 
         /// <summary>
@@ -427,7 +483,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a customized, right-handed perspective projection matrix.</returns>
         public static TGCMatrix PerspectiveOffCenterRH(float left, float right, float bottom, float top, float znearPlane, float zfarPlane)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.PerspectiveOffCenterRH(left, right, bottom, top, znearPlane, zfarPlane));
         }
 
         /// <summary>
@@ -440,7 +496,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Pointer to a TGCMatrix that is a right-handed perspective projection matrix.</returns>
         public static TGCMatrix PerspectiveRH(float width, float height, float znearPlane, float zfarPlane)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.PerspectiveRH(width, height, znearPlane, zfarPlane));
         }
 
         /// <summary>
@@ -449,7 +505,8 @@ namespace TGC.Core.Mathematica
         /// <param name="plane">Source TGCPlane structure.</param>
         public void Reflect(TGCPlane plane)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.Reflect(plane.ToPlane());
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -459,7 +516,8 @@ namespace TGC.Core.Mathematica
         /// <param name="angle">Angle of rotation, in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
         public void RotateAxis(TGCVector3 axisRotation, float angle)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.RotateAxis(axisRotation.ToVector3(), angle);
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -468,7 +526,8 @@ namespace TGC.Core.Mathematica
         /// <param name="quat">Source Quaternion structure that defines the rotation.</param>
         public void RotateQuaternion(Quaternion quat)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.RotateQuaternion(quat);
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -477,7 +536,8 @@ namespace TGC.Core.Mathematica
         /// <param name="angle">Angle of rotation, in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
         public void RotateX(float angle)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.RotateX(angle);
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -486,7 +546,8 @@ namespace TGC.Core.Mathematica
         /// <param name="angle">Angle of rotation, in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
         public void RotateY(float angle)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.RotateY(angle);
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -497,7 +558,8 @@ namespace TGC.Core.Mathematica
         /// <param name="roll">Roll around the z-axis, in radians.</param>
         public void RotateYawPitchRoll(float yaw, float pitch, float roll)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.RotateYawPitchRoll(yaw, pitch, roll);
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -506,7 +568,8 @@ namespace TGC.Core.Mathematica
         /// <param name="angle">Angle of rotation, in radians. Angles are measured clockwise when viewed from the rotation axis (positive side) toward the origin.</param>
         public void RotateZ(float angle)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.RotateZ(angle);
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -517,7 +580,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Rotated TGCMatrix.</returns>
         public static TGCMatrix RotationAxis(TGCVector3 axisRotation, float angle)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.RotationAxis(axisRotation.ToVector3(), angle));
         }
 
         /// <summary>
@@ -527,7 +590,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Rotated TGCMatrix.</returns>
         public static TGCMatrix RotationQuaternion(Quaternion quat)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.RotationQuaternion(quat));
         }
 
         /// <summary>
@@ -537,7 +600,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Rotated TGCMatrix.</returns>
         public static TGCMatrix RotationX(float angle)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.RotationX(angle));
         }
 
         /// <summary>
@@ -547,7 +610,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Rotated TGCMatrix.</returns>
         public static TGCMatrix RotationY(float angle)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.RotationY(angle));
         }
 
         /// <summary>
@@ -559,7 +622,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Rotated TGCMatrix.</returns>
         public static TGCMatrix RotationYawPitchRoll(float yaw, float pitch, float roll)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.RotationYawPitchRoll(yaw, pitch, roll));
         }
 
         /// <summary>
@@ -569,7 +632,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Rotated TGCMatrix.</returns>
         public static TGCMatrix RotationZ(float angle)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.RotationZ(angle));
         }
 
         /// <summary>
@@ -580,7 +643,8 @@ namespace TGC.Core.Mathematica
         /// <param name="z">Scaling factor that is applied along the z-axis.</param>
         public void Scale(float x, float y, float z)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.Scale(x,y,z);
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -589,7 +653,8 @@ namespace TGC.Core.Mathematica
         /// <param name="v">A TGCVector3 containing three values that represent the scaling factors applied along the x-axis, y-axis, and z-axis.</param>
         public void Scale(TGCVector3 v)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.Scale(v.ToVector3());
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -601,7 +666,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Scaled TGCMatrix.</returns>
         public static TGCMatrix Scaling(float x, float y, float z)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Scaling(x,y,z));
         }
 
         /// <summary>
@@ -611,7 +676,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Scaled TGCMatrix.</returns>
         public static TGCMatrix Scaling(TGCVector3 v)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Scaling(v.ToVector3()));
         }
 
         /// <summary>
@@ -619,9 +684,10 @@ namespace TGC.Core.Mathematica
         /// </summary>
         /// <param name="light">A Vector4 structure that describes the light's position.</param>
         /// <param name="plane">Source TGCPlane structure.</param>
-        public void Shadow(Vector4 light, TGCPlane plane)
+        public void Shadow(TGCVector4 light, TGCPlane plane)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.Shadow(light.ToVector4(), plane.ToPlane());
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -632,7 +698,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix instance that represents the result of the subtraction.</returns>
         public static TGCMatrix Subtract(TGCMatrix left, TGCMatrix right)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Subtract(left.ToMatrix(), right.ToMatrix()));
         }
 
         /// <summary>
@@ -641,7 +707,8 @@ namespace TGC.Core.Mathematica
         /// <returns>String that represents the object.</returns>
         public override string ToString()
         {
-            throw new NotImplementedException();
+            //TODO mejorar.
+            return this.DXMatrix.ToString();
         }
 
         /// <summary>
@@ -655,7 +722,8 @@ namespace TGC.Core.Mathematica
         /// <param name="translation">A TGCVector3 that represents the translation. Use Vector3.Empty to specify no translation.</param>
         public void Transform(TGCVector3 scalingCenter, Quaternion scalingRotation, TGCVector3 scalingFactor, TGCVector3 rotationCenter, Quaternion rotation, TGCVector3 translation)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.Transform(scalingCenter.ToVector3(), scalingRotation, scalingFactor.ToVector3(), rotationCenter.ToVector3(), rotation, translation.ToVector3());
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -670,7 +738,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Resulting TGCMatrix.</returns>
         public static TGCMatrix Transformation(TGCVector3 scalingCenter, Quaternion scalingRotation, TGCVector3 scalingFactor, TGCVector3 rotationCenter, Quaternion rotation, TGCVector3 translation)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Transformation(scalingCenter.ToVector3(), scalingRotation, scalingFactor.ToVector3(), rotationCenter.ToVector3(), rotation, translation.ToVector3()));
         }
 
         /// <summary>
@@ -685,7 +753,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that contains the transformation matrix.</returns>
         public static TGCMatrix Transformation2D(TGCVector2 scalingCenter, float scalingRotation, TGCVector2 scaling, TGCVector2 rotationCenter, float rotation, TGCVector2 translation)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Transformation2D(scalingCenter.ToVector2(), scalingRotation, scaling.ToVector2(), rotationCenter.ToVector2(), rotation, translation.ToVector2()));
         }
 
         /// <summary>
@@ -696,7 +764,8 @@ namespace TGC.Core.Mathematica
         /// <param name="z">Z-coordinate offset.</param>
         public void Translate(float x, float y, float z)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.Translate(x, y, z);
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -705,7 +774,8 @@ namespace TGC.Core.Mathematica
         /// <param name="v">A TGCVector3 that contains the x-coordinate, y-coordinate, and z-coordinate offsets.</param>
         public void Translate(TGCVector3 v)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.Translate(v.ToVector3());
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -717,7 +787,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that contains a translated transformation matrix.</returns>
         public static TGCMatrix Translation(float x, float y, float z)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Translation(x, y, z));
         }
 
         /// <summary>
@@ -727,7 +797,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that contains a translated transformation matrix.</returns>
         public static TGCMatrix Translation(TGCVector3 v)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.Translation(v.ToVector3()));
         }
 
         /// <summary>
@@ -736,7 +806,8 @@ namespace TGC.Core.Mathematica
         /// <param name="source">Source TGCMatrix.</param>
         public void Transpose(TGCMatrix source)
         {
-            throw new NotImplementedException();
+            this.DXMatrix.Transpose(source.ToMatrix());
+            AssingAllDXMatrix();
         }
 
         /// <summary>
@@ -746,7 +817,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix object that is the matrix transpose of the matrix.</returns>
         public static TGCMatrix TransposeMatrix(TGCMatrix source)
         {
-            throw new NotImplementedException();
+            return new TGCMatrix(Matrix.TransposeMatrix(source.ToMatrix()));
         }
 
         /// <summary>
@@ -782,7 +853,8 @@ namespace TGC.Core.Mathematica
         /// <returns>Initializes a new instance of the TGCMatrix class.</returns>
         public static TGCMatrix FromMatrix(Matrix matrix)
         {
-            return new TGCMatrix();
+            //TODO deprecar.
+            return new TGCMatrix(matrix);
         }
     }
 }
