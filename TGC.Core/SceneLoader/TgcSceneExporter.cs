@@ -197,7 +197,7 @@ namespace TGC.Core.SceneLoader
                         tgcMesh.Rotation.Z);
                     var parentRotQuat = Quaternion.RotationYawPitchRoll(parentInstance.Rotation.Y,
                         parentInstance.Rotation.X, parentInstance.Rotation.Z);
-                    meshExport.MeshData.rotation = TgcParserUtils.quaternionToFloat4Array(rotQuat - parentRotQuat);
+					meshExport.MeshData.rotation = TGCQuaternion.QuaternionToFloat4Array(rotQuat - parentRotQuat);
                     var scale = new TGCVector3(
                         tgcMesh.Scale.X / parentInstance.Scale.X,
                         tgcMesh.Scale.Y / parentInstance.Scale.Y,

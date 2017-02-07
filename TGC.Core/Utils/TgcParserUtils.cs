@@ -1,5 +1,3 @@
-using Microsoft.DirectX;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
 
@@ -249,18 +247,6 @@ namespace TGC.Core.Utils
         }
 
         /// <summary>
-        ///     Imprime un Quaternion de la forma [x, y, z, w]
-        /// </summary>
-        public static string printQuaternion(Quaternion q)
-        {
-            return "[" + printFloat(q.X) +
-                   "," + printFloat(q.Y) +
-                   "," + printFloat(q.Z) +
-                   "," + printFloat(q.W) +
-                   "]";
-        }
-
-        /// <summary>
         ///     Imprime un float[2] de la forma [150.0,150.0]
         /// </summary>
         /// <returns></returns>
@@ -319,14 +305,6 @@ namespace TGC.Core.Utils
                 sb.Append(" ");
             }
             return sb.ToString();
-        }
-
-        /// <summary>
-        ///     Convierte un Quaternion a un float[4]
-        /// </summary>
-        public static float[] quaternionToFloat4Array(Quaternion q)
-        {
-            return new[] { q.X, q.Y, q.Z, q.W };
         }
     }
 }
