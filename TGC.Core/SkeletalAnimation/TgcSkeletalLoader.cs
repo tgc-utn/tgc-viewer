@@ -230,7 +230,7 @@ namespace TGC.Core.SkeletalAnimation
                     var frame = new TgcSkeletalAnimationFrame(
                         frameData.frame,
                         new TGCVector3(frameData.position[0], frameData.position[1], frameData.position[2]),
-                        new Quaternion(frameData.rotation[0], frameData.rotation[1], frameData.rotation[2],
+                        new TGCQuaternion(frameData.rotation[0], frameData.rotation[1], frameData.rotation[2],
                             frameData.rotation[3])
                         );
 
@@ -275,7 +275,7 @@ namespace TGC.Core.SkeletalAnimation
 
                 var bone = new TgcSkeletalBone(i, boneData.name,
                     new TGCVector3(boneData.startPosition[0], boneData.startPosition[1], boneData.startPosition[2]),
-                    new Quaternion(boneData.startRotation[0], boneData.startRotation[1], boneData.startRotation[2],
+                    new TGCQuaternion(boneData.startRotation[0], boneData.startRotation[1], boneData.startRotation[2],
                         boneData.startRotation[3])
                     );
                 bones[i] = bone;

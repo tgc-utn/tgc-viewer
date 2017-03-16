@@ -538,7 +538,7 @@ namespace TGC.Core.SceneLoader
         {
             var originalMesh = meshes[meshData.originalMesh];
             var translation = new TGCVector3(meshData.position[0], meshData.position[1], meshData.position[2]);
-            var rotationQuat = new Quaternion(meshData.rotation[0], meshData.rotation[1], meshData.rotation[2],
+            var rotationQuat = new TGCQuaternion(meshData.rotation[0], meshData.rotation[1], meshData.rotation[2],
                 meshData.rotation[3]);
             var rotation = quaternionToEuler(rotationQuat);
             var scale = new TGCVector3(meshData.scale[0], meshData.scale[1], meshData.scale[2]);
@@ -548,13 +548,13 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Convierte un Quaternion a rotación de Euler
+        ///     Convierte un TGCQuaternion a rotación de Euler
         /// </summary>
-        private TGCVector3 quaternionToEuler(Quaternion quat)
+        private TGCVector3 quaternionToEuler(TGCQuaternion quat)
         {
             //TODO revisar que esta conversion a Euler ande bien
 
-            var mat = TGCMatrix.RotationQuaternion(quat);
+            var mat = TGCMatrix.RotationTGCQuaternion(quat);
             var matrixGetRotation = new TGCVector3();
 
             //gets the x axis rotation from the matrix

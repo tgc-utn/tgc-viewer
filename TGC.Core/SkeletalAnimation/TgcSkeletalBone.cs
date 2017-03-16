@@ -8,14 +8,14 @@ namespace TGC.Core.SkeletalAnimation
     /// </summary>
     public class TgcSkeletalBone
     {
-        public TgcSkeletalBone(int index, string name, TGCVector3 startPosition, Quaternion startRotation)
+        public TgcSkeletalBone(int index, string name, TGCVector3 startPosition, TGCQuaternion startRotation)
         {
             Index = index;
             Name = name;
             StartPosition = startPosition;
             StartRotation = startRotation;
 
-            MatLocal = TGCMatrix.RotationQuaternion(StartRotation) * TGCMatrix.Translation(StartPosition);
+            MatLocal = TGCMatrix.RotationTGCQuaternion(StartRotation) * TGCMatrix.Translation(StartPosition);
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Rotacion inicial del hueso
         /// </summary>
-        public Quaternion StartRotation { get; }
+        public TGCQuaternion StartRotation { get; }
 
         /// <summary>
         ///     Matriz local de transformacion

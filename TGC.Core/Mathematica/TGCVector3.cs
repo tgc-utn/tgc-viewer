@@ -27,7 +27,7 @@ namespace TGC.Core.Mathematica
             this.X = x;
             this.Y = y;
             this.Z = z;
-            this.DXVector3 = new Vector3(x,y,z);
+            this.DXVector3 = new Vector3(x, y, z);
         }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace TGC.Core.Mathematica
         public static TGCVector3 operator +(TGCVector3 left, TGCVector3 right)
         {
             return TGCVector3.Add(left, right);
-            
+
         }
 
         /// <summary>
@@ -578,7 +578,6 @@ namespace TGC.Core.Mathematica
             this.Y = DXVector3.Y;
             this.Z = DXVector3.Z;
         }
-
 
         /// <summary>
         /// Transforms a 3-D vector normal by the given matrix.
