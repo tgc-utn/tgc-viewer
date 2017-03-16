@@ -8,7 +8,7 @@ namespace TGC.Core.SkeletalAnimation
     /// </summary>
     public class TgcSkeletalAnimationFrame
     {
-        public TgcSkeletalAnimationFrame(int frame, TGCVector3 position, Quaternion rotation)
+        public TgcSkeletalAnimationFrame(int frame, TGCVector3 position, TGCQuaternion rotation)
         {
             Frame = frame;
             Position = position;
@@ -26,8 +26,8 @@ namespace TGC.Core.SkeletalAnimation
         public TGCVector3 Position { get; }
 
         /// <summary>
-        ///     Rotacion del hueso para este frame en Quaternion
+        ///     Rotacion del hueso para este frame en TGCQuaternion
         /// </summary>
-        public Quaternion Rotation { get; }
+        public TGCQuaternion Rotation { get; }
     }
 }

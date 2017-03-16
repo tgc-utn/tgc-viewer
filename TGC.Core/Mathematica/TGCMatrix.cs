@@ -151,12 +151,12 @@ namespace TGC.Core.Mathematica
         /// <param name="scaling">Scaling factor. A value of zero indicates no scaling.</param>
         /// <param name="rotationCenter">A TGCVector3 that indicates the point at the center of rotation.</param>
         /// <param name="rotation">A 
-        /// structure that specifies the rotation. Use Quaternion.Identity to specify no rotation.</param>
+        /// structure that specifies the rotation. Use TGCQuaternion.Identity to specify no rotation.</param>
         /// <param name="translation">A TGCVector3 that represents the translation. Use TGCVector3.Empty to specify no translation.</param>
-        public void AffineTransformation(float scaling, TGCVector3 rotationCenter, Quaternion rotation, TGCVector3 translation)
+        public void AffineTransformation(float scaling, TGCVector3 rotationCenter, TGCQuaternion rotation, TGCVector3 translation)
         {
 
-            this.DXMatrix.AffineTransformation(scaling, rotationCenter.ToVector3(), rotation, translation.ToVector3());
+            this.DXMatrix.AffineTransformation(scaling, rotationCenter.ToVector3(), rotation.ToQuaternion(), translation.ToVector3());
             AssingAllDXMatrix();
         }
 
@@ -523,10 +523,10 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Rotates a matrix from a quaternion.
         /// </summary>
-        /// <param name="quat">Source Quaternion structure that defines the rotation.</param>
-        public void RotateQuaternion(Quaternion quat)
+        /// <param name="quat">Source TGCQuaternion structure that defines the rotation.</param>
+        public void RotateTGCQuaternion(TGCQuaternion quat)
         {
-            this.DXMatrix.RotateQuaternion(quat);
+            this.DXMatrix.RotateQuaternion(quat.ToQuaternion());
             AssingAllDXMatrix();
         }
 
@@ -586,11 +586,11 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Builds a matrix from a quaternion.
         /// </summary>
-        /// <param name="quat">Source Quaternion structure.</param>
+        /// <param name="quat">Source TGCQuaternion structure.</param>
         /// <returns>Rotated TGCMatrix.</returns>
-        public static TGCMatrix RotationQuaternion(Quaternion quat)
+        public static TGCMatrix RotationTGCQuaternion(TGCQuaternion quat)
         {
-            return new TGCMatrix(Matrix.RotationQuaternion(quat));
+            return new TGCMatrix(Matrix.RotationQuaternion(quat.ToQuaternion()));
         }
 
         /// <summary>
@@ -643,7 +643,7 @@ namespace TGC.Core.Mathematica
         /// <param name="z">Scaling factor that is applied along the z-axis.</param>
         public void Scale(float x, float y, float z)
         {
-            this.DXMatrix.Scale(x,y,z);
+            this.DXMatrix.Scale(x, y, z);
             AssingAllDXMatrix();
         }
 
@@ -666,7 +666,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Scaled TGCMatrix.</returns>
         public static TGCMatrix Scaling(float x, float y, float z)
         {
-            return new TGCMatrix(Matrix.Scaling(x,y,z));
+            return new TGCMatrix(Matrix.Scaling(x, y, z));
         }
 
         /// <summary>
@@ -715,14 +715,14 @@ namespace TGC.Core.Mathematica
         /// Transforms the matrix.
         /// </summary>
         /// <param name="scalingCenter">A TGCVector3 that identifies the scaling center point.</param>
-        /// <param name="scalingRotation">A Quaternion structure that specifies the scaling rotation. Use Quaternion.Identity to specify no scaling.</param>
+        /// <param name="scalingRotation">A TGCQuaternion structure that specifies the scaling rotation. Use TGCQuaternion.Identity to specify no scaling.</param>
         /// <param name="scalingFactor">A TGCVector3 that is the scaling vector.</param>
         /// <param name="rotationCenter">A TGCVector3 that is a point that identifies the center of rotation.</param>
-        /// <param name="rotation">A Quaternion structure that specifies the rotation. Use Quaternion.Identity to specify no rotation.</param>
+        /// <param name="rotation">A TGCQuaternion structure that specifies the rotation. Use TGCQuaternion.Identity to specify no rotation.</param>
         /// <param name="translation">A TGCVector3 that represents the translation. Use Vector3.Empty to specify no translation.</param>
-        public void Transform(TGCVector3 scalingCenter, Quaternion scalingRotation, TGCVector3 scalingFactor, TGCVector3 rotationCenter, Quaternion rotation, TGCVector3 translation)
+        public void Transform(TGCVector3 scalingCenter, TGCQuaternion scalingRotation, TGCVector3 scalingFactor, TGCVector3 rotationCenter, TGCQuaternion rotation, TGCVector3 translation)
         {
-            this.DXMatrix.Transform(scalingCenter.ToVector3(), scalingRotation, scalingFactor.ToVector3(), rotationCenter.ToVector3(), rotation, translation.ToVector3());
+            this.DXMatrix.Transform(scalingCenter.ToVector3(), scalingRotation.ToQuaternion(), scalingFactor.ToVector3(), rotationCenter.ToVector3(), rotation.ToQuaternion(), translation.ToVector3());
             AssingAllDXMatrix();
         }
 
@@ -730,15 +730,15 @@ namespace TGC.Core.Mathematica
         /// Builds a transformation matrix.
         /// </summary>
         /// <param name="scalingCenter">A TGCVector3 that identifies the scaling center point.</param>
-        /// <param name="scalingRotation">A Quaternion structure that specifies the scaling rotation. Use Quaternion.Identity to specify no scaling.</param>
+        /// <param name="scalingRotation">A TGCQuaternion structure that specifies the scaling rotation. Use TGCQuaternion.Identity to specify no scaling.</param>
         /// <param name="scalingFactor">A TGCVector3 that is the scaling vector.</param>
         /// <param name="rotationCenter">A TGCVector3 that is a point that identifies the center of rotation.</param>
-        /// <param name="rotation">A Quaternion structure that specifies the rotation. Use Quaternion.Identity to specify no rotation.</param>
+        /// <param name="rotation">A TGCQuaternion structure that specifies the rotation. Use TGCQuaternion.Identity to specify no rotation.</param>
         /// <param name="translation">A TGCVector3 that represents the translation. Use Vector3.Empty to specify no translation.</param>
         /// <returns>Resulting TGCMatrix.</returns>
-        public static TGCMatrix Transformation(TGCVector3 scalingCenter, Quaternion scalingRotation, TGCVector3 scalingFactor, TGCVector3 rotationCenter, Quaternion rotation, TGCVector3 translation)
+        public static TGCMatrix Transformation(TGCVector3 scalingCenter, TGCQuaternion scalingRotation, TGCVector3 scalingFactor, TGCVector3 rotationCenter, TGCQuaternion rotation, TGCVector3 translation)
         {
-            return new TGCMatrix(Matrix.Transformation(scalingCenter.ToVector3(), scalingRotation, scalingFactor.ToVector3(), rotationCenter.ToVector3(), rotation, translation.ToVector3()));
+            return new TGCMatrix(Matrix.Transformation(scalingCenter.ToVector3(), scalingRotation.ToQuaternion(), scalingFactor.ToVector3(), rotationCenter.ToVector3(), rotation.ToQuaternion(), translation.ToVector3()));
         }
 
         /// <summary>

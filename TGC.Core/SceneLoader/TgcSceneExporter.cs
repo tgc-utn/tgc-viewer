@@ -193,11 +193,11 @@ namespace TGC.Core.SceneLoader
 
                     //Posicion, rotacion y escala con diferencia de la malla original
                     meshExport.MeshData.position = TGCVector3.Vector3ToFloat3Array(tgcMesh.Position - parentInstance.Position);
-                    var rotQuat = Quaternion.RotationYawPitchRoll(tgcMesh.Rotation.Y, tgcMesh.Rotation.X,
+                    var rotQuat = TGCQuaternion.RotationYawPitchRoll(tgcMesh.Rotation.Y, tgcMesh.Rotation.X,
                         tgcMesh.Rotation.Z);
-                    var parentRotQuat = Quaternion.RotationYawPitchRoll(parentInstance.Rotation.Y,
+                    var parentRotQuat = TGCQuaternion.RotationYawPitchRoll(parentInstance.Rotation.Y,
                         parentInstance.Rotation.X, parentInstance.Rotation.Z);
-					meshExport.MeshData.rotation = TGCQuaternion.QuaternionToFloat4Array(rotQuat - parentRotQuat);
+					meshExport.MeshData.rotation = TGCQuaternion.TGCQuaternionToFloat4Array(rotQuat - parentRotQuat);
                     var scale = new TGCVector3(
                         tgcMesh.Scale.X / parentInstance.Scale.X,
                         tgcMesh.Scale.Y / parentInstance.Scale.Y,

@@ -916,7 +916,7 @@ namespace TGC.Core.SkeletalAnimation
 
                 //Determinar matriz local inicial
                 var firstFrame = currentAnimation.BoneFrames[i][0];
-                bone.MatLocal = TGCMatrix.RotationQuaternion(firstFrame.Rotation) * TGCMatrix.Translation(firstFrame.Position);
+                bone.MatLocal = TGCMatrix.RotationTGCQuaternion(firstFrame.Rotation) * TGCMatrix.Translation(firstFrame.Position);
 
                 //Multiplicar por matriz del padre, si tiene
                 if (bone.ParentBone != null)
@@ -1027,10 +1027,10 @@ namespace TGC.Core.SkeletalAnimation
                 var frameTranslation = (frame2.Position - frame1.Position) * interpolationValue + frame1.Position;
 
                 //Interpolar rotacion con SLERP
-                var quatFrameRotation = Quaternion.Slerp(frame1.Rotation, frame2.Rotation, interpolationValue);
+                var quatFrameRotation = TGCQuaternion.Slerp(frame1.Rotation, frame2.Rotation, interpolationValue);
 
                 //Unir ambas transformaciones de este frame
-                var frameMatrix = TGCMatrix.RotationQuaternion(quatFrameRotation) * TGCMatrix.Translation(frameTranslation);
+                var frameMatrix = TGCMatrix.RotationTGCQuaternion(quatFrameRotation) * TGCMatrix.Translation(frameTranslation);
 
                 //Multiplicar por la matriz del padre, si tiene
                 if (bone.ParentBone != null)

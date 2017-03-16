@@ -11,19 +11,19 @@ using TGC.Examples.Example;
 namespace TGC.Examples.Transformations
 {
     /// <summary>
-    ///     Euler vs Quaternions
+    ///     Euler vs TGCQuaternions
     /// </summary>
-    public class EjemploQuaternions : TGCExampleViewer
+    public class EjemploTGCQuaternions : TGCExampleViewer
     {
         private TgcBox boxEuler;
-        private TgcBox boxQuaternion;
+        private TgcBox boxTGCQuaternion;
 
-        public EjemploQuaternions(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
+        public EjemploTGCQuaternions(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Transformations";
-            Name = "Euler vs Quaternion";
-            Description = "Euler vs Quaternion";
+            Name = "Euler vs TGCQuaternion";
+            Description = "Euler vs TGCQuaternion";
         }
 
         public override void Init()
@@ -33,8 +33,8 @@ namespace TGC.Examples.Transformations
 
             var textureQuat = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\paredMuyRugosa.jpg");
-            boxQuaternion = TgcBox.fromSize(new TGCVector3(50, 0, 0), new TGCVector3(50, 50, 50), textureQuat);
-            boxQuaternion.AutoTransformEnable = false;
+            boxTGCQuaternion = TgcBox.fromSize(new TGCVector3(50, 0, 0), new TGCVector3(50, 50, 50), textureQuat);
+            boxTGCQuaternion.AutoTransformEnable = false;
 
             Modifiers.addVertex3f("Rotacion", TGCVector3.Empty, new TGCVector3(360, 360, 360), TGCVector3.Empty);
 
@@ -54,9 +54,9 @@ namespace TGC.Examples.Transformations
             boxEuler.Transform = TGCMatrix.RotationYawPitchRoll(rot.Y, rot.X, rot.Z) *
                                  TGCMatrix.Translation(boxEuler.Position);
 
-            //Rotacion Quaternion
-            var q = Quaternion.RotationYawPitchRoll(rot.Y, rot.X, rot.Z);
-            boxQuaternion.Transform = TGCMatrix.RotationQuaternion(q) * TGCMatrix.Translation(boxQuaternion.Position);
+            //Rotacion TGCQuaternion
+            var q = TGCQuaternion.RotationYawPitchRoll(rot.Y, rot.X, rot.Z);
+            boxTGCQuaternion.Transform = TGCMatrix.RotationTGCQuaternion(q) * TGCMatrix.Translation(boxTGCQuaternion.Position);
         }
 
         public override void Render()
@@ -64,7 +64,7 @@ namespace TGC.Examples.Transformations
             PreRender();
 
             boxEuler.render();
-            boxQuaternion.render();
+            boxTGCQuaternion.render();
 
             PostRender();
         }
@@ -72,7 +72,7 @@ namespace TGC.Examples.Transformations
         public override void Dispose()
         {
             boxEuler.dispose();
-            boxQuaternion.dispose();
+            boxTGCQuaternion.dispose();
         }
     }
 }
