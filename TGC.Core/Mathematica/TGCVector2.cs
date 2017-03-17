@@ -21,13 +21,11 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Initializes a new instance of the TGCVector2 class.
         /// </summary>
-        /// <param name="valueX">Initial X value.</param>
-        /// <param name="valueY">Initial Y value.</param>
-        public TGCVector2(float valueX, float valueY)
+        /// <param name="x">Initial X value.</param>
+        /// <param name="y">Initial Y value.</param>
+        public TGCVector2(float x, float y)
         {
-            this.X = valueX;
-            this.Y = valueY;
-            this.DXVector2 = new Vector2(valueX, valueY);
+            this.DXVector2 = new Vector2(x, y);
         }
 
         /// <summary>
@@ -36,25 +34,29 @@ namespace TGC.Core.Mathematica
         /// <param name="dxVector2">Vector2 from value.</param>        
         public TGCVector2(Vector2 dxVector2)
         {
-            this.X = dxVector2.X;
-            this.Y = dxVector2.Y;
             this.DXVector2 = dxVector2;
         }
 
         /// <summary>
         /// Retrieves or sets the DirectX of a 2-D vector.
         /// </summary>
-        public Vector2 DXVector2 { get; set; }
+        private Vector2 DXVector2;
 
         /// <summary>
         /// Retrieves or sets the x component of a 2-D vector.
         /// </summary>
-        public float X { get; set; }
+        public float X {
+            get { return this.DXVector2.X; }
+            set { this.DXVector2.X = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the y component of a 2-D vector.
         /// </summary>
-        public float Y { get; set; }
+        public float Y {
+            get { return this.DXVector2.Y; }
+            set { this.DXVector2.Y = value; }
+        }
 
         /// <summary>
         /// Retrieves a 2-D vector (0,0).
@@ -324,6 +326,15 @@ namespace TGC.Core.Mathematica
         public static TGCVector2 Normalize(TGCVector2 source)
         {
             return new TGCVector2(Vector2.Normalize(source.ToVector2()));
+        }
+
+        /// <summary>
+        /// Cast TGCMatrix to DX Matrix
+        /// </summary>
+        /// <param name="vector"></param>
+        public static implicit operator Vector2(TGCVector2 vector)
+        {
+            return vector.ToVector2();
         }
 
         /// <summary>

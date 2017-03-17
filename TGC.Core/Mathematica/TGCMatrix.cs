@@ -18,26 +18,10 @@ namespace TGC.Core.Mathematica
         /// <param name="dxMatrix">Matrix from value.</param>        
         public TGCMatrix(Matrix dxMatrix)
         {
-            this.M11 = dxMatrix.M11;
-            this.M12 = dxMatrix.M12;
-            this.M13 = dxMatrix.M13;
-            this.M14 = dxMatrix.M14;
-            this.M21 = dxMatrix.M21;
-            this.M22 = dxMatrix.M22;
-            this.M23 = dxMatrix.M23;
-            this.M24 = dxMatrix.M24;
-            this.M31 = dxMatrix.M31;
-            this.M32 = dxMatrix.M32;
-            this.M33 = dxMatrix.M33;
-            this.M34 = dxMatrix.M34;
-            this.M41 = dxMatrix.M41;
-            this.M42 = dxMatrix.M42;
-            this.M43 = dxMatrix.M43;
-            this.M44 = dxMatrix.M44;
             this.DXMatrix = dxMatrix;
         }
 
-        private Matrix DXMatrix { get; set; }
+        private Matrix DXMatrix;
 
         /// <summary>
         /// Retrieves the determinant of the matrix.
@@ -57,82 +41,130 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the first row and the first column of the matrix.
         /// </summary>
-        public float M11 { get; set; }
+        public float M11 {
+            get { return this.DXMatrix.M11; }
+            set { this.DXMatrix.M11 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the first row and the second column of the matrix.
         /// </summary>
-        public float M12 { get; set; }
+        public float M12 {
+            get { return this.DXMatrix.M12; }
+            set { this.DXMatrix.M12 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the first row and the third column of the matrix.
         /// </summary>
-        public float M13 { get; set; }
+        public float M13 {
+            get { return this.DXMatrix.M13; }
+            set { this.DXMatrix.M13 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the first row and the fourth column of the matrix.
         /// </summary>
-        public float M14 { get; set; }
+        public float M14 {
+            get { return this.DXMatrix.M14; }
+            set { this.DXMatrix.M14 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the second row and the first column of the matrix.
         /// </summary>
-        public float M21 { get; set; }
+        public float M21 {
+            get { return this.DXMatrix.M21; }
+            set { this.DXMatrix.M21 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the second row and the second column of the matrix.
         /// </summary>
-        public float M22 { get; set; }
+        public float M22 {
+            get { return this.DXMatrix.M22; }
+            set { this.DXMatrix.M22 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the second row and the third column of the matrix.
         /// </summary>
-        public float M23 { get; set; }
+        public float M23 {
+            get { return this.DXMatrix.M23; }
+            set { this.DXMatrix.M23 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the second row and the fourth column of the matrix.
         /// </summary>
-        public float M24 { get; set; }
+        public float M24 {
+            get { return this.DXMatrix.M24; }
+            set { this.DXMatrix.M24 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the third row and the first column of the matrix.
         /// </summary>
-        public float M31 { get; set; }
+        public float M31 {
+            get { return this.DXMatrix.M31; }
+            set { this.DXMatrix.M31 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the third row and the second column of the matrix.
         /// </summary>
-        public float M32 { get; set; }
+        public float M32 {
+            get { return this.DXMatrix.M32; }
+            set { this.DXMatrix.M32 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the third row and the third column of the matrix.
         /// </summary>
-        public float M33 { get; set; }
+        public float M33 {
+            get { return this.DXMatrix.M33; }
+            set { this.DXMatrix.M33 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the third row and the fourth column of the matrix.
         /// </summary>
-        public float M34 { get; set; }
+        public float M34 {
+            get { return this.DXMatrix.M34; }
+            set { this.DXMatrix.M34 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the fourth row and the first column of the matrix.
         /// </summary>
-        public float M41 { get; set; }
+        public float M41 {
+            get { return this.DXMatrix.M41; }
+            set { this.DXMatrix.M41 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the fourth row and the second column of the matrix.
         /// </summary>
-        public float M42 { get; set; }
+        public float M42 {
+            get { return this.DXMatrix.M42; }
+            set { this.DXMatrix.M42 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the fourth row and the third column of the matrix.
         /// </summary>
-        public float M43 { get; set; }
+        public float M43 {
+            get { return this.DXMatrix.M43; }
+            set { this.DXMatrix.M43 = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the element in the fourth row and the fourth column of the matrix.
         /// </summary>
-        public float M44 { get; set; }
+        public float M44 {
+            get { return this.DXMatrix.M44; }
+            set { this.DXMatrix.M44 = value; }
+        }
 
         /// <summary>
         /// Adds two matrices.
@@ -318,7 +350,16 @@ namespace TGC.Core.Mathematica
         }
 
         /// <summary>
-        /// Adds two instances of TGCMatrix.
+        /// Cast TGCMatrix to DX Matrix
+        /// </summary>
+        /// <param name="matrix"></param>
+        public static implicit operator Matrix(TGCMatrix matrix)
+        {
+            return matrix.ToMatrix();
+        }
+
+        /// <summary>
+        /// Adds two instances of TGCMatrix
         /// </summary>
         /// <param name="left">The TGCMatrix to the left of the addition operator.</param>
         /// <param name="right">The TGCMatrix to the right of the addition operator.</param>
