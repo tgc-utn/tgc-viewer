@@ -524,7 +524,7 @@ namespace TGC.Core.Geometry
             enabled = true;
             scale = TGCVector3.One;
             alphaBlendEnable = false;
-            uvOffset = TGCVector2.Empty;
+            uvOffset = TGCVector2.Zero;
 
             //BoundingSphere
             boundingSphere = new TgcBoundingSphere();

@@ -74,7 +74,7 @@ namespace TGC.Examples.Engine2D.Spaceship
             state = StateEnum.Idle;
 
             Position = new TGCVector2(100, 100);
-            speed = TGCVector2.Empty;
+            speed = TGCVector2.Zero;
 
             angleToMousePointer = 0;
 

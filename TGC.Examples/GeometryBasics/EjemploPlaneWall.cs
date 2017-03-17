@@ -42,7 +42,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addVertex3f("dimension", new TGCVector3(-100, -100, -100), new TGCVector3(1000, 1000, 100),
                 new TGCVector3(100, 100, 100));
             Modifiers.addInterval("orientation", new[] { "XY", "XZ", "YZ" }, 0);
-            Modifiers.addVertex2f("tiling", TGCVector2.Empty, new TGCVector2(10, 10), TGCVector2.One);
+            Modifiers.addVertex2f("tiling", TGCVector2.Zero, new TGCVector2(10, 10), TGCVector2.One);
             Modifiers.addBoolean("autoAdjust", "autoAdjust", false);
 
             //Modifier de textura

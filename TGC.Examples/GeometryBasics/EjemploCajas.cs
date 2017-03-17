@@ -55,7 +55,7 @@ namespace TGC.Examples.GeometryBasics
             Modifiers.addBoolean("debugBox", "debugBox", true);
             Modifiers.addFloat("thickness", 0.1f, 5, 0.2f);
             Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
-            Modifiers.addVertex2f("offset", new TGCVector2(-0.5f, -0.5f), new TGCVector2(0.9f, 0.9f), TGCVector2.Empty);
+            Modifiers.addVertex2f("offset", new TGCVector2(-0.5f, -0.5f), new TGCVector2(0.9f, 0.9f), TGCVector2.Zero);
             Modifiers.addVertex2f("tiling", new TGCVector2(0.1f, 0.1f), new TGCVector2(4, 4), TGCVector2.One);
             Modifiers.addColor("color", Color.BurlyWood);
             Modifiers.addVertex3f("size", TGCVector3.Empty, new TGCVector3(100, 100, 100), new TGCVector3(20, 20, 20));

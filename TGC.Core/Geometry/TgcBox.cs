@@ -49,7 +49,7 @@ namespace TGC.Core.Geometry
             Enabled = true;
             color = Color.White;
             AlphaBlendEnable = false;
-            UVOffset = TGCVector2.Empty;
+            UVOffset = TGCVector2.Zero;
             UVTiling = TGCVector2.One;
 
             //BoundingBox

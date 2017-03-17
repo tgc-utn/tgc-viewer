@@ -225,7 +225,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is an affine transformation matrix.</returns>
         public static TGCMatrix AffineTransformation2D(float scaling, TGCVector2 rotationCenter, float rotation, TGCVector2 translation)
         {
-            return new TGCMatrix(Matrix.AffineTransformation2D(scaling, rotationCenter.ToVector2(), rotation, translation.ToVector2()));
+            return new TGCMatrix(Matrix.AffineTransformation2D(scaling, rotationCenter, rotation, translation));
         }
 
         /// <summary>
@@ -794,7 +794,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that contains the transformation matrix.</returns>
         public static TGCMatrix Transformation2D(TGCVector2 scalingCenter, float scalingRotation, TGCVector2 scaling, TGCVector2 rotationCenter, float rotation, TGCVector2 translation)
         {
-            return new TGCMatrix(Matrix.Transformation2D(scalingCenter.ToVector2(), scalingRotation, scaling.ToVector2(), rotationCenter.ToVector2(), rotation, translation.ToVector2()));
+            return new TGCMatrix(Matrix.Transformation2D(scalingCenter, scalingRotation, scaling, rotationCenter, rotation, translation));
         }
 
         /// <summary>
