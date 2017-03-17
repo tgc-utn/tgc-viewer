@@ -24,9 +24,6 @@ namespace TGC.Core.Mathematica
         /// <param name="z">Initial Z value.</param>
         public TGCVector3(float x, float y, float z)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
             this.DXVector3 = new Vector3(x, y, z);
         }
 
@@ -36,28 +33,34 @@ namespace TGC.Core.Mathematica
         /// <param name="dxVector3">Vector3 from value.</param>        
         public TGCVector3(Vector3 dxVector3)
         {
-            this.X = dxVector3.X;
-            this.Y = dxVector3.Y;
-            this.Z = dxVector3.Z;
             this.DXVector3 = dxVector3;
         }
 
-        private Vector3 DXVector3 { get; set; }
+        private Vector3 DXVector3;
 
         /// <summary>
         /// Retrieves or sets the x component of a 3-D vector.
         /// </summary>
-        public float X { get; set; }
+        public float X {
+            get { return this.DXVector3.X; }
+            set { this.DXVector3.X = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the y component of a 3-D vector.
         /// </summary>
-        public float Y { get; set; }
+        public float Y {
+            get { return this.DXVector3.Y; }
+            set { this.DXVector3.Y = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the z component of a 3-D vector.
         /// </summary>
-        public float Z { get; set; }
+        public float Z {
+            get { return this.DXVector3.Z; }
+            set { this.DXVector3.Z = value; }
+        }
 
         /// <summary>
         /// Retrieves a 3-D vector (0,0,0).
@@ -340,6 +343,15 @@ namespace TGC.Core.Mathematica
         public static TGCVector3 Normalize(TGCVector3 source)
         {
             return new TGCVector3(Vector3.Normalize(source.ToVector3()));
+        }
+
+        /// <summary>
+        /// Cast TGCMatrix to DX Matrix
+        /// </summary>
+        /// <param name="vector"></param>
+        public static implicit operator Vector3(TGCVector3 vector)
+        {
+            return vector.ToVector3();
         }
 
         /// <summary>
@@ -645,7 +657,7 @@ namespace TGC.Core.Mathematica
         }
 
         /// <summary>
-        /// New TGCVector3 from DX Vector3
+        /// (DEPRECATED)New TGCVector3 from DX Vector3
         /// </summary>
         /// <param name="vector">Source Vector3.</param>
         /// <returns>Initializes a new instance of the TGCVector3 class.</returns>        

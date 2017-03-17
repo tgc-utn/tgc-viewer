@@ -17,10 +17,6 @@ namespace TGC.Core.Mathematica
         /// <param name="dxVector4">Vector4 from value.</param>        
         public TGCVector4(Vector4 dxVector4)
         {
-            this.X = dxVector4.X;
-            this.Y = dxVector4.Y;
-            this.Z = dxVector4.Z;
-            this.W = dxVector4.W;
             this.DXVector4 = dxVector4;
         }
 
@@ -28,27 +24,39 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the DirectX of a 4-D vector.
         /// </summary>
-        public Vector4 DXVector4 { get; set; }
+        private Vector4 DXVector4;
 
         /// <summary>
         /// Retrieves or sets the x component of a 4-D vector.
         /// </summary>
-        public float X { get; set; }
+        public float X {
+            get { return this.DXVector4.X; }
+            set { this.DXVector4.X = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the y component of a 4-D vector.
         /// </summary>
-        public float Y { get; set; }
+        public float Y {
+            get { return this.DXVector4.Y; }
+            set { this.DXVector4.Y = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the y component of a 4-D vector.
         /// </summary>
-        public float Z { get; set; }
+        public float Z {
+            get { return this.DXVector4.Z; }
+            set { this.DXVector4.Z = value; }
+        }
 
         /// <summary>
         /// Retrieves or sets the y component of a 4-D vector.
         /// </summary>
-        public float W { get; set; }
+        public float W {
+            get { return this.DXVector4.W; }
+            set { this.DXVector4.W = value; }
+        }
 
         /// <summary>
         /// Retrieves the DirectX of a 4-D vector
@@ -57,6 +65,15 @@ namespace TGC.Core.Mathematica
         public Vector4 ToVector4()
         {
             return DXVector4;
+        }
+
+        /// <summary>
+        /// Cast TGCMatrix to DX Matrix
+        /// </summary>
+        /// <param name="vector"></param>
+        public static implicit operator Vector4(TGCVector4 vector)
+        {
+            return vector.ToVector4();
         }
 
         #region Old TGCVectorUtils
