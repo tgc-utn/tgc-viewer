@@ -33,11 +33,11 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
             SrcRect = Rectangle.Empty;
 
             //Initialize transformation properties.
-            position = TGCVector2.Empty;
+            position = TGCVector2.Zero;
             scaling = TGCVector2.One;
-            scalingCenter = TGCVector2.Empty;
+            scalingCenter = TGCVector2.Zero;
             rotation = 0;
-            rotationCenter = TGCVector2.Empty;
+            rotationCenter = TGCVector2.Zero;
 
             Color = Color.White;
         }

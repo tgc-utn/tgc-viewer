@@ -36,7 +36,7 @@ namespace TGC.Core.Shaders
             var weight = multiplier * FastMath.GaussianDistribution(0, 0, deviation);
             colorWeights[0] = weight;
 
-            texCoordOffsets[0] = TGCVector2.Empty;
+            texCoordOffsets[0] = TGCVector2.Zero;
 
             // Fill the first half
             for (i = 1; i < 8; i++)

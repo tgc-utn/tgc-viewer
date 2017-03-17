@@ -54,7 +54,7 @@ namespace TGC.Core.Geometry
             UTile = 1;
             VTile = 1;
             AlphaBlendEnable = false;
-            UVOffset = TGCVector2.Empty;
+            UVOffset = TGCVector2.Zero;
 
             //Shader
             effect = TgcShaders.Instance.VariosShader;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.DirectX;
-using System;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Mathematica
@@ -9,14 +8,21 @@ namespace TGC.Core.Mathematica
     /// </summary>
     public struct TGCVector2
     {
-
         private static TGCVector2 ZERO = new TGCVector2(0f, 0f);
         private static TGCVector2 ONE = new TGCVector2(1f, 1f);
+
+        /// <summary>
+        /// Retrieves or sets the DirectX of a 2-D vector.
+        /// </summary>
+        private Vector2 DXVector2;
 
         // <summary>
         // Initializes a new instance of the TGCVector2 class.
         // </summary>
-        //public TGCVector2();
+        //public TGCVector2()
+        //{
+        //    this.DXVector2 = new Vector2();
+        //}
 
         /// <summary>
         /// Initializes a new instance of the TGCVector2 class.
@@ -31,21 +37,17 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Initializes a new instance of the TGCVector2 class.
         /// </summary>
-        /// <param name="dxVector2">Vector2 from value.</param>        
+        /// <param name="dxVector2">Vector2 from value.</param>
         public TGCVector2(Vector2 dxVector2)
         {
             this.DXVector2 = dxVector2;
         }
 
         /// <summary>
-        /// Retrieves or sets the DirectX of a 2-D vector.
-        /// </summary>
-        private Vector2 DXVector2;
-
-        /// <summary>
         /// Retrieves or sets the x component of a 2-D vector.
         /// </summary>
-        public float X {
+        public float X
+        {
             get { return this.DXVector2.X; }
             set { this.DXVector2.X = value; }
         }
@@ -53,7 +55,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the y component of a 2-D vector.
         /// </summary>
-        public float Y {
+        public float Y
+        {
             get { return this.DXVector2.Y; }
             set { this.DXVector2.Y = value; }
         }
@@ -61,12 +64,18 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves a 2-D vector (0,0).
         /// </summary>
-        public static TGCVector2 Empty { get { return ZERO; } }
+        public static TGCVector2 Zero
+        {
+            get { return ZERO; }
+        }
 
         /// <summary>
         /// Retrieves a 2-D vector (1,1).
         /// </summary>
-        public static TGCVector2 One { get { return ONE; } }
+        public static TGCVector2 One
+        {
+            get { return ONE; }
+        }
 
         /// <summary>
         /// Adds two 2-D vectors.
@@ -74,9 +83,7 @@ namespace TGC.Core.Mathematica
         /// <param name="v">Source TGCVector2.</param>
         public void Add(TGCVector2 v)
         {
-            this.X += v.X;
-            this.Y += v.Y;
-            DXVector2 = new Vector2(this.X, this.Y);
+            this.DXVector2.Add(v.ToVector2());
         }
 
         /// <summary>
@@ -87,10 +94,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Sum of the two source TGCVector2.</returns>
         public static TGCVector2 Add(TGCVector2 left, TGCVector2 right)
         {
-            left.X += right.X;
-            left.Y += right.Y;
-            left.DXVector2 += right.DXVector2;
-            return left;
+            return new TGCVector2(Vector2.Add(left.ToVector2(), right.ToVector2()));
         }
 
         /// <summary>
@@ -151,13 +155,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
         public override bool Equals(object compare)
         {
-            if (compare is TGCVector2)
-            {
-                TGCVector2 other = ( (TGCVector2)compare);
-                return (X == other.X) && (Y == other.Y);
-            }
-
-            return false;
+            return this.DXVector2.Equals(compare);
         }
 
         /// <summary>
@@ -166,14 +164,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Hash code for the instance.</returns>
         public override int GetHashCode()
         {
-            //TODO verificar correctamente esto en C#
-            unchecked // Overflow is fine, just wrap
-            {
-                int hash = 17;                
-                hash = hash * 23 + X.GetHashCode();
-                hash = hash * 23 + Y.GetHashCode();            
-                return hash;
-            }            
+            return this.DXVector2.GetHashCode();
         }
 
         /// <summary>
@@ -248,7 +239,7 @@ namespace TGC.Core.Mathematica
         public TGCVector2 Maximize(TGCVector2 source)
         {
             //TODO validar cambio de firma. este no retornaba nada.
-            return new TGCVector2(Vector2.Maximize(this.ToVector2(), source.ToVector2())); 
+            return new TGCVector2(Vector2.Maximize(this.ToVector2(), source.ToVector2()));
         }
 
         /// <summary>
@@ -289,8 +280,6 @@ namespace TGC.Core.Mathematica
         public void Multiply(float s)
         {
             this.DXVector2.Multiply(s);
-            this.X = DXVector2.X;
-            this.Y = DXVector2.Y;            
         }
 
         /// <summary>
@@ -301,10 +290,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector2 that is the result of the source parameter multiplied by the s parameter.</returns>
         public static TGCVector2 Multiply(TGCVector2 source, float s)
         {
-            source.X *= s;
-            source.Y *= s;
-            source.DXVector2.Multiply(s);
-            return source;
+            return new TGCVector2(Vector2.Multiply(source.ToVector2(), s));
         }
 
         /// <summary>
@@ -312,11 +298,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public void Normalize()
         {
-            this.DXVector2 = Vector2.Normalize(this.ToVector2());
-            this.X = DXVector2.X;
-            this.Y = DXVector2.Y;
+            this.DXVector2.Normalize();
         }
-
 
         /// <summary>
         /// Returns the normalized version of a 2-D vector.
@@ -345,7 +328,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Resulting TGCVector2.</returns>
         public static TGCVector2 operator +(TGCVector2 left, TGCVector2 right)
         {
-            return TGCVector2.Add(left, right);
+            return new TGCVector2(left.ToVector2() + right.ToVector2());
         }
 
         /// <summary>
@@ -356,7 +339,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the objects are the same, or false if they are different.</returns>
         public static bool operator ==(TGCVector2 left, TGCVector2 right)
         {
-            return left.Equals(right);
+            return left.ToVector2() == right.ToVector2();
         }
 
         /// <summary>
@@ -367,7 +350,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the objects are different, or false if they are the same.</returns>
         public static bool operator !=(TGCVector2 left, TGCVector2 right)
         {
-            return !left.Equals(right);
+            return left.ToVector2() != right.ToVector2();
         }
 
         /// <summary>
@@ -378,7 +361,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector2 structure that is the product of the right and left parameters.</returns>
         public static TGCVector2 operator *(float right, TGCVector2 left)
         {
-            return TGCVector2.Multiply(left, right);
+            return new TGCVector2(left.ToVector2() * right);
         }
 
         /// <summary>
@@ -389,7 +372,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector2 that is the product of the right and left parameters.</returns>
         public static TGCVector2 operator *(TGCVector2 left, float right)
         {
-            return TGCVector2.Multiply(left, right);
+            return new TGCVector2(left.ToVector2() * right);
         }
 
         /// <summary>
@@ -400,7 +383,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Resulting TGCVector2.</returns>
         public static TGCVector2 operator -(TGCVector2 left, TGCVector2 right)
         {
-            return TGCVector2.Add(left, -right);
+            return new TGCVector2(left.ToVector2() - right.ToVector2());
         }
 
         /// <summary>
@@ -410,8 +393,7 @@ namespace TGC.Core.Mathematica
         /// <returns>The TGCVector2 structure that is the result of the negation operation.</returns>
         public static TGCVector2 operator -(TGCVector2 vec)
         {
-            //TODO asi o mejor el *-1???
-            return new TGCVector2(-vec.X, -vec.Y);
+            return new TGCVector2(-vec.ToVector2());
         }
 
         /// <summary>
@@ -420,8 +402,7 @@ namespace TGC.Core.Mathematica
         /// <param name="scalingFactor">Scaling value.</param>
         public void Scale(float scalingFactor)
         {
-            //TODO validar diferencia entre scale y multiply
-            this.Multiply(scalingFactor);
+            this.DXVector2.Scale(scalingFactor);
         }
 
         /// <summary>
@@ -432,7 +413,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector2 that is the scaled vector.</returns>
         public static TGCVector2 Scale(TGCVector2 source, float scalingFactor)
         {
-            return TGCVector2.Multiply(source, scalingFactor);
+            return new TGCVector2(Vector2.Scale(source.ToVector2(), scalingFactor));
         }
 
         /// <summary>
@@ -441,7 +422,7 @@ namespace TGC.Core.Mathematica
         /// <param name="source">Source TGCVector2 to subtract from the current TGCVector2 instance.</param>
         public void Subtract(TGCVector2 source)
         {
-            this.Add(-source);
+            this.DXVector2.Subtract(source.ToVector2());
         }
 
         /// <summary>
@@ -452,7 +433,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCVector2 that is the result of the operation.</returns>
         public static TGCVector2 Subtract(TGCVector2 left, TGCVector2 right)
         {
-            return TGCVector2.Add(left, -right);
+            return new TGCVector2(Vector2.Subtract(left.ToVector2(), right.ToVector2()));
         }
 
         /// <summary>
@@ -462,7 +443,7 @@ namespace TGC.Core.Mathematica
         public override string ToString()
         {
             return "[" + string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", X) + "," +
-                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", Y) + "]";            
+                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", Y) + "]";
         }
 
         /// <summary>
@@ -498,9 +479,7 @@ namespace TGC.Core.Mathematica
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
         public void TransformCoordinate(TGCMatrix sourceMatrix)
         {
-            this.DXVector2 = Vector2.TransformCoordinate(this.ToVector2(), sourceMatrix.ToMatrix());
-            this.X = DXVector2.X;
-            this.Y = DXVector2.Y;
+            this.DXVector2.TransformCoordinate(sourceMatrix.ToMatrix());
         }
 
         /// <summary>
@@ -536,9 +515,7 @@ namespace TGC.Core.Mathematica
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
         public void TransformNormal(TGCMatrix sourceMatrix)
         {
-            this.DXVector2 = Vector2.TransformNormal(this.ToVector2(), sourceMatrix.ToMatrix());
-            this.X = DXVector2.X;
-            this.Y = DXVector2.Y;
+            this.DXVector2.TransformNormal(sourceMatrix.ToMatrix());
         }
 
         /// <summary>
@@ -572,7 +549,7 @@ namespace TGC.Core.Mathematica
         /// Get the DX Vector3 wrapped to be use in DX primitives.
         /// </summary>
         /// <returns>The DX Vector3 wrapped</returns>
-        public Vector2 ToVector2()
+        private Vector2 ToVector2()
         {
             return this.DXVector2;
         }
@@ -643,6 +620,6 @@ namespace TGC.Core.Mathematica
             return data;
         }
 
-        #endregion
+        #endregion Old TGCVectorUtils
     }
 }

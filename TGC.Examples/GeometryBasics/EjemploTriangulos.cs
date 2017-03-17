@@ -74,19 +74,19 @@ namespace TGC.Examples.GeometryBasics
             //Modifiers
             Modifiers.addVertex3f("vertex1", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
                 new TGCVector3(-1, 0, 0));
-            Modifiers.addVertex2f("texCoord1", TGCVector2.Empty, TGCVector2.One,
+            Modifiers.addVertex2f("texCoord1", TGCVector2.Zero, TGCVector2.One,
                 new TGCVector2(1, 0));
             Modifiers.addColor("color1", Color.White);
 
             Modifiers.addVertex3f("vertex2", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
                 new TGCVector3(1, 0, 0));
-            Modifiers.addVertex2f("texCoord2", TGCVector2.Empty, TGCVector2.One,
+            Modifiers.addVertex2f("texCoord2", TGCVector2.Zero, TGCVector2.One,
                 new TGCVector2(0, 1));
             Modifiers.addColor("color2", Color.White);
 
             Modifiers.addVertex3f("vertex3", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
                 TGCVector3.Up);
-            Modifiers.addVertex2f("texCoord3", TGCVector2.Empty, TGCVector2.One,
+            Modifiers.addVertex2f("texCoord3", TGCVector2.Zero, TGCVector2.One,
                 TGCVector2.One);
             Modifiers.addColor("color3", Color.White);
 

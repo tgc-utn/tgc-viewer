@@ -113,7 +113,7 @@ namespace TGC.Examples.Collision
             //Modifiers para modificar propiedades de la camara
             Modifiers.addFloat("offsetHeight", 0, 300, 100);
             Modifiers.addFloat("offsetForward", -400, 0, -220);
-            Modifiers.addVertex2f("displacement", TGCVector2.Empty, new TGCVector2(100, 200), new TGCVector2(0, 100));
+            Modifiers.addVertex2f("displacement", TGCVector2.Zero, new TGCVector2(100, 200), new TGCVector2(0, 100));
         }
 
         public override void Update()

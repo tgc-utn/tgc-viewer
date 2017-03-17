@@ -66,16 +66,16 @@ namespace TGC.Examples.Engine2D
                 D3DDevice.Instance.Height / 2 - textureSizeAnimado.Height / 2);
 
             //Modifiers para variar parametros del sprite
-            Modifiers.addVertex2f("position", TGCVector2.Empty,
+            Modifiers.addVertex2f("position", TGCVector2.Zero,
                 new TGCVector2(D3DDevice.Instance.Width, D3DDevice.Instance.Height), sprite.Position);
-            Modifiers.addVertex2f("scaling", TGCVector2.Empty, new TGCVector2(4, 4), sprite.Scaling);
+            Modifiers.addVertex2f("scaling", TGCVector2.Zero, new TGCVector2(4, 4), sprite.Scaling);
             Modifiers.addFloat("rotation", 0, 360, 0);
 
             //Modifiers para variar parametros del sprite
             Modifiers.addFloat("frameRateAnimated", 1, 30, 10);
-            Modifiers.addVertex2f("positionAnimated", TGCVector2.Empty,
+            Modifiers.addVertex2f("positionAnimated", TGCVector2.Zero,
                 new TGCVector2(D3DDevice.Instance.Width, D3DDevice.Instance.Height), animatedSprite.Position);
-            Modifiers.addVertex2f("scalingAnimated", TGCVector2.Empty, new TGCVector2(4, 4), animatedSprite.Scaling);
+            Modifiers.addVertex2f("scalingAnimated", TGCVector2.Zero, new TGCVector2(4, 4), animatedSprite.Scaling);
             Modifiers.addFloat("rotationAnimated", 0, 360, 0);
 
             //Creamos un Box3D para que se vea como el Sprite es en 2D y se dibuja siempre arriba de la escena 3D
