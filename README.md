@@ -31,7 +31,7 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
         2. [GTK# for .NET](http://www.mono-project.com/download/#download-win)
         3. [Microsoft Build Tools 2013](https://www.microsoft.com/es-ar/download/details.aspx?id=40760)
         4. [Microsoft Build Tools 2015](https://www.microsoft.com/es-ar/download/details.aspx?id=48159)
-        5. [Xamarin Studio Community](https://dl.xamarin.com/MonoDevelop/Windows/XamarinStudio-6.1.4.1.msi)
+        5. [Xamarin Studio Community](https://dl.xamarin.com/MonoDevelop/Windows/XamarinStudio-6.2.0.1829.msi)
 
 ### Colaboradores
 * [Daniela Kazarian](https://github.com/Dkazarian)
