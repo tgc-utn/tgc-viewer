@@ -1,5 +1,4 @@
 ﻿using Microsoft.DirectX;
-using System;
 
 namespace TGC.Core.Mathematica
 {
@@ -8,14 +7,13 @@ namespace TGC.Core.Mathematica
     /// </summary>
     public struct TGCMatrix
     {
-
         private static TGCMatrix IDENTITY = new TGCMatrix(Matrix.Identity);
         private static TGCMatrix ZERO = new TGCMatrix(Matrix.Zero);
 
         /// <summary>
         /// Initializes a new instance of the TGCMatrix class.
         /// </summary>
-        /// <param name="dxMatrix">Matrix from value.</param>        
+        /// <param name="dxMatrix">Matrix from value.</param>
         public TGCMatrix(Matrix dxMatrix)
         {
             this.DXMatrix = dxMatrix;
@@ -41,7 +39,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the first row and the first column of the matrix.
         /// </summary>
-        public float M11 {
+        public float M11
+        {
             get { return this.DXMatrix.M11; }
             set { this.DXMatrix.M11 = value; }
         }
@@ -49,7 +48,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the first row and the second column of the matrix.
         /// </summary>
-        public float M12 {
+        public float M12
+        {
             get { return this.DXMatrix.M12; }
             set { this.DXMatrix.M12 = value; }
         }
@@ -57,7 +57,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the first row and the third column of the matrix.
         /// </summary>
-        public float M13 {
+        public float M13
+        {
             get { return this.DXMatrix.M13; }
             set { this.DXMatrix.M13 = value; }
         }
@@ -65,7 +66,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the first row and the fourth column of the matrix.
         /// </summary>
-        public float M14 {
+        public float M14
+        {
             get { return this.DXMatrix.M14; }
             set { this.DXMatrix.M14 = value; }
         }
@@ -73,7 +75,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the second row and the first column of the matrix.
         /// </summary>
-        public float M21 {
+        public float M21
+        {
             get { return this.DXMatrix.M21; }
             set { this.DXMatrix.M21 = value; }
         }
@@ -81,7 +84,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the second row and the second column of the matrix.
         /// </summary>
-        public float M22 {
+        public float M22
+        {
             get { return this.DXMatrix.M22; }
             set { this.DXMatrix.M22 = value; }
         }
@@ -89,7 +93,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the second row and the third column of the matrix.
         /// </summary>
-        public float M23 {
+        public float M23
+        {
             get { return this.DXMatrix.M23; }
             set { this.DXMatrix.M23 = value; }
         }
@@ -97,7 +102,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the second row and the fourth column of the matrix.
         /// </summary>
-        public float M24 {
+        public float M24
+        {
             get { return this.DXMatrix.M24; }
             set { this.DXMatrix.M24 = value; }
         }
@@ -105,7 +111,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the third row and the first column of the matrix.
         /// </summary>
-        public float M31 {
+        public float M31
+        {
             get { return this.DXMatrix.M31; }
             set { this.DXMatrix.M31 = value; }
         }
@@ -113,7 +120,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the third row and the second column of the matrix.
         /// </summary>
-        public float M32 {
+        public float M32
+        {
             get { return this.DXMatrix.M32; }
             set { this.DXMatrix.M32 = value; }
         }
@@ -121,7 +129,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the third row and the third column of the matrix.
         /// </summary>
-        public float M33 {
+        public float M33
+        {
             get { return this.DXMatrix.M33; }
             set { this.DXMatrix.M33 = value; }
         }
@@ -129,7 +138,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the third row and the fourth column of the matrix.
         /// </summary>
-        public float M34 {
+        public float M34
+        {
             get { return this.DXMatrix.M34; }
             set { this.DXMatrix.M34 = value; }
         }
@@ -137,7 +147,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the fourth row and the first column of the matrix.
         /// </summary>
-        public float M41 {
+        public float M41
+        {
             get { return this.DXMatrix.M41; }
             set { this.DXMatrix.M41 = value; }
         }
@@ -145,7 +156,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the fourth row and the second column of the matrix.
         /// </summary>
-        public float M42 {
+        public float M42
+        {
             get { return this.DXMatrix.M42; }
             set { this.DXMatrix.M42 = value; }
         }
@@ -153,7 +165,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the fourth row and the third column of the matrix.
         /// </summary>
-        public float M43 {
+        public float M43
+        {
             get { return this.DXMatrix.M43; }
             set { this.DXMatrix.M43 = value; }
         }
@@ -161,7 +174,8 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the element in the fourth row and the fourth column of the matrix.
         /// </summary>
-        public float M44 {
+        public float M44
+        {
             get { return this.DXMatrix.M44; }
             set { this.DXMatrix.M44 = value; }
         }
@@ -182,13 +196,12 @@ namespace TGC.Core.Mathematica
         /// </summary>
         /// <param name="scaling">Scaling factor. A value of zero indicates no scaling.</param>
         /// <param name="rotationCenter">A TGCVector3 that indicates the point at the center of rotation.</param>
-        /// <param name="rotation">A 
+        /// <param name="rotation">A
         /// structure that specifies the rotation. Use TGCQuaternion.Identity to specify no rotation.</param>
         /// <param name="translation">A TGCVector3 that represents the translation. Use TGCVector3.Empty to specify no translation.</param>
         public void AffineTransformation(float scaling, TGCVector3 rotationCenter, TGCQuaternion rotation, TGCVector3 translation)
         {
-
-            this.DXMatrix.AffineTransformation(scaling, rotationCenter.ToVector3(), rotation.ToQuaternion(), translation.ToVector3());
+            this.DXMatrix.AffineTransformation(scaling, rotationCenter, rotation, translation);
             AssingAllDXMatrix();
         }
 
@@ -292,7 +305,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a left-handed look-at matrix.</returns>
         public static TGCMatrix LookAtLH(TGCVector3 cameraPosition, TGCVector3 cameraTarget, TGCVector3 cameraUpVector)
         {
-            return new TGCMatrix(Matrix.LookAtLH(cameraPosition.ToVector3(), cameraTarget.ToVector3(), cameraUpVector.ToVector3()));
+            return new TGCMatrix(Matrix.LookAtLH(cameraPosition, cameraTarget, cameraUpVector));
         }
 
         /// <summary>
@@ -304,7 +317,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that is a right-handed look-at matrix.</returns>
         public static TGCMatrix LookAtRH(TGCVector3 cameraPosition, TGCVector3 cameraTarget, TGCVector3 cameraUpVector)
         {
-            return new TGCMatrix(Matrix.LookAtRH(cameraPosition.ToVector3(), cameraTarget.ToVector3(), cameraUpVector.ToVector3()));
+            return new TGCMatrix(Matrix.LookAtRH(cameraPosition, cameraTarget, cameraUpVector));
         }
 
         /// <summary>
@@ -352,7 +365,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Cast TGCMatrix to DX Matrix
         /// </summary>
-        /// <param name="matrix"></param>
+        /// <param name="vector">TGCMatrix to become into Matrix</param>
         public static implicit operator Matrix(TGCMatrix matrix)
         {
             return matrix.ToMatrix();
@@ -483,7 +496,6 @@ namespace TGC.Core.Mathematica
             return new TGCMatrix(Matrix.PerspectiveFovRH(fieldOfViewY, aspectRatio, znearPlane, zfarPlane));
         }
 
-
         /// <summary>
         /// Builds a left-handed perspective projection matrix.
         /// </summary>
@@ -546,7 +558,7 @@ namespace TGC.Core.Mathematica
         /// <param name="plane">Source TGCPlane structure.</param>
         public void Reflect(TGCPlane plane)
         {
-            this.DXMatrix.Reflect(plane.ToPlane());
+            this.DXMatrix.Reflect(plane);
             AssingAllDXMatrix();
         }
 
@@ -557,7 +569,7 @@ namespace TGC.Core.Mathematica
         /// <param name="angle">Angle of rotation, in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.</param>
         public void RotateAxis(TGCVector3 axisRotation, float angle)
         {
-            this.DXMatrix.RotateAxis(axisRotation.ToVector3(), angle);
+            this.DXMatrix.RotateAxis(axisRotation, angle);
             AssingAllDXMatrix();
         }
 
@@ -567,7 +579,7 @@ namespace TGC.Core.Mathematica
         /// <param name="quat">Source TGCQuaternion structure that defines the rotation.</param>
         public void RotateTGCQuaternion(TGCQuaternion quat)
         {
-            this.DXMatrix.RotateQuaternion(quat.ToQuaternion());
+            this.DXMatrix.RotateQuaternion(quat);
             AssingAllDXMatrix();
         }
 
@@ -621,7 +633,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Rotated TGCMatrix.</returns>
         public static TGCMatrix RotationAxis(TGCVector3 axisRotation, float angle)
         {
-            return new TGCMatrix(Matrix.RotationAxis(axisRotation.ToVector3(), angle));
+            return new TGCMatrix(Matrix.RotationAxis(axisRotation, angle));
         }
 
         /// <summary>
@@ -631,7 +643,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Rotated TGCMatrix.</returns>
         public static TGCMatrix RotationTGCQuaternion(TGCQuaternion quat)
         {
-            return new TGCMatrix(Matrix.RotationQuaternion(quat.ToQuaternion()));
+            return new TGCMatrix(Matrix.RotationQuaternion(quat));
         }
 
         /// <summary>
@@ -694,7 +706,7 @@ namespace TGC.Core.Mathematica
         /// <param name="v">A TGCVector3 containing three values that represent the scaling factors applied along the x-axis, y-axis, and z-axis.</param>
         public void Scale(TGCVector3 v)
         {
-            this.DXMatrix.Scale(v.ToVector3());
+            this.DXMatrix.Scale(v);
             AssingAllDXMatrix();
         }
 
@@ -717,7 +729,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Scaled TGCMatrix.</returns>
         public static TGCMatrix Scaling(TGCVector3 v)
         {
-            return new TGCMatrix(Matrix.Scaling(v.ToVector3()));
+            return new TGCMatrix(Matrix.Scaling(v));
         }
 
         /// <summary>
@@ -727,7 +739,7 @@ namespace TGC.Core.Mathematica
         /// <param name="plane">Source TGCPlane structure.</param>
         public void Shadow(TGCVector4 light, TGCPlane plane)
         {
-            this.DXMatrix.Shadow(light.ToVector4(), plane.ToPlane());
+            this.DXMatrix.Shadow(light, plane);
             AssingAllDXMatrix();
         }
 
@@ -763,7 +775,7 @@ namespace TGC.Core.Mathematica
         /// <param name="translation">A TGCVector3 that represents the translation. Use Vector3.Empty to specify no translation.</param>
         public void Transform(TGCVector3 scalingCenter, TGCQuaternion scalingRotation, TGCVector3 scalingFactor, TGCVector3 rotationCenter, TGCQuaternion rotation, TGCVector3 translation)
         {
-            this.DXMatrix.Transform(scalingCenter.ToVector3(), scalingRotation.ToQuaternion(), scalingFactor.ToVector3(), rotationCenter.ToVector3(), rotation.ToQuaternion(), translation.ToVector3());
+            this.DXMatrix.Transform(scalingCenter, scalingRotation, scalingFactor, rotationCenter, rotation, translation);
             AssingAllDXMatrix();
         }
 
@@ -779,7 +791,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Resulting TGCMatrix.</returns>
         public static TGCMatrix Transformation(TGCVector3 scalingCenter, TGCQuaternion scalingRotation, TGCVector3 scalingFactor, TGCVector3 rotationCenter, TGCQuaternion rotation, TGCVector3 translation)
         {
-            return new TGCMatrix(Matrix.Transformation(scalingCenter.ToVector3(), scalingRotation.ToQuaternion(), scalingFactor.ToVector3(), rotationCenter.ToVector3(), rotation.ToQuaternion(), translation.ToVector3()));
+            return new TGCMatrix(Matrix.Transformation(scalingCenter, scalingRotation, scalingFactor, rotationCenter, rotation, translation));
         }
 
         /// <summary>
@@ -815,7 +827,7 @@ namespace TGC.Core.Mathematica
         /// <param name="v">A TGCVector3 that contains the x-coordinate, y-coordinate, and z-coordinate offsets.</param>
         public void Translate(TGCVector3 v)
         {
-            this.DXMatrix.Translate(v.ToVector3());
+            this.DXMatrix.Translate(v);
             AssingAllDXMatrix();
         }
 
@@ -838,7 +850,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A TGCMatrix that contains a translated transformation matrix.</returns>
         public static TGCMatrix Translation(TGCVector3 v)
         {
-            return new TGCMatrix(Matrix.Translation(v.ToVector3()));
+            return new TGCMatrix(Matrix.Translation(v));
         }
 
         /// <summary>

@@ -82,7 +82,7 @@ namespace TGC.Core.Geometry
             var vertices = new CustomVertex.PositionColored[BoundingVertices.Length];
             for (var i = 0; i < BoundingVertices.Length; i++)
             {
-                vertices[i] = new CustomVertex.PositionColored(BoundingVertices[i].ToVector3(), c);
+                vertices[i] = new CustomVertex.PositionColored(BoundingVertices[i], c);
             }
 
             //Cargar vertexBuffer

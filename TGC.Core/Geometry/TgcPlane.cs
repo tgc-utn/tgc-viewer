@@ -295,14 +295,14 @@ namespace TGC.Core.Geometry
             var offsetV = UVOffset.Y;
 
             //Primer triangulo
-            vertices[0] = new CustomVertex.PositionTextured(bLeft.ToVector3(), offsetU + UTile, offsetV + VTile);
-            vertices[1] = new CustomVertex.PositionTextured(tLeft.ToVector3(), offsetU, offsetV + VTile);
-            vertices[2] = new CustomVertex.PositionTextured(tRight.ToVector3(), offsetU, offsetV);
+            vertices[0] = new CustomVertex.PositionTextured(bLeft, offsetU + UTile, offsetV + VTile);
+            vertices[1] = new CustomVertex.PositionTextured(tLeft, offsetU, offsetV + VTile);
+            vertices[2] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
 
             //Segundo triangulo
-            vertices[3] = new CustomVertex.PositionTextured(bLeft.ToVector3(), offsetU + UTile, offsetV + VTile);
-            vertices[4] = new CustomVertex.PositionTextured(tRight.ToVector3(), offsetU, offsetV);
-            vertices[5] = new CustomVertex.PositionTextured(bRight.ToVector3(), offsetU + UTile, offsetV);
+            vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + UTile, offsetV + VTile);
+            vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
+            vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + UTile, offsetV);
 
             /*Versión con triángulos para el otro sentido
             //Primer triangulo

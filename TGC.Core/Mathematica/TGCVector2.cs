@@ -14,15 +14,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves or sets the DirectX of a 2-D vector.
         /// </summary>
-        private Vector2 DXVector2;
-
-        // <summary>
-        // Initializes a new instance of the TGCVector2 class.
-        // </summary>
-        //public TGCVector2()
-        //{
-        //    this.DXVector2 = new Vector2();
-        //}
+        private Vector2 dxVector2;
 
         /// <summary>
         /// Initializes a new instance of the TGCVector2 class.
@@ -31,7 +23,7 @@ namespace TGC.Core.Mathematica
         /// <param name="y">Initial Y value.</param>
         public TGCVector2(float x, float y)
         {
-            this.DXVector2 = new Vector2(x, y);
+            this.dxVector2 = new Vector2(x, y);
         }
 
         /// <summary>
@@ -40,7 +32,7 @@ namespace TGC.Core.Mathematica
         /// <param name="dxVector2">Vector2 from value.</param>
         public TGCVector2(Vector2 dxVector2)
         {
-            this.DXVector2 = dxVector2;
+            this.dxVector2 = dxVector2;
         }
 
         /// <summary>
@@ -48,8 +40,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public float X
         {
-            get { return this.DXVector2.X; }
-            set { this.DXVector2.X = value; }
+            get { return this.dxVector2.X; }
+            set { this.dxVector2.X = value; }
         }
 
         /// <summary>
@@ -57,8 +49,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public float Y
         {
-            get { return this.DXVector2.Y; }
-            set { this.DXVector2.Y = value; }
+            get { return this.dxVector2.Y; }
+            set { this.dxVector2.Y = value; }
         }
 
         /// <summary>
@@ -83,7 +75,7 @@ namespace TGC.Core.Mathematica
         /// <param name="v">Source TGCVector2.</param>
         public void Add(TGCVector2 v)
         {
-            this.DXVector2.Add(v.ToVector2());
+            this.dxVector2.Add(v.ToVector2());
         }
 
         /// <summary>
@@ -155,7 +147,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
         public override bool Equals(object compare)
         {
-            return this.DXVector2.Equals(compare);
+            return this.dxVector2.Equals(compare);
         }
 
         /// <summary>
@@ -164,7 +156,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Hash code for the instance.</returns>
         public override int GetHashCode()
         {
-            return this.DXVector2.GetHashCode();
+            return this.dxVector2.GetHashCode();
         }
 
         /// <summary>
@@ -188,7 +180,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Vector length.</returns>
         public float Length()
         {
-            return DXVector2.Length();
+            return dxVector2.Length();
         }
 
         /// <summary>
@@ -207,7 +199,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Vector's squared length.</returns>
         public float LengthSq()
         {
-            return DXVector2.LengthSq();
+            return dxVector2.LengthSq();
         }
 
         /// <summary>
@@ -279,7 +271,7 @@ namespace TGC.Core.Mathematica
         /// <param name="s">Source float value.</param>
         public void Multiply(float s)
         {
-            this.DXVector2.Multiply(s);
+            this.dxVector2.Multiply(s);
         }
 
         /// <summary>
@@ -298,7 +290,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public void Normalize()
         {
-            this.DXVector2.Normalize();
+            this.dxVector2.Normalize();
         }
 
         /// <summary>
@@ -312,9 +304,9 @@ namespace TGC.Core.Mathematica
         }
 
         /// <summary>
-        /// Cast TGCMatrix to DX Matrix
+        /// Cast TGCVector2 to DX Vector2
         /// </summary>
-        /// <param name="vector"></param>
+        /// <param name="vector">TGCVector2 to become into Vector2</param>
         public static implicit operator Vector2(TGCVector2 vector)
         {
             return vector.ToVector2();
@@ -402,7 +394,7 @@ namespace TGC.Core.Mathematica
         /// <param name="scalingFactor">Scaling value.</param>
         public void Scale(float scalingFactor)
         {
-            this.DXVector2.Scale(scalingFactor);
+            this.dxVector2.Scale(scalingFactor);
         }
 
         /// <summary>
@@ -422,7 +414,7 @@ namespace TGC.Core.Mathematica
         /// <param name="source">Source TGCVector2 to subtract from the current TGCVector2 instance.</param>
         public void Subtract(TGCVector2 source)
         {
-            this.DXVector2.Subtract(source.ToVector2());
+            this.dxVector2.Subtract(source.ToVector2());
         }
 
         /// <summary>
@@ -479,7 +471,7 @@ namespace TGC.Core.Mathematica
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
         public void TransformCoordinate(TGCMatrix sourceMatrix)
         {
-            this.DXVector2.TransformCoordinate(sourceMatrix.ToMatrix());
+            this.dxVector2.TransformCoordinate(sourceMatrix.ToMatrix());
         }
 
         /// <summary>
@@ -515,7 +507,7 @@ namespace TGC.Core.Mathematica
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
         public void TransformNormal(TGCMatrix sourceMatrix)
         {
-            this.DXVector2.TransformNormal(sourceMatrix.ToMatrix());
+            this.dxVector2.TransformNormal(sourceMatrix.ToMatrix());
         }
 
         /// <summary>
@@ -546,12 +538,12 @@ namespace TGC.Core.Mathematica
         }
 
         /// <summary>
-        /// Get the DX Vector3 wrapped to be use in DX primitives.
+        /// Get the DX Vector2 wrapped to be use in DX primitives.
         /// </summary>
-        /// <returns>The DX Vector3 wrapped</returns>
+        /// <returns>The DX Vector2 wrapped</returns>
         private Vector2 ToVector2()
         {
-            return this.DXVector2;
+            return this.dxVector2;
         }
 
         /// <summary>

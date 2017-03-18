@@ -120,8 +120,8 @@ namespace TGC.Examples.ShadersExamples
                 var p0 = pt_ruta[i] - n * dr;
                 var p1 = pt_ruta[i] + n * dr;
 
-                data[dataIdx++] = new CustomVertex.PositionTextured(p0.ToVector3(), 1, i * Kr);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p1.ToVector3(), 0, i * Kr);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p0, 1, i * Kr);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p1, 0, i * Kr);
             }
 
             // pared izquierda
@@ -136,8 +136,8 @@ namespace TGC.Examples.ShadersExamples
                 p0.Y -= 25;
                 p1.Y += 25;
 
-                data[dataIdx++] = new CustomVertex.PositionTextured(p0.ToVector3(), i * Kr, 1);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p1.ToVector3(), i * Kr, 0);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p0, i * Kr, 1);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p1, i * Kr, 0);
             }
 
             // pared derecha
@@ -152,8 +152,8 @@ namespace TGC.Examples.ShadersExamples
                 p0.Y -= 25;
                 p1.Y += 25;
 
-                data[dataIdx++] = new CustomVertex.PositionTextured(p0.ToVector3(), i * Kr, 1);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p1.ToVector3(), i * Kr, 0);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p0, i * Kr, 1);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p1, i * Kr, 0);
             }
 
             // Carteles
@@ -169,10 +169,10 @@ namespace TGC.Examples.ShadersExamples
                 var p1 = pt_ruta[i] - n * (dr + 50) + up * 170;
                 var p2 = pt_ruta[i] + n * (dr + 50) + up * 170;
                 var p3 = pt_ruta[i] + n * (dr + 50) + up * 0;
-                data[dataIdx++] = new CustomVertex.PositionTextured(p0.ToVector3(), 1, 1);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p3.ToVector3(), 0, 1);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p1.ToVector3(), 1, 0);
-                data[dataIdx++] = new CustomVertex.PositionTextured(p2.ToVector3(), 0, 0);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p0, 1, 1);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p3, 0, 1);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p1, 1, 0);
+                data[dataIdx++] = new CustomVertex.PositionTextured(p2, 0, 0);
             }
 
             vb.SetData(data, 0, LockFlags.None);

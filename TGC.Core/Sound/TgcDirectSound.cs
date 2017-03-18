@@ -39,7 +39,7 @@ namespace TGC.Core.Sound
         {
             if (ListenerTracking != null)
             {
-                Listener3d.Position = ListenerTracking.Position.ToVector3();
+                Listener3d.Position = ListenerTracking.Position;
             }
         }
 
@@ -55,8 +55,8 @@ namespace TGC.Core.Sound
             primaryBufferDesc.PrimaryBuffer = true;
             primaryBuffer = new Buffer(primaryBufferDesc, DsDevice);
             Listener3d = new Listener3D(primaryBuffer);
-            Listener3d.Position = TGCVector3.Empty.ToVector3();
-            Listener3d.Orientation = new Listener3DOrientation(new TGCVector3(1, 0, 0).ToVector3(), TGCVector3.Up.ToVector3());
+            Listener3d.Position = TGCVector3.Empty;
+            Listener3d.Orientation = new Listener3DOrientation(new TGCVector3(1, 0, 0), TGCVector3.Up);
         }
     }
 }

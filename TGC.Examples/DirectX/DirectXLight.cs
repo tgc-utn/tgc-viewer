@@ -120,17 +120,16 @@ namespace TGC.Examples.DirectX
             var LightRotationMatrix = TGCMatrix.Identity;
             LightRotationMatrix *= TGCMatrix.Translation(lightDistance, 0, 0);
             LightRotationMatrix *= TGCMatrix.RotationYawPitchRoll(angleX, angleY, angleZ);
-            D3DDevice.Instance.Device.Lights[0].Position = TGCVector3.TransformCoordinate(TGCVector3.Empty,
-                LightRotationMatrix).ToVector3();
+            D3DDevice.Instance.Device.Lights[0].Position = TGCVector3.TransformCoordinate(TGCVector3.Empty, LightRotationMatrix);
             lightVectorToCenter = TGCVector3.FromVector3(D3DDevice.Instance.Device.Lights[0].Position);
             D3DDevice.Instance.Device.Lights[0].Direction = -D3DDevice.Instance.Device.Lights[0].Position;
             D3DDevice.Instance.Device.Lights[0].Direction.Normalize();
             D3DDevice.Instance.Device.Lights[0].Update();
 
             //Poner el vertex buffer de la linea que muestra la direccion de la luz.
-            lightVectorVB[0].Position = lightVectorToCenter.ToVector3();
+            lightVectorVB[0].Position = lightVectorToCenter;
             lightVectorVB[0].Color = Color.White.ToArgb();
-            lightVectorVB[1].Position = TGCVector3.Empty.ToVector3();
+            lightVectorVB[1].Position = TGCVector3.Empty;
             lightVectorVB[1].Color = Color.Blue.ToArgb();
 
             //Variar el color del material
@@ -254,7 +253,7 @@ namespace TGC.Examples.DirectX
                 teapotMeshNormalsVB[i * 2].Position = verts[i].Position;
 
                 //El extremo del vector normal es la posicion mas la normal en si misma. Se escala para que se mas proporcionada.
-                teapotMeshNormalsVB[i * 2 + 1].Position = verts[i].Position + TGCVector3.Scale(TGCVector3.FromVector3(verts[i].Normal), 1 / 10f).ToVector3();
+                teapotMeshNormalsVB[i * 2 + 1].Position = verts[i].Position + TGCVector3.Scale(TGCVector3.FromVector3(verts[i].Normal), 1 / 10f);
                 teapotMeshNormalsVB[i * 2].Color = teapotMeshNormalsVB[i * 2 + 1].Color = Color.Yellow.ToArgb();
             }
 

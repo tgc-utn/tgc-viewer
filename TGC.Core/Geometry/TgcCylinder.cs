@@ -217,8 +217,8 @@ namespace TGC.Core.Geometry
                 u = angle / FastMath.TWO_PI;
 
                 //triangulos de la cara lateral (strip)
-                sideTrianglesVertices[2 * i] = new CustomVertex.PositionColoredTextured(topCapDraw[i].ToVector3(), color, u, 0);
-                sideTrianglesVertices[2 * i + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[i].ToVector3(), color, u, 1);
+                sideTrianglesVertices[2 * i] = new CustomVertex.PositionColoredTextured(topCapDraw[i], color, u, 0);
+                sideTrianglesVertices[2 * i + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[i], color, u, 1);
 
                 //rotamos el vector de dibujado
                 n.TransformNormal(rotationMatrix);
@@ -226,9 +226,9 @@ namespace TGC.Core.Geometry
             }
 
             //cerramos la cara lateral
-            sideTrianglesVertices[2 * capsResolution] = new CustomVertex.PositionColoredTextured(topCapDraw[0].ToVector3(), color, 1,
+            sideTrianglesVertices[2 * capsResolution] = new CustomVertex.PositionColoredTextured(topCapDraw[0], color, 1,
                 0);
-            sideTrianglesVertices[2 * capsResolution + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[0].ToVector3(),
+            sideTrianglesVertices[2 * capsResolution + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[0],
                 color, 1, 1);
         }
 

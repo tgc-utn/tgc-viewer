@@ -167,7 +167,7 @@ namespace TGC.Core.BoundingVolumes
             //rotamos y trasladamos los puntos, y los volcamos al vector de vertices
             var transformation = Transform;
             for (var i = 0; i < END_CAPS_VERTEX_COUNT; i++)
-                vertices[i] = new CustomVertex.PositionColored(TGCVector3.TransformCoordinate(draw[i], transformation).ToVector3(),
+                vertices[i] = new CustomVertex.PositionColored(TGCVector3.TransformCoordinate(draw[i], transformation),
                     color);
         }
 

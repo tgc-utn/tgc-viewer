@@ -73,7 +73,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
             minQ = TGCVector3.Empty;
             minT = float.MaxValue;
             n = TGCVector3.Empty;
-            var collisionPlane = TGCPlane.Empty;
+            var collisionPlane = TGCPlane.Zero;
 
             //Colision contra cada triangulo del collider, quedarse con el menor
             TGCVector3 q;

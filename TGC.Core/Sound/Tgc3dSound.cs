@@ -44,7 +44,7 @@ namespace TGC.Core.Sound
         public TGCVector3 Position
         {
             get { return TGCVector3.FromVector3(Buffer3d.Position); }
-            set { Buffer3d.Position = value.ToVector3(); }
+            set { Buffer3d.Position = value; }
         }
 
         /// <summary>

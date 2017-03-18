@@ -260,7 +260,7 @@ namespace TGC.Core.Geometry
             //Transformar todos los puntos
             for (var i = 0; i < vertices.Length; i++)
             {
-                vertices[i].Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vertices[i].Position), t).ToVector3();
+                vertices[i].Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vertices[i].Position), t);
             }
 
             //Cargar vertexBuffer

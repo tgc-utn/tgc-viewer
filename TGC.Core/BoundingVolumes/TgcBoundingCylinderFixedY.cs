@@ -148,7 +148,7 @@ namespace TGC.Core.BoundingVolumes
             }
 
             for (var i = 0; i < END_CAPS_VERTEX_COUNT; i++)
-                vertices[i] = new CustomVertex.PositionColored(draw[i].ToVector3(), color);
+                vertices[i] = new CustomVertex.PositionColored(draw[i], color);
         }
 
         public void render()

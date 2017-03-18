@@ -177,7 +177,7 @@ namespace TGC.Examples.ShadersExamples
                 D3DDevice.Instance.Device.Viewport = View2;
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.Lighting, true);
                 D3DDevice.Instance.Device.SetRenderState(RenderStates.SpecularEnable, true);
-                D3DDevice.Instance.Device.Lights[0].Position = lightPosition.ToVector3();
+                D3DDevice.Instance.Device.Lights[0].Position = lightPosition;
                 D3DDevice.Instance.Device.Lights[0].Update();
 
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
