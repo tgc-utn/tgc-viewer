@@ -145,9 +145,9 @@ namespace TGC.Core.Geometry
 
             //Crear triángulo
             var ci = color.ToArgb();
-            vertices[0] = new CustomVertex.PositionColored(A.ToVector3(), ci);
-            vertices[1] = new CustomVertex.PositionColored(B.ToVector3(), ci);
-            vertices[2] = new CustomVertex.PositionColored(C.ToVector3(), ci);
+            vertices[0] = new CustomVertex.PositionColored(A, ci);
+            vertices[1] = new CustomVertex.PositionColored(B, ci);
+            vertices[2] = new CustomVertex.PositionColored(C, ci);
 
             //Cargar vertexBuffer
             vertexBuffer.SetData(vertices, 0, LockFlags.None);

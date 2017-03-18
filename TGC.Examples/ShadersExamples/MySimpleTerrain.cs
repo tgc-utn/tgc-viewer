@@ -129,14 +129,14 @@ namespace TGC.Examples.ShadersExamples
                         var t4 = new TGCVector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
 
                         //Cargar triangulo 1
-                        data[dataIdx] = new CustomVertex.PositionTextured(v1.ToVector3(), t1.X, t1.Y);
-                        data[dataIdx + 1] = new CustomVertex.PositionTextured(v2.ToVector3(), t2.X, t2.Y);
-                        data[dataIdx + 2] = new CustomVertex.PositionTextured(v4.ToVector3(), t4.X, t4.Y);
+                        data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
+                        data[dataIdx + 1] = new CustomVertex.PositionTextured(v2, t2.X, t2.Y);
+                        data[dataIdx + 2] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
 
                         //Cargar triangulo 2
-                        data[dataIdx + 3] = new CustomVertex.PositionTextured(v1.ToVector3(), t1.X, t1.Y);
-                        data[dataIdx + 4] = new CustomVertex.PositionTextured(v4.ToVector3(), t4.X, t4.Y);
-                        data[dataIdx + 5] = new CustomVertex.PositionTextured(v3.ToVector3(), t3.X, t3.Y);
+                        data[dataIdx + 3] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
+                        data[dataIdx + 4] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
+                        data[dataIdx + 5] = new CustomVertex.PositionTextured(v3, t3.X, t3.Y);
 
                         dataIdx += 6;
                     }
@@ -165,14 +165,14 @@ namespace TGC.Examples.ShadersExamples
                         var t4 = new TGCVector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
 
                         //Cargar triangulo 1
-                        data[dataIdx] = new CustomVertex.PositionTextured(v1.ToVector3(), t1.X, t1.Y);
-                        data[dataIdx + 1] = new CustomVertex.PositionTextured(v2.ToVector3(), t2.X, t2.Y);
-                        data[dataIdx + 2] = new CustomVertex.PositionTextured(v4.ToVector3(), t4.X, t4.Y);
+                        data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
+                        data[dataIdx + 1] = new CustomVertex.PositionTextured(v2, t2.X, t2.Y);
+                        data[dataIdx + 2] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
 
                         //Cargar triangulo 2
-                        data[dataIdx + 3] = new CustomVertex.PositionTextured(v1.ToVector3(), t1.X, t1.Y);
-                        data[dataIdx + 4] = new CustomVertex.PositionTextured(v4.ToVector3(), t4.X, t4.Y);
-                        data[dataIdx + 5] = new CustomVertex.PositionTextured(v3.ToVector3(), t3.X, t3.Y);
+                        data[dataIdx + 3] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
+                        data[dataIdx + 4] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
+                        data[dataIdx + 5] = new CustomVertex.PositionTextured(v3, t3.X, t3.Y);
 
                         dataIdx += 6;
                     }

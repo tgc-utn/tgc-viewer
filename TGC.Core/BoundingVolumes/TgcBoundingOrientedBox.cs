@@ -174,43 +174,43 @@ namespace TGC.Core.BoundingVolumes
             var corners = computeCorners();
 
             //Cuadrado de atras
-            vertices[0] = new CustomVertex.PositionColored(corners[0].ToVector3(), RenderColor);
-            vertices[1] = new CustomVertex.PositionColored(corners[4].ToVector3(), RenderColor);
+            vertices[0] = new CustomVertex.PositionColored(corners[0], RenderColor);
+            vertices[1] = new CustomVertex.PositionColored(corners[4], RenderColor);
 
-            vertices[2] = new CustomVertex.PositionColored(corners[0].ToVector3(), RenderColor);
-            vertices[3] = new CustomVertex.PositionColored(corners[2].ToVector3(), RenderColor);
+            vertices[2] = new CustomVertex.PositionColored(corners[0], RenderColor);
+            vertices[3] = new CustomVertex.PositionColored(corners[2], RenderColor);
 
-            vertices[4] = new CustomVertex.PositionColored(corners[2].ToVector3(), RenderColor);
-            vertices[5] = new CustomVertex.PositionColored(corners[6].ToVector3(), RenderColor);
+            vertices[4] = new CustomVertex.PositionColored(corners[2], RenderColor);
+            vertices[5] = new CustomVertex.PositionColored(corners[6], RenderColor);
 
-            vertices[6] = new CustomVertex.PositionColored(corners[4].ToVector3(), RenderColor);
-            vertices[7] = new CustomVertex.PositionColored(corners[6].ToVector3(), RenderColor);
+            vertices[6] = new CustomVertex.PositionColored(corners[4], RenderColor);
+            vertices[7] = new CustomVertex.PositionColored(corners[6], RenderColor);
 
             //Cuadrado de adelante
-            vertices[8] = new CustomVertex.PositionColored(corners[1].ToVector3(), RenderColor);
-            vertices[9] = new CustomVertex.PositionColored(corners[5].ToVector3(), RenderColor);
+            vertices[8] = new CustomVertex.PositionColored(corners[1], RenderColor);
+            vertices[9] = new CustomVertex.PositionColored(corners[5], RenderColor);
 
-            vertices[10] = new CustomVertex.PositionColored(corners[1].ToVector3(), RenderColor);
-            vertices[11] = new CustomVertex.PositionColored(corners[3].ToVector3(), RenderColor);
+            vertices[10] = new CustomVertex.PositionColored(corners[1], RenderColor);
+            vertices[11] = new CustomVertex.PositionColored(corners[3], RenderColor);
 
-            vertices[12] = new CustomVertex.PositionColored(corners[3].ToVector3(), RenderColor);
-            vertices[13] = new CustomVertex.PositionColored(corners[7].ToVector3(), RenderColor);
+            vertices[12] = new CustomVertex.PositionColored(corners[3], RenderColor);
+            vertices[13] = new CustomVertex.PositionColored(corners[7], RenderColor);
 
-            vertices[14] = new CustomVertex.PositionColored(corners[5].ToVector3(), RenderColor);
-            vertices[15] = new CustomVertex.PositionColored(corners[7].ToVector3(), RenderColor);
+            vertices[14] = new CustomVertex.PositionColored(corners[5], RenderColor);
+            vertices[15] = new CustomVertex.PositionColored(corners[7], RenderColor);
 
             //Union de ambos cuadrados
-            vertices[16] = new CustomVertex.PositionColored(corners[0].ToVector3(), RenderColor);
-            vertices[17] = new CustomVertex.PositionColored(corners[1].ToVector3(), RenderColor);
+            vertices[16] = new CustomVertex.PositionColored(corners[0], RenderColor);
+            vertices[17] = new CustomVertex.PositionColored(corners[1], RenderColor);
 
-            vertices[18] = new CustomVertex.PositionColored(corners[4].ToVector3(), RenderColor);
-            vertices[19] = new CustomVertex.PositionColored(corners[5].ToVector3(), RenderColor);
+            vertices[18] = new CustomVertex.PositionColored(corners[4], RenderColor);
+            vertices[19] = new CustomVertex.PositionColored(corners[5], RenderColor);
 
-            vertices[20] = new CustomVertex.PositionColored(corners[2].ToVector3(), RenderColor);
-            vertices[21] = new CustomVertex.PositionColored(corners[3].ToVector3(), RenderColor);
+            vertices[20] = new CustomVertex.PositionColored(corners[2], RenderColor);
+            vertices[21] = new CustomVertex.PositionColored(corners[3], RenderColor);
 
-            vertices[22] = new CustomVertex.PositionColored(corners[6].ToVector3(), RenderColor);
-            vertices[23] = new CustomVertex.PositionColored(corners[7].ToVector3(), RenderColor);
+            vertices[22] = new CustomVertex.PositionColored(corners[6], RenderColor);
+            vertices[23] = new CustomVertex.PositionColored(corners[7], RenderColor);
         }
 
         /// <summary>

@@ -46,7 +46,7 @@ namespace TGC.Examples.Engine2D.Spaceship.Core
         public void DrawSprite(CustomSprite sprite)
         {
             DxSprite.Transform = sprite.TransformationMatrix.ToMatrix();
-            DxSprite.Draw(sprite.Bitmap.D3dTexture, sprite.SrcRect, TGCVector3.Empty.ToVector3(), TGCVector3.Empty.ToVector3(), sprite.Color);
+            DxSprite.Draw(sprite.Bitmap.D3dTexture, sprite.SrcRect, TGCVector3.Empty, TGCVector3.Empty, sprite.Color);
         }
 
         /// <summary>

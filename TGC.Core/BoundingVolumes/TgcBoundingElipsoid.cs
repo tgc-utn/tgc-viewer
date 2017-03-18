@@ -196,10 +196,10 @@ namespace TGC.Core.BoundingVolumes
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        (new TGCVector3(FastMath.Cos(a) * Radius.X, FastMath.Sin(a) * Radius.Y, 0f)).ToVector3() + Center.ToVector3(), RenderColor);
+                        (new TGCVector3(FastMath.Cos(a) * Radius.X, FastMath.Sin(a) * Radius.Y, 0f)) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        (new TGCVector3(FastMath.Cos(a + step) * Radius.X, FastMath.Sin(a + step) * Radius.Y, 0f)).ToVector3() + Center.ToVector3(),
+                        (new TGCVector3(FastMath.Cos(a + step) * Radius.X, FastMath.Sin(a + step) * Radius.Y, 0f)) + Center,
                         RenderColor);
             }
 
@@ -208,10 +208,10 @@ namespace TGC.Core.BoundingVolumes
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        (new TGCVector3(FastMath.Cos(a) * Radius.X, 0f, FastMath.Sin(a) * Radius.Z)).ToVector3() + Center.ToVector3(), RenderColor);
+                        (new TGCVector3(FastMath.Cos(a) * Radius.X, 0f, FastMath.Sin(a) * Radius.Z)) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        (new TGCVector3(FastMath.Cos(a + step) * Radius.X, 0f, FastMath.Sin(a + step) * Radius.Z)).ToVector3() + Center.ToVector3(),
+                        (new TGCVector3(FastMath.Cos(a + step) * Radius.X, 0f, FastMath.Sin(a + step) * Radius.Z)) + Center,
                         RenderColor);
             }
 
@@ -220,10 +220,10 @@ namespace TGC.Core.BoundingVolumes
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        (new TGCVector3(0f, FastMath.Cos(a) * Radius.Y, FastMath.Sin(a) * Radius.Z)).ToVector3() + Center.ToVector3(), RenderColor);
+                        (new TGCVector3(0f, FastMath.Cos(a) * Radius.Y, FastMath.Sin(a) * Radius.Z)) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        (new TGCVector3(0f, FastMath.Cos(a + step) * Radius.Y, FastMath.Sin(a + step) * Radius.Z)).ToVector3() + Center.ToVector3(),
+                        (new TGCVector3(0f, FastMath.Cos(a + step) * Radius.Y, FastMath.Sin(a + step) * Radius.Z)) + Center,
                         RenderColor);
             }
         }

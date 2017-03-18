@@ -1,76 +1,76 @@
-﻿using System;
+﻿using Microsoft.DirectX;
 using System.Drawing;
-using Microsoft.DirectX;
 
 namespace TGC.Core.Mathematica
 {
-
     /// <summary>
     /// Describes and manipulates a vector in four-dimensional (4-D) space.
     /// </summary>
-    public class TGCVector4
+    public struct TGCVector4
     {
+        /// <summary>
+        /// Retrieves or sets the DirectX of a 4-D vector.
+        /// </summary>
+        private Vector4 dxVector4;
 
         /// <summary>
         /// Initializes a new instance of the TGCVector4 class.
         /// </summary>
-        /// <param name="dxVector4">Vector4 from value.</param>        
+        /// <param name="dxVector4">Vector4 from value.</param>
         public TGCVector4(Vector4 dxVector4)
         {
-            this.DXVector4 = dxVector4;
+            this.dxVector4 = dxVector4;
         }
-
-
-        /// <summary>
-        /// Retrieves or sets the DirectX of a 4-D vector.
-        /// </summary>
-        private Vector4 DXVector4;
 
         /// <summary>
         /// Retrieves or sets the x component of a 4-D vector.
         /// </summary>
-        public float X {
-            get { return this.DXVector4.X; }
-            set { this.DXVector4.X = value; }
+        public float X
+        {
+            get { return this.dxVector4.X; }
+            set { this.dxVector4.X = value; }
         }
 
         /// <summary>
         /// Retrieves or sets the y component of a 4-D vector.
         /// </summary>
-        public float Y {
-            get { return this.DXVector4.Y; }
-            set { this.DXVector4.Y = value; }
+        public float Y
+        {
+            get { return this.dxVector4.Y; }
+            set { this.dxVector4.Y = value; }
         }
 
         /// <summary>
         /// Retrieves or sets the y component of a 4-D vector.
         /// </summary>
-        public float Z {
-            get { return this.DXVector4.Z; }
-            set { this.DXVector4.Z = value; }
+        public float Z
+        {
+            get { return this.dxVector4.Z; }
+            set { this.dxVector4.Z = value; }
         }
 
         /// <summary>
         /// Retrieves or sets the y component of a 4-D vector.
         /// </summary>
-        public float W {
-            get { return this.DXVector4.W; }
-            set { this.DXVector4.W = value; }
+        public float W
+        {
+            get { return this.dxVector4.W; }
+            set { this.dxVector4.W = value; }
         }
 
         /// <summary>
         /// Retrieves the DirectX of a 4-D vector
         /// </summary>
         /// <returns></returns>
-        public Vector4 ToVector4()
+        private Vector4 ToVector4()
         {
-            return DXVector4;
+            return dxVector4;
         }
 
         /// <summary>
-        /// Cast TGCMatrix to DX Matrix
+        /// Cast TGCVector4 to DX Vector4
         /// </summary>
-        /// <param name="vector"></param>
+        /// <param name="vector">TGCVector4 to become into Vector4</param>
         public static implicit operator Vector4(TGCVector4 vector)
         {
             return vector.ToVector4();
@@ -87,8 +87,7 @@ namespace TGC.Core.Mathematica
         {
             return Vector4.Normalize(new Vector4(color.R, color.G, color.B, color.A));
         }
-               
 
-        #endregion
+        #endregion Old TGCVectorUtils
     }
 }

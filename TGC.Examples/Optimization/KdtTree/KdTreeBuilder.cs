@@ -177,7 +177,7 @@ namespace TGC.Examples.Optimization.KdtTree
         {
             var vueltas = (int)((pMax - pMin) / D_DESPLAZAMIENTO);
             var bestBalance = int.MaxValue;
-            var bestPlane = TGCPlane.Empty;
+            var bestPlane = TGCPlane.Zero;
             cutValue = 0;
 
             for (var i = 0; i < vueltas; i++)

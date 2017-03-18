@@ -156,12 +156,12 @@ namespace TGC.Core.Geometry
             var max = new TGCVector3(Size.X / 2, 0, Size.Y / 2);
             var c = color.ToArgb();
 
-            vertices[0] = new CustomVertex.PositionColored(min.ToVector3(), c);
+            vertices[0] = new CustomVertex.PositionColored(min, c);
             vertices[1] = new CustomVertex.PositionColored(min.X, 0, max.Z, c);
-            vertices[2] = new CustomVertex.PositionColored(max.ToVector3(), c);
+            vertices[2] = new CustomVertex.PositionColored(max, c);
 
-            vertices[3] = new CustomVertex.PositionColored(min.ToVector3(), c);
-            vertices[4] = new CustomVertex.PositionColored(max.ToVector3(), c);
+            vertices[3] = new CustomVertex.PositionColored(min, c);
+            vertices[4] = new CustomVertex.PositionColored(max, c);
             vertices[5] = new CustomVertex.PositionColored(max.X, 0, min.Z, c);
 
             //Obtener matriz de rotacion respecto de la normal del plano
@@ -174,7 +174,7 @@ namespace TGC.Core.Geometry
             //Transformar todos los puntos
             for (var i = 0; i < vertices.Length; i++)
             {
-                vertices[i].Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vertices[i].Position), t).ToVector3();
+                vertices[i].Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vertices[i].Position), t);
             }
 
             //Cargar vertexBuffer

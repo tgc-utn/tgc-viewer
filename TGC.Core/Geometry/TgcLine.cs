@@ -126,8 +126,8 @@ namespace TGC.Core.Geometry
         {
             var c = color.ToArgb();
 
-            vertices[0] = new CustomVertex.PositionColored(PStart.ToVector3(), c);
-            vertices[1] = new CustomVertex.PositionColored(PEnd.ToVector3(), c);
+            vertices[0] = new CustomVertex.PositionColored(PStart, c);
+            vertices[1] = new CustomVertex.PositionColored(PEnd, c);
         }
 
         #region Creacion
