@@ -288,7 +288,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Cast TGCQuaternion to DX Quaternion
         /// </summary>
-        /// <param name="vector">TGCQuaternion to become into Quaternion</param>
+        /// <param name="quaternion">TGCQuaternion to become into Quaternion</param>
         public static implicit operator Quaternion(TGCQuaternion quaternion)
         {
             return quaternion.ToQuaternion();
@@ -435,7 +435,7 @@ namespace TGC.Core.Mathematica
         /// <returns></returns>
         public static TGCQuaternion Squad(TGCQuaternion q1, TGCQuaternion a, TGCQuaternion b, TGCQuaternion c, float t)
         {
-            throw new NotImplementedException();
+            return new TGCQuaternion(Quaternion.Squad(q1.ToQuaternion(), a.ToQuaternion(), b.ToQuaternion(), c.ToQuaternion(), t));
         }
 
         /// <summary>
@@ -450,7 +450,13 @@ namespace TGC.Core.Mathematica
         /// <param name="q3">A TGCQuaternion instance that represents the q3 input control point.</param>
         public static void SquadSetup(ref TGCQuaternion outA, ref TGCQuaternion outB, ref TGCQuaternion outC, TGCQuaternion q0, TGCQuaternion q1, TGCQuaternion q2, TGCQuaternion q3)
         {
-            throw new NotImplementedException();
+            Quaternion tempA = outA;
+            Quaternion tempB = outB;
+            Quaternion tempC = outC;            
+            Quaternion.SquadSetup(ref tempA, ref tempA, ref tempA, q0, q1, q2, q3);
+            outA = new TGCQuaternion(tempA);
+            outB = new TGCQuaternion(tempB);
+            outC = new TGCQuaternion(tempC);
         }
 
         /// <summary>
@@ -461,7 +467,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Quaternion structure that is the result of the operation.</returns>
         public static TGCQuaternion Subtract(TGCQuaternion m1, TGCQuaternion m2)
         {
-            throw new NotImplementedException();
+            return new TGCQuaternion(Quaternion.Subtract(m1.ToQuaternion(), m1.ToQuaternion()));
         }
 
         /// <summary>
@@ -472,7 +478,9 @@ namespace TGC.Core.Mathematica
         /// <param name="angle">A float value that identifies the quaternion's angle of rotation, in radians.</param>
         public static void ToAxisAngle(TGCQuaternion q, ref TGCVector3 axis, ref float angle)
         {
-            throw new NotImplementedException();
+            Vector3 tempAxis = axis;
+            Quaternion.ToAxisAngle(q.ToQuaternion(), ref tempAxis, ref angle);
+            axis = new TGCVector3(tempAxis);
         }
 
         /// <summary>
@@ -481,7 +489,10 @@ namespace TGC.Core.Mathematica
         /// <returns>String that represents the object.</returns>
         public override string ToString()
         {
-            throw new NotImplementedException();
+            return "[" + string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", X) + "," +
+                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", Y) + "," +
+                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", X) + "," +
+                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", W) + "]";
         }
 
         /// <summary>
@@ -509,18 +520,6 @@ namespace TGC.Core.Mathematica
         public static float[] TGCQuaternionToFloat4Array(TGCQuaternion q)
         {
             return new[] { q.X, q.Y, q.Z, q.W };
-        }
-
-        /// <summary>
-        ///     Imprime un TGCQuaternion de la forma [x, y, z, w]
-        /// </summary>
-        public static string PrintTGCQuaternion(TGCQuaternion q)
-        {
-            return "[" + TgcParserUtils.printFloat(q.X) +
-                   "," + TgcParserUtils.printFloat(q.Y) +
-                   "," + TgcParserUtils.printFloat(q.Z) +
-                   "," + TgcParserUtils.printFloat(q.W) +
-                   "]";
         }
 
         #endregion Old TGCVectorUtils && TGCParserUtils
