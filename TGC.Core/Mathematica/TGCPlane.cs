@@ -7,8 +7,6 @@ namespace TGC.Core.Mathematica
     /// </summary>
     public struct TGCPlane
     {
-        private static TGCPlane ZERO = new TGCPlane(0f, 0f, 0f, 0f);
-
         /// <summary>
         /// Initializes a new instance of the Plane class.
         /// </summary>
@@ -37,7 +35,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public static TGCPlane Zero
         {
-            get { return ZERO; }
+            get { return new TGCPlane(Plane.Empty); }
         }
 
         /// <summary>
