@@ -579,16 +579,26 @@ namespace TGC.Core.Geometry
             //Creo la lista de vertices
             for (var i = 0; i < positions.Count; i++)
             {
+
                 var pos = positions[i];
                 var u = 0.5f + FastMath.Atan2(pos.Z, pos.X) / twoPi;
                 var v = 0.5f - 2 * FastMath.Asin(pos.Y) / twoPi;
                 vertices.Add(new Vertex.PositionColoredTexturedNormal(pos, c, UVTiling.X * u + UVOffset.X,
                     UVTiling.Y * v + UVOffset.Y, pos));
 
+
                 if (u == 1 || esPolo(vertices[i]))
                 {
                     iverticesU1.Add(i);
-                    if (u != 1) polos[p++] = i;
+                    try
+                    {
+                        if (u != 1) polos[p++] = i;
+                    }
+                    catch (Exception e)
+                    {
+                        //Arreglar esto... y despues quitar el try catch :(
+                        System.Console.WriteLine(e.Message);
+                    }
                 }
             }
 

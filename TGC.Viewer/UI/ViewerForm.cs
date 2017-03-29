@@ -101,10 +101,14 @@ namespace TGC.Viewer.UI
             if (!Directory.Exists(pathMedia))
             {
                 //modelo.DownloadMediaFolder();
+                Process.Start(Settings.Default.MediaLink);
+                Process.Start(Environment.CurrentDirectory);
                 MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine +
                                 Environment.NewLine +
                                 "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
-                Process.Start(Settings.Default.MediaLink);
+
+                //Fuerzo el cierre de la aplicacion.
+                Environment.Exit(0);
             }
         }
 
