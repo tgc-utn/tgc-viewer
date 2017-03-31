@@ -9,9 +9,6 @@ namespace TGC.Core.Mathematica
     /// </summary>
     public struct TGCQuaternion
     {
-        private static TGCQuaternion ZERO = new TGCQuaternion(0f, 0f, 0f, 0f);
-        private static TGCQuaternion IDENTITY = new TGCQuaternion(1f, 1f, 1f, 1f);
-
         /// <summary>
         /// Retrieves or sets the DirectX of quaternion.
         /// </summary>
@@ -79,7 +76,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public static TGCQuaternion Identity
         {
-            get { return IDENTITY; }
+            get { return new TGCQuaternion(1f, 1f, 1f, 1f); }
         }
 
         /// <summary>
@@ -87,7 +84,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public static TGCQuaternion Zero
         {
-            get { return ZERO; }
+            get { return new TGCQuaternion(0f, 0f, 0f, 0f); }
         }
 
         /// <summary>
@@ -139,11 +136,11 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Returns a value that indicates whether the current instance is equal to a specified object.
         /// </summary>
-        /// <param name="compare">Object with which to make the comparison.</param>
+        /// <param name="obj">Object with which to make the comparison.</param>
         /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
-        public override bool Equals(object compare)
+        public override bool Equals(object obj)
         {
-            return this.dxQuaternion.Equals(compare);
+            return this.dxQuaternion.Equals(obj);
         }
 
         /// <summary>
@@ -478,6 +475,7 @@ namespace TGC.Core.Mathematica
         /// <param name="angle">A float value that identifies the quaternion's angle of rotation, in radians.</param>
         public static void ToAxisAngle(TGCQuaternion q, ref TGCVector3 axis, ref float angle)
         {
+			//TODO no deberia depender de Vector3
             Vector3 tempAxis = axis;
             Quaternion.ToAxisAngle(q.ToQuaternion(), ref tempAxis, ref angle);
             axis = new TGCVector3(tempAxis);
