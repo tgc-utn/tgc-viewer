@@ -7,6 +7,11 @@ namespace TGC.Core.Mathematica
     /// </summary>
     public struct TGCPlane
     {
+		/// <summary>
+		/// Retrieves or sets the DirectX of a Plane.
+		/// </summary>
+		private Plane dxPlane;
+
         /// <summary>
         /// Initializes a new instance of the Plane class.
         /// </summary>
@@ -16,7 +21,7 @@ namespace TGC.Core.Mathematica
         /// <param name="valuePointD">A Single value used to set the initial value of the D field.</param>
         public TGCPlane(float valuePointA, float valuePointB, float valuePointC, float valuePointD)
         {
-            this.DXPlane = new Plane(valuePointA, valuePointB, valuePointC, valuePointD);
+            this.dxPlane = new Plane(valuePointA, valuePointB, valuePointC, valuePointD);
         }
 
         /// <summary>
@@ -25,10 +30,8 @@ namespace TGC.Core.Mathematica
         /// <param name="dxPlane">A plane DXPlane.</param>
         public TGCPlane(Plane dxPlane)
         {
-            this.DXPlane = dxPlane;
+            this.dxPlane = dxPlane;
         }
-
-        private Plane DXPlane;
 
         /// <summary>
         /// Retrieves an empty plane.
@@ -43,8 +46,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public float A
         {
-            get { return this.DXPlane.A; }
-            set { this.DXPlane.A = value; }
+            get { return this.dxPlane.A; }
+            set { this.dxPlane.A = value; }
         }
 
         /// <summary>
@@ -52,8 +55,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public float B
         {
-            get { return this.DXPlane.B; }
-            set { this.DXPlane.B = value; }
+            get { return this.dxPlane.B; }
+            set { this.dxPlane.B = value; }
         }
 
         /// <summary>
@@ -61,8 +64,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public float C
         {
-            get { return this.DXPlane.C; }
-            set { this.DXPlane.C = value; }
+            get { return this.dxPlane.C; }
+            set { this.dxPlane.C = value; }
         }
 
         /// <summary>
@@ -70,8 +73,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public float D
         {
-            get { return this.DXPlane.D; }
-            set { this.DXPlane.D = value; }
+            get { return this.dxPlane.D; }
+            set { this.dxPlane.D = value; }
         }
 
         /// <summary>
@@ -81,7 +84,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Single value that is the dot product of the plane and the vector.</returns>
         public float Dot(TGCVector3 v)
         {
-            return this.DXPlane.Dot(v);
+            return this.dxPlane.Dot(v);
         }
 
         /// <summary>
@@ -91,7 +94,7 @@ namespace TGC.Core.Mathematica
         /// <returns>A Single value that is the dot product of the plane and the vector.</returns>
         public float Dot(TGCVector4 v)
         {
-            return this.DXPlane.Dot(v);
+            return this.dxPlane.Dot(v);
         }
 
         /// <summary>
@@ -108,11 +111,11 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Returns a value that indicates whether the current instance is equal to a specified object.
         /// </summary>
-        /// <param name="compare">Object with which to make the comparison.</param>
+        /// <param name="obj">Object with which to make the comparison.</param>
         /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
-        public override bool Equals(object compare)
+        public override bool Equals(object obj)
         {
-            return this.DXPlane.Equals(compare);
+            return this.dxPlane.Equals(obj);
         }
 
         /// <summary>
@@ -121,7 +124,7 @@ namespace TGC.Core.Mathematica
         /// <returns>Hash code for the instance.</returns>
         public override int GetHashCode()
         {
-            return this.DXPlane.GetHashCode();
+            return this.dxPlane.GetHashCode();
         }
 
         /// <summary>
@@ -164,7 +167,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public void Normalize()
         {
-            this.DXPlane.Normalize();
+            this.dxPlane.Normalize();
         }
 
         /// <summary>
@@ -214,7 +217,7 @@ namespace TGC.Core.Mathematica
         /// <param name="s">Scale factor.</param>
         public void Scale(float s)
         {
-            this.DXPlane.Scale(s);
+            this.dxPlane.Scale(s);
         }
 
         /// <summary>
@@ -246,7 +249,7 @@ namespace TGC.Core.Mathematica
         /// <param name="m">Source TGCMatrix, which contains the transformation values. This matrix must contain the inverse transpose of the transformation values.</param>
         public void Transform(TGCMatrix m)
         {
-            this.DXPlane.Transform(m.ToMatrix());
+            this.dxPlane.Transform(m.ToMatrix());
         }
 
         /// <summary>
@@ -266,7 +269,7 @@ namespace TGC.Core.Mathematica
         /// <returns></returns>
         private Plane ToPlane()
         {
-            return this.DXPlane;
+            return this.dxPlane;
         }
 
         #region Old TGCVectorUtils
@@ -279,6 +282,6 @@ namespace TGC.Core.Mathematica
             return new TGCPlane(f[0], f[1], f[2], f[3]);
         }
 
-        #endregion Old TGCVectorUtils
+        #endregion
     }
 }
