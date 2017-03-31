@@ -736,8 +736,9 @@ namespace TGC.Core.Mathematica
 		/// <summary>
 		///     Convierte un TGCVector3 a un Vector4 con w = 1
 		/// </summary>
-		public static TGCVector4 Vector3ToVector4(TGCVector3 v)
+		public static Vector4 Vector3ToVector4(TGCVector3 v)
 		{
+            //TODO esta mal que retorne un Vector4 pero hay un tema de cast implicito en un metodo sobrecargado que no lo puede resolver un ejemplo.
 			return new TGCVector4(v.X, v.Y, v.Z, 1f);
 		}
 
