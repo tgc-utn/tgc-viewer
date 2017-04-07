@@ -726,7 +726,6 @@ namespace TGC.Core.Mathematica
 		/// <returns>String that represents the object.</returns>
 		public override string ToString()
 		{
-			//TODO mejorar.
 			return this.dxMatrix.ToString();
 		}
 

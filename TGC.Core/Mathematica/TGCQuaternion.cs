@@ -487,10 +487,7 @@ namespace TGC.Core.Mathematica
         /// <returns>String that represents the object.</returns>
         public override string ToString()
         {
-            return "[" + string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", X) + "," +
-                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", Y) + "," +
-                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", X) + "," +
-                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", W) + "]";
+            return this.dxQuaternion.ToString();
         }
 
         /// <summary>

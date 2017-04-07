@@ -590,14 +590,18 @@ namespace TGC.Core.Geometry
                 if (u == 1 || esPolo(vertices[i]))
                 {
                     iverticesU1.Add(i);
-                    try
+
+                    if (u != 1)
                     {
-                        if (u != 1) polos[p++] = i;
-                    }
-                    catch (Exception e)
-                    {
-                        //Arreglar esto... y despues quitar el try catch :(
-                        System.Console.WriteLine(e.Message);
+                        try
+                        {
+                            polos[p++] = i;
+                        }
+                        catch (Exception e)
+                        {
+                            //Arreglar esto... y despues quitar el try catch :(
+                            System.Console.WriteLine(e.Message);
+                        }
                     }
                 }
             }

@@ -237,10 +237,7 @@ namespace TGC.Core.Mathematica
         /// <returns>String that represents the object.</returns>
         public override string ToString()
         {
-            return "[" + string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", A) + "," +
-                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", B) + "," +
-                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", C) + "," +
-                        string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.####}", D) + "]";
+            return this.dxPlane.ToString();
         }
 
         /// <summary>
