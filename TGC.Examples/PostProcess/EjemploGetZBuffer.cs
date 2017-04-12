@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
@@ -67,7 +68,7 @@ namespace TGC.Examples.PostProcess
                 DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(-20, 80, 450), 400f, 300f, Input);
         }
 
         public override void Update()

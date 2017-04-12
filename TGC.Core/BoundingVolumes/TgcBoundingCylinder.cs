@@ -2,6 +2,7 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
@@ -12,15 +13,15 @@ namespace TGC.Core.BoundingVolumes
     /// </summary>
     public class TgcBoundingCylinder : IRenderObject
     {
-        private Vector3 center;
-        private Vector3 rotation;
+        private TGCVector3 center;
+        private TGCVector3 rotation;
 
-        public TgcBoundingCylinder(Vector3 center, float radius, float halfLength)
+        public TgcBoundingCylinder(TGCVector3 center, float radius, float halfLength)
         {
             this.center = center;
             Radius = radius;
             HalfLength = halfLength;
-            rotation = new Vector3(0, 0, 0);
+            rotation = TGCVector3.Empty;
             updateValues();
 
             color = Color.Yellow;
@@ -30,9 +31,9 @@ namespace TGC.Core.BoundingVolumes
         ///     Devuelve el vector HalfHeight (va del centro a la tapa superior del cilindro)
         ///     Se utiliza para testeo de colisiones
         /// </summary>
-        public Vector3 HalfHeight
+        public TGCVector3 HalfHeight
         {
-            get { return Vector3.TransformNormal(new Vector3(0, 1, 0), Transform); }
+            get { return TGCVector3.TransformNormal(TGCVector3.Up, Transform); }
         }
 
         /// <summary>
@@ -40,9 +41,9 @@ namespace TGC.Core.BoundingVolumes
         ///     Esta normalizado
         ///     Se utiliza para testeo de colisiones
         /// </summary>
-        public Vector3 Direction
+        public TGCVector3 Direction
         {
-            get { return Vector3.TransformNormal(new Vector3(0, 1 / HalfLength, 0), Transform); }
+            get { return TGCVector3.TransformNormal(new TGCVector3(0, 1 / HalfLength, 0), Transform); }
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Centro del cilindro
         /// </summary>
-        public Vector3 Center
+        public TGCVector3 Center
         {
             get { return center; }
             set { center = value; }
@@ -78,23 +79,23 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         public void updateValues()
         {
-            var rotationMatrix = Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+            var rotationMatrix = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
 
             //la matriz Transformation se usa para ubicar los vertices y calcular el vector HalfHeight
             Transform =
-                Matrix.Scaling(Radius, HalfLength, Radius) *
+                TGCMatrix.Scaling(Radius, HalfLength, Radius) *
                 rotationMatrix *
-                Matrix.Translation(center);
+                TGCMatrix.Translation(center);
 
             //la matriz AntiTransformation convierte el cilindro a uno generico de radio 1 y altura 2
             AntiTransformationMatrix =
-                Matrix.Invert(Transform);
+                TGCMatrix.Invert(Transform);
 
             //la matriz AntiRotation sirve para alinear el cilindro con los ejes
             AntiRotationMatrix =
-                Matrix.Translation(-center) *
-                Matrix.Invert(rotationMatrix) *
-                Matrix.Translation(center);
+                TGCMatrix.Translation(-center) *
+                TGCMatrix.Invert(rotationMatrix) *
+                TGCMatrix.Translation(center);
         }
 
         /// <summary>
@@ -130,14 +131,14 @@ namespace TGC.Core.BoundingVolumes
 
             //matriz que vamos a usar para girar el vector de dibujado
             var angle = FastMath.TWO_PI / (END_CAPS_RESOLUTION / 4); // /4 ya que agregamos los bordes a la resolucion.
-            var upVector = new Vector3(0, 1, 0);
-            var rotationMatrix = Matrix.RotationAxis(upVector, angle);
+            var upVector = TGCVector3.Up;
+            var rotationMatrix = TGCMatrix.RotationAxis(upVector, angle);
 
             //vector de dibujado
-            var n = new Vector3(1, 0, 0);
+            var n = new TGCVector3(1, 0, 0);
 
             //array donde guardamos los puntos dibujados
-            var draw = new Vector3[vertices.Length];
+            var draw = new TGCVector3[vertices.Length];
 
             for (var i = 0; i < END_CAPS_VERTEX_COUNT / 4; i += 4)
             {
@@ -166,7 +167,7 @@ namespace TGC.Core.BoundingVolumes
             //rotamos y trasladamos los puntos, y los volcamos al vector de vertices
             var transformation = Transform;
             for (var i = 0; i < END_CAPS_VERTEX_COUNT; i++)
-                vertices[i] = new CustomVertex.PositionColored(Vector3.TransformCoordinate(draw[i], transformation),
+                vertices[i] = new CustomVertex.PositionColored(TGCVector3.TransformCoordinate(draw[i], transformation),
                     color);
         }
 
@@ -190,25 +191,25 @@ namespace TGC.Core.BoundingVolumes
 
         #region Transform
 
-        public Matrix Transform { get; private set; }
+        public TGCMatrix Transform { get; private set; }
 
         /// <summary>
         ///     Matriz que lleva cualquier punto al espacio UVW del cilindro
         /// </summary>
-        public Matrix AntiRotationMatrix { get; private set; }
+        public TGCMatrix AntiRotationMatrix { get; private set; }
 
         /// <summary>
         ///     Matriz que lleva el radio del cilindro a 1, la altura a 2, y el centro al origen de coordenadas
         /// </summary>
-        public Matrix AntiTransformationMatrix { get; private set; }
+        public TGCMatrix AntiTransformationMatrix { get; private set; }
 
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
         }
 
-        public void move(Vector3 v)
+        public void move(TGCVector3 v)
         {
             move(v.X, v.Y, v.Z);
         }

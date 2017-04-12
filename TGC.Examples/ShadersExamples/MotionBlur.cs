@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -14,7 +15,7 @@ namespace TGC.Examples.ShadersExamples
 {
     public class MotionBlur : TGCExampleViewer
     {
-        private Matrix antMatWorldView;
+        private TGCMatrix antMatWorldView;
         private Effect effect;
         private Surface g_pDepthStencil; // Depth-stencil buffer
         private Texture g_pRenderTarget;
@@ -56,7 +57,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.Effect = effect;
 
             //Camara
-            Camara = new TgcRotationalCamera(new Vector3(), 150f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(), 150f, Input);
 
             // stencil
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
@@ -93,7 +94,7 @@ namespace TGC.Examples.ShadersExamples
                 CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
-            antMatWorldView = Matrix.Identity;
+            antMatWorldView = TGCMatrix.Identity;
         }
 
         public override void Update()
@@ -101,7 +102,7 @@ namespace TGC.Examples.ShadersExamples
             PreUpdate();
             time += ElapsedTime;
             float r = 40;
-            mesh.Position = new Vector3(r * (float)Math.Cos(time * 0.5), 0, 0 * (float)Math.Sin(time * 0.5));
+            mesh.Position = new TGCVector3(r * (float)Math.Cos(time * 0.5), 0, 0 * (float)Math.Sin(time * 0.5));
             //mesh.rotateY(elapsedTime);
         }
 
@@ -127,7 +128,7 @@ namespace TGC.Examples.ShadersExamples
             // 1 - Genero un mapa de velocidad
             effect.Technique = "VelocityMap";
             // necesito mandarle la matrix de view proj anterior
-            effect.SetValue("matWorldViewProjAnt", antMatWorldView * device.Transform.Projection);
+            effect.SetValue("matWorldViewProjAnt", antMatWorldView.ToMatrix() * device.Transform.Projection);
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             device.BeginScene();
 
@@ -173,7 +174,7 @@ namespace TGC.Examples.ShadersExamples
             device.Present();
 
             // actualizo los valores para el proximo frame
-            antMatWorldView = mesh.Transform * device.Transform.View;
+            antMatWorldView = mesh.Transform * TGCMatrix.FromMatrix(device.Transform.View);
             var aux = g_pVel2;
             g_pVel2 = g_pVel1;
             g_pVel1 = aux;

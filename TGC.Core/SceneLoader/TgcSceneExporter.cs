@@ -9,6 +9,7 @@ using System.Xml;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
@@ -60,8 +61,8 @@ namespace TGC.Core.SceneLoader
             foreach (var m in meshesExport)
             {
                 boundingBoxes.Add(new TgcBoundingAxisAlignBox(
-                    TgcParserUtils.float3ArrayToVector3(m.MeshData.pMin),
-                    TgcParserUtils.float3ArrayToVector3(m.MeshData.pMax)));
+                    TGCVector3.Float3ArrayToVector3(m.MeshData.pMin),
+                    TGCVector3.Float3ArrayToVector3(m.MeshData.pMax)));
             }
             return TgcBoundingAxisAlignBox.computeFromBoundingBoxes(boundingBoxes);
         }
@@ -143,8 +144,8 @@ namespace TGC.Core.SceneLoader
                 meshExport.MeshData.name = tgcMesh.Name;
                 meshExport.MeshData.layerName = tgcMesh.Layer;
                 meshExport.MeshRenderType = tgcMesh.RenderType;
-                meshExport.MeshData.pMin = TgcParserUtils.vector3ToFloat3Array(tgcMesh.BoundingBox.PMin);
-                meshExport.MeshData.pMax = TgcParserUtils.vector3ToFloat3Array(tgcMesh.BoundingBox.PMax);
+                meshExport.MeshData.pMin = TGCVector3.Vector3ToFloat3Array(tgcMesh.BoundingBox.PMin);
+                meshExport.MeshData.pMax = TGCVector3.Vector3ToFloat3Array(tgcMesh.BoundingBox.PMax);
                 meshExport.MeshData.userProperties = tgcMesh.UserProperties;
                 meshExport.MeshData.alphaBlending = tgcMesh.AlphaBlendEnable;
 
@@ -191,19 +192,18 @@ namespace TGC.Core.SceneLoader
                     //TODO: la rotación no se exporta correctamente cuando la malla original esta rotada
 
                     //Posicion, rotacion y escala con diferencia de la malla original
-                    meshExport.MeshData.position =
-                        TgcParserUtils.vector3ToFloat3Array(tgcMesh.Position - parentInstance.Position);
-                    var rotQuat = Quaternion.RotationYawPitchRoll(tgcMesh.Rotation.Y, tgcMesh.Rotation.X,
+                    meshExport.MeshData.position = TGCVector3.Vector3ToFloat3Array(tgcMesh.Position - parentInstance.Position);
+                    var rotQuat = TGCQuaternion.RotationYawPitchRoll(tgcMesh.Rotation.Y, tgcMesh.Rotation.X,
                         tgcMesh.Rotation.Z);
-                    var parentRotQuat = Quaternion.RotationYawPitchRoll(parentInstance.Rotation.Y,
+                    var parentRotQuat = TGCQuaternion.RotationYawPitchRoll(parentInstance.Rotation.Y,
                         parentInstance.Rotation.X, parentInstance.Rotation.Z);
-                    meshExport.MeshData.rotation = TgcParserUtils.quaternionToFloat4Array(rotQuat - parentRotQuat);
-                    var scale = new Vector3(
+					meshExport.MeshData.rotation = TGCQuaternion.TGCQuaternionToFloat4Array(rotQuat - parentRotQuat);
+                    var scale = new TGCVector3(
                         tgcMesh.Scale.X / parentInstance.Scale.X,
                         tgcMesh.Scale.Y / parentInstance.Scale.Y,
                         tgcMesh.Scale.Z / parentInstance.Scale.Z
                         );
-                    meshExport.MeshData.scale = TgcParserUtils.vector3ToFloat3Array(scale);
+                    meshExport.MeshData.scale = TGCVector3.Vector3ToFloat3Array(scale);
                 }
 
                 return meshExport;
@@ -252,13 +252,13 @@ namespace TGC.Core.SceneLoader
             //Armar buffer de vertices, normales y coordenadas de textura, buscando similitudes de valores
             var coordinatesIndices = new List<int>();
             var colorIndices = new List<int>();
-            var verticesCoordinates = new List<Vector3>();
+            var verticesCoordinates = new List<TGCVector3>();
             var verticesColors = new List<int>();
-            var verticesNormals = new List<Vector3>();
+            var verticesNormals = new List<TGCVector3>();
             for (var i = 0; i < indices.Length; i++)
             {
                 var vertexData = vbData[indices[i]];
-                var position = Vector3.TransformCoordinate(vertexData.Position, tgcMesh.Transform);
+                var position = TGCVector3.TransformCoordinate(vertexData.Position, tgcMesh.Transform);
 
                 var coordIdx = addVertex(coordinatesIndices, verticesCoordinates, position);
                 addNormal(verticesNormals, coordIdx, vertexData.Normal);
@@ -328,21 +328,21 @@ namespace TGC.Core.SceneLoader
             //Armar buffer de vertices, normales y coordenadas de textura, buscando similitudes de valores
             var coordinatesIndices = new List<int>();
             var texCoordinatesIndices = new List<int>();
-            var verticesCoordinates = new List<Vector3>();
-            var textureCoordinates = new List<Vector2>();
-            var verticesNormals = new List<Vector3>();
+            var verticesCoordinates = new List<TGCVector3>();
+            var textureCoordinates = new List<TGCVector2>();
+            var verticesNormals = new List<TGCVector3>();
             var colorIndices = new List<int>();
             var verticesColors = new List<int>();
 
             for (var i = 0; i < indices.Length; i++)
             {
                 var vertexData = vbData[indices[i]];
-                var position = Vector3.TransformCoordinate(vertexData.Position, tgcMesh.Transform);
+                var position = TGCVector3.TransformCoordinate(vertexData.Position, tgcMesh.Transform);
 
                 var coordIdx = addVertex(coordinatesIndices, verticesCoordinates, position);
                 addNormal(verticesNormals, coordIdx, vertexData.Normal);
                 addTextureCoordinates(texCoordinatesIndices, textureCoordinates,
-                    new Vector2(vertexData.Tu, vertexData.Tv));
+                    new TGCVector2(vertexData.Tu, vertexData.Tv));
                 addColor(colorIndices, verticesColors, vertexData.Color);
             }
 
@@ -418,24 +418,24 @@ namespace TGC.Core.SceneLoader
             var coordinatesIndices = new List<int>();
             var texCoordinatesIndices = new List<int>();
             var texCoordinatesIndicesLightMap = new List<int>();
-            var verticesCoordinates = new List<Vector3>();
-            var textureCoordinates = new List<Vector2>();
-            var textureCoordinatesLightMap = new List<Vector2>();
-            var verticesNormals = new List<Vector3>();
+            var verticesCoordinates = new List<TGCVector3>();
+            var textureCoordinates = new List<TGCVector2>();
+            var textureCoordinatesLightMap = new List<TGCVector2>();
+            var verticesNormals = new List<TGCVector3>();
             var colorIndices = new List<int>();
             var verticesColors = new List<int>();
 
             for (var i = 0; i < indices.Length; i++)
             {
                 var vertexData = vbData[indices[i]];
-                var position = Vector3.TransformCoordinate(vertexData.Position, tgcMesh.Transform);
+                var position = TGCVector3.TransformCoordinate(vertexData.Position, tgcMesh.Transform);
 
                 var coordIdx = addVertex(coordinatesIndices, verticesCoordinates, position);
                 addNormal(verticesNormals, coordIdx, vertexData.Normal);
                 addTextureCoordinates(texCoordinatesIndices, textureCoordinates,
-                    new Vector2(vertexData.Tu0, vertexData.Tv0));
+                    new TGCVector2(vertexData.Tu0, vertexData.Tv0));
                 addTextureCoordinates(texCoordinatesIndicesLightMap, textureCoordinatesLightMap,
-                    new Vector2(vertexData.Tu1, vertexData.Tv1));
+                    new TGCVector2(vertexData.Tu1, vertexData.Tv1));
                 addColor(colorIndices, verticesColors, vertexData.Color);
             }
 
@@ -609,7 +609,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Agregar un vertice sin repetir
         /// </summary>
-        private int addVertex(List<int> coordinatesIndices, List<Vector3> verticesCoordinates, Vector3 vertex)
+        private int addVertex(List<int> coordinatesIndices, List<TGCVector3> verticesCoordinates, TGCVector3 vertex)
         {
             for (var i = 0; i < verticesCoordinates.Count; i++)
             {
@@ -630,8 +630,8 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Agregar una coordenada de textura sin repetir
         /// </summary>
-        private int addTextureCoordinates(List<int> texCoordinatesIndices, List<Vector2> textureCoordinates,
-            Vector2 texCoord)
+        private int addTextureCoordinates(List<int> texCoordinatesIndices, List<TGCVector2> textureCoordinates,
+            TGCVector2 texCoord)
         {
             for (var i = 0; i < textureCoordinates.Count; i++)
             {
@@ -652,7 +652,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Agregar una normal en base a los indices de vertices
         /// </summary>
-        private void addNormal(List<Vector3> verticesNormals, int coordIdx, Vector3 normal)
+        private void addNormal(List<TGCVector3> verticesNormals, int coordIdx, TGCVector3 normal)
         {
             if (coordIdx == verticesNormals.Count)
             {
@@ -682,17 +682,17 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Compara que dos Vector3 sean iguales, o casi
+        ///     Compara que dos TGCVector3 sean iguales, o casi
         /// </summary>
-        private bool equalsVector3(Vector3 v1, Vector3 v2)
+        private bool equalsVector3(TGCVector3 v1, TGCVector3 v2)
         {
             return equalsFloat(v1.X, v2.X) && equalsFloat(v1.Y, v2.Y) && equalsFloat(v1.Z, v2.Z);
         }
 
         /// <summary>
-        ///     Compara que dos Vector2 sean iguales, o casi
+        ///     Compara que dos TGCVector2 sean iguales, o casi
         /// </summary>
-        private bool equalsVector2(Vector2 v1, Vector2 v2)
+        private bool equalsVector2(TGCVector2 v1, TGCVector2 v2)
         {
             return equalsFloat(v1.X, v2.X) && equalsFloat(v1.Y, v2.Y);
         }
@@ -775,13 +775,13 @@ namespace TGC.Core.SceneLoader
 
             //BoundingBox que une ambas
             var bboxes = new List<TgcBoundingAxisAlignBox>();
-            bboxes.Add(new TgcBoundingAxisAlignBox(TgcParserUtils.float3ArrayToVector3(mExp1.MeshData.pMin),
-                TgcParserUtils.float3ArrayToVector3(mExp1.MeshData.pMax)));
-            bboxes.Add(new TgcBoundingAxisAlignBox(TgcParserUtils.float3ArrayToVector3(mExp2.MeshData.pMin),
-                TgcParserUtils.float3ArrayToVector3(mExp2.MeshData.pMax)));
+            bboxes.Add(new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(mExp1.MeshData.pMin),
+                TGCVector3.Float3ArrayToVector3(mExp1.MeshData.pMax)));
+            bboxes.Add(new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(mExp2.MeshData.pMin),
+                TGCVector3.Float3ArrayToVector3(mExp2.MeshData.pMax)));
             var appendenBbox = TgcBoundingAxisAlignBox.computeFromBoundingBoxes(bboxes);
-            meshExpAppended.MeshData.pMin = TgcParserUtils.vector3ToFloat3Array(appendenBbox.PMin);
-            meshExpAppended.MeshData.pMax = TgcParserUtils.vector3ToFloat3Array(appendenBbox.PMax);
+            meshExpAppended.MeshData.pMin = TGCVector3.Vector3ToFloat3Array(appendenBbox.PMin);
+            meshExpAppended.MeshData.pMax = TGCVector3.Vector3ToFloat3Array(appendenBbox.PMax);
 
             //coordinatesIndices
             meshExpAppended.MeshData.coordinatesIndices =
@@ -1071,7 +1071,7 @@ namespace TGC.Core.SceneLoader
                     typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh1.D3dMesh.NumberVertices);
                 for (var i = 0; i < verts1.Length; i++)
                 {
-                    verts1[i].Position = TgcVectorUtils.transform(verts1[i].Position, mesh1.Transform);
+                    verts1[i].Position = TGCVector3.transform(verts1[i].Position, mesh1.Transform);
                 }
                 Array.Copy(verts1, vertsData, verts1.Length);
                 mesh1.D3dMesh.UnlockVertexBuffer();
@@ -1082,7 +1082,7 @@ namespace TGC.Core.SceneLoader
                     typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, mesh2.D3dMesh.NumberVertices);
                 for (var i = 0; i < verts2.Length; i++)
                 {
-                    verts2[i].Position = TgcVectorUtils.transform(verts2[i].Position, mesh2.Transform);
+                    verts2[i].Position = TGCVector3.transform(verts2[i].Position, mesh2.Transform);
                 }
                 Array.Copy(verts2, 0, vertsData, mesh1.NumberVertices, verts2.Length);
                 mesh2.D3dMesh.UnlockVertexBuffer();
@@ -1101,7 +1101,7 @@ namespace TGC.Core.SceneLoader
                     typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh1.D3dMesh.NumberVertices);
                 for (var i = 0; i < verts1.Length; i++)
                 {
-                    verts1[i].Position = TgcVectorUtils.transform(verts1[i].Position, mesh1.Transform);
+                    verts1[i].Position = TGCVector3.transform(verts1[i].Position, mesh1.Transform);
                 }
                 Array.Copy(verts1, vertsData, verts1.Length);
                 mesh1.D3dMesh.UnlockVertexBuffer();
@@ -1112,7 +1112,7 @@ namespace TGC.Core.SceneLoader
                     typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, mesh2.D3dMesh.NumberVertices);
                 for (var i = 0; i < verts2.Length; i++)
                 {
-                    verts2[i].Position = TgcVectorUtils.transform(verts2[i].Position, mesh2.Transform);
+                    verts2[i].Position = TGCVector3.transform(verts2[i].Position, mesh2.Transform);
                 }
                 Array.Copy(verts2, 0, vertsData, mesh1.NumberVertices, verts2.Length);
                 mesh2.D3dMesh.UnlockVertexBuffer();
@@ -1223,10 +1223,10 @@ namespace TGC.Core.SceneLoader
             tgcMesh.Enabled = mesh1.Enabled;
 
             //Transformaciones con la identidad (porque ya transformamos los vertices)
-            tgcMesh.Position = new Vector3(0, 0, 0);
-            tgcMesh.Rotation = new Vector3(0, 0, 0);
-            tgcMesh.Scale = new Vector3(1, 1, 1);
-            tgcMesh.Transform = Matrix.Identity;
+            tgcMesh.Position = TGCVector3.Empty;
+            tgcMesh.Rotation = TGCVector3.Empty;
+            tgcMesh.Scale = TGCVector3.One;
+            tgcMesh.Transform = TGCMatrix.Identity;
             tgcMesh.AutoTransformEnable = mesh1.AutoTransformEnable;
 
             //Agregar userProperties de ambos
@@ -1309,8 +1309,8 @@ namespace TGC.Core.SceneLoader
 
                 //sceneBoundingBox
                 var sceneBoundingBoxNode = doc.CreateElement("sceneBoundingBox");
-                sceneBoundingBoxNode.SetAttribute("min", TgcParserUtils.printVector3(sceneBoundingBox.PMin));
-                sceneBoundingBoxNode.SetAttribute("max", TgcParserUtils.printVector3(sceneBoundingBox.PMax));
+                sceneBoundingBoxNode.SetAttribute("min", TGCVector3.PrintVector3(sceneBoundingBox.PMin));
+                sceneBoundingBoxNode.SetAttribute("max", TGCVector3.PrintVector3(sceneBoundingBox.PMax));
                 root.AppendChild(sceneBoundingBoxNode);
 
                 //materials

@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX;
+using TGC.Core.Mathematica;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Shaders
@@ -22,9 +23,9 @@ namespace TGC.Core.Shaders
         /// <param name="colorWeights">weights generados para multiplicar los valores de los samplers en el shader</param>
         public static void computeGaussianBlurSampleOffsets15(float textureSize, float deviation, float multiplier,
             bool horizontal,
-            out Vector2[] texCoordOffsets, out float[] colorWeights)
+            out TGCVector2[] texCoordOffsets, out float[] colorWeights)
         {
-            texCoordOffsets = new Vector2[15];
+            texCoordOffsets = new TGCVector2[15];
             colorWeights = new float[15];
 
             var i = 0;
@@ -35,7 +36,7 @@ namespace TGC.Core.Shaders
             var weight = multiplier * FastMath.GaussianDistribution(0, 0, deviation);
             colorWeights[0] = weight;
 
-            texCoordOffsets[0] = new Vector2(0, 0);
+            texCoordOffsets[0] = TGCVector2.Zero;
 
             // Fill the first half
             for (i = 1; i < 8; i++)
@@ -45,11 +46,11 @@ namespace TGC.Core.Shaders
                 offset = i * tu;
                 if (horizontal)
                 {
-                    texCoordOffsets[i] = new Vector2(offset, 0);
+                    texCoordOffsets[i] = new TGCVector2(offset, 0);
                 }
                 else
                 {
-                    texCoordOffsets[i] = new Vector2(0, offset);
+                    texCoordOffsets[i] = new TGCVector2(0, offset);
                 }
 
                 colorWeights[i] = weight;
@@ -69,9 +70,9 @@ namespace TGC.Core.Shaders
         /// <param name="textureWidth">Ancho de la textura original</param>
         /// <param name="textureHeight">Alto de la textura original</param>
         /// <returns>Offsets calculados</returns>
-        public static Vector2[] computeDownScaleOffsets4x4(int textureWidth, int textureHeight)
+        public static TGCVector2[] computeDownScaleOffsets4x4(int textureWidth, int textureHeight)
         {
-            var offsets = new Vector2[16];
+            var offsets = new TGCVector2[16];
 
             var tU = 1.0f / textureWidth;
             var tV = 1.0f / textureHeight;
@@ -84,7 +85,7 @@ namespace TGC.Core.Shaders
             {
                 for (var x = 0; x < 4; x++)
                 {
-                    offsets[index] = new Vector2((x - 1.5f) * tU, (y - 1.5f) * tV);
+                    offsets[index] = new TGCVector2((x - 1.5f) * tU, (y - 1.5f) * tV);
                     index++;
                 }
             }

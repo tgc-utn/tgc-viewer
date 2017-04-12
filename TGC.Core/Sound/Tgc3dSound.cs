@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectSound;
 using System;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.Sound
 {
@@ -19,7 +20,7 @@ namespace TGC.Core.Sound
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="position">Posicion del sonido en el espacio</param>
-        public Tgc3dSound(string soundPath, Vector3 position, Device device)
+        public Tgc3dSound(string soundPath, TGCVector3 position, Device device)
         {
             loadSound(soundPath, device);
             Position = position;
@@ -40,9 +41,9 @@ namespace TGC.Core.Sound
         ///     La forma de escuchar el sonido varia según esta ubicación y la posición
         ///     del Listener3D de sonidos.
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
-            get { return Buffer3d.Position; }
+            get { return TGCVector3.FromVector3(Buffer3d.Position); }
             set { Buffer3d.Position = value; }
         }
 

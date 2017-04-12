@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.UserControls.Modifier
 {
@@ -151,7 +152,7 @@ namespace TGC.Core.UserControls.Modifier
         /// <param name="minValue">Valor minimo</param>
         /// <param name="maxValue">Valor maximo</param>
         /// <param name="defaultValue">Valor default</param>
-        public void addVertex3f(string varName, Vector3 minValue, Vector3 maxValue, Vector3 defaultValue)
+        public void addVertex3f(string varName, TGCVector3 minValue, TGCVector3 maxValue, TGCVector3 defaultValue)
         {
             add(new TgcVertex3fModifier(varName, minValue, maxValue, defaultValue));
         }
@@ -163,7 +164,7 @@ namespace TGC.Core.UserControls.Modifier
         /// <param name="minValue">Valor minimo</param>
         /// <param name="maxValue">Valor maximo</param>
         /// <param name="defaultValue">Valor default</param>
-        public void addVertex2f(string varName, Vector2 minValue, Vector2 maxValue, Vector2 defaultValue)
+        public void addVertex2f(string varName, TGCVector2 minValue, TGCVector2 maxValue, TGCVector2 defaultValue)
         {
             add(new TgcVertex2fModifier(varName, minValue, maxValue, defaultValue));
         }

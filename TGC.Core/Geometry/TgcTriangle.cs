@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -27,9 +28,9 @@ namespace TGC.Core.Geometry
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
-            A = Vector3.Empty;
-            B = Vector3.Empty;
-            C = Vector3.Empty;
+            A = TGCVector3.Empty;
+            B = TGCVector3.Empty;
+            C = TGCVector3.Empty;
             Enabled = true;
             color = Color.Blue;
             AlphaBlendEnable = false;
@@ -42,17 +43,17 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Primer vértice del triángulo
         /// </summary>
-        public Vector3 A { get; set; }
+        public TGCVector3 A { get; set; }
 
         /// <summary>
         ///     Segundo vértice del triángulo
         /// </summary>
-        public Vector3 B { get; set; }
+        public TGCVector3 B { get; set; }
 
         /// <summary>
         ///     Tercer vértice del triángulo
         /// </summary>
-        public Vector3 C { get; set; }
+        public TGCVector3 C { get; set; }
 
         /// <summary>
         ///     Color del plano
@@ -68,7 +69,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public bool Enabled { get; set; }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             //Habria que devolver el centro pero es costoso calcularlo cada vez
             get { return A; }
@@ -156,9 +157,9 @@ namespace TGC.Core.Geometry
         ///     Calcular normal del Triángulo
         /// </summary>
         /// <returns>Normal (esta normalizada)</returns>
-        public Vector3 computeNormal()
+        public TGCVector3 computeNormal()
         {
-            var n = Vector3.Cross(B - A, C - A);
+            var n = TGCVector3.Cross(B - A, C - A);
             n.Normalize();
             return n;
         }
@@ -167,9 +168,9 @@ namespace TGC.Core.Geometry
         ///     Calcular centro del Triángulo
         /// </summary>
         /// <returns>Centro</returns>
-        public Vector3 computeCenter()
+        public TGCVector3 computeCenter()
         {
-            return Vector3.Scale(A + B + C, 1 / 3f);
+            return TGCVector3.Scale(A + B + C, 1 / 3f);
         }
 
         /// <summary>
@@ -178,7 +179,7 @@ namespace TGC.Core.Geometry
         /// <returns>TgcArrow que representa la face-normal</returns>
         public TgcArrow createNormalArrow()
         {
-            return TgcArrow.fromDirection(computeCenter(), Vector3.Scale(computeNormal(), 10f));
+            return TgcArrow.fromDirection(computeCenter(), TGCVector3.Scale(computeNormal(), 10f));
         }
 
         /// <summary>

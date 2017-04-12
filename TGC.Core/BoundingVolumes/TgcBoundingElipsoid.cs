@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -41,7 +42,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="center">Centro</param>
         /// <param name="radius">Radios para los 3 ejes</param>
-        public TgcBoundingElipsoid(Vector3 center, Vector3 radius)
+        public TgcBoundingElipsoid(TGCVector3 center, TGCVector3 radius)
             : this()
         {
             setValues(center, radius);
@@ -69,19 +70,19 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Centro del Elipsoid
         /// </summary>
-        public Vector3 Center { get; private set; }
+        public TGCVector3 Center { get; private set; }
 
         /// <summary>
         ///     Radios del Elipsoid para cada uno de los 3 ejes
         /// </summary>
-        public Vector3 Radius { get; private set; }
+        public TGCVector3 Radius { get; private set; }
 
         /// <summary>
         ///     Color de renderizado del Elipsoid.
         /// </summary>
         public int RenderColor { get; private set; }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return Center; }
         }
@@ -140,7 +141,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="center">Centro</param>
         /// <param name="radius">Radios para los 3 ejes</param>
-        public void setValues(Vector3 center, Vector3 radius)
+        public void setValues(TGCVector3 center, TGCVector3 radius)
         {
             Center = center;
             Radius = radius;
@@ -152,7 +153,7 @@ namespace TGC.Core.BoundingVolumes
         ///     Configurar un nuevo centro del Elipsoid
         /// </summary>
         /// <param name="center">Nuevo centro</param>
-        public void setCenter(Vector3 center)
+        public void setCenter(TGCVector3 center)
         {
             setValues(center, Radius);
         }
@@ -161,7 +162,7 @@ namespace TGC.Core.BoundingVolumes
         ///     Desplazar el centro respecto de su posición actual
         /// </summary>
         /// <param name="movement">Movimiento relativo a realizar</param>
-        public void moveCenter(Vector3 movement)
+        public void moveCenter(TGCVector3 movement)
         {
             setValues(Center + movement, Radius);
         }
@@ -195,10 +196,10 @@ namespace TGC.Core.BoundingVolumes
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a) * Radius.X, FastMath.Sin(a) * Radius.Y, 0f) + Center, RenderColor);
+                        (new TGCVector3(FastMath.Cos(a) * Radius.X, FastMath.Sin(a) * Radius.Y, 0f)) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a + step) * Radius.X, FastMath.Sin(a + step) * Radius.Y, 0f) + Center,
+                        (new TGCVector3(FastMath.Cos(a + step) * Radius.X, FastMath.Sin(a + step) * Radius.Y, 0f)) + Center,
                         RenderColor);
             }
 
@@ -207,10 +208,10 @@ namespace TGC.Core.BoundingVolumes
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a) * Radius.X, 0f, FastMath.Sin(a) * Radius.Z) + Center, RenderColor);
+                        (new TGCVector3(FastMath.Cos(a) * Radius.X, 0f, FastMath.Sin(a) * Radius.Z)) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a + step) * Radius.X, 0f, FastMath.Sin(a + step) * Radius.Z) + Center,
+                        (new TGCVector3(FastMath.Cos(a + step) * Radius.X, 0f, FastMath.Sin(a + step) * Radius.Z)) + Center,
                         RenderColor);
             }
 
@@ -219,17 +220,17 @@ namespace TGC.Core.BoundingVolumes
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(0f, FastMath.Cos(a) * Radius.Y, FastMath.Sin(a) * Radius.Z) + Center, RenderColor);
+                        (new TGCVector3(0f, FastMath.Cos(a) * Radius.Y, FastMath.Sin(a) * Radius.Z)) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(0f, FastMath.Cos(a + step) * Radius.Y, FastMath.Sin(a + step) * Radius.Z) + Center,
+                        (new TGCVector3(0f, FastMath.Cos(a + step) * Radius.Y, FastMath.Sin(a + step) * Radius.Z)) + Center,
                         RenderColor);
             }
         }
 
         public override string ToString()
         {
-            return "Center " + TgcParserUtils.printVector3(Center) + ", Radius " + TgcParserUtils.printVector3(Radius);
+            return "Center " + TGCVector3.PrintVector3(Center) + ", Radius " + TGCVector3.PrintVector3(Radius);
         }
 
         /// <summary>
@@ -257,8 +258,8 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         public struct ElipsoidStruct
         {
-            public Vector3 center;
-            public Vector3 radius;
+            public TGCVector3 center;
+            public TGCVector3 radius;
 
             /// <summary>
             ///     Convertir a clase

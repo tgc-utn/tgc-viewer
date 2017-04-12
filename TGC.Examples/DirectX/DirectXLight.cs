@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
@@ -24,7 +25,7 @@ namespace TGC.Examples.DirectX
         private float angleY;
         private float angleZ;
         private Mesh lightBulb;
-        private Vector3 lightVectorToCenter;
+        private TGCVector3 lightVectorToCenter;
         private CustomVertex.PositionColored[] lightVectorVB;
         private Material material;
         private Mesh SelectedMesh;
@@ -59,7 +60,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
-            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 10f, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 10f, Input);
 
             //El tipo de mesh para seleccionar.
             Modifiers.addInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
@@ -116,12 +117,11 @@ namespace TGC.Examples.DirectX
             angleZ += vAngleZ;
 
             //Posicionar la luz a una distancia y rotarla segun los parametros
-            var LightRotationMatrix = Matrix.Identity;
-            LightRotationMatrix *= Matrix.Translation(lightDistance, 0, 0);
-            LightRotationMatrix *= Matrix.RotationYawPitchRoll(angleX, angleY, angleZ);
-            D3DDevice.Instance.Device.Lights[0].Position = Vector3.TransformCoordinate(new Vector3(0, 0, 0),
-                LightRotationMatrix);
-            lightVectorToCenter = D3DDevice.Instance.Device.Lights[0].Position;
+            var LightRotationMatrix = TGCMatrix.Identity;
+            LightRotationMatrix *= TGCMatrix.Translation(lightDistance, 0, 0);
+            LightRotationMatrix *= TGCMatrix.RotationYawPitchRoll(angleX, angleY, angleZ);
+            D3DDevice.Instance.Device.Lights[0].Position = TGCVector3.TransformCoordinate(TGCVector3.Empty, LightRotationMatrix);
+            lightVectorToCenter = TGCVector3.FromVector3(D3DDevice.Instance.Device.Lights[0].Position);
             D3DDevice.Instance.Device.Lights[0].Direction = -D3DDevice.Instance.Device.Lights[0].Position;
             D3DDevice.Instance.Device.Lights[0].Direction.Normalize();
             D3DDevice.Instance.Device.Lights[0].Update();
@@ -129,7 +129,7 @@ namespace TGC.Examples.DirectX
             //Poner el vertex buffer de la linea que muestra la direccion de la luz.
             lightVectorVB[0].Position = lightVectorToCenter;
             lightVectorVB[0].Color = Color.White.ToArgb();
-            lightVectorVB[1].Position = new Vector3(0, 0, 0);
+            lightVectorVB[1].Position = TGCVector3.Empty;
             lightVectorVB[1].Color = Color.Blue.ToArgb();
 
             //Variar el color del material
@@ -182,7 +182,7 @@ namespace TGC.Examples.DirectX
             }
 
             D3DDevice.Instance.Device.RenderState.Lighting = true;
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
 
             //Renderizar malla
             SelectedMesh.DrawSubset(0);
@@ -199,7 +199,7 @@ namespace TGC.Examples.DirectX
                 D3DDevice.Instance.Device.RenderState.Lighting = true;
             }
 
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
 
             D3DDevice.Instance.Device.RenderState.Lighting = false;
 
@@ -210,7 +210,7 @@ namespace TGC.Examples.DirectX
                 1,
                 lightVectorVB);
 
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
 
             //Dibujo las normales si estan habilitadas y si es la tetera.
             if (selectedNormalVB != null && (bool)Modifiers["Normales"])
@@ -219,7 +219,7 @@ namespace TGC.Examples.DirectX
                     selectedNormalVB);
 
             //Traslado y renderizo la esfera que hace de lampara.
-            D3DDevice.Instance.Device.Transform.World *= Matrix.Translation(lightVectorToCenter);
+            D3DDevice.Instance.Device.Transform.World *= TGCMatrix.Translation(lightVectorToCenter).ToMatrix();
             lightBulb.DrawSubset(0);
 
             PostRender();
@@ -253,7 +253,7 @@ namespace TGC.Examples.DirectX
                 teapotMeshNormalsVB[i * 2].Position = verts[i].Position;
 
                 //El extremo del vector normal es la posicion mas la normal en si misma. Se escala para que se mas proporcionada.
-                teapotMeshNormalsVB[i * 2 + 1].Position = verts[i].Position + Vector3.Scale(verts[i].Normal, 1 / 10f);
+                teapotMeshNormalsVB[i * 2 + 1].Position = verts[i].Position + TGCVector3.Scale(TGCVector3.FromVector3(verts[i].Normal), 1 / 10f);
                 teapotMeshNormalsVB[i * 2].Color = teapotMeshNormalsVB[i * 2 + 1].Color = Color.Yellow.ToArgb();
             }
 

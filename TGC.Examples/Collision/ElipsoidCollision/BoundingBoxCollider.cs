@@ -2,6 +2,7 @@
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Utils;
 
 namespace TGC.Examples.Collision.ElipsoidCollision
@@ -56,18 +57,15 @@ namespace TGC.Examples.Collision.ElipsoidCollision
         /// <param name="q">Punto mas cercano de colision, en Elipsoid space</param>
         /// <param name="n">Vector normal de la superficie contra la que se colisiona</param>
         /// <returns>True si hay colision</returns>
-        public override bool intersectMovingElipsoid(TgcBoundingSphere eSphere, Vector3 eMovementVector, Vector3 eRadius,
-            TgcBoundingSphere movementSphere, out float t, out Vector3 q, out Vector3 n)
+        public override bool intersectMovingElipsoid(TgcBoundingSphere eSphere, TGCVector3 eMovementVector, TGCVector3 eRadius,
+            TgcBoundingSphere movementSphere, out float t, out TGCVector3 q, out TGCVector3 n)
         {
             //Pasar AABB a Elipsoid Space
-            eAABB.setExtremes(
-                TgcVectorUtils.div(Aabb.PMin, eRadius),
-                TgcVectorUtils.div(Aabb.PMax, eRadius)
-                );
+            eAABB.setExtremes(TGCVector3.Div(Aabb.PMin, eRadius), TGCVector3.Div(Aabb.PMax, eRadius));
 
             t = -1f;
-            q = Vector3.Empty;
-            n = Vector3.Empty;
+            q = TGCVector3.Empty;
+            n = TGCVector3.Empty;
 
             // Compute the AABB resulting from expanding b by sphere radius r
             var e = eAABB.toStruct();
@@ -80,7 +78,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
 
             // Intersect ray against expanded AABB e. Exit with no intersection if ray
             // misses e, else get intersection point p and time t as result
-            Vector3 p;
+            TGCVector3 p;
             var ray = new TgcRay.RayStruct();
             ray.origin = eSphere.Center;
             ray.direction = eMovementVector;
@@ -126,7 +124,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
             //Face
             if (i == 1)
             {
-                n = new Vector3(sign[0], sign[1], sign[2]);
+                n = new TGCVector3(sign[0], sign[1], sign[2]);
                 q = eSphere.Center + t * eMovementVector - eSphere.Radius * n;
                 return true;
             }
@@ -145,14 +143,14 @@ namespace TGC.Examples.Collision.ElipsoidCollision
                 float[] extentDir = { sign[0], sign[1], sign[2] };
                 var zeroIndex = sign[0] == 0 ? 0 : (sign[1] == 0 ? 1 : 2);
                 extentDir[zeroIndex] = 1;
-                var capsuleA = center + new Vector3(extent.X * extentDir[0], extent.Y * extentDir[1], extent.Z * extentDir[2]);
+                var capsuleA = center + new TGCVector3(extent.X * extentDir[0], extent.Y * extentDir[1], extent.Z * extentDir[2]);
                 extentDir[zeroIndex] = -1;
-                var capsuleB = center + new Vector3(extent.X * extentDir[0], extent.Y * extentDir[1], extent.Z * extentDir[2]);
+                var capsuleB = center + new TGCVector3(extent.X * extentDir[0], extent.Y * extentDir[1], extent.Z * extentDir[2]);
 
                 //Colision contra el Edge hecho Capsula
                 if (intersectSegmentCapsule(seg, new Capsule(capsuleA, capsuleB, eSphere.Radius), out t))
                 {
-                    n = new Vector3(sign[0], sign[1], sign[2]);
+                    n = new TGCVector3(sign[0], sign[1], sign[2]);
                     n.Normalize();
                     q = eSphere.Center + t * eMovementVector - eSphere.Radius * n;
                     return true;
@@ -163,25 +161,25 @@ namespace TGC.Examples.Collision.ElipsoidCollision
             if (i == 3)
             {
                 var tmin = float.MaxValue;
-                var capsuleA = center + new Vector3(extent.X * sign[0], extent.Y * sign[1], extent.Z * sign[2]);
-                Vector3 capsuleB;
+                var capsuleA = center + new TGCVector3(extent.X * sign[0], extent.Y * sign[1], extent.Z * sign[2]);
+                TGCVector3 capsuleB;
 
-                capsuleB = center + new Vector3(extent.X * -sign[0], extent.Y * sign[1], extent.Z * sign[2]);
+                capsuleB = center + new TGCVector3(extent.X * -sign[0], extent.Y * sign[1], extent.Z * sign[2]);
                 if (intersectSegmentCapsule(seg, new Capsule(capsuleA, capsuleB, eSphere.Radius), out t))
                     tmin = TgcCollisionUtils.min(t, tmin);
 
-                capsuleB = center + new Vector3(extent.X * sign[0], extent.Y * -sign[1], extent.Z * sign[2]);
+                capsuleB = center + new TGCVector3(extent.X * sign[0], extent.Y * -sign[1], extent.Z * sign[2]);
                 if (intersectSegmentCapsule(seg, new Capsule(capsuleA, capsuleB, eSphere.Radius), out t))
                     tmin = TgcCollisionUtils.min(t, tmin);
 
-                capsuleB = center + new Vector3(extent.X * sign[0], extent.Y * sign[1], extent.Z * -sign[2]);
+                capsuleB = center + new TGCVector3(extent.X * sign[0], extent.Y * sign[1], extent.Z * -sign[2]);
                 if (intersectSegmentCapsule(seg, new Capsule(capsuleA, capsuleB, eSphere.Radius), out t))
                     tmin = TgcCollisionUtils.min(t, tmin);
 
                 if (tmin == float.MaxValue) return false; // No intersection
 
                 t = tmin;
-                n = new Vector3(sign[0], sign[1], sign[2]);
+                n = new TGCVector3(sign[0], sign[1], sign[2]);
                 n.Normalize();
                 q = eSphere.Center + t * eMovementVector - eSphere.Radius * n;
                 return true; // Intersection at time t == tmin
@@ -247,10 +245,10 @@ namespace TGC.Examples.Collision.ElipsoidCollision
 
             // Convert incoming line origin to capsule coordinates.
             var diff = origin - capsule.segment.center;
-            var P = new Vector3(Vector3.Dot(U, diff), Vector3.Dot(V, diff), Vector3.Dot(W, diff));
+            var P = new TGCVector3(TGCVector3.Dot(U, diff), TGCVector3.Dot(V, diff), TGCVector3.Dot(W, diff));
 
             // Get the z-value, in capsule coordinates, of the incoming line's unit-length direction.
-            var dz = Vector3.Dot(W, dir);
+            var dz = TGCVector3.Dot(W, dir);
             if (FastMath.Abs(dz) >= 1f - float.Epsilon)
             {
                 // The line is parallel to the capsule axis.  Determine whether the line intersects the capsule hemispheres.
@@ -275,7 +273,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
             }
 
             // Convert incoming line unit-length direction to capsule coordinates.
-            var D = new Vector3(Vector3.Dot(U, dir), Vector3.Dot(V, dir), dz);
+            var D = new TGCVector3(TGCVector3.Dot(U, dir), TGCVector3.Dot(V, dir), dz);
 
             // Test intersection of line P+t*D with infinite cylinder x^2+y^2 = r^2.
             // This reduces to computing the roots of a quadratic equation.  If
@@ -440,7 +438,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
         ///     Input W must be a unit-length vector.  The output vectors {U,V} are
         ///     unit length and mutually perpendicular, and {U,V,W} is an orthonormal basis.
         /// </summary>
-        private void generateComplementBasis(ref Vector3 u, ref Vector3 v, Vector3 w)
+        private void generateComplementBasis(ref TGCVector3 u, ref TGCVector3 v, TGCVector3 w)
         {
             float invLength;
 
@@ -477,7 +475,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
         /// <param name="q">Punto minimo de colision</param>
         /// <returns>True si hay colision</returns>
         private bool intersectRayAABB(TgcRay.RayStruct ray, TgcBoundingAxisAlignBox.AABBStruct aabb, out float tmin,
-            out Vector3 q)
+            out TGCVector3 q)
         {
             var aabbMin = TgcCollisionUtils.toArray(aabb.min);
             var aabbMax = TgcCollisionUtils.toArray(aabb.max);
@@ -486,7 +484,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
 
             tmin = 0.0f; // set to -FLT_MAX to get first hit on line
             var tmax = float.MaxValue; // set to max distance ray can travel (for segment)
-            q = Vector3.Empty;
+            q = TGCVector3.Empty;
 
             // For all three slabs
             for (var i = 0; i < 3; i++)
@@ -521,7 +519,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
         /// </summary>
         private struct Segment
         {
-            public Segment(Vector3 a, Vector3 b)
+            public Segment(TGCVector3 a, TGCVector3 b)
             {
                 this.a = a;
                 this.b = b;
@@ -533,11 +531,11 @@ namespace TGC.Examples.Collision.ElipsoidCollision
                 dir.Normalize();
             }
 
-            public readonly Vector3 a;
-            public Vector3 b;
+            public readonly TGCVector3 a;
+            public TGCVector3 b;
 
-            public readonly Vector3 center;
-            public readonly Vector3 dir;
+            public readonly TGCVector3 center;
+            public readonly TGCVector3 dir;
             public readonly float extent;
             public readonly float length;
         }
@@ -547,7 +545,7 @@ namespace TGC.Examples.Collision.ElipsoidCollision
         /// </summary>
         private struct Capsule
         {
-            public Capsule(Vector3 a, Vector3 b, float radius)
+            public Capsule(TGCVector3 a, TGCVector3 b, float radius)
             {
                 segment = new Segment(a, b);
                 this.radius = radius;
@@ -599,9 +597,9 @@ namespace TGC.Examples.Collision.ElipsoidCollision
         {
             t = -1;
 
-            Vector3 m = ray.origin - sphere.center;
-            float b = Vector3.Dot(m, ray.direction);
-            float c = Vector3.Dot(m, m) - sphere.radius * sphere.radius;
+            TGCVector3 m = ray.origin - sphere.center;
+            float b = TGCVector3.Dot(m, ray.direction);
+            float c = TGCVector3.Dot(m, m) - sphere.radius * sphere.radius;
             // Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
             if (c > 0.0f && b > 0.0f) return false;
             float discr = b * b - c;
@@ -627,21 +625,21 @@ namespace TGC.Examples.Collision.ElipsoidCollision
         /// <param name="radius">Radio del cilindro</param>
         /// <param name="t">Instante de colision</param>
         /// <returns>True si hay colision</returns>
-        private static bool intersectSegmentCylinderNoEndcap(Vector3 segmentInit, Vector3 segmentEnd, Vector3 cylinderInit, Vector3 cylinderEnd, float radius, out float t)
+        private static bool intersectSegmentCylinderNoEndcap(TGCVector3 segmentInit, TGCVector3 segmentEnd, TGCVector3 cylinderInit, TGCVector3 cylinderEnd, float radius, out float t)
         {
             t = -1;
 
-            Vector3 d = cylinderEnd - cylinderInit, m = segmentInit - cylinderInit, n = segmentEnd - segmentInit;
-            float md = Vector3.Dot(m, d);
-            float nd = Vector3.Dot(n, d);
-            float dd = Vector3.Dot(d, d);
+            TGCVector3 d = cylinderEnd - cylinderInit, m = segmentInit - cylinderInit, n = segmentEnd - segmentInit;
+            float md = TGCVector3.Dot(m, d);
+            float nd = TGCVector3.Dot(n, d);
+            float dd = TGCVector3.Dot(d, d);
             // Test if segment fully outside either endcap of cylinder
             if (md < 0.0f && md + nd < 0.0f) return false; // Segment outside ’p’ side of cylinder
             if (md > dd && md + nd > dd) return false; // Segment outside ’q’ side of cylinder
-            float nn = Vector3.Dot(n, n);
-            float mn = Vector3.Dot(m, n);
+            float nn = TGCVector3.Dot(n, n);
+            float mn = TGCVector3.Dot(m, n);
             float a = dd * nn - nd * nd;
-            float k = Vector3.Dot(m, m) - radius * radius;
+            float k = TGCVector3.Dot(m, m) - radius * radius;
             float c = dd * k - md * md;
             if (FastMath.Abs(a) < float.Epsilon)
             {

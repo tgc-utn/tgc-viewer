@@ -6,6 +6,7 @@ using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
@@ -49,9 +50,9 @@ namespace TGC.Examples.Collision
         public override void Init()
         {
             //Objetos en movimiento.
-            colliderCylinder = new TgcBoundingCylinder(new Vector3(0, 0, 0), 2, 4);
+            colliderCylinder = new TgcBoundingCylinder(TGCVector3.Empty, 2, 4);
             colliderCylinder.setRenderColor(Color.LimeGreen);
-            colliderCylinderFixedY = new TgcBoundingCylinderFixedY(new Vector3(0, 0, 0), 2, 4);
+            colliderCylinderFixedY = new TgcBoundingCylinderFixedY(TGCVector3.Empty, 2, 4);
             colliderCylinderFixedY.setRenderColor(Color.LimeGreen);
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -67,11 +68,11 @@ namespace TGC.Examples.Collision
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
             //Escalarlo porque es muy grande
-            personaje.Scale = new Vector3(0.04f, 0.04f, 0.04f);
+            personaje.Scale = new TGCVector3(0.04f, 0.04f, 0.04f);
             
             //El personaje esta en el 0,0,0 hay que bajarlo
             var size = personaje.BoundingBox.PMax.Y - personaje.BoundingBox.PMin.Y;
-            personaje.Position = new Vector3(0, -3f, 0);
+            personaje.Position = new TGCVector3(0, -3f, 0);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.rotateY(FastMath.PI);
 
@@ -79,18 +80,18 @@ namespace TGC.Examples.Collision
             var loader = new TgcSceneLoader();
             var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Patrullero\\Patrullero-TgcScene.xml");
             collisionableMeshAABB = scene.Meshes[0];
-            collisionableMeshAABB.Scale = new Vector3(0.1f, 0.1f, 0.1f);
-            collisionableMeshAABB.Position = new Vector3(6, 0, -2);
-            collisionableCylinder = new TgcBoundingCylinderFixedY(new Vector3(-6, 0, 0), 2, 2);
-            collisionableSphere = new TgcBoundingSphere(new Vector3(-3, 0, 10), 3);
+            collisionableMeshAABB.Scale = new TGCVector3(0.1f, 0.1f, 0.1f);
+            collisionableMeshAABB.Position = new TGCVector3(6, 0, -2);
+            collisionableCylinder = new TgcBoundingCylinderFixedY(new TGCVector3(-6, 0, 0), 2, 2);
+            collisionableSphere = new TgcBoundingSphere(new TGCVector3(-3, 0, 10), 3);
 
             Modifiers.addBoolean("fixedY", "use fixed Y", true);
             //Modifier para ver BoundingBox del personaje
             Modifiers.addBoolean("showBoundingBox", "Personaje Bouding Box", false);
-            Modifiers.addVertex2f("size", new Vector2(1, 1), new Vector2(5, 10), new Vector2(2, 5));
+            Modifiers.addVertex2f("size", TGCVector2.One, new TGCVector2(5, 10), new TGCVector2(2, 5));
             var angle = FastMath.TWO_PI;
-            Modifiers.addVertex3f("rotation", new Vector3(-angle, -angle, -angle), new Vector3(angle, angle, angle),
-                new Vector3(FastMath.TWO_PI / 8, 0, FastMath.TWO_PI / 8));
+            Modifiers.addVertex3f("rotation", new TGCVector3(-angle, -angle, -angle), new TGCVector3(angle, angle, angle),
+                new TGCVector3(FastMath.TWO_PI / 8, 0, FastMath.TWO_PI / 8));
 
 
             //Configurar camara en Tercer Persona
@@ -105,7 +106,7 @@ namespace TGC.Examples.Collision
             var velocidadCaminar = 25f * ElapsedTime;
             //Calcular proxima posicion de personaje segun Input
             var moving = false;
-            var movement = new Vector3(0, 0, 0);
+            var movement = TGCVector3.Empty;
 
             //Adelante
             if (Input.keyDown(Key.W))
@@ -149,8 +150,8 @@ namespace TGC.Examples.Collision
                 personaje.playAnimation("Parado", true);
             }
 
-            var size = (Vector2)Modifiers.getValue("size");
-            var rotation = (Vector3)Modifiers.getValue("rotation");
+            var size = (TGCVector2)Modifiers.getValue("size");
+            var rotation = (TGCVector3)Modifiers.getValue("rotation");
             //Se tienen dos coliders, un cilindro con rotacion y otro orientado al eje Y.
             colliderCylinder.Rotation = rotation;
             colliderCylinder.Radius = size.X;
@@ -234,9 +235,9 @@ namespace TGC.Examples.Collision
 
             //Render personaje
             personaje.Transform =
-                Matrix.Scaling(personaje.Scale)
-                            * Matrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z)
-                            * Matrix.Translation(personaje.Position);
+                TGCMatrix.Scaling(personaje.Scale)
+                            * TGCMatrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z)
+                            * TGCMatrix.Translation(personaje.Position);
             personaje.animateAndRender(ElapsedTime);
             if ((bool)Modifiers["showBoundingBox"])
             {
@@ -251,9 +252,7 @@ namespace TGC.Examples.Collision
 
             //Dibujar todo mallas.
             //Una vez actualizadas las diferentes posiciones internas solo debemos asignar la matriz de world.
-            collisionableMeshAABB.Transform =
-                Matrix.Scaling(collisionableMeshAABB.Scale)
-                            * Matrix.Translation(collisionableMeshAABB.Position);
+            collisionableMeshAABB.Transform = TGCMatrix.Scaling(collisionableMeshAABB.Scale) * TGCMatrix.Translation(collisionableMeshAABB.Position);
             collisionableMeshAABB.render();
 
             PostRender();

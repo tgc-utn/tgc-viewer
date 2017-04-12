@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using TGC.Core.Direct3D;
 using TGC.Core.KeyFrameLoader;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 
@@ -244,29 +245,29 @@ namespace TGC.Core.Shaders
         /// <summary>
         ///     Cargar todas la matrices generales que necesita el shader
         /// </summary>
-        public void setShaderMatrix(Effect effect, Matrix world)
+        public void setShaderMatrix(Effect effect, TGCMatrix world)
         {
-            var matWorldView = world * D3DDevice.Instance.Device.Transform.View;
+            var matWorldView = world.ToMatrix() * D3DDevice.Instance.Device.Transform.View;
             var matWorldViewProj = matWorldView * D3DDevice.Instance.Device.Transform.Projection;
-            effect.SetValue("matWorld", world);
+            effect.SetValue("matWorld", world.ToMatrix());
             effect.SetValue("matWorldView", matWorldView);
             effect.SetValue("matWorldViewProj", matWorldViewProj);
-            effect.SetValue("matInverseTransposeWorld", Matrix.TransposeMatrix(Matrix.Invert(world)));
+            effect.SetValue("matInverseTransposeWorld", TGCMatrix.TransposeMatrix(TGCMatrix.Invert(world)).ToMatrix());
         }
 
         /// <summary>
         ///     Cargar todas la matrices generales que necesita el shader, tomando
         ///     como primicia que la matriz de world es la identidad.
-        ///     Simplica los calculos respecto a setShaderMatrix()
+        ///     Simplica los calculos respecto a setShaderTGCMatrix()
         /// </summary>
         public void setShaderMatrixIdentity(Effect effect)
         {
             var matWorldView = D3DDevice.Instance.Device.Transform.View;
             var matWorldViewProj = matWorldView * D3DDevice.Instance.Device.Transform.Projection;
-            effect.SetValue("matWorld", Matrix.Identity);
+            effect.SetValue("matWorld", TGCMatrix.Identity.ToMatrix());
             effect.SetValue("matWorldView", matWorldView);
             effect.SetValue("matWorldViewProj", matWorldViewProj);
-            effect.SetValue("matInverseTransposeWorld", Matrix.Identity);
+            effect.SetValue("matInverseTransposeWorld", TGCMatrix.Identity.ToMatrix());
         }
     }
 }

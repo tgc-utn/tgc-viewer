@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectSound;
 using System.Windows.Forms;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.Sound
@@ -54,8 +55,8 @@ namespace TGC.Core.Sound
             primaryBufferDesc.PrimaryBuffer = true;
             primaryBuffer = new Buffer(primaryBufferDesc, DsDevice);
             Listener3d = new Listener3D(primaryBuffer);
-            Listener3d.Position = new Vector3(0f, 0f, 0f);
-            Listener3d.Orientation = new Listener3DOrientation(new Vector3(1, 0, 0), new Vector3(0, 1, 0));
+            Listener3d.Position = TGCVector3.Empty;
+            Listener3d.Orientation = new Listener3DOrientation(new TGCVector3(1, 0, 0), TGCVector3.Up);
         }
     }
 }

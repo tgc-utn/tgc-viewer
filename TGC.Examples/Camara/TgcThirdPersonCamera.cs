@@ -1,5 +1,6 @@
 ﻿using Microsoft.DirectX;
 using TGC.Core.Camara;
+using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Camara
 {
@@ -8,7 +9,7 @@ namespace TGC.Examples.Camara
     /// </summary>
     public class TgcThirdPersonCamera : TgcCamera
     {
-        private Vector3 position;
+        private TGCVector3 position;
 
         /// <summary>
         ///     Crear una nueva camara
@@ -18,14 +19,14 @@ namespace TGC.Examples.Camara
             resetValues();
         }
 
-        public TgcThirdPersonCamera(Vector3 target, float offsetHeight, float offsetForward) : this()
+        public TgcThirdPersonCamera(TGCVector3 target, float offsetHeight, float offsetForward) : this()
         {
             Target = target;
             OffsetHeight = offsetHeight;
             OffsetForward = offsetForward;
         }
 
-        public TgcThirdPersonCamera(Vector3 target, Vector3 targetDisplacement, float offsetHeight, float offsetForward)
+        public TgcThirdPersonCamera(TGCVector3 target, TGCVector3 targetDisplacement, float offsetHeight, float offsetForward)
             : this()
         {
             Target = target;
@@ -49,7 +50,7 @@ namespace TGC.Examples.Camara
         ///     Desplazamiento final que se le hace al target para acomodar la camara en un cierto
         ///     rincon de la pantalla
         /// </summary>
-        public Vector3 TargetDisplacement { get; set; }
+        public TGCVector3 TargetDisplacement { get; set; }
 
         /// <summary>
         ///     Rotacion absoluta en Y de la camara
@@ -59,11 +60,11 @@ namespace TGC.Examples.Camara
         /// <summary>
         ///     Objetivo al cual la camara tiene que apuntar
         /// </summary>
-        public Vector3 Target { get; set; }
+        public TGCVector3 Target { get; set; }
 
         public override void UpdateCamera(float elapsedTime)
         {
-            Vector3 targetCenter;
+            TGCVector3 targetCenter;
             CalculatePositionTarget(out position, out targetCenter);
             SetCamera(position, targetCenter);
         }
@@ -76,9 +77,9 @@ namespace TGC.Examples.Camara
             OffsetHeight = 20;
             OffsetForward = -120;
             RotationY = 0;
-            TargetDisplacement = Vector3.Empty;
-            Target = Vector3.Empty;
-            position = Vector3.Empty;
+            TargetDisplacement = TGCVector3.Empty;
+            Target = TGCVector3.Empty;
+            position = TGCVector3.Empty;
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace TGC.Examples.Camara
         /// <param name="target">Objetivo al cual la camara tiene que apuntar</param>
         /// <param name="offsetHeight">Desplazamiento en altura de la camara respecto del target</param>
         /// <param name="offsetForward">Desplazamiento hacia adelante o atras de la camara repecto del target.</param>
-        public void setTargetOffsets(Vector3 target, float offsetHeight, float offsetForward)
+        public void setTargetOffsets(TGCVector3 target, float offsetHeight, float offsetForward)
         {
             Target = target;
             OffsetHeight = offsetHeight;
@@ -98,18 +99,15 @@ namespace TGC.Examples.Camara
         ///     Genera la proxima matriz de view, sin actualizar aun los valores internos
         /// </summary>
         /// <param name="pos">Futura posicion de camara generada</param>
-        /// <param name="pos">Futuro centro de camara a generada</param>
-        public void CalculatePositionTarget(out Vector3 pos, out Vector3 targetCenter)
+        /// <param name="targetCenter">Futuro centro de camara a generada</param>
+        public void CalculatePositionTarget(out TGCVector3 pos, out TGCVector3 targetCenter)
         {
             //alejarse, luego rotar y lueg ubicar camara en el centro deseado
-            targetCenter = Vector3.Add(Target, TargetDisplacement);
-            var m = Matrix.Translation(0, OffsetHeight, OffsetForward) * Matrix.RotationY(RotationY) *
-                    Matrix.Translation(targetCenter);
+            targetCenter = TGCVector3.Add(Target, TargetDisplacement);
+            var m = TGCMatrix.Translation(0, OffsetHeight, OffsetForward) * TGCMatrix.RotationY(RotationY) * TGCMatrix.Translation(targetCenter);
 
             //Extraer la posicion final de la matriz de transformacion
-            pos.X = m.M41;
-            pos.Y = m.M42;
-            pos.Z = m.M43;
+            pos = new TGCVector3(m.M41, m.M42, m.M43);
         }
 
         /// <summary>

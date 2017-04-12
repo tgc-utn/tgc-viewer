@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 
 namespace TGC.Examples.ShadersExamples
@@ -12,7 +13,7 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class MySimpleTerrain
     {
-        public Vector3 center;
+        public TGCVector3 center;
         public float ftex; // factor para la textura
         public int[,] heightmapData;
         public float ki;
@@ -36,7 +37,7 @@ namespace TGC.Examples.ShadersExamples
             kj = 1;
         }
 
-        public void loadHeightmap(string heightmapPath, float pscaleXZ, float pscaleY, Vector3 center)
+        public void loadHeightmap(string heightmapPath, float pscaleXZ, float pscaleY, TGCVector3 center)
         {
             scaleXZ = pscaleXZ;
             scaleY = pscaleY;
@@ -83,7 +84,7 @@ namespace TGC.Examples.ShadersExamples
                         var ri1 = (i + 1) % (int)width;
                         var rj1 = (j + 1) % (int)length;
 
-                        Vector3 v1, v2, v3, v4;
+                        TGCVector3 v1, v2, v3, v4;
                         {
                             var r = radio_2 + heightmapData[ri, rj] * scaleY;
                             var s = 2f * (float)Math.PI * j / dj;
@@ -91,7 +92,7 @@ namespace TGC.Examples.ShadersExamples
                             var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
                             var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
                             var y = r * (float)Math.Sin(t);
-                            v1 = new Vector3(x, y, z);
+                            v1 = new TGCVector3(x, y, z);
                         }
                         {
                             var r = radio_2 + heightmapData[ri, rj1] * scaleY;
@@ -100,7 +101,7 @@ namespace TGC.Examples.ShadersExamples
                             var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
                             var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
                             var y = r * (float)Math.Sin(t);
-                            v2 = new Vector3(x, y, z);
+                            v2 = new TGCVector3(x, y, z);
                         }
                         {
                             var r = radio_2 + heightmapData[ri1, rj] * scaleY;
@@ -109,7 +110,7 @@ namespace TGC.Examples.ShadersExamples
                             var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
                             var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
                             var y = r * (float)Math.Sin(t);
-                            v3 = new Vector3(x, y, z);
+                            v3 = new TGCVector3(x, y, z);
                         }
                         {
                             var r = radio_2 + heightmapData[ri1, rj1] * scaleY;
@@ -118,14 +119,14 @@ namespace TGC.Examples.ShadersExamples
                             var x = (float)Math.Cos(s) * (radio_1 + r * (float)Math.Cos(t));
                             var z = (float)Math.Sin(s) * (radio_1 + r * (float)Math.Cos(t));
                             var y = r * (float)Math.Sin(t);
-                            v4 = new Vector3(x, y, z);
+                            v4 = new TGCVector3(x, y, z);
                         }
 
                         //Coordendas de textura
-                        var t1 = new Vector2(ftex * i / width, ftex * j / length);
-                        var t2 = new Vector2(ftex * i / width, ftex * (j + 1) / length);
-                        var t3 = new Vector2(ftex * (i + 1) / width, ftex * j / length);
-                        var t4 = new Vector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
+                        var t1 = new TGCVector2(ftex * i / width, ftex * j / length);
+                        var t2 = new TGCVector2(ftex * i / width, ftex * (j + 1) / length);
+                        var t3 = new TGCVector2(ftex * (i + 1) / width, ftex * j / length);
+                        var t4 = new TGCVector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
 
                         //Cargar triangulo 1
                         data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
@@ -148,20 +149,20 @@ namespace TGC.Examples.ShadersExamples
                     for (var j = 0; j < length - 1; j++)
                     {
                         //Vertices
-                        var v1 = new Vector3(center.X + i * scaleXZ, center.Y + heightmapData[i, j] * scaleY,
+                        var v1 = new TGCVector3(center.X + i * scaleXZ, center.Y + heightmapData[i, j] * scaleY,
                             center.Z + j * scaleXZ);
-                        var v2 = new Vector3(center.X + i * scaleXZ, center.Y + heightmapData[i, j + 1] * scaleY,
+                        var v2 = new TGCVector3(center.X + i * scaleXZ, center.Y + heightmapData[i, j + 1] * scaleY,
                             center.Z + (j + 1) * scaleXZ);
-                        var v3 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + heightmapData[i + 1, j] * scaleY,
+                        var v3 = new TGCVector3(center.X + (i + 1) * scaleXZ, center.Y + heightmapData[i + 1, j] * scaleY,
                             center.Z + j * scaleXZ);
-                        var v4 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + heightmapData[i + 1, j + 1] * scaleY,
+                        var v4 = new TGCVector3(center.X + (i + 1) * scaleXZ, center.Y + heightmapData[i + 1, j + 1] * scaleY,
                             center.Z + (j + 1) * scaleXZ);
 
                         //Coordendas de textura
-                        var t1 = new Vector2(ftex * i / width, ftex * j / length);
-                        var t2 = new Vector2(ftex * i / width, ftex * (j + 1) / length);
-                        var t3 = new Vector2(ftex * (i + 1) / width, ftex * j / length);
-                        var t4 = new Vector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
+                        var t1 = new TGCVector2(ftex * i / width, ftex * j / length);
+                        var t2 = new TGCVector2(ftex * i / width, ftex * (j + 1) / length);
+                        var t3 = new TGCVector2(ftex * (i + 1) / width, ftex * j / length);
+                        var t4 = new TGCVector2(ftex * (i + 1) / width, ftex * (j + 1) / length);
 
                         //Cargar triangulo 1
                         data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
@@ -225,7 +226,7 @@ namespace TGC.Examples.ShadersExamples
         // utilizo estos metodos para el render:
         public void render()
         {
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
 
             //Render terrain
             D3DDevice.Instance.Device.SetTexture(0, terrainTexture);

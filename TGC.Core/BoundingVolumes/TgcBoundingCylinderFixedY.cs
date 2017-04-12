@@ -2,6 +2,7 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
@@ -12,13 +13,13 @@ namespace TGC.Core.BoundingVolumes
     /// </summary>
     public class TgcBoundingCylinderFixedY : IRenderObject
     {
-        private Vector3 center;
+        private TGCVector3 center;
 
-        public TgcBoundingCylinderFixedY(Vector3 center, float radius, float halfLength)
+        public TgcBoundingCylinderFixedY(TGCVector3 center, float radius, float halfLength)
         {
             this.center = center;
             Radius = radius;
-            HalfHeight = new Vector3(0, halfLength, 0);
+            HalfHeight = new TGCVector3(0, halfLength, 0);
             color = Color.Yellow;
         }
 
@@ -26,17 +27,17 @@ namespace TGC.Core.BoundingVolumes
         ///     Devuelve el vector HalfHeight (va del centro a la tapa superior del cilindro)
         ///     Se utiliza para testeo de colisiones
         /// </summary>
-        public Vector3 HalfHeight { get; private set; }
+        public TGCVector3 HalfHeight { get; private set; }
 
         /// <summary>
         ///     Matriz que lleva el radio del cilindro a 1, la altura a 2, y el centro al origen de coordenadas
         /// </summary>
-        public Matrix AntiTransformationMatrix { get; private set; }
+        public TGCMatrix AntiTransformationMatrix { get; private set; }
 
         /// <summary>
         ///     Centro del cilindro
         /// </summary>
-        public Vector3 Center
+        public TGCVector3 Center
         {
             get { return center; }
             set { center = value; }
@@ -53,7 +54,7 @@ namespace TGC.Core.BoundingVolumes
         public float HalfLength
         {
             get { return HalfHeight.Y; }
-            set { HalfHeight = new Vector3(0, value, 0); }
+            set { HalfHeight = new TGCVector3(0, value, 0); }
         }
 
         /// <summary>
@@ -62,10 +63,10 @@ namespace TGC.Core.BoundingVolumes
         public float Length
         {
             get { return 2 * HalfHeight.Y; }
-            set { HalfHeight = new Vector3(0, value / 2, 0); }
+            set { HalfHeight = new TGCVector3(0, value / 2, 0); }
         }
 
-        public void move(Vector3 v)
+        public void move(TGCVector3 v)
         {
             move(v.X, v.Y, v.Z);
         }
@@ -83,8 +84,8 @@ namespace TGC.Core.BoundingVolumes
         public void updateValues()
         {
             AntiTransformationMatrix =
-                Matrix.Translation(-center) *
-                Matrix.Scaling(1 / Radius, 1 / HalfLength, 1 / Radius);
+                TGCMatrix.Translation(-center) *
+                TGCMatrix.Scaling(1 / Radius, 1 / HalfLength, 1 / Radius);
         }
 
         #region Rendering
@@ -114,13 +115,13 @@ namespace TGC.Core.BoundingVolumes
             //matriz que vamos a usar para girar el vector de dibujado
             var angle = FastMath.TWO_PI / (END_CAPS_RESOLUTION / 4); // /4 ya que agregamos los bordes a la resolucion.
             var upVector = HalfHeight;
-            var rotationMatrix = Matrix.RotationAxis(new Vector3(0, 1, 0), angle);
+            var rotationMatrix = TGCMatrix.RotationAxis(TGCVector3.Up, angle);
 
             //vector de dibujado
-            var n = new Vector3(Radius, 0, 0);
+            var n = new TGCVector3(Radius, 0, 0);
 
             //array donde guardamos los puntos dibujados
-            var draw = new Vector3[END_CAPS_VERTEX_COUNT];
+            var draw = new TGCVector3[END_CAPS_VERTEX_COUNT];
 
             for (var i = 0; i < END_CAPS_VERTEX_COUNT / 4; i += 4)
             {

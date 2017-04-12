@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
@@ -71,22 +72,22 @@ namespace TGC.Examples.GeometryBasics
             texture = TextureLoader.FromFile(D3DDevice.Instance.Device, currentTexurePah);
 
             //Modifiers
-            Modifiers.addVertex3f("vertex1", new Vector3(-3, -3, -3), new Vector3(3, 3, 3),
-                new Vector3(-1, 0, 0));
-            Modifiers.addVertex2f("texCoord1", new Vector2(0, 0), new Vector2(1, 1),
-                new Vector2(1, 0));
+            Modifiers.addVertex3f("vertex1", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
+                new TGCVector3(-1, 0, 0));
+            Modifiers.addVertex2f("texCoord1", TGCVector2.Zero, TGCVector2.One,
+                new TGCVector2(1, 0));
             Modifiers.addColor("color1", Color.White);
 
-            Modifiers.addVertex3f("vertex2", new Vector3(-3, -3, -3), new Vector3(3, 3, 3),
-                new Vector3(1, 0, 0));
-            Modifiers.addVertex2f("texCoord2", new Vector2(0, 0), new Vector2(1, 1),
-                new Vector2(0, 1));
+            Modifiers.addVertex3f("vertex2", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
+                new TGCVector3(1, 0, 0));
+            Modifiers.addVertex2f("texCoord2", TGCVector2.Zero, TGCVector2.One,
+                new TGCVector2(0, 1));
             Modifiers.addColor("color2", Color.White);
 
-            Modifiers.addVertex3f("vertex3", new Vector3(-3, -3, -3), new Vector3(3, 3, 3),
-                new Vector3(0, 1, 0));
-            Modifiers.addVertex2f("texCoord3", new Vector2(0, 0), new Vector2(1, 1),
-                new Vector2(1, 1));
+            Modifiers.addVertex3f("vertex3", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
+                TGCVector3.Up);
+            Modifiers.addVertex2f("texCoord3", TGCVector2.Zero, TGCVector2.One,
+                TGCVector2.One);
             Modifiers.addColor("color3", Color.White);
 
             Modifiers.addFloat("rotation", -2, 2f, 0f);
@@ -112,7 +113,7 @@ namespace TGC.Examples.GeometryBasics
             UserVars.setValue("Triangle 3 vertices", data.Length);
 
             //Configurar camara en rotacion
-            Camara = new TgcRotationalCamera(new Vector3(0, 0.5f, 0), 7.5f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(0, 0.5f, 0), 7.5f, Input);
         }
 
         public override void Update()
@@ -133,7 +134,7 @@ namespace TGC.Examples.GeometryBasics
 
             //Especificar formato de triangulo
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
-            D3DDevice.Instance.Device.Transform.World = Matrix.Translation(-2.5f, 0, 0);
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Translation(-2.5f, 0, 0).ToMatrix();
             //Dibujar 1 primitiva (nuestro triangulo)
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 1, simpleTriangleData);
 
@@ -150,8 +151,8 @@ namespace TGC.Examples.GeometryBasics
             var data = new CustomVertex.PositionColoredTextured[3];
 
             //vertice 1
-            var v1 = (Vector3)Modifiers["vertex1"];
-            var t1 = (Vector2)Modifiers["texCoord1"];
+            var v1 = (TGCVector3)Modifiers["vertex1"];
+            var t1 = (TGCVector2)Modifiers["texCoord1"];
             data[0] = new CustomVertex.PositionColoredTextured(
                 v1.X,
                 v1.Y,
@@ -161,8 +162,8 @@ namespace TGC.Examples.GeometryBasics
                 t1.Y);
 
             //vertice 2
-            var v2 = (Vector3)Modifiers["vertex2"];
-            var t2 = (Vector2)Modifiers["texCoord2"];
+            var v2 = (TGCVector3)Modifiers["vertex2"];
+            var t2 = (TGCVector2)Modifiers["texCoord2"];
             data[1] = new CustomVertex.PositionColoredTextured(
                 v2.X,
                 v2.Y,
@@ -172,8 +173,8 @@ namespace TGC.Examples.GeometryBasics
                 t2.Y);
 
             //vertice 3
-            var v3 = (Vector3)Modifiers["vertex3"];
-            var t3 = (Vector2)Modifiers["texCoord3"];
+            var v3 = (TGCVector3)Modifiers["vertex3"];
+            var t3 = (TGCVector2)Modifiers["texCoord3"];
             data[2] = new CustomVertex.PositionColoredTextured(
                 v3.X,
                 v3.Y,
@@ -184,7 +185,7 @@ namespace TGC.Examples.GeometryBasics
 
             //Rotacion
             var rotation = (float)Modifiers["rotation"];
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity * Matrix.RotationY(rotation);
+            D3DDevice.Instance.Device.Transform.World = (TGCMatrix.Identity * TGCMatrix.RotationY(rotation)).ToMatrix();
 
             //Habilitar textura
             var textureEnable = (bool)Modifiers["TextureEnable"];
@@ -206,7 +207,7 @@ namespace TGC.Examples.GeometryBasics
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
             //Cargar VertexBuffer a renderizar
             D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
-            D3DDevice.Instance.Device.Transform.World = Matrix.Translation(2.5f, 0, 0);
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Translation(2.5f, 0, 0).ToMatrix();
             //Dibujar 1 primitiva
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 1);
 

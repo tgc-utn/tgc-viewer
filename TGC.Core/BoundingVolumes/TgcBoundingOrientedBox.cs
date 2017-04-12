@@ -2,6 +2,7 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -18,9 +19,9 @@ namespace TGC.Core.BoundingVolumes
 
         protected Effect effect;
 
-        private Vector3 extents;
+        private TGCVector3 extents;
 
-        private Vector3[] orientation = new Vector3[3];
+        private TGCVector3[] orientation = new TGCVector3[3];
 
         protected string technique;
 
@@ -39,7 +40,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Centro
         /// </summary>
-        public Vector3 Center
+        public TGCVector3 Center
         {
             get { return Position; }
             set
@@ -52,7 +53,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Orientacion del OBB, expresada en local axes
         /// </summary>
-        public Vector3[] Orientation
+        public TGCVector3[] Orientation
         {
             get { return orientation; }
             set
@@ -65,7 +66,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Radios
         /// </summary>
-        public Vector3 Extents
+        public TGCVector3 Extents
         {
             get { return extents; }
             set
@@ -80,7 +81,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         public int RenderColor { get; private set; }
 
-        public Vector3 Position { get; private set; }
+        public TGCVector3 Position { get; private set; }
 
         /// <summary>
         ///     Shader del mesh
@@ -215,9 +216,9 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Crea un array con los 8 vertices del OBB
         /// </summary>
-        private Vector3[] computeCorners()
+        private TGCVector3[] computeCorners()
         {
-            var corners = new Vector3[8];
+            var corners = new TGCVector3[8];
 
             var eX = extents.X * orientation[0];
             var eY = extents.Y * orientation[1];
@@ -242,7 +243,7 @@ namespace TGC.Core.BoundingVolumes
         ///     Mueve el centro del OBB
         /// </summary>
         /// <param name="movement">Movimiento relativo que se quiere aplicar</param>
-        public void move(Vector3 movement)
+        public void move(TGCVector3 movement)
         {
             Position += movement;
             dirtyValues = true;
@@ -253,15 +254,15 @@ namespace TGC.Core.BoundingVolumes
         ///     Es una rotacion relativa, sumando a lo que ya tenia antes de rotacion.
         /// </summary>
         /// <param name="movement">Ángulo de rotación de cada eje en radianes</param>
-        public void rotate(Vector3 rotation)
+        public void rotate(TGCVector3 rotation)
         {
-            var rotM = Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+            var rotM = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
             var currentRotM = computeRotationMatrix();
             var newRotM = currentRotM * rotM;
 
-            orientation[0] = new Vector3(newRotM.M11, newRotM.M12, newRotM.M13);
-            orientation[1] = new Vector3(newRotM.M21, newRotM.M22, newRotM.M23);
-            orientation[2] = new Vector3(newRotM.M31, newRotM.M32, newRotM.M33);
+            orientation[0] = new TGCVector3(newRotM.M11, newRotM.M12, newRotM.M13);
+            orientation[1] = new TGCVector3(newRotM.M21, newRotM.M22, newRotM.M23);
+            orientation[2] = new TGCVector3(newRotM.M31, newRotM.M32, newRotM.M33);
 
             dirtyValues = true;
         }
@@ -271,12 +272,12 @@ namespace TGC.Core.BoundingVolumes
         ///     Pierda la rotacion anterior.
         /// </summary>
         /// <param name="rotation">Ángulo de rotación de cada eje en radianes</param>
-        public void setRotation(Vector3 rotation)
+        public void setRotation(TGCVector3 rotation)
         {
-            var rotM = Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
-            orientation[0] = new Vector3(rotM.M11, rotM.M12, rotM.M13);
-            orientation[1] = new Vector3(rotM.M21, rotM.M22, rotM.M23);
-            orientation[2] = new Vector3(rotM.M31, rotM.M32, rotM.M33);
+            var rotM = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z);
+            orientation[0] = new TGCVector3(rotM.M11, rotM.M12, rotM.M13);
+            orientation[1] = new TGCVector3(rotM.M21, rotM.M22, rotM.M23);
+            orientation[2] = new TGCVector3(rotM.M31, rotM.M32, rotM.M33);
 
             dirtyValues = true;
         }
@@ -285,9 +286,9 @@ namespace TGC.Core.BoundingVolumes
         ///     Calcula la matriz de rotacion 4x4 del Obb en base a su orientacion
         /// </summary>
         /// <returns>Matriz de rotacion de 4x4</returns>
-        public Matrix computeRotationMatrix()
+        public TGCMatrix computeRotationMatrix()
         {
-            var rot = Matrix.Identity;
+            var rot = TGCMatrix.Identity;
 
             rot.M11 = orientation[0].X;
             rot.M12 = orientation[0].Y;
@@ -311,9 +312,9 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="points">puntos</param>
         /// <returns>OBB calculado</returns>
-        public static TgcBoundingOrientedBox computeFromPoints(Vector3[] points)
+        public static TgcBoundingOrientedBox computeFromPoints(TGCVector3[] points)
         {
-            return computeFromPointsRecursive(points, new Vector3(0, 0, 0), new Vector3(360, 360, 360), 10f).toClass();
+            return computeFromPointsRecursive(points, TGCVector3.Empty, new TGCVector3(360, 360, 360), 10f).toClass();
         }
 
         /// <summary>
@@ -322,14 +323,14 @@ namespace TGC.Core.BoundingVolumes
         ///     Continua recursivamente hasta llegar a un step menor a 0.01f
         /// </summary>
         /// <returns></returns>
-        private static OBBStruct computeFromPointsRecursive(Vector3[] points, Vector3 initValues, Vector3 endValues,
+        private static OBBStruct computeFromPointsRecursive(TGCVector3[] points, TGCVector3 initValues, TGCVector3 endValues,
             float step)
         {
             var minObb = new OBBStruct();
             var minVolume = float.MaxValue;
-            var minInitValues = Vector3.Empty;
-            var minEndValues = Vector3.Empty;
-            var transformedPoints = new Vector3[points.Length];
+            var minInitValues = TGCVector3.Empty;
+            var minEndValues = TGCVector3.Empty;
+            var transformedPoints = new TGCVector3[points.Length];
             float x, y, z;
 
             x = initValues.X;
@@ -345,20 +346,20 @@ namespace TGC.Core.BoundingVolumes
                     {
                         //Matriz de rotacion
                         var rotZ = FastMath.ToRad(z);
-                        var rotM = Matrix.RotationYawPitchRoll(rotY, rotX, rotZ);
-                        Vector3[] orientation =
+                        var rotM = TGCMatrix.RotationYawPitchRoll(rotY, rotX, rotZ);
+                        TGCVector3[] orientation =
                         {
-                            new Vector3(rotM.M11, rotM.M12, rotM.M13),
-                            new Vector3(rotM.M21, rotM.M22, rotM.M23),
-                            new Vector3(rotM.M31, rotM.M32, rotM.M33)
+                            new TGCVector3(rotM.M11, rotM.M12, rotM.M13),
+                            new TGCVector3(rotM.M21, rotM.M22, rotM.M23),
+                            new TGCVector3(rotM.M31, rotM.M32, rotM.M33)
                         };
 
                         //Transformar todos los puntos a OBB-space
                         for (var i = 0; i < transformedPoints.Length; i++)
                         {
-                            transformedPoints[i].X = Vector3.Dot(points[i], orientation[0]);
-                            transformedPoints[i].Y = Vector3.Dot(points[i], orientation[1]);
-                            transformedPoints[i].Z = Vector3.Dot(points[i], orientation[2]);
+                            transformedPoints[i].X = TGCVector3.Dot(points[i], orientation[0]);
+                            transformedPoints[i].Y = TGCVector3.Dot(points[i], orientation[1]);
+                            transformedPoints[i].Z = TGCVector3.Dot(points[i], orientation[2]);
                         }
 
                         //Obtener el AABB de todos los puntos transformados
@@ -366,15 +367,15 @@ namespace TGC.Core.BoundingVolumes
 
                         //Calcular volumen del AABB
                         var extents = aabb.calculateAxisRadius();
-                        extents = TgcVectorUtils.abs(extents);
+                        extents = TGCVector3.Abs(extents);
                         var volume = extents.X * 2 * extents.Y * 2 * extents.Z * 2;
 
                         //Buscar menor volumen
                         if (volume < minVolume)
                         {
                             minVolume = volume;
-                            minInitValues = new Vector3(x, y, z);
-                            minEndValues = new Vector3(x + step, y + step, z + step);
+                            minInitValues = new TGCVector3(x, y, z);
+                            minEndValues = new TGCVector3(x + step, y + step, z + step);
 
                             //Volver centro del AABB a World-space
                             var center = aabb.calculateBoxCenter();
@@ -423,7 +424,7 @@ namespace TGC.Core.BoundingVolumes
             obb.extents = (aabb.max - aabb.min) * 0.5f;
             obb.center = aabb.min + obb.extents;
 
-            obb.orientation = new[] { new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1) };
+            obb.orientation = new[] { new TGCVector3(1, 0, 0), TGCVector3.Up, new TGCVector3(0, 0, 1) };
             return obb;
         }
 
@@ -432,11 +433,11 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="p">Punto en World-space</param>
         /// <returns>Punto convertido a OBB-space</returns>
-        public Vector3 toObbSpace(Vector3 p)
+        public TGCVector3 toObbSpace(TGCVector3 p)
         {
             var t = p - Position;
-            return new Vector3(Vector3.Dot(t, orientation[0]), Vector3.Dot(t, orientation[1]),
-                Vector3.Dot(t, orientation[2]));
+            return new TGCVector3(TGCVector3.Dot(t, orientation[0]), TGCVector3.Dot(t, orientation[1]),
+                TGCVector3.Dot(t, orientation[2]));
         }
 
         /// <summary>
@@ -444,7 +445,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="p">Punto en OBB-space</param>
         /// <returns>Punto convertido a World-space</returns>
-        public Vector3 toWorldSpace(Vector3 p)
+        public TGCVector3 toWorldSpace(TGCVector3 p)
         {
             return Position + p.X * orientation[0] + p.Y * orientation[1] + p.Z * orientation[2];
         }
@@ -466,9 +467,9 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         public struct OBBStruct
         {
-            public Vector3 center;
-            public Vector3[] orientation;
-            public Vector3 extents;
+            public TGCVector3 center;
+            public TGCVector3[] orientation;
+            public TGCVector3 extents;
 
             /// <summary>
             ///     Convertir a clase
@@ -487,11 +488,11 @@ namespace TGC.Core.BoundingVolumes
             /// </summary>
             /// <param name="p">Punto en World-space</param>
             /// <returns>Punto convertido a OBB-space</returns>
-            public Vector3 toObbSpace(Vector3 p)
+            public TGCVector3 toObbSpace(TGCVector3 p)
             {
                 var t = p - center;
-                return new Vector3(Vector3.Dot(t, orientation[0]), Vector3.Dot(t, orientation[1]),
-                    Vector3.Dot(t, orientation[2]));
+                return new TGCVector3(TGCVector3.Dot(t, orientation[0]), TGCVector3.Dot(t, orientation[1]),
+                    TGCVector3.Dot(t, orientation[2]));
             }
 
             /// <summary>
@@ -499,7 +500,7 @@ namespace TGC.Core.BoundingVolumes
             /// </summary>
             /// <param name="p">Punto en OBB-space</param>
             /// <returns>Punto convertido a World-space</returns>
-            public Vector3 toWorldSpace(Vector3 p)
+            public TGCVector3 toWorldSpace(TGCVector3 p)
             {
                 return center + p.X * orientation[0] + p.Y * orientation[1] + p.Z * orientation[2];
             }

@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -35,12 +36,12 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Punto de inicio de la linea
         /// </summary>
-        public Vector3 PStart { get; set; }
+        public TGCVector3 PStart { get; set; }
 
         /// <summary>
         ///     Punto final de la linea
         /// </summary>
-        public Vector3 PEnd { get; set; }
+        public TGCVector3 PEnd { get; set; }
 
         /// <summary>
         ///     Color de la linea
@@ -56,7 +57,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public bool Enabled { get; set; }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             //Lo correcto sería calcular el centro, pero con un extremo es suficiente.
             get { return PStart; }
@@ -137,7 +138,7 @@ namespace TGC.Core.Geometry
         /// <param name="start">Punto de inicio</param>
         /// <param name="end">Punto de fin</param>
         /// <returns>Línea creada</returns>
-        public static TgcLine fromExtremes(Vector3 start, Vector3 end)
+        public static TgcLine fromExtremes(TGCVector3 start, TGCVector3 end)
         {
             var line = new TgcLine();
             line.PStart = start;
@@ -153,7 +154,7 @@ namespace TGC.Core.Geometry
         /// <param name="end">Punto de fin</param>
         /// <param name="color">Color de la línea</param>
         /// <returns>Línea creada</returns>
-        public static TgcLine fromExtremes(Vector3 start, Vector3 end, Color color)
+        public static TgcLine fromExtremes(TGCVector3 start, TGCVector3 end, Color color)
         {
             var line = new TgcLine();
             line.PStart = start;

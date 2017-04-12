@@ -1,5 +1,3 @@
-using Microsoft.DirectX;
-using System.Drawing;
 using System.Globalization;
 using System.Text;
 
@@ -249,70 +247,6 @@ namespace TGC.Core.Utils
         }
 
         /// <summary>
-        ///     Imprime un Vector3 de la forma [150.0,150.0,150.0]
-        /// </summary>
-        /// <returns></returns>
-        public static string printVector3(float x, float y, float z)
-        {
-            return "[" + printFloat(x) +
-                   "," + printFloat(y) +
-                   "," + printFloat(z) + "]";
-        }
-
-        /// <summary>
-        ///     Imprime un Vector3 de la forma [150.0,150.0,150.0]
-        /// </summary>
-        public static string printVector3(Vector3 vec)
-        {
-            return printVector3(vec.X, vec.Y, vec.Z);
-        }
-
-        /// <summary>
-        ///     Imprime un Vector3 de la forma [150.0,150.0,150.0], tomando valores string
-        /// </summary>
-        public static string printVector3FromString(string x, string y, string z)
-        {
-            return printVector3(parseFloat(x), parseFloat(y), parseFloat(z));
-        }
-
-        /// <summary>
-        ///     Imprime un Vector2 de la forma [150.0,150.0]
-        /// </summary>
-        /// <returns></returns>
-        public static string printVector2(float x, float y)
-        {
-            return "[" + printFloat(x) + "," + printFloat(y) + "]";
-        }
-
-        /// <summary>
-        ///     Imprime un Vector2 de la forma [150.0,150.0]
-        /// </summary>
-        public static string printVector2(Vector2 vec)
-        {
-            return printVector2(vec.X, vec.Y);
-        }
-
-        /// <summary>
-        ///     Imprime un Vector2 de la forma [150.0,150.0], tomando valores string
-        /// </summary>
-        public static string printVectorFromString(string x, string y)
-        {
-            return printVector2(parseFloat(x), parseFloat(y));
-        }
-
-        /// <summary>
-        ///     Imprime un Quaternion de la forma [x, y, z, w]
-        /// </summary>
-        public static string printQuaternion(Quaternion q)
-        {
-            return "[" + printFloat(q.X) +
-                   "," + printFloat(q.Y) +
-                   "," + printFloat(q.Z) +
-                   "," + printFloat(q.W) +
-                   "]";
-        }
-
-        /// <summary>
         ///     Imprime un float[2] de la forma [150.0,150.0]
         /// </summary>
         /// <returns></returns>
@@ -371,94 +305,6 @@ namespace TGC.Core.Utils
                 sb.Append(" ");
             }
             return sb.ToString();
-        }
-
-        /// <summary>
-        ///     Convierte un Vector3 a un float[3]
-        /// </summary>
-        public static float[] vector3ToFloat3Array(Vector3 v)
-        {
-            return new[] { v.X, v.Y, v.Z };
-        }
-
-        /// <summary>
-        ///     Convierte un Vector3 a un float[4] con w = 1
-        /// </summary>
-        public static float[] vector3ToFloat4Array(Vector3 v)
-        {
-            return new[] { v.X, v.Y, v.Z, 1f };
-        }
-
-        /// <summary>
-        ///     Convierte un Vector3 a un Vector4 con w = 1
-        /// </summary>
-        public static Vector4 vector3ToVector4(Vector3 v)
-        {
-            return new Vector4(v.X, v.Y, v.Z, 1f);
-        }
-
-        /// <summary>
-        ///     Convierte un Vector2 a un float[2]
-        /// </summary>
-        public static float[] vector2ToFloat2Array(Vector2 v)
-        {
-            return new[] { v.X, v.Y };
-        }
-
-        /// <summary>
-        ///     Convierte un Quaternion a un float[4]
-        /// </summary>
-        public static float[] quaternionToFloat4Array(Quaternion q)
-        {
-            return new[] { q.X, q.Y, q.Z, q.W };
-        }
-
-        /// <summary>
-        ///     Convierte un float[3] a un Vector3
-        /// </summary>
-        public static Vector3 float3ArrayToVector3(float[] f)
-        {
-            return new Vector3(f[0], f[1], f[2]);
-        }
-
-        /// <summary>
-        ///     Convierte un float[4] a un Quaternion
-        /// </summary>
-        public static Quaternion float4ArrayToQuaternion(float[] f)
-        {
-            return new Quaternion(f[0], f[1], f[2], f[3]);
-        }
-
-        /// <summary>
-        ///     Convierte un float[4] a un Plane
-        /// </summary>
-        public static Plane float4ArrayToPlane(float[] f)
-        {
-            return new Plane(f[0], f[1], f[2], f[3]);
-        }
-
-        /// <summary>
-        ///     Convierte un array de Vector2 a un array de float
-        /// </summary>
-        public static float[] vector2ArrayToFloat2Array(Vector2[] values)
-        {
-            var data = new float[values.Length * 2];
-            for (var i = 0; i < values.Length; i++)
-            {
-                data[i * 2] = values[i].X;
-                data[i * 2 + 1] = values[i].Y;
-            }
-            return data;
-        }
-
-        /// <summary>
-        ///     convierte un color base(255,255,255,255) a un Vector4(1f,1f,1f,1f).
-        /// </summary>
-        /// <param name="color"></param>
-        /// <returns></returns>
-        public static Vector4 ColorToVector4(Color color)
-        {
-            return Vector4.Normalize(new Vector4(color.R, color.G, color.B, color.A));
         }
     }
 }

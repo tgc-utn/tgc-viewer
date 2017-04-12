@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -43,7 +44,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Centro del terreno
         /// </summary>
-        public Vector3 Center { get; private set; }
+        public TGCVector3 Center { get; private set; }
 
         /// <summary>
         ///     Shader del mesh
@@ -64,7 +65,7 @@ namespace TGC.Core.Terrain
             set { technique = value; }
         }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return Center; }
         }
@@ -88,7 +89,7 @@ namespace TGC.Core.Terrain
             effect.SetValue("texDiffuseMap", terrainTexture);
             TexturesManager.Instance.clear(1);
 
-            TgcShaders.Instance.setShaderMatrix(effect, Matrix.Identity);
+            TgcShaders.Instance.setShaderMatrix(effect, TGCMatrix.Identity);
             D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionTextured;
             effect.Technique = technique;
             D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
@@ -124,7 +125,7 @@ namespace TGC.Core.Terrain
         /// <param name="scaleXZ">Escala para los ejes X y Z</param>
         /// <param name="scaleY">Escala para el eje Y</param>
         /// <param name="center">Centro de la malla del terreno</param>
-        public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, Vector3 center)
+        public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, TGCVector3 center)
         {
             Center = center;
 
@@ -158,20 +159,20 @@ namespace TGC.Core.Terrain
                 for (var j = 0; j < length - 1; j++)
                 {
                     //Vertices
-                    var v1 = new Vector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j] * scaleY,
+                    var v1 = new TGCVector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j] * scaleY,
                         center.Z + j * scaleXZ);
-                    var v2 = new Vector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j + 1] * scaleY,
+                    var v2 = new TGCVector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j + 1] * scaleY,
                         center.Z + (j + 1) * scaleXZ);
-                    var v3 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j] * scaleY,
+                    var v3 = new TGCVector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j] * scaleY,
                         center.Z + j * scaleXZ);
-                    var v4 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j + 1] * scaleY,
+                    var v4 = new TGCVector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j + 1] * scaleY,
                         center.Z + (j + 1) * scaleXZ);
 
                     //Coordendas de textura
-                    var t1 = new Vector2(i / width, j / length);
-                    var t2 = new Vector2(i / width, (j + 1) / length);
-                    var t3 = new Vector2((i + 1) / width, j / length);
-                    var t4 = new Vector2((i + 1) / width, (j + 1) / length);
+                    var t1 = new TGCVector2(i / width, j / length);
+                    var t2 = new TGCVector2(i / width, (j + 1) / length);
+                    var t3 = new TGCVector2((i + 1) / width, j / length);
+                    var t4 = new TGCVector2((i + 1) / width, (j + 1) / length);
 
                     //Cargar triangulo 1
                     data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);

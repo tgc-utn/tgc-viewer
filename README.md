@@ -11,27 +11,27 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
 [Técnicas de Gráficos por Computadora](http://tgc-utn.github.io/)
 
 ## Características
-* [Lenguaje C#](https://msdn.microsoft.com/es-ar/library/kx37x362.aspx)
+* [.NET Framework](https://www.microsoft.com/net)
 * [Managed DirectX 9](https://en.wikipedia.org/wiki/Managed_DirectX)
 * [Detección de colisiones](https://en.wikipedia.org/wiki/Collision_detection)
 * [Skeletal animation](https://en.wikipedia.org/wiki/Skeletal_animation)
 * [HLSL shaders](https://msdn.microsoft.com/en-us/library/windows/desktop/bb509561%28v=vs.85%29.aspx)
 * [TGC tools](https://github.com/tgc-utn/tgc-tools)
 * Level editor
-* Exportación para los modelos de [SketchUp](https://www.sketchup.com/) (beta)
+* Exportación para los modelos de [SketchUp](https://www.sketchup.com) (beta)
 * Plugins para la exportación de modelos desde [3Ds MAX](http://www.autodesk.com/education/free-software/3ds-max) (outdate)
 
 ## Requisitos
 * API gráfica
     * [DirectX 9 SDK](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=6812)
 * IDEs compatibles
-    * [Visual Studio Community Edition](https://www.visualstudio.com/es-ar/products/visual-studio-community-vs)
+    * [Visual Studio Community Edition](https://www.visualstudio.com/vs/community)
     * [Xamarin Studio Community](https://www.xamarin.com/studio) (Instalar las siguientes dependencias en orden)
-        1. [Microsoft .NET Framework 4.5.2 Developer Pack](https://www.microsoft.com/es-ar/download/details.aspx?id=42637)
+        1. [.NET Framework Developer Pack](https://www.microsoft.com/net/targeting)
         2. [GTK# for .NET](http://www.mono-project.com/download/#download-win)
         3. [Microsoft Build Tools 2013](https://www.microsoft.com/es-ar/download/details.aspx?id=40760)
         4. [Microsoft Build Tools 2015](https://www.microsoft.com/es-ar/download/details.aspx?id=48159)
-        5. [Xamarin Studio Community](http://download.xamarin.com/studio/Windows/XamarinStudio-6.1.0.5441-0.msi)
+        5. [Xamarin Studio Community](https://dl.xamarin.com/MonoDevelop/Windows/XamarinStudio-6.2.0.1829.msi)
 
 ### Colaboradores
 * [Daniela Kazarian](https://github.com/Dkazarian)

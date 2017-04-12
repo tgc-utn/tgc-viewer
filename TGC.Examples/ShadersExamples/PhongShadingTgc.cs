@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
@@ -46,12 +47,12 @@ namespace TGC.Examples.ShadersExamples
             mesh = scene.Meshes[0];
 
             //Crear caja para indicar ubicacion de la luz
-            lightMesh = TgcBox.fromSize(new Vector3(20, 20, 20), Color.Yellow).toMesh("Box");
+            lightMesh = TgcBox.fromSize(new TGCVector3(20, 20, 20), Color.Yellow).toMesh("Box");
 
             //Modifiers de la luz
             Modifiers.addBoolean("lightEnable", "lightEnable", true);
-            Modifiers.addVertex3f("lightPos", new Vector3(-500, -500, -500), new Vector3(500, 800, 500),
-                new Vector3(0, 500, 0));
+            Modifiers.addVertex3f("lightPos", new TGCVector3(-500, -500, -500), new TGCVector3(500, 800, 500),
+                new TGCVector3(0, 500, 0));
             Modifiers.addColor("ambient", Color.Gray);
             Modifiers.addColor("diffuse", Color.Blue);
             Modifiers.addColor("specular", Color.White);
@@ -92,14 +93,14 @@ namespace TGC.Examples.ShadersExamples
             mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
 
             //Actualzar posicion de la luz
-            var lightPos = (Vector3)Modifiers["lightPos"];
+            var lightPos = (TGCVector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 
             if (lightEnable)
             {
                 //Cargar variables shader
-                mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
-                mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
+                mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightPos));
+                mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
                 mesh.Effect.SetValue("ambientColor", ColorValue.FromColor((Color)Modifiers["ambient"]));
                 mesh.Effect.SetValue("diffuseColor", ColorValue.FromColor((Color)Modifiers["diffuse"]));
                 mesh.Effect.SetValue("specularColor", ColorValue.FromColor((Color)Modifiers["specular"]));

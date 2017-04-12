@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -106,10 +107,10 @@ namespace TGC.Examples.Animation
 
             //Crear caja como modelo de Attachment del hueos "Bip01 L Hand"
             attachment = new TgcSkeletalBoneAttach();
-            var attachmentBox = TgcBox.fromSize(new Vector3(5, 100, 5), Color.Blue);
+            var attachmentBox = TgcBox.fromSize(new TGCVector3(5, 100, 5), Color.Blue);
             attachment.Mesh = attachmentBox.toMesh("attachment");
             attachment.Bone = mesh.getBoneByName("Bip01 L Hand");
-            attachment.Offset = Matrix.Translation(10, -40, 0);
+            attachment.Offset = TGCMatrix.Translation(10, -40, 0);
             attachment.updateValues();
 
             //Modifier para habilitar attachment
@@ -117,7 +118,7 @@ namespace TGC.Examples.Animation
             Modifiers.addBoolean("Attachment", "Attachment:", showAttachment);
 
             //Configurar camara
-            Camara = new TgcRotationalCamera(new Vector3(0, 70, 0), 200, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(0, 70, 0), 200, Input);
         }
 
         public override void Update()

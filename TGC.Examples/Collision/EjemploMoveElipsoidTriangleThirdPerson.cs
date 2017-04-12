@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Terrain;
@@ -85,15 +86,15 @@ namespace TGC.Examples.Collision
             //Configurar animacion inicial
             personaje.playAnimation("StandBy", true);
             //Escalarlo porque es muy grande
-            personaje.Position = new Vector3(0, 1000, -150);
+            personaje.Position = new TGCVector3(0, 1000, -150);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.rotateY(Geometry.DegreeToRadian(180f));
             //escalamos un poco el personaje.
-            personaje.Scale = new Vector3(0.75f, 0.75f, 0.75f);
+            personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
             //BoundingSphere que va a usar el personaje
             personaje.AutoUpdateBoundingBox = false;
-            characterElipsoid = new TgcBoundingElipsoid(personaje.BoundingBox.calculateBoxCenter() + new Vector3(0, 0, 0),
-                new Vector3(12, 28, 12));
+            characterElipsoid = new TgcBoundingElipsoid(personaje.BoundingBox.calculateBoxCenter() + TGCVector3.Empty,
+                new TGCVector3(12, 28, 12));
             jumping = false;
 
             //Almacenar volumenes de colision del escenario
@@ -122,26 +123,26 @@ namespace TGC.Examples.Collision
             directionArrow.BodyColor = Color.Red;
             directionArrow.HeadColor = Color.Green;
             directionArrow.Thickness = 0.4f;
-            directionArrow.HeadSize = new Vector2(5, 10);
+            directionArrow.HeadSize = new TGCVector2(5, 10);
 
             //Linea para normal de colision
             collisionNormalArrow = new TgcArrow();
             collisionNormalArrow.BodyColor = Color.Blue;
             collisionNormalArrow.HeadColor = Color.Yellow;
             collisionNormalArrow.Thickness = 0.4f;
-            collisionNormalArrow.HeadSize = new Vector2(2, 5);
+            collisionNormalArrow.HeadSize = new TGCVector2(2, 5);
 
             //Caja para marcar punto de colision
-            collisionPoint = TgcBox.fromSize(new Vector3(4, 4, 4), Color.Red);
+            collisionPoint = TgcBox.fromSize(new TGCVector3(4, 4, 4), Color.Red);
 
             //Configurar camara en Tercer Persona
-            camaraInterna = new TgcThirdPersonCamera(personaje.Position, new Vector3(0, 45, 0), 20, -120);
+            camaraInterna = new TgcThirdPersonCamera(personaje.Position, new TGCVector3(0, 45, 0), 20, -120);
             Camara = camaraInterna;
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 0, 0);
-            skyBox.Size = new Vector3(10000, 10000, 10000);
+            skyBox.Center = TGCVector3.Empty;
+            skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox3\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "Up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "Down.jpg");
@@ -159,8 +160,8 @@ namespace TGC.Examples.Collision
             Modifiers.addFloat("VelocidadCaminar", 0, 20, 2);
             Modifiers.addFloat("VelocidadRotacion", 1f, 360f, 150f);
             Modifiers.addBoolean("HabilitarGravedad", "Habilitar Gravedad", true);
-            Modifiers.addVertex3f("Gravedad", new Vector3(-5, -5, -5), new Vector3(5, 5, 5),
-                new Vector3(0, -4, 0));
+            Modifiers.addVertex3f("Gravedad", new TGCVector3(-5, -5, -5), new TGCVector3(5, 5, 5),
+                new TGCVector3(0, -4, 0));
             Modifiers.addFloat("SlideFactor", 0f, 2f, 1f);
             Modifiers.addFloat("Pendiente", 0f, 1f, 0.72f);
             Modifiers.addFloat("VelocidadSalto", 0f, 50f, 10f);
@@ -269,11 +270,11 @@ namespace TGC.Examples.Collision
             }
 
             //Vector de movimiento
-            var movementVector = Vector3.Empty;
+            var movementVector = TGCVector3.Empty;
             if (moving || jumping)
             {
                 //Aplicar movimiento, desplazarse en base a la rotacion actual del personaje
-                movementVector = new Vector3(
+                movementVector = new TGCVector3(
                     FastMath.Sin(personaje.Rotation.Y) * moveForward,
                     jump,
                     FastMath.Cos(personaje.Rotation.Y) * moveForward
@@ -282,7 +283,7 @@ namespace TGC.Examples.Collision
 
             //Actualizar valores de gravedad
             collisionManager.GravityEnabled = (bool)Modifiers["HabilitarGravedad"];
-            collisionManager.GravityForce = (Vector3)Modifiers["Gravedad"] /** elapsedTime*/;
+            collisionManager.GravityForce = (TGCVector3)Modifiers["Gravedad"] /** elapsedTime*/;
             collisionManager.SlideFactor = (float)Modifiers["SlideFactor"];
             collisionManager.OnGroundMinDotValue = (float)Modifiers["Pendiente"];
 
@@ -302,7 +303,7 @@ namespace TGC.Examples.Collision
                 personaje.move(realMovement);
 
                 //Cargar desplazamiento realizar en UserVar
-                UserVars.setValue("Movement", TgcParserUtils.printVector3(realMovement));
+                UserVars.setValue("Movement", TGCVector3.PrintVector3(realMovement));
             }
             else
             {
@@ -322,7 +323,7 @@ namespace TGC.Examples.Collision
 
             //Actualizar valores de la linea de movimiento
             directionArrow.PStart = characterElipsoid.Center;
-            directionArrow.PEnd = characterElipsoid.Center + Vector3.Multiply(movementVector, 50);
+            directionArrow.PEnd = characterElipsoid.Center + TGCVector3.Multiply(movementVector, 50);
             directionArrow.updateValues();
 
             //Actualizar valores de normal de colision
@@ -330,7 +331,7 @@ namespace TGC.Examples.Collision
             {
                 collisionNormalArrow.PStart = collisionManager.Result.collisionPoint;
                 collisionNormalArrow.PEnd = collisionManager.Result.collisionPoint +
-                                            Vector3.Multiply(collisionManager.Result.collisionNormal, 80);
+                                            TGCVector3.Multiply(collisionManager.Result.collisionNormal, 80);
                 
                 collisionNormalArrow.updateValues();
                 
@@ -352,8 +353,8 @@ namespace TGC.Examples.Collision
             if (collisionManager.Result.collisionFound)
             {
                 collisionNormalArrow.render();
-                collisionPoint.Transform = Matrix.RotationYawPitchRoll(collisionPoint.Rotation.Y, collisionPoint.Rotation.X, collisionPoint.Rotation.Z) *
-                            Matrix.Translation(collisionPoint.Position);
+                collisionPoint.Transform = TGCMatrix.RotationYawPitchRoll(collisionPoint.Rotation.Y, collisionPoint.Rotation.X, collisionPoint.Rotation.Z) *
+                            TGCMatrix.Translation(collisionPoint.Position);
                 collisionPoint.render();
             }
 

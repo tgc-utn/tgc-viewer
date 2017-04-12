@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
@@ -47,16 +48,16 @@ namespace TGC.Examples.Lights
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(200, 250, 175), 400f, 300f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(200, 250, 175), 400f, 300f, Input);
 
             //Mesh para la luz
-            lightMesh = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
+            lightMesh = TgcBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
 
             //Modifiers de la luz
             Modifiers.addBoolean("lightEnable", "lightEnable", true);
-            Modifiers.addVertex3f("lightPos", new Vector3(-200, -100, -200), new Vector3(200, 200, 300),
-                new Vector3(-60, 90, 175));
-            Modifiers.addVertex3f("lightDir", new Vector3(-1, -1, -1), new Vector3(1, 1, 1), new Vector3(-0.05f, 0, 0));
+            Modifiers.addVertex3f("lightPos", new TGCVector3(-200, -100, -200), new TGCVector3(200, 200, 300),
+                new TGCVector3(-60, 90, 175));
+            Modifiers.addVertex3f("lightDir", new TGCVector3(-1, -1, -1), TGCVector3.One, new TGCVector3(-0.05f, 0, 0));
             Modifiers.addColor("lightColor", Color.White);
             Modifiers.addFloat("lightIntensity", 0, 150, 35);
             Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
@@ -103,11 +104,11 @@ namespace TGC.Examples.Lights
             }
 
             //Actualzar posicion de la luz
-            var lightPos = (Vector3)Modifiers["lightPos"];
+            var lightPos = (TGCVector3)Modifiers["lightPos"];
             lightMesh.Position = lightPos;
 
             //Normalizar direccion de la luz
-            var lightDir = (Vector3)Modifiers["lightDir"];
+            var lightDir = (TGCVector3)Modifiers["lightDir"];
             lightDir.Normalize();
 
             //Renderizar meshes
@@ -117,9 +118,9 @@ namespace TGC.Examples.Lights
                 {
                     //Cargar variables shader de la luz
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor((Color)Modifiers["lightColor"]));
-                    mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(lightPos));
-                    mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
-                    mesh.Effect.SetValue("spotLightDir", TgcParserUtils.vector3ToFloat3Array(lightDir));
+                    mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightPos));
+                    mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
+                    mesh.Effect.SetValue("spotLightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
                     mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
                     mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
                     mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad((float)Modifiers["spotAngle"]));

@@ -2,6 +2,7 @@ using Microsoft.DirectX;
 using System.Collections.Generic;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Utils;
 
@@ -31,20 +32,20 @@ namespace TGC.Core.PortalRendering
             {
                 //Crear cuerpo Convexo
                 var convexPoly = new TgcConvexPolyhedron();
-                convexPoly.Planes = new Plane[cellData.facePlanes.Length / 4];
+                convexPoly.Planes = new TGCPlane[cellData.facePlanes.Length / 4];
                 for (var i = 0; i < convexPoly.Planes.Length; i++)
                 {
-                    convexPoly.Planes[i] = new Plane(
+                    convexPoly.Planes[i] = new TGCPlane(
                         cellData.facePlanes[i * 4],
                         cellData.facePlanes[i * 4 + 1],
                         cellData.facePlanes[i * 4 + 2],
                         cellData.facePlanes[i * 4 + 3]
                         );
                 }
-                convexPoly.BoundingVertices = new Vector3[cellData.boundingVertices.Length / 3];
+                convexPoly.BoundingVertices = new TGCVector3[cellData.boundingVertices.Length / 3];
                 for (var i = 0; i < convexPoly.BoundingVertices.Length; i++)
                 {
-                    convexPoly.BoundingVertices[i] = new Vector3(
+                    convexPoly.BoundingVertices[i] = new TGCVector3(
                         cellData.boundingVertices[i * 3],
                         cellData.boundingVertices[i * 3 + 1],
                         cellData.boundingVertices[i * 3 + 2]
@@ -68,8 +69,8 @@ namespace TGC.Core.PortalRendering
             {
                 //BoundingBox del portal
                 var boundingBox = new TgcBoundingAxisAlignBox(
-                    new Vector3(portalData.pMin[0], portalData.pMin[1], portalData.pMin[2]),
-                    new Vector3(portalData.pMax[0], portalData.pMax[1], portalData.pMax[2])
+                    new TGCVector3(portalData.pMin[0], portalData.pMin[1], portalData.pMin[2]),
+                    new TGCVector3(portalData.pMax[0], portalData.pMax[1], portalData.pMax[2])
                     );
 
                 //Crear portal
@@ -82,10 +83,10 @@ namespace TGC.Core.PortalRendering
 
                 //Poligono del portal para la celda A
                 var polygonA = new TgcConvexPolygon();
-                polygonA.BoundingVertices = new Vector3[portalData.boundingVerticesA.Length / 3];
+                polygonA.BoundingVertices = new TGCVector3[portalData.boundingVerticesA.Length / 3];
                 for (var i = 0; i < polygonA.BoundingVertices.Length; i++)
                 {
-                    polygonA.BoundingVertices[i] = new Vector3(
+                    polygonA.BoundingVertices[i] = new TGCVector3(
                         portalData.boundingVerticesA[i * 3],
                         portalData.boundingVerticesA[i * 3 + 1],
                         portalData.boundingVerticesA[i * 3 + 2]
@@ -93,7 +94,7 @@ namespace TGC.Core.PortalRendering
                 }
 
                 //Plano del portal para la celda A
-                var planeA = TgcParserUtils.float4ArrayToPlane(portalData.planeA);
+                var planeA = TGCPlane.Float4ArrayToPlane(portalData.planeA);
 
                 //Crear conexion A
                 var connectionA = new TgcPortalRenderingConnection(portal, cellB, polygonA, planeA);
@@ -101,10 +102,10 @@ namespace TGC.Core.PortalRendering
 
                 //Poligono del portal para la celda B
                 var polygonB = new TgcConvexPolygon();
-                polygonB.BoundingVertices = new Vector3[portalData.boundingVerticesB.Length / 3];
+                polygonB.BoundingVertices = new TGCVector3[portalData.boundingVerticesB.Length / 3];
                 for (var i = 0; i < polygonB.BoundingVertices.Length; i++)
                 {
-                    polygonB.BoundingVertices[i] = new Vector3(
+                    polygonB.BoundingVertices[i] = new TGCVector3(
                         portalData.boundingVerticesB[i * 3],
                         portalData.boundingVerticesB[i * 3 + 1],
                         portalData.boundingVerticesB[i * 3 + 2]
@@ -112,7 +113,7 @@ namespace TGC.Core.PortalRendering
                 }
 
                 //Plano del portal para la celda B
-                var planeB = TgcParserUtils.float4ArrayToPlane(portalData.planeB);
+                var planeB = TGCPlane.Float4ArrayToPlane(portalData.planeB);
 
                 //Crear conexion B
                 var connectionB = new TgcPortalRenderingConnection(portal, cellA, polygonB, planeB);

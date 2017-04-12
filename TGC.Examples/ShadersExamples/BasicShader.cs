@@ -3,6 +3,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
@@ -44,8 +45,8 @@ namespace TGC.Examples.ShadersExamples
                 loader.loadSceneFromFile(MediaDir +
                                          "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml");
             mesh = scene.Meshes[0];
-            mesh.Scale = new Vector3(0.5f, 0.5f, 0.5f);
-            mesh.Position = new Vector3(0f, 0f, 0f);
+            mesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
+            mesh.Position = new TGCVector3(0f, 0f, 0f);
 
             //Cargar Shader personalizado
             effect = TgcShaders.loadEffect(ShadersDir + "WorkshopShaders\\BasicShader.fx");

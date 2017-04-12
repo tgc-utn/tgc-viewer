@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Examples.Engine2D.Spaceship.Core;
 
 namespace TGC.Examples.Engine2D.Spaceship
@@ -17,7 +18,7 @@ namespace TGC.Examples.Engine2D.Spaceship
         private float angleToMousePointer;
 
         //La posicion del centro del sprite
-        private Vector2 centerPosition;
+        private TGCVector2 centerPosition;
 
         private int contadorAnimacion;
 
@@ -28,7 +29,7 @@ namespace TGC.Examples.Engine2D.Spaceship
         private float misilRateCounter;
 
         //La posicion de la nave.
-        public Vector2 Position;
+        public TGCVector2 Position;
 
         //El factor de escalado.
         private float size;
@@ -37,12 +38,12 @@ namespace TGC.Examples.Engine2D.Spaceship
         private CustomBitmap spaceshipBitmap;
 
         //La velocidad de la nave.
-        private Vector2 speed;
+        private TGCVector2 speed;
 
         //Los distintos sprites de animacion.
         private List<CustomSprite> sprites;
 
-        public Vector2 spriteSize;
+        public TGCVector2 spriteSize;
 
         //El estado de la nave.
         private StateEnum state;
@@ -56,7 +57,7 @@ namespace TGC.Examples.Engine2D.Spaceship
 
             sprites = new List<CustomSprite>();
 
-            spriteSize = new Vector2(41, 44);
+            spriteSize = new TGCVector2(41, 44);
             size = 2.0f;
 
             CustomSprite newSprite;
@@ -65,15 +66,15 @@ namespace TGC.Examples.Engine2D.Spaceship
                 newSprite = new CustomSprite();
                 newSprite.Bitmap = spaceshipBitmap;
                 newSprite.SrcRect = new Rectangle(i * (int)spriteSize.X, 0, (int)spriteSize.X, (int)spriteSize.Y);
-                newSprite.Scaling = new Vector2(size, size);
+                newSprite.Scaling = new TGCVector2(size, size);
                 sprites.Add(newSprite);
             }
 
             currentSprite = 0;
             state = StateEnum.Idle;
 
-            Position = new Vector2(100, 100);
-            speed = new Vector2(0, 0);
+            Position = new TGCVector2(100, 100);
+            speed = TGCVector2.Zero;
 
             angleToMousePointer = 0;
 
@@ -166,10 +167,10 @@ namespace TGC.Examples.Engine2D.Spaceship
             const float deacceleration = 300.0f;
             //const float Epsilon = 0.2f;
 
-            var spriteMouseVector = new Vector2();
-            var mouseVector = new Vector2(Input.Xpos, Input.Ypos);
-            spriteMouseVector = Vector2.Subtract(mouseVector,
-                Position + new Vector2(spriteSize.X / 2 * size, spriteSize.Y / 2 * size));
+            var spriteMouseVector = new TGCVector2();
+            var mouseVector = new TGCVector2(Input.Xpos, Input.Ypos);
+            spriteMouseVector = TGCVector2.Subtract(mouseVector,
+                Position + new TGCVector2(spriteSize.X / 2 * size, spriteSize.Y / 2 * size));
 
             if (spriteMouseVector.Length() > 10f)
                 angleToMousePointer = (float)Math.Atan2(spriteMouseVector.Y, spriteMouseVector.X);
@@ -206,7 +207,7 @@ namespace TGC.Examples.Engine2D.Spaceship
             sprites[currentSprite].Position = Position;
             sprites[currentSprite].Rotation = angle;
 
-            sprites[currentSprite].RotationCenter = new Vector2(spriteSize.X / 2 * size, spriteSize.Y / 2 * size);
+            sprites[currentSprite].RotationCenter = new TGCVector2(spriteSize.X / 2 * size, spriteSize.Y / 2 * size);
 
             misilRateCounter += elapsedTime;
 

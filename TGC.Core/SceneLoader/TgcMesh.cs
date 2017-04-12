@@ -6,6 +6,7 @@ using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
@@ -69,15 +70,15 @@ namespace TGC.Core.SceneLoader
 
         protected MeshRenderType renderType;
 
-        protected Vector3 rotation;
+        protected TGCVector3 rotation;
 
-        protected Vector3 scale;
+        protected TGCVector3 scale;
 
         protected string technique;
 
-        protected Matrix transform;
+        protected TGCMatrix transform;
 
-        protected Vector3 translation;
+        protected TGCVector3 translation;
 
         protected VertexDeclaration vertexDeclaration;
 
@@ -109,7 +110,7 @@ namespace TGC.Core.SceneLoader
         /// <param name="rotation">Rotación respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
         [Obsolete]
-        public TgcMesh(string name, TgcMesh parentInstance, Vector3 translation, Vector3 rotation, Vector3 scale)
+        public TgcMesh(string name, TgcMesh parentInstance, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
         {
             //Cargar datos en base al original
             initData(parentInstance.d3dMesh, name, parentInstance.renderType);
@@ -455,7 +456,7 @@ namespace TGC.Core.SceneLoader
         ///     en base a los valores de: Position, Rotation, Scale.
         ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
-        public Matrix Transform
+        public TGCMatrix Transform
         {
             get { return transform; }
             set { transform = value; }
@@ -476,7 +477,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Posicion absoluta de la Malla
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return translation; }
             set
@@ -489,7 +490,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Rotación absoluta de la malla
         /// </summary>
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
@@ -498,7 +499,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Escalado absoluto de la malla;
         /// </summary>
-        public Vector3 Scale
+        public TGCVector3 Scale
         {
             get { return scale; }
             set
@@ -511,7 +512,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(Vector3 v)
+        public void move(TGCVector3 v)
         {
             move(v.X, v.Y, v.Z);
         }
@@ -546,7 +547,7 @@ namespace TGC.Core.SceneLoader
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
+        public void getPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -595,10 +596,10 @@ namespace TGC.Core.SceneLoader
 
             AutoTransformEnable = false;
             AutoUpdateBoundingBox = true;
-            translation = new Vector3(0f, 0f, 0f);
-            rotation = new Vector3(0f, 0f, 0f);
-            scale = new Vector3(1f, 1f, 1f);
-            transform = Matrix.Identity;
+            translation = new TGCVector3(0f, 0f, 0f);
+            rotation = new TGCVector3(0f, 0f, 0f);
+            scale = new TGCVector3(1f, 1f, 1f);
+            transform = TGCMatrix.Identity;
 
             //Shader
             vertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
@@ -619,9 +620,9 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         public void UpdateMeshTransform()
         {
-            transform = Matrix.Scaling(scale)
-                            * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            * Matrix.Translation(translation);            
+            transform = TGCMatrix.Scaling(scale)
+                            * TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
+                            * TGCMatrix.Translation(translation);            
         }
 
         /// <summary>
@@ -649,15 +650,15 @@ namespace TGC.Core.SceneLoader
         ///     Devuelve un array con todas las posiciones de los vértices de la malla
         /// </summary>
         /// <returns>Array creado</returns>
-        public Vector3[] getVertexPositions()
+        public TGCVector3[] getVertexPositions()
         {
-            Vector3[] points = null;
+            TGCVector3[] points = null;
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
                     var verts1 = (TgcSceneLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts1.Length];
+                    points = new TGCVector3[verts1.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts1[i].Position;
@@ -668,7 +669,7 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP:
                     var verts2 = (TgcSceneLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts2.Length];
+                    points = new TGCVector3[verts2.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts2[i].Position;
@@ -679,7 +680,7 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                     var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts3.Length];
+                    points = new TGCVector3[verts3.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts3[i].Position;
@@ -695,9 +696,9 @@ namespace TGC.Core.SceneLoader
         ///     Solo puede hacerse para meshes del tipo DIFFUSE_MAP y DIFFUSE_MAP_AND_LIGHTMAP.
         /// </summary>
         /// <returns>Array creado</returns>
-        public Vector2[] getTextureCoordinates()
+        public TGCVector2[] getTextureCoordinates()
         {
-            Vector2[] uvCoords = null;
+            TGCVector2[] uvCoords = null;
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
@@ -706,10 +707,10 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP:
                     var verts2 = (TgcSceneLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    uvCoords = new Vector2[verts2.Length];
+                    uvCoords = new TGCVector2[verts2.Length];
                     for (var i = 0; i < uvCoords.Length; i++)
                     {
-                        uvCoords[i] = new Vector2(verts2[i].Tu, verts2[i].Tv);
+                        uvCoords[i] = new TGCVector2(verts2[i].Tu, verts2[i].Tv);
                     }
                     d3dMesh.UnlockVertexBuffer();
                     break;
@@ -717,10 +718,10 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                     var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    uvCoords = new Vector2[verts3.Length];
+                    uvCoords = new TGCVector2[verts3.Length];
                     for (var i = 0; i < uvCoords.Length; i++)
                     {
-                        uvCoords[i] = new Vector2(verts3[i].Tu0, verts3[i].Tv0);
+                        uvCoords[i] = new TGCVector2(verts3[i].Tu0, verts3[i].Tv0);
                     }
                     d3dMesh.UnlockVertexBuffer();
                     break;
@@ -906,7 +907,7 @@ namespace TGC.Core.SceneLoader
         /// <param name="translation">Traslación respecto de la malla original</param>
         /// <param name="rotation">Rotación respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcMesh createMeshInstance(string name, Vector3 translation, Vector3 rotation, Vector3 scale)
+        public TgcMesh createMeshInstance(string name, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
         {
             if (parentInstance != null)
             {
@@ -933,7 +934,7 @@ namespace TGC.Core.SceneLoader
         /// <param name="name">Nombre de la malla</param>
         public TgcMesh createMeshInstance(string name)
         {
-            return createMeshInstance(name, Vector3.Empty, Vector3.Empty, new Vector3(1, 1, 1));
+            return createMeshInstance(name, TGCVector3.Empty, TGCVector3.Empty, TGCVector3.One);
         }
 
         public override string ToString()

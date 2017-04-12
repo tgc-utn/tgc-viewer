@@ -6,6 +6,7 @@ using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
@@ -51,28 +52,28 @@ namespace TGC.Examples.Collision
         {
             //Crear piso
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
-            piso = new TgcPlane(new Vector3(-500, -60, -500), new Vector3(1000, 0, 1000), TgcPlane.Orientations.XZplane, pisoTexture);
+            piso = new TgcPlane(new TGCVector3(-500, -60, -500), new TGCVector3(1000, 0, 1000), TgcPlane.Orientations.XZplane, pisoTexture);
 
             //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
             obstaculos = new List<TgcBox>();
             TgcBox obstaculo;
 
             //Obstaculo 1
-            obstaculo = TgcBox.fromSize(new Vector3(-100, 0, 0), new Vector3(80, 150, 80),
+            obstaculo = TgcBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
-            obstaculo = TgcBox.fromSize(new Vector3(50, 0, 200), new Vector3(80, 300, 80),
+            obstaculo = TgcBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
-            obstaculo = TgcBox.fromSize(new Vector3(300, 0, 100), new Vector3(80, 100, 150),
+            obstaculo = TgcBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             obstaculo.AutoTransformEnable = true;
@@ -103,8 +104,8 @@ namespace TGC.Examples.Collision
             personaje.AutoTransformEnable = true;
 
             //Escalarlo porque es muy grande            
-            personaje.Position = new Vector3(0, -45, 0);
-            personaje.Scale = new Vector3(0.75f, 0.75f, 0.75f);
+            personaje.Position = new TGCVector3(0, -45, 0);
+            personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.rotateY(Geometry.DegreeToRadian(180f));
 
@@ -223,7 +224,7 @@ namespace TGC.Examples.Collision
                         //Para todos los casos podemos deducir que la normal del plano cancela el movimiento en dicho plano.
                         //Esto quiere decir que podemos cancelar el movimiento en el plano y movernos en el otros.
                         var t = "";
-                        var rs = Vector3.Empty;
+                        var rs = TGCVector3.Empty;
                         if (((personaje.BoundingBox.PMax.X > collider.BoundingBox.PMax.X && movementRay.X > 0) ||
                             (personaje.BoundingBox.PMin.X < collider.BoundingBox.PMin.X && movementRay.X < 0)) &&
                             ((personaje.BoundingBox.PMax.Z > collider.BoundingBox.PMax.Z && movementRay.Z > 0) ||
@@ -244,14 +245,14 @@ namespace TGC.Examples.Collision
                             {
                                 //El personaje esta contenido en el bounding X
                                 t += "\n Sliding Z Dentro de X";
-                                rs = new Vector3(movementRay.X, movementRay.Y, 0);
+                                rs = new TGCVector3(movementRay.X, movementRay.Y, 0);
                             }
                             if (personaje.Position.Z > collider.BoundingBox.PMin.Z &&
                                 personaje.Position.Z < collider.BoundingBox.PMax.Z)
                             {
                                 //El personaje esta contenido en el bounding Z
                                 t += "\n Sliding X Dentro de Z";
-                                rs = new Vector3(0, movementRay.Y, movementRay.Z);
+                                rs = new TGCVector3(0, movementRay.Y, movementRay.Z);
                             }
 
                             //Seria ideal sacar el punto mas proximo al bounding que colisiona y chequear con eso, en ves que con la posicion.
@@ -263,13 +264,13 @@ namespace TGC.Examples.Collision
                                 (personaje.BoundingBox.PMin.X < collider.BoundingBox.PMin.X && movementRay.X < 0))
                             {
                                 t += "Sliding X";
-                                rs = new Vector3(0, movementRay.Y, movementRay.Z);
+                                rs = new TGCVector3(0, movementRay.Y, movementRay.Z);
                             }
                             if ((personaje.BoundingBox.PMax.Z > collider.BoundingBox.PMax.Z && movementRay.Z > 0) ||
                                 (personaje.BoundingBox.PMin.Z < collider.BoundingBox.PMin.Z && movementRay.Z < 0))
                             {
                                 t += "Sliding Z";
-                                rs = new Vector3(movementRay.X, movementRay.Y, 0);
+                                rs = new TGCVector3(movementRay.X, movementRay.Y, 0);
                             }
                         }
                         text = t;
