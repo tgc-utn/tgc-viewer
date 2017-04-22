@@ -109,7 +109,7 @@ namespace TGC.Examples.ShadersExamples
         public void renderScene(string technique)
         {
             mesh.Technique = technique;
-            mesh.render();
+            mesh.Render();
         }
 
         public override void Render()
@@ -182,7 +182,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
 
             g_pRenderTarget.Dispose();
             g_pDepthStencil.Dispose();

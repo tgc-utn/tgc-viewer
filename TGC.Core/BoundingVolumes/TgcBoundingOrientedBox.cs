@@ -112,7 +112,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Renderizar
         /// </summary>
-        public void render()
+        public void Render()
         {
             TexturesManager.Instance.clear(0);
             TexturesManager.Instance.clear(1);
@@ -146,7 +146,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Libera los recursos del objeto
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             vertices = null;
         }

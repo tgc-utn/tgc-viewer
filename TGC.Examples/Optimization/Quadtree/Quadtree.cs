@@ -69,7 +69,7 @@ namespace TGC.Examples.Optimization.Quadtree
             {
                 if (mesh.Enabled)
                 {
-                    mesh.render();
+                    mesh.Render();
                     mesh.Enabled = false;
                 }
             }
@@ -78,7 +78,7 @@ namespace TGC.Examples.Optimization.Quadtree
             {
                 foreach (var debugBox in debugQuadtreeBoxes)
                 {
-                    debugBox.render();
+                    debugBox.Render();
                 }
             }
         }

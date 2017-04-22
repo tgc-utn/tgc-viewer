@@ -84,8 +84,8 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("lightPosition", lightPos);
             mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
 
-            mesh.rotateY(-ElapsedTime / 2);
-            mesh.render();
+            mesh.RotateY(-ElapsedTime / 2);
+            mesh.Render();
 
             textHelp.render();
 
@@ -100,7 +100,7 @@ namespace TGC.Examples.Others
 
         public override void Dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
             textHelp.Dispose();
             helpForm.Dispose();
         }

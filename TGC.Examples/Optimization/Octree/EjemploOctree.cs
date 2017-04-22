@@ -83,10 +83,10 @@ namespace TGC.Examples.Optimization.Octree
             var showOctree = (bool)Modifiers["showOctree"];
             var showTerrain = (bool)Modifiers["showTerrain"];
 
-            skyBox.render();
+            skyBox.Render();
             if (showTerrain)
             {
-                terreno.render();
+                terreno.Render();
             }
             octree.render(Frustum, showOctree);
 
@@ -95,11 +95,11 @@ namespace TGC.Examples.Optimization.Octree
 
         public override void Dispose()
         {
-            skyBox.dispose();
-            terreno.dispose();
+            skyBox.Dispose();
+            terreno.Dispose();
             foreach (var mesh in objetosIsla)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
         }
     }

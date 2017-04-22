@@ -200,7 +200,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Renderizar la pared
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!Enabled)
                 return;
@@ -226,7 +226,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Liberar recursos de la pared
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             Texture.dispose();
         }

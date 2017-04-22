@@ -150,21 +150,21 @@ namespace TGC.Examples.Collision
 
             //FIX IT SOLO CON COLISION.
             if (selecting)
-                selectionBox.BoundingBox.render();
+                selectionBox.BoundingBox.Render();
 
             //Render
-            suelo.render();
+            suelo.Render();
             foreach (var mesh in modelos)
             {
                 mesh.Transform =
                 TGCMatrix.Scaling(mesh.Scale) * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z) * TGCMatrix.Translation(mesh.Position);
-                mesh.render();
+                mesh.Render();
             }
 
             //Renderizar BB de los modelos seleccionados
             foreach (var mesh in modelosSeleccionados)
             {
-                mesh.BoundingBox.render();
+                mesh.BoundingBox.Render();
             }
 
             PostRender();
@@ -172,12 +172,12 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            suelo.dispose();
+            suelo.Dispose();
             foreach (var mesh in modelos)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
-            selectionBox.dispose();
+            selectionBox.Dispose();
         }
     }
 }

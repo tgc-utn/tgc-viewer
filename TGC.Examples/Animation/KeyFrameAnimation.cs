@@ -132,7 +132,7 @@ namespace TGC.Examples.Animation
             var showBB = (bool)Modifiers["BoundingBox"];
             if (showBB)
             {
-                mesh.BoundingBox.render();
+                mesh.BoundingBox.Render();
             }
 
             PostRender();
@@ -140,7 +140,7 @@ namespace TGC.Examples.Animation
 
         public override void Dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
         }
     }
 }

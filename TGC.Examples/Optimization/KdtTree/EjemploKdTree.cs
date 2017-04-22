@@ -84,10 +84,10 @@ namespace TGC.Examples.Optimization.KdtTree
             var showKdTree = (bool)Modifiers["showKdTree"];
             var showTerrain = (bool)Modifiers["showTerrain"];
 
-            skyBox.render();
+            skyBox.Render();
             if (showTerrain)
             {
-                terreno.render();
+                terreno.Render();
             }
             kdtree.render(Frustum, showKdTree);
 
@@ -96,11 +96,11 @@ namespace TGC.Examples.Optimization.KdtTree
 
         public override void Dispose()
         {
-            skyBox.dispose();
-            terreno.dispose();
+            skyBox.Dispose();
+            terreno.Dispose();
             foreach (var mesh in objetosIsla)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
         }
     }

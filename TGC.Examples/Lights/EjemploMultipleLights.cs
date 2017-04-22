@@ -190,7 +190,7 @@ namespace TGC.Examples.Lights
                 }
 
                 //Renderizar modelo
-                mesh.render();
+                mesh.Render();
             }
             PostRender();
         }

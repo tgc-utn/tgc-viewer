@@ -91,7 +91,7 @@ namespace TGC.Examples.Collision
             //Escalarlo porque es muy grande
             personaje.Position = new TGCVector3(0, 500, -100);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.rotateY(Geometry.DegreeToRadian(180f));
+            personaje.RotateY(Geometry.DegreeToRadian(180f));
             //Escalamos el personaje ya que sino la escalera es demaciado grande.
             personaje.Scale = new TGCVector3(1.5f, 1.5f, 1.5f);
             //BoundingSphere que va a usar el personaje
@@ -208,7 +208,7 @@ namespace TGC.Examples.Collision
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.rotateY(rotAngle);
+                personaje.RotateY(rotAngle);
                 camaraInterna.rotateY(rotAngle);
             }
 
@@ -241,7 +241,7 @@ namespace TGC.Examples.Collision
 
             //Mover personaje con detección de colisiones, sliding y gravedad
             var realMovement = collisionManager.moveCharacter(characterSphere, movementVector, objetosColisionables);
-            personaje.move(realMovement);
+            personaje.Move(realMovement);
 
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = personaje.Position;
@@ -283,31 +283,31 @@ namespace TGC.Examples.Collision
             //Render mallas que no se interponen
             foreach (var mesh in objectsInFront)
             {
-                mesh.render();
+                mesh.Render();
                 if (showBB)
                 {
-                    mesh.BoundingBox.render();
+                    mesh.BoundingBox.Render();
                 }
             }
 
             //Para las mallas que se interponen a la cámara, solo renderizar su BoundingBox
             foreach (var mesh in objectsBehind)
             {
-                mesh.BoundingBox.render();
+                mesh.BoundingBox.Render();
             }
 
             //Render personaje
             personaje.animateAndRender(ElapsedTime);
             if (showBB)
             {
-                characterSphere.render();
+                characterSphere.Render();
             }
 
             //Render linea
-            directionArrow.render();
+            directionArrow.Render();
 
             //Render SkyBox
-            skyBox.render();
+            skyBox.Render();
 
             PostRender();
         }
@@ -315,8 +315,8 @@ namespace TGC.Examples.Collision
         public override void Dispose()
         {
             escenario.disposeAll();
-            personaje.dispose();
-            skyBox.dispose();
+            personaje.Dispose();
+            skyBox.Dispose();
         }
     }
 }

@@ -67,7 +67,7 @@ namespace TGC.Examples.MeshExamples
 
         public override void Dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
         }
     }
 
@@ -107,7 +107,7 @@ namespace TGC.Examples.MeshExamples
             D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
 
             //Llamamos al metodo original del padre
-            base.render();
+            base.Render();
 
             //Restrablecemos modo solido
             D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;            

@@ -105,9 +105,9 @@ namespace TGC.Examples.MeshExamples
         {
             for (var i = 0; i < cajasNivel1.Length; i++)
             {
-                cajasNivel1[i].render();
-                cajasNivel2[i].render();
-                cajasNivel3[i].render();
+                cajasNivel1[i].Render();
+                cajasNivel2[i].Render();
+                cajasNivel3[i].Render();
             }
         }
 
@@ -118,15 +118,15 @@ namespace TGC.Examples.MeshExamples
         {
             for (var i = 0; i < cajasNivel1.Length; i++)
             {
-                cajasNivel1[i].render();
+                cajasNivel1[i].Render();
             }
             for (var i = 0; i < cajasNivel2.Length; i++)
             {
-                cajasNivel2[i].render();
+                cajasNivel2[i].Render();
             }
             for (var i = 0; i < cajasNivel3.Length; i++)
             {
-                cajasNivel3[i].render();
+                cajasNivel3[i].Render();
             }
         }
 
@@ -160,7 +160,7 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var box in cajasNivel1)
                 {
-                    box.dispose();
+                    box.Dispose();
                 }
                 cajasNivel1 = null;
             }
@@ -168,7 +168,7 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var box in cajasNivel2)
                 {
-                    box.dispose();
+                    box.Dispose();
                 }
                 cajasNivel2 = null;
             }
@@ -176,7 +176,7 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var box in cajasNivel3)
                 {
-                    box.dispose();
+                    box.Dispose();
                 }
                 cajasNivel3 = null;
             }

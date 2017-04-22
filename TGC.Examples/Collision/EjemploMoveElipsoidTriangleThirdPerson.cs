@@ -88,7 +88,7 @@ namespace TGC.Examples.Collision
             //Escalarlo porque es muy grande
             personaje.Position = new TGCVector3(0, 1000, -150);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.rotateY(Geometry.DegreeToRadian(180f));
+            personaje.RotateY(Geometry.DegreeToRadian(180f));
             //escalamos un poco el personaje.
             personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
             //BoundingSphere que va a usar el personaje
@@ -232,7 +232,7 @@ namespace TGC.Examples.Collision
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.rotateY(rotAngle);
+                personaje.RotateY(rotAngle);
                 camaraInterna.rotateY(rotAngle);
             }
 
@@ -300,14 +300,14 @@ namespace TGC.Examples.Collision
                 //del personaje a la posición deseada. Retorna la verdadera posicion (realMovement) a la que se pudo mover
                 var realMovement = collisionManager.moveCharacter(characterElipsoid, movementVector,
                     objetosColisionables);
-                personaje.move(realMovement);
+                personaje.Move(realMovement);
 
                 //Cargar desplazamiento realizar en UserVar
                 UserVars.setValue("Movement", TGCVector3.PrintVector3(realMovement));
             }
             else
             {
-                personaje.move(movementVector);
+                personaje.Move(movementVector);
             }
 
             /*
@@ -352,30 +352,30 @@ namespace TGC.Examples.Collision
 
             if (collisionManager.Result.collisionFound)
             {
-                collisionNormalArrow.render();
+                collisionNormalArrow.Render();
                 collisionPoint.Transform = TGCMatrix.RotationYawPitchRoll(collisionPoint.Rotation.Y, collisionPoint.Rotation.X, collisionPoint.Rotation.Z) *
                             TGCMatrix.Translation(collisionPoint.Position);
-                collisionPoint.render();
+                collisionPoint.Render();
             }
 
             //Render de mallas
             foreach (var mesh in escenario.Meshes)
             {
-                mesh.render();
+                mesh.Render();
             }
 
             //Render personaje
             personaje.animateAndRender(ElapsedTime);
             if (showBB)
             {
-                characterElipsoid.render();
+                characterElipsoid.Render();
             }
 
             //Render linea
-            directionArrow.render();
+            directionArrow.Render();
 
             //Render SkyBox
-            skyBox.render();
+            skyBox.Render();
 
             PostRender();
         }
@@ -383,11 +383,11 @@ namespace TGC.Examples.Collision
         public override void Dispose()
         {
             escenario.disposeAll();
-            personaje.dispose();
-            skyBox.dispose();
-            collisionNormalArrow.dispose();
-            directionArrow.dispose();
-            characterElipsoid.dispose();
+            personaje.Dispose();
+            skyBox.Dispose();
+            collisionNormalArrow.Dispose();
+            directionArrow.Dispose();
+            characterElipsoid.Dispose();
         }
     }
 }

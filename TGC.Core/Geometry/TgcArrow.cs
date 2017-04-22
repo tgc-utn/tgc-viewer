@@ -122,7 +122,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Renderizar la flecha
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!Enabled)
                 return;
@@ -146,7 +146,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Liberar recursos de la flecha
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (vertexBuffer != null && !vertexBuffer.Disposed)
             {

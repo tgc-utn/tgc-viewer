@@ -90,16 +90,16 @@ namespace TGC.Examples.GeometryBasics
             cylinder.updateValues();
 
             if ((bool)modifiers.getValue("boundingCylinder"))
-                cylinder.BoundingCylinder.render();
+                cylinder.BoundingCylinder.Render();
             else
-                cylinder.render();
+                cylinder.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            cylinder.dispose();
+            cylinder.Dispose();
         }
     }
 }

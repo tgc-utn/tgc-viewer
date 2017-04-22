@@ -86,14 +86,14 @@ namespace TGC.Examples.ShadersExamples
             mesh.Effect.SetValue("random", (float)r.NextDouble());
             mesh.Effect.SetValue("textureOffset", (float)Modifiers["textureOffset"]);
 
-            mesh.render();
+            mesh.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
             mesh.Effect.Dispose();
         }
     }

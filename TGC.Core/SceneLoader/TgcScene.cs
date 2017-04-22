@@ -78,14 +78,14 @@ namespace TGC.Core.SceneLoader
         {
             foreach (var mesh in Meshes)
             {
-                mesh.render();
+                mesh.Render();
             }
 
             if (showBoundingBox)
             {
                 foreach (var mesh in Meshes)
                 {
-                    mesh.BoundingBox.render();
+                    mesh.BoundingBox.Render();
                 }
             }
         }
@@ -97,7 +97,7 @@ namespace TGC.Core.SceneLoader
         {
             foreach (var mesh in Meshes)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
         }
 

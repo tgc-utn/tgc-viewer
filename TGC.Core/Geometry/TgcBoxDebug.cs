@@ -111,7 +111,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Renderizar la caja
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!Enabled)
                 return;
@@ -135,7 +135,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Liberar recursos de la línea
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (vertexBuffer != null && !vertexBuffer.Disposed)
             {

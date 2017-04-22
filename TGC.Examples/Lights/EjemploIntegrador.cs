@@ -123,7 +123,7 @@ namespace TGC.Examples.Lights
                     bumpMeshes.Add(bumpMesh);
 
                     //Liberar original
-                    mesh.dispose();
+                    mesh.Dispose();
                 }
                 //Mesh normal
                 else
@@ -216,7 +216,7 @@ namespace TGC.Examples.Lights
             foreach (var mesh in commonMeshes)
             {
                 mesh.UpdateMeshTransform();
-                mesh.render();
+                mesh.Render();
             }
 
             PostRender();
@@ -248,11 +248,11 @@ namespace TGC.Examples.Lights
             effect.Dispose();
             foreach (var m in bumpMeshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             foreach (var m in commonMeshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             cubeMap.Dispose();
         }

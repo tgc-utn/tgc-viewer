@@ -15,11 +15,11 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Renderiza el objeto
         /// </summary>
-        void render();
+        void Render();
 
         /// <summary>
         ///     Libera los recursos del objeto
         /// </summary>
-        void dispose();
+        void Dispose();
     }
 }

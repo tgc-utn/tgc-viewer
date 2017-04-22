@@ -151,7 +151,7 @@ namespace TGC.Core.BoundingVolumes
                 vertices[i] = new CustomVertex.PositionColored(draw[i], color);
         }
 
-        public void render()
+        public void Render()
         {
             //actualizamos los vertices de las tapas
             updateDraw();
@@ -160,7 +160,7 @@ namespace TGC.Core.BoundingVolumes
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length / 2, vertices);
         }
 
-        public void dispose()
+        public void Dispose()
         {
             vertices = null;
         }

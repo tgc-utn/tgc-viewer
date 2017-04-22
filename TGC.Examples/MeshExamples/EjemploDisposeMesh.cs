@@ -48,7 +48,7 @@ namespace TGC.Examples.MeshExamples
                 {
                     var mesh = baseMesh.clone(i + " - " + j);
                     mesh.AutoTransformEnable = true;
-                    mesh.move(i * 100, 0, j * 100);
+                    mesh.Move(i * 100, 0, j * 100);
                     meshes.Add(mesh);
                     //Se agrega un callback function para informar cuando se realiza el dispose.
                     mesh.D3dMesh.Disposing += D3dMesh_Disposing;
@@ -61,7 +61,7 @@ namespace TGC.Examples.MeshExamples
             var box = TgcBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
             boxMesh = box.toMesh("box");
             //Liberamos la caja pero nos quedamos con el mesh.
-            box.dispose();
+            box.Dispose();
 
             //Creamos una esena
             var loader1 = new TgcSceneLoader();
@@ -115,14 +115,14 @@ namespace TGC.Examples.MeshExamples
                 //Render de todas las palmeras.
                 foreach (var m in meshes)
                 {
-                    m.render();
+                    m.Render();
                 }
 
                 //Render de una esena.
                 scene1.renderAll();
 
                 //Render de la caja.
-                boxMesh.render();
+                boxMesh.Render();
 
                 time += ElapsedTime;
             }
@@ -148,13 +148,13 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var m in meshes)
                 {
-                    m.dispose();
+                    m.Dispose();
                 }
                 meshes.Clear();
 
                 scene1.disposeAll();
 
-                boxMesh.dispose();
+                boxMesh.Dispose();
             }
         }
     }

@@ -143,7 +143,7 @@ namespace TGC.Examples.ShadersExamples
             //Dibujamos todos los meshes del escenario
             foreach (var m in meshes)
             {
-                m.render();
+                m.Render();
             }
             device.EndScene();
             //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
@@ -278,7 +278,7 @@ namespace TGC.Examples.ShadersExamples
         {
             foreach (var m in meshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             effect.Dispose();
             g_pRenderTarget.Dispose();

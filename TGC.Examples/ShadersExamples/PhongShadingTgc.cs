@@ -109,18 +109,18 @@ namespace TGC.Examples.ShadersExamples
 
             //No hace falta actualizar la matriz de transformacion ya que es un objeto estatico.
             //Renderizar modelo
-            mesh.render();
+            mesh.Render();
             lightMesh.UpdateMeshTransform();
             //Renderizar mesh de luz
-            lightMesh.render();
+            lightMesh.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            mesh.dispose();
-            lightMesh.dispose();
+            mesh.Dispose();
+            lightMesh.Dispose();
         }
     }
 }

@@ -111,7 +111,7 @@ namespace TGC.Examples.Engine2D
             PreRender();
 
             //Dibujar box3D. Se deben dibujar primero todos los objetos 3D. Recien al final dibujar los Sprites
-            box.render();
+            box.Render();
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
             drawer2D.BeginDrawSprite();
@@ -130,7 +130,7 @@ namespace TGC.Examples.Engine2D
         {
             sprite.Dispose();
             animatedSprite.Dispose();
-            box.dispose();
+            box.Dispose();
         }
     }
 }

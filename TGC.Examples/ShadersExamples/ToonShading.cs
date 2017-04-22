@@ -78,7 +78,7 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = -5; j < 5; j++)
                 {
                     var instance = mesh.createMeshInstance(mesh.Name + i);
-                    instance.move(i * 50, (i + j) * 5, j * 50);
+                    instance.Move(i * 50, (i + j) * 5, j * 50);
                     instances.Add(instance);
                 }
 
@@ -211,7 +211,7 @@ namespace TGC.Examples.ShadersExamples
             {
                 instance.Technique = "DefaultTechnique";
                 instance.UpdateMeshTransform();
-                instance.render();
+                instance.Render();
             }
             D3DDevice.Instance.Device.EndScene();
             //TextureLoader.Save("scene.bmp", ImageFileFormat.Bmp, g_pRenderTarget);
@@ -225,7 +225,7 @@ namespace TGC.Examples.ShadersExamples
             {
                 instance.Technique = "NormalMap";
                 instance.UpdateMeshTransform();
-                instance.render();
+                instance.Render();
             }
 
             D3DDevice.Instance.Device.EndScene();

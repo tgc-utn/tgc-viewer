@@ -48,7 +48,7 @@ namespace TGC.Examples.Tutorial
             mainMesh = scene2.Meshes[0];
 			mainMesh.AutoTransformEnable = true;
 			//Movemos el mesh un poco para arriba. Porque sino choca con el piso todo el tiempo y no se puede mover.
-			mainMesh.move(0, 5, 0);
+			mainMesh.Move(0, 5, 0);
 
             //Vamos a utilizar la camara en 3ra persona para que siga al objeto principal a medida que se mueve
             camaraInterna = new TgcThirdPersonCamera(mainMesh.Position, 200, 300);
@@ -92,7 +92,7 @@ namespace TGC.Examples.Tutorial
 
 			//Multiplicar movimiento por velocidad y elapsedTime
 			movement *= MOVEMENT_SPEED * ElapsedTime;
-			mainMesh.move(movement);
+			mainMesh.Move(movement);
 
 			//Chequear si el objeto principal en su nueva posición choca con alguno de los objetos de la escena.
 			//Si es así, entonces volvemos a la posición original.
@@ -136,17 +136,17 @@ namespace TGC.Examples.Tutorial
 
             //Dibujar objeto principal
             //Siempre primero hacer todos los calculos de logica e input y luego al final dibujar todo (ciclo update-render)
-            mainMesh.render();
+            mainMesh.Render();
 
             //Dibujamos la escena
             scene.renderAll();
 
 			//En este ejemplo a modo de debug vamos a dibujar los BoundingBox de todos los objetos.
 			//Asi puede verse como se efectúa el testeo de colisiones.
-			mainMesh.BoundingBox.render();
+			mainMesh.BoundingBox.Render();
 			foreach (var mesh in scene.Meshes)
 			{
-				mesh.BoundingBox.render();
+				mesh.BoundingBox.Render();
 			}
 
             PostRender();
@@ -155,7 +155,7 @@ namespace TGC.Examples.Tutorial
         public override void Dispose()
         {
             scene.disposeAll();
-            mainMesh.dispose();
+            mainMesh.Dispose();
         }
     }
 }

@@ -120,7 +120,7 @@ namespace TGC.Core.Geometry
             set { BoundingCylinder.Center = value; }
         }
 
-        public void render()
+        public void Render()
         {
             if (AlphaBlendEnable)
             {
@@ -151,11 +151,11 @@ namespace TGC.Core.Geometry
             D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
-        public void dispose()
+        public void Dispose()
         {
             if (texture != null) texture.dispose();
             sideTrianglesVertices = null;
-            BoundingCylinder.dispose();
+            BoundingCylinder.Dispose();
         }
 
         public bool AlphaBlendEnable { get; set; }
@@ -285,41 +285,41 @@ namespace TGC.Core.Geometry
             set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
         }
 
-        public void move(TGCVector3 v)
+        public void Move(TGCVector3 v)
         {
             BoundingCylinder.move(v);
         }
 
-        public void move(float x, float y, float z)
+        public void Move(float x, float y, float z)
         {
             BoundingCylinder.move(x, y, z);
         }
 
-        public void moveOrientedY(float movement)
+        public void MoveOrientedY(float movement)
         {
             var z = FastMath.Cos(Rotation.Y) * movement;
             var x = FastMath.Sin(Rotation.Y) * movement;
-            move(x, 0, z);
+            Move(x, 0, z);
         }
 
-        public void getPosition(TGCVector3 pos)
+        public void GetPosition(TGCVector3 pos)
         {
             pos.X = Position.X;
             pos.Y = Position.Y;
             pos.Z = Position.Z;
         }
 
-        public void rotateX(float angle)
+        public void RotateX(float angle)
         {
             BoundingCylinder.rotateX(angle);
         }
 
-        public void rotateY(float angle)
+        public void RotateY(float angle)
         {
             BoundingCylinder.rotateY(angle);
         }
 
-        public void rotateZ(float angle)
+        public void RotateZ(float angle)
         {
             BoundingCylinder.rotateZ(angle);
         }

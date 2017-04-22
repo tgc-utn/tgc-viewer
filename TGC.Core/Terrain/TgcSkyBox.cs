@@ -111,23 +111,23 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Render del SkyBox
         /// </summary>
-        public void render()
+        public void Render()
         {
             foreach (var face in Faces)
             {
                 face.Transform = TGCMatrix.Identity * Traslation;
-                face.render();
+                face.Render();
             }
         }
 
         /// <summary>
         ///     Liberar recursos del SkyBox
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             foreach (var face in Faces)
             {
-                face.dispose();
+                face.Dispose();
             }
         }
 

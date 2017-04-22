@@ -256,7 +256,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     llamado previamente al metodo updateAnimation()
         ///     Sino se renderiza la pose fija de la malla
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!Enabled)
                 return;
@@ -327,12 +327,12 @@ namespace TGC.Core.KeyFrameLoader
         /// <summary>
         ///     Libera los recursos de la malla
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             Enabled = false;
             if (boundingBox != null)
             {
-                boundingBox.dispose();
+                boundingBox.Dispose();
             }
 
             //dejar de utilizar originalData
@@ -348,7 +348,7 @@ namespace TGC.Core.KeyFrameLoader
             //hacer dispose de instancias
             foreach (var meshInstance in MeshInstances)
             {
-                meshInstance.dispose();
+                meshInstance.Dispose();
             }
             MeshInstances = null;
 
@@ -425,15 +425,15 @@ namespace TGC.Core.KeyFrameLoader
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(TGCVector3 v)
+        public void Move(TGCVector3 v)
         {
-            move(v.X, v.Y, v.Z);
+            Move(v.X, v.Y, v.Z);
         }
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(float x, float y, float z)
+        public void Move(float x, float y, float z)
         {
             translation.X += x;
             translation.Y += y;
@@ -447,12 +447,12 @@ namespace TGC.Core.KeyFrameLoader
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
-        public void moveOrientedY(float movement)
+        public void MoveOrientedY(float movement)
         {
             var z = (float)Math.Cos(rotation.Y) * movement;
             var x = (float)Math.Sin(rotation.Y) * movement;
 
-            move(x, 0, z);
+            Move(x, 0, z);
         }
 
         /// <summary>
@@ -460,7 +460,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(TGCVector3 pos)
+        public void GetPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -471,7 +471,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     Rota la malla respecto del eje X
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateX(float angle)
+        public void RotateX(float angle)
         {
             rotation.X += angle;
         }
@@ -480,7 +480,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     Rota la malla respecto del eje Y
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateY(float angle)
+        public void RotateY(float angle)
         {
             rotation.Y += angle;
         }
@@ -489,7 +489,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     Rota la malla respecto del eje Z
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateZ(float angle)
+        public void RotateZ(float angle)
         {
             rotation.Z += angle;
         }
@@ -838,7 +838,7 @@ namespace TGC.Core.KeyFrameLoader
                 return;
 
             updateAnimation(elapsedTime);
-            render();
+            Render();
         }
 
         /// <summary>

@@ -84,10 +84,10 @@ namespace TGC.Examples.Optimization.GrillaRegular
             var showGrid = (bool)Modifiers["showGrid"];
             var showTerrain = (bool)Modifiers["showTerrain"];
 
-            skyBox.render();
+            skyBox.Render();
             if (showTerrain)
             {
-                terreno.render();
+                terreno.Render();
             }
             grilla.render(Frustum, showGrid);
 
@@ -96,11 +96,11 @@ namespace TGC.Examples.Optimization.GrillaRegular
 
         public override void Dispose()
         {
-            skyBox.dispose();
-            terreno.dispose();
+            skyBox.Dispose();
+            terreno.Dispose();
             foreach (var mesh in objetosIsla)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
         }
     }

@@ -257,7 +257,7 @@ namespace TGC.Examples.ShadersExamples
                             pos.Y = 0;
                             arbol[j].Position = pos;
                             arbol[j].UpdateMeshTransform();
-                            arbol[j].render();
+                            arbol[j].Render();
                             K[j] *= -1;
                         }
                     }
@@ -423,7 +423,7 @@ namespace TGC.Examples.ShadersExamples
             }
 
             for (var i = 0; i < cant_arboles; ++i)
-                arbol[i].dispose();
+                arbol[i].Dispose();
         }
     }
 }

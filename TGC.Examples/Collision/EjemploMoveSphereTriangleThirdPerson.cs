@@ -92,7 +92,7 @@ namespace TGC.Examples.Collision
             //Escalarlo porque es muy grande
             personaje.Position = new TGCVector3(0, 2500, -150);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.rotateY(Geometry.DegreeToRadian(180f));
+            personaje.RotateY(Geometry.DegreeToRadian(180f));
             //escalamos el personaje porque es muy grande.
             personaje.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
 
@@ -236,7 +236,7 @@ namespace TGC.Examples.Collision
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.rotateY(rotAngle);
+                personaje.RotateY(rotAngle);
                 camaraInterna.rotateY(rotAngle);
             }
 
@@ -296,7 +296,7 @@ namespace TGC.Examples.Collision
             if ((bool)Modifiers["Collisions"])
             {
                 var realMovement = collisionManager.moveCharacter(characterSphere, movementVector, objetosColisionables);
-                personaje.move(realMovement);
+                personaje.Move(realMovement);
 
                 //Cargar desplazamiento realizar en UserVar
                 UserVars.setValue("Movement", TGCVector3.PrintVector3(realMovement));
@@ -304,7 +304,7 @@ namespace TGC.Examples.Collision
             }
             else
             {
-                personaje.move(movementVector);
+                personaje.Move(movementVector);
             }
 
             //Si estaba saltando y hubo colision de una superficie que mira hacia abajo, desactivar salto
@@ -332,7 +332,7 @@ namespace TGC.Examples.Collision
                 
 
                 collisionPoint.Position = collisionManager.LastCollisionPoint;
-                collisionPoint.render();
+                collisionPoint.Render();
             }
         }
 
@@ -345,28 +345,28 @@ namespace TGC.Examples.Collision
 
             if (collisionManager.Collision)
             {
-                collisionNormalArrow.render();
-                collisionPoint.render();
+                collisionNormalArrow.Render();
+                collisionPoint.Render();
             }
 
                 //Render de mallas
             foreach (var mesh in escenario.Meshes)
             {
-                mesh.render();
+                mesh.Render();
             }
 
             //Render personaje
             personaje.animateAndRender(ElapsedTime);
             if (showBB)
             {
-                characterSphere.render();
+                characterSphere.Render();
             }
 
             //Render linea
-            directionArrow.render();
+            directionArrow.Render();
 
             //Render SkyBox
-            skyBox.render();
+            skyBox.Render();
 
             PostRender();
         }
@@ -374,10 +374,10 @@ namespace TGC.Examples.Collision
         public override void Dispose()
         {
             escenario.disposeAll();
-            personaje.dispose();
-            skyBox.dispose();
-            collisionNormalArrow.dispose();
-            directionArrow.dispose();
+            personaje.Dispose();
+            skyBox.Dispose();
+            collisionNormalArrow.Dispose();
+            directionArrow.Dispose();
         }
     }
 }

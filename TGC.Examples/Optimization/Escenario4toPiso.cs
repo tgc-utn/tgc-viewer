@@ -94,7 +94,7 @@ namespace TGC.Examples.Optimization
                         var r = TgcCollisionUtils.classifyFrustumAABB(Frustum, mesh.BoundingBox);
                         if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
                         {
-                            mesh.render();
+                            mesh.Render();
                             totalMeshes++;
                         }
                     }

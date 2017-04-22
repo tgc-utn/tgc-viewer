@@ -111,7 +111,7 @@ namespace TGC.Examples.Particles
             //Render de emisor
             emitter.render(ElapsedTime);
 
-            box.render();
+            box.Render();
 
             PostRender();
         }
@@ -121,7 +121,7 @@ namespace TGC.Examples.Particles
             //Liberar recursos
             emitter.dispose();
 
-            box.dispose();
+            box.Dispose();
         }
     }
 }

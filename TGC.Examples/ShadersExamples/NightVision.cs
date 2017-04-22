@@ -215,8 +215,8 @@ namespace TGC.Examples.ShadersExamples
                     // escapando
                     case 1:
                         dir_escape.Normalize();
-                        m.rotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y + 3.1415f);
-                        m.move(dir_escape * (vel_bot * ElapsedTime));
+                        m.RotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y + 3.1415f);
+                        m.Move(dir_escape * (vel_bot * ElapsedTime));
                         var X = m.Position.X;
                         var Z = m.Position.Z;
                         if (X < -2000)
@@ -236,14 +236,14 @@ namespace TGC.Examples.ShadersExamples
                         dir_escape.Normalize();
                         if (Math.Abs(dir_escape.Z) > 0.01f)
                         {
-                            m.rotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y);
-                            m.move(dir_escape * (-60 * ElapsedTime));
+                            m.RotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y);
+                            m.Move(dir_escape * (-60 * ElapsedTime));
                         }
                         m.playAnimation("Run", true, 20);
                         break;
 
                     case 99:
-                        m.rotateZ(3.1415f * 0.5f - m.Rotation.Z);
+                        m.RotateZ(3.1415f * 0.5f - m.Rotation.Z);
                         m.playAnimation("StandBy", true);
                         break;
                 }
@@ -300,7 +300,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
             {
                 m.UpdateMeshTransform();//Transformacion default
-                m.render();
+                m.Render();
             }
 
             DrawText.drawText("Pos: " + Camara.Position, 5, 20, Color.Yellow);
@@ -330,7 +330,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
             {
                 m.UpdateMeshTransform();
-                m.render();
+                m.Render();
             }
 
             device.EndScene();
@@ -351,7 +351,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
             {
                 m.UpdateMeshTransform();
-                m.render();
+                m.Render();
             }
 
             if (Input.keyDown(Key.F))
@@ -366,7 +366,7 @@ namespace TGC.Examples.ShadersExamples
                         bala.Effect = effect;
                         bala.Technique = "DefaultTechnique";
                         bala.updateValues();
-                        bala.render();
+                        bala.Render();
                     }
 
             // El resto opacos
@@ -494,7 +494,7 @@ namespace TGC.Examples.ShadersExamples
                     pasto.Scale = new TGCVector3(3, 4 + rnd.Next(0, 4), 5);
                     pasto.UpdateMeshTransform();
                     //pasto.Transform = TGCMatrix.Identity*TGCMatrix.Scaling(3, 4 + rnd.Next(0, 4), 5) * TGCMatrix.Translation(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
-                    pasto.render();
+                    pasto.Render();
                 }
 
             arbusto.Effect = effect;
@@ -505,7 +505,7 @@ namespace TGC.Examples.ShadersExamples
                     arbusto.Position = new TGCVector3(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
                     //arbusto.Transform = TGCMatrix.Identity*TGCMatrix.Translation(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
                     arbusto.UpdateMeshTransform();
-                    arbusto.render();
+                    arbusto.Render();
                 }
 
             arbol.Effect = effect;
@@ -516,7 +516,7 @@ namespace TGC.Examples.ShadersExamples
                     arbol.Position = new TGCVector3(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
                     //arbol.Transform = TGCMatrix.Identity*TGCMatrix.Translation(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
                     arbol.UpdateMeshTransform();
-                    arbol.render();
+                    arbol.Render();
                 }
         }
 
@@ -524,12 +524,12 @@ namespace TGC.Examples.ShadersExamples
         {
             foreach (var m in meshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             effect.Dispose();
-            pasto.dispose();
-            arbol.dispose();
-            arbusto.dispose();
+            pasto.Dispose();
+            arbol.Dispose();
+            arbusto.Dispose();
             g_pRenderTarget.Dispose();
             g_pGlowMap.Dispose();
             g_pRenderTarget4Aux.Dispose();
@@ -537,7 +537,7 @@ namespace TGC.Examples.ShadersExamples
             g_pVBV3D.Dispose();
             g_pDepthStencil.Dispose();
             foreach (var m in enemigos)
-                m.dispose();
+                m.Dispose();
         }
     }
 }

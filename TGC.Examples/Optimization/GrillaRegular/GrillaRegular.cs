@@ -137,7 +137,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
             {
                 if (mesh.Enabled)
                 {
-                    mesh.render();
+                    mesh.Render();
                     mesh.Enabled = false;
                 }
             }
@@ -146,7 +146,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
             {
                 foreach (var debugBox in debugBoxes)
                 {
-                    debugBox.render();
+                    debugBox.Render();
                 }
             }
         }

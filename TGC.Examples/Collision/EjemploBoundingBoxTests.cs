@@ -157,7 +157,7 @@ namespace TGC.Examples.Collision
             if (moving)
             {
                 //Aplicar movimiento, internamente suma valores a la posicion actual del mesh.
-                mesh.move(movement);
+                mesh.Move(movement);
             }
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = mesh.Position;
@@ -217,30 +217,30 @@ namespace TGC.Examples.Collision
                 TGCMatrix.Scaling(mesh.Scale)
                             * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
                             * TGCMatrix.Translation(mesh.Position);
-            mesh.render();
+            mesh.Render();
             //Actualmente los bounding box se actualizan solos en momento de hacer render, esto no es recomendado ya que trae overhead
             //Igualmente aqui podemos tener un objeto debug de nuestro mesh.
-            mesh.BoundingBox.render();
+            mesh.BoundingBox.Render();
 
             box2.Transform =
                 TGCMatrix.Scaling(box2.Scale)
                             * TGCMatrix.RotationYawPitchRoll(box2.Rotation.Y, box2.Rotation.X, box2.Rotation.Z)
                             * TGCMatrix.Translation(box2.Position);
-            box2.render();
+            box2.Render();
                         
             //Los bounding volume por la forma actual de framework no realizan transformaciones entonces podemos hacer esto:
             //D3DDevice.Instance.Device.Transform.World =
             //    TGCMatrix.Scaling(new TGCVector3(sphere.Radius, sphere.Radius, sphere.Radius))
             //                * TGCMatrix.Identity //No tienen sentido las rotaciones con la esfera.
             //                * TGCMatrix.Translation(sphere.Position);
-            boundingSphere.render();
+            boundingSphere.Render();
            
             //Las mesh por defecto tienen el metodo UpdateMeshTransform que realiza el set por defecto.
             //Esto es igual que utilizar AutoTransform en true, con lo cual no es recomendado para casos complejos.
             meshObb.UpdateMeshTransform();
-            meshObb.render();
+            meshObb.Render();
             //La implementacion de Obb por el momento reconstruye el obb debug siempre. Practica no recomendada.
-            obb.render();
+            obb.Render();
 
             //triangulo
             D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
@@ -252,11 +252,11 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            mesh.dispose();
-            box2.dispose();
-            boundingSphere.dispose();
-            meshObb.dispose();
-            obb.dispose();
+            mesh.Dispose();
+            box2.Dispose();
+            boundingSphere.Dispose();
+            meshObb.Dispose();
+            obb.Dispose();
             triangle = null;
         }
     }

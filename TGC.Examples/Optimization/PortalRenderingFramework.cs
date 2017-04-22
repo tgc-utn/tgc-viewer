@@ -103,7 +103,7 @@ namespace TGC.Examples.Optimization
                 }
 
                 //Renderizar modelo y luego desactivarlo para el proximo cuadro
-                mesh.render();
+                mesh.Render();
                 mesh.Enabled = false;
             }
 
@@ -117,7 +117,7 @@ namespace TGC.Examples.Optimization
                 }
 
                 //Renderizar modelo y luego desactivarlo para el proximo cuadro
-                mesh.render();
+                mesh.Render();
                 mesh.Enabled = false;
             }
 

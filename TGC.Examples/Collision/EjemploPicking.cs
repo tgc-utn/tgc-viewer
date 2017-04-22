@@ -112,14 +112,14 @@ namespace TGC.Examples.Collision
             //Renderizar modelos
             foreach (var box in boxes)
             {
-                box.render();
+                box.Render();
             }
 
             //Renderizar BoundingBox del mesh seleccionado
             if (selected)
             {
                 //Render de AABB
-                selectedMesh.BoundingBox.render();
+                selectedMesh.BoundingBox.Render();
 
                 //Cargar punto de colision
                 UserVars.setValue("CollP-X:", collisionPoint.X);
@@ -128,7 +128,7 @@ namespace TGC.Examples.Collision
 
                 //Dibujar caja que representa el punto de colision
                 collisionPointMesh.Position = collisionPoint;
-                collisionPointMesh.render();
+                collisionPointMesh.Render();
             }
             else
             {
@@ -145,9 +145,9 @@ namespace TGC.Examples.Collision
         {
             foreach (var box in boxes)
             {
-                box.dispose();
+                box.Dispose();
             }
-            collisionPointMesh.dispose();
+            collisionPointMesh.Dispose();
         }
     }
 }

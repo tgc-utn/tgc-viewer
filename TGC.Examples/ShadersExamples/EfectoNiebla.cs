@@ -121,7 +121,7 @@ namespace TGC.Examples.PostProcess
                     mesh.Technique = "DIFFUSE_MAP";
                 }
 
-                mesh.render();
+                mesh.Render();
             }
 
             //skyBox.render();
@@ -139,7 +139,7 @@ namespace TGC.Examples.PostProcess
                     mesh.Technique = "DIFFUSE_MAP";
                 }
                 mesh.UpdateMeshTransform();
-                mesh.render();
+                mesh.Render();
             }
 
             RenderAxis();
@@ -150,7 +150,7 @@ namespace TGC.Examples.PostProcess
 
         public override void Dispose()
         {
-            skyBox.dispose();
+            skyBox.Dispose();
             scene.disposeAll();
         }
     }

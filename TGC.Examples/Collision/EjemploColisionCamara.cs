@@ -104,7 +104,7 @@ namespace TGC.Examples.Collision
             personaje.Position = new TGCVector3(100, 0, 100);
             personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.rotateY(Geometry.DegreeToRadian(180f));
+            personaje.RotateY(Geometry.DegreeToRadian(180f));
 
             //Configurar camara en Tercera Persona y la asigno al TGC.
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 200, -300);
@@ -161,7 +161,7 @@ namespace TGC.Examples.Collision
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.rotateY(rotAngle);
+                personaje.RotateY(rotAngle);
                 camaraInterna.rotateY(rotAngle);
             }
 
@@ -176,7 +176,7 @@ namespace TGC.Examples.Collision
 
                 //La velocidad de movimiento tiene que multiplicarse por el elapsedTime para hacerse independiente de la velocida de CPU
                 //Ver Unidad 2: Ciclo acoplado vs ciclo desacoplado
-                personaje.moveOrientedY(moveForward * ElapsedTime);
+                personaje.MoveOrientedY(moveForward * ElapsedTime);
 
                 //Detectar colisiones
                 var collide = false;
@@ -217,12 +217,12 @@ namespace TGC.Examples.Collision
             PreRender();
             
             //Render piso
-            piso.render();
+            piso.Render();
 
             //Render de obstaculos
             foreach (var obstaculo in obstaculos)
             {
-                obstaculo.render();
+                obstaculo.Render();
             }
 
             personaje.Transform = TGCMatrix.Scaling(personaje.Scale)
@@ -284,12 +284,12 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            piso.dispose();
+            piso.Dispose();
             foreach (var obstaculo in obstaculos)
             {
-                obstaculo.dispose();
+                obstaculo.Dispose();
             }
-            personaje.dispose();
+            personaje.Dispose();
         }
     }
 }

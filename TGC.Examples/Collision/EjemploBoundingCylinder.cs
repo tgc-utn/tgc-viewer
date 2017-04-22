@@ -74,7 +74,7 @@ namespace TGC.Examples.Collision
             var size = personaje.BoundingBox.PMax.Y - personaje.BoundingBox.PMin.Y;
             personaje.Position = new TGCVector3(0, -3f, 0);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.rotateY(FastMath.PI);
+            personaje.RotateY(FastMath.PI);
 
             //Objetos estaticos, pueden ser mesh o objetos simplificados.
             var loader = new TgcSceneLoader();
@@ -141,7 +141,7 @@ namespace TGC.Examples.Collision
                 //Aplicar movimiento
                 colliderCylinder.move(movement);
                 colliderCylinderFixedY.move(movement);
-                personaje.move(movement);
+                personaje.Move(movement);
 
                 //Activar animacion de caminando
                 personaje.playAnimation("Caminando", true);
@@ -229,9 +229,9 @@ namespace TGC.Examples.Collision
             //Bounding volumes.
             //Los bounding volumes realizan un update de los vertices en momento de render, por ello pueden ser mas lentos que utilizar transformadas.
             if ((bool)Modifiers["fixedY"])
-                colliderCylinderFixedY.render();
+                colliderCylinderFixedY.Render();
             else
-                colliderCylinder.render();
+                colliderCylinder.Render();
 
             //Render personaje
             personaje.Transform =
@@ -241,30 +241,30 @@ namespace TGC.Examples.Collision
             personaje.animateAndRender(ElapsedTime);
             if ((bool)Modifiers["showBoundingBox"])
             {
-                personaje.BoundingBox.render();
+                personaje.BoundingBox.Render();
             }
 
 
             //Render de objetos estaticos
-            collisionableSphere.render();
-            collisionableMeshAABB.BoundingBox.render();
-            collisionableCylinder.render();
+            collisionableSphere.Render();
+            collisionableMeshAABB.BoundingBox.Render();
+            collisionableCylinder.Render();
 
             //Dibujar todo mallas.
             //Una vez actualizadas las diferentes posiciones internas solo debemos asignar la matriz de world.
             collisionableMeshAABB.Transform = TGCMatrix.Scaling(collisionableMeshAABB.Scale) * TGCMatrix.Translation(collisionableMeshAABB.Position);
-            collisionableMeshAABB.render();
+            collisionableMeshAABB.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            colliderCylinder.dispose();
-            colliderCylinderFixedY.dispose();
-            collisionableSphere.dispose();
-            collisionableMeshAABB.dispose();
-            collisionableCylinder.dispose();
+            colliderCylinder.Dispose();
+            colliderCylinderFixedY.Dispose();
+            collisionableSphere.Dispose();
+            collisionableMeshAABB.Dispose();
+            collisionableCylinder.Dispose();
         }
     }
 }

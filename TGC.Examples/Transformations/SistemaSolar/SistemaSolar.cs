@@ -101,15 +101,15 @@ namespace TGC.Examples.Transformations.SistemaSolar
 
             //Actualizar transformacion y renderizar el sol
             sun.Transform = getSunTransform(ElapsedTime);
-            sun.render();
+            sun.Render();
 
             //Actualizar transformacion y renderizar la tierra
             earth.Transform = getEarthTransform(ElapsedTime);
-            earth.render();
+            earth.Render();
 
             //Actualizar transformacion y renderizar la luna
             moon.Transform = getMoonTransform(ElapsedTime, earth.Transform);
-            moon.render();
+            moon.Render();
 
             axisRotation += AXIS_ROTATION_SPEED * ElapsedTime;
             earthAxisRotation += EARTH_AXIS_ROTATION_SPEED * ElapsedTime;
@@ -152,9 +152,9 @@ namespace TGC.Examples.Transformations.SistemaSolar
 
         public override void Dispose()
         {
-            sun.dispose();
-            moon.dispose();
-            earth.dispose();
+            sun.Dispose();
+            moon.Dispose();
+            earth.Dispose();
         }
     }
 }

@@ -519,7 +519,7 @@ namespace TGC.Examples.ShadersExamples
                 effect.SetValue("canoa_x", x0 / 10.0f);
                 effect.SetValue("canoa_y", z0 / 10.0f);
                 piso.Technique = "RenderAgua";
-                piso.render();
+                piso.Render();
             }
 
             if (tipo_vista != 0)
@@ -536,17 +536,17 @@ namespace TGC.Examples.ShadersExamples
                 //Renderizar terreno
                 terrain.render();
                 //Renderizar SkyBox
-                skyBox.render();
+                skyBox.Render();
                 // dibujo el bosque
                 foreach (var instance in bosque)
                 {
                     instance.UpdateMeshTransform();
-                    instance.render();
+                    instance.Render();
                 }
                 // canoa
-                canoa.render();
+                canoa.Render();
                 // tanque
-                mesh.render();
+                mesh.Render();
                 // agua
                 var ant_src = D3DDevice.Instance.Device.RenderState.SourceBlend;
                 var ant_dest = D3DDevice.Instance.Device.RenderState.DestinationBlend;
@@ -554,7 +554,7 @@ namespace TGC.Examples.ShadersExamples
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
                 D3DDevice.Instance.Device.RenderState.SourceBlend = Blend.SourceColor;
                 D3DDevice.Instance.Device.RenderState.DestinationBlend = Blend.InvSourceColor;
-                piso.render();
+                piso.Render();
                 D3DDevice.Instance.Device.RenderState.SourceBlend = ant_src;
                 D3DDevice.Instance.Device.RenderState.DestinationBlend = ant_dest;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = ant_alpha;
@@ -580,24 +580,24 @@ namespace TGC.Examples.ShadersExamples
                 terrain.render();
 
             //Renderizar SkyBox
-            skyBox.render();
+            skyBox.Render();
 
             // dibujo el bosque
             var total = cubemap ? cant_palmeras : bosque.Count;
             for (var i = 0; i < total; ++i)
             {
                 bosque[i].UpdateMeshTransform();
-                bosque[i].render();
+                bosque[i].Render();
             }
 
             // canoa
-            canoa.render();
+            canoa.Render();
 
             if (!cubemap)
             {
                 // dibujo el mesh
                 mesh.Technique = "RenderScene";
-                mesh.render();
+                mesh.Render();
             }
         }
 
@@ -679,12 +679,12 @@ namespace TGC.Examples.ShadersExamples
                 else
                 {
                     //Renderizar SkyBox
-                    skyBox.render();
+                    skyBox.Render();
                     // dibujo el bosque
                     foreach (var instance in bosque)
                     {
                         instance.UpdateMeshTransform();
-                        instance.render();
+                        instance.Render();
                     }
                 }
                 var fname = string.Format("face{0:D}.bmp", nFace);
@@ -726,13 +726,13 @@ namespace TGC.Examples.ShadersExamples
             foreach (var instance in bosque)
             {
                 instance.UpdateMeshTransform();
-                instance.render();
+                instance.Render();
             }
 
             // el tanque
             // Seteo la tecnica: estoy generando la sombra o estoy dibujando la escena
             mesh.Technique = "RenderShadow";
-            mesh.render();
+            mesh.Render();
             // Termino
             D3DDevice.Instance.Device.EndScene();
             //TextureLoader.Save("shadowmap.bmp", ImageFileFormat.Bmp, g_pShadowMap);

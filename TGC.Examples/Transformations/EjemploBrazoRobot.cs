@@ -172,34 +172,34 @@ namespace TGC.Examples.Transformations
 
             // Primero asignamos la transformacion de la base, esta solo se escala.
             box.Transform = escalaBase;
-            box.render();
+            box.Render();
 
             // Asignamos la transformacion del brazo, se escala ya que estamos utilizando siempre la misma caja
             // y se aplica la transformacion calculada en update.
             box.Transform = escalaBrazo * transformacionBrazo;
-            box.render();
+            box.Render();
 
             // Asignamos la transformacion del antebrazo, se escala ya que estamos utilizando siempre la misma caja
             // y se aplica la transformacion calculada en update.
             box.Transform = escalaAntebrazo * transformacionAntebrazo;
-            box.render();
+            box.Render();
 
             // Asignamos la transformacion de la mano, se escala ya que estamos utilizando siempre la misma caja
             // y se aplica la transformacion calculada en update.
             box.Transform = escalaPinza * transformacionPinzaIzquierda;
-            box.render();
+            box.Render();
 
             // Asignamos la transformacion de la pinza, se escala ya que estamos utilizando siempre la misma caja
             // y se aplica la transformacion calculada en update.
             box.Transform = escalaPinza * transformacionPinzaDerecha;
-            box.render();
+            box.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            box.dispose();
+            box.Dispose();
         }
     }
 }

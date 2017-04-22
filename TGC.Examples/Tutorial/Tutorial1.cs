@@ -100,12 +100,12 @@ namespace TGC.Examples.Tutorial
 			//Siempre tenemos que multiplicar las velocidades por el elapsedTime.
 			//De esta forma la velocidad de rotacion es independiente de la potencia del CPU.
 			//Sino en computadoras con CPU más rápido la caja giraría mas rápido que en computadoras mas lentas.
-			box3.rotateY(ROTATION_SPEED * ElapsedTime);
+			box3.RotateY(ROTATION_SPEED * ElapsedTime);
 
 			//Aplicamos una traslación en Y. Hacemos que la caja se mueva en forma intermitente en el intervalo [0, 3] de Y. 
 			//Cuando llega a uno de los límites del intervalo invertimos la dirección del movimiento.
 			//Tambien tenemos que multiplicar la velocidad por el elapsedTime
-			box3.move(0, MOVEMENT_SPEED * currentMoveDir * ElapsedTime, 0);
+			box3.Move(0, MOVEMENT_SPEED * currentMoveDir * ElapsedTime, 0);
 			if (FastMath.Abs(box3.Position.Y) > 3f)
 			{
 				currentMoveDir *= -1;
@@ -126,9 +126,9 @@ namespace TGC.Examples.Tutorial
             PreRender();
 
             //Dibujar las cajas en pantalla
-            box1.render();
-			box2.render();
-			box3.render();
+            box1.Render();
+			box2.Render();
+			box3.Render();
 
             //Finalizamos el renderizado de la escena
             PostRender();
@@ -143,9 +143,9 @@ namespace TGC.Examples.Tutorial
             //Liberar memoria de las cajas 3D.
             //Por mas que estamos en C# con Garbage Collector igual hay que liberar la memoria de los recursos gráficos.
             //Porque están utilizando memoria de la placa de video (y ahí no hay Garbage Collector).
-            box1.dispose();
-			box2.dispose();
-			box3.dispose();
+            box1.Dispose();
+			box2.Dispose();
+			box3.Dispose();
         }
     }
 }

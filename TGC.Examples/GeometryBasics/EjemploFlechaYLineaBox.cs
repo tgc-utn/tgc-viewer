@@ -97,16 +97,16 @@ namespace TGC.Examples.GeometryBasics
             PreRender();
 
             //Render
-            arrow.render();
+            arrow.Render();
 
-            box.render();
+            box.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            arrow.dispose();
+            arrow.Dispose();
         }
     }
 }

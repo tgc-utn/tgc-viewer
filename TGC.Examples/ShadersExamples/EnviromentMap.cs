@@ -350,24 +350,24 @@ namespace TGC.Examples.ShadersExamples
         public void renderScene(float elapsedTime, bool cubemap)
         {
             //Renderizar terreno
-            terrain.render();
+            terrain.Render();
             //Renderizar SkyBox
-            skyBox.render();
+            skyBox.Render();
             // dibujo el bosque
             foreach (var instance in bosque)
             {
-                instance.render();
+                instance.Render();
             }
 
             // avion
             //avion.Technique = cubemap ? "RenderCubeMap" : "RenderScene";
-            avion.render();
+            avion.Render();
 
             if (!cubemap)
             {
                 // dibujo el mesh
                 mesh.Technique = "RenderCubeMap";
-                mesh.render();
+                mesh.Render();
             }
         }
 

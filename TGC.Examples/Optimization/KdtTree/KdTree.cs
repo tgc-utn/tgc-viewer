@@ -68,7 +68,7 @@ namespace TGC.Examples.Optimization.KdtTree
             {
                 if (mesh.Enabled)
                 {
-                    mesh.render();
+                    mesh.Render();
                     mesh.Enabled = false;
                 }
             }
@@ -77,7 +77,7 @@ namespace TGC.Examples.Optimization.KdtTree
             {
                 foreach (var debugBox in debugKdTreeBoxes)
                 {
-                    debugBox.render();
+                    debugBox.Render();
                 }
             }
         }

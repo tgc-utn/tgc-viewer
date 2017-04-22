@@ -122,7 +122,7 @@ namespace TGC.Examples.MeshExamples
             var drawMesh = (bool)Modifiers["mesh"];
             if (drawMesh)
             {
-                mesh.render();
+                mesh.Render();
             }
 
             //Draw triangles (Ojo: renderizar triangulos asi es extremadamene lento, para algo eficiente se usa un VertexBuffer)
@@ -131,7 +131,7 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var t in triangles)
                 {
-                    t.render();
+                    t.Render();
                 }
             }
 
@@ -141,7 +141,7 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var a in normals)
                 {
-                    a.render();
+                    a.Render();
                 }
             }
 
@@ -151,7 +151,7 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var p in planes)
                 {
-                    p.render();
+                    p.Render();
                 }
             }
 
@@ -166,18 +166,18 @@ namespace TGC.Examples.MeshExamples
 
         public override void Dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
             foreach (var t in triangles)
             {
-                t.dispose();
+                t.Dispose();
             }
             foreach (var a in normals)
             {
-                a.dispose();
+                a.Dispose();
             }
             foreach (var p in planes)
             {
-                p.dispose();
+                p.Dispose();
             }
         }
     }

@@ -92,7 +92,7 @@ namespace TGC.Core.PortalRendering
         {
             foreach (var mesh in scene.Meshes)
             {
-                mesh.render();
+                mesh.Render();
                 mesh.Enabled = false;
             }
         }
@@ -261,7 +261,7 @@ namespace TGC.Core.PortalRendering
                 {
                     if (connection.Portal.Visited)
                     {
-                        connection.Polygon.render();
+                        connection.Polygon.Render();
                     }
                 }
             }
@@ -276,7 +276,7 @@ namespace TGC.Core.PortalRendering
             {
                 foreach (var connection in cell.Connections)
                 {
-                    connection.Polygon.dispose();
+                    connection.Polygon.Dispose();
                 }
             }
         }

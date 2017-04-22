@@ -177,7 +177,7 @@ namespace TGC.Examples.Animation
 
             //Solo malla o esqueleto, depende lo seleccionado
             mesh.RenderSkeleton = renderSkeleton;
-            mesh.render();
+            mesh.Render();
 
             //Se puede renderizar todo mucho mas simple (sin esqueleto) de la siguiente forma:
             //mesh.animateAndRender();
@@ -186,7 +186,7 @@ namespace TGC.Examples.Animation
             var showBB = (bool)Modifiers["BoundingBox"];
             if (showBB)
             {
-                mesh.BoundingBox.render();
+                mesh.BoundingBox.Render();
             }
 
             PostRender();
@@ -195,7 +195,7 @@ namespace TGC.Examples.Animation
         public override void Dispose()
         {
             //La malla tambien hace dispose del attachment
-            mesh.dispose();
+            mesh.Dispose();
         }
     }
 }

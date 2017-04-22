@@ -107,7 +107,7 @@ namespace TGC.Examples.Collision
             personaje.Position = new TGCVector3(0, -45, 0);
             personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.rotateY(Geometry.DegreeToRadian(180f));
+            personaje.RotateY(Geometry.DegreeToRadian(180f));
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 200, -300);
@@ -168,7 +168,7 @@ namespace TGC.Examples.Collision
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.rotateY(rotAngle);
+                personaje.RotateY(rotAngle);
                 camaraInterna.rotateY(rotAngle);
             }
 
@@ -185,7 +185,7 @@ namespace TGC.Examples.Collision
                 //Ver Unidad 2: Ciclo acoplado vs ciclo desacoplado
 
                 //NO SE RECOMIENDA UTILIZAR! moveOrientedY mueve el personaje segun la direccion actual, realiza operaciones de seno y coseno.
-                personaje.moveOrientedY(moveForward * ElapsedTime);
+                personaje.MoveOrientedY(moveForward * ElapsedTime);
 
                 //Detectar colisiones
                 var collide = false;
@@ -306,15 +306,15 @@ namespace TGC.Examples.Collision
 
 
             //Render piso
-            piso.render();
+            piso.Render();
 
             //Render obstaculos
             foreach (var obstaculo in obstaculos)
             {
-                obstaculo.render();
+                obstaculo.Render();
                 if (showBB)
                 {
-                    obstaculo.BoundingBox.render();
+                    obstaculo.BoundingBox.Render();
                 }
             }
 
@@ -322,7 +322,7 @@ namespace TGC.Examples.Collision
             personaje.animateAndRender(ElapsedTime);
             if (showBB)
             {
-                personaje.BoundingBox.render();
+                personaje.BoundingBox.Render();
             }
 
             PostRender();
@@ -330,12 +330,12 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            piso.dispose();
+            piso.Dispose();
             foreach (var obstaculo in obstaculos)
             {
-                obstaculo.dispose();
+                obstaculo.Dispose();
             }
-            personaje.dispose();
+            personaje.Dispose();
         }
     }
 }

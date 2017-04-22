@@ -91,11 +91,11 @@ namespace TGC.Examples.GeometryBasics
         {
             PreRender();
 
-            quad.render();
+            quad.Render();
 
             if ((bool)Modifiers["showNormal"])
             {
-                normalArrow.render();
+                normalArrow.Render();
             }
 
             PostRender();
@@ -103,8 +103,8 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            quad.dispose();
-            normalArrow.dispose();
+            quad.Dispose();
+            normalArrow.Dispose();
         }
     }
 }

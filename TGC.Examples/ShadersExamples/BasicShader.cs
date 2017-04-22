@@ -84,7 +84,7 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("time", time);
 
             // dibujo la malla pp dicha
-            mesh.render();
+            mesh.Render();
 
             RenderAxis();
             RenderFPS();

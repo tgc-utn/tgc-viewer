@@ -84,10 +84,10 @@ namespace TGC.Examples.Optimization.Quadtree
             var showQuadtree = (bool)Modifiers["showQuadtree"];
             var showTerrain = (bool)Modifiers["showTerrain"];
 
-            skyBox.render();
+            skyBox.Render();
             if (showTerrain)
             {
-                terreno.render();
+                terreno.Render();
             }
             quadtree.render(Frustum, showQuadtree);
 
@@ -96,11 +96,11 @@ namespace TGC.Examples.Optimization.Quadtree
 
         public override void Dispose()
         {
-            skyBox.dispose();
-            terreno.dispose();
+            skyBox.Dispose();
+            terreno.Dispose();
             foreach (var mesh in objetosIsla)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
         }
     }

@@ -66,7 +66,7 @@ namespace TGC.Examples.Lights
             //Pongo al mesh en posicion, activo e AutoTransform
             skeletalMesh.AutoTransformEnable = true;
             skeletalMesh.Position = new TGCVector3(0, 0, 100);
-            skeletalMesh.rotateY(FastMath.PI);
+            skeletalMesh.RotateY(FastMath.PI);
 
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new TGCVector3(250, 140, 150), Input);
@@ -160,7 +160,7 @@ namespace TGC.Examples.Lights
                 }
 
                 //Renderizar modelo
-                mesh.render();
+                mesh.Render();
             }
 
             //Renderizar mesh
@@ -185,7 +185,7 @@ namespace TGC.Examples.Lights
             skeletalMesh.animateAndRender(ElapsedTime);
 
             //Renderizar mesh de luz
-            lightMesh.render();
+            lightMesh.Render();
 
             PostRender();
         }
@@ -193,8 +193,8 @@ namespace TGC.Examples.Lights
         public override void Dispose()
         {
             scene.disposeAll();
-            skeletalMesh.dispose();
-            lightMesh.dispose();
+            skeletalMesh.Dispose();
+            lightMesh.Dispose();
         }
     }
 }

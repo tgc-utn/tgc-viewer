@@ -69,7 +69,7 @@ namespace TGC.Examples.Optimization.Octree
             {
                 if (mesh.Enabled)
                 {
-                    mesh.render();
+                    mesh.Render();
                     mesh.Enabled = false;
                 }
             }
@@ -78,7 +78,7 @@ namespace TGC.Examples.Optimization.Octree
             {
                 foreach (var debugBox in debugOctreeBoxes)
                 {
-                    debugBox.render();
+                    debugBox.Render();
                 }
             }
         }

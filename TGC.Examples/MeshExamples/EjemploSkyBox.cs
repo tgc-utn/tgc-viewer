@@ -84,7 +84,7 @@ namespace TGC.Examples.MeshExamples
             PreRender();
             DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, Color.Red);
             //Renderizar SkyBox
-            skyBox.render();
+            skyBox.Render();
 
             PostRender();
         }
@@ -92,7 +92,7 @@ namespace TGC.Examples.MeshExamples
         public override void Dispose()
         {
             //Liberar recursos del SkyBox
-            skyBox.dispose();
+            skyBox.Dispose();
         }
     }
 }

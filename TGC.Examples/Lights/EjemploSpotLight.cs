@@ -135,11 +135,11 @@ namespace TGC.Examples.Lights
                 }
 
                 //Renderizar modelo
-                mesh.render();
+                mesh.Render();
             }
 
             //Renderizar mesh de luz
-            lightMesh.render();
+            lightMesh.Render();
 
             PostRender();
         }
@@ -147,7 +147,7 @@ namespace TGC.Examples.Lights
         public override void Dispose()
         {
             scene.disposeAll();
-            lightMesh.dispose();
+            lightMesh.Dispose();
         }
     }
 }

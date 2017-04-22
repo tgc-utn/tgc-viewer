@@ -171,7 +171,7 @@ namespace TGC.Core.BoundingVolumes
                     color);
         }
 
-        public void render()
+        public void Render()
         {
             //actualizamos los vertices de las tapas y los vertices de las lineas laterales
             updateDraw();
@@ -180,7 +180,7 @@ namespace TGC.Core.BoundingVolumes
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, vertices.Length / 2, vertices);
         }
 
-        public void dispose()
+        public void Dispose()
         {
             vertices = null;
         }

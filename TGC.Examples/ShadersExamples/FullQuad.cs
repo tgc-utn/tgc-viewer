@@ -126,7 +126,7 @@ namespace TGC.Examples.ShadersExamples
             //Dibujamos todos los meshes del escenario
             foreach (var m in meshes)
             {
-                m.render();
+                m.Render();
             }
 
             device.EndScene();
@@ -169,7 +169,7 @@ namespace TGC.Examples.ShadersExamples
         {
             foreach (var m in meshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             effect.Dispose();
             g_pRenderTarget.Dispose();

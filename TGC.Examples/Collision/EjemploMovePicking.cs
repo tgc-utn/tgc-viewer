@@ -165,21 +165,21 @@ namespace TGC.Examples.Collision
             //Mostrar caja con lugar en el que se hizo click, solo si hay movimiento
             if (applyMovement)
             {
-                collisionPointMesh.render();
-                directionArrow.render();
+                collisionPointMesh.Render();
+                directionArrow.Render();
             }
 
-            suelo.render();
-            mesh.render();
+            suelo.Render();
+            mesh.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            suelo.dispose();
-            mesh.dispose();
-            collisionPointMesh.dispose();
+            suelo.Dispose();
+            mesh.Dispose();
+            collisionPointMesh.Dispose();
         }
     }
 }

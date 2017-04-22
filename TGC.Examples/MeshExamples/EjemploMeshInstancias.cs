@@ -62,7 +62,7 @@ namespace TGC.Examples.MeshExamples
                     //No recomendamos utilizar AutoTransform, en juegos complejos se pierde el control. mejor utilizar Transformaciones con matrices.
                     instance.AutoTransformEnable = true;
                     //Desplazarlo
-                    instance.move(i * offset, 0, j * offset);
+                    instance.Move(i * offset, 0, j * offset);
                     //instance.Scale = new TGCVector3(0.25f, 0.25f, 0.25f);
 
                     meshes.Add(instance);
@@ -86,12 +86,12 @@ namespace TGC.Examples.MeshExamples
             DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
             DrawText.drawText("Camera LookAt: " + TGCVector3.PrintVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
             //Renderizar suelo
-            suelo.render();
+            suelo.Render();
 
             //Renderizar instancias
             foreach (var mesh in meshes)
             {
-                mesh.render();
+                mesh.Render();
             }
 
             PostRender();
@@ -99,10 +99,10 @@ namespace TGC.Examples.MeshExamples
 
         public override void Dispose()
         {
-            suelo.dispose();
+            suelo.Dispose();
 
             //Al hacer dispose del original, se hace dispose automaticamente de todas las instancias
-            palmeraOriginal.dispose();
+            palmeraOriginal.Dispose();
         }
     }
 }

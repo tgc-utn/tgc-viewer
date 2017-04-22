@@ -807,7 +807,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Renderizar la esfera
         /// </summary>
-        public virtual void render()
+        public virtual void Render()
         {
             if (!enabled)
                 return;
@@ -892,7 +892,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Liberar los recursos de la esfera
         /// </summary>
-        public virtual void dispose()
+        public virtual void Dispose()
         {
             if (Texture != null)
             {
@@ -903,7 +903,7 @@ namespace TGC.Core.Geometry
             if (vertexBuffer != null && !vertexBuffer.Disposed) vertexBuffer.Dispose();
             if (indexBuffer != null && !indexBuffer.Disposed) indexBuffer.Dispose();
 
-            boundingSphere.dispose();
+            boundingSphere.Dispose();
         }
 
         #endregion RENDER & DISPOSE
@@ -913,15 +913,15 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(TGCVector3 v)
+        public void Move(TGCVector3 v)
         {
-            move(v.X, v.Y, v.Z);
+            Move(v.X, v.Y, v.Z);
         }
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(float x, float y, float z)
+        public void Move(float x, float y, float z)
         {
             translation.X += x;
             translation.Y += y;
@@ -935,12 +935,12 @@ namespace TGC.Core.Geometry
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
-        public void moveOrientedY(float movement)
+        public void MoveOrientedY(float movement)
         {
             var z = (float)Math.Cos(rotation.Y) * movement;
             var x = (float)Math.Sin(rotation.Y) * movement;
 
-            move(x, 0, z);
+            Move(x, 0, z);
         }
 
         /// <summary>
@@ -948,7 +948,7 @@ namespace TGC.Core.Geometry
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(TGCVector3 pos)
+        public void GetPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -959,7 +959,7 @@ namespace TGC.Core.Geometry
         ///     Rota la malla respecto del eje X
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateX(float angle)
+        public void RotateX(float angle)
         {
             rotation.X += angle;
         }
@@ -968,7 +968,7 @@ namespace TGC.Core.Geometry
         ///     Rota la malla respecto del eje Y
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateY(float angle)
+        public void RotateY(float angle)
         {
             rotation.Y += angle;
         }
@@ -977,7 +977,7 @@ namespace TGC.Core.Geometry
         ///     Rota la malla respecto del eje Z
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateZ(float angle)
+        public void RotateZ(float angle)
         {
             rotation.Z += angle;
         }

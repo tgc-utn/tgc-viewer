@@ -96,7 +96,7 @@ namespace TGC.Examples.PostProcess
             foreach (var mesh in meshes)
             {
                 mesh.Technique = "GenerateZBuffer";
-                mesh.render();
+                mesh.Render();
             }
 
             zBufferSurface.Dispose();
@@ -120,7 +120,7 @@ namespace TGC.Examples.PostProcess
             foreach (var mesh in meshes)
             {
                 mesh.Technique = "AlterColorByDepth";
-                mesh.render();
+                mesh.Render();
             }
 
             RenderFPS();
@@ -136,7 +136,7 @@ namespace TGC.Examples.PostProcess
             depthStencil.Dispose();
             foreach (var mesh in meshes)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
         }
     }

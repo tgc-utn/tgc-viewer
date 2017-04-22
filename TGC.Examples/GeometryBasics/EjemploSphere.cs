@@ -129,13 +129,13 @@ namespace TGC.Examples.GeometryBasics
             UserVars.setValue("Vertices", sphere.VertexCount);
             UserVars.setValue("Triangulos", sphere.TriangleCount);
             //Renderizar caja
-            sphere.render();
+            sphere.Render();
 
             //Mostrar Boundingsphere de la caja
             var boundingsphere = (bool)Modifiers["boundingsphere"];
             if (boundingsphere)
             {
-                sphere.BoundingSphere.render();
+                sphere.BoundingSphere.Render();
             }
 
             PostRender();
@@ -143,7 +143,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            sphere.dispose();
+            sphere.Dispose();
         }
     }
 }

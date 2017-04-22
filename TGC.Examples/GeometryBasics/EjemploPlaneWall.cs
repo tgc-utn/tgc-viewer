@@ -113,14 +113,14 @@ namespace TGC.Examples.GeometryBasics
             updateTGCPlane();
 
             //Renderizar pared
-            plane.render();
+            plane.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            plane.dispose();
+            plane.Dispose();
         }
     }
 }

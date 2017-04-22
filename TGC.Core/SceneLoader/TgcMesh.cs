@@ -297,7 +297,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Renderiza la malla, si esta habilitada
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!enabled)
                 return;
@@ -398,12 +398,12 @@ namespace TGC.Core.SceneLoader
         ///     Si la malla es una instancia se deshabilita pero no se liberan recursos.
         ///     Si la malla es el original y tiene varias instancias adjuntadas, se hace dispose() también de las instancias.
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             enabled = false;
             if (boundingBox != null)
             {
-                boundingBox.dispose();
+                boundingBox.Dispose();
             }
 
             //Si es una instancia no liberar nada, lo hace el original.
@@ -418,7 +418,7 @@ namespace TGC.Core.SceneLoader
             {
                 foreach (var meshInstance in meshInstances)
                 {
-                    meshInstance.dispose();
+                    meshInstance.Dispose();
                 }
                 meshInstances = null;
             }
@@ -512,15 +512,15 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(TGCVector3 v)
+        public void Move(TGCVector3 v)
         {
-            move(v.X, v.Y, v.Z);
+            Move(v.X, v.Y, v.Z);
         }
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(float x, float y, float z)
+        public void Move(float x, float y, float z)
         {
             translation.X += x;
             translation.Y += y;
@@ -534,12 +534,12 @@ namespace TGC.Core.SceneLoader
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
-        public void moveOrientedY(float movement)
+        public void MoveOrientedY(float movement)
         {
             var z = FastMath.Cos(rotation.Y) * movement;
             var x = FastMath.Sin(rotation.Y) * movement;
 
-            move(x, 0, z);
+            Move(x, 0, z);
         }
 
         /// <summary>
@@ -547,7 +547,7 @@ namespace TGC.Core.SceneLoader
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(TGCVector3 pos)
+        public void GetPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -558,7 +558,7 @@ namespace TGC.Core.SceneLoader
         ///     Rota la malla respecto del eje X
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateX(float angle)
+        public void RotateX(float angle)
         {
             rotation.X += angle;
         }
@@ -567,7 +567,7 @@ namespace TGC.Core.SceneLoader
         ///     Rota la malla respecto del eje Y
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateY(float angle)
+        public void RotateY(float angle)
         {
             rotation.Y += angle;
         }
@@ -576,7 +576,7 @@ namespace TGC.Core.SceneLoader
         ///     Rota la malla respecto del eje Z
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateZ(float angle)
+        public void RotateZ(float angle)
         {
             rotation.Z += angle;
         }
@@ -737,7 +737,7 @@ namespace TGC.Core.SceneLoader
         {
             if (boundingBox != null)
             {
-                boundingBox.dispose();
+                boundingBox.Dispose();
                 boundingBox = null;
             }
             //Obtener vertices en base al tipo de malla

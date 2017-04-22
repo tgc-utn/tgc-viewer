@@ -178,7 +178,7 @@ namespace TGC.Examples.ShadersExamples
             RenderScene(false);
 
             //Cargar valores de la flecha
-            arrow.render();
+            arrow.Render();
 
             D3DDevice.Instance.Device.EndScene();
             D3DDevice.Instance.Device.Present();
@@ -236,7 +236,7 @@ namespace TGC.Examples.ShadersExamples
                     T.Technique = "RenderScene";
                 }
 
-                T.render();
+                T.Render();
             }
 
             // avion
@@ -248,7 +248,7 @@ namespace TGC.Examples.ShadersExamples
             {
                 avion.Technique = "RenderScene";
             }
-            avion.render();
+            avion.Render();
         }
 
         // helper

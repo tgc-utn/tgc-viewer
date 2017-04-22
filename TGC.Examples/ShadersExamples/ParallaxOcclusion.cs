@@ -164,7 +164,7 @@ namespace TGC.Examples.ShadersExamples
 
             mesh.Effect = effect;
             mesh.Technique = pom ? "ParallaxOcclusion" : "BumpMap";
-            mesh.render();
+            mesh.Render();
 
             DrawText.drawText(
                 (pom ? "ParallaxOcclusion" : "BumpMap") + "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0,
@@ -178,7 +178,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
             effect.Dispose();
             g_pBaseTexture.Dispose();
             g_pBaseTexture2.Dispose();

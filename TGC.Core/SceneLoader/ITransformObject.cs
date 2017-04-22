@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using TGC.Core.Mathematica;
 
 namespace TGC.Core.SceneLoader
@@ -42,43 +41,43 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        void move(TGCVector3 v);
+        void Move(TGCVector3 v);
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        void move(float x, float y, float z);
+        void Move(float x, float y, float z);
 
         /// <summary>
         ///     Mueve la malla en base a la orientacion actual de rotacion.
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
-        void moveOrientedY(float movement);
+        void MoveOrientedY(float movement);
 
         /// <summary>
         ///     Obtiene la posicion absoluta de la malla, recibiendo un vector ya creado para
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        void getPosition(TGCVector3 pos);
+        void GetPosition(TGCVector3 pos);
 
         /// <summary>
         ///     Rota la malla respecto del eje X
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        void rotateX(float angle);
+        void RotateX(float angle);
 
         /// <summary>
         ///     Rota la malla respecto del eje Y
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        void rotateY(float angle);
+        void RotateY(float angle);
 
         /// <summary>
         ///     Rota la malla respecto del eje Z
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
-        void rotateZ(float angle);
+        void RotateZ(float angle);
     }
 }

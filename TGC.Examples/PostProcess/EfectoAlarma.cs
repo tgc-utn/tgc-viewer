@@ -169,7 +169,7 @@ namespace TGC.Examples.PostProcess
             //Dibujamos todos los meshes del escenario
             foreach (var m in meshes)
             {
-                m.render();
+                m.Render();
             }
 
             //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
@@ -225,7 +225,7 @@ namespace TGC.Examples.PostProcess
         {
             foreach (var m in meshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             effect.Dispose();
             alarmTexture.dispose();

@@ -92,19 +92,19 @@ namespace TGC.Examples.Transformations
 
             // Primero asignamos la transformacion de la base, esta solo se escala.
             box.Transform = escalaAvion * transformacionAvion;
-            box.render();
+            box.Render();
 
             // Asignamos la transformacion del brazo, se escala ya que estamos utilizando siempre la misma caja
             // y se aplica la transformacion calculada en update.
             box.Transform = escalaHelice * transformacionHelice;
-            box.render();            
+            box.Render();            
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            box.dispose();
+            box.Dispose();
         }
     }
 }

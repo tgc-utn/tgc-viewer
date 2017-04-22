@@ -70,14 +70,14 @@ namespace TGC.Examples.Lights
             meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m4, normalMapArray));
 
             //Borrar TgcMesh y TgcBox, ya no se usan
-            paredSur.dispose();
-            paredOeste.dispose();
-            paredEste.dispose();
-            piso.dispose();
-            m1.dispose();
-            m2.dispose();
-            m3.dispose();
-            m4.dispose();
+            paredSur.Dispose();
+            paredOeste.Dispose();
+            paredEste.Dispose();
+            piso.Dispose();
+            m1.Dispose();
+            m2.Dispose();
+            m3.Dispose();
+            m4.Dispose();
 
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new TGCVector3(0, 50, 100), Input);
@@ -155,7 +155,7 @@ namespace TGC.Examples.Lights
             }
 
             //Renderizar mesh de luz
-            lightMesh.render();
+            lightMesh.Render();
 
             PostRender();
         }
@@ -165,10 +165,10 @@ namespace TGC.Examples.Lights
             effect.Dispose();
             foreach (var m in meshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             cubeMap.Dispose();
-            lightMesh.dispose();
+            lightMesh.Dispose();
         }
     }
 }

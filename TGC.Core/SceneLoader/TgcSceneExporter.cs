@@ -1019,7 +1019,7 @@ namespace TGC.Core.SceneLoader
             var finalMergeMesh = mergedMeshes[mergedMeshes.Count - 1];
             for (var i = 0; i < mergedMeshes.Count - 1; i++)
             {
-                mergedMeshes[i].dispose();
+                mergedMeshes[i].Dispose();
             }
             mergedMeshes.Clear();
 

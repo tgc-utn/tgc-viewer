@@ -235,15 +235,15 @@ namespace TGC.Examples.ShadersExamples
             //Renderizar terreno
             terrain.Effect = effect;
             terrain.Technique = "DefaultTechnique";
-            terrain.render();
+            terrain.Render();
             // skybox
-            skyBox.render();
+            skyBox.Render();
             //Renderizar pista
             circuito.render(effect);
             //Renderizar auto
             car.Effect = effect;
             car.Technique = "DefaultTechnique";
-            car.render();
+            car.Render();
             // -------------------------------------
 
             device.EndScene();
@@ -300,10 +300,10 @@ namespace TGC.Examples.ShadersExamples
         public override void Dispose()
         {
             circuito.dispose();
-            car.dispose();
+            car.Dispose();
             effect.Dispose();
-            terrain.dispose();
-            skyBox.dispose();
+            terrain.Dispose();
+            skyBox.Dispose();
 
             g_pRenderTarget.Dispose();
             g_pRenderTarget2.Dispose();

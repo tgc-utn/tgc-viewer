@@ -154,9 +154,9 @@ namespace TGC.Examples.ShadersExamples
                     m.Effect = effect;
                     m.Technique = "DefaultTechnique";
                     m.UpdateMeshTransform();
-                    m.render();
+                    m.Render();
                 }
-                lightBox.render();
+                lightBox.Render();
             }
             else
             {
@@ -169,9 +169,9 @@ namespace TGC.Examples.ShadersExamples
                     m.Effect = effect;
                     m.Technique = "DefaultTechnique";
                     m.UpdateMeshTransform();
-                    m.render();
+                    m.Render();
                 }
-                lightBox.render();
+                lightBox.Render();
 
                 // 2- vista: fixed pipeline con iluminacion dinamica
                 D3DDevice.Instance.Device.Viewport = View2;
@@ -187,10 +187,10 @@ namespace TGC.Examples.ShadersExamples
                     m.RenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
                     m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);               
                     m.UpdateMeshTransform();
-                    m.render();
+                    m.Render();
                 }
 
-                lightBox.render();
+                lightBox.Render();
 
                 // 3- vista: fixed pipeline con iluminacion estatica
                 D3DDevice.Instance.Device.Viewport = View3;
@@ -202,10 +202,10 @@ namespace TGC.Examples.ShadersExamples
                     m.RenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
                     m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);
                     m.UpdateMeshTransform();
-                    m.render();
+                    m.Render();
                 }
 
-                lightBox.render();
+                lightBox.Render();
             }
             RenderFPS();
             RenderAxis();
@@ -217,7 +217,7 @@ namespace TGC.Examples.ShadersExamples
         {
             effect.Dispose();
             scene.disposeAll();
-            lightBox.dispose();
+            lightBox.Dispose();
 
             D3DDevice.Instance.Device.Viewport = ViewF;            
         }

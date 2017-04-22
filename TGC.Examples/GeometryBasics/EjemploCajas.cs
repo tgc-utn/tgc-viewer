@@ -125,18 +125,18 @@ namespace TGC.Examples.GeometryBasics
             //Renderizar caja
             if ((bool)Modifiers["box"])
             {
-                box.render();
+                box.Render();
             }
 
             //Mostrar BoundingBox de la caja
             if ((bool)Modifiers["boundingBox"])
             {
-                box.BoundingBox.render();
+                box.BoundingBox.Render();
             }
 
             if ((bool)Modifiers["debugBox"])
             {
-                debugBox.render();
+                debugBox.Render();
             }
 
             PostRender();
@@ -144,7 +144,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            box.dispose();
+            box.Dispose();
         }
     }
 }

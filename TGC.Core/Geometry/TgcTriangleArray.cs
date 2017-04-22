@@ -61,7 +61,7 @@ namespace TGC.Core.Geometry
         {
             foreach (var t in Triangles)
             {
-                t.render();
+                t.Render();
             }
         }
 
@@ -77,7 +77,7 @@ namespace TGC.Core.Geometry
         {
             foreach (var t in Triangles)
             {
-                t.dispose();
+                t.Dispose();
             }
         }
 

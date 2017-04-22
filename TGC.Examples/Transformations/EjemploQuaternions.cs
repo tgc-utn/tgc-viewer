@@ -63,16 +63,16 @@ namespace TGC.Examples.Transformations
         {
             PreRender();
 
-            boxEuler.render();
-            boxTGCQuaternion.render();
+            boxEuler.Render();
+            boxTGCQuaternion.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            boxEuler.dispose();
-            boxTGCQuaternion.dispose();
+            boxEuler.Dispose();
+            boxTGCQuaternion.Dispose();
         }
     }
 }

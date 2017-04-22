@@ -80,7 +80,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Renderiza el terreno
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!Enabled)
                 return;
@@ -105,7 +105,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Libera los recursos del Terreno
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (vbTerrain != null)
             {

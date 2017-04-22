@@ -160,14 +160,14 @@ namespace TGC.Examples.Lights
                 }
 
                 //Renderizar modelo
-                mesh.render();
+                mesh.Render();
             }
 
             //Renderizar meshes de luz
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var lightMesh = lightMeshes[i];
-                lightMesh.render();
+                lightMesh.Render();
             }
 
             PostRender();
@@ -180,7 +180,7 @@ namespace TGC.Examples.Lights
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var lightMesh = lightMeshes[i];
-                lightMesh.dispose();
+                lightMesh.Dispose();
             }
         }
     }
