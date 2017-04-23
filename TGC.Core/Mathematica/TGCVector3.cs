@@ -162,15 +162,18 @@ namespace TGC.Core.Mathematica
 			return Vector3.Dot(left.ToVector3(), right.ToVector3());
 		}
 
-		/// <summary>
+        /// <summary>
 		/// Returns a value that indicates whether the current instance is equal to a specified object.
 		/// </summary>
 		/// <param name="obj">Object with which to make the comparison.</param>
 		/// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
 		public override bool Equals(object obj)
 		{
-			return this.dxVector3.Equals(obj);
-		}
+            if (obj == null || !(obj is TGCVector3))
+                return false;
+            else
+                return this==((TGCVector3)obj);
+        }
 
 		/// <summary>
 		/// Returns the hash code for the current instance.
@@ -351,8 +354,8 @@ namespace TGC.Core.Mathematica
 		/// <returns>Compares the current instance of a class to another instance to determine whether they are the same.</returns>
 		public static bool operator ==(TGCVector3 left, TGCVector3 right)
 		{
-			return left.ToVector3() == right.ToVector3();
-		}
+            return left.ToVector3() == right.ToVector3();
+        }
 
 		/// <summary>
 		/// Compares the current instance of a class to another instance to determine whether they are different.
@@ -363,7 +366,7 @@ namespace TGC.Core.Mathematica
 		public static bool operator !=(TGCVector3 left, TGCVector3 right)
 		{
 			return left.ToVector3() != right.ToVector3();
-		}
+        }
 
 		/// <summary>
 		/// Determines the product of a single value and a 3-D vector.

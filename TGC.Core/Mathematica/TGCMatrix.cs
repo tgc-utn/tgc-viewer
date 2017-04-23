@@ -233,8 +233,11 @@ namespace TGC.Core.Mathematica
 		/// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
 		public override bool Equals(object obj)
 		{
-			return this.dxMatrix.Equals(obj);
-		}
+            if (obj == null || !(obj is TGCMatrix))
+                return false;
+            else
+                return this == ((TGCMatrix)obj);
+        }
 
 		/// <summary>
 		/// Returns the hash code for the current instance.
@@ -366,7 +369,6 @@ namespace TGC.Core.Mathematica
 		/// <returns>Value that is true if the objects are the same, or false if they are different.</returns>
 		public static bool operator ==(TGCMatrix left, TGCMatrix right)
 		{
-			//TODO validar NPE????
 			return left.ToMatrix() == right.ToMatrix();
 		}
 

@@ -115,7 +115,10 @@ namespace TGC.Core.Mathematica
         /// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
         public override bool Equals(object obj)
         {
-            return this.dxPlane.Equals(obj);
+            if (obj == null || !(obj is TGCPlane))
+                return false;
+            else
+                return this == ((TGCPlane)obj);
         }
 
         /// <summary>

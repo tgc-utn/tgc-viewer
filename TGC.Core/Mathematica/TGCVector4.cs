@@ -96,14 +96,58 @@ namespace TGC.Core.Mathematica
 			return vector.ToVector4();
 		}
 
-		#region Old TGCVectorUtils
-
-		/// <summary>
-		///     convierte un color base(255,255,255,255) a un Vector4(1f,1f,1f,1f).
+        /// <summary>
+		/// Compares the current instance of a class to another instance to determine whether they are the same.
 		/// </summary>
-		/// <param name="color"></param>
-		/// <returns></returns>
-		public static Vector4 ColorToVector4(Color color)
+		/// <param name="left">The TGCVector2 to the left of the equality operator.</param>
+		/// <param name="right">The TGCVector2 to the right of the equality operator.</param>
+		/// <returns>Value that is true if the objects are the same, or false if they are different.</returns>
+		public static bool operator ==(TGCVector4 left, TGCVector4 right)
+        {
+            return left.ToVector4() == right.ToVector4();
+        }
+
+        /// <summary>
+        /// Compares the current instance of a class to another instance to determine whether they are different.
+        /// </summary>
+        /// <param name="left">The TGCVector2 to the left of the inequality operator.</param>
+        /// <param name="right">The TGCVector2 to the right of the inequality operator.</param>
+        /// <returns>Value that is true if the objects are different, or false if they are the same.</returns>
+        public static bool operator !=(TGCVector4 left, TGCVector4 right)
+        {
+            return left.ToVector4() != right.ToVector4();
+        }
+
+        /// <summary>
+		/// Returns a value that indicates whether the current instance is equal to a specified object.
+		/// </summary>
+		/// <param name="obj">Object with which to make the comparison.</param>
+		/// <returns>Value that is true if the current instance is equal to the specified object, or false if it is not.</returns>
+		public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is TGCVector4))
+                return false;
+            else
+                return this == ((TGCVector4)obj);
+        }
+
+        /// <summary>
+        /// Returns the hash code for the current instance.
+        /// </summary>
+        /// <returns>Hash code for the instance.</returns>
+        public override int GetHashCode()
+        {
+            return this.dxVector4.GetHashCode();
+        }
+
+        #region Old TGCVectorUtils
+
+        /// <summary>
+        ///     convierte un color base(255,255,255,255) a un Vector4(1f,1f,1f,1f).
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static Vector4 ColorToVector4(Color color)
 		{
 			return Vector4.Normalize(new Vector4(color.R, color.G, color.B, color.A));
 		}
