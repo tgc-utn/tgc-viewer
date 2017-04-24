@@ -32,7 +32,7 @@ namespace TGC.Examples.Collision
         private List<TgcMesh> modelosSeleccionados;
         private TgcPickingRay pickingRay;
         private bool selecting;
-        private TgcBox selectionBox;
+        private TGCBox selectionBox;
 
         private TgcPlane suelo;
 
@@ -77,7 +77,7 @@ namespace TGC.Examples.Collision
                 TGCVector3.One));
 
             //Crear caja para marcar en que lugar hubo colision
-            selectionBox = TgcBox.fromSize(new TGCVector3(3, SELECTION_BOX_HEIGHT, 3), Color.Red);
+            selectionBox = TGCBox.fromSize(new TGCVector3(3, SELECTION_BOX_HEIGHT, 3), Color.Red);
             selectionBox.BoundingBox.setRenderColor(Color.Red);
             selecting = false;
 

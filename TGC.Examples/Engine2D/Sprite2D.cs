@@ -29,7 +29,7 @@ namespace TGC.Examples.Engine2D
     public class Sprite2D : TGCExampleViewer
     {
         private AnimatedSprite animatedSprite;
-        private TgcBox box;
+        private TGCBox box;
         private Drawer2D drawer2D;
         private CustomSprite sprite;
 
@@ -79,7 +79,7 @@ namespace TGC.Examples.Engine2D
             Modifiers.addFloat("rotationAnimated", 0, 360, 0);
 
             //Creamos un Box3D para que se vea como el Sprite es en 2D y se dibuja siempre arriba de la escena 3D
-            box = TgcBox.fromSize(new TGCVector3(10, 10, 10), TgcTexture.createTexture(MediaDir + "\\Texturas\\pasto.jpg"));
+            box = TGCBox.fromSize(new TGCVector3(10, 10, 10), TgcTexture.createTexture(MediaDir + "\\Texturas\\pasto.jpg"));
             box.Transform = TGCMatrix.RotationX(FastMath.QUARTER_PI);
 
             //Hacer que la camara se centre en el box3D

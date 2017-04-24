@@ -29,7 +29,7 @@ namespace TGC.Examples.Lights
     /// </summary>
     public class EjemploSpotLight : TGCExampleViewer
     {
-        private TgcBox lightMesh;
+        private TGCBox lightMesh;
         private TgcScene scene;
 
         public EjemploSpotLight(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
@@ -51,7 +51,7 @@ namespace TGC.Examples.Lights
             Camara = new TgcFpsCamera(new TGCVector3(200, 250, 175), 400f, 300f, Input);
 
             //Mesh para la luz
-            lightMesh = TgcBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
+            lightMesh = TGCBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
 
             //Modifiers de la luz
             Modifiers.addBoolean("lightEnable", "lightEnable", true);

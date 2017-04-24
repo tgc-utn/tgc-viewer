@@ -31,9 +31,9 @@ namespace TGC.Examples.Tutorial
 		private const float MOVEMENT_SPEED = 5f;
 
         //Variables para las cajas 3D
-        private TgcBox box1;
-		private TgcBox box2;
-		private TgcBox box3;
+        private TGCBox box1;
+		private TGCBox box2;
+		private TGCBox box3;
 
 		//Variable direccion de movimiento
 		private float currentMoveDir = 1f;
@@ -59,7 +59,7 @@ namespace TGC.Examples.Tutorial
 			var center = TGCVector3.Empty;
             var size = new TGCVector3(10, 10, 10);
             var color = Color.Red;
-            box1 = TgcBox.fromSize(size, color);
+            box1 = TGCBox.fromSize(size, color);
 			box1.Transform = TGCMatrix.Translation(center);
 
 			//Cargamos una textura una textura es una imágen 2D que puede dibujarse arriba de un polígono 3D para darle color.
@@ -74,13 +74,13 @@ namespace TGC.Examples.Tutorial
 
 			//Creamos una caja 3D ubicada en (10, 0, 0) y la textura como color.
 			center = new TGCVector3(15, 0, 0);
-			box2 = TgcBox.fromSize(size, texture);
+			box2 = TGCBox.fromSize(size, texture);
 			box2.Transform = TGCMatrix.Translation(center);
 
 			//Creamos una caja 3D con textura
 			center = new TGCVector3(-15, 0, 0);
 			texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\cajaMetal.jpg");
-			box3 = TgcBox.fromSize(center, size, texture);
+			box3 = TGCBox.fromSize(center, size, texture);
 			box3.AutoTransformEnable = true;
 
 			//Ubicar la camara del framework mirando al centro de este objeto.

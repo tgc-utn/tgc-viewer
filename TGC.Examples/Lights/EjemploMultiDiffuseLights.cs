@@ -31,7 +31,7 @@ namespace TGC.Examples.Lights
     {
         private Effect effect;
         private InterpoladorVaiven interp;
-        private TgcBox[] lightMeshes;
+        private TGCBox[] lightMeshes;
         private TGCVector3[] origLightPos;
         private TgcScene scene;
 
@@ -63,13 +63,13 @@ namespace TGC.Examples.Lights
             effect = TgcShaders.loadEffect(ShadersDir + "MultiDiffuseLights.fx");
 
             //Crear 4 mesh para representar las 4 para la luces. Las ubicamos en distintas posiciones del escenario, cada una con un color distinto.
-            lightMeshes = new TgcBox[4];
+            lightMeshes = new TGCBox[4];
             origLightPos = new TGCVector3[lightMeshes.Length];
             var c = new Color[4] { Color.Red, Color.Blue, Color.Green, Color.Yellow };
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var co = c[i % c.Length];
-                lightMeshes[i] = TgcBox.fromSize(new TGCVector3(10, 10, 10), co);
+                lightMeshes[i] = TGCBox.fromSize(new TGCVector3(10, 10, 10), co);
                 lightMeshes[i].AutoTransformEnable = true;
                 origLightPos[i] = new TGCVector3(-40, 20 + i * 20, 400);
             }

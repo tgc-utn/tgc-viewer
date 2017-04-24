@@ -30,7 +30,7 @@ namespace TGC.Examples.Collision
     {
         private bool applyMovement;
         private TgcThirdPersonCamera camaraInterna;
-        private TgcBox collisionPointMesh;
+        private TGCBox collisionPointMesh;
         private TgcArrow directionArrow;
         private TgcMesh mesh;
         private TGCMatrix meshRotationMatrix;
@@ -75,7 +75,7 @@ namespace TGC.Examples.Collision
             applyMovement = false;
 
             //Crear caja para marcar en que lugar hubo colision
-            collisionPointMesh = TgcBox.fromSize(new TGCVector3(3, 100, 3), Color.Red);
+            collisionPointMesh = TGCBox.fromSize(new TGCVector3(3, 100, 3), Color.Red);
 
             //Flecha para marcar la dirección
             directionArrow = new TgcArrow();

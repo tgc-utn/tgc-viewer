@@ -24,7 +24,7 @@ namespace TGC.Examples.Transformations
 
         private readonly float baseDY = 0.5f;
         private readonly float baseDZ = 1.0f;
-        private TgcBox box;
+        private TGCBox box;
         private float brazoDAng;
         private readonly float brazoDx = 0.5f;
         private readonly float brazoDY = 1f;
@@ -57,7 +57,7 @@ namespace TGC.Examples.Transformations
             var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\floor1.jpg");
             var center = TGCVector3.Empty;
             var size = new TGCVector3(1f, 1f, 1f);
-            box = TgcBox.fromSize(center, size, texture);
+            box = TGCBox.fromSize(center, size, texture);
             //Por defecto se deshabilito esto, cada uno debe implementar su modelo de transformaciones.
             //box.AutoTransformEnable = false;
             box.Transform = TGCMatrix.Identity;

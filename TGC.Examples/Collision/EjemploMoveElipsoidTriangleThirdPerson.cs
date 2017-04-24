@@ -42,7 +42,7 @@ namespace TGC.Examples.Collision
         private TgcBoundingElipsoid characterElipsoid;
         private ElipsoidCollisionManager collisionManager;
         private TgcArrow collisionNormalArrow;
-        private TgcBox collisionPoint;
+        private TGCBox collisionPoint;
         private TgcArrow directionArrow;
         private TgcScene escenario;
         private bool jumping;
@@ -133,7 +133,7 @@ namespace TGC.Examples.Collision
             collisionNormalArrow.HeadSize = new TGCVector2(2, 5);
 
             //Caja para marcar punto de colision
-            collisionPoint = TgcBox.fromSize(new TGCVector3(4, 4, 4), Color.Red);
+            collisionPoint = TGCBox.fromSize(new TGCVector3(4, 4, 4), Color.Red);
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, new TGCVector3(0, 45, 0), 20, -120);

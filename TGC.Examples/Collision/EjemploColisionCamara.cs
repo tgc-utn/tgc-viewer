@@ -29,7 +29,7 @@ namespace TGC.Examples.Collision
     public class EjemploColisionCamara : TGCExampleViewer
     {
         private TgcThirdPersonCamera camaraInterna;
-        private List<TgcBox> obstaculos;
+        private List<TGCBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcPlane piso;
 
@@ -48,40 +48,40 @@ namespace TGC.Examples.Collision
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             piso = new TgcPlane(new TGCVector3(), new TGCVector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 50f, 50f);
             //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
-            obstaculos = new List<TgcBox>();
-            TgcBox obstaculo;
+            obstaculos = new List<TGCBox>();
+            TGCBox obstaculo;
 
             float wallSize = 1000;
             float wallHeight = 500;
 
             //Obstaculo 1
-            obstaculo = TgcBox.fromExtremes(TGCVector3.Empty, new TGCVector3(wallSize, wallHeight, 10),
+            obstaculo = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(wallSize, wallHeight, 10),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
-            obstaculo = TgcBox.fromExtremes(TGCVector3.Empty, new TGCVector3(10, wallHeight, wallSize),
+            obstaculo = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(10, wallHeight, wallSize),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
-            obstaculo = TgcBox.fromExtremes(new TGCVector3(0, 0, wallSize),
+            obstaculo = TGCBox.fromExtremes(new TGCVector3(0, 0, wallSize),
                 new TGCVector3(wallSize, wallHeight, wallSize + 10),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 4
-            obstaculo = TgcBox.fromExtremes(new TGCVector3(wallSize, 0, 0),
+            obstaculo = TGCBox.fromExtremes(new TGCVector3(wallSize, 0, 0),
                 new TGCVector3(wallSize + 10, wallHeight, wallSize),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 5
-            obstaculo = TgcBox.fromExtremes(new TGCVector3(wallSize / 2, 0, wallSize - 400),
+            obstaculo = TGCBox.fromExtremes(new TGCVector3(wallSize / 2, 0, wallSize - 400),
                 new TGCVector3(wallSize + 10, wallHeight, wallSize - 400 + 10),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculo.AutoTransformEnable = true;

@@ -17,9 +17,9 @@ namespace TGC.Examples.MeshExamples
         private TgcTexture box1Texture;
         private TgcTexture box2Texture;
         private TgcTexture box3Texture;
-        private TgcBox[] cajasNivel1;
-        private TgcBox[] cajasNivel2;
-        private TgcBox[] cajasNivel3;
+        private TGCBox[] cajasNivel1;
+        private TGCBox[] cajasNivel2;
+        private TGCBox[] cajasNivel3;
 
         private RenderMethod currentRenderMethod;
 
@@ -54,24 +54,24 @@ namespace TGC.Examples.MeshExamples
 
             //Crear nuevas cajas
             var boxSize = 3f;
-            cajasNivel1 = new TgcBox[cantCajasPorNivel];
-            cajasNivel2 = new TgcBox[cantCajasPorNivel];
-            cajasNivel3 = new TgcBox[cantCajasPorNivel];
+            cajasNivel1 = new TGCBox[cantCajasPorNivel];
+            cajasNivel2 = new TGCBox[cantCajasPorNivel];
+            cajasNivel3 = new TGCBox[cantCajasPorNivel];
             var cajas = 0;
             for (var i = 0; i < cajasPorCuadrante; i++)
             {
                 for (var j = 0; j < cajasPorCuadrante; j++)
                 {
                     //Crear tres niveles de caja, una abajo y otra arriba, con texturas diferentes
-                    cajasNivel1[cajas] = TgcBox.fromSize(new TGCVector3(i * boxSize, 0, j * boxSize * 1.5f),
+                    cajasNivel1[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, 0, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box1Texture);
                     cajasNivel1[cajas].AutoTransformEnable = true;
 
-                    cajasNivel2[cajas] = TgcBox.fromSize(new TGCVector3(i * boxSize, boxSize, j * boxSize * 1.5f),
+                    cajasNivel2[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, boxSize, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box2Texture);
                     cajasNivel2[cajas].AutoTransformEnable = true;
 
-                    cajasNivel3[cajas] = TgcBox.fromSize(new TGCVector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
+                    cajasNivel3[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box3Texture);
                     cajasNivel3[cajas].AutoTransformEnable = true;
                     cajas++;

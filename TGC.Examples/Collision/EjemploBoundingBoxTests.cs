@@ -41,7 +41,7 @@ namespace TGC.Examples.Collision
 
         private TgcMesh mesh;
         private TgcMesh meshObb;
-        private TgcBox box2;
+        private TGCBox box2;
         private TgcThirdPersonCamera camaraInterna;
         private TgcBoundingOrientedBox obb;
         private TgcBoundingSphere boundingSphere;
@@ -77,7 +77,7 @@ namespace TGC.Examples.Collision
                 {TGCVector3.FromVector3(triangle[0].Position), TGCVector3.FromVector3(triangle[1].Position), TGCVector3.FromVector3(triangle[2].Position)});
 
             //box2
-            box2 = TgcBox.fromSize(new TGCVector3(-50, 10, -20), new TGCVector3(15, 15, 15), Color.Violet);
+            box2 = TGCBox.fromSize(new TGCVector3(-50, 10, -20), new TGCVector3(15, 15, 15), Color.Violet);
 
             //sphere
             boundingSphere = new TgcBoundingSphere(new TGCVector3(30, 20, -20), 15);

@@ -35,7 +35,7 @@ namespace TGC.Examples.Collision
     public class EjemploMoveThirdPerson : TGCExampleViewer
     {
         private TgcThirdPersonCamera camaraInterna;
-        private List<TgcBox> obstaculos;
+        private List<TGCBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcPlane piso;
 
@@ -55,25 +55,25 @@ namespace TGC.Examples.Collision
             piso = new TgcPlane(new TGCVector3(-500, -60, -500), new TGCVector3(1000, 0, 1000), TgcPlane.Orientations.XZplane, pisoTexture);
 
             //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
-            obstaculos = new List<TgcBox>();
-            TgcBox obstaculo;
+            obstaculos = new List<TGCBox>();
+            TGCBox obstaculo;
 
             //Obstaculo 1
-            obstaculo = TgcBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80),
+            obstaculo = TGCBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
-            obstaculo = TgcBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80),
+            obstaculo = TGCBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
-            obstaculo = TgcBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150),
+            obstaculo = TGCBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             obstaculo.AutoTransformEnable = true;
@@ -190,7 +190,7 @@ namespace TGC.Examples.Collision
                 //Detectar colisiones
                 var collide = false;
                 //Guardamos los objetos colicionados para luego resolver la respuesta. (para este ejemplo simple es solo 1 caja)
-                TgcBox collider = null;
+                TGCBox collider = null;
                 foreach (var obstaculo in obstaculos)
                 {
                     if (TgcCollisionUtils.testAABBAABB(personaje.BoundingBox, obstaculo.BoundingBox))

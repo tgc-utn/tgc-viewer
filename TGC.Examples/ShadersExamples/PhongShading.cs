@@ -32,7 +32,7 @@ namespace TGC.Examples.ShadersExamples
     public class PhongShading : TGCExampleViewer
     {
         private Effect effect;
-        private TgcBox lightBox;
+        private TGCBox lightBox;
         private TgcMesh mesh;
         private string MyMediaDir;
         private string MyShaderDir;
@@ -78,7 +78,7 @@ namespace TGC.Examples.ShadersExamples
             Modifiers.addFloat("SpecularPower", 1, 100, 16);
 
             //Crear caja para indicar ubicacion de la luz
-            lightBox = TgcBox.fromSize(new TGCVector3(5, 5, 5), Color.Yellow);
+            lightBox = TGCBox.fromSize(new TGCVector3(5, 5, 5), Color.Yellow);
             lightBox.AutoTransformEnable = true;
 
             // Creo 3 viewport, para mostrar una comparativa entre los metodos de iluminacion

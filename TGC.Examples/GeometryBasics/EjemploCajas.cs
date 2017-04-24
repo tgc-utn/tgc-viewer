@@ -27,7 +27,7 @@ namespace TGC.Examples.GeometryBasics
     /// </summary>
     public class EjemploCajas : TGCExampleViewer
     {
-        private TgcBox box;
+        private TGCBox box;
         private string currentTexture;
         private TgcBoxDebug debugBox;
 
@@ -43,7 +43,7 @@ namespace TGC.Examples.GeometryBasics
         public override void Init()
         {
             //Crear caja vacia
-            box = new TgcBox();
+            box = new TGCBox();
             box.AutoTransformEnable = true;
             //Crear caja debug vacia
             debugBox = new TgcBoxDebug();

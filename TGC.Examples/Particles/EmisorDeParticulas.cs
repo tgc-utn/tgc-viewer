@@ -17,7 +17,7 @@ namespace TGC.Examples.Particles
     /// </summary>
     public class EmisorDeParticulas : TGCExampleViewer
     {
-        private TgcBox box;
+        private TGCBox box;
         private ParticleEmitter emitter;
         private int selectedParticleCount;
         private string selectedTextureName;
@@ -65,7 +65,7 @@ namespace TGC.Examples.Particles
             emitter = new ParticleEmitter(texturePath + selectedTextureName, selectedParticleCount);
             emitter.Position = TGCVector3.Empty;
 
-            box = TgcBox.fromSize(new TGCVector3(0, -30, 0), new TGCVector3(10, 10, 10), Color.Blue);
+            box = TGCBox.fromSize(new TGCVector3(0, -30, 0), new TGCVector3(10, 10, 10), Color.Blue);
 
             Camara = new TgcRotationalCamera(TGCVector3.Empty, 300f, Input);
         }

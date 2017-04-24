@@ -16,7 +16,7 @@ namespace TGC.Examples.Transformations
         private readonly TGCVector3 lengthAvion = new TGCVector3(10f, 2f, 2f);
         private readonly TGCVector3 lengthHelice = new TGCVector3(1f, 5f, 1f);
 
-        private TgcBox box;
+        private TGCBox box;
         private float ang=0;
         private float pos=0;
         private TGCMatrix escalaAvion;
@@ -39,7 +39,7 @@ namespace TGC.Examples.Transformations
             var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\floor1.jpg");
             var center = new TGCVector3(0, 0, 0);
             var size = new TGCVector3(1f, 1f, 1f);
-            box = TgcBox.fromSize(center, size, texture);
+            box = TGCBox.fromSize(center, size, texture);
             //Por defecto se deshabilito esto, cada uno debe implementar su modelo de transformaciones.
             //box.AutoTransformEnable = false;
             box.Transform = TGCMatrix.Identity;

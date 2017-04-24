@@ -28,12 +28,12 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploPicking : TGCExampleViewer
     {
-        private List<TgcBox> boxes;
+        private List<TGCBox> boxes;
         private TGCVector3 collisionPoint;
-        private TgcBox collisionPointMesh;
+        private TGCBox collisionPointMesh;
         private TgcPickingRay pickingRay;
         private bool selected;
-        private TgcBox selectedMesh;
+        private TGCBox selectedMesh;
 
         public EjemploPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -48,7 +48,7 @@ namespace TGC.Examples.Collision
         {
             //Cargar 25 cajas formando una matriz
             var loader = new TgcSceneLoader();
-            boxes = new List<TgcBox>();
+            boxes = new List<TGCBox>();
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\granito.jpg");
             var boxSize = new TGCVector3(30, 30, 30);
@@ -57,7 +57,7 @@ namespace TGC.Examples.Collision
                 for (var j = 0; j < 5; j++)
                 {
                     var center = new TGCVector3((boxSize.X + boxSize.X / 2) * i, (boxSize.Y + boxSize.Y / 2) * j, 0);
-                    var box = TgcBox.fromSize(center, boxSize, texture);
+                    var box = TGCBox.fromSize(center, boxSize, texture);
                     box.AutoTransformEnable = true;
                     boxes.Add(box);
                 }
@@ -69,7 +69,7 @@ namespace TGC.Examples.Collision
             Camara.SetCamera(new TGCVector3(100f, 100f, -500f), new TGCVector3(100f, 100f, -250f));
 
             //Crear caja para marcar en que lugar hubo colision
-            collisionPointMesh = TgcBox.fromSize(new TGCVector3(3, 3, 3), Color.Red);
+            collisionPointMesh = TGCBox.fromSize(new TGCVector3(3, 3, 3), Color.Red);
             collisionPointMesh.AutoTransformEnable = true;
             selected = false;
 

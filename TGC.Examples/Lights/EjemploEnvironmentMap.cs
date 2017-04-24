@@ -30,7 +30,7 @@ namespace TGC.Examples.Lights
     {
         private CubeTexture cubeMap;
         private Effect effect;
-        private TgcBox lightMesh;
+        private TGCBox lightMesh;
         private List<TgcMeshBumpMapping> meshes;
 
         public EjemploEnvironmentMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
@@ -51,10 +51,10 @@ namespace TGC.Examples.Lights
             var normalMap = TgcTexture.createTexture(MediaDir + "Texturas//BM_NormalMap.jpg");
             TgcTexture[] normalMapArray = { normalMap };
 
-            var paredSur = TgcBox.fromExtremes(new TGCVector3(-200, 0, -210), new TGCVector3(200, 100, -200), diffuseMap);
-            var paredOeste = TgcBox.fromExtremes(new TGCVector3(-210, 0, -200), new TGCVector3(-200, 100, 200), diffuseMap);
-            var paredEste = TgcBox.fromExtremes(new TGCVector3(200, 0, -200), new TGCVector3(210, 100, 200), diffuseMap);
-            var piso = TgcBox.fromExtremes(new TGCVector3(-200, -1, -200), new TGCVector3(200, 0, 200), diffuseMap);
+            var paredSur = TGCBox.fromExtremes(new TGCVector3(-200, 0, -210), new TGCVector3(200, 100, -200), diffuseMap);
+            var paredOeste = TGCBox.fromExtremes(new TGCVector3(-210, 0, -200), new TGCVector3(-200, 100, 200), diffuseMap);
+            var paredEste = TGCBox.fromExtremes(new TGCVector3(200, 0, -200), new TGCVector3(210, 100, 200), diffuseMap);
+            var piso = TGCBox.fromExtremes(new TGCVector3(-200, -1, -200), new TGCVector3(200, 0, 200), diffuseMap);
 
             //Convertir TgcBox a TgcMesh
             var m1 = paredSur.toMesh("paredSur");
@@ -93,7 +93,7 @@ namespace TGC.Examples.Lights
             }
 
             //Mesh para la luz
-            lightMesh = TgcBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
+            lightMesh = TGCBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
             Modifiers.addFloat("reflection", 0, 1, 0.35f);
             Modifiers.addFloat("bumpiness", 0, 1, 1f);
             Modifiers.addVertex3f("lightPos", new TGCVector3(-200, 0, -200), new TGCVector3(200, 100, 200),

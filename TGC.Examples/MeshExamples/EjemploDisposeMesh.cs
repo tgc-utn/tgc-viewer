@@ -58,7 +58,7 @@ namespace TGC.Examples.MeshExamples
             scene.disposeAll();
 
             //Se crea una box y se convierte en mesh.
-            var box = TgcBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
+            var box = TGCBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
             boxMesh = box.toMesh("box");
             //Liberamos la caja pero nos quedamos con el mesh.
             box.Dispose();

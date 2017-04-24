@@ -80,7 +80,7 @@
     <Compile Include="BoundingVolumes\TgcBoundingAxisAlignBox.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingCylinder.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingSphere.cs" />
-    <Compile Include="Geometry\TgcBox.cs" />
+    <Compile Include="Geometry\TGCBox.cs" />
     <Compile Include="Collision\TgcCollisionUtils.cs" />
     <Compile Include="Geometry\TgcConvexPolygon.cs" />
     <Compile Include="Geometry\TgcConvexPolyhedron.cs" />

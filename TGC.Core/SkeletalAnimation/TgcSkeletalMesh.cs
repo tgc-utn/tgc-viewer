@@ -104,7 +104,7 @@ namespace TGC.Core.SkeletalAnimation
         protected TgcLine[] skeletonRenderBones;
 
         //Elementos para renderizar el esqueleto
-        protected TgcBox[] skeletonRenderJoints;
+        protected TGCBox[] skeletonRenderJoints;
 
         /// <summary>
         ///     BoundingBox de la malla sin ninguna animación.
@@ -783,7 +783,7 @@ namespace TGC.Core.SkeletalAnimation
             var bonesColor = Color.Yellow;
             var jointsSize = new TGCVector3(2, 2, 2);
             var ceroVec = TGCVector3.Empty;
-            skeletonRenderJoints = new TgcBox[bones.Length];
+            skeletonRenderJoints = new TGCBox[bones.Length];
             skeletonRenderBones = new TgcLine[bones.Length];
             var boneColor = Color.Yellow.ToArgb();
 
@@ -807,7 +807,7 @@ namespace TGC.Core.SkeletalAnimation
                     skeletonRenderBones[i] = boneLine;
                 }
                 //Crear malla de Joint para renderizar el esqueleto
-                var jointBox = TgcBox.fromSize(jointsSize, jointsColor);
+                var jointBox = TGCBox.fromSize(jointsSize, jointsColor);
                 jointBox.AutoTransformEnable = false;
                 skeletonRenderJoints[i] = jointBox;
             }

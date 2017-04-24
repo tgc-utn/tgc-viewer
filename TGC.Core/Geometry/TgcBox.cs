@@ -14,7 +14,7 @@ namespace TGC.Core.Geometry
     /// <summary>
     ///     Herramienta para crear una Caja 3D de tamaño variable, con color y Textura
     /// </summary>
-    public class TgcBox : IRenderObject, ITransformObject
+    public class TGCBox : IRenderObject, ITransformObject
     {
         private readonly VertexBuffer vertexBuffer;
 
@@ -29,7 +29,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crea una caja vacia
         /// </summary>
-        public TgcBox()
+        public TGCBox()
         {
             vertices = new CustomVertex.PositionColoredTextured[36];
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColoredTextured), vertices.Length,
@@ -551,9 +551,9 @@ namespace TGC.Core.Geometry
         ///     Crear un nuevo TgcBox igual a este
         /// </summary>
         /// <returns>Box clonado</returns>
-        public TgcBox clone()
+        public TGCBox clone()
         {
-            var cloneBox = new TgcBox();
+            var cloneBox = new TGCBox();
             cloneBox.setPositionSize(translation, size);
             cloneBox.Color = Color;
             if (Texture != null)
@@ -579,9 +579,9 @@ namespace TGC.Core.Geometry
         /// <param name="center">Centro de la caja</param>
         /// <param name="size">Tamaño de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(TGCVector3 center, TGCVector3 size)
+        public static TGCBox fromSize(TGCVector3 center, TGCVector3 size)
         {
-            var box = new TgcBox();
+            var box = new TGCBox();
             box.setPositionSize(center, size);
             box.updateValues();
             return box;
@@ -594,9 +594,9 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(TGCVector3 center, TGCVector3 size, Color color)
+        public static TGCBox fromSize(TGCVector3 center, TGCVector3 size, Color color)
         {
-            var box = new TgcBox();
+            var box = new TGCBox();
             box.setPositionSize(center, size);
             box.Color = color;
             box.updateValues();
@@ -610,7 +610,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(TGCVector3 center, TGCVector3 size, TgcTexture texture)
+        public static TGCBox fromSize(TGCVector3 center, TGCVector3 size, TgcTexture texture)
         {
             var box = fromSize(center, size);
             box.setTexture(texture);
@@ -622,7 +622,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="size">Tamaño de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(TGCVector3 size)
+        public static TGCBox fromSize(TGCVector3 size)
         {
             return fromSize(TGCVector3.Empty, size);
         }
@@ -633,7 +633,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(TGCVector3 size, Color color)
+        public static TGCBox fromSize(TGCVector3 size, Color color)
         {
             return fromSize(TGCVector3.Empty, size, color);
         }
@@ -644,7 +644,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(TGCVector3 size, TgcTexture texture)
+        public static TGCBox fromSize(TGCVector3 size, TgcTexture texture)
         {
             return fromSize(TGCVector3.Empty, size, texture);
         }
@@ -655,7 +655,7 @@ namespace TGC.Core.Geometry
         /// <param name="pMin">Punto mínimo</param>
         /// <param name="pMax">Punto máximo</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax)
+        public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax)
         {
             var size = TGCVector3.Subtract(pMax, pMin);
             var midSize = TGCVector3.Scale(size, 0.5f);
@@ -670,7 +670,7 @@ namespace TGC.Core.Geometry
         /// <param name="pMax">Punto máximo</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color)
+        public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color)
         {
             var box = fromExtremes(pMin, pMax);
             box.Color = color;
@@ -685,13 +685,13 @@ namespace TGC.Core.Geometry
         /// <param name="pMax">Punto máximo</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, TgcTexture texture)
+        public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, TgcTexture texture)
         {
             var box = fromExtremes(pMin, pMax);
             box.setTexture(texture);
             return box;
         }
 
-        #endregion Creacion
+        #endregion
     }
 }

@@ -41,7 +41,7 @@ namespace TGC.Examples.Collision
         private TgcBoundingSphere characterSphere;
         private SphereTriangleCollisionManager collisionManager;
         private TgcArrow collisionNormalArrow;
-        private TgcBox collisionPoint;
+        private TGCBox collisionPoint;
         private TgcArrow directionArrow;
         private TgcScene escenario;
         private bool jumping;
@@ -133,7 +133,7 @@ namespace TGC.Examples.Collision
             collisionNormalArrow.HeadSize = new TGCVector2(2, 5);
 
             //Caja para marcar punto de colision
-            collisionPoint = TgcBox.fromSize(new TGCVector3(4, 4, 4), Color.Red);
+            collisionPoint = TGCBox.fromSize(new TGCVector3(4, 4, 4), Color.Red);
             collisionPoint.AutoTransformEnable = true;
 
             //Crear manejador de colisiones

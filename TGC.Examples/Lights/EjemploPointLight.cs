@@ -32,7 +32,7 @@ namespace TGC.Examples.Lights
     /// </summary>
     public class EjemploPointLight : TGCExampleViewer
     {
-        private TgcBox lightMesh;
+        private TGCBox lightMesh;
         private TgcScene scene;
         private TgcSkeletalMesh skeletalMesh;
 
@@ -72,7 +72,7 @@ namespace TGC.Examples.Lights
             Camara = new TgcFpsCamera(new TGCVector3(250, 140, 150), Input);
 
             //Mesh para la luz
-            lightMesh = TgcBox.fromSize(new TGCVector3(10, 10, 10));
+            lightMesh = TGCBox.fromSize(new TGCVector3(10, 10, 10));
 
             //Pongo al mesh en posicion, activo e AutoTransform
             lightMesh.AutoTransformEnable = true;
