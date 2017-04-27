@@ -1,5 +1,4 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +9,6 @@ using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.Geometry
 {
@@ -579,13 +577,11 @@ namespace TGC.Core.Geometry
             //Creo la lista de vertices
             for (var i = 0; i < positions.Count; i++)
             {
-
                 var pos = positions[i];
                 var u = 0.5f + FastMath.Atan2(pos.Z, pos.X) / twoPi;
                 var v = 0.5f - 2 * FastMath.Asin(pos.Y) / twoPi;
                 vertices.Add(new Vertex.PositionColoredTexturedNormal(pos, c, UVTiling.X * u + UVOffset.X,
                     UVTiling.Y * v + UVOffset.Y, pos));
-
 
                 if (u == 1 || esPolo(vertices[i]))
                 {

@@ -1,12 +1,10 @@
-﻿using System.Drawing;
+﻿using Microsoft.DirectX.DirectInput;
+using System.Drawing;
 using System.Windows.Forms;
-using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
-using TGC.Core.Utils;
 
 namespace TGC.Examples.Camara
 {
@@ -23,14 +21,15 @@ namespace TGC.Examples.Camara
         private TGCMatrix cameraRotation;
 
         //Direction view se calcula a partir de donde se quiere ver con la camara inicialmente. por defecto se ve en -Z.
-        private TGCVector3 directionView;        
+        private TGCVector3 directionView;
 
         //No hace falta la base ya que siempre es la misma, la base se arma segun las rotaciones de esto costados y updown.
         private float leftrightRot;
+
         private float updownRot;
 
         private bool lockCam;
-        private TGCVector3 positionEye;        
+        private TGCVector3 positionEye;
 
         public TgcFpsCamera(TgcD3dInput input)
         {

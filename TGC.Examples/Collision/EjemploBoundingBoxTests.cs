@@ -1,9 +1,7 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
-using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -11,7 +9,6 @@ using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
@@ -83,10 +80,10 @@ namespace TGC.Examples.Collision
             boundingSphere = new TgcBoundingSphere(new TGCVector3(30, 20, -20), 15);
 
             //OBB: computar OBB a partir del AABB del mesh.
-             meshObb =
-                loader.loadSceneFromFile(MediaDir +
-                "MeshCreator\\Meshes\\Objetos\\Catapulta\\Catapulta-TgcScene.xml")
-                        .Meshes[0];
+            meshObb =
+               loader.loadSceneFromFile(MediaDir +
+               "MeshCreator\\Meshes\\Objetos\\Catapulta\\Catapulta-TgcScene.xml")
+                       .Meshes[0];
             meshObb.Scale = new TGCVector3(0.1f, 0.1f, 0.1f);
             meshObb.Position = new TGCVector3(100, 0, 30);
             meshObb.updateBoundingBox();
@@ -94,11 +91,11 @@ namespace TGC.Examples.Collision
             obb = TgcBoundingOrientedBox.computeFromAABB(meshObb.BoundingBox);
             //Otra alternativa es computar OBB a partir de sus vertices. Esto genera un OBB lo mas apretado posible pero es una operacion costosa
             //obb = TgcBoundingOrientedBox.computeFromPoints(mesh.getVertexPositions());
-            
+
             //Rotar mesh y rotar OBB. A diferencia del AABB, nosotros tenemos que mantener el OBB actualizado segun cada movimiento del mesh
             meshObb.Rotation = new TGCVector3(0, FastMath.PI / 4, 0);
             //Los obb tienen una especie de autotransform aun.
-            obb.rotate(new TGCVector3(0, FastMath.PI / 4, 0));            
+            obb.rotate(new TGCVector3(0, FastMath.PI / 4, 0));
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(mesh.Position, 30, -75);
@@ -190,7 +187,7 @@ namespace TGC.Examples.Collision
             //Detectar colision con la esfera
             if (TgcCollisionUtils.testSphereAABB(boundingSphere, mesh.BoundingBox))
             {
-               boundingSphere.setRenderColor(Color.Red);
+                boundingSphere.setRenderColor(Color.Red);
             }
             else
             {
@@ -227,14 +224,14 @@ namespace TGC.Examples.Collision
                             * TGCMatrix.RotationYawPitchRoll(box2.Rotation.Y, box2.Rotation.X, box2.Rotation.Z)
                             * TGCMatrix.Translation(box2.Position);
             box2.Render();
-                        
+
             //Los bounding volume por la forma actual de framework no realizan transformaciones entonces podemos hacer esto:
             //D3DDevice.Instance.Device.Transform.World =
             //    TGCMatrix.Scaling(new TGCVector3(sphere.Radius, sphere.Radius, sphere.Radius))
             //                * TGCMatrix.Identity //No tienen sentido las rotaciones con la esfera.
             //                * TGCMatrix.Translation(sphere.Position);
             boundingSphere.Render();
-           
+
             //Las mesh por defecto tienen el metodo UpdateMeshTransform que realiza el set por defecto.
             //Esto es igual que utilizar AutoTransform en true, con lo cual no es recomendado para casos complejos.
             meshObb.UpdateMeshTransform();

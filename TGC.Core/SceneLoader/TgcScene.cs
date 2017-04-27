@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using TGC.Core.BoundingVolumes;
-using TGC.Core.Geometry;
 using TGC.Core.PortalRendering;
 
 namespace TGC.Core.SceneLoader

@@ -1,6 +1,4 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
@@ -110,7 +108,7 @@ namespace TGC.Examples.MeshExamples
             base.Render();
 
             //Restrablecemos modo solido
-            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;            
+            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;
         }
     }
 

@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,6 @@ using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.SkeletalAnimation
 {
@@ -1089,7 +1087,7 @@ namespace TGC.Core.SkeletalAnimation
         {
             transform = TGCMatrix.Scaling(scale)
                             * TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            * TGCMatrix.Translation(translation);            
+                            * TGCMatrix.Translation(translation);
         }
 
         /// <summary>

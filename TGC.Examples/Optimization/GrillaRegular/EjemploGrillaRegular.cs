@@ -1,6 +1,4 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
-using TGC.Core.Camara;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;

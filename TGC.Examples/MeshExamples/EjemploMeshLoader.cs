@@ -1,6 +1,5 @@
 using System;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;

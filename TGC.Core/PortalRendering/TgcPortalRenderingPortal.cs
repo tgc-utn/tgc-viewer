@@ -1,5 +1,4 @@
 using TGC.Core.BoundingVolumes;
-using TGC.Core.Geometry;
 
 namespace TGC.Core.PortalRendering
 {

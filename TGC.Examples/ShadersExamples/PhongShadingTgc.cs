@@ -1,14 +1,11 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
@@ -86,7 +83,6 @@ namespace TGC.Examples.ShadersExamples
                 currentShader = TgcShaders.Instance.TgcMeshShader;
             }
 
-            
             //Aplicar al mesh el shader actual
             mesh.Effect = currentShader;
             //El Technique depende del tipo RenderType del mesh

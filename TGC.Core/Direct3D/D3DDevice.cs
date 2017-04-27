@@ -1,10 +1,8 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System.Diagnostics;
 using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.Direct3D
 {

@@ -1,6 +1,4 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
@@ -41,7 +39,7 @@ namespace TGC.Examples.MeshExamples
             //Crear suelo
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
             suelo = new TgcPlane(new TGCVector3(-500, 0, -500), new TGCVector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 10f, 10f);
-            
+
             //Cargar modelo de palmera original
             var loader = new TgcSceneLoader();
             var scene =
@@ -70,8 +68,7 @@ namespace TGC.Examples.MeshExamples
             }
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new TGCVector3(900f, 400f, 900f), Input);            
-
+            Camara = new TgcFpsCamera(new TGCVector3(900f, 400f, 900f), Input);
         }
 
         public override void Update()

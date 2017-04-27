@@ -1,10 +1,8 @@
-using Microsoft.DirectX;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.Transformations

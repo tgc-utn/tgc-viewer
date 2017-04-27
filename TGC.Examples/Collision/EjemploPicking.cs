@@ -1,7 +1,5 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -65,7 +63,7 @@ namespace TGC.Examples.Collision
 
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
-            
+
             Camara.SetCamera(new TGCVector3(100f, 100f, -500f), new TGCVector3(100f, 100f, -250f));
 
             //Crear caja para marcar en que lugar hubo colision

@@ -1,6 +1,4 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
-using TGC.Core.Camara;
+﻿using Microsoft.DirectX.DirectInput;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;

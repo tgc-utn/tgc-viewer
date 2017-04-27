@@ -187,21 +187,142 @@ namespace TGC.Core.Mathematica
         }
 
         /// <summary>
-        /// Retrieves the DirectX of a 4-D vector
+        /// Returns the length of a 4-D vector.
         /// </summary>
-        /// <returns></returns>
-        private Vector4 ToVector4()
+        /// <returns>A Single value that indicates the vector's length.</returns>
+        public float Length()
         {
-            return dxVector4;
+            throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Cast TGCVector4 to DX Vector4
+        /// Returns the length of a 4-D vector.
         /// </summary>
-        /// <param name="vector">TGCVector4 to become into Vector4</param>
-        public static implicit operator Vector4(TGCVector4 vector)
+        /// <param name="source">Source TGCVector4 structure.</param>
+        /// <returns>A Single value that indicates the vector's length.</returns>
+        public static float Length(TGCVector4 source)
         {
-            return vector.ToVector4();
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the square of the length of a 4-D vector.
+        /// </summary>
+        /// <returns>A Single value that indicates the vector's squared length.</returns>
+        public float LengthSq()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the square of the length of a 4-D vector.
+        /// </summary>
+        /// <param name="source">Source TGCVector4 structure.</param>
+        /// <returns>A Single value that indicates the vector's squared length.</returns>
+        public static float LengthSq(TGCVector4 source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Performs a linear interpolation between two 4-D vectors.
+        /// </summary>
+        /// <param name="left">Source TGCVector4 structure.</param>
+        /// <param name="right">Source TGCVector4 structure.</param>
+        /// <param name="interpolater"></param>
+        /// <returns>A TGCVector4 structure that is the result of the linear interpolation.</returns>
+        public static TGCVector4 Lerp(TGCVector4 left, TGCVector4 right, float interpolater)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a 4-D vector that is made up of the largest components of two 4-D vectors.
+        /// </summary>
+        /// <param name="source">Source TGCVector4 structure.</param>
+        public void Maximize(TGCVector4 source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a 4-D vector that is made up of the largest components of two 4-D vectors.
+        /// </summary>
+        /// <param name="left">Source TGCVector4 structure.</param>
+        /// <param name="right">Source TGCVector4 structure.</param>
+        /// <returns>A TGCVector4 structure that is made up of the largest components of the two vectors.</returns>
+        public static TGCVector4 Maximize(TGCVector4 left, TGCVector4 right)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a 4-D vector that is made up of the smallest components of two 4-D vectors.
+        /// </summary>
+        /// <param name="source">Source Vector4 structure.</param>
+        public void Minimize(TGCVector4 source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a 4-D vector that is made up of the smallest components of two 4-D vectors.
+        /// </summary>
+        /// <param name="left">Source TGCVector4 structure.</param>
+        /// <param name="right">Source TGCVector4 structure.</param>
+        /// <returns>A TGCVector4 structure that is made up of the smallest components of the two vectors.</returns>
+        public static TGCVector4 Minimize(TGCVector4 left, TGCVector4 right)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Multiplies a 4-D vector by a Single value.
+        /// </summary>
+        /// <param name="s">Source Single value used as a multiplier.</param>
+        public void Multiply(float s)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Multiplies a 4-D vector by a Single value.
+        /// </summary>
+        /// <param name="source">Source TGCVector4 structure.</param>
+        /// <param name="f">Source Single value used as a multiplier.</param>
+        /// <returns>A Vector4 structure that is multiplied by the Single value.</returns>
+        public static TGCVector4 Multiply(TGCVector4 source, float f)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the normalized version of a 4-D vector.
+        /// </summary>
+        public void Normalize()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the normalized version of a 4-D vector.
+        /// </summary>
+        /// <param name="source">Source TGCVector4 structure.</param>
+        /// <returns>A TGCVector4 structure that is the normalized version of the specified vector.</returns>
+        public static TGCVector4 Normalize(TGCVector4 source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Adds two vectors.
+        /// </summary>
+        /// <param name="left">Source TGCVector4.</param>
+        /// <param name="right">Source TGCVector4.</param>
+        /// <returns>A TGCVector4 structure that contains the sum of the parameters.</returns>
+        public static TGCVector4 operator +(TGCVector4 left, TGCVector4 right)
+        {
+            return new TGCVector4(left.ToVector4() + right.ToVector4());
         }
 
         /// <summary>
@@ -226,6 +347,147 @@ namespace TGC.Core.Mathematica
             return left.ToVector4() != right.ToVector4();
         }
 
+        /// <summary>
+        /// Determines the product of a single value and a 4-D vector.
+        /// </summary>
+        /// <param name="right">Source Single structure.</param>
+        /// <param name="left">Source TGCVector4.</param>
+        /// <returns>A TGCVector4 structure that is the product of the right and left parameters.</returns>
+        public static TGCVector4 operator *(float right, TGCVector4 left)
+        {
+            return new TGCVector4(left.ToVector4() * right);
+        }
+
+        /// <summary>
+        /// Determines the product of a single value and a 4-D vector.
+        /// </summary>
+        /// <param name="left">Source TGCVector4.</param>
+        /// <param name="right">Source Single structure.</param>
+        /// <returns>A TGCVector4 structure that is the product of the right and left parameters.</returns>
+        public static TGCVector4 operator *(TGCVector4 left, float right)
+        {
+            return new TGCVector4(left.ToVector4() * right);
+        }
+
+        /// <summary>
+        /// Subtracts two 4-D vectors.
+        /// </summary>
+        /// <param name="left">The TGCVector4 to the left of the subtraction operator.</param>
+        /// <param name="right">The TGCVector4 to the right of the subtraction operator.</param>
+        /// <returns>Resulting TGCVector4 structure.</returns>
+        public static TGCVector4 operator -(TGCVector4 left, TGCVector4 right)
+        {
+            return new TGCVector4(left.ToVector4() - right.ToVector4());
+        }
+
+        /// <summary>
+        /// Negates the vector.
+        /// </summary>
+        /// <param name="vec">Source TGCVector4.</param>
+        /// <returns>The TGCVector4 structure that is the result of the operation.</returns>
+        public static TGCVector4 operator -(TGCVector4 vec)
+        {
+            return new TGCVector4(-vec.ToVector4());
+        }
+
+        /// <summary>
+        /// Scales a 4-D vector.
+        /// </summary>
+        /// <param name="scalingFactor">Scaling value.</param>
+        public void Scale(float scalingFactor)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Scales a 4-D vector.
+        /// </summary>
+        /// <param name="source">Source TGCVector4 structure.</param>
+        /// <param name="scalingFactor">Scaling value.</param>
+        /// <returns>A TGCVector4 structure that is the scaled vector.</returns>
+        public static TGCVector4 Scale(TGCVector4 source, float scalingFactor)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Subtracts two 4-D vectors.
+        /// </summary>
+        /// <param name="source">Source TGCVector4 structure to subtract from the current instance.</param>
+        public void Subtract(TGCVector4 source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Subtracts two 4-D vectors.
+        /// </summary>
+        /// <param name="left">Source TGCVector4 structure to the left of the subtraction operator.</param>
+        /// <param name="right">Source TGCVector4 structure to the right of the subtraction operator.</param>
+        /// <returns>A TGCVector4 structure that is the result of the operation.</returns>
+        public static TGCVector4 Subtract(TGCVector4 left, TGCVector4 right)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Obtains a string representation of the current instance.
+        /// </summary>
+        /// <returns>String that represents the object.</returns>
+        public override string ToString()
+        {
+            return this.dxVector4.ToString();
+        }
+
+        /// <summary>
+        /// Transforms a 4-D vector or an array of 4-D vectors by a given matrix.
+        /// </summary>
+        /// <param name="sourceMatrix">Source TGCMatrix structure.</param>
+        public void Transform(TGCMatrix sourceMatrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Transforms a 4-D vector or an array of 4-D vectors by a given matrix.
+        /// </summary>
+        /// <param name="source">Source TGCVector4 structure.</param>
+        /// <param name="sourceMatrix">Source TGCMatrix structure.</param>
+        /// <returns>A TGCVector4 structure that is the result of the method.</returns>
+        public static TGCVector4 Transform(TGCVector4 source, TGCMatrix sourceMatrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Transforms a 4-D vector or an array of 4-D vectors by a given matrix.
+        /// </summary>
+        /// <param name="vector">Array of source TGCVector4 structures.</param>
+        /// <param name="sourceMatrix">Source TGCMatrix structure.</param>
+        /// <returns></returns>
+        public static TGCVector4[] Transform(TGCVector4[] vector, TGCMatrix sourceMatrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Retrieves the DirectX of a 4-D vector
+        /// </summary>
+        /// <returns></returns>
+        private Vector4 ToVector4()
+        {
+            return dxVector4;
+        }
+
+        /// <summary>
+        /// Cast TGCVector4 to DX Vector4
+        /// </summary>
+        /// <param name="vector">TGCVector4 to become into Vector4</param>
+        public static implicit operator Vector4(TGCVector4 vector)
+        {
+            return vector.ToVector4();
+        }
+
         #region Old TGCVectorUtils
 
         /// <summary>
@@ -238,6 +500,6 @@ namespace TGC.Core.Mathematica
             return Vector4.Normalize(new Vector4(color.R, color.G, color.B, color.A));
         }
 
-        #endregion
+        #endregion Old TGCVectorUtils
     }
 }

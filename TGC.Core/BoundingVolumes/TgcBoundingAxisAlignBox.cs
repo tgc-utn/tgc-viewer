@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
@@ -251,13 +250,13 @@ namespace TGC.Core.BoundingVolumes
             return size;
         }
 
-		/// <summary>
-		/// Traslada y escala el BoundingBox.
-		/// Si el BoundingBox tenia alguna rotación, se pierde.
-		/// </summary>
-		/// <param name="position">Nueva posición absoluta de referencia</param>
-		/// <param name="scale">Nueva escala absoluta de referencia</param>
-		public void scaleTranslate(TGCVector3 position, TGCVector3 scale)
+        /// <summary>
+        /// Traslada y escala el BoundingBox.
+        /// Si el BoundingBox tenia alguna rotación, se pierde.
+        /// </summary>
+        /// <param name="position">Nueva posición absoluta de referencia</param>
+        /// <param name="scale">Nueva escala absoluta de referencia</param>
+        public void scaleTranslate(TGCVector3 position, TGCVector3 scale)
         {
             //actualizar puntos extremos
             pMin.X = pMinOriginal.X * scale.X + position.X;

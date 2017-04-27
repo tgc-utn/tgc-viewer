@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Microsoft.DirectX;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;

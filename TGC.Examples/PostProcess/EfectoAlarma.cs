@@ -1,8 +1,6 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Interpolation;
 using TGC.Core.Mathematica;
@@ -151,7 +149,7 @@ namespace TGC.Examples.PostProcess
 
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
-            D3DDevice.Instance.Device.DepthStencilSurface = depthStencilOld;            
+            D3DDevice.Instance.Device.DepthStencilSurface = depthStencilOld;
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcess(D3DDevice.Instance.Device, ElapsedTime);

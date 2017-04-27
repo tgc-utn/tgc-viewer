@@ -1,8 +1,6 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
-using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -11,7 +9,6 @@ using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
@@ -206,16 +203,15 @@ namespace TGC.Examples.Collision
             {
                 personaje.playAnimation("Parado", true);
             }
-            
+
             //Ajustar la posicion de la camara segun la colision con los objetos del escenario
             ajustarPosicionDeCamara();
-
         }
 
         public override void Render()
         {
             PreRender();
-            
+
             //Render piso
             piso.Render();
 
@@ -264,14 +260,14 @@ namespace TGC.Examples.Collision
                     var distSq = TGCVector3.Subtract(q, target).LengthSq();
                     //Hay dos casos singulares, puede que tengamos mas de una colision hay que quedarse con el menor offset.
                     //Si no dividimos la distancia por 2 se acerca mucho al target.
-                    minDistSq = FastMath.Min(distSq/2, minDistSq);
+                    minDistSq = FastMath.Min(distSq / 2, minDistSq);
                 }
             }
 
             //Acercar la camara hasta la minima distancia de colision encontrada (pero ponemos un umbral maximo de cercania)
             var newOffsetForward = -FastMath.Sqrt(minDistSq);
-            
-            if(FastMath.Abs(newOffsetForward) < 10)
+
+            if (FastMath.Abs(newOffsetForward) < 10)
             {
                 newOffsetForward = 10;
             }

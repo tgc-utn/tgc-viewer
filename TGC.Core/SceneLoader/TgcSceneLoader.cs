@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
@@ -6,11 +5,9 @@ using System.IO;
 using System.IO.Compression;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.PortalRendering;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.SceneLoader
 {

@@ -1,6 +1,4 @@
-using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.KeyFrameLoader;
 using TGC.Core.Mathematica;
 using TGC.Core.UserControls;

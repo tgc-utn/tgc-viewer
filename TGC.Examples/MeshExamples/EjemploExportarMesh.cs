@@ -1,11 +1,9 @@
-using Microsoft.DirectX;
 using System.Drawing;
 using System.IO;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Example;
 
 namespace TGC.Examples.MeshExamples

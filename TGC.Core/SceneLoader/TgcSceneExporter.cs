@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using System.Text;
 using System.Xml;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
@@ -197,7 +195,7 @@ namespace TGC.Core.SceneLoader
                         tgcMesh.Rotation.Z);
                     var parentRotQuat = TGCQuaternion.RotationYawPitchRoll(parentInstance.Rotation.Y,
                         parentInstance.Rotation.X, parentInstance.Rotation.Z);
-					meshExport.MeshData.rotation = TGCQuaternion.TGCQuaternionToFloat4Array(rotQuat - parentRotQuat);
+                    meshExport.MeshData.rotation = TGCQuaternion.TGCQuaternionToFloat4Array(rotQuat - parentRotQuat);
                     var scale = new TGCVector3(
                         tgcMesh.Scale.X / parentInstance.Scale.X,
                         tgcMesh.Scale.Y / parentInstance.Scale.Y,

@@ -1,6 +1,4 @@
 ﻿using Microsoft.DirectX;
-using System;
-using TGC.Core.Utils;
 
 namespace TGC.Core.Mathematica
 {
@@ -452,7 +450,7 @@ namespace TGC.Core.Mathematica
         {
             Quaternion tempA = outA;
             Quaternion tempB = outB;
-            Quaternion tempC = outC;            
+            Quaternion tempC = outC;
             Quaternion.SquadSetup(ref tempA, ref tempA, ref tempA, q0, q1, q2, q3);
             outA = new TGCQuaternion(tempA);
             outB = new TGCQuaternion(tempB);
@@ -478,7 +476,7 @@ namespace TGC.Core.Mathematica
         /// <param name="angle">A float value that identifies the quaternion's angle of rotation, in radians.</param>
         public static void ToAxisAngle(TGCQuaternion q, ref TGCVector3 axis, ref float angle)
         {
-			//TODO no deberia depender de Vector3
+            //TODO no deberia depender de Vector3
             Vector3 tempAxis = axis;
             Quaternion.ToAxisAngle(q.ToQuaternion(), ref tempAxis, ref angle);
             axis = new TGCVector3(tempAxis);

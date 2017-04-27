@@ -1,9 +1,7 @@
-﻿using Microsoft.DirectX;
-using TGC.Core.BoundingVolumes;
+﻿using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.Utils;
 
 namespace TGC.Examples.Collision.SphereCollision
 {

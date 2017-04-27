@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 

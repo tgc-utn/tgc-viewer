@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 

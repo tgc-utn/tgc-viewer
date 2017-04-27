@@ -1,5 +1,4 @@
-﻿using Microsoft.DirectX;
-using TGC.Core.Camara;
+﻿using TGC.Core.Camara;
 using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Camara

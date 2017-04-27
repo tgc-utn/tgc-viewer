@@ -7,10 +7,10 @@ namespace TGC.Core.Mathematica
     /// </summary>
     public struct TGCPlane
     {
-		/// <summary>
-		/// Retrieves or sets the DirectX of a Plane.
-		/// </summary>
-		private Plane dxPlane;
+        /// <summary>
+        /// Retrieves or sets the DirectX of a Plane.
+        /// </summary>
+        private Plane dxPlane;
 
         /// <summary>
         /// Initializes a new instance of the Plane class.
@@ -282,6 +282,6 @@ namespace TGC.Core.Mathematica
             return new TGCPlane(f[0], f[1], f[2], f[3]);
         }
 
-        #endregion
+        #endregion Old TGCVectorUtils
     }
 }

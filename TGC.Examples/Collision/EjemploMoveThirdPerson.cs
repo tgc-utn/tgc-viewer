@@ -1,8 +1,6 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
-using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -103,7 +101,7 @@ namespace TGC.Examples.Collision
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             personaje.AutoTransformEnable = true;
 
-            //Escalarlo porque es muy grande            
+            //Escalarlo porque es muy grande
             personaje.Position = new TGCVector3(0, -45, 0);
             personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
             //Rotarlo 180° porque esta mirando para el otro lado
@@ -256,7 +254,6 @@ namespace TGC.Examples.Collision
                             }
 
                             //Seria ideal sacar el punto mas proximo al bounding que colisiona y chequear con eso, en ves que con la posicion.
-
                         }
                         else
                         {
@@ -276,12 +273,8 @@ namespace TGC.Examples.Collision
                         text = t;
                         personaje.Position = lastPos - rs;
                         //Este ejemplo solo se mueve en X y Z con lo cual realizar el test en el plano Y no tiene sentido.
-
                     }
                 }
-
-
-
             }
 
             //Si no se esta moviendo, activar animacion de Parado
@@ -292,9 +285,10 @@ namespace TGC.Examples.Collision
 
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = personaje.Position;
-
         }
-        string text = "No colision";
+
+        private string text = "No colision";
+
         public override void Render()
         {
             PreRender();
@@ -303,7 +297,6 @@ namespace TGC.Examples.Collision
             var showBB = (bool)Modifiers.getValue("showBoundingBox");
 
             DrawText.drawText(text, 5, 20, System.Drawing.Color.Red);
-
 
             //Render piso
             piso.Render();

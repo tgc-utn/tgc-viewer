@@ -67,8 +67,7 @@ float4 ps_main(VS_OUTPUT_VERTEX input) : COLOR0
 {
 	float zn = StartFogDistance;
 	float zf = EndFogDistance;
-	
-	
+
 	float4 fvBaseColor = tex2D(diffuseMap, input.Texture);
 	if (input.PosView.z < zn)
 		return fvBaseColor;
@@ -80,7 +79,7 @@ float4 ps_main(VS_OUTPUT_VERTEX input) : COLOR0
 		// combino fog y textura
 		float1 total = zf - zn;
 		float1 resto = input.PosView.z - zn;
-		float1 proporcion = resto/total;
+		float1 proporcion = resto / total;
 		fvBaseColor = lerp(fvBaseColor, ColorFog, proporcion);
 		return fvBaseColor;
 	}

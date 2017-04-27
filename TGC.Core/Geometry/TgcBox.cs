@@ -692,6 +692,6 @@ namespace TGC.Core.Geometry
             return box;
         }
 
-        #endregion
+        #endregion Creacion
     }
 }

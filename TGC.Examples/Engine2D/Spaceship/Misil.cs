@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using System;
 using TGC.Core.Mathematica;
 using TGC.Examples.Engine2D.Spaceship.Core;

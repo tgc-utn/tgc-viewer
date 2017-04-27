@@ -1,8 +1,6 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
-using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
@@ -11,7 +9,6 @@ using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
@@ -69,7 +66,7 @@ namespace TGC.Examples.Collision
             personaje.playAnimation("Parado", true);
             //Escalarlo porque es muy grande
             personaje.Scale = new TGCVector3(0.04f, 0.04f, 0.04f);
-            
+
             //El personaje esta en el 0,0,0 hay que bajarlo
             var size = personaje.BoundingBox.PMax.Y - personaje.BoundingBox.PMin.Y;
             personaje.Position = new TGCVector3(0, -3f, 0);
@@ -92,7 +89,6 @@ namespace TGC.Examples.Collision
             var angle = FastMath.TWO_PI;
             Modifiers.addVertex3f("rotation", new TGCVector3(-angle, -angle, -angle), new TGCVector3(angle, angle, angle),
                 new TGCVector3(FastMath.TWO_PI / 8, 0, FastMath.TWO_PI / 8));
-
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 25, -45);
@@ -145,7 +141,9 @@ namespace TGC.Examples.Collision
 
                 //Activar animacion de caminando
                 personaje.playAnimation("Caminando", true);
-            } else {
+            }
+            else
+            {
                 //Si no se esta moviendo, activar animacion de Parado
                 personaje.playAnimation("Parado", true);
             }
@@ -195,7 +193,8 @@ namespace TGC.Examples.Collision
                         colliderCylinderFixedY.setRenderColor(pickingColor);
                     }
                 }
-            } else
+            }
+            else
             {
                 //Test de colisiones del cilindro, la cantidad de test que tiene el framewor es acotada.
                 if (TgcCollisionUtils.testSphereCylinder(collisionableSphere, colliderCylinder))
@@ -243,7 +242,6 @@ namespace TGC.Examples.Collision
             {
                 personaje.BoundingBox.Render();
             }
-
 
             //Render de objetos estaticos
             collisionableSphere.Render();

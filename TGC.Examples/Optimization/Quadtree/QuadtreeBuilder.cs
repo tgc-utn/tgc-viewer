@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,7 +7,6 @@ using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.Utils;
 
 namespace TGC.Examples.Optimization.Quadtree
 {

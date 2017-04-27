@@ -1,6 +1,4 @@
-﻿using Microsoft.DirectX;
-using TGC.Core.Mathematica;
-using TGC.Core.Utils;
+﻿using TGC.Core.Mathematica;
 
 namespace TGC.Core.Shaders
 {

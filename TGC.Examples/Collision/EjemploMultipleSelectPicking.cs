@@ -1,7 +1,5 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -49,7 +47,7 @@ namespace TGC.Examples.Collision
             //Crear suelo
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\Quake\\quakeWall3.jpg");
-           suelo = new TgcPlane(new TGCVector3(-500, 0, -500), new TGCVector3(1000, 0f, 1000), TgcPlane.Orientations.XZplane, texture);
+            suelo = new TgcPlane(new TGCVector3(-500, 0, -500), new TGCVector3(1000, 0f, 1000), TgcPlane.Orientations.XZplane, texture);
 
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
@@ -122,7 +120,6 @@ namespace TGC.Examples.Collision
                         //Configurar BOX
                         selectionBox.setExtremes(min, max);
                         selectionBox.updateValues();
-               
                     }
                 }
             }

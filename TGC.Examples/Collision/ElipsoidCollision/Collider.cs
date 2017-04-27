@@ -1,5 +1,4 @@
-﻿using Microsoft.DirectX;
-using TGC.Core.BoundingVolumes;
+﻿using TGC.Core.BoundingVolumes;
 using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Collision.ElipsoidCollision

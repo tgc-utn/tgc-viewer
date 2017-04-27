@@ -1,10 +1,8 @@
-using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
-using TGC.Core.Utils;
 
 namespace TGC.Core.Collision
 {

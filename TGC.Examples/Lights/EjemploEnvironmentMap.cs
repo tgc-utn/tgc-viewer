@@ -1,8 +1,6 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
@@ -10,7 +8,6 @@ using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
@@ -64,7 +61,7 @@ namespace TGC.Examples.Lights
 
             //Convertir TgcMesh a TgcMeshBumpMapping
             meshes = new List<TgcMeshBumpMapping>();
-            meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m1, normalMapArray)); 
+            meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m1, normalMapArray));
             meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m2, normalMapArray));
             meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m3, normalMapArray));
             meshes.Add(TgcMeshBumpMapping.fromTgcMesh(m4, normalMapArray));

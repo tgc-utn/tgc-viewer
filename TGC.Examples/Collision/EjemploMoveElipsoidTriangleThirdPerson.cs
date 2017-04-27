@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
@@ -11,7 +10,6 @@ using TGC.Core.SkeletalAnimation;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Collision.ElipsoidCollision;
 using TGC.Examples.Example;
@@ -79,8 +77,8 @@ namespace TGC.Examples.Collision
                         MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\Jump-TgcSkeletalAnim.xml"
                     });
 
-            //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform, 
-            //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta 
+            //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform,
+            //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta
             //perdiendo el control de las transformaciones del personaje.
             personaje.AutoTransformEnable = true;
             //Configurar animacion inicial
@@ -332,14 +330,11 @@ namespace TGC.Examples.Collision
                 collisionNormalArrow.PStart = collisionManager.Result.collisionPoint;
                 collisionNormalArrow.PEnd = collisionManager.Result.collisionPoint +
                                             TGCVector3.Multiply(collisionManager.Result.collisionNormal, 80);
-                
+
                 collisionNormalArrow.updateValues();
-                
 
                 collisionPoint.Position = collisionManager.Result.collisionPoint;
                 collisionPoint.updateValues();
-
-
             }
         }
 

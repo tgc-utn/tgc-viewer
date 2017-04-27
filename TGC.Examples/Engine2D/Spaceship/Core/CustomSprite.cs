@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using System;
 using System.Drawing;
 using TGC.Core.Mathematica;

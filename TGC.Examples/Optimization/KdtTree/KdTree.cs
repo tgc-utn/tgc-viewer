@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;

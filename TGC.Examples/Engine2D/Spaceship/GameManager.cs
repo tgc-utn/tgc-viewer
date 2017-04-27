@@ -1,5 +1,4 @@
-﻿using Microsoft.DirectX;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;

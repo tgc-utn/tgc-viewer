@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using System.Drawing;
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
+using System.Collections.Generic;
+using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -13,7 +12,6 @@ using TGC.Core.Terrain;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Collision.SphereCollision;
 using TGC.Examples.Example;
@@ -83,8 +81,8 @@ namespace TGC.Examples.Collision
                     MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
             });
 
-            //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform, 
-            //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta 
+            //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform,
+            //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta
             //perdiendo el control de las transformaciones del personaje.
             personaje.AutoTransformEnable = true;
             //Configurar animacion inicial
@@ -329,7 +327,6 @@ namespace TGC.Examples.Collision
                                             TGCVector3.Multiply(collisionManager.LastCollisionNormal, 80);
 
                 collisionNormalArrow.updateValues();
-                
 
                 collisionPoint.Position = collisionManager.LastCollisionPoint;
                 collisionPoint.Render();
@@ -349,7 +346,7 @@ namespace TGC.Examples.Collision
                 collisionPoint.Render();
             }
 
-                //Render de mallas
+            //Render de mallas
             foreach (var mesh in escenario.Meshes)
             {
                 mesh.Render();

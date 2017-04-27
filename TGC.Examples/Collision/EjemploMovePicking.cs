@@ -1,7 +1,4 @@
-using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core.BoundingVolumes;
-using TGC.Core.Camara;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -11,7 +8,6 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
@@ -52,8 +48,8 @@ namespace TGC.Examples.Collision
         {
             //Cargar suelo
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg");
-            suelo = new TgcPlane(new TGCVector3(-5000, 0, -5000), new TGCVector3(10000, 0f, 10000),TgcPlane.Orientations.XZplane, texture);
-            
+            suelo = new TgcPlane(new TGCVector3(-5000, 0, -5000), new TGCVector3(10000, 0f, 10000), TgcPlane.Orientations.XZplane, texture);
+
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
 

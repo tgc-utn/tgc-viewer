@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Drawing;

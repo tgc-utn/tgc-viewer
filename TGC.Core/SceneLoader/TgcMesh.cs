@@ -1,15 +1,12 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.SceneLoader
 {
@@ -301,7 +298,7 @@ namespace TGC.Core.SceneLoader
         {
             if (!enabled)
                 return;
-            
+
             //Aplicar transformacion de malla
             if (autoTransformEnable)
             {
@@ -622,7 +619,7 @@ namespace TGC.Core.SceneLoader
         {
             transform = TGCMatrix.Scaling(scale)
                             * TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            * TGCMatrix.Translation(translation);            
+                            * TGCMatrix.Translation(translation);
         }
 
         /// <summary>

@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.SkeletalAnimation
 {

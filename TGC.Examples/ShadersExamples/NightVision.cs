@@ -1,10 +1,8 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
@@ -475,7 +473,7 @@ namespace TGC.Examples.ShadersExamples
         public void renderScene(float elapsedTime, string Technique)
         {
             //Dibujamos todos los meshes del escenario
-            
+
             /*foreach (TgcMesh m in meshes)
             {
                 m.Effect = effect;

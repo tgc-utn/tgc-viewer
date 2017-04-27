@@ -1,8 +1,5 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX.DirectInput;
 using System.Drawing;
-using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
@@ -10,7 +7,6 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
@@ -185,7 +181,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     m.Effect = TgcShaders.Instance.TgcMeshShader;
                     m.RenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
-                    m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);               
+                    m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);
                     m.UpdateMeshTransform();
                     m.Render();
                 }
@@ -219,7 +215,7 @@ namespace TGC.Examples.ShadersExamples
             scene.disposeAll();
             lightBox.Dispose();
 
-            D3DDevice.Instance.Device.Viewport = ViewF;            
+            D3DDevice.Instance.Device.Viewport = ViewF;
         }
     }
 }

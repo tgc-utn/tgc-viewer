@@ -1,5 +1,4 @@
 using System;
-using TGC.Core.Camara;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;

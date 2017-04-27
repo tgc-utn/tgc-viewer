@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.DirectSound;
 using System;
 using TGC.Core.Mathematica;

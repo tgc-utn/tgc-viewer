@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;

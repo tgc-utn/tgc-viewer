@@ -1,5 +1,4 @@
-﻿using Microsoft.DirectX;
-using TGC.Core.Mathematica;
+﻿using TGC.Core.Mathematica;
 
 namespace TGC.Core.Interpolation
 {

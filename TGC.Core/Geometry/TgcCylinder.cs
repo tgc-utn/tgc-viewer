@@ -1,5 +1,4 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System.Diagnostics;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
@@ -8,7 +7,6 @@ using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.Geometry
 {

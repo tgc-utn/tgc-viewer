@@ -1,5 +1,4 @@
-﻿
-using Microsoft.DirectX.DirectInput;
+﻿using Microsoft.DirectX.DirectInput;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
@@ -17,13 +16,13 @@ namespace TGC.Examples.Transformations
         private readonly TGCVector3 lengthHelice = new TGCVector3(1f, 5f, 1f);
 
         private TGCBox box;
-        private float ang=0;
-        private float pos=0;
+        private float ang = 0;
+        private float pos = 0;
         private TGCMatrix escalaAvion;
         private TGCMatrix escalaHelice;
         private TGCMatrix transformacionAvion;
         private TGCMatrix transformacionHelice;
-        private float angHelice=0;
+        private float angHelice = 0;
 
         public EjemploAvion(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -68,22 +67,19 @@ namespace TGC.Examples.Transformations
             }
             angHelice += ElapsedTime * VELOCIDAD_ANGULAR;
 
-           escalaAvion = TGCMatrix.Scaling(lengthAvion);
-            
+            escalaAvion = TGCMatrix.Scaling(lengthAvion);
+
             escalaHelice = TGCMatrix.Scaling(lengthHelice);
 
-                    
             var T1 = TGCMatrix.Translation(pos, pos, 0);
             var R1 = TGCMatrix.RotationZ(ang);
             transformacionAvion = R1 * T1;
 
             var T2 = TGCMatrix.Translation(lengthAvion.X / 2 + lengthHelice.X / 2, 0, 0);
 
-           
             var R3 = TGCMatrix.RotationX(angHelice);
 
             transformacionHelice = R3 * T2 * transformacionAvion;
-
         }
 
         public override void Render()
@@ -97,7 +93,7 @@ namespace TGC.Examples.Transformations
             // Asignamos la transformacion del brazo, se escala ya que estamos utilizando siempre la misma caja
             // y se aplica la transformacion calculada en update.
             box.Transform = escalaHelice * transformacionHelice;
-            box.Render();            
+            box.Render();
 
             PostRender();
         }
