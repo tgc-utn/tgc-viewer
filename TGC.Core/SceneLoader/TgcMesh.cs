@@ -934,6 +934,10 @@ namespace TGC.Core.SceneLoader
             return createMeshInstance(name, TGCVector3.Empty, TGCVector3.Empty, TGCVector3.One);
         }
 
+        /// <summary>
+        /// Obtains a string representation of the current instance.
+        /// </summary>
+        /// <returns>String that represents the object.</returns>
         public override string ToString()
         {
             return "Mesh: " + name;
@@ -1032,12 +1036,12 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        /// 
+        /// Crea un TGCMesh con solo color.
         /// </summary>
-        /// <param name="meshName"></param>
-        /// <param name="vertices"></param>
-        /// <param name="transform"></param>
-        /// <returns></returns>
+        /// <param name="meshName">Nombre de la malla que se va a crear.</param>
+        /// <param name="vertices">Vertices a utilizar para crear la malla.</param>
+        /// <param name="transform">Matriz a utilizar para aplicar transformaciones a la malla.</param>
+        /// <returns>Un nuevo TGCMesh basado en los parametros dados.</returns>
         public static TgcMesh ToColorMesh(string meshName, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform)
         {
             //Crear Mesh
@@ -1087,14 +1091,14 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        /// 
+        /// Crea un TGCMesh con DiffuseMap.
         /// </summary>
-        /// <param name="meshName"></param>
-        /// <param name="vertices"></param>
-        /// <param name="transform"></param>
-        /// <param name="texture"></param>
-        /// <param name="alphaBlendEnable"></param>
-        /// <returns></returns>
+        /// <param name="meshName">Nombre de la malla que se va a crear.</param>
+        /// <param name="vertices">Vertices a utilizar para crear la malla.</param>
+        /// <param name="transform">Matriz que se utiliza para aplicar transformaciones a la malla.</param>
+        /// <param name="texture">Textura a utilizar.</param>
+        /// <param name="alphaBlendEnable">Habilita el AlphaBlending para los modelos.</param>
+        /// <returns>Un nuevo TGCMesh basado en los parametros dados.</returns>
         public static TgcMesh ToDiffuseMapMesh(string meshName, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform, TgcTexture texture, bool alphaBlendEnable)
         {
             //Crear Mesh
