@@ -44,7 +44,7 @@ namespace TGC.Examples.ShadersExamples
             mesh = scene.Meshes[0];
 
             //Crear caja para indicar ubicacion de la luz
-            lightMesh = TGCBox.fromSize(new TGCVector3(20, 20, 20), Color.Yellow).toMesh("Box");
+            lightMesh = TGCBox.fromSize(new TGCVector3(20, 20, 20), Color.Yellow).ToMesh("Box");
 
             //Modifiers de la luz
             Modifiers.addBoolean("lightEnable", "lightEnable", true);

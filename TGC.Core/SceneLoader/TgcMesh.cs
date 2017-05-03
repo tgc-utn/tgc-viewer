@@ -1030,5 +1030,126 @@ namespace TGC.Core.SceneLoader
             }
             return null;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="meshName"></param>
+        /// <param name="vertices"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
+        public static TgcMesh ToColorMesh(string meshName, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform)
+        {
+            //Crear Mesh
+            var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
+                TgcSceneLoader.VertexColorVertexElements, D3DDevice.Instance.Device);
+
+            //Cargar VertexBuffer
+            using (var vb = d3dMesh.VertexBuffer)
+            {
+                var data = vb.Lock(0, 0, LockFlags.None);
+                for (var j = 0; j < vertices.Length; j++)
+                {
+                    var v = new TgcSceneLoader.VertexColorVertex();
+                    var vBox = vertices[j];
+
+                    //vertices
+                    v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), transform);
+
+                    //normals
+                    v.Normal = TGCVector3.Empty;
+
+                    //color
+                    v.Color = vBox.Color;
+
+                    data.Write(v);
+                }
+                vb.Unlock();
+            }
+
+            //Cargar IndexBuffer en forma plana
+            using (var ib = d3dMesh.IndexBuffer)
+            {
+                var indices = new short[vertices.Length];
+                for (var j = 0; j < indices.Length; j++)
+                {
+                    indices[j] = (short)j;
+                }
+                ib.SetData(indices, 0, LockFlags.None);
+            }
+
+            //Malla de TGC
+            var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.VERTEX_COLOR);
+            tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
+            tgcMesh.createBoundingBox();
+            tgcMesh.Enabled = true;
+            return tgcMesh;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="meshName"></param>
+        /// <param name="vertices"></param>
+        /// <param name="transform"></param>
+        /// <param name="texture"></param>
+        /// <param name="alphaBlendEnable"></param>
+        /// <returns></returns>
+        public static TgcMesh ToDiffuseMapMesh(string meshName, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform, TgcTexture texture, bool alphaBlendEnable)
+        {
+            //Crear Mesh
+            var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
+                TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
+
+            //Cargar VertexBuffer
+            using (var vb = d3dMesh.VertexBuffer)
+            {
+                var data = vb.Lock(0, 0, LockFlags.None);
+                for (var j = 0; j < vertices.Length; j++)
+                {
+                    var v = new TgcSceneLoader.DiffuseMapVertex();
+                    var vBox = vertices[j];
+
+                    //vertices
+                    v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), transform);
+
+                    //normals
+                    v.Normal = TGCVector3.Empty;
+
+                    //texture coordinates diffuseMap
+                    v.Tu = vBox.Tu;
+                    v.Tv = vBox.Tv;
+
+                    //color
+                    v.Color = vBox.Color;
+
+                    data.Write(v);
+                }
+                vb.Unlock();
+            }
+
+            //Cargar IndexBuffer en forma plana
+            using (var ib = d3dMesh.IndexBuffer)
+            {
+                var indices = new short[vertices.Length];
+                for (var j = 0; j < indices.Length; j++)
+                {
+                    indices[j] = (short)j;
+                }
+                ib.SetData(indices, 0, LockFlags.None);
+            }
+
+            //Calcular normales
+            d3dMesh.ComputeNormals();
+
+            //Malla de TGC
+            var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
+            tgcMesh.DiffuseMaps = new[] { texture.Clone() };
+            tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
+            tgcMesh.createBoundingBox();
+            tgcMesh.Enabled = true;
+            tgcMesh.AlphaBlendEnable = alphaBlendEnable;
+            return tgcMesh;
+        }
     }
 }

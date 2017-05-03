@@ -57,7 +57,7 @@ namespace TGC.Examples.MeshExamples
 
             //Se crea una box y se convierte en mesh.
             var box = TGCBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
-            boxMesh = box.toMesh("box");
+            boxMesh = box.ToMesh("box");
             //Liberamos la caja pero nos quedamos con el mesh.
             box.Dispose();
 

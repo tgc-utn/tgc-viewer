@@ -54,10 +54,10 @@ namespace TGC.Examples.Lights
             var piso = TGCBox.fromExtremes(new TGCVector3(-200, -1, -200), new TGCVector3(200, 0, 200), diffuseMap);
 
             //Convertir TgcBox a TgcMesh
-            var m1 = paredSur.toMesh("paredSur");
-            var m2 = paredOeste.toMesh("paredOeste");
-            var m3 = paredEste.toMesh("paredEste");
-            var m4 = piso.toMesh("piso");
+            var m1 = paredSur.ToMesh("paredSur");
+            var m2 = paredOeste.ToMesh("paredOeste");
+            var m3 = paredEste.ToMesh("paredEste");
+            var m4 = piso.ToMesh("piso");
 
             //Convertir TgcMesh a TgcMeshBumpMapping
             meshes = new List<TgcMeshBumpMapping>();

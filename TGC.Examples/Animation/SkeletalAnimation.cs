@@ -106,7 +106,7 @@ namespace TGC.Examples.Animation
             //Crear caja como modelo de Attachment del hueos "Bip01 L Hand"
             attachment = new TgcSkeletalBoneAttach();
             var attachmentBox = TGCBox.fromSize(new TGCVector3(5, 100, 5), Color.Blue);
-            attachment.Mesh = attachmentBox.toMesh("attachment");
+            attachment.Mesh = attachmentBox.ToMesh("attachment");
             attachment.Bone = mesh.getBoneByName("Bip01 L Hand");
             attachment.Offset = TGCMatrix.Translation(10, -40, 0);
             attachment.updateValues();
