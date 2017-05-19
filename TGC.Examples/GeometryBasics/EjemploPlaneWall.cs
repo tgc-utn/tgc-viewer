@@ -27,7 +27,7 @@ namespace TGC.Examples.GeometryBasics
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Geometry Basics";
-            Name = "TGCPlane";
+            Name = "Plane";
             Description =
                 "Muestra como utilizar la herramienta TgcTGCPlane para crear paredes planas con textura. Permite editar su posicion, tamano, textura y mapeo de textura. Movimiento con mouse.";
         }

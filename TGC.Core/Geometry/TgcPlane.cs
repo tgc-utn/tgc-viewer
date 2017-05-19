@@ -1,5 +1,4 @@
 using Microsoft.DirectX.Direct3D;
-using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
@@ -9,301 +8,289 @@ using TGC.Core.Textures;
 
 namespace TGC.Core.Geometry
 {
-    /// <summary>
-    ///     Pared 3D plana que solo crece en dos dimensiones.
-    /// </summary>
-    public class TgcPlane : IRenderObject
-    {
-        /// <summary>
-        ///     Orientaciones posibles de la pared
-        /// </summary>
-        public enum Orientations
-        {
-            /// <summary>
-            ///     Pared vertical a lo largo de X
-            /// </summary>
-            XYplane = 0,
+	/// <summary>
+	///     Pared 3D plana que solo crece en dos dimensiones.
+	/// </summary>
+	public class TgcPlane : IRenderObject
+	{
+		/// <summary>
+		///     Orientaciones posibles de la pared
+		/// </summary>
+		public enum Orientations
+		{
+			/// <summary>
+			///     Pared vertical a lo largo de X
+			/// </summary>
+			XYplane = 0,
 
-            /// <summary>
-            ///     Pared horizontal
-            /// </summary>
-            XZplane = 1,
+			/// <summary>
+			///     Pared horizontal
+			/// </summary>
+			XZplane = 1,
 
-            /// <summary>
-            ///     Pared vertical a lo largo de Z
-            /// </summary>
-            YZplane = 2
-        }
+			/// <summary>
+			///     Pared vertical a lo largo de Z
+			/// </summary>
+			YZplane = 2
+		}
 
-        private readonly CustomVertex.PositionTextured[] vertices;
+		private readonly CustomVertex.PositionTextured[] vertices;
 
-        protected Effect effect;
+		/// <summary>
+		///     Crea una pared vacia.
+		/// </summary>
+		public TgcPlane()
+		{
+			vertices = new CustomVertex.PositionTextured[6];
+			AutoAdjustUv = false;
+			Enabled = true;
+			BoundingBox = new TgcBoundingAxisAlignBox();
+			UTile = 1;
+			VTile = 1;
+			AlphaBlendEnable = false;
+			UVOffset = TGCVector2.Zero;
 
-        protected string technique;
+			//Shader
+			Effect = TgcShaders.Instance.VariosShader;
+			Technique = TgcShaders.T_POSITION_TEXTURED;
+		}
 
-        /// <summary>
-        ///     Crea una pared vacia.
-        /// </summary>
-        public TgcPlane()
-        {
-            vertices = new CustomVertex.PositionTextured[6];
-            AutoAdjustUv = false;
-            Enabled = true;
-            BoundingBox = new TgcBoundingAxisAlignBox();
-            UTile = 1;
-            VTile = 1;
-            AlphaBlendEnable = false;
-            UVOffset = TGCVector2.Zero;
+		/// <summary>
+		///     Crea una pared con un punto de origen, el tamaño de la pared y la orientación de la misma, especificando
+		///     el tiling de la textura
+		/// </summary>
+		/// <param name="origin">Punto de origen de la pared</param>
+		/// <param name="size">Dimensiones de la pared. Uno de los valores será ignorado, según la orientación elegida</param>
+		/// <param name="orientation">Orientacion de la pared</param>
+		/// <param name="texture">Textura de la pared</param>
+		/// <param name="uTile">Cantidad de tile de la textura en coordenada U</param>
+		/// <param name="vTile">Cantidad de tile de la textura en coordenada V</param>
+		public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture, float uTile,
+			float vTile)
+			: this()
+		{
+			setTexture(texture);
 
-            //Shader
-            effect = TgcShaders.Instance.VariosShader;
-            technique = TgcShaders.T_POSITION_TEXTURED;
-        }
+			AutoAdjustUv = false;
+			Origin = origin;
+			Size = size;
+			Orientation = orientation;
+			UTile = uTile;
+			VTile = vTile;
 
-        /// <summary>
-        ///     Crea una pared con un punto de origen, el tamaño de la pared y la orientación de la misma, especificando
-        ///     el tiling de la textura
-        /// </summary>
-        /// <param name="origin">Punto de origen de la pared</param>
-        /// <param name="size">Dimensiones de la pared. Uno de los valores será ignorado, según la orientación elegida</param>
-        /// <param name="orientation">Orientacion de la pared</param>
-        /// <param name="texture">Textura de la pared</param>
-        /// <param name="uTile">Cantidad de tile de la textura en coordenada U</param>
-        /// <param name="vTile">Cantidad de tile de la textura en coordenada V</param>
-        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture, float uTile,
-            float vTile)
-            : this()
-        {
-            setTexture(texture);
+			updateValues();
+		}
 
-            AutoAdjustUv = false;
-            Origin = origin;
-            Size = size;
-            Orientation = orientation;
-            UTile = uTile;
-            VTile = vTile;
+		/// <summary>
+		///     Crea una pared con un punto de origen, el tamaño de la pared y la orientación de la misma, con ajuste automatico
+		///     de coordenadas de textura
+		/// </summary>
+		/// <param name="origin">Punto de origen de la pared</param>
+		/// <param name="size">Dimensiones de la pared. Uno de los valores será ignorado, según la orientación elegida</param>
+		/// <param name="orientation">Orientacion de la pared</param>
+		/// <param name="texture">Textura de la pared</param>
+		public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture)
+			: this()
+		{
+			setTexture(texture);
 
-            updateValues();
-        }
+			AutoAdjustUv = true;
+			Origin = origin;
+			Size = size;
+			Orientation = orientation;
+			UTile = 1;
+			VTile = 1;
 
-        /// <summary>
-        ///     Crea una pared con un punto de origen, el tamaño de la pared y la orientación de la misma, con ajuste automatico
-        ///     de coordenadas de textura
-        /// </summary>
-        /// <param name="origin">Punto de origen de la pared</param>
-        /// <param name="size">Dimensiones de la pared. Uno de los valores será ignorado, según la orientación elegida</param>
-        /// <param name="orientation">Orientacion de la pared</param>
-        /// <param name="texture">Textura de la pared</param>
-        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture)
-            : this()
-        {
-            setTexture(texture);
+			updateValues();
+		}
 
-            AutoAdjustUv = true;
-            Origin = origin;
-            Size = size;
-            Orientation = orientation;
-            UTile = 1;
-            VTile = 1;
+		/// <summary>
+		///     Origen de coordenadas de la pared.
+		///     Llamar a updateValues() para aplicar cambios.
+		/// </summary>
+		public TGCVector3 Origin { get; set; }
 
-            updateValues();
-        }
+		/// <summary>
+		///     Dimensiones de la pared.
+		///     Llamar a updateValues() para aplicar cambios.
+		/// </summary>
+		public TGCVector3 Size { get; set; }
 
-        /// <summary>
-        ///     Origen de coordenadas de la pared.
-        ///     Llamar a updateValues() para aplicar cambios.
-        /// </summary>
-        public TGCVector3 Origin { get; set; }
+		/// <summary>
+		///     Orientación de la pared.
+		///     Llamar a updateValues() para aplicar cambios.
+		/// </summary>
+		public Orientations Orientation { get; set; }
 
-        /// <summary>
-        ///     Dimensiones de la pared.
-        ///     Llamar a updateValues() para aplicar cambios.
-        /// </summary>
-        public TGCVector3 Size { get; set; }
+		/// <summary>
+		///     Textura de la pared
+		/// </summary>
+		public TgcTexture Texture { get; private set; }
 
-        /// <summary>
-        ///     Orientación de la pared.
-        ///     Llamar a updateValues() para aplicar cambios.
-        /// </summary>
-        public Orientations Orientation { get; set; }
+		/// <summary>
+		///     Shader del mesh
+		/// </summary>
+		public Effect Effect { get; set; }
 
-        /// <summary>
-        ///     Textura de la pared
-        /// </summary>
-        public TgcTexture Texture { get; private set; }
+		/// <summary>
+		///     Technique que se va a utilizar en el effect.
+		///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+		/// </summary>
+		public string Technique { get; set; }
 
-        /// <summary>
-        ///     Shader del mesh
-        /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
+		/// <summary>
+		///     Cantidad de tile de la textura en coordenada U.
+		///     Llamar a updateValues() para aplicar cambios.
+		/// </summary>
+		public float UTile { get; set; }
 
-        /// <summary>
-        ///     Technique que se va a utilizar en el effect.
-        ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
-        /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
+		/// <summary>
+		///     Cantidad de tile de la textura en coordenada V.
+		///     Llamar a updateValues() para aplicar cambios.
+		/// </summary>
+		public float VTile { get; set; }
 
-        /// <summary>
-        ///     Cantidad de tile de la textura en coordenada U.
-        ///     Llamar a updateValues() para aplicar cambios.
-        /// </summary>
-        public float UTile { get; set; }
+		/// <summary>
+		///     Auto ajustar coordenadas UV en base a la relación de tamaño de la pared y la textura
+		///     Llamar a updateValues() para aplicar cambios.
+		/// </summary>
+		public bool AutoAdjustUv { get; set; }
 
-        /// <summary>
-        ///     Cantidad de tile de la textura en coordenada V.
-        ///     Llamar a updateValues() para aplicar cambios.
-        /// </summary>
-        public float VTile { get; set; }
+		/// <summary>
+		///     Offset UV de textura
+		/// </summary>
+		public TGCVector2 UVOffset { get; set; }
 
-        /// <summary>
-        ///     Auto ajustar coordenadas UV en base a la relación de tamaño de la pared y la textura
-        ///     Llamar a updateValues() para aplicar cambios.
-        /// </summary>
-        public bool AutoAdjustUv { get; set; }
+		/// <summary>
+		///     Indica si la pared esta habilitada para ser renderizada
+		/// </summary>
+		public bool Enabled { get; set; }
 
-        /// <summary>
-        ///     Offset UV de textura
-        /// </summary>
-        public TGCVector2 UVOffset { get; set; }
+		/// <summary>
+		///     BoundingBox de la pared
+		/// </summary>
+		public TgcBoundingAxisAlignBox BoundingBox { get; }
 
-        /// <summary>
-        ///     Indica si la pared esta habilitada para ser renderizada
-        /// </summary>
-        public bool Enabled { get; set; }
+		public TGCVector3 Position
+		{
+			get { return Origin; }
+		}
 
-        /// <summary>
-        ///     BoundingBox de la pared
-        /// </summary>
-        public TgcBoundingAxisAlignBox BoundingBox { get; }
+		/// <summary>
+		///     Habilita el renderizado con AlphaBlending para los modelos
+		///     con textura o colores por vértice de canal Alpha.
+		///     Por default está deshabilitado.
+		/// </summary>
+		public bool AlphaBlendEnable { get; set; }
 
-        public TGCVector3 Position
-        {
-            get { return Origin; }
-        }
+		/// <summary>
+		///     Renderizar la pared
+		/// </summary>
+		public void Render()
+		{
+			if (!Enabled)
+				return;
 
-        /// <summary>
-        ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vértice de canal Alpha.
-        ///     Por default está deshabilitado.
-        /// </summary>
-        public bool AlphaBlendEnable { get; set; }
+			activateAlphaBlend();
 
-        /// <summary>
-        ///     Renderizar la pared
-        /// </summary>
-        public void Render()
-        {
-            if (!Enabled)
-                return;
+			TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", Texture);
+			TexturesManager.Instance.clear(1);
+			TgcShaders.Instance.setShaderMatrixIdentity(Effect);
+			D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionTextured;
+			Effect.Technique = Technique;
 
-            activateAlphaBlend();
+			//Render con shader
+			Effect.Begin(0);
+			Effect.BeginPass(0);
+			D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, vertices);
+			Effect.EndPass();
+			Effect.End();
 
-            TexturesManager.Instance.shaderSet(effect, "texDiffuseMap", Texture);
-            TexturesManager.Instance.clear(1);
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionTextured;
-            effect.Technique = technique;
+			resetAlphaBlend();
+		}
 
-            //Render con shader
-            effect.Begin(0);
-            effect.BeginPass(0);
-            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.TriangleList, 2, vertices);
-            effect.EndPass();
-            effect.End();
+		/// <summary>
+		///     Liberar recursos de la pared
+		/// </summary>
+		public void Dispose()
+		{
+			Texture.dispose();
+		}
 
-            resetAlphaBlend();
-        }
+		/// <summary>
+		///     Configurar punto minimo y maximo de la pared.
+		///     Se ignora un valor de cada punto según la orientación elegida.
+		///     Llamar a updateValues() para aplicar cambios.
+		/// </summary>
+		/// <param name="min">Min</param>
+		/// <param name="max">Max</param>
+		public void setExtremes(TGCVector3 min, TGCVector3 max)
+		{
+			Origin = min;
+			Size = TGCVector3.Subtract(max, min);
+		}
 
-        /// <summary>
-        ///     Liberar recursos de la pared
-        /// </summary>
-        public void Dispose()
-        {
-            Texture.dispose();
-        }
+		/// <summary>
+		///     Actualizar parámetros de la pared en base a los valores configurados
+		/// </summary>
+		public void updateValues()
+		{
+			float autoWidth;
+			float autoHeight;
 
-        /// <summary>
-        ///     Configurar punto minimo y maximo de la pared.
-        ///     Se ignora un valor de cada punto según la orientación elegida.
-        ///     Llamar a updateValues() para aplicar cambios.
-        /// </summary>
-        /// <param name="min">Min</param>
-        /// <param name="max">Max</param>
-        public void setExtremes(TGCVector3 min, TGCVector3 max)
-        {
-            Origin = min;
-            Size = TGCVector3.Subtract(max, min);
-        }
+			//Calcular los 4 corners de la pared, segun el tipo de orientacion
+			TGCVector3 bLeft, tLeft, bRight, tRight;
+			if (Orientation == Orientations.XYplane)
+			{
+				bLeft = Origin;
+				tLeft = new TGCVector3(Origin.X + Size.X, Origin.Y, Origin.Z);
+				bRight = new TGCVector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
+				tRight = new TGCVector3(Origin.X + Size.X, Origin.Y + Size.Y, Origin.Z);
 
-        /// <summary>
-        ///     Actualizar parámetros de la pared en base a los valores configurados
-        /// </summary>
-        public void updateValues()
-        {
-            float autoWidth;
-            float autoHeight;
+				autoWidth = Size.X / Texture.Width;
+				autoHeight = Size.Y / Texture.Height;
+			}
+			else if (Orientation == Orientations.YZplane)
+			{
+				bLeft = Origin;
+				tLeft = new TGCVector3(Origin.X, Origin.Y, Origin.Z + Size.Z);
+				bRight = new TGCVector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
+				tRight = new TGCVector3(Origin.X, Origin.Y + Size.Y, Origin.Z + Size.Z);
 
-            //Calcular los 4 corners de la pared, segun el tipo de orientacion
-            TGCVector3 bLeft, tLeft, bRight, tRight;
-            if (Orientation == Orientations.XYplane)
-            {
-                bLeft = Origin;
-                tLeft = new TGCVector3(Origin.X + Size.X, Origin.Y, Origin.Z);
-                bRight = new TGCVector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
-                tRight = new TGCVector3(Origin.X + Size.X, Origin.Y + Size.Y, Origin.Z);
+				autoWidth = Size.Y / Texture.Width;
+				autoHeight = Size.Z / Texture.Height;
+			}
+			else
+			{
+				bLeft = Origin;
+				tLeft = new TGCVector3(Origin.X + Size.X, Origin.Y, Origin.Z);
+				bRight = new TGCVector3(Origin.X, Origin.Y, Origin.Z + Size.Z);
+				tRight = new TGCVector3(Origin.X + Size.X, Origin.Y, Origin.Z + Size.Z);
 
-                autoWidth = Size.X / Texture.Width;
-                autoHeight = Size.Y / Texture.Height;
-            }
-            else if (Orientation == Orientations.YZplane)
-            {
-                bLeft = Origin;
-                tLeft = new TGCVector3(Origin.X, Origin.Y, Origin.Z + Size.Z);
-                bRight = new TGCVector3(Origin.X, Origin.Y + Size.Y, Origin.Z);
-                tRight = new TGCVector3(Origin.X, Origin.Y + Size.Y, Origin.Z + Size.Z);
+				autoWidth = Size.X / Texture.Width;
+				autoHeight = Size.Z / Texture.Height;
+			}
 
-                autoWidth = Size.Y / Texture.Width;
-                autoHeight = Size.Z / Texture.Height;
-            }
-            else
-            {
-                bLeft = Origin;
-                tLeft = new TGCVector3(Origin.X + Size.X, Origin.Y, Origin.Z);
-                bRight = new TGCVector3(Origin.X, Origin.Y, Origin.Z + Size.Z);
-                tRight = new TGCVector3(Origin.X + Size.X, Origin.Y, Origin.Z + Size.Z);
+			//Auto ajustar UV
+			if (AutoAdjustUv)
+			{
+				UTile = autoHeight;
+				VTile = autoWidth;
+			}
+			var offsetU = UVOffset.X;
+			var offsetV = UVOffset.Y;
 
-                autoWidth = Size.X / Texture.Width;
-                autoHeight = Size.Z / Texture.Height;
-            }
+			//Primer triangulo
+			vertices[0] = new CustomVertex.PositionTextured(bLeft, offsetU + UTile, offsetV + VTile);
+			vertices[1] = new CustomVertex.PositionTextured(tLeft, offsetU, offsetV + VTile);
+			vertices[2] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
 
-            //Auto ajustar UV
-            if (AutoAdjustUv)
-            {
-                UTile = autoHeight;
-                VTile = autoWidth;
-            }
-            var offsetU = UVOffset.X;
-            var offsetV = UVOffset.Y;
+			//Segundo triangulo
+			vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + UTile, offsetV + VTile);
+			vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
+			vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + UTile, offsetV);
 
-            //Primer triangulo
-            vertices[0] = new CustomVertex.PositionTextured(bLeft, offsetU + UTile, offsetV + VTile);
-            vertices[1] = new CustomVertex.PositionTextured(tLeft, offsetU, offsetV + VTile);
-            vertices[2] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
-
-            //Segundo triangulo
-            vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + UTile, offsetV + VTile);
-            vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
-            vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + UTile, offsetV);
-
-            /*Versión con triángulos para el otro sentido
+			/*Versión con triángulos para el otro sentido
             //Primer triangulo
             vertices[0] = new CustomVertex.PositionTextured(tLeft, 0 * this.uTile, 1 * this.vTile);
             vertices[1] = new CustomVertex.PositionTextured(bLeft, 1 * this.uTile, 1 * this.vTile);
@@ -315,124 +302,72 @@ namespace TGC.Core.Geometry
             vertices[5] = new CustomVertex.PositionTextured(tLeft, 0 * this.uTile, 1 * this.vTile);
             */
 
-            //BoundingBox
-            BoundingBox.setExtremes(bLeft, tRight);
-        }
+			//BoundingBox
+			BoundingBox.setExtremes(bLeft, tRight);
+		}
 
-        /// <summary>
-        ///     Configurar textura de la pared
-        /// </summary>
-        public void setTexture(TgcTexture texture)
-        {
-            if (Texture != null)
-            {
-                Texture.dispose();
-            }
-            Texture = texture;
-        }
+		/// <summary>
+		///     Configurar textura de la pared.
+		/// </summary>
+		public void setTexture(TgcTexture texture)
+		{
+			if (Texture != null)
+			{
+				Texture.dispose();
+			}
+			Texture = texture;
+		}
 
-        /// <summary>
-        ///     Activar AlphaBlending, si corresponde
-        /// </summary>
-        protected void activateAlphaBlend()
-        {
-            if (AlphaBlendEnable)
-            {
-                D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
-                D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
-            }
-        }
+		/// <summary>
+		///     Activar AlphaBlending, si corresponde.
+		/// </summary>
+		protected void activateAlphaBlend()
+		{
+			if (AlphaBlendEnable)
+			{
+				D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
+				D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
+			}
+		}
 
-        /// <summary>
-        ///     Desactivar AlphaBlending
-        /// </summary>
-        protected void resetAlphaBlend()
-        {
-            D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
-            D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
-        }
+		/// <summary>
+		///     Desactivar AlphaBlending.
+		/// </summary>
+		protected void resetAlphaBlend()
+		{
+			D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
+			D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
+		}
 
-        /// <summary>
-        ///     Convierte la pared en un TgcMesh
-        /// </summary>
-        /// <param name="meshName">Nombre de la malla que se va a crear</param>
-        public TgcMesh toMesh(string meshName)
-        {
-            //Crear Mesh
-            var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
-                TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
+		/// <summary>
+		///     Convierte la pared en un TgcMesh.
+		/// </summary>
+		/// <param name="meshName">Nombre de la malla que se va a crear</param>
+		public TgcMesh toMesh(string meshName)
+		{
+			return TgcMesh.FromTGCPlane(meshName, this.vertices, this.Texture);
+		}
 
-            //Cargar VertexBuffer
-            using (var vb = d3dMesh.VertexBuffer)
-            {
-                var data = vb.Lock(0, 0, LockFlags.None);
-                var ceroNormal = TGCVector3.Empty;
-                var whiteColor = Color.White.ToArgb();
-                for (var j = 0; j < vertices.Length; j++)
-                {
-                    var v = new TgcSceneLoader.DiffuseMapVertex();
-                    var vPlane = vertices[j];
 
-                    //vertices
-                    v.Position = TGCVector3.FromVector3(vPlane.Position);
+		/// <summary>
+		///     Crear un nuevo TGCPlane igual a este.
+		/// </summary>
+		/// <returns>TgcPlane clonado</returns>
+		public TgcPlane clone()
+		{
+			var clonePlane = new TgcPlane();
+			clonePlane.Origin = Origin;
+			clonePlane.Size = Size;
+			clonePlane.Orientation = Orientation;
+			clonePlane.AutoAdjustUv = AutoAdjustUv;
+			clonePlane.UTile = UTile;
+			clonePlane.VTile = VTile;
+			clonePlane.AlphaBlendEnable = AlphaBlendEnable;
+			clonePlane.UVOffset = UVOffset;
+			clonePlane.setTexture(Texture.Clone());
 
-                    //normals
-                    v.Normal = ceroNormal;
-
-                    //texture coordinates diffuseMap
-                    v.Tu = vPlane.Tu;
-                    v.Tv = vPlane.Tv;
-
-                    //color
-                    v.Color = whiteColor;
-
-                    data.Write(v);
-                }
-                vb.Unlock();
-            }
-
-            //Cargar IndexBuffer en forma plana
-            using (var ib = d3dMesh.IndexBuffer)
-            {
-                var indices = new short[vertices.Length];
-                for (var j = 0; j < indices.Length; j++)
-                {
-                    indices[j] = (short)j;
-                }
-                ib.SetData(indices, 0, LockFlags.None);
-            }
-
-            //Calcular normales
-            d3dMesh.ComputeNormals();
-
-            //Malla de TGC
-            var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
-            tgcMesh.DiffuseMaps = new[] { Texture.Clone() };
-            tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
-            tgcMesh.createBoundingBox();
-            tgcMesh.Enabled = true;
-            return tgcMesh;
-        }
-
-        /// <summary>
-        ///     Crear un nuevo TgcPlane igual a este
-        /// </summary>
-        /// <returns>TgcPlane clonado</returns>
-        public TgcPlane clone()
-        {
-            var clonePlane = new TgcPlane();
-            clonePlane.Origin = Origin;
-            clonePlane.Size = Size;
-            clonePlane.Orientation = Orientation;
-            clonePlane.AutoAdjustUv = AutoAdjustUv;
-            clonePlane.UTile = UTile;
-            clonePlane.VTile = VTile;
-            clonePlane.AlphaBlendEnable = AlphaBlendEnable;
-            clonePlane.UVOffset = UVOffset;
-            clonePlane.setTexture(Texture.Clone());
-
-            updateValues();
-            return clonePlane;
-        }
-    }
+			updateValues();
+			return clonePlane;
+		}
+	}
 }
