@@ -1,4 +1,4 @@
-﻿using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -22,7 +22,7 @@ namespace TGC.Examples.GeometryBasics
     public class Esfera : TGCExampleViewer
     {
         private string currentTexture;
-        private TgcSphere sphere;
+        private TGCSphere sphere;
         private bool useTexture;
 
         public Esfera(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
@@ -37,13 +37,13 @@ namespace TGC.Examples.GeometryBasics
         public override void Init()
         {
             //Crear esfera
-            sphere = new TgcSphere();
+            sphere = new TGCSphere();
             //No recomendamos utilizar AutoTransformEnable, con juegos complejos se pierde el control.
             sphere.AutoTransformEnable = true;
             currentTexture = null;
 
             //Modifiers para vararis sus parametros
-            Modifiers.addEnum("base", typeof(TgcSphere.eBasePoly), TgcSphere.eBasePoly.ICOSAHEDRON);
+            Modifiers.addEnum("base", typeof(TGCSphere.eBasePoly), TGCSphere.eBasePoly.ICOSAHEDRON);
             Modifiers.addBoolean("inflate", "yes", true);
             Modifiers.addInterval("level of detail", new object[] { 0, 1, 2, 3, 4 }, 2);
             Modifiers.addBoolean("edges", "show", false);
@@ -80,7 +80,7 @@ namespace TGC.Examples.GeometryBasics
             var color = (Color)Modifiers["color"];
             sphere.RenderEdges = (bool)Modifiers["edges"];
             sphere.Inflate = (bool)Modifiers["inflate"];
-            sphere.BasePoly = (TgcSphere.eBasePoly)Modifiers.getValue("base");
+            sphere.BasePoly = (TGCSphere.eBasePoly)Modifiers.getValue("base");
 
             if (bTexture)
             {

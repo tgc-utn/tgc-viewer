@@ -35,6 +35,9 @@ namespace TGC.Core.Geometry
 		}
 
 		private readonly CustomVertex.PositionTextured[] vertices;
+		private TGCVector3 origin;
+		private TGCVector3 size;
+		private TGCVector2 uvOffset;
 
 		/// <summary>
 		///     Crea una pared vacia.
@@ -108,13 +111,20 @@ namespace TGC.Core.Geometry
 		///     Origen de coordenadas de la pared.
 		///     Llamar a updateValues() para aplicar cambios.
 		/// </summary>
-		public TGCVector3 Origin { get; set; }
+		public TGCVector3 Origin
+		{
+			get { return origin; }
+			set { origin = value; }
+		}
 
 		/// <summary>
 		///     Dimensiones de la pared.
-		///     Llamar a updateValues() para aplicar cambios.
 		/// </summary>
-		public TGCVector3 Size { get; set; }
+		public TGCVector3 Size
+		{
+			get { return size; }
+			set { size = value; }
+		}
 
 		/// <summary>
 		///     Orientación de la pared.
@@ -159,7 +169,11 @@ namespace TGC.Core.Geometry
 		/// <summary>
 		///     Offset UV de textura
 		/// </summary>
-		public TGCVector2 UVOffset { get; set; }
+		public TGCVector2 UVOffset
+		{
+			get { return uvOffset; }
+			set { uvOffset = value; }
+		}
 
 		/// <summary>
 		///     Indica si la pared esta habilitada para ser renderizada

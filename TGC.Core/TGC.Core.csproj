@@ -95,7 +95,7 @@
     <Compile Include="Geometry\TgcPlane.cs" />
     <Compile Include="Geometry\TgcQuad.cs" />
     <Compile Include="Geometry\TgcRay.cs" />
-    <Compile Include="Geometry\TgcSphere.cs" />
+    <Compile Include="Geometry\TGCSphere.cs" />
     <Compile Include="Geometry\TgcTriangle.cs" />
     <Compile Include="Geometry\TgcTriangleArray.cs" />
     <Compile Include="HighResolutionTimer.cs" />

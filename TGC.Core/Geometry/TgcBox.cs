@@ -17,14 +17,13 @@ namespace TGC.Core.Geometry
 	public class TGCBox : IRenderObject, ITransformObject
 	{
 		private readonly VertexBuffer vertexBuffer;
-
 		private readonly CustomVertex.PositionColoredTextured[] vertices;
-
 		private TGCVector3 rotation;
-
 		private TGCVector3 size;
-
 		private TGCVector3 translation;
+		private TGCMatrix transform;
+		private TGCVector2 uvOffset;
+		private TGCVector2 uvTiling;
 
 		/// <summary>
 		///     Crea una caja vacia
@@ -105,7 +104,11 @@ namespace TGC.Core.Geometry
 		/// <summary>
 		///     Rotación absoluta de la caja
 		/// </summary>
-		public TGCVector3 Rotation { get; set; }
+		public TGCVector3 Rotation
+		{
+			get { return rotation; }
+			set { rotation = value; }
+		}
 
 		/// <summary>
 		///     Escala de la caja. Siempre es (1, 1, 1).
@@ -142,7 +145,11 @@ namespace TGC.Core.Geometry
 		///     en base a los valores de: Position, Rotation, Scale.
 		///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
 		/// </summary>
-		public TGCMatrix Transform { get; set; }
+		public TGCMatrix Transform
+		{
+			get { return transform; }
+			set { transform = value; }
+		}
 
 		/// <summary>
 		///     Textura de la caja
@@ -152,12 +159,20 @@ namespace TGC.Core.Geometry
 		/// <summary>
 		///     Offset UV de textura
 		/// </summary>
-		public TGCVector2 UVOffset { get; set; }
+		public TGCVector2 UVOffset
+		{
+			get { return uvOffset; }
+			set { uvOffset = value; }
+		}
 
 		/// <summary>
 		///     Tiling UV de textura
 		/// </summary>
-		public TGCVector2 UVTiling { get; set; }
+		public TGCVector2 UVTiling
+		{
+			get { return uvTiling; }
+			set { uvTiling = value; }
+		}
 
 		/// <summary>
 		///     Renderizar la caja
@@ -440,7 +455,6 @@ namespace TGC.Core.Geometry
 
 			return TgcMesh.FromTGCBox(meshName, this.Texture, this.vertices, this.Transform, this.AlphaBlendEnable);
 		}
-
 
 		/// <summary>
 		///     Crear un nuevo TgcBox igual a este
