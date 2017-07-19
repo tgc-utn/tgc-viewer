@@ -1,11 +1,11 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
+﻿using Microsoft.DirectX.DirectInput;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using Device = Microsoft.DirectX.Direct3D.Device;
 
 namespace TGC.Examples.Quake3Loader
@@ -20,7 +20,7 @@ namespace TGC.Examples.Quake3Loader
         private const float LADO_CUBO = 1.0f;
         private const float MEDIO_LADO_CUBO = LADO_CUBO * 0.5f;
         private readonly float STEP_ANGULO = LADO_CUBO / 90;
-        private readonly Vector3 up = new Vector3(0.0f, 1.0f, 0.0f);
+        private readonly TGCVector3 up = new TGCVector3(0.0f, 1.0f, 0.0f);
         /*
          * Esta Camara es un prototipo. Esta pensada para no utilizar senos y cosenos en las rotaciones.
          * Se utiliza una camara que se desplaza sobre las caras de un cubo sin techo, ni piso.
@@ -29,14 +29,14 @@ namespace TGC.Examples.Quake3Loader
          * Entonces se puede cambiar el angulo de la direccion desplazando proporcionalmente a la cantidad de grados el punto
          * target sobre las caras del cubo.
          */
-        private Vector3 eye = new Vector3();
+        private TGCVector3 eye = new TGCVector3();
         private float latitud;
         private bool lockCam;
         private float longitud;
         protected Point mouseCenter;
-        private Vector3 sideDirection = new Vector3();
-        private Vector3 target = new Vector3();
-        private Matrix viewMatrix = Matrix.Identity;
+        private TGCVector3 sideDirection = new TGCVector3();
+        private TGCVector3 target = new TGCVector3();
+        private TGCMatrix viewMatrix = TGCMatrix.Identity;
 
         public Q3FpsCamera()
         {
@@ -48,9 +48,9 @@ namespace TGC.Examples.Quake3Loader
                 );
         }
 
-        public Vector3 ForwardDirection { get; private set; } = new Vector3();
+        public TGCVector3 ForwardDirection { get; private set; } = new TGCVector3();
 
-        public Vector3 SideDirection
+        public TGCVector3 SideDirection
         {
             get { return sideDirection; }
         }
@@ -97,7 +97,7 @@ namespace TGC.Examples.Quake3Loader
             sideDirection.Z = -forward.X;
         }
 
-        public void move(Vector3 v)
+        public void move(TGCVector3 v)
         {
             eye.Add(v);
             target.Add(v);
@@ -187,12 +187,12 @@ namespace TGC.Examples.Quake3Loader
 
             y = longitud * STEP_ANGULO - MEDIO_LADO_CUBO;
 
-            target = eye + new Vector3(x, y, z);
+            target = eye + new TGCVector3(x, y, z);
 
             recalcularDirecciones();
         }
 
-        public void setCamera(Vector3 eye, Vector3 target)
+        public void setCamera(TGCVector3 eye, TGCVector3 target)
         {
             this.eye = eye;
             this.target = target;
@@ -214,70 +214,69 @@ namespace TGC.Examples.Quake3Loader
 
         #region Miembros de TgcCamera
 
-        public Vector3 getPosition()
+        public TGCVector3 getPosition()
         {
             return eye;
         }
 
-        public Vector3 getLookAt()
+        public TGCVector3 getLookAt()
         {
             return target;
         }
 
-        public void updateCamera(float elapsedTime)
+        public void Update(float elapsedTime, TgcD3dInput input)
         {
             //Forward
-            if (TgcD3dInput.Instance.keyDown(Key.W))
+            if (input.keyDown(Key.W))
             {
                 moveForward(MovementSpeed * elapsedTime);
             }
 
             //Backward
-            if (TgcD3dInput.Instance.keyDown(Key.S))
+            if (input.keyDown(Key.S))
             {
                 moveForward(-MovementSpeed * elapsedTime);
             }
 
             //Strafe right
-            if (TgcD3dInput.Instance.keyDown(Key.D))
+            if (input.keyDown(Key.D))
             {
                 moveSide(MovementSpeed * elapsedTime);
             }
 
             //Strafe left
-            if (TgcD3dInput.Instance.keyDown(Key.A))
+            if (input.keyDown(Key.A))
             {
                 moveSide(-MovementSpeed * elapsedTime);
             }
 
             //Jump
-            if (TgcD3dInput.Instance.keyDown(Key.Space))
+            if (input.keyDown(Key.Space))
             {
                 moveUp(JumpSpeed * elapsedTime);
             }
 
             //Crouch
-            if (TgcD3dInput.Instance.keyDown(Key.LeftControl))
+            if (input.keyDown(Key.LeftControl))
             {
                 moveUp(-JumpSpeed * elapsedTime);
             }
 
-            if (TgcD3dInput.Instance.keyPressed(Key.L))
+            if (input.keyPressed(Key.L))
             {
                 LockCam = !LockCam;
             }
 
             //Solo rotar si se esta aprentando el boton izq del mouse
-            if (lockCam || TgcD3dInput.Instance.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (lockCam || input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                rotate(-TgcD3dInput.Instance.XposRelative * RotationSpeed,
-                    -TgcD3dInput.Instance.YposRelative * RotationSpeed);
+                rotate(-input.XposRelative * RotationSpeed, -input.YposRelative * RotationSpeed);
             }
 
             if (lockCam)
                 Cursor.Position = mouseCenter;
 
-            viewMatrix = Matrix.LookAtLH(eye, target, up);
+            viewMatrix = TGCMatrix.LookAtLH(eye, target, up);
 
             updateViewMatrix(D3DDevice.Instance.Device);
         }

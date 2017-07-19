@@ -2,7 +2,6 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
-using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 
@@ -11,7 +10,7 @@ namespace TGC.Core.Geometry
     /// <summary>
     ///     Herramienta para dibujar una flecha 3D.
     /// </summary>
-    public class TgcArrow : IRenderObject
+    public class TgcArrow
     {
         private readonly TGCVector3 ORIGINAL_DIR = TGCVector3.Up;
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 
@@ -327,7 +327,7 @@ namespace TGC.Examples.Quake3Loader
             var y = int.Parse(cords[2]) + 100;
             var z = int.Parse(cords[1]);
 
-            bspMap.CollisionManager.InitialPos = new Vector3(x, y, z);
+            bspMap.CollisionManager.InitialPos = new TGCVector3(x, y, z);
         }
 
         /// <summary>
@@ -740,10 +740,10 @@ namespace TGC.Examples.Quake3Loader
             var cantIndices = 2 * (L * num2 + 2) * L * num1;
 
             //aloco el espacio para los vertices y los indices
-            var vertices = new Vector3[cantVertices];
-            var normals = new Vector3[cantVertices];
-            var textCords = new Vector2[cantVertices];
-            var textCords2 = new Vector2[cantVertices];
+            var vertices = new TGCVector3[cantVertices];
+            var normals = new TGCVector3[cantVertices];
+            var textCords = new TGCVector2[cantVertices];
+            var textCords2 = new TGCVector2[cantVertices];
             var indices = new int[cantIndices];
             {
                 //se cargan las constantes de bezier
@@ -809,10 +809,10 @@ namespace TGC.Examples.Quake3Loader
 
                         for (var j2 = 0; j2 < Lj; j2++, vertexNum++)
                         {
-                            vertices[vertexNum] = new Vector3();
-                            normals[vertexNum] = new Vector3();
-                            textCords[vertexNum] = new Vector2();
-                            textCords2[vertexNum] = new Vector2();
+                            vertices[vertexNum] = new TGCVector3();
+                            normals[vertexNum] = new TGCVector3();
+                            textCords[vertexNum] = new TGCVector2();
+                            textCords2[vertexNum] = new TGCVector2();
 
                             for (var i3 = 0; i3 < 3; i3++)
                             {

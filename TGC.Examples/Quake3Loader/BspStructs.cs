@@ -1,8 +1,8 @@
-﻿using Microsoft.DirectX;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Text;
-using TGC.Core.Geometry;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -43,15 +43,15 @@ namespace TGC.Examples.Quake3Loader
         public const int SIZE = 40;
         public int firstBrush, numBrushes;
         public int firstSurface, numSurfaces;
-        public Vector3 min, max;
+        public TGCVector3 min, max;
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
-            min = new Vector3(BitConverter.ToSingle(buffer, offset + 0),
+            min = new TGCVector3(BitConverter.ToSingle(buffer, offset + 0),
                 BitConverter.ToSingle(buffer, offset + 4),
                 BitConverter.ToSingle(buffer, offset + 8));
 
-            max = new Vector3(BitConverter.ToSingle(buffer, offset + 12),
+            max = new TGCVector3(BitConverter.ToSingle(buffer, offset + 12),
                 BitConverter.ToSingle(buffer, offset + 16),
                 BitConverter.ToSingle(buffer, offset + 20));
 
@@ -86,13 +86,13 @@ namespace TGC.Examples.Quake3Loader
     {
         public const int SIZE = 16;
         public float dist;
-        public Vector3 normal;
+        public TGCVector3 normal;
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
             // en el archivo BSP Usan la Z como si fuera el Eje vertical,
             //aca hay que invertir el Z por el Y
-            normal = new Vector3(BitConverter.ToSingle(buffer, offset + 0),
+            normal = new TGCVector3(BitConverter.ToSingle(buffer, offset + 0),
                 BitConverter.ToSingle(buffer, offset + 8),
                 BitConverter.ToSingle(buffer, offset + 4));
 
@@ -129,7 +129,7 @@ namespace TGC.Examples.Quake3Loader
     {
         public const int SIZE = 48;
         public int area;
-        public TgcBoundingBox boundingBox;
+        public TgcBoundingAxisAlignBox boundingBox;
         public int cluster; // -1 = opaque cluster (do I still store these?)
 
         public int firstLeafBrush;
@@ -156,9 +156,9 @@ namespace TGC.Examples.Quake3Loader
             maxs[1] = BitConverter.ToInt32(buffer, offset + 28);
             maxs[2] = BitConverter.ToInt32(buffer, offset + 24);
 
-            var pMin = new Vector3(Math.Min(mins[0], maxs[0]), Math.Min(mins[1], maxs[1]), Math.Min(mins[2], maxs[2]));
-            var pMax = new Vector3(Math.Max(mins[0], maxs[0]), Math.Max(mins[1], maxs[1]), Math.Max(mins[2], maxs[2]));
-            boundingBox = new TgcBoundingBox(pMin, pMax);
+            var pMin = new TGCVector3(Math.Min(mins[0], maxs[0]), Math.Min(mins[1], maxs[1]), Math.Min(mins[2], maxs[2]));
+            var pMax = new TGCVector3(Math.Max(mins[0], maxs[0]), Math.Max(mins[1], maxs[1]), Math.Max(mins[2], maxs[2]));
+            boundingBox = new TgcBoundingAxisAlignBox(pMin, pMax);
 
             firstLeafSurface = BitConverter.ToInt32(buffer, offset + 32);
             numLeafSurfaces = BitConverter.ToInt32(buffer, offset + 36);
@@ -225,26 +225,26 @@ namespace TGC.Examples.Quake3Loader
     {
         public const int SIZE = 44;
         public int color;
-        public Vector2 lightmap;
-        public Vector3 normal;
-        public Vector2 st;
-        public Vector3 xyz;
+        public TGCVector2 lightmap;
+        public TGCVector3 normal;
+        public TGCVector2 st;
+        public TGCVector3 xyz;
 
         public void LoadFromByteArray(byte[] buffer, int offset)
         {
             // en el archivo BSP Usan la Z como si fuera el Eje vertical,
             //aca hay que invertir el Z por el Y
-            xyz = new Vector3(BitConverter.ToSingle(buffer, offset + 0),
+            xyz = new TGCVector3(BitConverter.ToSingle(buffer, offset + 0),
                 BitConverter.ToSingle(buffer, offset + 8),
                 BitConverter.ToSingle(buffer, offset + 4));
 
-            st = new Vector2(BitConverter.ToSingle(buffer, offset + 12),
+            st = new TGCVector2(BitConverter.ToSingle(buffer, offset + 12),
                 BitConverter.ToSingle(buffer, offset + 16));
 
-            lightmap = new Vector2(BitConverter.ToSingle(buffer, offset + 20),
+            lightmap = new TGCVector2(BitConverter.ToSingle(buffer, offset + 20),
                 BitConverter.ToSingle(buffer, offset + 24));
 
-            normal = new Vector3(BitConverter.ToSingle(buffer, offset + 28),
+            normal = new TGCVector3(BitConverter.ToSingle(buffer, offset + 28),
                 BitConverter.ToSingle(buffer, offset + 36),
                 BitConverter.ToSingle(buffer, offset + 32));
 
@@ -274,8 +274,8 @@ namespace TGC.Examples.Quake3Loader
 
         public int lightmapNum;
 
-        public Vector3 lightmapOrigin;
-        public Vector3[] lightmapVecs = new Vector3[3]; // for patches, [0] and [1] are lodbounds
+        public TGCVector3 lightmapOrigin;
+        public TGCVector3[] lightmapVecs = new TGCVector3[3]; // for patches, [0] and [1] are lodbounds
         public int lightmapWidth, lightmapHeight;
         public int lightmapX, lightmapY;
         public int numIndexes;
@@ -304,19 +304,19 @@ namespace TGC.Examples.Quake3Loader
             lightmapWidth = BitConverter.ToInt32(buffer, offset + 40);
             lightmapHeight = BitConverter.ToInt32(buffer, offset + 44);
 
-            lightmapOrigin = new Vector3(BitConverter.ToSingle(buffer, offset + 48),
+            lightmapOrigin = new TGCVector3(BitConverter.ToSingle(buffer, offset + 48),
                 BitConverter.ToSingle(buffer, offset + 52),
                 BitConverter.ToSingle(buffer, offset + 56));
 
-            lightmapVecs[0] = new Vector3(BitConverter.ToSingle(buffer, offset + 60),
+            lightmapVecs[0] = new TGCVector3(BitConverter.ToSingle(buffer, offset + 60),
                 BitConverter.ToSingle(buffer, offset + 64),
                 BitConverter.ToSingle(buffer, offset + 68));
 
-            lightmapVecs[1] = new Vector3(BitConverter.ToSingle(buffer, offset + 72),
+            lightmapVecs[1] = new TGCVector3(BitConverter.ToSingle(buffer, offset + 72),
                 BitConverter.ToSingle(buffer, offset + 76),
                 BitConverter.ToSingle(buffer, offset + 80));
 
-            lightmapVecs[2] = new Vector3(BitConverter.ToSingle(buffer, offset + 84),
+            lightmapVecs[2] = new TGCVector3(BitConverter.ToSingle(buffer, offset + 84),
                 BitConverter.ToSingle(buffer, offset + 88),
                 BitConverter.ToSingle(buffer, offset + 92));
 

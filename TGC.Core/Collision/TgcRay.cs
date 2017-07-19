@@ -1,7 +1,7 @@
 using TGC.Core.Mathematica;
 using TGC.Core.Utils;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.Collision
 {
     /// <summary>
     ///     Representa un Ray 3D con un origen y una direccion, de la forma: r = p + td

@@ -1,8 +1,8 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
+﻿using Microsoft.DirectX.DirectInput;
 using System;
-using TGC.Core.Geometry;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -16,7 +16,7 @@ namespace TGC.Examples.Quake3Loader
     public class BspCollisionManager
     {
         private readonly BspMap bspMap;
-        private Vector3 antCamPos;
+        private TGCVector3 antCamPos;
 
         // Almacena si colisiono o no
         private bool bCollided;
@@ -32,14 +32,14 @@ namespace TGC.Examples.Quake3Loader
         private float traceRatio;
 
         private int traceType;
-        private Vector3 vCollisionNormal;
-        private Vector3 velocidad;
-        private Vector3 vExtents;
+        private TGCVector3 vCollisionNormal;
+        private TGCVector3 velocidad;
+        private TGCVector3 vExtents;
 
         //Boundingbox de la camara
-        private Vector3 vTraceMaxs;
+        private TGCVector3 vTraceMaxs;
 
-        private Vector3 vTraceMins;
+        private TGCVector3 vTraceMins;
 
         /// <summary>
         ///     Crear nuevo manejador de colsiones
@@ -54,17 +54,17 @@ namespace TGC.Examples.Quake3Loader
             MaxStepHeight = 40;
 
             NoClip = false;
-            velocidad = new Vector3();
-            antCamPos = Vector3.Empty;
+            velocidad = new TGCVector3();
+            antCamPos = TGCVector3.Empty;
             time = 0;
             firstTime = true;
-            PlayerBB = new TgcBoundingBox(new Vector3(-20, -60, -20), new Vector3(20, 20, 20));
+            PlayerBB = new TgcBoundingAxisAlignBox(new TGCVector3(-20, -60, -20), new TGCVector3(20, 20, 20));
         }
 
         /// <summary>
         ///     Posicion inicial en el mapa
         /// </summary>
-        public Vector3 InitialPos { get; set; }
+        public TGCVector3 InitialPos { get; set; }
 
         /// <summary>
         ///     Camara FPS especial para BSP
@@ -99,28 +99,28 @@ namespace TGC.Examples.Quake3Loader
         /// <summary>
         ///     AABB que representa el volumen del jugador o camara
         /// </summary>
-        public TgcBoundingBox PlayerBB { get; set; }
+        public TgcBoundingAxisAlignBox PlayerBB { get; set; }
 
         /// <summary>
         ///     Configurar la cámara en la posicion inicial
         /// </summary>
         public void initCamera()
         {
-            Camera.setCamera(InitialPos, InitialPos + new Vector3(1.0f, 0.0f, 0.0f));
+            Camera.setCamera(InitialPos, InitialPos + new TGCVector3(1.0f, 0.0f, 0.0f));
         }
 
         /// <summary>
         ///     Actualizar colisiones y camara
         /// </summary>
         /// <returns>Nueva posicion de la camara</returns>
-        public Vector3 update(float elapsedTime)
+        public TGCVector3 update(float elapsedTime, TgcD3dInput input)
         {
-            Camera.updateCamera(elapsedTime);
+            Camera.Update(elapsedTime, input);
 
             //Capturar eventos de algunas teclas
 
             //Jump
-            if (TgcD3dInput.Instance.keyPressed(Key.Space))
+            if (input.keyPressed(Key.Space))
             {
                 //Salta si esta en el piso
                 if (OnGround)
@@ -147,7 +147,7 @@ namespace TGC.Examples.Quake3Loader
                 var lookDir = camLookAt - camPos;
 
                 //aplico la velocidad
-                var aceleracion = new Vector3(0, -Gravity, 0);
+                var aceleracion = new TGCVector3(0, -Gravity, 0);
 
                 //aplico la gravedad
                 velocidad = velocidad + elapsedTime * aceleracion;
@@ -194,7 +194,7 @@ namespace TGC.Examples.Quake3Loader
         /// <summary>
         ///     Posicion actual
         /// </summary>
-        public Vector3 getCurrentPosition()
+        public TGCVector3 getCurrentPosition()
         {
             return Camera.getPosition();
         }
@@ -204,12 +204,12 @@ namespace TGC.Examples.Quake3Loader
         /// <summary>
         ///     Recorrer el BSP desde un punto de inicio hasta un punto de fin y detectar colisiones
         /// </summary>
-        private Vector3 Trace(Vector3 vStart, Vector3 vEnd)
+        private TGCVector3 Trace(TGCVector3 vStart, TGCVector3 vEnd)
         {
             // Initially we set our trace ratio to 1.0f, which means that we don't have
             // a collision or intersection point, so we can move freely.
             traceRatio = 1.0f;
-            vCollisionNormal = Vector3.Empty;
+            vCollisionNormal = TGCVector3.Empty;
 
             // We start out with the first node (0), setting our start and end ratio to 0 and 1.
             // We will recursively go through all of the nodes to see which brushes we should check.
@@ -230,7 +230,7 @@ namespace TGC.Examples.Quake3Loader
             //Aplico el Sliding
             var vMove = vEnd - vNewPosition;
 
-            var distance = Vector3.Dot(vMove, vCollisionNormal);
+            var distance = TGCVector3.Dot(vMove, vCollisionNormal);
 
             var vEndPosition = vEnd - vCollisionNormal * distance;
 
@@ -254,7 +254,7 @@ namespace TGC.Examples.Quake3Loader
         /// <summary>
         ///     Takes a start and end position (ray) to test against the BSP brushes
         /// </summary>
-        private Vector3 TraceRay(Vector3 vStart, Vector3 vEnd)
+        private TGCVector3 TraceRay(TGCVector3 vStart, TGCVector3 vEnd)
         {
             // We don't use this function, but we set it up to allow us to just check a
             // ray with the BSP tree brushes.  We do so by setting the trace type to TYPE_RAY.
@@ -268,7 +268,7 @@ namespace TGC.Examples.Quake3Loader
         /// <summary>
         ///     Tests a sphere around our movement vector against the BSP brushes for collision
         /// </summary>
-        private Vector3 TraceSphere(Vector3 vStart, Vector3 vEnd, float radius)
+        private TGCVector3 TraceSphere(TGCVector3 vStart, TGCVector3 vEnd, float radius)
         {
             // In this tutorial we are doing sphere collision, so this is the function
             // that we will be doing to initiate our collision checks.
@@ -296,7 +296,7 @@ namespace TGC.Examples.Quake3Loader
         /// <summary>
         ///     Tests a BoundingBox around our movement vector against the BSP brushes for collision
         /// </summary>
-        private Vector3 TraceBox(Vector3 vStart, Vector3 vEnd, Vector3 vMin, Vector3 vMax)
+        private TGCVector3 TraceBox(TGCVector3 vStart, TGCVector3 vEnd, TGCVector3 vMin, TGCVector3 vMax)
         {
             traceType = TYPE_BOX; // Set the trace type to a BOX
             vTraceMaxs = vMax; // Set the max value of our AABB
@@ -306,7 +306,7 @@ namespace TGC.Examples.Quake3Loader
             bTryStep = false;
 
             // Grab the extend of our box (the largest size for each x, y, z axis)
-            vExtents = new Vector3(-vTraceMins.X > vTraceMaxs.X ? -vTraceMins.X : vTraceMaxs.X,
+            vExtents = new TGCVector3(-vTraceMins.X > vTraceMaxs.X ? -vTraceMins.X : vTraceMaxs.X,
                 -vTraceMins.Y > vTraceMaxs.Y ? -vTraceMins.Y : vTraceMaxs.Y,
                 -vTraceMins.Z > vTraceMaxs.Z ? -vTraceMins.Z : vTraceMaxs.Z);
 
@@ -326,7 +326,7 @@ namespace TGC.Examples.Quake3Loader
         /// <summary>
         ///     Traverses the BSP to find the brushes closest to our position
         /// </summary>
-        private void CheckNode(int nodeIndex, float startRatio, float endRatio, Vector3 vStart, Vector3 vEnd)
+        private void CheckNode(int nodeIndex, float startRatio, float endRatio, TGCVector3 vStart, TGCVector3 vEnd)
         {
             // Remember, the nodeIndices are stored as negative numbers when we get to a leaf, so we
             // check if the current node is a leaf, which holds brushes.  If the nodeIndex is negative,
@@ -377,8 +377,8 @@ namespace TGC.Examples.Quake3Loader
 
             // Here we use the plane equation to find out where our initial start position is
             // according the the node that we are checking.  We then grab the same info for the end pos.
-            var startDistance = Vector3.Dot(vStart, pPlane.normal) - pPlane.dist;
-            var endDistance = Vector3.Dot(vEnd, pPlane.normal) - pPlane.dist;
+            var startDistance = TGCVector3.Dot(vStart, pPlane.normal) - pPlane.dist;
+            var endDistance = TGCVector3.Dot(vEnd, pPlane.normal) - pPlane.dist;
             var offset = 0.0f;
 
             // If we are doing any type of collision detection besides a ray, we need to change
@@ -428,7 +428,7 @@ namespace TGC.Examples.Quake3Loader
                 // If we get here, then our ray needs to be split in half to check the nodes
                 // on both sides of the current splitter plane.  Thus we create 2 ratios.
                 float Ratio1 = 1.0f, Ratio2 = 0.0f, middleRatio = 0.0f;
-                Vector3 vMiddle; // This stores the middle point for our split ray
+                TGCVector3 vMiddle; // This stores the middle point for our split ray
 
                 // Start of the side as the front side to check
                 var side = pNode.children[0];
@@ -494,7 +494,7 @@ namespace TGC.Examples.Quake3Loader
         /// <summary>
         ///     Checks our movement vector against all the planes of the brush
         /// </summary>
-        private void CheckBrush(QBrush pBrush, Vector3 vStart, Vector3 vEnd)
+        private void CheckBrush(QBrush pBrush, TGCVector3 vStart, TGCVector3 vEnd)
         {
             var startRatio = -1.0f; // Like in BrushCollision.htm, start a ratio at -1
             var endRatio = 1.0f; // Set the end ratio to 1
@@ -525,8 +525,8 @@ namespace TGC.Examples.Quake3Loader
                 // Test the start and end points against the current plane of the brush side.
                 // Notice that we add an offset to the distance from the origin, which makes
                 // our sphere collision work.
-                var startDistance = Vector3.Dot(vStart, pPlane.normal) - (pPlane.dist + offset);
-                var endDistance = Vector3.Dot(vEnd, pPlane.normal) - (pPlane.dist + offset);
+                var startDistance = TGCVector3.Dot(vStart, pPlane.normal) - (pPlane.dist + offset);
+                var endDistance = TGCVector3.Dot(vEnd, pPlane.normal) - (pPlane.dist + offset);
 
                 // This is the last beefy part of code in this tutorial.  In this
                 // section we need to do a few special checks to see which extents
@@ -543,7 +543,7 @@ namespace TGC.Examples.Quake3Loader
                 // If we are using AABB collision
                 if (traceType == TYPE_BOX)
                 {
-                    var vOffset = new Vector3();
+                    var vOffset = new TGCVector3();
                     // Grab the closest corner (x, y, or z value) that is closest to the plane
                     vOffset.X = pPlane.normal.X < 0 ? vTraceMaxs.X : vTraceMins.X;
                     vOffset.Y = pPlane.normal.Y < 0 ? vTraceMaxs.Y : vTraceMins.Y;
@@ -552,10 +552,10 @@ namespace TGC.Examples.Quake3Loader
                     // Use the plane equation to grab the distance our start position is from the plane.
                     // We need to add the offset to this to see if the box collides with the plane,
                     // even if the position doesn't.
-                    startDistance = Vector3.Dot(vStart + vOffset, pPlane.normal) - pPlane.dist;
+                    startDistance = TGCVector3.Dot(vStart + vOffset, pPlane.normal) - pPlane.dist;
 
                     // Get the distance our end position is from this current brush plane
-                    endDistance = Vector3.Dot(vEnd + vOffset, pPlane.normal) - pPlane.dist;
+                    endDistance = TGCVector3.Dot(vEnd + vOffset, pPlane.normal) - pPlane.dist;
                 }
 
                 // Make sure we start outside of the brush's volume
@@ -641,7 +641,7 @@ namespace TGC.Examples.Quake3Loader
         /// <param name="vStart"></param>
         /// <param name="vEnd"></param>
         /// <returns></returns>
-        private Vector3 TryToStep(Vector3 vStart, Vector3 vEnd)
+        private TGCVector3 TryToStep(TGCVector3 vStart, TGCVector3 vEnd)
         {
             // In this function we loop until we either found a reasonable height
             // that we can step over, or find out that we can't step over anything.
@@ -657,8 +657,8 @@ namespace TGC.Examples.Quake3Loader
 
                 // Here we add the current height to our y position of a new start and end.
                 // If these 2 new start and end positions are okay, we can step up.
-                var vStepStart = new Vector3(vStart.X, vStart.Y + height, vStart.Z);
-                var vStepEnd = new Vector3(vEnd.X, vStart.Y + height, vEnd.Z);
+                var vStepStart = new TGCVector3(vStart.X, vStart.Y + height, vStart.Z);
+                var vStepEnd = new TGCVector3(vEnd.X, vStart.Y + height, vEnd.Z);
 
                 // Test to see if the new position we are trying to step collides or not
                 var vStepPosition = Trace(vStepStart, vStepEnd);

@@ -26,12 +26,12 @@ Es un motor de renderizado 3D académico utilizado para realizar los trabajos pr
     * [DirectX 9 SDK](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=6812)
 * IDEs compatibles
     * [Visual Studio Community Edition](https://www.visualstudio.com/vs/community)
-    * [Xamarin Studio Community](https://www.xamarin.com/studio) (Instalar las siguientes dependencias en orden)
+    * [MonoDevelop](http://www.monodevelop.com/) (Instalar las siguientes dependencias en orden)
         1. [.NET Framework Developer Pack](https://www.microsoft.com/net/targeting)
         2. [GTK# for .NET](http://www.mono-project.com/download/#download-win)
         3. [Microsoft Build Tools 2013](https://www.microsoft.com/es-ar/download/details.aspx?id=40760)
         4. [Microsoft Build Tools 2015](https://www.microsoft.com/es-ar/download/details.aspx?id=48159)
-        5. [Xamarin Studio Community](https://dl.xamarin.com/MonoDevelop/Windows/XamarinStudio-6.2.0.1829.msi)
+        5. [Xamarin Studio Community](https://dl.xamarin.com/MonoDevelop/Windows/XamarinStudio-6.3.0.863.msi)
 
 ### Colaboradores
 * [Daniela Kazarian](https://github.com/Dkazarian)

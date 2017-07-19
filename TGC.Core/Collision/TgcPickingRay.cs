@@ -2,7 +2,7 @@ using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 
-namespace TGC.Core.Geometry
+namespace TGC.Core.Collision
 {
     /// <summary>
     ///     Utilidad para crear

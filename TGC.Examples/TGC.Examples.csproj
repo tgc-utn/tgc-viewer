@@ -214,6 +214,15 @@
     <Compile Include="Optimization\PortalRenderingFramework.cs" />
     <Compile Include="Engine2D\Sprite2D.cs" />
     <Compile Include="Transformations\EjemploAvion.cs" />
+    <Compile Include="Quake3Loader\BspCollisionManager.cs" />
+    <Compile Include="Quake3Loader\BspLoader.cs" />
+    <Compile Include="Quake3Loader\BspMap.cs" />
+    <Compile Include="Quake3Loader\BspMapData.cs" />
+    <Compile Include="Quake3Loader\BspStructs.cs" />
+    <Compile Include="Quake3Loader\EjemploEmpaquetarQ3Level.cs" />
+    <Compile Include="Quake3Loader\EjemploLoadQ3Level.cs" />
+    <Compile Include="Quake3Loader\Q3FpsCamera.cs" />
+    <Compile Include="Quake3Loader\Q3ShaderParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">

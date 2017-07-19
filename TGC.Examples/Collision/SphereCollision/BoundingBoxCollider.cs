@@ -1,6 +1,5 @@
 ﻿using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
-using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Collision.SphereCollision
