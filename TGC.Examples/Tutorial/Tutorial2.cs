@@ -45,7 +45,7 @@ namespace TGC.Examples.Tutorial
 
             //De toda la escena solo nos interesa guardarnos el primer modelo (el único que hay en este caso).
             mesh = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml").Meshes[0];
-            mesh.AutoTransformEnable = true;
+            mesh.AutoTransform = true;
             mesh.RotateY(FastMath.QUARTER_PI);
             mesh.Move(new TGCVector3(100, 40, -200));
             //mesh.Transform = TGCMatrix.RotationY(FastMath.QUARTER_PI) * TGCMatrix.Translation(100,40,-200);

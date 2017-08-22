@@ -17,12 +17,12 @@ float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
 texture texDiffuseMap;
 sampler2D diffuseMap = sampler_state
 {
-	Texture = (texDiffuseMap);
-	ADDRESSU = WRAP;
-	ADDRESSV = WRAP;
-	MINFILTER = LINEAR;
-	MAGFILTER = LINEAR;
-	MIPFILTER = LINEAR;
+    Texture = (texDiffuseMap);
+    ADDRESSU = WRAP;
+    ADDRESSV = WRAP;
+    MINFILTER = LINEAR;
+    MAGFILTER = LINEAR;
+    MIPFILTER = LINEAR;
 };
 
 float darkFactor;
@@ -33,9 +33,9 @@ float textureOffset;
 
 struct VS_OUTPUT
 {
-	float4 Position : POSITION;
-	float4 Color : COLOR0;
-	float2 TexCoord : TEXCOORD0;
+    float4 Position : POSITION;
+    float4 Color : COLOR0;
+    float2 TexCoord : TEXCOORD0;
 };
 
 VS_OUTPUT VS_main(
@@ -45,13 +45,13 @@ VS_OUTPUT VS_main(
 	float2 TexCoord : TEXCOORD0
 )
 {
-	VS_OUTPUT Out = (VS_OUTPUT)0;
+    VS_OUTPUT Out = (VS_OUTPUT) 0;
 
-	Out.Position = mul(Position, matWorldViewProj);
-	Out.Color = Color;
-	Out.TexCoord = TexCoord;
+    Out.Position = mul(Position, matWorldViewProj);
+    Out.Color = Color;
+    Out.TexCoord = TexCoord;
 
-	return Out;
+    return Out;
 }
 
 VS_OUTPUT VS_randomTexCoord(
@@ -61,13 +61,13 @@ VS_OUTPUT VS_randomTexCoord(
 	float2 TexCoord : TEXCOORD0
 )
 {
-	VS_OUTPUT Out = (VS_OUTPUT)0;
+    VS_OUTPUT Out = (VS_OUTPUT) 0;
 
-	Out.Position = mul(Position, matWorldViewProj);
-	Out.Color = Color;
-	Out.TexCoord = TexCoord + random;
+    Out.Position = mul(Position, matWorldViewProj);
+    Out.Color = Color;
+    Out.TexCoord = TexCoord + random;
 
-	return Out;
+    return Out;
 }
 
 VS_OUTPUT VS_randomColor(
@@ -77,13 +77,13 @@ VS_OUTPUT VS_randomColor(
 	float2 TexCoord : TEXCOORD0
 )
 {
-	VS_OUTPUT Out = (VS_OUTPUT)0;
+    VS_OUTPUT Out = (VS_OUTPUT) 0;
 
-	Out.Position = mul(Position, matWorldViewProj);
-	Out.Color = random;
-	Out.TexCoord = TexCoord;
+    Out.Position = mul(Position, matWorldViewProj);
+    Out.Color = random;
+    Out.TexCoord = TexCoord;
 
-	return Out;
+    return Out;
 }
 
 VS_OUTPUT VS_textureOffset(
@@ -93,113 +93,131 @@ VS_OUTPUT VS_textureOffset(
 	float2 TexCoord : TEXCOORD0
 )
 {
-	VS_OUTPUT Out = (VS_OUTPUT)0;
+    VS_OUTPUT Out = (VS_OUTPUT) 0;
 
-	Out.Position = mul(Position, matWorldViewProj);
-	Out.Color = random;
-	Out.TexCoord = TexCoord;
-	Out.TexCoord[0] += textureOffset;
+    Out.Position = mul(Position, matWorldViewProj);
+    Out.Color = random;
+    Out.TexCoord = TexCoord;
+    Out.TexCoord[0] += textureOffset;
 
-	return Out;
+    return Out;
 }
 
 /*********************************************** Pixel Shaders ***************************************************/
 
 float4 PS_onlyColor(VS_OUTPUT In) : COLOR
 {
-	return In.Color;
+    return In.Color;
 }
 
 float4 PS_onlyTexture(VS_OUTPUT In) : COLOR
 {
-	return tex2D(diffuseMap, In.TexCoord);
+    return tex2D(diffuseMap, In.TexCoord);
 }
 
 float4 PS_darkening(VS_OUTPUT In) : COLOR
 {
-	return darkFactor * tex2D(diffuseMap, In.TexCoord);
+    return darkFactor * tex2D(diffuseMap, In.TexCoord);
 }
 
 float4 PS_complementing(VS_OUTPUT In) : COLOR
 {
-	return 1 - tex2D(diffuseMap, In.TexCoord);
+    return 1 - tex2D(diffuseMap, In.TexCoord);
 }
 
 float4 PS_maskRedOut(VS_OUTPUT In) : COLOR
 {
-	float4 outColor = tex2D(diffuseMap, In.TexCoord);
-	outColor.r = 0.0f;
-	return outColor;
+    float4 outColor = tex2D(diffuseMap, In.TexCoord);
+    outColor.r = 0.0f;
+    return outColor;
 }
 
 float4 PS_redOnly(VS_OUTPUT In) : COLOR
 {
-	float4 outColor = tex2D(diffuseMap, In.TexCoord);
-	outColor.bga = 0.0f;
-	return outColor;
+    float4 outColor = tex2D(diffuseMap, In.TexCoord);
+    outColor.bga = 0.0f;
+    return outColor;
 }
 
 /*********************************************** Techniques ***************************************************/
 
-technique OnlyTexture {
-	pass p0 {
-		VertexShader = compile vs_2_0 VS_main();
-		PixelShader = compile ps_2_0 PS_onlyTexture();
-	}
+technique OnlyTexture
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VS_main();
+        PixelShader = compile ps_3_0 PS_onlyTexture();
+    }
 }
 
-technique OnlyColor {
-	pass p0 {
-		VertexShader = compile vs_2_0 VS_main();
-		PixelShader = compile ps_2_0 PS_onlyColor();
-	}
+technique OnlyColor
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VS_main();
+        PixelShader = compile ps_3_0 PS_onlyColor();
+    }
 }
 
-technique Darkening {
-	pass p0 {
-		VertexShader = compile vs_2_0 VS_main();
-		PixelShader = compile ps_2_0 PS_darkening();
-	}
+technique Darkening
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VS_main();
+        PixelShader = compile ps_3_0 PS_darkening();
+    }
 }
 
-technique Complementing {
-	pass p0 {
-		VertexShader = compile vs_2_0 VS_main();
-		PixelShader = compile ps_2_0 PS_complementing();
-	}
+technique Complementing
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VS_main();
+        PixelShader = compile ps_3_0 PS_complementing();
+    }
 }
 
-technique MaskRedOut {
-	pass p0 {
-		VertexShader = compile vs_2_0 VS_main();
-		PixelShader = compile ps_2_0 PS_maskRedOut();
-	}
+technique MaskRedOut
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VS_main();
+        PixelShader = compile ps_3_0 PS_maskRedOut();
+    }
 }
 
-technique RedOnly {
-	pass p0 {
-		VertexShader = compile vs_2_0 VS_main();
-		PixelShader = compile ps_2_0 PS_redOnly();
-	}
+technique RedOnly
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VS_main();
+        PixelShader = compile ps_3_0 PS_redOnly();
+    }
 }
 
-technique RandomTexCoord {
-	pass p0 {
-		VertexShader = compile vs_2_0 VS_randomTexCoord();
-		PixelShader = compile ps_2_0 PS_onlyTexture();
-	}
+technique RandomTexCoord
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VS_randomTexCoord();
+        PixelShader = compile ps_3_0 PS_onlyTexture();
+    }
 }
 
-technique RandomColorVS {
-	pass p0 {
-		VertexShader = compile vs_2_0 VS_randomColor();
-		PixelShader = compile ps_2_0 PS_onlyColor();
-	}
+technique RandomColorVS
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VS_randomColor();
+        PixelShader = compile ps_3_0 PS_onlyColor();
+    }
 }
 
-technique TextureOffset {
-	pass p0 {
-		VertexShader = compile vs_2_0 VS_textureOffset();
-		PixelShader = compile ps_2_0 PS_onlyTexture();
-	}
+technique TextureOffset
+{
+    pass p0
+    {
+        VertexShader = compile vs_3_0 VS_textureOffset();
+        PixelShader = compile ps_3_0 PS_onlyTexture();
+    }
 }

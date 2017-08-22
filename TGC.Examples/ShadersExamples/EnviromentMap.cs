@@ -109,12 +109,12 @@ namespace TGC.Examples.ShadersExamples
 
             sceneX = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml");
             meshX = sceneX.Meshes[0];
-            meshX.AutoTransformEnable = true;
+            meshX.AutoTransform = true;
 
             scene2 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
             palmera = scene2.Meshes[0];
-            palmera.AutoTransformEnable = true;
+            palmera.AutoTransform = true;
 
             scene3 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
@@ -137,7 +137,7 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = 0; j < 15; j++)
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
-                    instance.AutoTransformEnable = true;
+                    instance.AutoTransform = true;
                     instance.Scale = new TGCVector3(0.5f, 1.5f, 0.5f);
                     var x = r[i] * (float)Math.Cos(Geometry.DegreeToRadian(180 + 10.0f * j));
                     var z = r[i] * (float)Math.Sin(Geometry.DegreeToRadian(180 + 10.0f * j));

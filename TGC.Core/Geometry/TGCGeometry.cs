@@ -1,8 +1,12 @@
 ﻿using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
 
 namespace TGC.Core
 {
-    public abstract class TGCGeometry
+    /// <summary>
+    ///     Abstraccion con el comportamiento y estado interno comun de las geometrias.
+    /// </summary>
+    public abstract class TGCGeometry : IRenderObject
     {
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
@@ -16,9 +20,20 @@ namespace TGC.Core
         /// </summary>
         public TGCVector3 Position { get; set; }
 
+        /// <summary>
+        ///     Direccion hacia arriba
+        /// </summary>
         public TGCVector3 Up { get; set; }
 
+        /// <summary>
+        ///     Direccion hacia la derecha.
+        /// </summary>
         public TGCVector3 Right { get; set; }
+
+        /// <summary>
+        ///     Direccion hacia el frente.
+        /// </summary>
+        public TGCVector3 Front { get; set; }
 
         /// <summary>
         ///     Rotación absoluta del objeto
@@ -38,6 +53,14 @@ namespace TGC.Core
         /// </summary>
         public TGCMatrix Transform { get; set; }
 
+        /// <summary>
+        ///     Iinicializacion del objeto.
+        /// </summary>
+        public abstract void Init();
+
+        /// <summary>
+        ///     Se debe escribir toda la lógica de computo del modelo.
+        /// </summary>
         public abstract void Update();
 
         /// <summary>

@@ -25,7 +25,7 @@ namespace TGC.Core.Geometry
             vertices = new CustomVertex.PositionColored[2];
             color = Color.White;
             Enabled = true;
-            AlphaBlendEnable = false;
+            AlphaBlend = false;
 
             //Shader
             effect = TgcShaders.Instance.VariosShader;
@@ -86,7 +86,7 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
+        public bool AlphaBlend { get; set; }
 
         /// <summary>
         ///     Renderizar la línea

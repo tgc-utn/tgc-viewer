@@ -99,10 +99,10 @@ namespace TGC.Examples.DirectX
 
         public override void Render()
         {
-            PreRender();
-
             //Pongo el fondo negro
-            D3DDevice.Instance.Device.Clear(ClearFlags.Target, Color.Black, 1.0f, 0);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            BeginScene();
+            ClearTextures();
 
             //Obtener valores de Modifiers
             var vAngleX = (float)Modifiers["angleX"];

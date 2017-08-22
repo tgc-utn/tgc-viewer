@@ -82,7 +82,7 @@ namespace TGC.Examples.ShadersExamples
             var loader = new TgcSceneLoader();
             var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Auto\\Auto-TgcScene.xml");
             car = scene.Meshes[0];
-            car.AutoTransformEnable = false;
+            car.AutoTransform = false;
 
             //Cargar Shader personalizado
             string compilationErrors;

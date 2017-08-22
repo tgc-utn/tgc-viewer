@@ -96,14 +96,14 @@ namespace TGC.Core.Terrain
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable
+        public bool AlphaBlend
         {
-            get { return Faces[0].AlphaBlendEnable; }
+            get { return Faces[0].AlphaBlend; }
             set
             {
                 foreach (var face in Faces)
                 {
-                    face.AlphaBlendEnable = value;
+                    face.AlphaBlend = value;
                 }
             }
         }
@@ -178,7 +178,7 @@ namespace TGC.Core.Terrain
                 faceMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
                 faceMesh.createBoundingBox();
                 faceMesh.Enabled = true;
-                faceMesh.AutoTransformEnable = false;
+                faceMesh.AutoTransform = false;
 
                 //textura
                 var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, FaceTextures[i]);

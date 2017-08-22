@@ -85,7 +85,7 @@ namespace TGC.Examples.Collision
             //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform,
             //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta
             //perdiendo el control de las transformaciones del personaje.
-            personaje.AutoTransformEnable = true;
+            personaje.AutoTransform = true;
             //Escalarlo porque es muy grande
             personaje.Position = new TGCVector3(0, 500, -100);
             //Rotarlo 180° porque esta mirando para el otro lado

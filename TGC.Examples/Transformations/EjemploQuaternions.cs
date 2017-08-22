@@ -33,7 +33,7 @@ namespace TGC.Examples.Transformations
             var textureQuat = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\paredMuyRugosa.jpg");
             boxTGCQuaternion = TGCBox.fromSize(new TGCVector3(50, 0, 0), new TGCVector3(50, 50, 50), textureQuat);
-            boxTGCQuaternion.AutoTransformEnable = false;
+            boxTGCQuaternion.AutoTransform = false;
 
             Modifiers.addVertex3f("Rotacion", TGCVector3.Empty, new TGCVector3(360, 360, 360), TGCVector3.Empty);
 

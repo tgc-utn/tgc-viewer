@@ -68,7 +68,7 @@ namespace TGC.Examples.Lights
             {
                 var co = c[i % c.Length];
                 lightMeshes[i] = TGCBox.fromSize(new TGCVector3(10, 10, 10), co);
-                lightMeshes[i].AutoTransformEnable = true;
+                lightMeshes[i].AutoTransform = true;
                 origLightPos[i] = new TGCVector3(-40, 20 + i * 20, 400);
             }
 

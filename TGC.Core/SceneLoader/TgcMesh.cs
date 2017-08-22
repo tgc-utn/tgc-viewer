@@ -286,7 +286,7 @@ namespace TGC.Core.SceneLoader
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable
+        public bool AlphaBlend
         {
             get { return alphaBlendEnable; }
             set { alphaBlendEnable = value; }
@@ -466,7 +466,7 @@ namespace TGC.Core.SceneLoader
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en True.
         /// </summary>
-        public bool AutoTransformEnable
+        public bool AutoTransform
         {
             get { return autoTransformEnable; }
             set { autoTransformEnable = value; }
@@ -592,7 +592,7 @@ namespace TGC.Core.SceneLoader
             meshInstances = new List<TgcMesh>();
             alphaBlendEnable = false;
 
-            AutoTransformEnable = false;
+            AutoTransform = false;
             AutoUpdateBoundingBox = true;
             translation = new TGCVector3(0f, 0f, 0f);
             rotation = new TGCVector3(0f, 0f, 0f);
@@ -1171,7 +1171,7 @@ namespace TGC.Core.SceneLoader
             tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
             tgcMesh.createBoundingBox();
             tgcMesh.Enabled = true;
-            tgcMesh.AlphaBlendEnable = alphaBlendEnable;
+            tgcMesh.AlphaBlend = alphaBlendEnable;
             return tgcMesh;
         }
 
@@ -1280,12 +1280,12 @@ namespace TGC.Core.SceneLoader
                 tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
                 tgcMesh.createBoundingBox();
                 tgcMesh.Enabled = true;
-                tgcMesh.AlphaBlendEnable = alphaBlendEnable;
+                tgcMesh.AlphaBlend = alphaBlendEnable;
                 return tgcMesh;
             }
         }
 
-        public static TgcMesh FromTGCPlane(string meshName, CustomVertex.PositionTextured[] vertices, TgcTexture texture)
+        public static TgcMesh FromTGCPlane(string meshName, CustomVertex.PositionTextured[] vertices, TgcTexture texture, TGCVector3? Normal)
         {
             //Crear Mesh
             var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed, TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
@@ -1305,7 +1305,7 @@ namespace TGC.Core.SceneLoader
                     v.Position = TGCVector3.FromVector3(vPlane.Position);
 
                     //normals
-                    v.Normal = ceroNormal;
+                    v.Normal = (Normal ?? TGCVector3.Empty);
 
                     //texture coordinates diffuseMap
                     v.Tu = vPlane.Tu;
@@ -1331,7 +1331,10 @@ namespace TGC.Core.SceneLoader
             }
 
             //Calcular normales
-            d3dMesh.ComputeNormals();
+            if (Normal == null)
+            {
+                d3dMesh.ComputeNormals();
+            }
 
             //Malla de TGC
             var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);

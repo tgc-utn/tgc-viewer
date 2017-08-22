@@ -12,36 +12,11 @@ namespace TGC.Core.Geometry
     ///     Herramienta para crear un Quad 3D, o un plano con ancho y largo acotado,
     ///     en base al centro y una normal.
     /// </summary>
-    public class TgcQuad : IRenderObject
+    public class TGCQuad : IRenderObject
     {
         private readonly TGCVector3 ORIGINAL_DIR = TGCVector3.Up;
 
         private readonly VertexBuffer vertexBuffer;
-
-        private Color color;
-
-        protected Effect effect;
-
-        private TGCVector3 normal;
-
-        protected string technique;
-
-        public TgcQuad()
-        {
-            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 6, D3DDevice.Instance.Device,
-                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
-
-            Center = TGCVector3.Empty;
-            normal = TGCVector3.Up;
-            Size = new TGCVector2(10, 10);
-            Enabled = true;
-            color = Color.Blue;
-            AlphaBlendEnable = false;
-
-            //Shader
-            effect = TgcShaders.Instance.VariosShader;
-            technique = TgcShaders.T_POSITION_COLORED;
-        }
 
         /// <summary>
         ///     Centro del plano
@@ -51,11 +26,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Normal del plano
         /// </summary>
-        public TGCVector3 Normal
-        {
-            get { return normal; }
-            set { normal = value; }
-        }
+        public TGCVector3 Normal { get; set; }
 
         /// <summary>
         ///     Tamaño del plano, en ancho y longitud
@@ -65,11 +36,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Color del plano
         /// </summary>
-        public Color Color
-        {
-            get { return color; }
-            set { color = value; }
-        }
+        public Color Color { get; set; }
 
         /// <summary>
         ///     Indica si el plano habilitado para ser renderizado
@@ -84,28 +51,37 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Shader del mesh
         /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
+        public Effect Effect { get; set; }
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
         ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
+        public string Technique { get; set; }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
+        public bool AlphaBlend { get; set; }
+
+        public TGCQuad()
+        {
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 6, D3DDevice.Instance.Device,
+                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+
+            Center = TGCVector3.Empty;
+            Normal = TGCVector3.Up;
+            Size = new TGCVector2(10, 10);
+            Enabled = true;
+            Color = Color.Blue;
+            AlphaBlend = false;
+
+            //Shader
+            Effect = TgcShaders.Instance.VariosShader;
+            Technique = TgcShaders.T_POSITION_COLORED;
+        }
 
         /// <summary>
         ///     Renderizar el Quad
@@ -118,17 +94,17 @@ namespace TGC.Core.Geometry
             TexturesManager.Instance.clear(0);
             TexturesManager.Instance.clear(1);
 
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
             D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
-            effect.Technique = technique;
+            Effect.Technique = Technique;
             D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //Render con shader
-            effect.Begin(0);
-            effect.BeginPass(0);
+            Effect.Begin(0);
+            Effect.BeginPass(0);
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 2);
-            effect.EndPass();
-            effect.End();
+            Effect.EndPass();
+            Effect.End();
         }
 
         /// <summary>
@@ -152,7 +128,7 @@ namespace TGC.Core.Geometry
             //Crear un Quad con dos triángulos sobre XZ con normal default (0, 1, 0)
             var min = new TGCVector3(-Size.X / 2, 0, -Size.Y / 2);
             var max = new TGCVector3(Size.X / 2, 0, Size.Y / 2);
-            var c = color.ToArgb();
+            var c = Color.ToArgb();
 
             vertices[0] = new CustomVertex.PositionColored(min, c);
             vertices[1] = new CustomVertex.PositionColored(min.X, 0, max.Z, c);
@@ -163,9 +139,9 @@ namespace TGC.Core.Geometry
             vertices[5] = new CustomVertex.PositionColored(max.X, 0, min.Z, c);
 
             //Obtener matriz de rotacion respecto de la normal del plano
-            normal.Normalize();
-            var angle = FastMath.Acos(TGCVector3.Dot(ORIGINAL_DIR, normal));
-            var axisRotation = TGCVector3.Cross(ORIGINAL_DIR, normal);
+            Normal.Normalize();
+            var angle = FastMath.Acos(TGCVector3.Dot(ORIGINAL_DIR, Normal));
+            var axisRotation = TGCVector3.Cross(ORIGINAL_DIR, Normal);
             axisRotation.Normalize();
             var t = TGCMatrix.RotationAxis(axisRotation, angle) * TGCMatrix.Translation(Center);
 

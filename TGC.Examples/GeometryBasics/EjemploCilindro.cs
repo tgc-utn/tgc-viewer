@@ -32,9 +32,9 @@ namespace TGC.Examples.GeometryBasics
         public override void Init()
         {
             cylinder = new TgcCylinder(TGCVector3.Empty, 2, 4);
-            cylinder.AutoTransformEnable = true;
+            cylinder.AutoTransform = true;
 
-            cylinder.AlphaBlendEnable = true;
+            cylinder.AlphaBlend = true;
 
             Modifiers.addBoolean("boundingCylinder", "boundingCylinder", false);
             Modifiers.addColor("color", Color.White);

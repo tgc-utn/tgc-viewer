@@ -1,8 +1,9 @@
 using System.Diagnostics;
 using System.Drawing;
-using TGC.Core.Example;
-using TGC.Util;
-using TGC.Util.Networking;
+using TGC.Core.UserControls;
+using TGC.Core.UserControls.Modifier;
+using TGC.Core.UserControls.Networking;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.Multiplayer
 {
@@ -15,35 +16,32 @@ namespace TGC.Examples.Multiplayer
     ///     y el servidor lo imprime por consola.... o como hacer el TP de Operativo en 5 min.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploNetworkingModifier : TgcExample
+    public class EjemploNetworkingModifier : TGCExampleViewer
     {
         private float acumulatedTime;
         private TgcNetworkingModifier networkingMod;
 
-        public override string getCategory()
+        public EjemploNetworkingModifier(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
         {
-            return "Multiplayer";
+            Category = "Multiplayer";
+            Name = "NetworkingModifier";
+            Description = "El cliente envia un mensaje cada 1 segundo al servidor y el servidor lo imprime por consola.";
         }
 
-        public override string getName()
-        {
-            return "NetworkingModifier";
-        }
-
-        public override string getDescription()
-        {
-            return "El cliente envia un mensaje cada 1 segundo al servidor y el servidor lo imprime por consola.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear Modifier de Networking
-            networkingMod = GuiController.Instance.Modifiers.addNetworking("Networking", "MyServer", "MyClient");
+            networkingMod = Modifiers.addNetworking("Networking", "MyServer", "MyClient");
 
             acumulatedTime = 0;
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
+        {
+            PreUpdate();
+        }
+
+        public override void Render()
         {
             //Actualizar siempre primero todos los valores de red.
             //Esto hace que el cliente y el servidor reciban todos los mensajes y actualicen su es
@@ -70,7 +68,7 @@ namespace TGC.Examples.Multiplayer
             if (networkingMod.Client.Online)
             {
                 //Mandamos un mensaje al server cada 1 segundo
-                acumulatedTime += elapsedTime;
+                acumulatedTime += ElapsedTime;
                 if (acumulatedTime > 1)
                 {
                     acumulatedTime = 0;
@@ -79,7 +77,7 @@ namespace TGC.Examples.Multiplayer
                     var msg = new TgcSocketSendMsg();
 
                     //Agregar un dato al mensaje, un string en este caso
-                    msg.write("Hello world - ElapsedTime: " + elapsedTime);
+                    msg.write("Hello world - ElapsedTime: " + ElapsedTime);
 
                     //Enviar mensaje al server
                     networkingMod.Client.send(msg);
@@ -87,7 +85,7 @@ namespace TGC.Examples.Multiplayer
             }
         }
 
-        public override void close()
+        public override void Dispose()
         {
             //Cerrar todas las conexiones
             networkingMod.dispose();

@@ -246,7 +246,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
+        public bool AlphaBlend { get; set; }
 
         /// <summary>
         ///     Renderiza la malla, si esta habilitada.
@@ -383,7 +383,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en False.
         /// </summary>
-        public bool AutoTransformEnable { get; set; }
+        public bool AutoTransform { get; set; }
 
         /// <summary>
         ///     Posicion absoluta de la Malla
@@ -504,12 +504,12 @@ namespace TGC.Core.KeyFrameLoader
             Enabled = false;
             AutoUpdateBoundingBox = true;
             MeshInstances = new List<TgcKeyFrameMesh>();
-            AlphaBlendEnable = false;
+            AlphaBlend = false;
 
             VertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
 
             //variables de movimiento
-            AutoTransformEnable = false;
+            AutoTransform = false;
             translation = new TGCVector3(0f, 0f, 0f);
             rotation = new TGCVector3(0f, 0f, 0f);
             scale = new TGCVector3(1f, 1f, 1f);
@@ -796,7 +796,7 @@ namespace TGC.Core.KeyFrameLoader
         protected void updateMeshTransform()
         {
             //Aplicar transformacion de malla
-            if (AutoTransformEnable)
+            if (AutoTransform)
             {
                 Transform = TGCMatrix.Identity
                             * TGCMatrix.Scaling(scale)
@@ -810,7 +810,7 @@ namespace TGC.Core.KeyFrameLoader
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (AlphaBlendEnable)
+            if (AlphaBlend)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;

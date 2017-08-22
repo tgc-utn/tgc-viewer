@@ -24,7 +24,7 @@ namespace TGC.Examples.MeshExamples
         private readonly Random random = new Random();
         private TgcMesh mesh;
         private List<TgcArrow> normals;
-        private List<TgcQuad> planes;
+        private List<TGCQuad> planes;
         private List<TgcTriangle> triangles;
 
         public EjemploTriangulosYPlanos(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
@@ -52,7 +52,7 @@ namespace TGC.Examples.MeshExamples
             var triCount = vertices.Length / 3;
             triangles = new List<TgcTriangle>(triCount);
             normals = new List<TgcArrow>();
-            planes = new List<TgcQuad>();
+            planes = new List<TGCQuad>();
             for (var i = 0; i < triCount; i++)
             {
                 //Obtenemos los 3 vertices del triangulo, es importante saber como esta estructurado nuestro mesh.
@@ -74,7 +74,7 @@ namespace TGC.Examples.MeshExamples
                 ///////////// Creacion de elementos para poder dibujar a pantalla (propios de este ejemplo) ///////////////
 
                 //Crear un quad (pequeno plano) con la clase TgcQuad para poder dibujar el plano que contiene al triangulo
-                var quad = new TgcQuad();
+                var quad = new TGCQuad();
                 quad.Center = center;
                 quad.Normal = normal;
                 quad.Color = adaptColorRandom(Color.DarkGreen);

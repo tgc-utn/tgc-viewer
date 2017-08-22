@@ -393,7 +393,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable
+        public bool AlphaBlend
         {
             get { return alphaBlendEnable; }
             set { alphaBlendEnable = value; }
@@ -587,7 +587,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en True.
         /// </summary>
-        public bool AutoTransformEnable
+        public bool AutoTransform
         {
             get { return autoTransformEnable; }
             set { autoTransformEnable = value; }
@@ -717,7 +717,7 @@ namespace TGC.Core.SkeletalAnimation
             alphaBlendEnable = false;
 
             //variables de movimiento
-            AutoTransformEnable = false;
+            AutoTransform = false;
             translation = new TGCVector3(0f, 0f, 0f);
             rotation = new TGCVector3(0f, 0f, 0f);
             scale = new TGCVector3(1f, 1f, 1f);
@@ -806,7 +806,7 @@ namespace TGC.Core.SkeletalAnimation
                 }
                 //Crear malla de Joint para renderizar el esqueleto
                 var jointBox = TGCBox.fromSize(jointsSize, jointsColor);
-                jointBox.AutoTransformEnable = false;
+                jointBox.AutoTransform = false;
                 skeletonRenderJoints[i] = jointBox;
             }
         }

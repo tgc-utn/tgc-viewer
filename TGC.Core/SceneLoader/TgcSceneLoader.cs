@@ -158,14 +158,14 @@ namespace TGC.Core.SceneLoader
                         }
                     }
                     //Fixloader
-                    tgcMesh.AutoTransformEnable = true;
+                    tgcMesh.AutoTransform = true;
                 }
 
                 //Crear malla instancia
                 else if (meshData.instanceType.Equals(TgcMeshData.INSTANCE))
                 {
                     tgcMesh = crearMeshInstance(meshData, tgcScene.Meshes);
-                    tgcMesh.AutoTransformEnable = true;
+                    tgcMesh.AutoTransform = true;
                 }
 
                 //Crear BoundingBox, aprovechar lo que viene del XML o crear uno por nuestra cuenta
@@ -187,7 +187,7 @@ namespace TGC.Core.SceneLoader
                 tgcMesh.Layer = meshData.layerName;
 
                 //Cargar AlphaBlending
-                tgcMesh.AlphaBlendEnable = meshData.alphaBlending;
+                tgcMesh.AlphaBlend = meshData.alphaBlending;
 
                 //agregar mesh a escena
                 tgcMesh.Enabled = true;

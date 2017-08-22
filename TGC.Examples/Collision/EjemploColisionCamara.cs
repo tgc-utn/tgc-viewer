@@ -54,34 +54,34 @@ namespace TGC.Examples.Collision
             //Obstaculo 1
             obstaculo = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(wallSize, wallHeight, 10),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
             obstaculo = TGCBox.fromExtremes(TGCVector3.Empty, new TGCVector3(10, wallHeight, wallSize),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
             obstaculo = TGCBox.fromExtremes(new TGCVector3(0, 0, wallSize),
                 new TGCVector3(wallSize, wallHeight, wallSize + 10),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 4
             obstaculo = TGCBox.fromExtremes(new TGCVector3(wallSize, 0, 0),
                 new TGCVector3(wallSize + 10, wallHeight, wallSize),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 5
             obstaculo = TGCBox.fromExtremes(new TGCVector3(wallSize / 2, 0, wallSize - 400),
                 new TGCVector3(wallSize + 10, wallHeight, wallSize - 400 + 10),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Cargar personaje con animaciones

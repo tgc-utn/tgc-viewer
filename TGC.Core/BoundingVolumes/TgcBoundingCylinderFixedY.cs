@@ -163,7 +163,7 @@ namespace TGC.Core.BoundingVolumes
             vertices = null;
         }
 
-        public bool AlphaBlendEnable { get; set; } //useless?
+        public bool AlphaBlend { get; set; } //useless?
 
         #endregion Rendering
     }

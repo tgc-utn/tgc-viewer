@@ -35,13 +35,13 @@ namespace TGC.Core.Geometry
                 D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColoredTextured.Format, Pool.Default);
 
-            AutoTransformEnable = false;
+            AutoTransform = false;
             Transform = TGCMatrix.Identity;
             translation = TGCVector3.Empty;
             rotation = TGCVector3.Empty;
             Enabled = true;
             Color = Color.White;
-            AlphaBlendEnable = false;
+            AlphaBlend = false;
             UVOffset = TGCVector2.Zero;
             UVTiling = TGCVector2.One;
 
@@ -58,7 +58,7 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
+        public bool AlphaBlend { get; set; }
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
@@ -66,7 +66,7 @@ namespace TGC.Core.Geometry
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en False.
         /// </summary>
-        public bool AutoTransformEnable { get; set; }
+        public bool AutoTransform { get; set; }
 
         /// <summary>
         ///     BoundingBox de la caja
@@ -183,7 +183,7 @@ namespace TGC.Core.Geometry
                 return;
 
             //transformacion
-            if (AutoTransformEnable)
+            if (AutoTransform)
             {
                 Transform = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
                             TGCMatrix.Translation(translation);
@@ -390,7 +390,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (AlphaBlendEnable)
+            if (AlphaBlend)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -448,12 +448,12 @@ namespace TGC.Core.Geometry
         public TgcMesh ToMesh(string meshName)
         {
             //Obtener matriz para transformar vertices
-            if (AutoTransformEnable)
+            if (AutoTransform)
             {
                 Transform = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * TGCMatrix.Translation(translation);
             }
 
-            return TgcMesh.FromTGCBox(meshName, this.Texture, this.vertices, this.Transform, this.AlphaBlendEnable);
+            return TgcMesh.FromTGCBox(meshName, this.Texture, this.vertices, this.Transform, this.AlphaBlend);
         }
 
         /// <summary>
@@ -469,10 +469,10 @@ namespace TGC.Core.Geometry
             {
                 cloneBox.setTexture(Texture.Clone());
             }
-            cloneBox.AutoTransformEnable = AutoTransformEnable;
+            cloneBox.AutoTransform = AutoTransform;
             cloneBox.Transform = Transform;
             cloneBox.rotation = rotation;
-            cloneBox.AlphaBlendEnable = AlphaBlendEnable;
+            cloneBox.AlphaBlend = AlphaBlend;
             cloneBox.UVOffset = UVOffset;
             cloneBox.UVTiling = UVTiling;
 

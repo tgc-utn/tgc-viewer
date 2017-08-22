@@ -909,7 +909,7 @@ namespace TGC.Examples.Quake3Loader
         {
             var StateLines = new List<string>();
 
-            StateLines.Add("AlphaBlendEnable = " + qstage.HasBlendFunc.ToString().ToLower() + ";");
+            StateLines.Add("AlphaBlend = " + qstage.HasBlendFunc.ToString().ToLower() + ";");
             StateLines.Add("SrcBlend = " + GLtoDXBlend(qstage.BlendSrc) + ";");
             StateLines.Add("DestBlend = " + GLtoDXBlend(qstage.BlendDest) + ";");
             //StateLines.Add("ZWriteEnable = " + (!qstage.HasBlendFunc).ToString().ToLower() + ";");

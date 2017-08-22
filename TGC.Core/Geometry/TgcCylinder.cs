@@ -30,7 +30,7 @@ namespace TGC.Core.Geometry
             color = Color.Red.ToArgb();
 
             manualTransformation = TGCMatrix.Identity;
-            AutoTransformEnable = false;
+            AutoTransform = false;
 
             initialize();
         }
@@ -120,7 +120,7 @@ namespace TGC.Core.Geometry
 
         public void Render()
         {
-            if (AlphaBlendEnable)
+            if (AlphaBlend)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
@@ -156,7 +156,7 @@ namespace TGC.Core.Geometry
             BoundingCylinder.Dispose();
         }
 
-        public bool AlphaBlendEnable { get; set; }
+        public bool AlphaBlend { get; set; }
 
         private void initialize()
         {
@@ -253,13 +253,13 @@ namespace TGC.Core.Geometry
 
         #region Transformation
 
-        public bool AutoTransformEnable { get; set; }
+        public bool AutoTransform { get; set; }
 
         public TGCMatrix Transform
         {
             get
             {
-                if (AutoTransformEnable) return BoundingCylinder.Transform;
+                if (AutoTransform) return BoundingCylinder.Transform;
                 return manualTransformation;
             }
             set { manualTransformation = value; }

@@ -35,9 +35,7 @@ namespace TGC.Examples.Camara
         {
             Input = input;
             positionEye = new TGCVector3();
-            mouseCenter = new Point(
-                D3DDevice.Instance.Device.Viewport.Width / 2,
-                D3DDevice.Instance.Device.Viewport.Height / 2);
+            mouseCenter = new Point(D3DDevice.Instance.Device.Viewport.Width / 2, D3DDevice.Instance.Device.Viewport.Height / 2);
             RotationSpeed = 0.1f;
             MovementSpeed = 500f;
             JumpSpeed = 500f;
@@ -59,8 +57,7 @@ namespace TGC.Examples.Camara
             JumpSpeed = jumpSpeed;
         }
 
-        public TgcFpsCamera(TGCVector3 positionEye, float moveSpeed, float jumpSpeed, float rotationSpeed,
-            TgcD3dInput input)
+        public TgcFpsCamera(TGCVector3 positionEye, float moveSpeed, float jumpSpeed, float rotationSpeed, TgcD3dInput input)
             : this(positionEye, moveSpeed, jumpSpeed, input)
         {
             RotationSpeed = rotationSpeed;

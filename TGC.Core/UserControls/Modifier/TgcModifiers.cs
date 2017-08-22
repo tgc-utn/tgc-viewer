@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Mathematica;
+using TGC.Core.UserControls.Networking;
 
 namespace TGC.Core.UserControls.Modifier
 {
@@ -168,7 +169,6 @@ namespace TGC.Core.UserControls.Modifier
             add(new TgcVertex2fModifier(varName, minValue, maxValue, defaultValue));
         }
 
-        /*
         /// <summary>
         ///     Modifier para Networking.
         ///     Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
@@ -202,7 +202,6 @@ namespace TGC.Core.UserControls.Modifier
             add(m);
             return m;
         }
-        */
 
         /// <summary>
         ///     Modificador que agrega un Boton

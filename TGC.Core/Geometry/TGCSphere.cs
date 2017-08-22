@@ -144,7 +144,7 @@ namespace TGC.Core.Geometry
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en False.
         /// </summary>
-        public bool AutoTransformEnable { get; set; }
+        public bool AutoTransform { get; set; }
 
         /// <summary>
         ///     Posicion absoluta del centro de la esfera
@@ -186,7 +186,7 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
+        public bool AlphaBlend { get; set; }
 
         /// <summary>
         ///     Offset UV de textura
@@ -339,13 +339,13 @@ namespace TGC.Core.Geometry
 
         protected void configure(float radius, Color color, TgcTexture texture, TGCVector3 center)
         {
-            AutoTransformEnable = false;
+            AutoTransform = false;
             Transform = TGCMatrix.Identity;
             translation = center;
             Rotation = TGCVector3.Empty;
             Enabled = true;
             scale = TGCVector3.One;
-            AlphaBlendEnable = false;
+            AlphaBlend = false;
             uvOffset = TGCVector2.Zero;
 
             //BoundingSphere
@@ -633,7 +633,7 @@ namespace TGC.Core.Geometry
                 return;
 
             //transformacion
-            if (AutoTransformEnable)
+            if (AutoTransform)
             {
                 Transform = TGCMatrix.Scaling(radius, radius, radius) * TGCMatrix.Scaling(Scale) *
                             TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *
@@ -693,7 +693,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (AlphaBlendEnable)
+            if (AlphaBlend)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -822,10 +822,10 @@ namespace TGC.Core.Geometry
 
             if (Texture != null) cloneSphere.setTexture(Texture.Clone());
 
-            cloneSphere.AutoTransformEnable = AutoTransformEnable;
+            cloneSphere.AutoTransform = AutoTransform;
             cloneSphere.Transform = Transform;
             cloneSphere.Rotation = Rotation;
-            cloneSphere.AlphaBlendEnable = AlphaBlendEnable;
+            cloneSphere.AlphaBlend = AlphaBlend;
             cloneSphere.uvOffset = uvOffset;
 
             cloneSphere.updateValues();
@@ -840,14 +840,14 @@ namespace TGC.Core.Geometry
         public TgcMesh toMesh(string meshName)
         {
             //Obtener matriz para transformar vertices
-            if (AutoTransformEnable)
+            if (AutoTransform)
             {
                 Transform = TGCMatrix.Scaling(radius, radius, radius) * TGCMatrix.Scaling(Scale) *
                             TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *
                             TGCMatrix.Translation(translation);
             }
 
-            return TgcMesh.FromTGCSphere(meshName, Texture, indices, vertices, Transform, AlphaBlendEnable);
+            return TgcMesh.FromTGCSphere(meshName, Texture, indices, vertices, Transform, AlphaBlend);
         }
 
         /// <remarks> http://gamedev.stackexchange.com/questions/31308/algorithm-for-creating-spheres David Lively</remarks>

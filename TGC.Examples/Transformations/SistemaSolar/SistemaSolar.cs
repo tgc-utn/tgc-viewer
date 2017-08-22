@@ -78,9 +78,9 @@ namespace TGC.Examples.Transformations.SistemaSolar
             });
 
             //Deshabilitamos el manejo automatico de Transformaciones de TgcMesh, para poder manipularlas en forma personalizada
-            sun.AutoTransformEnable = false;
-            earth.AutoTransformEnable = false;
-            moon.AutoTransformEnable = false;
+            sun.AutoTransform = false;
+            earth.AutoTransform = false;
+            moon.AutoTransform = false;
 
             //Camara en primera persona
             Camara = new TgcRotationalCamera(new TGCVector3(0f, 200f, 1000f), 500f, Input);
@@ -93,8 +93,9 @@ namespace TGC.Examples.Transformations.SistemaSolar
 
         public override void Render()
         {
+            //BackgroundColor
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            D3DDevice.Instance.Device.BeginScene();
+            BeginScene();
             ClearTextures();
 
             //Actualizar transformacion y renderizar el sol

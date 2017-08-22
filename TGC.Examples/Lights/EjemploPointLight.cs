@@ -61,7 +61,7 @@ namespace TGC.Examples.Lights
             skeletalMesh.computeNormals();
 
             //Pongo al mesh en posicion, activo e AutoTransform
-            skeletalMesh.AutoTransformEnable = true;
+            skeletalMesh.AutoTransform = true;
             skeletalMesh.Position = new TGCVector3(0, 0, 100);
             skeletalMesh.RotateY(FastMath.PI);
 
@@ -72,7 +72,7 @@ namespace TGC.Examples.Lights
             lightMesh = TGCBox.fromSize(new TGCVector3(10, 10, 10));
 
             //Pongo al mesh en posicion, activo e AutoTransform
-            lightMesh.AutoTransformEnable = true;
+            lightMesh.AutoTransform = true;
             lightMesh.Position = new TGCVector3(0, 150, 150);
 
             //Modifiers de la luz

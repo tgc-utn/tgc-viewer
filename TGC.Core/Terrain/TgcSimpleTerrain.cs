@@ -23,7 +23,7 @@ namespace TGC.Core.Terrain
         public TgcSimpleTerrain()
         {
             Enabled = true;
-            AlphaBlendEnable = false;
+            AlphaBlend = false;
 
             //Shader
             effect = TgcShaders.Instance.VariosShader;
@@ -74,7 +74,7 @@ namespace TGC.Core.Terrain
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
+        public bool AlphaBlend { get; set; }
 
         /// <summary>
         ///     Renderiza el terreno

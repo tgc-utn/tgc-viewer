@@ -37,7 +37,7 @@ namespace TGC.Core.BoundingVolumes
         {
             RenderColor = Color.Yellow.ToArgb();
             dirtyValues = true;
-            AlphaBlendEnable = false;
+            AlphaBlend = false;
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace TGC.Core.BoundingVolumes
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
+        public bool AlphaBlend { get; set; }
 
         /// <summary>
         ///     Renderizar BoundingBox

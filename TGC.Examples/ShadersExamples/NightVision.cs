@@ -59,16 +59,16 @@ namespace TGC.Examples.ShadersExamples
             var scene2 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pasto\\Pasto-TgcScene.xml");
             pasto = scene2.Meshes[0];
-            pasto.AutoTransformEnable = true;
+            pasto.AutoTransform = true;
             var scene3 =
                 loader.loadSceneFromFile(MediaDir +
                                          "MeshCreator\\Meshes\\Vegetacion\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml");
             arbol = scene3.Meshes[0];
-            arbol.AutoTransformEnable = true;
+            arbol.AutoTransform = true;
             var scene4 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Arbusto2\\Arbusto2-TgcScene.xml");
             arbusto = scene4.Meshes[0];
-            arbusto.AutoTransformEnable = true;
+            arbusto.AutoTransform = true;
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();

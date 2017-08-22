@@ -58,7 +58,7 @@ namespace TGC.Examples.MeshExamples
                     //Crear instancia de modelo
                     var instance = palmeraOriginal.createMeshInstance(palmeraOriginal.Name + i + "_" + j);
                     //No recomendamos utilizar AutoTransform, en juegos complejos se pierde el control. mejor utilizar Transformaciones con matrices.
-                    instance.AutoTransformEnable = true;
+                    instance.AutoTransform = true;
                     //Desplazarlo
                     instance.Move(i * offset, 0, j * offset);
                     //instance.Scale = new TGCVector3(0.25f, 0.25f, 0.25f);

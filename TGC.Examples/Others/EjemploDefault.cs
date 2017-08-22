@@ -38,7 +38,7 @@ namespace TGC.Examples.Others
             //Cargar mesh
             var loader = new TgcSceneLoader();
             mesh = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
-            mesh.AutoTransformEnable = true;
+            mesh.AutoTransform = true;
 
             //Cargar Shader de PhongShading
             mesh.Effect = TgcShaders.Instance.TgcMeshPhongShader;
@@ -70,7 +70,7 @@ namespace TGC.Examples.Others
         {
             //BackgroundColor
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            D3DDevice.Instance.Device.BeginScene();
+            BeginScene();
             ClearTextures();
 
             //Cargar variables shader

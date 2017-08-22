@@ -19,12 +19,12 @@ float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
 texture texDiffuseMap;
 sampler2D diffuseMap = sampler_state
 {
-	Texture = (texDiffuseMap);
-	ADDRESSU = WRAP;
-	ADDRESSV = WRAP;
-	MINFILTER = LINEAR;
-	MAGFILTER = LINEAR;
-	MIPFILTER = LINEAR;
+    Texture = (texDiffuseMap);
+    ADDRESSU = WRAP;
+    ADDRESSV = WRAP;
+    MINFILTER = LINEAR;
+    MAGFILTER = LINEAR;
+    MIPFILTER = LINEAR;
 };
 
 /**************************************************************************************/
@@ -34,41 +34,41 @@ sampler2D diffuseMap = sampler_state
 //Input del Vertex Shader
 struct VS_INPUT_VERTEX_COLOR
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR;
+    float4 Position : POSITION0;
+    float4 Color : COLOR;
 };
 
 //Output del Vertex Shader
 struct VS_OUTPUT_VERTEX_COLOR
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR;
+    float4 Position : POSITION0;
+    float4 Color : COLOR;
 };
 
 //Vertex Shader
 VS_OUTPUT_VERTEX_COLOR vs_VertexColor(VS_INPUT_VERTEX_COLOR input)
 {
-	VS_OUTPUT_VERTEX_COLOR output;
+    VS_OUTPUT_VERTEX_COLOR output;
 
 	//Proyectar posicion
-	output.Position = mul(input.Position, matWorldViewProj);
+    output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar color directamente
-	output.Color = input.Color;
+    output.Color = input.Color;
 
-	return output;
+    return output;
 }
 
 //Input del Pixel Shader
 struct PS_INPUT_VERTEX_COLOR
 {
-	float4 Color : COLOR0;
+    float4 Color : COLOR0;
 };
 
 //Pixel Shader
 float4 ps_VertexColor(PS_INPUT_VERTEX_COLOR input) : COLOR0
 {
-	return input.Color;
+    return input.Color;
 }
 
 /*
@@ -76,11 +76,11 @@ float4 ps_VertexColor(PS_INPUT_VERTEX_COLOR input) : COLOR0
 */
 technique VERTEX_COLOR
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_VertexColor();
-		PixelShader = compile ps_2_0 ps_VertexColor();
-	}
+    pass Pass_0
+    {
+        VertexShader = compile vs_3_0 vs_VertexColor();
+        PixelShader = compile ps_3_0 ps_VertexColor();
+    }
 }
 
 /**************************************************************************************/
@@ -90,48 +90,48 @@ technique VERTEX_COLOR
 //Input del Vertex Shader
 struct VS_INPUT_DIFFUSE_MAP
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR;
-	float2 Texcoord : TEXCOORD0;
+    float4 Position : POSITION0;
+    float4 Color : COLOR;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Output del Vertex Shader
 struct VS_OUTPUT_DIFFUSE_MAP
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR;
-	float2 Texcoord : TEXCOORD0;
+    float4 Position : POSITION0;
+    float4 Color : COLOR;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Vertex Shader
 VS_OUTPUT_DIFFUSE_MAP vs_DiffuseMap(VS_INPUT_DIFFUSE_MAP input)
 {
-	VS_OUTPUT_DIFFUSE_MAP output;
+    VS_OUTPUT_DIFFUSE_MAP output;
 
 	//Proyectar posicion
-	output.Position = mul(input.Position, matWorldViewProj);
+    output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar color directamente
-	output.Color = input.Color;
+    output.Color = input.Color;
 
 	//Enviar Texcoord directamente
-	output.Texcoord = input.Texcoord;
+    output.Texcoord = input.Texcoord;
 
-	return output;
+    return output;
 }
 
 //Input del Pixel Shader
 struct PS_DIFFUSE_MAP
 {
-	float4 Color : COLOR;
-	float2 Texcoord : TEXCOORD0;
+    float4 Color : COLOR;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Pixel Shader
 float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 {
 	//Modular color de la textura por color del mesh
-	return tex2D(diffuseMap, input.Texcoord) * input.Color;
+    return tex2D(diffuseMap, input.Texcoord) * input.Color;
 }
 
 /*
@@ -139,9 +139,9 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 */
 technique DIFFUSE_MAP
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_DiffuseMap();
-		PixelShader = compile ps_2_0 ps_DiffuseMap();
-	}
+    pass Pass_0
+    {
+        VertexShader = compile vs_3_0 vs_DiffuseMap();
+        PixelShader = compile ps_3_0 ps_DiffuseMap();
+    }
 }

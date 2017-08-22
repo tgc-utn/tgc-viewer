@@ -145,7 +145,7 @@ namespace TGC.Core.SceneLoader
                 meshExport.MeshData.pMin = TGCVector3.Vector3ToFloat3Array(tgcMesh.BoundingBox.PMin);
                 meshExport.MeshData.pMax = TGCVector3.Vector3ToFloat3Array(tgcMesh.BoundingBox.PMax);
                 meshExport.MeshData.userProperties = tgcMesh.UserProperties;
-                meshExport.MeshData.alphaBlending = tgcMesh.AlphaBlendEnable;
+                meshExport.MeshData.alphaBlending = tgcMesh.AlphaBlend;
 
                 //Exportar malla original
                 if (tgcMesh.ParentInstance == null)
@@ -537,7 +537,7 @@ namespace TGC.Core.SceneLoader
                     tgcMaterial.SpecularColor.Alpha
                 };
                 materialData.opacity = 1f;
-                materialData.alphaBlendEnable = tgcMesh.AlphaBlendEnable;
+                materialData.alphaBlendEnable = tgcMesh.AlphaBlend;
 
                 //Texture
                 var tgcTexture = tgcMesh.DiffuseMaps[0];
@@ -587,7 +587,7 @@ namespace TGC.Core.SceneLoader
                         tgcMaterial.SpecularColor.Alpha
                     };
                     materialData.opacity = 1f;
-                    materialData.alphaBlendEnable = tgcMesh.AlphaBlendEnable;
+                    materialData.alphaBlendEnable = tgcMesh.AlphaBlend;
 
                     //Texture
                     var tgcTexture = tgcMesh.DiffuseMaps[i];
@@ -1217,7 +1217,7 @@ namespace TGC.Core.SceneLoader
             tgcMesh.createBoundingBox();
             tgcMesh.Materials = materials;
             tgcMesh.DiffuseMaps = textures;
-            tgcMesh.AlphaBlendEnable = mesh1.AlphaBlendEnable;
+            tgcMesh.AlphaBlend = mesh1.AlphaBlend;
             tgcMesh.Enabled = mesh1.Enabled;
 
             //Transformaciones con la identidad (porque ya transformamos los vertices)
@@ -1225,7 +1225,7 @@ namespace TGC.Core.SceneLoader
             tgcMesh.Rotation = TGCVector3.Empty;
             tgcMesh.Scale = TGCVector3.One;
             tgcMesh.Transform = TGCMatrix.Identity;
-            tgcMesh.AutoTransformEnable = mesh1.AutoTransformEnable;
+            tgcMesh.AutoTransform = mesh1.AutoTransform;
 
             //Agregar userProperties de ambos
             if (mesh1.UserProperties != null || mesh2.UserProperties != null)

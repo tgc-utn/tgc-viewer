@@ -53,7 +53,7 @@ namespace TGC.Examples.Sound
             //Crear piso
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             piso = TGCBox.fromSize(new TGCVector3(5000, 5, 5000), pisoTexture);
-            piso.AutoTransformEnable = true;
+            piso.AutoTransform = true;
             piso.Position = new TGCVector3(0, -60, 0);
 
             //Cargar obstaculos y posicionarlos. Los obstaculos se crean con TgcBox en lugar de cargar un modelo.
@@ -65,7 +65,7 @@ namespace TGC.Examples.Sound
             //Obstaculo 1
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 150, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack3\\goo2.jpg"));
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculo.Position = new TGCVector3(-250, 0, 0);
             obstaculos.Add(obstaculo);
 
@@ -81,7 +81,7 @@ namespace TGC.Examples.Sound
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 300, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\lun_dirt.jpg"));
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculo.Position = new TGCVector3(250, 0, 800);
             obstaculos.Add(obstaculo);
 
@@ -94,7 +94,7 @@ namespace TGC.Examples.Sound
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 100, 150),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\Metal2_1.jpg"));
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculo.Position = new TGCVector3(500, 0, -400);
             obstaculos.Add(obstaculo);
 
@@ -108,7 +108,7 @@ namespace TGC.Examples.Sound
             var scene =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
             personaje = scene.Meshes[0];
-            personaje.AutoTransformEnable = true;
+            personaje.AutoTransform = true;
             personaje.Position = new TGCVector3(0, -50, 0);
 
             //Hacer que el Listener del sonido 3D siga al personaje

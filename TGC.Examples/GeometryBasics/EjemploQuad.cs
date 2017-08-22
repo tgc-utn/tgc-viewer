@@ -19,7 +19,7 @@ namespace TGC.Examples.GeometryBasics
     public class EjemploQuad : TGCExampleViewer
     {
         private TgcArrow normalArrow;
-        private TgcQuad quad;
+        private TGCQuad quad;
 
         public EjemploQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -33,7 +33,7 @@ namespace TGC.Examples.GeometryBasics
         public override void Init()
         {
             //Crear Quad vacio
-            quad = new TgcQuad();
+            quad = new TGCQuad();
 
             //Modifiers para vararia sus parametros
             Modifiers.addVertex2f("size", TGCVector2.Zero, new TGCVector2(100, 100), new TGCVector2(20, 20));

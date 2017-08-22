@@ -79,7 +79,7 @@ namespace TGC.Examples.Tutorial
             center = new TGCVector3(-15, 0, 0);
             texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\cajaMetal.jpg");
             box3 = TGCBox.fromSize(center, size, texture);
-            box3.AutoTransformEnable = true;
+            box3.AutoTransform = true;
 
             //Ubicar la camara del framework mirando al centro de este objeto.
             //La camara por default del framework es RotCamera, cuyo comportamiento es

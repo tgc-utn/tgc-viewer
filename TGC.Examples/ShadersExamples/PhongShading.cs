@@ -75,7 +75,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Crear caja para indicar ubicacion de la luz
             lightBox = TGCBox.fromSize(new TGCVector3(5, 5, 5), Color.Yellow);
-            lightBox.AutoTransformEnable = true;
+            lightBox.AutoTransform = true;
 
             // Creo 3 viewport, para mostrar una comparativa entre los metodos de iluminacion
 

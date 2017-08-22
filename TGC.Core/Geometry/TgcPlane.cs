@@ -35,9 +35,6 @@ namespace TGC.Core.Geometry
         }
 
         private readonly CustomVertex.PositionTextured[] vertices;
-        private TGCVector3 origin;
-        private TGCVector3 size;
-        private TGCVector2 uvOffset;
 
         /// <summary>
         ///     Crea una pared vacia.
@@ -50,7 +47,7 @@ namespace TGC.Core.Geometry
             BoundingBox = new TgcBoundingAxisAlignBox();
             UTile = 1;
             VTile = 1;
-            AlphaBlendEnable = false;
+            AlphaBlend = false;
             UVOffset = TGCVector2.Zero;
 
             //Shader
@@ -68,8 +65,7 @@ namespace TGC.Core.Geometry
         /// <param name="texture">Textura de la pared</param>
         /// <param name="uTile">Cantidad de tile de la textura en coordenada U</param>
         /// <param name="vTile">Cantidad de tile de la textura en coordenada V</param>
-        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture, float uTile,
-            float vTile)
+        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture, float uTile, float vTile)
             : this()
         {
             setTexture(texture);
@@ -111,20 +107,12 @@ namespace TGC.Core.Geometry
         ///     Origen de coordenadas de la pared.
         ///     Llamar a updateValues() para aplicar cambios.
         /// </summary>
-        public TGCVector3 Origin
-        {
-            get { return origin; }
-            set { origin = value; }
-        }
+        public TGCVector3 Origin { get; set; }
 
         /// <summary>
         ///     Dimensiones de la pared.
         /// </summary>
-        public TGCVector3 Size
-        {
-            get { return size; }
-            set { size = value; }
-        }
+        public TGCVector3 Size { get; set; }
 
         /// <summary>
         ///     Orientación de la pared.
@@ -169,11 +157,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Offset UV de textura
         /// </summary>
-        public TGCVector2 UVOffset
-        {
-            get { return uvOffset; }
-            set { uvOffset = value; }
-        }
+        public TGCVector2 UVOffset { get; set; }
 
         /// <summary>
         ///     Indica si la pared esta habilitada para ser renderizada
@@ -195,7 +179,12 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
+        public bool AlphaBlend { get; set; }
+
+        /// <summary>
+        /// La normal del plano. si no se setea se autocalcula
+        /// </summary>
+        public TGCVector3? Normal { get; set; } = null;
 
         /// <summary>
         ///     Renderizar la pared
@@ -337,7 +326,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (AlphaBlendEnable)
+            if (AlphaBlend)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -359,7 +348,7 @@ namespace TGC.Core.Geometry
         /// <param name="meshName">Nombre de la malla que se va a crear</param>
         public TgcMesh toMesh(string meshName)
         {
-            return TgcMesh.FromTGCPlane(meshName, this.vertices, this.Texture);
+            return TgcMesh.FromTGCPlane(meshName, this.vertices, this.Texture, this.Normal);
         }
 
         /// <summary>
@@ -375,7 +364,7 @@ namespace TGC.Core.Geometry
             clonePlane.AutoAdjustUv = AutoAdjustUv;
             clonePlane.UTile = UTile;
             clonePlane.VTile = VTile;
-            clonePlane.AlphaBlendEnable = AlphaBlendEnable;
+            clonePlane.AlphaBlend = AlphaBlend;
             clonePlane.UVOffset = UVOffset;
             clonePlane.setTexture(Texture.Clone());
 

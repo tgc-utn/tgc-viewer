@@ -22,12 +22,12 @@ float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
 texture texDiffuseMap;
 sampler2D diffuseMap = sampler_state
 {
-	Texture = (texDiffuseMap);
-	ADDRESSU = WRAP;
-	ADDRESSV = WRAP;
-	MINFILTER = LINEAR;
-	MAGFILTER = LINEAR;
-	MIPFILTER = LINEAR;
+    Texture = (texDiffuseMap);
+    ADDRESSU = WRAP;
+    ADDRESSV = WRAP;
+    MINFILTER = LINEAR;
+    MAGFILTER = LINEAR;
+    MIPFILTER = LINEAR;
 };
 
 //Factor de translucidez
@@ -40,47 +40,47 @@ float alphaValue = 1;
 //Input del Vertex Shader
 struct VS_INPUT_PositionColoredTextured
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR;
-	float2 Texcoord : TEXCOORD0;
+    float4 Position : POSITION0;
+    float4 Color : COLOR;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Output del Vertex Shader
 struct VS_OUTPUT_PositionColoredTextured
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR;
-	float2 Texcoord : TEXCOORD0;
+    float4 Position : POSITION0;
+    float4 Color : COLOR;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Vertex Shader
 VS_OUTPUT_PositionColoredTextured vs_PositionColoredTextured(VS_INPUT_PositionColoredTextured input)
 {
-	VS_OUTPUT_PositionColoredTextured output;
+    VS_OUTPUT_PositionColoredTextured output;
 
 	//Proyectar posicion
-	output.Position = mul(input.Position, matWorldViewProj);
+    output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar color directamente
-	output.Color = input.Color;
+    output.Color = input.Color;
 
 	//Enviar Texcoord directamente
-	output.Texcoord = input.Texcoord;
+    output.Texcoord = input.Texcoord;
 
-	return output;
+    return output;
 }
 
 //Input del Pixel Shader
 struct PS_INPUT_PositionColoredTextured
 {
-	float4 Color : COLOR0;
-	float2 Texcoord : TEXCOORD0;
+    float4 Color : COLOR0;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Pixel Shader
 float4 ps_PositionColoredTextured(PS_INPUT_PositionColoredTextured input) : COLOR0
 {
-	return input.Color * tex2D(diffuseMap, input.Texcoord);
+    return input.Color * tex2D(diffuseMap, input.Texcoord);
 }
 
 /*
@@ -88,11 +88,11 @@ float4 ps_PositionColoredTextured(PS_INPUT_PositionColoredTextured input) : COLO
 */
 technique PositionColoredTextured
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_PositionColoredTextured();
-		PixelShader = compile ps_2_0 ps_PositionColoredTextured();
-	}
+    pass Pass_0
+    {
+        VertexShader = compile vs_3_0 vs_PositionColoredTextured();
+        PixelShader = compile ps_3_0 ps_PositionColoredTextured();
+    }
 }
 
 /**************************************************************************************/
@@ -102,41 +102,41 @@ technique PositionColoredTextured
 //Input del Vertex Shader
 struct VS_INPUT_PositionTextured
 {
-	float4 Position : POSITION0;
-	float2 Texcoord : TEXCOORD0;
+    float4 Position : POSITION0;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Output del Vertex Shader
 struct VS_OUTPUT_PositionTextured
 {
-	float4 Position : POSITION0;
-	float2 Texcoord : TEXCOORD0;
+    float4 Position : POSITION0;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Vertex Shader
 VS_OUTPUT_PositionTextured vs_PositionTextured(VS_INPUT_PositionTextured input)
 {
-	VS_OUTPUT_PositionTextured output;
+    VS_OUTPUT_PositionTextured output;
 
 	//Proyectar posicion
-	output.Position = mul(input.Position, matWorldViewProj);
+    output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar Texcoord directamente
-	output.Texcoord = input.Texcoord;
+    output.Texcoord = input.Texcoord;
 
-	return output;
+    return output;
 }
 
 //Input del Pixel Shader
 struct PS_INPUT_PositionTextured
 {
-	float2 Texcoord : TEXCOORD0;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Pixel Shader
 float4 ps_PositionTextured(PS_INPUT_PositionTextured input) : COLOR0
 {
-	return tex2D(diffuseMap, input.Texcoord);
+    return tex2D(diffuseMap, input.Texcoord);
 }
 
 /*
@@ -144,11 +144,11 @@ float4 ps_PositionTextured(PS_INPUT_PositionTextured input) : COLOR0
 */
 technique PositionTextured
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_PositionTextured();
-		PixelShader = compile ps_2_0 ps_PositionTextured();
-	}
+    pass Pass_0
+    {
+        VertexShader = compile vs_3_0 vs_PositionTextured();
+        PixelShader = compile ps_3_0 ps_PositionTextured();
+    }
 }
 
 /**************************************************************************************/
@@ -158,41 +158,41 @@ technique PositionTextured
 //Input del Vertex Shader
 struct VS_INPUT_PositionColored
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR0;
+    float4 Position : POSITION0;
+    float4 Color : COLOR0;
 };
 
 //Output del Vertex Shader
 struct VS_OUTPUT_PositionColored
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR0;
+    float4 Position : POSITION0;
+    float4 Color : COLOR0;
 };
 
 //Vertex Shader
 VS_OUTPUT_PositionColored vs_PositionColored(VS_INPUT_PositionColored input)
 {
-	VS_OUTPUT_PositionColored output;
+    VS_OUTPUT_PositionColored output;
 
 	//Proyectar posicion
-	output.Position = mul(input.Position, matWorldViewProj);
+    output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar color directamente
-	output.Color = input.Color;
+    output.Color = input.Color;
 
-	return output;
+    return output;
 }
 
 //Input del Pixel Shader
 struct PS_INPUT_PositionColored
 {
-	float4 Color : COLOR0;
+    float4 Color : COLOR0;
 };
 
 //Pixel Shader
 float4 ps_PositionColored(PS_INPUT_PositionColored input) : COLOR0
 {
-	return input.Color;
+    return input.Color;
 }
 
 /*
@@ -200,11 +200,11 @@ float4 ps_PositionColored(PS_INPUT_PositionColored input) : COLOR0
 */
 technique PositionColored
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_PositionColored();
-		PixelShader = compile ps_2_0 ps_PositionColored();
-	}
+    pass Pass_0
+    {
+        VertexShader = compile vs_3_0 vs_PositionColored();
+        PixelShader = compile ps_3_0 ps_PositionColored();
+    }
 }
 
 /**************************************************************************************/
@@ -214,41 +214,41 @@ technique PositionColored
 //Input del Vertex Shader
 struct VS_INPUT_PositionColoredAlpha
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR0;
+    float4 Position : POSITION0;
+    float4 Color : COLOR0;
 };
 
 //Output del Vertex Shader
 struct VS_OUTPUT_PositionColoredAlpha
 {
-	float4 Position : POSITION0;
-	float4 Color : COLOR0;
+    float4 Position : POSITION0;
+    float4 Color : COLOR0;
 };
 
 //Vertex Shader
 VS_OUTPUT_PositionColoredAlpha vs_PositionColoredAlpha(VS_INPUT_PositionColoredAlpha input)
 {
-	VS_OUTPUT_PositionColoredAlpha output;
+    VS_OUTPUT_PositionColoredAlpha output;
 
 	//Proyectar posicion
-	output.Position = mul(input.Position, matWorldViewProj);
+    output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar color directamente
-	output.Color = input.Color;
+    output.Color = input.Color;
 
-	return output;
+    return output;
 }
 
 //Input del Pixel Shader
 struct PS_INPUT_PositionColoredAlpha
 {
-	float4 Color : COLOR0;
+    float4 Color : COLOR0;
 };
 
 //Pixel Shader
 float4 ps_PositionColoredAlpha(PS_INPUT_PositionColoredAlpha input) : COLOR0
 {
-	return float4(input.Color.rgb, alphaValue);
+    return float4(input.Color.rgb, alphaValue);
 }
 
 /*
@@ -256,9 +256,9 @@ float4 ps_PositionColoredAlpha(PS_INPUT_PositionColoredAlpha input) : COLOR0
 */
 technique PositionColoredAlpha
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_PositionColoredAlpha();
-		PixelShader = compile ps_2_0 ps_PositionColoredAlpha();
-	}
+    pass Pass_0
+    {
+        VertexShader = compile vs_3_0 vs_PositionColoredAlpha();
+        PixelShader = compile ps_3_0 ps_PositionColoredAlpha();
+    }
 }

@@ -21,7 +21,7 @@ namespace TGC.Core.SceneLoader
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en True.
         /// </summary>
-        bool AutoTransformEnable { get; set; }
+        bool AutoTransform { get; set; }
 
         /// <summary>
         ///     Posicion absoluta del objeto

@@ -42,7 +42,7 @@ namespace TGC.Examples.GeometryBasics
         {
             //Crear caja vacia
             box = new TGCBox();
-            box.AutoTransformEnable = true;
+            box.AutoTransform = true;
             //Crear caja debug vacia
             debugBox = new TgcBoxDebug();
             currentTexture = null;

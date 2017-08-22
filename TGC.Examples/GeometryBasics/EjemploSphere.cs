@@ -39,7 +39,7 @@ namespace TGC.Examples.GeometryBasics
             //Crear esfera
             sphere = new TGCSphere();
             //No recomendamos utilizar AutoTransformEnable, con juegos complejos se pierde el control.
-            sphere.AutoTransformEnable = true;
+            sphere.AutoTransform = true;
             currentTexture = null;
 
             //Modifiers para vararis sus parametros

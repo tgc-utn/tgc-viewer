@@ -92,7 +92,7 @@
     <Compile Include="Geometry\TgcLine.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingOrientedBox.cs" />
     <Compile Include="Geometry\TgcPlane.cs" />
-    <Compile Include="Geometry\TgcQuad.cs" />
+    <Compile Include="Geometry\TGCQuad.cs" />
     <Compile Include="Geometry\TGCSphere.cs" />
     <Compile Include="Geometry\TgcTriangle.cs" />
     <Compile Include="Geometry\TgcTriangleArray.cs" />

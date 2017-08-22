@@ -54,7 +54,7 @@ namespace TGC.Examples.ShadersExamples
 
             // indico que tecnica voy a usar
             // Hay effectos que estan organizados con mas de una tecnica.
-            mesh.Technique = "RenderScene";
+            mesh.Technique = "RenderScene2";
 
             //Centrar camara rotacional respecto a este mesh
 
