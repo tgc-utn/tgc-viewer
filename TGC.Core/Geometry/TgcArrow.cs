@@ -18,11 +18,7 @@ namespace TGC.Core.Geometry
 
         private Color bodyColor;
 
-        protected Effect effect;
-
         private Color headColor;
-
-        protected string technique;
 
         public TgcArrow()
         {
@@ -34,11 +30,11 @@ namespace TGC.Core.Geometry
             Enabled = true;
             bodyColor = Color.Blue;
             headColor = Color.LightBlue;
-            AlphaBlendEnable = false;
+            AlphaBlend = false;
 
             //Shader
-            effect = TgcShaders.Instance.VariosShader;
-            technique = TgcShaders.T_POSITION_COLORED;
+            Effect = TgcShaders.Instance.VariosShader;
+            Technique = TgcShaders.T_POSITION_COLORED;
         }
 
         /// <summary>
@@ -93,63 +89,20 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Shader del mesh
         /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
+        public Effect Effect { get; set; }
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
         ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
+        public string Technique { get; set; }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
-
-        /// <summary>
-        ///     Renderizar la flecha
-        /// </summary>
-        public void Render()
-        {
-            if (!Enabled)
-                return;
-
-            TexturesManager.Instance.clear(0);
-            TexturesManager.Instance.clear(1);
-
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
-            effect.Technique = technique;
-            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
-
-            //Render con shader
-            effect.Begin(0);
-            effect.BeginPass(0);
-            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 18);
-            effect.EndPass();
-            effect.End();
-        }
-
-        /// <summary>
-        ///     Liberar recursos de la flecha
-        /// </summary>
-        public void Dispose()
-        {
-            if (vertexBuffer != null && !vertexBuffer.Disposed)
-            {
-                vertexBuffer.Dispose();
-            }
-        }
+        public bool AlphaBlend { get; set; }
 
         /// <summary>
         ///     Actualizar parámetros de la flecha en base a los valores configurados
@@ -262,6 +215,41 @@ namespace TGC.Core.Geometry
 
             //Cargar vertexBuffer
             vertexBuffer.SetData(vertices, 0, LockFlags.None);
+        }
+
+        /// <summary>
+        ///     Renderizar la flecha
+        /// </summary>
+        public void Render()
+        {
+            if (!Enabled)
+                return;
+
+            TexturesManager.Instance.clear(0);
+            TexturesManager.Instance.clear(1);
+
+            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
+            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
+            Effect.Technique = Technique;
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
+
+            //Render con shader
+            Effect.Begin(0);
+            Effect.BeginPass(0);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 18);
+            Effect.EndPass();
+            Effect.End();
+        }
+
+        /// <summary>
+        ///     Liberar recursos de la flecha
+        /// </summary>
+        public void Dispose()
+        {
+            if (vertexBuffer != null && !vertexBuffer.Disposed)
+            {
+                vertexBuffer.Dispose();
+            }
         }
 
         #region Creacion

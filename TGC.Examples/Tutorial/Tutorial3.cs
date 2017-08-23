@@ -137,7 +137,7 @@ namespace TGC.Examples.Tutorial
             mainMesh.Render();
 
             //Dibujamos la escena
-            scene.renderAll();
+            scene.RenderAll();
 
             //En este ejemplo a modo de debug vamos a dibujar los BoundingBox de todos los objetos.
             //Asi puede verse como se efectúa el testeo de colisiones.
@@ -152,7 +152,7 @@ namespace TGC.Examples.Tutorial
 
         public override void Dispose()
         {
-            scene.disposeAll();
+            scene.DisposeAll();
             mainMesh.Dispose();
         }
     }

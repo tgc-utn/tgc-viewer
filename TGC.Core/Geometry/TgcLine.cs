@@ -14,22 +14,17 @@ namespace TGC.Core.Geometry
     public class TgcLine : IRenderObject
     {
         private readonly CustomVertex.PositionColored[] vertices;
-        private Color color;
-
-        protected Effect effect;
-
-        protected string technique;
 
         public TgcLine()
         {
             vertices = new CustomVertex.PositionColored[2];
-            color = Color.White;
+            Color = Color.White;
             Enabled = true;
             AlphaBlend = false;
 
             //Shader
-            effect = TgcShaders.Instance.VariosShader;
-            technique = TgcShaders.T_POSITION_COLORED;
+            Effect = TgcShaders.Instance.VariosShader;
+            Technique = TgcShaders.T_POSITION_COLORED;
         }
 
         /// <summary>
@@ -45,11 +40,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Color de la linea
         /// </summary>
-        public Color Color
-        {
-            get { return color; }
-            set { color = value; }
-        }
+        public Color Color { get; set; }
 
         /// <summary>
         ///     Indica si la linea esta habilitada para ser renderizada
@@ -65,21 +56,13 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Shader del mesh
         /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
+        public Effect Effect { get; set; }
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
         ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
+        public string Technique { get; set; }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
@@ -87,6 +70,17 @@ namespace TGC.Core.Geometry
         ///     Por default está deshabilitado.
         /// </summary>
         public bool AlphaBlend { get; set; }
+
+        /// <summary>
+        ///     Actualizar parámetros de la línea en base a los valores configurados
+        /// </summary>
+        public void updateValues()
+        {
+            var c = Color.ToArgb();
+
+            vertices[0] = new CustomVertex.PositionColored(PStart, c);
+            vertices[1] = new CustomVertex.PositionColored(PEnd, c);
+        }
 
         /// <summary>
         ///     Renderizar la línea
@@ -99,16 +93,16 @@ namespace TGC.Core.Geometry
             TexturesManager.Instance.clear(0);
             TexturesManager.Instance.clear(1);
 
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
             D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
-            effect.Technique = technique;
+            Effect.Technique = Technique;
 
             //Render con shader
-            effect.Begin(0);
-            effect.BeginPass(0);
+            Effect.Begin(0);
+            Effect.BeginPass(0);
             D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, 1, vertices);
-            effect.EndPass();
-            effect.End();
+            Effect.EndPass();
+            Effect.End();
         }
 
         /// <summary>
@@ -116,17 +110,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public void Dispose()
         {
-        }
-
-        /// <summary>
-        ///     Actualizar parámetros de la línea en base a los valores configurados
-        /// </summary>
-        public void updateValues()
-        {
-            var c = color.ToArgb();
-
-            vertices[0] = new CustomVertex.PositionColored(PStart, c);
-            vertices[1] = new CustomVertex.PositionColored(PEnd, c);
+            //TODO porque esto esta vacio?
         }
 
         #region Creacion
@@ -158,7 +142,7 @@ namespace TGC.Core.Geometry
             var line = new TgcLine();
             line.PStart = start;
             line.PEnd = end;
-            line.color = color;
+            line.Color = color;
             line.updateValues();
             return line;
         }

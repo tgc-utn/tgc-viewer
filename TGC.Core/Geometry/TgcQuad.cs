@@ -18,6 +18,23 @@ namespace TGC.Core.Geometry
 
         private readonly VertexBuffer vertexBuffer;
 
+        public TGCQuad()
+        {
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 6, D3DDevice.Instance.Device,
+                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+
+            Center = TGCVector3.Empty;
+            Normal = TGCVector3.Up;
+            Size = new TGCVector2(10, 10);
+            Enabled = true;
+            Color = Color.Blue;
+            AlphaBlend = false;
+
+            //Shader
+            Effect = TgcShaders.Instance.VariosShader;
+            Technique = TgcShaders.T_POSITION_COLORED;
+        }
+
         /// <summary>
         ///     Centro del plano
         /// </summary>
@@ -66,58 +83,6 @@ namespace TGC.Core.Geometry
         /// </summary>
         public bool AlphaBlend { get; set; }
 
-        public TGCQuad()
-        {
-            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 6, D3DDevice.Instance.Device,
-                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
-
-            Center = TGCVector3.Empty;
-            Normal = TGCVector3.Up;
-            Size = new TGCVector2(10, 10);
-            Enabled = true;
-            Color = Color.Blue;
-            AlphaBlend = false;
-
-            //Shader
-            Effect = TgcShaders.Instance.VariosShader;
-            Technique = TgcShaders.T_POSITION_COLORED;
-        }
-
-        /// <summary>
-        ///     Renderizar el Quad
-        /// </summary>
-        public void Render()
-        {
-            if (!Enabled)
-                return;
-
-            TexturesManager.Instance.clear(0);
-            TexturesManager.Instance.clear(1);
-
-            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
-            Effect.Technique = Technique;
-            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
-
-            //Render con shader
-            Effect.Begin(0);
-            Effect.BeginPass(0);
-            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 2);
-            Effect.EndPass();
-            Effect.End();
-        }
-
-        /// <summary>
-        ///     Liberar recursos de la flecha
-        /// </summary>
-        public void Dispose()
-        {
-            if (vertexBuffer != null && !vertexBuffer.Disposed)
-            {
-                vertexBuffer.Dispose();
-            }
-        }
-
         /// <summary>
         ///     Actualizar parámetros del plano en base a los valores configurados
         /// </summary>
@@ -153,6 +118,41 @@ namespace TGC.Core.Geometry
 
             //Cargar vertexBuffer
             vertexBuffer.SetData(vertices, 0, LockFlags.None);
+        }
+
+        /// <summary>
+        ///     Renderizar el Quad
+        /// </summary>
+        public void Render()
+        {
+            if (!Enabled)
+                return;
+
+            TexturesManager.Instance.clear(0);
+            TexturesManager.Instance.clear(1);
+
+            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
+            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
+            Effect.Technique = Technique;
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
+
+            //Render con shader
+            Effect.Begin(0);
+            Effect.BeginPass(0);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 2);
+            Effect.EndPass();
+            Effect.End();
+        }
+
+        /// <summary>
+        ///     Liberar recursos de la flecha
+        /// </summary>
+        public void Dispose()
+        {
+            if (vertexBuffer != null && !vertexBuffer.Disposed)
+            {
+                vertexBuffer.Dispose();
+            }
         }
     }
 }

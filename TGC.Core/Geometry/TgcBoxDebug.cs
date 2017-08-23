@@ -24,12 +24,6 @@ namespace TGC.Core.Geometry
 
         private readonly VertexBuffer vertexBuffer;
 
-        private Color color;
-
-        protected Effect effect;
-
-        protected string technique;
-
         public TgcBoxDebug()
         {
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), VERTICES_COUNT,
@@ -38,12 +32,12 @@ namespace TGC.Core.Geometry
 
             Thickness = 1f;
             Enabled = true;
-            color = Color.White;
+            Color = Color.White;
             AlphaBlend = false;
 
             //Shader
-            effect = TgcShaders.Instance.VariosShader;
-            technique = TgcShaders.T_POSITION_COLORED;
+            Effect = TgcShaders.Instance.VariosShader;
+            Technique = TgcShaders.T_POSITION_COLORED;
         }
 
         /// <summary>
@@ -59,11 +53,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Color de la caja
         /// </summary>
-        public Color Color
-        {
-            get { return color; }
-            set { color = value; }
-        }
+        public Color Color { get; set; }
 
         /// <summary>
         ///     Indica si la caja esta habilitada para ser renderizada
@@ -84,21 +74,13 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Shader del mesh
         /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
+        public Effect Effect { get; set; }
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
         ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
+        public string Technique { get; set; }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
@@ -108,48 +90,13 @@ namespace TGC.Core.Geometry
         public bool AlphaBlend { get; set; }
 
         /// <summary>
-        ///     Renderizar la caja
-        /// </summary>
-        public void Render()
-        {
-            if (!Enabled)
-                return;
-
-            TexturesManager.Instance.clear(0);
-            TexturesManager.Instance.clear(1);
-
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
-            effect.Technique = technique;
-            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
-
-            //Render con shader
-            effect.Begin(0);
-            effect.BeginPass(0);
-            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, TRIANGLES_COUNT);
-            effect.EndPass();
-            effect.End();
-        }
-
-        /// <summary>
-        ///     Liberar recursos de la línea
-        /// </summary>
-        public void Dispose()
-        {
-            if (vertexBuffer != null && !vertexBuffer.Disposed)
-            {
-                vertexBuffer.Dispose();
-            }
-        }
-
-        /// <summary>
         ///     Actualizar parámetros de la caja en base a los valores configurados
         /// </summary>
         public void updateValues()
         {
             var vertices = new CustomVertex.PositionColored[VERTICES_COUNT];
             int idx;
-            var c = color.ToArgb();
+            var c = Color.ToArgb();
 
             //Botton Face
             idx = 0;
@@ -207,6 +154,41 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
+        ///     Renderizar la caja
+        /// </summary>
+        public void Render()
+        {
+            if (!Enabled)
+                return;
+
+            TexturesManager.Instance.clear(0);
+            TexturesManager.Instance.clear(1);
+
+            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
+            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
+            Effect.Technique = Technique;
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
+
+            //Render con shader
+            Effect.Begin(0);
+            Effect.BeginPass(0);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, TRIANGLES_COUNT);
+            Effect.EndPass();
+            Effect.End();
+        }
+
+        /// <summary>
+        ///     Liberar recursos de la línea
+        /// </summary>
+        public void Dispose()
+        {
+            if (vertexBuffer != null && !vertexBuffer.Disposed)
+            {
+                vertexBuffer.Dispose();
+            }
+        }
+
+        /// <summary>
         ///     Crear linea en X
         /// </summary>
         private void createLineX(CustomVertex.PositionColored[] vertices, int idx, int color, TGCVector3 min, TGCVector3 max)
@@ -239,8 +221,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crear los vértices de la línea con valores extremos especificados
         /// </summary>
-        private void createLineVertices(CustomVertex.PositionColored[] vertices, int idx, TGCVector3 min, TGCVector3 max,
-            int c)
+        private void createLineVertices(CustomVertex.PositionColored[] vertices, int idx, TGCVector3 min, TGCVector3 max, int c)
         {
             // Front face
             vertices[idx] = new CustomVertex.PositionColored(min.X, max.Y, max.Z, c);
@@ -330,7 +311,7 @@ namespace TGC.Core.Geometry
         {
             var box = new TgcBoxDebug();
             box.setPositionSize(center, size);
-            box.color = color;
+            box.Color = color;
             box.updateValues();
             return box;
         }
@@ -347,7 +328,7 @@ namespace TGC.Core.Geometry
         {
             var box = new TgcBoxDebug();
             box.setPositionSize(center, size);
-            box.color = color;
+            box.Color = color;
             box.Thickness = thickness;
             box.updateValues();
             return box;
@@ -380,7 +361,7 @@ namespace TGC.Core.Geometry
             var box = new TgcBoxDebug();
             box.PMin = pMin;
             box.PMax = pMax;
-            box.color = color;
+            box.Color = color;
             box.updateValues();
             return box;
         }
@@ -398,7 +379,7 @@ namespace TGC.Core.Geometry
             var box = new TgcBoxDebug();
             box.PMin = pMin;
             box.PMax = pMax;
-            box.color = color;
+            box.Color = color;
             box.Thickness = thickness;
             box.updateValues();
             return box;

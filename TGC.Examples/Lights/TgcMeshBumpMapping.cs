@@ -81,8 +81,8 @@ namespace TGC.Examples.Lights
             setShaderMatrix();
 
             //Renderizar segun el tipo de render de la malla
-            effect.Technique = technique;
-            var numPasses = effect.Begin(0);
+            Effect.Technique = Technique;
+            var numPasses = Effect.Begin(0);
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
@@ -100,22 +100,22 @@ namespace TGC.Examples.Lights
                             D3DDevice.Instance.Device.Material = materials[i];
 
                             //Setear textura en shader
-                            TexturesManager.Instance.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
+                            TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", diffuseMaps[i]);
 
                             //Setear normalMap en shader
-                            TexturesManager.Instance.shaderSet(effect, "texNormalMap", NormalMaps[i]);
+                            TexturesManager.Instance.shaderSet(Effect, "texNormalMap", NormalMaps[i]);
 
                             //Iniciar pasada de shader
                             // guarda: Todos los SetValue tienen que ir ANTES del beginPass.
                             // si no hay que llamar effect.CommitChanges para que tome el dato!
-                            effect.BeginPass(n);
+                            Effect.BeginPass(n);
                             d3dMesh.DrawSubset(i);
-                            effect.EndPass();
+                            Effect.EndPass();
                         }
                     }
 
                     //Finalizar shader
-                    effect.End();
+                    Effect.End();
 
                     break;
 
@@ -125,7 +125,7 @@ namespace TGC.Examples.Lights
             }
 
             //Finalizar shader
-            effect.End();
+            Effect.End();
 
             //Activar AlphaBlending
             resetAlphaBlend();
@@ -274,7 +274,7 @@ namespace TGC.Examples.Lights
             bumpMesh.materials = materials;
             bumpMesh.NormalMaps = normalMaps;
             bumpMesh.layer = mesh.Layer;
-            bumpMesh.alphaBlendEnable = mesh.AlphaBlend;
+            bumpMesh.AlphaBlend = mesh.AlphaBlend;
             bumpMesh.UserProperties = mesh.UserProperties;
             bumpMesh.boundingBox = mesh.BoundingBox.clone();
             bumpMesh.enabled = true;

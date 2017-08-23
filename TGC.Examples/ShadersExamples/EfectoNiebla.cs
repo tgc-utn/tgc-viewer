@@ -148,7 +148,7 @@ namespace TGC.Examples.PostProcess
         public override void Dispose()
         {
             skyBox.Dispose();
-            scene.disposeAll();
+            scene.DisposeAll();
         }
     }
 }

@@ -60,14 +60,14 @@ namespace TGC.Examples.MeshExamples
         {
             PreRender();
 
-            scene.renderAll();
+            scene.RenderAll();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            scene.disposeAll();
+            scene.DisposeAll();
         }
     }
 }

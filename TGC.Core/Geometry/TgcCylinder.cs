@@ -118,6 +118,18 @@ namespace TGC.Core.Geometry
             set { BoundingCylinder.Center = value; }
         }
 
+        public bool AlphaBlend { get; set; }
+
+        /// <summary>
+        ///     Actualiza la posicion e inclinacion del cilindro
+        /// </summary>
+        public void updateValues()
+        {
+            BoundingCylinder.Radius = FastMath.Max(FastMath.Abs(TopRadius), FastMath.Abs(BottomRadius));
+            BoundingCylinder.updateValues();
+            updateDraw();
+        }
+
         public void Render()
         {
             if (AlphaBlend)
@@ -155,8 +167,6 @@ namespace TGC.Core.Geometry
             sideTrianglesVertices = null;
             BoundingCylinder.Dispose();
         }
-
-        public bool AlphaBlend { get; set; }
 
         private void initialize()
         {
@@ -238,17 +248,6 @@ namespace TGC.Core.Geometry
             if (texture != null)
                 texture.dispose();
             texture = _texture;
-        }
-
-        /// <summary>
-        ///     Actualiza la posicion e inclinacion del cilindro
-        /// </summary>
-        public void updateValues()
-        {
-            BoundingCylinder.Radius = FastMath.Max(
-                FastMath.Abs(TopRadius), FastMath.Abs(BottomRadius));
-            BoundingCylinder.updateValues();
-            updateDraw();
         }
 
         #region Transformation

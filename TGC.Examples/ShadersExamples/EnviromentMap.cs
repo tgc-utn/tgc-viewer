@@ -482,10 +482,10 @@ namespace TGC.Examples.ShadersExamples
         public override void Dispose()
         {
             effect.Dispose();
-            scene.disposeAll();
-            scene2.disposeAll();
-            scene3.disposeAll();
-            sceneX.disposeAll();
+            scene.DisposeAll();
+            scene2.DisposeAll();
+            scene3.DisposeAll();
+            sceneX.DisposeAll();
         }
     }
 }

@@ -65,7 +65,7 @@ namespace TGC.Examples.MeshExamples
         {
             PreRender();
 
-            sceneRecover.renderAll();
+            sceneRecover.RenderAll();
             DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, Color.Red);
             DrawText.drawText("Camera LookAt: " + TGCVector3.PrintVector3(Camara.LookAt), 5, 40, Color.Red);
             PostRender();
@@ -73,7 +73,7 @@ namespace TGC.Examples.MeshExamples
 
         public override void Dispose()
         {
-            sceneRecover.disposeAll();
+            sceneRecover.DisposeAll();
         }
     }
 }

@@ -91,7 +91,7 @@ namespace Examples.WorkshopShaders
         public override void Dispose()
         {
             effect.Dispose();
-            scene.disposeAll();
+            scene.DisposeAll();
         }
     }
 }

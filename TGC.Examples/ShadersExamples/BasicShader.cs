@@ -93,7 +93,7 @@ namespace TGC.Examples.ShadersExamples
         public override void Dispose()
         {
             effect.Dispose();
-            scene.disposeAll();
+            scene.DisposeAll();
         }
     }
 }

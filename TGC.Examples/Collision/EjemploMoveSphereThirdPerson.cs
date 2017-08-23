@@ -312,7 +312,7 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            escenario.disposeAll();
+            escenario.DisposeAll();
             personaje.Dispose();
             skyBox.Dispose();
         }

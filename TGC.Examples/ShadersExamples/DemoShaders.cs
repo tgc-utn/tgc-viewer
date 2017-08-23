@@ -816,10 +816,10 @@ namespace TGC.Examples.ShadersExamples
         public override void Dispose()
         {
             effect.Dispose();
-            scene.disposeAll();
-            scene2.disposeAll();
-            scene3.disposeAll();
-            scene4.disposeAll();
+            scene.DisposeAll();
+            scene2.DisposeAll();
+            scene3.DisposeAll();
+            scene4.DisposeAll();
             terrain.dispose();
             g_pCubeMapAgua.Dispose();
             g_pShadowMap.Dispose();

@@ -213,7 +213,7 @@ namespace TGC.Examples.Lights
 
         public override void Dispose()
         {
-            scene.disposeAll();
+            scene.DisposeAll();
         }
 
         /// <summary>

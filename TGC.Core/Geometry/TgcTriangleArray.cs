@@ -56,7 +56,7 @@ namespace TGC.Core.Geometry
             return triangleArray;
         }
 
-        public void render()
+        public void Render()
         {
             foreach (var t in Triangles)
             {
@@ -72,7 +72,7 @@ namespace TGC.Core.Geometry
             }
         }
 
-        public void dispose()
+        public void Dispose()
         {
             foreach (var t in Triangles)
             {

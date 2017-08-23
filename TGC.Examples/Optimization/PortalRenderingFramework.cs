@@ -134,7 +134,7 @@ namespace TGC.Examples.Optimization
 
         public override void Dispose()
         {
-            scene.disposeAll();
+            scene.DisposeAll();
         }
     }
 }

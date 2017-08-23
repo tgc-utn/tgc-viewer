@@ -30,7 +30,6 @@ namespace TGC.Core.Geometry
         private int triangleCount;
         private int levelOfDetail;
         private float radius;
-        private Color color;
         private TGCVector3 translation;
         private TgcBoundingSphere boundingSphere;
         private TGCVector2 uvOffset;
@@ -109,10 +108,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Color de los vértices de la esfera
         /// </summary>
-        public Color Color
-        {
-            get { return color; }
-        }
+        public Color Color { get; set; }
 
         /// <summary>
         ///     Textura de la esfera
@@ -274,9 +270,9 @@ namespace TGC.Core.Geometry
 
             Technique = TgcShaders.T_POSITION_COLORED;
 
-            if (this.color != color) mustUpdate = true;
+            if (this.Color != color) mustUpdate = true;
 
-            this.color = color;
+            this.Color = color;
         }
 
         /// <summary>
@@ -344,7 +340,7 @@ namespace TGC.Core.Geometry
             translation = center;
             Rotation = TGCVector3.Empty;
             Enabled = true;
-            scale = TGCVector3.One;
+            Scale = TGCVector3.One;
             AlphaBlend = false;
             uvOffset = TGCVector2.Zero;
 
@@ -394,7 +390,7 @@ namespace TGC.Core.Geometry
             var polos = new int[2];
             var p = 0;
 
-            var c = color.ToArgb();
+            var c = Color.ToArgb();
 
             var twoPi = FastMath.TWO_PI;
 
@@ -818,7 +814,7 @@ namespace TGC.Core.Geometry
         /// <returns>Sphere clonado</returns>
         public virtual TGCSphere clone()
         {
-            var cloneSphere = new TGCSphere(radius, color, translation);
+            var cloneSphere = new TGCSphere(radius, Color, translation);
 
             if (Texture != null) cloneSphere.setTexture(Texture.Clone());
 

@@ -254,7 +254,7 @@ namespace TGC.Examples.ShadersExamples
         public override void Dispose()
         {
             effect.Dispose();
-            scene.disposeAll();
+            scene.DisposeAll();
             g_pRenderTarget.Dispose();
             g_pNormals.Dispose();
             g_pVBV3D.Dispose();

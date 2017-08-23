@@ -41,16 +41,12 @@ namespace TGC.Core.SceneLoader
             DIFFUSE_MAP_AND_LIGHTMAP
         }
 
-        protected bool alphaBlendEnable;
-
         protected bool autoTransformEnable;
 
         protected TgcBoundingAxisAlignBox boundingBox;
         protected Mesh d3dMesh;
 
         protected TgcTexture[] diffuseMaps;
-
-        protected Effect effect;
 
         protected bool enabled;
 
@@ -71,8 +67,6 @@ namespace TGC.Core.SceneLoader
         protected TGCVector3 rotation;
 
         protected TGCVector3 scale;
-
-        protected string technique;
 
         protected TGCMatrix transform;
 
@@ -120,7 +114,7 @@ namespace TGC.Core.SceneLoader
             }
             materials = parentInstance.materials; //es un clone necesario?
             lightMap = parentInstance.lightMap; //es un clone necesario?
-            effect = parentInstance.effect; //.Clone() pide device ????...... FIXIT.
+            Effect = parentInstance.Effect; //.Clone() pide device ????...... FIXIT.
 
             //Almacenar transformación inicial
             this.translation = translation;
@@ -175,21 +169,13 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Shader del mesh
         /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
+        public Effect Effect { get; set; }
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
         ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
+        public string Technique { get; set; }
 
         /// <summary>
         ///     Array de texturas para DiffuseMap
@@ -286,11 +272,7 @@ namespace TGC.Core.SceneLoader
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
+        public bool AlphaBlend { get; set; }
 
         /// <summary>
         ///     Renderiza la malla, si esta habilitada
@@ -316,8 +298,8 @@ namespace TGC.Core.SceneLoader
             setShaderMatrix();
 
             //Renderizar segun el tipo de Render de la malla
-            effect.Technique = technique;
-            var numPasses = effect.Begin(0);
+            Effect.Technique = Technique;
+            var numPasses = Effect.Begin(0);
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
@@ -330,9 +312,9 @@ namespace TGC.Core.SceneLoader
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Iniciar pasada de shader
-                        effect.BeginPass(n);
+                        Effect.BeginPass(n);
                         d3dMesh.DrawSubset(0);
-                        effect.EndPass();
+                        Effect.EndPass();
                     }
 
                     break;
@@ -349,12 +331,12 @@ namespace TGC.Core.SceneLoader
                         for (var i = 0; i < diffuseMaps.Length; i++)
                         {
                             //Setear textura en shader
-                            TexturesManager.Instance.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
+                            TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", diffuseMaps[i]);
 
                             //Iniciar pasada de shader
-                            effect.BeginPass(n);
+                            Effect.BeginPass(n);
                             d3dMesh.DrawSubset(i);
-                            effect.EndPass();
+                            Effect.EndPass();
                         }
                     }
 
@@ -366,18 +348,18 @@ namespace TGC.Core.SceneLoader
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Cargar lightmap
-                        TexturesManager.Instance.shaderSet(effect, "texLightMap", lightMap);
+                        TexturesManager.Instance.shaderSet(Effect, "texLightMap", lightMap);
 
                         //Dibujar cada subset con su Material y su DiffuseMap correspondiente
                         for (var i = 0; i < diffuseMaps.Length; i++)
                         {
                             //Setear textura en shader
-                            TexturesManager.Instance.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
+                            TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", diffuseMaps[i]);
 
                             //Iniciar pasada de shader
-                            effect.BeginPass(n);
+                            Effect.BeginPass(n);
                             d3dMesh.DrawSubset(i);
-                            effect.EndPass();
+                            Effect.EndPass();
                         }
                     }
 
@@ -385,7 +367,7 @@ namespace TGC.Core.SceneLoader
             }
 
             //Finalizar shader
-            effect.End();
+            Effect.End();
 
             //Desactivar alphaBlend
             resetAlphaBlend();
@@ -590,7 +572,7 @@ namespace TGC.Core.SceneLoader
             enabled = false;
             parentInstance = null;
             meshInstances = new List<TgcMesh>();
-            alphaBlendEnable = false;
+            AlphaBlend = false;
 
             AutoTransform = false;
             AutoUpdateBoundingBox = true;
@@ -601,8 +583,8 @@ namespace TGC.Core.SceneLoader
 
             //Shader
             vertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
-            effect = TgcShaders.Instance.TgcMeshShader;
-            technique = TgcShaders.Instance.getTgcMeshTechnique(this.renderType);
+            Effect = TgcShaders.Instance.TgcMeshShader;
+            Technique = TgcShaders.Instance.getTgcMeshTechnique(this.renderType);
         }
 
         /// <summary>
@@ -610,7 +592,7 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         protected void setShaderMatrix()
         {
-            TgcShaders.Instance.setShaderMatrix(effect, transform);
+            TgcShaders.Instance.setShaderMatrix(Effect, transform);
         }
 
         /// <summary>
@@ -628,7 +610,7 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (alphaBlendEnable)
+            if (AlphaBlend)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -959,7 +941,7 @@ namespace TGC.Core.SceneLoader
             cloneMesh.Materials = Materials;
             cloneMesh.layer = layer;
             cloneMesh.boundingBox = boundingBox.clone();
-            cloneMesh.alphaBlendEnable = alphaBlendEnable;
+            cloneMesh.AlphaBlend = AlphaBlend;
             cloneMesh.enabled = true;
             cloneMesh.AutoUpdateBoundingBox = AutoUpdateBoundingBox;
 

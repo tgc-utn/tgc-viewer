@@ -290,8 +290,8 @@ namespace TGC.Examples.ShadersExamples
         public override void Dispose()
         {
             effect.Dispose();
-            scene.disposeAll();
-            scene2.disposeAll();
+            scene.DisposeAll();
+            scene2.DisposeAll();
             g_pShadowMap.Dispose();
             g_pDSShadow.Dispose();
         }

@@ -173,7 +173,7 @@ namespace TGC.Examples.Lights
 
         public override void Dispose()
         {
-            scene.disposeAll();
+            scene.DisposeAll();
             effect.Dispose();
             for (var i = 0; i < lightMeshes.Length; i++)
             {

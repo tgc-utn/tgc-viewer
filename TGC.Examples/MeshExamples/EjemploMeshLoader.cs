@@ -92,7 +92,7 @@ namespace TGC.Examples.MeshExamples
             //Dispose de escena anterior
             if (currentScene != null)
             {
-                currentScene.disposeAll();
+                currentScene.DisposeAll();
             }
 
             //Cargar escena con herramienta TgcSceneLoader
@@ -179,14 +179,14 @@ namespace TGC.Examples.MeshExamples
             }
 
             //Renderizar escena entera
-            currentScene.renderAll(showBoundingBox);
+            currentScene.RenderAll(showBoundingBox);
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            currentScene.disposeAll();
+            currentScene.DisposeAll();
         }
     }
 }

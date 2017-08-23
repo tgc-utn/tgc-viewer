@@ -53,7 +53,7 @@ namespace TGC.Examples.MeshExamples
                 }
             }
             //Una vez clonamos todas las mesh que queriamos eliminamos la esena.
-            scene.disposeAll();
+            scene.DisposeAll();
 
             //Se crea una box y se convierte en mesh.
             var box = TGCBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
@@ -117,7 +117,7 @@ namespace TGC.Examples.MeshExamples
                 }
 
                 //Render de una esena.
-                scene1.renderAll();
+                scene1.RenderAll();
 
                 //Render de la caja.
                 boxMesh.Render();
@@ -150,7 +150,7 @@ namespace TGC.Examples.MeshExamples
                 }
                 meshes.Clear();
 
-                scene1.disposeAll();
+                scene1.DisposeAll();
 
                 boxMesh.Dispose();
             }

@@ -75,7 +75,7 @@ namespace TGC.Examples.Optimization
             //Renderizar sin ninguna optimizacion
             if (!frustumCullingEnabled)
             {
-                tgcScene.renderAll();
+                tgcScene.RenderAll();
                 UserVars.setValue("Meshes renderizadas", tgcScene.Meshes.Count);
             }
 
@@ -107,7 +107,7 @@ namespace TGC.Examples.Optimization
 
         public override void Dispose()
         {
-            tgcScene.disposeAll();
+            tgcScene.DisposeAll();
         }
     }
 }

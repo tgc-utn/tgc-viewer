@@ -72,7 +72,7 @@ namespace TGC.Examples.Tutorial
             mesh.Render();
 
             //Dibujar la escena entera
-            scene.renderAll();
+            scene.RenderAll();
 
             PostRender();
         }
@@ -83,7 +83,7 @@ namespace TGC.Examples.Tutorial
             mesh.Dispose();
 
             //Liberar memoria de toda la escena
-            scene.disposeAll();
+            scene.DisposeAll();
         }
     }
 }

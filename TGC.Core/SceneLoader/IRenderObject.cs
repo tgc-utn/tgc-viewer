@@ -13,7 +13,7 @@ namespace TGC.Core.SceneLoader
         bool AlphaBlend { get; set; }
 
         /// <summary>
-        ///     Iinicializacion del objeto.
+        ///     Inicializacion del objeto.
         /// </summary>
         //void Init();
 
