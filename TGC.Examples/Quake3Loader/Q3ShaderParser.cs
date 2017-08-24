@@ -103,9 +103,7 @@ namespace TGC.Examples.Quake3Loader
 
             string errores;
 
-            Fx = Effect.FromString(D3DDevice.Instance.Device, ShaderSrc, null, null, ShaderFlags.NotCloneable,
-                null,
-                out errores);
+            Fx = Effect.FromString(D3DDevice.Instance.Device, ShaderSrc, null, null, ShaderFlags.NotCloneable, null, out errores);
             //if (!errores.Equals(""))
             //errores = "";
 
@@ -909,7 +907,7 @@ namespace TGC.Examples.Quake3Loader
         {
             var StateLines = new List<string>();
 
-            StateLines.Add("AlphaBlend = " + qstage.HasBlendFunc.ToString().ToLower() + ";");
+            StateLines.Add("AlphaBlendEnable = " + qstage.HasBlendFunc.ToString().ToLower() + ";");
             StateLines.Add("SrcBlend = " + GLtoDXBlend(qstage.BlendSrc) + ";");
             StateLines.Add("DestBlend = " + GLtoDXBlend(qstage.BlendDest) + ";");
             //StateLines.Add("ZWriteEnable = " + (!qstage.HasBlendFunc).ToString().ToLower() + ";");

@@ -16,7 +16,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -231,6 +231,7 @@
     <Compile Include="WorkshopShaders\DepthOfField.cs" />
     <Compile Include="WorkshopShaders\Distorsiones.cs" />
     <Compile Include="WorkshopShaders\PlanarShadows.cs" />
+    <Compile Include="WorkshopShaders\POMTerrain.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">

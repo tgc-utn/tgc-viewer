@@ -2,10 +2,13 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
+using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
 namespace Examples.WorkshopShaders
@@ -35,7 +38,7 @@ namespace Examples.WorkshopShaders
             scaleXZ = pscaleXZ;
             scaleY = pscaleY;
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             this.center = center;
 
             //Dispose de VertexBuffer anterior, si habia
@@ -109,7 +112,7 @@ namespace Examples.WorkshopShaders
                 terrainTexture.Dispose();
             }
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
 
             //Rotar e invertir textura
             Bitmap b = (Bitmap)Bitmap.FromFile(path);
@@ -143,20 +146,20 @@ namespace Examples.WorkshopShaders
 
         public void executeRender(Effect effect)
         {
-            Device device = GuiController.Instance.D3dDevice;
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(effect);
+            Device d3dDevice = D3DDevice.Instance.Device;
+            TgcShaders.Instance.setShaderMatrixIdentity(effect);
 
             //Render terrain
             effect.SetValue("texDiffuseMap", terrainTexture);
 
-            device.VertexFormat = CustomVertex.PositionNormalTextured.Format;
-            device.SetStreamSource(0, vbTerrain, 0);
+            d3dDevice.VertexFormat = CustomVertex.PositionNormalTextured.Format;
+            d3dDevice.SetStreamSource(0, vbTerrain, 0);
 
             int numPasses = effect.Begin(0);
             for (int n = 0; n < numPasses; n++)
             {
                 effect.BeginPass(n);
-                device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
+                d3dDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
                 effect.EndPass();
             }
             effect.End();
@@ -217,7 +220,6 @@ namespace Examples.WorkshopShaders
 
     public class POMTerrainSample : TGCExampleViewer
     {
-        private string MyMediaDir;
         private string MyShaderDir;
         private Effect effect;
         private Texture g_pBaseTexture;
@@ -240,13 +242,12 @@ namespace Examples.WorkshopShaders
         public override void Init()
         {
             time = 0f;
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            GuiController.Instance.CustomRenderEnabled = true;
-            MyMediaDir = MediaDir + "WorkshopShaders\\";
+            Device d3dDevice = D3DDevice.Instance.Device;
+
             MyShaderDir = ShadersDir + "WorkshopShaders\\";
 
-            g_pBaseTexture = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\rocks.jpg");
-            g_pHeightmap = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\rocks_NM_height.tga");
+            g_pBaseTexture = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\rocks.jpg");
+            g_pHeightmap = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\NM_height_rocks.tga");
 
             //Cargar Shader
             string compilationErrors;
@@ -270,25 +271,24 @@ namespace Examples.WorkshopShaders
             // Creo el Heightmap para el terreno:
             terrain = new POMTerrain();
             terrain.ftex = 250f;
-            terrain.loadHeightmap(MediaDir + "WorkshopShaders\\Heighmaps\\" + "Heightmap3.jpg", 100f, 2.25f, new TGCVector3(0, 0, 0));
-            terrain.loadTexture(MediaDir + "WorkshopShaders\\Heighmaps\\" + "TerrainTexture3.jpg");
+            terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "Heightmap3.jpg", 100f, 2.25f, new TGCVector3(0, 0, 0));
+            terrain.loadTexture(MediaDir + "Heighmaps\\" + "TerrainTexture3.jpg");
 
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new TGCVector3(-350, 1000, -1100), new TGCVector3(0, 0, 0));
-            GuiController.Instance.RotCamera.Enable = false;
+            Camara.SetCamera(new TGCVector3(-350, 1000, -1100), new TGCVector3(0, 0, 0));
         }
 
         public override void Update()
         {
             PreUpdate();
 
-            GuiController.Instance.FpsCamera.Enable = false;
+            Device d3dDevice = D3DDevice.Instance.Device;
+
             // Actualizo la direccion
-            if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.A))
+            if (Input.keyDown(Microsoft.DirectX.DirectInput.Key.A))
             {
                 dir_an += 1f * ElapsedTime;
             }
-            if (GuiController.Instance.D3dInput.keyDown(Microsoft.DirectX.DirectInput.Key.D))
+            if (Input.keyDown(Microsoft.DirectX.DirectInput.Key.D))
             {
                 dir_an -= 1f * ElapsedTime;
             }
@@ -304,31 +304,31 @@ namespace Examples.WorkshopShaders
             TGCVector2 pos_s = pos + vel * 2;
             TGCVector3 lookFrom = new TGCVector3(pos.X, H + dH, pos.Y);
             TGCVector3 lookAt = new TGCVector3(pos_s.X, H, pos_s.Y);
-            GuiController.Instance.D3dDevice.Transform.View = TGCMatrix.LookAtLH(lookFrom, lookAt, new TGCVector3(0, 1, 0));
-            effect.SetValue("fvEyePosition", TgcParserUtils.TGCVector3ToFloat3Array(lookFrom));
+            d3dDevice.Transform.View = TGCMatrix.LookAtLH(lookFrom, lookAt, new TGCVector3(0, 1, 0));
+            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(lookFrom));
         }
 
         public override void Render()
         {
-            Device device = GuiController.Instance.D3dDevice;
-            Control panel3d = GuiController.Instance.Panel3d;
-            float aspectRatio = (float)panel3d.Width / (float)panel3d.Height;
+            Device d3dDevice = D3DDevice.Instance.Device;
+
             time += ElapsedTime;
 
             TGCVector3 lightDir = (TGCVector3)Modifiers["LightDir"];
-            effect.SetValue("g_LightDir", TgcParserUtils.TGCVector3ToFloat3Array(lightDir));
+            effect.SetValue("g_LightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
             effect.SetValue("min_cant_samples", (float)Modifiers["minSample"]);
             effect.SetValue("max_cant_samples", (float)Modifiers["maxSample"]);
             effect.SetValue("fHeightMapScale", (float)Modifiers["HeightMapScale"]);
             //effect.SetValue("fvEyePosition", TgcParserUtils.TGCVector3ToFloat3Array(GuiController.Instance.FpsCamera.getPosition()));
             effect.SetValue("time", time);
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            device.BeginScene();
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            d3dDevice.BeginScene();
 
             //Renderizar terreno con POM
             effect.Technique = "ParallaxOcclusion";
             terrain.executeRender(effect);
-            device.EndScene();
+
+            PostRender();
         }
 
         public override void Dispose()
