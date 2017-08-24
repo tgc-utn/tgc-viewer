@@ -2,20 +2,19 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
-using TGC.Core;
+using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
 namespace Examples.WorkshopShaders
 {
     public class HDRLighting : TGCExampleViewer
     {
-        private string MyMediaDir;
         private string MyShaderDir;
         private List<TgcMesh> meshes;
         private TgcSkyBox skyBox;
@@ -48,14 +47,13 @@ namespace Examples.WorkshopShaders
             : base(mediaDir, shadersDir, userVars, modifiers)
         {
             Category = "Shaders";
-            Name = "Workshop-HdrLighting";
+            Name = "Workshop-HDRLighting";
             Description = "HDR lighting";
         }
 
         public override void Init()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            MyMediaDir = MediaDir + "WorkshopShaders\\";
+            Device d3dDevice = D3DDevice.Instance.Device;
             MyShaderDir = ShadersDir + "WorkshopShaders\\";
 
             //Cargamos un escenario
@@ -73,8 +71,8 @@ namespace Examples.WorkshopShaders
 
             //Cargar terreno: cargar heightmap y textura de color
             terrain = new TgcSimpleTerrain();
-            terrain.loadHeightmap(MyMediaDir + "Heighmaps\\" + "TerrainTexture2.jpg", 20, 0.3f, new TGCVector3(0, -115, 0));
-            terrain.loadTexture(MyMediaDir + "Heighmaps\\" + "grass.jpg");
+            terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg", 20, 0.3f, new TGCVector3(0, -115, 0));
+            terrain.loadTexture(MediaDir + "Heighmaps\\" + "grass.jpg");
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
@@ -87,11 +85,11 @@ namespace Examples.WorkshopShaders
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lun4_rt.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lun4_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lun4_ft.jpg");
-            skyBox.updateValues();
+            skyBox.Init();
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(GuiController.Instance.D3dDevice, ShadersDir + "WorkshopShaders\\GaussianBlur.fx", null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
+            effect = Effect.FromFile(d3dDevice, ShadersDir + "WorkshopShaders\\GaussianBlur.fx", null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
             {
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
@@ -100,11 +98,8 @@ namespace Examples.WorkshopShaders
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new TGCVector3(-944.1269f, 50, -1033.307f), new TGCVector3(-943.6573f, 50.8481f, -1033.533f));
-            GuiController.Instance.FpsCamera.MovementSpeed *= 2;
-            GuiController.Instance.FpsCamera.JumpSpeed = 600f;
-            GuiController.Instance.FpsCamera.RotationSpeed *= 4;
+            Camara = new TgcFpsCamera(Input);
+            Camara.SetCamera(new TGCVector3(-944.1269f, 80, -1033.307f), new TGCVector3(-943.6573f, 50.8481f, -1033.533f));
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
@@ -154,8 +149,6 @@ namespace Examples.WorkshopShaders
         public override void Update()
         {
             PreUpdate();
-
-            TGCVector3 pos = Camara.Position;
         }
 
         public override void Render()
@@ -165,47 +158,47 @@ namespace Examples.WorkshopShaders
 
         public void renderSinEfectos(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
 
             // dibujo la escena una textura
             effect.Technique = "DefaultTechnique";
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            device.BeginScene();
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            d3dDevice.BeginScene();
             //Dibujamos todos los meshes del escenario
             renderScene(elapsedTime, "DefaultTechnique");
             //Render skybox
             skyBox.Render();
-            device.EndScene();
+            d3dDevice.EndScene();
         }
 
         public void renderConEfectos(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
 
             // Resolucion de pantalla
-            float screen_dx = device.PresentationParameters.BackBufferWidth;
-            float screen_dy = device.PresentationParameters.BackBufferHeight;
+            float screen_dx = d3dDevice.PresentationParameters.BackBufferWidth;
+            float screen_dy = d3dDevice.PresentationParameters.BackBufferHeight;
             effect.SetValue("screen_dx", screen_dx);
             effect.SetValue("screen_dy", screen_dy);
 
             // dibujo la escena una textura
             effect.Technique = "DefaultTechnique";
             // guardo el Render target anterior y seteo la textura como render target
-            Surface pOldRT = device.GetRenderTarget(0);
+            Surface pOldRT = d3dDevice.GetRenderTarget(0);
             Surface pSurf = g_pRenderTarget.GetSurfaceLevel(0);
-            device.SetRenderTarget(0, pSurf);
+            d3dDevice.SetRenderTarget(0, pSurf);
             // hago lo mismo con el depthbuffer, necesito el que no tiene multisampling
-            Surface pOldDS = device.DepthStencilSurface;
-            device.DepthStencilSurface = g_pDepthStencil;
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            Surface pOldDS = d3dDevice.DepthStencilSurface;
+            d3dDevice.DepthStencilSurface = g_pDepthStencil;
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             effect.SetValue("KLum", 0.05f);
-            device.BeginScene();
+            d3dDevice.BeginScene();
             //Dibujamos todos los meshes del escenario
             renderScene(elapsedTime, "DefaultTechnique");
             // y el skybox (el skybox no tiene efectos, va por fixed OJOOO)
             skyBox.Render();
 
-            device.EndScene();
+            d3dDevice.EndScene();
             pSurf.Dispose();
 
             MAX_PUPILA_TIME = (float)Modifiers["adaptacion_pupila"];
@@ -217,9 +210,9 @@ namespace Examples.WorkshopShaders
                 effect.SetValue("KLum", 1.0f);
                 effect.Technique = "DefaultTechnique";
                 pSurf = g_pGlowMap.GetSurfaceLevel(0);
-                device.SetRenderTarget(0, pSurf);
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-                device.BeginScene();
+                d3dDevice.SetRenderTarget(0, pSurf);
+                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                d3dDevice.BeginScene();
 
                 // dibujo el skybox que es brillante, con la tecnica estandard
                 skyBox.Render();
@@ -227,29 +220,29 @@ namespace Examples.WorkshopShaders
                 // El resto opacos
                 renderScene(elapsedTime, "DibujarObjetosOscuros");
 
-                device.EndScene();
+                d3dDevice.EndScene();
                 pSurf.Dispose();
 
                 // Hago un blur sobre el glow map
                 // 1er pasada: downfilter x 4
                 // -----------------------------------------------------
                 pSurf = g_pRenderTarget4.GetSurfaceLevel(0);
-                device.SetRenderTarget(0, pSurf);
-                device.BeginScene();
+                d3dDevice.SetRenderTarget(0, pSurf);
+                d3dDevice.BeginScene();
                 effect.Technique = "DownFilter4";
-                device.VertexFormat = CustomVertex.PositionTextured.Format;
-                device.SetStreamSource(0, g_pVBV3D, 0);
+                d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+                d3dDevice.SetStreamSource(0, g_pVBV3D, 0);
                 effect.SetValue("g_RenderTarget", g_pGlowMap);
 
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 effect.Begin(FX.None);
                 effect.BeginPass(0);
-                device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+                d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
                 effect.EndPass();
                 effect.End();
                 pSurf.Dispose();
-                device.EndScene();
-                device.DepthStencilSurface = pOldDS;
+                d3dDevice.EndScene();
+                d3dDevice.DepthStencilSurface = pOldDS;
 
                 // Pasadas de blur
                 for (int P = 0; P < cant_pasadas; ++P)
@@ -257,42 +250,42 @@ namespace Examples.WorkshopShaders
                     // Gaussian blur Horizontal
                     // -----------------------------------------------------
                     pSurf = g_pRenderTarget4Aux.GetSurfaceLevel(0);
-                    device.SetRenderTarget(0, pSurf);
+                    d3dDevice.SetRenderTarget(0, pSurf);
                     // dibujo el quad pp dicho :
-                    device.BeginScene();
+                    d3dDevice.BeginScene();
                     effect.Technique = "GaussianBlurSeparable";
-                    device.VertexFormat = CustomVertex.PositionTextured.Format;
-                    device.SetStreamSource(0, g_pVBV3D, 0);
+                    d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+                    d3dDevice.SetStreamSource(0, g_pVBV3D, 0);
                     effect.SetValue("g_RenderTarget", g_pRenderTarget4);
 
-                    device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                    d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                     effect.Begin(FX.None);
                     effect.BeginPass(0);
-                    device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+                    d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
                     effect.EndPass();
                     effect.End();
                     pSurf.Dispose();
-                    device.EndScene();
+                    d3dDevice.EndScene();
 
                     pSurf = g_pRenderTarget4.GetSurfaceLevel(0);
-                    device.SetRenderTarget(0, pSurf);
+                    d3dDevice.SetRenderTarget(0, pSurf);
                     pSurf.Dispose();
 
                     //  Gaussian blur Vertical
                     // -----------------------------------------------------
-                    device.BeginScene();
+                    d3dDevice.BeginScene();
                     effect.Technique = "GaussianBlurSeparable";
-                    device.VertexFormat = CustomVertex.PositionTextured.Format;
-                    device.SetStreamSource(0, g_pVBV3D, 0);
+                    d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+                    d3dDevice.SetStreamSource(0, g_pVBV3D, 0);
                     effect.SetValue("g_RenderTarget", g_pRenderTarget4Aux);
 
-                    device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                    d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                     effect.Begin(FX.None);
                     effect.BeginPass(1);
-                    device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+                    d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
                     effect.EndPass();
                     effect.End();
-                    device.EndScene();
+                    d3dDevice.EndScene();
                 }
                 //TextureLoader.Save("glowmap", ImageFileFormat.Bmp, g_pRenderTarget4Aux);
             }
@@ -301,21 +294,21 @@ namespace Examples.WorkshopShaders
             pSurf = g_pLuminance[NUM_REDUCE_TX - 1].GetSurfaceLevel(0);
             screen_dx = pSurf.Description.Width;
             screen_dy = pSurf.Description.Height;
-            device.SetRenderTarget(0, pSurf);
-            device.BeginScene();
+            d3dDevice.SetRenderTarget(0, pSurf);
+            d3dDevice.BeginScene();
             effect.Technique = "DownFilter4";
-            device.VertexFormat = CustomVertex.PositionTextured.Format;
-            device.SetStreamSource(0, g_pVBV3D, 0);
+            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+            d3dDevice.SetStreamSource(0, g_pVBV3D, 0);
             effect.SetValue("g_RenderTarget", g_pRenderTarget);
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             effect.Begin(FX.None);
             effect.BeginPass(0);
-            device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             effect.EndPass();
             effect.End();
             pSurf.Dispose();
-            device.EndScene();
-            device.DepthStencilSurface = pOldDS;
+            d3dDevice.EndScene();
+            d3dDevice.DepthStencilSurface = pOldDS;
             string fname2 = string.Format("Pass{0:D}.bmp", NUM_REDUCE_TX);
             //SurfaceLoader.Save(fname2, ImageFileFormat.Bmp, pSurf);
 
@@ -326,17 +319,17 @@ namespace Examples.WorkshopShaders
                 effect.SetValue("screen_dx", screen_dx);
                 effect.SetValue("screen_dy", screen_dy);
 
-                device.SetRenderTarget(0, pSurf);
+                d3dDevice.SetRenderTarget(0, pSurf);
                 effect.SetValue("g_RenderTarget", g_pLuminance[i]);
-                device.BeginScene();
-                device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+                d3dDevice.BeginScene();
+                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 effect.Begin(FX.None);
                 effect.BeginPass(0);
-                device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+                d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
                 effect.EndPass();
                 effect.End();
                 pSurf.Dispose();
-                device.EndScene();
+                d3dDevice.EndScene();
 
                 string fname = string.Format("Pass{0:D}.bmp", i);
                 //SurfaceLoader.Save(fname, ImageFileFormat.Bmp, pSurf);
@@ -350,13 +343,13 @@ namespace Examples.WorkshopShaders
             effect.SetValue("tone_mapping_izq", (int)Modifiers["tm_izq"]);
             effect.SetValue("tone_mapping_der", (int)Modifiers["tm_der"]);
             effect.SetValue("pantalla_completa", (bool)Modifiers["pantalla_completa"]);
-            effect.SetValue("screen_dx", device.PresentationParameters.BackBufferWidth);
-            effect.SetValue("screen_dy", device.PresentationParameters.BackBufferHeight);
-            device.SetRenderTarget(0, pOldRT);
-            device.BeginScene();
+            effect.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
+            effect.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
+            d3dDevice.SetRenderTarget(0, pOldRT);
+            d3dDevice.BeginScene();
             effect.Technique = "ToneMapping";
-            device.VertexFormat = CustomVertex.PositionTextured.Format;
-            device.SetStreamSource(0, g_pVBV3D, 0);
+            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+            d3dDevice.SetStreamSource(0, g_pVBV3D, 0);
             effect.SetValue("g_RenderTarget", g_pRenderTarget);
             effect.SetValue("g_GlowMap", g_pRenderTarget4Aux);
             pupila_time += elapsedTime;
@@ -374,10 +367,10 @@ namespace Examples.WorkshopShaders
             }
 
             effect.SetValue("pupila_time", pupila_time / MAX_PUPILA_TIME);      // 0..1
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             effect.Begin(FX.None);
             effect.BeginPass(0);
-            device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             effect.EndPass();
             effect.End();
 

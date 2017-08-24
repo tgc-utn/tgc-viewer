@@ -230,6 +230,7 @@
     <Compile Include="WorkshopShaders\BasicShader.cs" />
     <Compile Include="WorkshopShaders\DepthOfField.cs" />
     <Compile Include="WorkshopShaders\Distorsiones.cs" />
+    <Compile Include="WorkshopShaders\HDRLighting.cs" />
     <Compile Include="WorkshopShaders\PlanarShadows.cs" />
     <Compile Include="WorkshopShaders\POMTerrain.cs" />
   </ItemGroup>
