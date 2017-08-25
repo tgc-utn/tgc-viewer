@@ -228,11 +228,16 @@
     <Compile Include="Quake3Loader\Q3FpsCamera.cs" />
     <Compile Include="Quake3Loader\Q3ShaderParser.cs" />
     <Compile Include="WorkshopShaders\BasicShader.cs" />
+    <Compile Include="WorkshopShaders\ComboRata.cs" />
     <Compile Include="WorkshopShaders\DepthOfField.cs" />
     <Compile Include="WorkshopShaders\Distorsiones.cs" />
+    <Compile Include="WorkshopShaders\GUI.cs" />
+    <Compile Include="WorkshopShaders\GUIItem.cs" />
+    <Compile Include="WorkshopShaders\GUITest.cs" />
     <Compile Include="WorkshopShaders\HDRLighting.cs" />
     <Compile Include="WorkshopShaders\PlanarShadows.cs" />
     <Compile Include="WorkshopShaders\POMTerrain.cs" />
+    <Compile Include="WorkshopShaders\Transformers.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">

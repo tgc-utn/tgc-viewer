@@ -1,7 +1,7 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TgcViewer.Utils.Gui
@@ -80,10 +80,10 @@ namespace TgcViewer.Utils.Gui
             len = s.Length;
         }
 
-        public void cargar_textura(String imagen)
+        public void cargar_textura(String imagen, string mediaDir)
         {
             // Cargo la imagen en el gui
-            if ((textura = DXGui.cargar_textura(imagen, true)) != null)
+            if ((textura = DXGui.cargar_textura(imagen, mediaDir, true)) != null)
             {
                 // Aprovecho para calcular el tamaño de la imagen del boton
                 SurfaceDescription desc = textura.GetLevelDescription(0);
@@ -92,7 +92,7 @@ namespace TgcViewer.Utils.Gui
             }
 
             // x defecto la imagen seleccionada tiene el mismo nombre con el S_ al principio
-            textura_sel = DXGui.cargar_textura("S_" + imagen, true);
+            textura_sel = DXGui.cargar_textura("S_" + imagen, mediaDir, true);
         }
 
         public void Dispose()
@@ -107,9 +107,9 @@ namespace TgcViewer.Utils.Gui
         // interface:
         public bool pt_inside(DXGui gui, Point p)
         {
-            Vector2[] Q = new Vector2[2];
-            Q[0] = new Vector2(rc.X, rc.Y);
-            Q[1] = new Vector2(rc.X + rc.Width, rc.Y + rc.Height);
+            TGCVector2[] Q = new TGCVector2[2];
+            Q[0] = new TGCVector2(rc.X, rc.Y);
+            Q[1] = new TGCVector2(rc.X + rc.Width, rc.Y + rc.Height);
             gui.Transform(Q, 2);
             Rectangle r = new Rectangle((int)Q[0].X, (int)Q[0].Y, (int)(Q[1].X - Q[0].X), (int)(Q[1].Y - Q[0].Y));
             return r.Contains(p);
@@ -140,10 +140,8 @@ namespace TgcViewer.Utils.Gui
             Texture tx = sel && textura_sel != null ? textura_sel : textura;
             if (tx != null)
             {
-                Vector3 pos = image_centrada ?
-                    new Vector3(rc.X - image_width, rc.Y + (rc.Height - image_height) / 2, 0) :
-                    new Vector3(rc.X, rc.Y, 0);
-                gui.sprite.Draw(tx, Rectangle.Empty, Vector3.Empty, pos, Color.FromArgb(gui.alpha, 255, 255, 255));
+                TGCVector3 pos = image_centrada ? new TGCVector3(rc.X - image_width, rc.Y + (rc.Height - image_height) / 2, 0) : new TGCVector3(rc.X, rc.Y, 0);
+                gui.sprite.Draw(tx, Rectangle.Empty, TGCVector3.Empty, pos, Color.FromArgb(gui.alpha, 255, 255, 255));
             }
 
             if (sel)
@@ -165,7 +163,7 @@ namespace TgcViewer.Utils.Gui
                 // Gradiente de abajo
                 for (int i = 0; i < dy; ++i)
                 {
-                    Vector2[] pt = new Vector2[2];
+                    TGCVector2[] pt = new TGCVector2[2];
                     pt[0].X = rc.X - 3;
                     pt[1].X = rc.X + rc.Width + 3;
                     pt[1].Y = pt[0].Y = rc.Y + rc.Height / 2 - i;
@@ -174,7 +172,7 @@ namespace TgcViewer.Utils.Gui
                     byte r = (byte)(r0 * t + r1 * (1 - t));
                     byte g = (byte)(g0 * t + g1 * (1 - t));
                     byte b = (byte)(b0 * t + b1 * (1 - t));
-                    gui.line.Draw(pt, Color.FromArgb(gui.alpha, r, g, b));
+                    gui.line.Draw(TGCVector2.ToVector2Array(pt), Color.FromArgb(gui.alpha, r, g, b));
                 }
 
                 // Gradiente de arriba
@@ -187,7 +185,7 @@ namespace TgcViewer.Utils.Gui
 
                 for (int i = 0; i < dy; ++i)
                 {
-                    Vector2[] pt = new Vector2[2];
+                    TGCVector2[] pt = new TGCVector2[2];
                     pt[0].X = rc.X - 3;
                     pt[1].X = rc.X + rc.Width + 3;
                     pt[1].Y = pt[0].Y = rc.Y + rc.Height / 2 + i;
@@ -196,26 +194,25 @@ namespace TgcViewer.Utils.Gui
                     byte r = (byte)(r0 * t + r1 * (1 - t));
                     byte g = (byte)(g0 * t + g1 * (1 - t));
                     byte b = (byte)(b0 * t + b1 * (1 - t));
-                    gui.line.Draw(pt, Color.FromArgb(gui.alpha, r, g, b));
+                    gui.line.Draw(TGCVector2.ToVector2Array(pt), Color.FromArgb(gui.alpha, r, g, b));
                 }
                 gui.line.End();
             }
 
             // dibujo el texto pp dicho
-            gui.font.DrawText(gui.sprite, text, rc, DrawTextFormat.NoClip | DrawTextFormat.VerticalCenter,
-                disabled ? Color.FromArgb(gui.alpha, DXGui.c_item_disabled) : sel ? Color.FromArgb(gui.alpha, 0, 32, 128) : c_font);
+            gui.font.DrawText(gui.sprite, text, rc, DrawTextFormat.NoClip | DrawTextFormat.VerticalCenter, disabled ? Color.FromArgb(gui.alpha, DXGui.c_item_disabled) : sel ? Color.FromArgb(gui.alpha, 0, 32, 128) : c_font);
         }
     }
 
     // menu item
     public class gui_menu_item : GUIItem
     {
-        public gui_menu_item(DXGui gui, String s, String imagen, int id, int x, int y, int dx = 0, int dy = 0, bool penabled = true) :
+        public gui_menu_item(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true) :
             base(gui, s, x, y, dx, dy, id)
         {
             disabled = !penabled;
             seleccionable = true;
-            cargar_textura(imagen);
+            cargar_textura(imagen, mediaDir);
         }
     }
 
@@ -233,8 +230,8 @@ namespace TgcViewer.Utils.Gui
             bool sel = gui.sel == nro_item ? true : false;
             if (textura != null)
             {
-                Vector3 pos = new Vector3(rc.Left - 64, rc.Top - 8, 0);
-                gui.sprite.Draw(textura, Rectangle.Empty, Vector3.Empty, pos, Color.FromArgb(gui.alpha, 255, 255, 255));
+                TGCVector3 pos = new TGCVector3(rc.Left - 64, rc.Top - 8, 0);
+                gui.sprite.Draw(textura, Rectangle.Empty, TGCVector3.Empty, pos, Color.FromArgb(gui.alpha, 255, 255, 255));
             }
 
             // recuadro del boton
@@ -275,7 +272,7 @@ namespace TgcViewer.Utils.Gui
                 y0 -= 6;
             }
 
-            Vector2[] Q = new Vector2[7];
+            TGCVector2[] Q = new TGCVector2[7];
             for (int i = 0; i < 6; ++i)
             {
                 Q[i].X = (float)(x0 + rx * Math.Cos(2 * Math.PI / 6 * i));
@@ -327,14 +324,14 @@ namespace TgcViewer.Utils.Gui
                 if (cursor % 2 != 0)
                 {
                     gui.line.Width = 8;
-                    Vector2[] pt = new Vector2[2];
+                    TGCVector2[] pt = new TGCVector2[2];
                     pt[0].X = rc2.Left;
                     pt[1].X = rc2.Right;
                     pt[1].Y = pt[0].Y = rc2.Bottom;
 
                     gui.Transform(pt, 2);
                     gui.line.Begin();
-                    gui.line.Draw(pt, Color.FromArgb(0, 64, 0));
+                    gui.line.Draw(TGCVector2.ToVector2Array(pt), Color.FromArgb(0, 64, 0));
                     gui.line.End();
                 }
             }
@@ -346,8 +343,7 @@ namespace TgcViewer.Utils.Gui
     {
         public frameBorder borde;
 
-        public gui_frame(DXGui gui, String s, int x, int y, int dx, int dy, Color color,
-                frameBorder tipo_borde = frameBorder.rectangular) :
+        public gui_frame(DXGui gui, String s, int x, int y, int dx, int dy, Color color, frameBorder tipo_borde = frameBorder.rectangular) :
             base(gui, s, x, y, dx, dy)
         {
             c_fondo = color;
@@ -375,7 +371,7 @@ namespace TgcViewer.Utils.Gui
                 case frameBorder.solapa:
                     {
                         float r = 40;
-                        Vector2[] pt = new Vector2[10];
+                        TGCVector2[] pt = new TGCVector2[10];
                         pt[0].X = rc.X;
                         pt[0].Y = rc.Y + rc.Height;
                         pt[1].X = rc.X;
@@ -429,7 +425,7 @@ namespace TgcViewer.Utils.Gui
             bool sel = gui.sel == nro_item ? true : false;
 
             float M_PI = (float)Math.PI;
-            Vector2[] pt = new Vector2[255];
+            TGCVector2[] pt = new TGCVector2[255];
             float da = M_PI / 8;
             float alfa;
 
@@ -573,14 +569,14 @@ namespace TgcViewer.Utils.Gui
         public DXGui gui;
         public bool border;
 
-        public gui_tile_button(DXGui gui, String s, String imagen, int id, int x, int y, int dx, int dy, bool bscrolleable = true) :
+        public gui_tile_button(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int dx, int dy, bool bscrolleable = true) :
             base(gui, s, x, y, dx, dy, id)
         {
             seleccionable = true;
             scrolleable = bscrolleable;
             border = true;
             // Cargo la imagen en el gui
-            cargar_textura(imagen);
+            cargar_textura(imagen, mediaDir);
         }
 
         public virtual void InitRender(DXGui p_gui)
@@ -617,8 +613,8 @@ namespace TgcViewer.Utils.Gui
                 // y esta centrada en el origen.
                 // Pero esta escala es local, del texto, que se aplica centra en centro del texto, luego de haberlo
                 // escalado por la escala global.
-                gui.sprite.Transform = gui.sprite.Transform * Matrix.Transformation2D(new Vector2((center.X + ox) * ex, (center.Y + oy) * ey), 0, new Vector2(k, k),
-                        new Vector2(0, 0), 0, new Vector2(0, 0));
+                gui.sprite.Transform = gui.sprite.Transform * TGCMatrix.Transformation2D(new TGCVector2((center.X + ox) * ex, (center.Y + oy) * ey), 0, new TGCVector2(k, k),
+                        new TGCVector2(0, 0), 0, new TGCVector2(0, 0));
             }
         }
 
@@ -628,8 +624,7 @@ namespace TgcViewer.Utils.Gui
             String buffer = text;
             Color color = sel ? Color.FromArgb(gui.alpha, c_selected) : Color.FromArgb(gui.alpha, c_font);
             Rectangle pos_texto = new Rectangle((int)ox + rc.Left, (int)oy + rc.Bottom + 15, rc.Width, 32);
-            gui.font.DrawText(gui.sprite, buffer, pos_texto, DrawTextFormat.NoClip | DrawTextFormat.Top | DrawTextFormat.Center,
-                        sel ? Color.FromArgb(gui.alpha, 0, 32, 128) : Color.FromArgb(gui.alpha, c_font));
+            gui.font.DrawText(gui.sprite, buffer, pos_texto, DrawTextFormat.NoClip | DrawTextFormat.Top | DrawTextFormat.Center, sel ? Color.FromArgb(gui.alpha, 0, 32, 128) : Color.FromArgb(gui.alpha, c_font));
         }
 
         public virtual void RenderFrame()
@@ -664,20 +659,20 @@ namespace TgcViewer.Utils.Gui
             // dibujo el glyph
             if (textura != null)
             {
-                Vector3 pos = new Vector3(center.X * ex, center.Y * ey, 0);
-                Vector3 c0 = new Vector3(image_width / 2, image_height / 2, 0);
+                TGCVector3 pos = new TGCVector3(center.X * ex, center.Y * ey, 0);
+                TGCVector3 c0 = new TGCVector3(image_width / 2, image_height / 2, 0);
                 // Determino la escala para que entre justo
-                Vector2 scale = new Vector2(k * ex * (float)rc.Width / (float)image_width, k * ey * (float)rc.Height / (float)image_height);
-                Vector2 offset = new Vector2(ox * ex, oy * ey);
-                gui.sprite.Transform = Matrix.Transformation2D(new Vector2(center.X * ex, center.Y * ey), 0, scale, new Vector2(0, 0), 0, offset) * gui.RTQ;
+                TGCVector2 scale = new TGCVector2(k * ex * (float)rc.Width / (float)image_width, k * ey * (float)rc.Height / (float)image_height);
+                TGCVector2 offset = new TGCVector2(ox * ex, oy * ey);
+                gui.sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(center.X * ex, center.Y * ey), 0, scale, new TGCVector2(0, 0), 0, offset) * gui.RTQ;
                 gui.sprite.Draw(textura, c0, pos, Color.FromArgb(gui.alpha, 255, 255, 255).ToArgb());
             }
         }
 
         public override void Render(DXGui gui)
         {
-            // Guardo la Matrix anterior
-            Matrix matAnt = gui.sprite.Transform * Matrix.Identity;
+            // Guardo la TGCMatrix anterior
+            TGCMatrix matAnt = TGCMatrix.FromMatrix(gui.sprite.Transform) * TGCMatrix.Identity;
             // Inicializo escalas, matrices, estados
             InitRender(gui);
             // Secuencia standard: texto + Frame + Glyph
@@ -696,8 +691,8 @@ namespace TgcViewer.Utils.Gui
         public Color c_interior_sel = Color.FromArgb(30, 240, 40);
         public bool texto_derecha;
 
-        public gui_circle_button(DXGui gui, String s, String imagen, int id, int x, int y, int r) :
-            base(gui, s, imagen, id, x, y, r, r)
+        public gui_circle_button(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int r) :
+            base(gui, s, imagen, id, x, y, mediaDir, r, r)
 
         {
             texto_derecha = false;              // indica si el texto va a derecha o debajo del glyph
@@ -711,14 +706,12 @@ namespace TgcViewer.Utils.Gui
             if (texto_derecha)
             {
                 Rectangle pos_texto = new Rectangle((int)ox + rc.Right, (int)oy + rc.Top + rc.Height / 2, rc.Width, 32);
-                gui.font.DrawText(gui.sprite, buffer, pos_texto, DrawTextFormat.NoClip | DrawTextFormat.VerticalCenter | DrawTextFormat.Left,
-                            sel ? Color.FromArgb(gui.alpha, 0, 32, 128) : Color.FromArgb(gui.alpha, c_font));
+                gui.font.DrawText(gui.sprite, buffer, pos_texto, DrawTextFormat.NoClip | DrawTextFormat.VerticalCenter | DrawTextFormat.Left, sel ? Color.FromArgb(gui.alpha, 0, 32, 128) : Color.FromArgb(gui.alpha, c_font));
             }
             else
             {
                 Rectangle pos_texto = new Rectangle((int)ox + rc.Left, (int)oy + rc.Bottom + 15, rc.Width, 32);
-                gui.font.DrawText(gui.sprite, buffer, pos_texto, DrawTextFormat.NoClip | DrawTextFormat.Top | DrawTextFormat.Center,
-                            sel ? Color.FromArgb(gui.alpha, 0, 32, 128) : Color.FromArgb(gui.alpha, c_font));
+                gui.font.DrawText(gui.sprite, buffer, pos_texto, DrawTextFormat.NoClip | DrawTextFormat.Top | DrawTextFormat.Center, sel ? Color.FromArgb(gui.alpha, 0, 32, 128) : Color.FromArgb(gui.alpha, c_font));
             }
         }
 
@@ -728,18 +721,18 @@ namespace TgcViewer.Utils.Gui
             // circulo
             int R = (int)(rc.Width / 2 * k);
 
-            gui.DrawCircle(new Vector2(rc.X + rc.Width / 2 + ox, rc.Y + rc.Height / 2 + oy), R, 10, Color.FromArgb(gui.alpha, c_border));
+            gui.DrawCircle(new TGCVector2(rc.X + rc.Width / 2 + ox, rc.Y + rc.Height / 2 + oy), R, 10, Color.FromArgb(gui.alpha, c_border));
 
             // relleno
             if (sel)
-                gui.DrawDisc(new Vector2(rc.X + rc.Width / 2 + ox, rc.Y + rc.Height / 2 + oy), R - 10,
+                gui.DrawDisc(new TGCVector2(rc.X + rc.Width / 2 + ox, rc.Y + rc.Height / 2 + oy), R - 10,
                     Color.FromArgb((byte)(255 * tr), c_interior_sel.R, c_interior_sel.G, c_interior_sel.B));
             else
                 if (state == itemState.pressed)
             {
-                gui.DrawDisc(new Vector2(rc.X + rc.Width / 2 + ox, rc.Y + rc.Height / 2 + oy), R - 10, Color.FromArgb(255, 255, 0, 0));
+                gui.DrawDisc(new TGCVector2(rc.X + rc.Width / 2 + ox, rc.Y + rc.Height / 2 + oy), R - 10, Color.FromArgb(255, 255, 0, 0));
                 int R2 = (int)(rc.Width / 2 + gui.delay_press * 100);
-                gui.DrawCircle(new Vector2(rc.X + rc.Width / 2 + ox, rc.Y + rc.Height / 2 + oy), R2, 10, Color.FromArgb(255, 120, 120));
+                gui.DrawCircle(new TGCVector2(rc.X + rc.Width / 2 + ox, rc.Y + rc.Height / 2 + oy), R2, 10, Color.FromArgb(255, 120, 120));
             }
         }
     }

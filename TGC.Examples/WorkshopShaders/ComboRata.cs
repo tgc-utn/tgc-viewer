@@ -2,14 +2,15 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
+using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
+using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using TgcViewer.Utils.Gui;
 
@@ -17,7 +18,6 @@ namespace Examples.WorkshopShaders
 {
     public class ComboRata : TGCExampleViewer
     {
-        private string MyMediaDir;
         private string MyShaderDir;
         private TgcScene scene;
         private Effect effect;
@@ -30,7 +30,7 @@ namespace Examples.WorkshopShaders
         private Texture g_pBaseTexture4;
         private Texture g_pHeightmap4;
         private float time;
-        private List<TgcBoundingBox> rooms = new List<TgcBoundingBox>();
+        private List<TgcBoundingAxisAlignBox> rooms = new List<TgcBoundingAxisAlignBox>();
 
         private List<TgcSkeletalMesh> enemigos = new List<TgcSkeletalMesh>();
         private float[] enemigo_an = new float[50];
@@ -49,26 +49,25 @@ namespace Examples.WorkshopShaders
         public override void Init()
         {
             time = 0f;
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            GuiController.Instance.CustomRenderEnabled = true;
-            MyMediaDir = MediaDir + "WorkshopShaders\\";
+            Device d3dDevice = D3DDevice.Instance.Device;
+
             MyShaderDir = ShadersDir + "WorkshopShaders\\";
 
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
-            scene = loader.loadSceneFromFile(MyMediaDir + "Piso\\comborata-TgcScene.xml");
+            scene = loader.loadSceneFromFile(MediaDir + "WorkshopShaders\\comborata\\comborata-TgcScene.xml");
 
-            g_pBaseTexture = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\rocks.jpg");
-            g_pHeightmap = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\rocks_NM_height.tga");
+            g_pBaseTexture = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\rocks.jpg");
+            g_pHeightmap = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\NM_height_rocks.tga");
 
-            g_pBaseTexture2 = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\stones.bmp");
-            g_pHeightmap2 = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\stones_NM_height.tga");
+            g_pBaseTexture2 = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\stones.bmp");
+            g_pHeightmap2 = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\NM_height_stones.tga");
 
-            g_pBaseTexture3 = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\granito.jpg");
-            g_pHeightmap3 = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\saint_NM_height.tga");
+            g_pBaseTexture3 = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\granito.jpg");
+            g_pHeightmap3 = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\NM_height_saint.tga");
 
-            g_pBaseTexture4 = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\granito.jpg");
-            g_pHeightmap4 = TextureLoader.FromFile(d3dDevice, MyMediaDir + "Piso\\Textures\\four_NM_height.tga");
+            g_pBaseTexture4 = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\granito.jpg");
+            g_pHeightmap4 = TextureLoader.FromFile(d3dDevice, MediaDir + "Texturas\\NM_four_height.tga");
 
             foreach (TgcMesh mesh in scene.Meshes)
             {
@@ -91,8 +90,8 @@ namespace Examples.WorkshopShaders
             Modifiers.addFloat("maxSample", 11f, 50f, 50f);
             Modifiers.addFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
 
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new TGCVector3(147.2558f, 8.0536f, 262.2509f), new TGCVector3(148.0797f, 7.7869f, 262.7511f));
+            this.Camara = new TgcFpsCamera(Input);
+            this.Camara.SetCamera(new TGCVector3(147.2558f, 8.0536f, 262.2509f), new TGCVector3(148.0797f, 7.7869f, 262.7511f));
 
             //Cargar personaje con animaciones
             TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
@@ -121,9 +120,9 @@ namespace Examples.WorkshopShaders
             }
 
             // levanto el GUI
-            float W = GuiController.Instance.Panel3d.Width;
-            float H = GuiController.Instance.Panel3d.Height;
-            gui.Create();
+            float W = D3DDevice.Instance.Width;
+            float H = D3DDevice.Instance.Height;
+            gui.Create(MediaDir);
             gui.InitDialog(false);
             gui.InsertFrame("Combo Rata", 10, 10, 200, 200, Color.FromArgb(32, 120, 255, 132), frameBorder.sin_borde);
             gui.InsertFrame("", 10, (int)H - 150, 200, 140, Color.FromArgb(62, 120, 132, 255), frameBorder.sin_borde);
@@ -152,7 +151,7 @@ namespace Examples.WorkshopShaders
                 TGCVector3 vel = new TGCVector3((float)Math.Sin(an), 0, (float)Math.Cos(an));
                 //Mover personaje
                 TGCVector3 lastPos = enemigos[t].Position;
-                enemigos[t].move(vel * speed);
+                enemigos[t].Move(vel * speed);
                 enemigos[t].Rotation = new TGCVector3(0, (float)Math.PI + an, 0);           // +(float)Math.PI/2
 
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
@@ -174,31 +173,30 @@ namespace Examples.WorkshopShaders
                     enemigo_an[t] += (float)rnd.Next(0, 100) / 100.0f;
                 }
 
-                enemigos[t].updateAnimation();
+                enemigos[t].updateAnimation(ElapsedTime);
             }
         }
 
         public override void Render()
         {
-            Device device = GuiController.Instance.D3dDevice;
-            Control panel3d = GuiController.Instance.Panel3d;
-            float aspectRatio = (float)panel3d.Width / (float)panel3d.Height;
+            Device d3dDevice = D3DDevice.Instance.Device;
+
             time += ElapsedTime;
 
             TGCVector3 lightDir = (TGCVector3)Modifiers["LightDir"];
-            effect.SetValue("g_LightDir", TgcParserUtils.vector3ToFloat3Array(lightDir));
+            effect.SetValue("g_LightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
             effect.SetValue("min_cant_samples", (float)Modifiers["minSample"]);
             effect.SetValue("max_cant_samples", (float)Modifiers["maxSample"]);
             effect.SetValue("fHeightMapScale", (float)Modifiers["HeightMapScale"]);
-            effect.SetValue("fvEyePosition", TgcParserUtils.vector3ToFloat3Array(GuiController.Instance.FpsCamera.getPosition()));
+            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(this.Camara.Position));
 
             effect.SetValue("time", time);
             effect.SetValue("aux_Tex", g_pBaseTexture);
             effect.SetValue("height_map", g_pHeightmap);
             effect.SetValue("phong_lighting", true);
 
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            device.BeginScene();
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            d3dDevice.BeginScene();
 
             foreach (TgcMesh mesh in scene.Meshes)
             {
@@ -207,17 +205,17 @@ namespace Examples.WorkshopShaders
                 mesh.Effect = effect;
                 if (mesh.Name.Contains("Floor"))
                 {
-                    effect.SetValue("g_normal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, -1, 0)));
-                    effect.SetValue("g_tangent", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, -1, 0)));
+                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
                     nro_textura = 0;
                 }
                 else
                 if (mesh.Name.Contains("Roof"))
                 {
-                    effect.SetValue("g_normal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
-                    effect.SetValue("g_tangent", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
                     nro_textura = 0;
 
                     va = false;
@@ -225,33 +223,33 @@ namespace Examples.WorkshopShaders
                 else
                 if (mesh.Name.Contains("East"))
                 {
-                    effect.SetValue("g_normal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_tangent", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
-                    effect.SetValue("g_binormal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
                     nro_textura = 1;
                 }
                 else
                 if (mesh.Name.Contains("West"))
                 {
-                    effect.SetValue("g_normal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(-1, 0, 0)));
-                    effect.SetValue("g_tangent", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
-                    effect.SetValue("g_binormal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(-1, 0, 0)));
+                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
                     nro_textura = 1;
                 }
                 else
                 if (mesh.Name.Contains("North"))
                 {
-                    effect.SetValue("g_normal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 0, -1)));
-                    effect.SetValue("g_tangent", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, -1)));
+                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
                     nro_textura = 1;
                 }
                 else
                 if (mesh.Name.Contains("South"))
                 {
-                    effect.SetValue("g_normal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
-                    effect.SetValue("g_tangent", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TgcParserUtils.vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
                     nro_textura = 1;
                 }
 
@@ -298,14 +296,14 @@ namespace Examples.WorkshopShaders
             float max_dist = 80;
             foreach (TgcSkeletalMesh m in enemigos)
             {
-                TGCVector3 pos_personaje = GuiController.Instance.FpsCamera.getPosition();
+                TGCVector3 pos_personaje = this.Camara.Position;
                 TGCVector3 pos_enemigo = m.Position * 1;
                 float dist = (pos_personaje - pos_enemigo).Length();
 
                 if (dist < max_dist)
                 {
                     pos_enemigo.Y = m.BoundingBox.PMax.Y * 0.75f + m.BoundingBox.PMin.Y * 0.25f;
-                    pos_enemigo.Project(device.Viewport, device.Transform.Projection, device.Transform.View, device.Transform.World);
+                    pos_enemigo.Project(d3dDevice.Viewport, TGCMatrix.FromMatrix(d3dDevice.Transform.Projection), TGCMatrix.FromMatrix(d3dDevice.Transform.View), TGCMatrix.FromMatrix(d3dDevice.Transform.World));
                     if (pos_enemigo.Z > 0 && pos_enemigo.Z < 1)
                     {
                         float an = (max_dist - dist) / max_dist * 3.1415f * 2.0f;
@@ -319,15 +317,15 @@ namespace Examples.WorkshopShaders
             }
             gui.trapezoidal_style = true;
 
-            device.EndScene();
+            PostRender();
         }
 
         public void renderHUD()
         {
-            Device device = GuiController.Instance.D3dDevice;
-            device.RenderState.ZBufferEnable = false;
-            int W = GuiController.Instance.Panel3d.Width;
-            int H = GuiController.Instance.Panel3d.Height;
+            Device d3dDevice = D3DDevice.Instance.Device;
+            d3dDevice.RenderState.ZBufferEnable = false;
+            int W = D3DDevice.Instance.Width;
+            int H = D3DDevice.Instance.Height;
 
             // Elapsed time
             int an = (int)(time * 10) % 360;
@@ -336,8 +334,8 @@ namespace Examples.WorkshopShaders
             gui.TextOut(20, H - 140, "Elapsed Time:" + Math.Round(time), Color.LightSteelBlue);
 
             // dibujo los enemigos
-            TGCVector3 pos_personaje = GuiController.Instance.FpsCamera.getPosition();
-            TGCVector3 dir_view = GuiController.Instance.FpsCamera.getLookAt() - pos_personaje;
+            TGCVector3 pos_personaje = this.Camara.Position;
+            TGCVector3 dir_view = this.Camara.LookAt - pos_personaje;
             TGCVector2 dir_v = new TGCVector2(dir_view.X, dir_view.Z);
             dir_v.Normalize();
             TGCVector2 dir_w = new TGCVector2(dir_v.Y, -dir_v.X);
@@ -372,7 +370,7 @@ namespace Examples.WorkshopShaders
             gui.DrawSolidPoly(P, 4, Color.Tomato, false);
             gui.DrawCircle(new TGCVector2(ox, oy), 14, 3, Color.Yellow);
 
-            foreach (TgcBoundingBox room in rooms)
+            foreach (TgcBoundingAxisAlignBox room in rooms)
             {
                 TGCVector2[] Q = new TGCVector2[4];
                 TGCVector2[] Qp = new TGCVector2[5];
@@ -418,13 +416,13 @@ namespace Examples.WorkshopShaders
             gui.DrawSolidPoly(P, 5, Color.Green);
             gui.DrawPoly(P, 5, 2, Color.YellowGreen);
 
-            device.RenderState.ZBufferEnable = true;
+            d3dDevice.RenderState.ZBufferEnable = true;
             gui.Render();
         }
 
         public override void Dispose()
         {
-            scene.disposeAll();
+            scene.DisposeAll();
             effect.Dispose();
             g_pBaseTexture.Dispose();
             g_pHeightmap.Dispose();

@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
@@ -16,12 +17,12 @@ namespace Examples.WorkshopShaders
     {
         public TGCVector3 pos_imagen = new TGCVector3(500, 60, 0);
 
-        public menu_item(DXGui gui, String s, String imagen, int id, int x, int y, int dx = 0, int dy = 0, bool penabled = true) :
+        public menu_item(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true) :
             base(gui, s, x, y, dx, dy, id)
         {
             disabled = !penabled;
             seleccionable = true;
-            cargar_textura(imagen);
+            cargar_textura(imagen, mediaDir);
             font = gui.font_medium;
         }
 
@@ -64,12 +65,12 @@ namespace Examples.WorkshopShaders
     // menu item secundario
     public class menu_item2 : GUIItem
     {
-        public menu_item2(DXGui gui, String s, String imagen, int id, int x, int y, int dx = 0, int dy = 0, bool penabled = true) :
+        public menu_item2(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true) :
             base(gui, s, x, y, dx, dy, id)
         {
             disabled = !penabled;
             seleccionable = true;
-            cargar_textura(imagen);
+            cargar_textura(imagen, mediaDir);
             font = gui.font_medium;
         }
 
@@ -224,59 +225,58 @@ namespace Examples.WorkshopShaders
 
         public override void Init()
         {
-            GuiController.Instance.CustomRenderEnabled = true;
             Cursor.Hide();
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             MyMediaDir = MediaDir + "WorkshopShaders\\";
             MyShaderDir = ShadersDir + "WorkshopShaders\\";
 
             // levanto el GUI
-            gui.Create();
+            gui.Create(MediaDir);
 
             // menu principal
             gui.InitDialog(false, false);
-            int W = GuiController.Instance.Panel3d.Width;
-            int H = GuiController.Instance.Panel3d.Height;
+            int W = D3DDevice.Instance.Width;
+            int H = D3DDevice.Instance.Height;
             int x0 = 70;
             int y0 = 10;
             int dy = 30;
             int dy2 = dy;
             int dx = 250;
-            GUIItem item = gui.InsertImage("transformers//custom_char.png", x0, y0);
+            GUIItem item = gui.InsertImage("transformers//custom_char.png", x0, y0, MediaDir);
             item.image_centrada = false;
             y0 += dy;
             gui.InsertItem(new static_text(gui, "SCOUT", x0, y0, 400, 25));
             y0 += 45;
-            item = gui.InsertImage("transformers//scout.png", x0 + dx, y0);
+            item = gui.InsertImage("transformers//scout.png", x0 + dx, y0, MediaDir);
             item.image_centrada = false;
-            gui.InsertItem(new menu_item(gui, "SCOUT 1", "transformers//scout1.png", ID_SCOUT, x0, y0, dx, dy));
+            gui.InsertItem(new menu_item(gui, "SCOUT 1", "transformers//scout1.png", ID_SCOUT, x0, y0, MediaDir, dx, dy));
             y0 += dy + 5;
-            gui.InsertItem(new menu_item(gui, "SCOUT 2", "transformers//scout2.png", ID_SCOUT, x0, y0, dx, dy));
+            gui.InsertItem(new menu_item(gui, "SCOUT 2", "transformers//scout2.png", ID_SCOUT, x0, y0, MediaDir, dx, dy));
             y0 += 2 * dy;
 
             gui.InsertItem(new static_text(gui, "HUNTER", x0, y0, 400, 25));
             y0 += 45;
-            item = gui.InsertImage("transformers//hunter.png", x0 + dx, y0);
+            item = gui.InsertImage("transformers//hunter.png", x0 + dx, y0, MediaDir);
             item.image_centrada = false;
-            menu_item hunter1 = (menu_item)gui.InsertItem(new menu_item(gui, "HUNTER 1", "transformers//hunter1.png", ID_HUNTER, x0, y0, dx, dy));
+            menu_item hunter1 = (menu_item)gui.InsertItem(new menu_item(gui, "HUNTER 1", "transformers//hunter1.png", ID_HUNTER, x0, y0, MediaDir, dx, dy));
             hunter1.pos_imagen.Y = y0;
 
             y0 += 2 * dy;
 
             gui.InsertItem(new static_text(gui, "COMMANDER", x0, y0, 400, 25));
             y0 += 45;
-            item = gui.InsertImage("transformers//commander.png", x0 + dx, y0);
+            item = gui.InsertImage("transformers//commander.png", x0 + dx, y0, MediaDir);
             item.image_centrada = false;
-            menu_item commander1 = (menu_item)gui.InsertItem(new menu_item(gui, "COMMANDER 1", "transformers//commander1.png", ID_COMMANDER, x0, y0, dx, 25));
+            menu_item commander1 = (menu_item)gui.InsertItem(new menu_item(gui, "COMMANDER 1", "transformers//commander1.png", ID_COMMANDER, x0, y0, MediaDir, dx, 25));
             commander1.pos_imagen.Y = y0;
             y0 += 2 * dy;
 
             gui.InsertItem(new static_text(gui, "WARRIOR", x0, y0, 400, 25));
             y0 += 45;
-            item = gui.InsertImage("transformers//warrior.png", x0 + dx, y0);
+            item = gui.InsertImage("transformers//warrior.png", x0 + dx, y0, MediaDir);
             item.image_centrada = false;
-            menu_item warrior1 = (menu_item)gui.InsertItem(new menu_item(gui, "WARRIOR 1", "transformers//warrior1.png", ID_WARRIOR, x0, y0, dx, 30));
+            menu_item warrior1 = (menu_item)gui.InsertItem(new menu_item(gui, "WARRIOR 1", "transformers//warrior1.png", ID_WARRIOR, x0, y0, MediaDir, dx, 30));
             warrior1.pos_imagen.Y = y0;
 
             dialog_sel = 0;
@@ -285,8 +285,8 @@ namespace Examples.WorkshopShaders
         public void Configurar()
         {
             gui.InitDialog(false, false);
-            int W = GuiController.Instance.Panel3d.Width;
-            int H = GuiController.Instance.Panel3d.Height;
+            int W = D3DDevice.Instance.Width;
+            int H = D3DDevice.Instance.Height;
             int x0 = 50;
             int y0 = 50;
             int dy = H - 100;
@@ -295,17 +295,17 @@ namespace Examples.WorkshopShaders
 
             gui.InsertItem(new static_text(gui, "WARRIOR", x0, y0, 400, 25));
             y0 += 45;
-            gui.InsertItem(new menu_item2(gui, "WARRIOR 1", "transformers//w1.png", ID_WARRIOR, x0, y0, dx, 70));
+            gui.InsertItem(new menu_item2(gui, "WARRIOR 1", "transformers//w1.png", ID_WARRIOR, x0, y0, MediaDir, dx, 70));
             y0 += 75;
-            gui.InsertItem(new menu_item2(gui, "WARRIOR 2", "transformers//w2.png", ID_WARRIOR, x0, y0, dx, 70));
+            gui.InsertItem(new menu_item2(gui, "WARRIOR 2", "transformers//w2.png", ID_WARRIOR, x0, y0, MediaDir, dx, 70));
             y0 += 75;
-            gui.InsertItem(new menu_item2(gui, "WARRIOR 3", "transformers//w3.png", ID_WARRIOR, x0, y0, dx, 70));
+            gui.InsertItem(new menu_item2(gui, "WARRIOR 3", "transformers//w3.png", ID_WARRIOR, x0, y0, MediaDir, dx, 70));
             y0 += 75;
-            gui.InsertItem(new menu_item2(gui, "WARRIOR 4", "transformers//w4.png", ID_WARRIOR, x0, y0, dx, 70));
+            gui.InsertItem(new menu_item2(gui, "WARRIOR 4", "transformers//w4.png", ID_WARRIOR, x0, y0, MediaDir, dx, 70));
             y0 += 95;
-            gui_circle_button button = gui.InsertCircleButton(0, "SELECT", "ok.png", x0 + 70, y0, 40);
+            gui_circle_button button = gui.InsertCircleButton(0, "SELECT", "ok.png", x0 + 70, y0, MediaDir, 40);
             button.texto_derecha = true;
-            button = gui.InsertCircleButton(1, "BACK", "cancel.png", x0 + 300, y0, 40);
+            button = gui.InsertCircleButton(1, "BACK", "cancel.png", x0 + 300, y0, MediaDir, 40);
             button.texto_derecha = true;
         }
 
@@ -316,15 +316,19 @@ namespace Examples.WorkshopShaders
 
         public override void Render()
         {
-            Device device = GuiController.Instance.D3dDevice;
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(35, 56, 68), 1.0f, 0);
+            PreRender();
+
+            Device d3dDevice = D3DDevice.Instance.Device;
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.FromArgb(35, 56, 68), 1.0f, 0);
             gui_render(ElapsedTime);
+
+            PostRender();
         }
 
         public void gui_render(float elapsedTime)
         {
             // ------------------------------------------------
-            GuiMessage msg = gui.Update(elapsedTime);
+            GuiMessage msg = gui.Update(elapsedTime, Input);
             // proceso el msg
             switch (msg.message)
             {

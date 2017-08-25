@@ -3,7 +3,9 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
 using System.IO;
+using TGC.Core.Direct3D;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Examples.Camara;
 
 namespace TgcViewer.Utils.Gui
@@ -111,7 +113,7 @@ namespace TgcViewer.Utils.Gui
         public float time;
         public float delay_show;
         public bool hidden;
-        public Matrix RTQ;              // Matriz de cambio de Rectangle to Quad (Trapezoidal quad)
+        public TGCMatrix RTQ;              // Matriz de cambio de Rectangle to Quad (Trapezoidal quad)
         public float timer_sel;
 
         // Estilos del dialogo actual
@@ -208,8 +210,8 @@ namespace TgcViewer.Utils.Gui
             alpha = 255;
 
             // Computo la matrix de cambio rect to quad
-            float W = GuiController.Instance.Panel3d.Width;
-            float H = GuiController.Instance.Panel3d.Height;
+            float W = D3DDevice.Instance.Width;
+            float H = D3DDevice.Instance.Height;
             RTQ = rectToQuad(0, 0, W, H, 0, 0, W - 50, 60, W - 100, H - 50, 0, H);
             closing = false;
         }
@@ -252,11 +254,11 @@ namespace TgcViewer.Utils.Gui
         }
 
         // interface
-        public void Create()
+        public void Create(String mediaDir)
         {
             Reset();
             // Creo el sprite
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             sprite = new Sprite(d3dDevice);
             // lines varios
             line = new Line(d3dDevice);
@@ -280,9 +282,9 @@ namespace TgcViewer.Utils.Gui
             font_medium.PreloadGlyphs('A', 'Z');
 
             // Cargo las textura del cursor
-            cursores[(int)tipoCursor.targeting] = cargar_textura("cursor_default.png", true);
-            cursores[(int)tipoCursor.over] = cargar_textura("cursor_over.png", true);
-            cursores[(int)tipoCursor.gripped] = cargar_textura("cursor_gripper.png", true);
+            cursores[(int)tipoCursor.targeting] = cargar_textura("cursor_default.png", mediaDir, true);
+            cursores[(int)tipoCursor.over] = cargar_textura("cursor_over.png", mediaDir, true);
+            cursores[(int)tipoCursor.gripped] = cargar_textura("cursor_gripper.png", mediaDir, true);
         }
 
         // dialog support
@@ -346,11 +348,11 @@ namespace TgcViewer.Utils.Gui
         }
 
         // Alerts
-        public void MessageBox(string msg, string titulo = "")
+        public void MessageBox(string msg, string mediaDir, string titulo = "")
         {
             InitDialog(false, false);
-            float W = GuiController.Instance.Panel3d.Width / ex;
-            float H = GuiController.Instance.Panel3d.Height / ey;
+            float W = D3DDevice.Instance.Width / ex;
+            float H = D3DDevice.Instance.Height / ey;
 
             int dx = (int)(700.0f / ex);
             int dy = (int)(450.0f / ey);
@@ -360,12 +362,12 @@ namespace TgcViewer.Utils.Gui
 
             InsertFrame(titulo, x0, y0, dx, dy, Color.FromArgb(64, 32, 64));
             InsertItem(msg, x0 + 50, y0 + 80);
-            InsertCircleButton(0, "OK", "ok.png", x0 + 70, y0 + dy - r - 90, r);
-            InsertCircleButton(1, "CANCEL", "cancel.png", x0 + dx - r - 70, y0 + dy - r - 90, r);
+            InsertCircleButton(0, "OK", "ok.png", x0 + 70, y0 + dy - r - 90, mediaDir, r);
+            InsertCircleButton(1, "CANCEL", "cancel.png", x0 + dx - r - 70, y0 + dy - r - 90, mediaDir, r);
         }
 
         // input
-        public GuiMessage ProcessInput(float elapsed_time)
+        public GuiMessage ProcessInput(float elapsed_time, TgcD3dInput input)
         {
             GuiMessage msg = new GuiMessage();
             msg.message = MessageType.WM_NOTHING;
@@ -374,21 +376,21 @@ namespace TgcViewer.Utils.Gui
 
             // Hardcodeado escala dinamica
 
-            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F2))
+            if (input.keyPressed(Microsoft.DirectX.DirectInput.Key.F2))
             {
                 ex /= 1.1f;
                 ey = ex;
             }
             else
-                if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F3))
+                if (input.keyPressed(Microsoft.DirectX.DirectInput.Key.F3))
             {
                 ex *= 1.1f;
                 ey = ex;
             }
 
             // tomo la posicion del mouse
-            float sx = GuiController.Instance.D3dInput.Xpos;
-            float sy = GuiController.Instance.D3dInput.Ypos;
+            float sx = input.Xpos;
+            float sy = input.Ypos;
 
             // Autohide dialog
             if (autohide)
@@ -441,7 +443,7 @@ namespace TgcViewer.Utils.Gui
                 timer_sel = 0;
             }
 
-            if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 // Presiona el item actual
                 if (sel != -1)
@@ -482,7 +484,7 @@ namespace TgcViewer.Utils.Gui
             return msg;
         }
 
-        public GuiMessage Update(float elapsed_time)
+        public GuiMessage Update(float elapsed_time, TgcD3dInput input)
         {
             if (closing)
             {
@@ -541,13 +543,13 @@ namespace TgcViewer.Utils.Gui
             // computo la matriz de transformacion final RTQ
             if (trapezoidal_style)
             {
-                float W = GuiController.Instance.Panel3d.Width;
-                float H = GuiController.Instance.Panel3d.Height;
+                float W = D3DDevice.Instance.Width;
+                float H = D3DDevice.Instance.Height;
                 RTQ = rectToQuad(0, 0, W, H,
                               0, 0, W - 50, 60, W - 100, H - 50, 0, H);
             }
             else
-                RTQ = Matrix.Identity;
+                RTQ = TGCMatrix.Identity;
 
             if (delay_press > 0)
             {
@@ -581,12 +583,12 @@ namespace TgcViewer.Utils.Gui
                 items[i].ftime += elapsed_time;
 
             // Proceso el input y devuelve el resultado
-            return ProcessInput(elapsed_time);
+            return ProcessInput(elapsed_time, input);
         }
 
         public void Render()
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             if (sprite.Disposed)
                 return;
 
@@ -598,10 +600,10 @@ namespace TgcViewer.Utils.Gui
 
             // 1- dibujo los items 2d con una interface de sprites
             sprite.Begin(SpriteFlags.AlphaBlend);
-            Matrix matAnt = sprite.Transform * Matrix.Identity;
-            Vector2 scale = new Vector2(ex, ey);
-            Vector2 offset = new Vector2(ox, oy);
-            sprite.Transform = Matrix.Transformation2D(new Vector2(0, 0), 0, scale, new Vector2(0, 0), 0, offset) * RTQ;
+            TGCMatrix matAnt = TGCMatrix.FromMatrix(sprite.Transform) * TGCMatrix.Identity;
+            TGCVector2 scale = new TGCVector2(ex, ey);
+            TGCVector2 offset = new TGCVector2(ox, oy);
+            sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(0, 0), 0, scale, new TGCVector2(0, 0), 0, offset) * RTQ;
 
             int item_desde = item_0;
             // Transicion entre dialogos
@@ -670,15 +672,15 @@ namespace TgcViewer.Utils.Gui
 
             // 4 - dibujo el cusor con la misma interface de prites
             sprite.Begin(SpriteFlags.AlphaBlend);
-            sprite.Transform = Matrix.Transformation2D(new Vector2(0, 0), 0, new Vector2(1, 1), new Vector2(0, 0), 0, new Vector2(0, 0));
+            sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(0, 0), 0, new TGCVector2(1, 1), new TGCVector2(0, 0), 0, new TGCVector2(0, 0));
 
             // mano derecha
             float t = delay_move / delay_move0;
-            Vector3 hand_pos = new Vector3(mouse_x, mouse_y, 0) * (1 - t) + new Vector3(mouse_x_ant, mouse_y_ant, 0) * t;
+            TGCVector3 hand_pos = new TGCVector3(mouse_x, mouse_y, 0) * (1 - t) + new TGCVector3(mouse_x_ant, mouse_y_ant, 0) * t;
             if (cursores[(int)cursor_der] != null)
             {
-                sprite.Transform = Matrix.Transformation2D(new Vector2(0, 0), 0, new Vector2(1, 1), Vector2.Empty, 0, new Vector2(0, 0));
-                sprite.Draw(cursores[(int)cursor_der], Rectangle.Empty, new Vector3(32, 32, 0), hand_pos, Color.FromArgb(255, 255, 255, 255));
+                sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(0, 0), 0, new TGCVector2(1, 1), TGCVector2.Zero, 0, new TGCVector2(0, 0));
+                sprite.Draw(cursores[(int)cursor_der], Rectangle.Empty, new TGCVector3(32, 32, 0), hand_pos, Color.FromArgb(255, 255, 255, 255));
             }
             sprite.End();
 
@@ -695,15 +697,15 @@ namespace TgcViewer.Utils.Gui
 
         public void TextOut(int x, int y, string text, Color clr)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             // elimino cualquier textura que me cague el modulate del vertex color
             d3dDevice.SetTexture(0, null);
             // Desactivo el zbuffer
             bool ant_zenable = d3dDevice.RenderState.ZBufferEnable;
             d3dDevice.RenderState.ZBufferEnable = false;
             // pongo la matriz identidad
-            Matrix matAnt = sprite.Transform * Matrix.Identity;
-            sprite.Transform = trapezoidal_style ? RTQ : Matrix.Identity;
+            TGCMatrix matAnt = TGCMatrix.FromMatrix(sprite.Transform) * TGCMatrix.Identity;
+            sprite.Transform = trapezoidal_style ? RTQ : TGCMatrix.Identity;
 
             Rectangle rc = new Rectangle(x, y, x + 600, y + 100);
             sprite.Begin(SpriteFlags.AlphaBlend);
@@ -733,21 +735,21 @@ namespace TgcViewer.Utils.Gui
         }
 
         // Inserta un item imagen estatica
-        public GUIItem InsertImage(String image, int x, int y)
+        public GUIItem InsertImage(String image, int x, int y, string mediaDir)
         {
             // Agrego un item generico
             GUIItem item = InsertItem(new GUIItem(this, "", x, y));
 
             // Cargo el bitmap
-            item.cargar_textura(image);
+            item.cargar_textura(image, mediaDir);
 
             return item;
         }
 
         // Pop up menu item
-        public gui_menu_item InsertMenuItem(int id, String s, String imagen, int x, int y, int dx = 0, int dy = 0, bool penabled = true)
+        public gui_menu_item InsertMenuItem(int id, String s, String imagen, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true)
         {
-            return (gui_menu_item)InsertItem(new gui_menu_item(this, s, imagen, id, x, y, dx, dy, penabled));
+            return (gui_menu_item)InsertItem(new gui_menu_item(this, s, imagen, id, x, y, mediaDir, dx, dy, penabled));
         }
 
         // Standard push button
@@ -757,14 +759,14 @@ namespace TgcViewer.Utils.Gui
         }
 
         // button
-        public gui_circle_button InsertCircleButton(int id, String s, String imagen, int x, int y, int r)
+        public gui_circle_button InsertCircleButton(int id, String s, String imagen, int x, int y, string mediaDir, int r)
         {
-            return (gui_circle_button)InsertItem(new gui_circle_button(this, s, imagen, id, x, y, r));
+            return (gui_circle_button)InsertItem(new gui_circle_button(this, s, imagen, id, x, y, mediaDir, r));
         }
 
-        public gui_tile_button InsertTileButton(int id, String s, String imagen, int x, int y, int dx, int dy, bool scrolleable = true)
+        public gui_tile_button InsertTileButton(int id, String s, String imagen, int x, int y, string mediaDir, int dx, int dy, bool scrolleable = true)
         {
-            return (gui_tile_button)InsertItem(new gui_tile_button(this, s, imagen, id, x, y, dx, dy, scrolleable));
+            return (gui_tile_button)InsertItem(new gui_tile_button(this, s, imagen, id, x, y, mediaDir, dx, dy, scrolleable));
         }
 
         // Dialog Frame
@@ -849,7 +851,7 @@ namespace TgcViewer.Utils.Gui
             }
         }
 
-        public void Transform(Vector2[] pt, int cant_ptos)
+        public void Transform(TGCVector2[] pt, int cant_ptos)
         {
             for (int i = 0; i < cant_ptos; ++i)
             {
@@ -875,7 +877,7 @@ namespace TgcViewer.Utils.Gui
 
         public void DrawLine(float x0, float y0, float x1, float y1, int dw, Color color)
         {
-            Vector2[] V = new Vector2[4];
+            TGCVector2[] V = new TGCVector2[4];
             V[0].X = x0;
             V[0].Y = y0;
             V[1].X = x1;
@@ -885,9 +887,9 @@ namespace TgcViewer.Utils.Gui
                 dw = 1;
 
             // direccion normnal
-            Vector2 v = V[1] - V[0];
+            TGCVector2 v = V[1] - V[0];
             v.Normalize();
-            Vector2 n = new Vector2(-v.Y, v.X);
+            TGCVector2 n = new TGCVector2(-v.Y, v.X);
 
             V[2] = V[1] + n * dw;
             V[3] = V[0] + n * dw;
@@ -920,17 +922,17 @@ namespace TgcViewer.Utils.Gui
             Transform(pt, 6);
 
             // dibujo como lista de triangulos
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             d3dDevice.VertexFormat = VertexFormats.Transformed | VertexFormats.Diffuse;
             d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, pt);
         }
 
-        public void DrawPoly(Vector2[] V, int cant_ptos, int dw, Color color)
+        public void DrawPoly(TGCVector2[] V, int cant_ptos, int dw, Color color)
         {
             if (dw < 1)
                 dw = 1;
             // Elimino ptos repetidos
-            Vector2[] P = new Vector2[1000];
+            TGCVector2[] P = new TGCVector2[1000];
             int cant = 1;
             P[0] = V[0];
             for (int i = 1; i < cant_ptos; ++i)
@@ -941,13 +943,13 @@ namespace TgcViewer.Utils.Gui
             bool closed = (P[0] - P[cant_ptos - 1]).Length() < 0.1;
 
             // calculo el offset
-            Vector2[] Q = new Vector2[1000];
-            Vector2[] N = new Vector2[1000];
+            TGCVector2[] Q = new TGCVector2[1000];
+            TGCVector2[] N = new TGCVector2[1000];
             for (int i = 0; i < cant_ptos - 1; ++i)
             {
-                Vector2 p0 = P[i];
-                Vector2 p1 = P[i + 1];
-                Vector2 v = p1 - p0;
+                TGCVector2 p0 = P[i];
+                TGCVector2 p1 = P[i + 1];
+                TGCVector2 v = p1 - p0;
                 v.Normalize();
                 // N = V.normal()
                 N[i].X = -v.Y;
@@ -959,9 +961,9 @@ namespace TgcViewer.Utils.Gui
             for (int i = i0; i < cant_ptos; ++i)
             {
                 int ia = i != 0 ? i - 1 : cant_ptos - 2;
-                Vector2 n = N[ia] + N[i];
+                TGCVector2 n = N[ia] + N[i];
                 n.Normalize();
-                float r = Vector2.Dot(N[ia], n);
+                float r = TGCVector2.Dot(N[ia], n);
                 if (r != 0)
                     Q[i] = P[i] + n * ((float)dw / r);
                 else
@@ -1009,12 +1011,12 @@ namespace TgcViewer.Utils.Gui
             Transform(pt, t);
 
             // dibujo como lista de triangulos
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             d3dDevice.VertexFormat = VertexFormats.Transformed | VertexFormats.Diffuse;
             d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2 * (cant_ptos - 1), pt);
         }
 
-        public void DrawSolidPoly(Vector2[] P, int cant_ptos, Color color, bool gradiente = true)
+        public void DrawSolidPoly(TGCVector2[] P, int cant_ptos, Color color, bool gradiente = true)
         {
             // calculo el centro de gravedad
             float xc = 0;
@@ -1067,12 +1069,12 @@ namespace TgcViewer.Utils.Gui
 
             Transform(pt, cant_ptos + 1);
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             d3dDevice.VertexFormat = VertexFormats.Transformed | VertexFormats.Diffuse;
             d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleFan, cant_ptos - 1, pt);
         }
 
-        public void DrawGradientPoly(Vector2[] P, int cant_ptos, Color color1, Color color2)
+        public void DrawGradientPoly(TGCVector2[] P, int cant_ptos, Color color1, Color color2)
         {
             // calculo el centro de gravedad
             float xc = 0;
@@ -1138,7 +1140,7 @@ namespace TgcViewer.Utils.Gui
 
             Transform(pt, cant_ptos + 1);
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             d3dDevice.VertexFormat = VertexFormats.Transformed | VertexFormats.Diffuse;
             d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleFan, cant_ptos - 1, pt);
         }
@@ -1147,7 +1149,7 @@ namespace TgcViewer.Utils.Gui
         {
             if (dw < 1)
                 dw = 1;
-            Vector2[] pt = new Vector2[1000];
+            TGCVector2[] pt = new TGCVector2[1000];
 
             float da = M_PI / 8.0f;
             float alfa;
@@ -1214,7 +1216,7 @@ namespace TgcViewer.Utils.Gui
         {
             if (dw < 1)
                 dw = 1;
-            Vector2[] pt = new Vector2[5];
+            TGCVector2[] pt = new TGCVector2[5];
 
             pt[0].X = x0;
             pt[0].Y = y0;
@@ -1232,7 +1234,7 @@ namespace TgcViewer.Utils.Gui
                 DrawPoly(pt, 5, dw, color);
         }
 
-        public void DrawDisc(Vector2 c, int r, Color color)
+        public void DrawDisc(TGCVector2 c, int r, Color color)
         {
             // demasiado pequeño el radio
             if (r < 10)
@@ -1267,12 +1269,12 @@ namespace TgcViewer.Utils.Gui
 
             Transform(pt, t);
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             d3dDevice.VertexFormat = VertexFormats.Transformed | VertexFormats.Diffuse;
             d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleFan, t - 2, pt);
         }
 
-        public void DrawCircle(Vector2 c, int r, int esp, Color color)
+        public void DrawCircle(TGCVector2 c, int r, int esp, Color color)
         {
             // demasiado pequeño el radio
             if (r - esp < 10)
@@ -1313,12 +1315,12 @@ namespace TgcViewer.Utils.Gui
 
             Transform(pt, t);
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             d3dDevice.VertexFormat = VertexFormats.Transformed | VertexFormats.Diffuse;
             d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, t - 2, pt);
         }
 
-        public void DrawArc(Vector2 c, int r, float desde, float hasta, int esp, Color color)
+        public void DrawArc(TGCVector2 c, int r, float desde, float hasta, int esp, Color color)
         {
             // demasiado pequeño el radio
             if (r - esp < 10)
@@ -1367,12 +1369,12 @@ namespace TgcViewer.Utils.Gui
 
             Transform(pt, t);
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             d3dDevice.VertexFormat = VertexFormats.Transformed | VertexFormats.Diffuse;
             d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, t - 2, pt);
         }
 
-        public void DrawImage(string fname, int x0, int y0, int x1, int y1)
+        public void DrawImage(string fname, int x0, int y0, int x1, int y1, string mediaDir)
         {
             if (sprite.Disposed)
                 return;
@@ -1390,7 +1392,7 @@ namespace TgcViewer.Utils.Gui
             {
                 // No estaba, cargo la textura
                 i = cant_bitmaps++;
-                bitmaps[i].texture = cargar_textura(fname);
+                bitmaps[i].texture = cargar_textura(fname, mediaDir);
                 bitmaps[i].fname = fname;
                 // Aprovecho para calcular el tamaño de la imagen del boton
                 SurfaceDescription desc = bitmaps[i].texture.GetLevelDescription(0);
@@ -1398,13 +1400,13 @@ namespace TgcViewer.Utils.Gui
                 bitmaps[i].Height = desc.Height;
             }
 
-            Vector3 pos = new Vector3((x0 + x1) / 2, (y0 + y1) / 2, 0);
-            Vector3 c0 = new Vector3(bitmaps[i].Width / 2, bitmaps[i].Height / 2, 0);
+            TGCVector3 pos = new TGCVector3((x0 + x1) / 2, (y0 + y1) / 2, 0);
+            TGCVector3 c0 = new TGCVector3(bitmaps[i].Width / 2, bitmaps[i].Height / 2, 0);
             // Determino la escala para que entre justo
-            Vector2 scale2 = new Vector2((float)(x1 - x0) / (float)bitmaps[i].Width, (float)(y1 - y0) / (float)bitmaps[i].Height);
-            sprite.Transform = Matrix.Transformation2D(new Vector2(pos.X, pos.Y), 0, scale2, new Vector2(0, 0), 0, new Vector2(0, 0));
+            TGCVector2 scale2 = new TGCVector2((float)(x1 - x0) / (float)bitmaps[i].Width, (float)(y1 - y0) / (float)bitmaps[i].Height);
+            sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(pos.X, pos.Y), 0, scale2, new TGCVector2(0, 0), 0, new TGCVector2(0, 0));
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             d3dDevice.SetTexture(0, null);
             bool ant_zenable = d3dDevice.RenderState.ZBufferEnable;
             d3dDevice.RenderState.ZBufferEnable = false;
@@ -1415,13 +1417,13 @@ namespace TgcViewer.Utils.Gui
         }
 
         // Helper para cargar una textura
-        public static Texture cargar_textura(String filename, bool alpha_channel = false)
+        public static Texture cargar_textura(String filename, string mediaDir, bool alpha_channel = false)
         {
             Texture textura = null;
             filename.TrimEnd();
             // cargo la textura
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            String fname_aux = GuiController.Instance.ExamplesDir + "Shaders\\WorkshopShaders\\Media\\gui\\" + filename;
+            Device d3dDevice = D3DDevice.Instance.Device;
+            String fname_aux = mediaDir + "WorkshopShaders\\gui\\" + filename;
             if (!File.Exists(fname_aux))
                 // Pruebo con el nombre directo
                 fname_aux = filename;
@@ -1490,8 +1492,7 @@ namespace TgcViewer.Utils.Gui
             return 1;
         }
 
-        public Matrix rectToQuad(float X, float Y, float W, float H,
-                           float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
+        public TGCMatrix rectToQuad(float X, float Y, float W, float H, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
         {
             float y21 = y2 - y1;
             float y32 = y4 - y2;
@@ -1519,7 +1520,7 @@ namespace TgcViewer.Utils.Gui
                 i = (float)(ep * (i > 0 ? 1.0f : -1.0f));
             }
 
-            Matrix transform = new Matrix();
+            TGCMatrix transform = new TGCMatrix();
 
             // X
             transform.M11 = a / i;

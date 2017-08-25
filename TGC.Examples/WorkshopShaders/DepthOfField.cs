@@ -1,8 +1,6 @@
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using System.Windows.Forms;
-using TGC.Core;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
@@ -54,7 +52,7 @@ namespace Examples.WorkshopShaders
 
             //Camara en primera persona
             Camara = new TgcFpsCamera(Input);
-            Camara.SetCamera(new TGCVector3(50, 30, 50), new TGCVector3(0,10, -50));
+            Camara.SetCamera(new TGCVector3(50, 30, 50), new TGCVector3(0, 10, -50));
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 

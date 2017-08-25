@@ -3,10 +3,12 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using TgcViewer.Utils.Gui;
 
@@ -14,8 +16,6 @@ namespace Examples.WorkshopShaders
 {
     public class GuiTest : TGCExampleViewer
     {
-        private string MyMediaDir;
-        private string MyShaderDir;
         private Effect effect;
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -84,16 +84,13 @@ namespace Examples.WorkshopShaders
 
         public override void Init()
         {
-            GuiController.Instance.CustomRenderEnabled = true;
             Cursor.Hide();
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            MyMediaDir = MediaDir + "WorkshopShaders\\";
-            MyShaderDir = ShadersDir + "WorkshopShaders\\";
+            Device d3dDevice = D3DDevice.Instance.Device;
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(GuiController.Instance.D3dDevice, MyShaderDir + "TgcSkeletalMeshShader.fx", null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
+            effect = Effect.FromFile(d3dDevice, ShadersDir + "TgcViewer\\TgcSkeletalMeshShader.fx", null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
             {
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
@@ -101,13 +98,13 @@ namespace Examples.WorkshopShaders
             //Configurar Technique dentro del shader
             effect.Technique = "DIFFUSE_MAP";
 
-            GuiController.Instance.FpsCamera.Enable = true;
-            GuiController.Instance.FpsCamera.setCamera(new TGCVector3(0, 60, 200), new TGCVector3(0, 0, 0));
-            GuiController.Instance.FpsCamera.updateCamera();
+            //Camara en primera persona
+            Camara.SetCamera(new TGCVector3(0, 60, 200), new TGCVector3(0, 0, 0));
 
             //Cargar personaje con animaciones
             TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
             mesh = skeletalLoader.loadMeshAndAnimationsFromFile(MediaDir + "SkeletalAnimations\\BasicHuman\\" + "CombineSoldier-TgcSkeletalMesh.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\", new string[] { MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "StandBy-TgcSkeletalAnim.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Run-TgcSkeletalAnim.xml", });
+            mesh.AutoTransform = true;
 
             //Configurar animacion inicial
             mesh.playAnimation("StandBy", true);
@@ -117,21 +114,21 @@ namespace Examples.WorkshopShaders
             mesh.Technique = "DIFFUSE_MAP";
 
             // levanto el GUI
-            gui.Create();
+            gui.Create(MediaDir);
 
             // menu principal
             gui.InitDialog(true);
-            int W = GuiController.Instance.Panel3d.Width;
-            int H = GuiController.Instance.Panel3d.Height;
+            int W = D3DDevice.Instance.Width;
+            int H = D3DDevice.Instance.Height;
             int x0 = 70;
             int y0 = 10;
             int dy = 120;
             int dy2 = dy;
             int dx = 400;
-            gui.InsertMenuItem(ID_ABRIR_MISION, "Abrir Mision", "open.png", x0, y0, dx, dy);
-            gui.InsertMenuItem(ID_NUEVA_MISION, "Play", "Play.png", x0, y0 += dy2, dx, dy);
-            gui.InsertMenuItem(ID_CONFIGURAR, "Configurar", "navegar.png", x0, y0 += dy2, dx, dy);
-            gui.InsertMenuItem(ID_APP_EXIT, "Salir", "salir.png", x0, y0 += dy2, dx, dy);
+            gui.InsertMenuItem(ID_ABRIR_MISION, "Abrir Mision", "open.png", x0, y0, MediaDir, dx, dy);
+            gui.InsertMenuItem(ID_NUEVA_MISION, "Play", "Play.png", x0, y0 += dy2, MediaDir, dx, dy);
+            gui.InsertMenuItem(ID_CONFIGURAR, "Configurar", "navegar.png", x0, y0 += dy2, MediaDir, dx, dy);
+            gui.InsertMenuItem(ID_APP_EXIT, "Salir", "salir.png", x0, y0 += dy2, MediaDir, dx, dy);
 
             // lista de colores
             lst_colores[0] = Color.FromArgb(100, 220, 255);
@@ -150,16 +147,20 @@ namespace Examples.WorkshopShaders
 
         public override void Update()
         {
+            PreUpdate();
+
             mesh.RotateY(ElapsedTime * 1.2f);
         }
 
         public override void Render()
         {
+            PreRender();
+
             gui_render(ElapsedTime);
 
             if (profiling)
             {
-                Device device = GuiController.Instance.D3dDevice;
+                Device device = D3DDevice.Instance.Device;
                 Viewport ant_view = device.Viewport;
                 Viewport view = new Viewport();
                 view.X = (int)(400 * gui.ex);
@@ -170,15 +171,20 @@ namespace Examples.WorkshopShaders
                 view.MaxZ = 1;
 
                 device.Viewport = view;
+
                 mesh.Render();
+
                 device.Viewport = ant_view;
             }
+
+            PostRender();
         }
 
         public void gui_render(float elapsedTime)
         {
             // ------------------------------------------------
-            GuiMessage msg = gui.Update(elapsedTime);
+            GuiMessage msg = gui.Update(elapsedTime, Input);
+
             // proceso el msg
             switch (msg.message)
             {
@@ -245,8 +251,8 @@ namespace Examples.WorkshopShaders
         {
             gui.InitDialog(false, false);
             profiling = true;
-            int W = GuiController.Instance.Panel3d.Width;
-            int H = GuiController.Instance.Panel3d.Height;
+            int W = D3DDevice.Instance.Width;
+            int H = D3DDevice.Instance.Height;
             int x0 = 50;
             int y0 = 50;
             int dy = H - 100;
@@ -285,8 +291,8 @@ namespace Examples.WorkshopShaders
         {
             gui.InitDialog(false, false);
 
-            int W = GuiController.Instance.Panel3d.Width;
-            int H = GuiController.Instance.Panel3d.Height;
+            int W = D3DDevice.Instance.Width;
+            int H = D3DDevice.Instance.Height;
             int x0 = -20;
             int y0 = 100;
             int dy = 350;
@@ -296,16 +302,16 @@ namespace Examples.WorkshopShaders
             frame.c_font = Color.FromArgb(0, 0, 0);
             progress_bar = gui.InsertProgressBar(ID_PROGRESS1, 50, y0 + 150, W - 100, 60);
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
             int cant_textures = 5;
             progress_bar.SetRange(0, cant_textures, "Descargando archivos..");
             progress_bar.SetPos(1);
             for (int i = 0; i < cant_textures; ++i)
             {
                 progress_bar.SetPos(i);
-                progress_bar.text = "Descargando archivo: " + MyMediaDir + "f1\\piso3.png";
+                progress_bar.text = "Descargando archivo: " + MediaDir + "Texturas\\f1\\f1piso3.png";
 
-                Texture textura_piso = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MyMediaDir + "f1\\piso3.png"), Usage.None, Pool.Managed);
+                Texture textura_piso = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MediaDir + "Texturas\\f1\\f1piso3.png"), Usage.None, Pool.Managed);
                 textura_piso.Dispose();
                 MessageLoop();
             }
@@ -322,7 +328,8 @@ namespace Examples.WorkshopShaders
             TranslateMessage(ref msg);
             DispatchMessage(ref msg);
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            Device d3dDevice = D3DDevice.Instance.Device;
+
             d3dDevice.BeginScene();
             //render(0);
             ElapsedTime = 0;
