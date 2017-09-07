@@ -274,7 +274,7 @@ namespace Examples.WorkshopShaders
             terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "Heightmap3.jpg", 100f, 2.25f, new TGCVector3(0, 0, 0));
             terrain.loadTexture(MediaDir + "Heighmaps\\" + "TerrainTexture3.jpg");
 
-            Camara.SetCamera(new TGCVector3(-350, 1000, -1100), new TGCVector3(0, 0, 0));
+            Camara.SetCamera(new TGCVector3(-350, 1000, -1100), new TGCVector3(0, 0, 0), new TGCVector3(0,1,0));
         }
 
         public override void Update()
@@ -299,11 +299,11 @@ namespace Examples.WorkshopShaders
             pos += vel * kvel * ElapsedTime;
 
             // actualizo los parametros de la camara
-            float dH = 1.0f;       // altura del personaje
+            float dH = 2.0f;       // altura del personaje
             float H = terrain.CalcularAltura(pos.X, pos.Y);
             TGCVector2 pos_s = pos + vel * 2;
             TGCVector3 lookFrom = new TGCVector3(pos.X, H + dH, pos.Y);
-            TGCVector3 lookAt = new TGCVector3(pos_s.X, H, pos_s.Y);
+            TGCVector3 lookAt = new TGCVector3(pos_s.X, H + 1.5f, pos_s.Y);
             d3dDevice.Transform.View = TGCMatrix.LookAtLH(lookFrom, lookAt, new TGCVector3(0, 1, 0));
             effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(lookFrom));
         }

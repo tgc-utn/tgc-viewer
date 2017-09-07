@@ -8,6 +8,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
+using TGC.Core.Text;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
@@ -33,6 +34,8 @@ namespace Examples.WorkshopShaders
 
         private float pupila_time = 0;
         private float MAX_PUPILA_TIME = 3;
+        private bool start = true;
+        private TgcText2D posicionCam;
 
         public enum ToneMapping : int
         {
@@ -55,6 +58,8 @@ namespace Examples.WorkshopShaders
         {
             Device d3dDevice = D3DDevice.Instance.Device;
             MyShaderDir = ShadersDir + "WorkshopShaders\\";
+
+            posicionCam = new TgcText2D();
 
             //Cargamos un escenario
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -98,9 +103,9 @@ namespace Examples.WorkshopShaders
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(Input);
-            Camara.SetCamera(new TGCVector3(-944.1269f, 80, -1033.307f), new TGCVector3(-943.6573f, 50.8481f, -1033.533f));
-
+            TGCVector3 positionEye = new TGCVector3(-944.1269f, 100f, -1033.307f);
+            Camara = new TgcFpsCamera(positionEye,Input);
+            
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             // inicializo el render target
@@ -148,7 +153,8 @@ namespace Examples.WorkshopShaders
 
         public override void Update()
         {
-            PreUpdate();
+            PreUpdate();         
+            Camara.UpdateCamera(ElapsedTime);
         }
 
         public override void Render()
@@ -414,6 +420,8 @@ namespace Examples.WorkshopShaders
             terrain.Effect = effect;
             terrain.Technique = Technique;
             terrain.Render();
+
+            posicionCam.drawText(Camara.Position.ToString(),0,0,Color.Black);
         }
 
         public override void Dispose()

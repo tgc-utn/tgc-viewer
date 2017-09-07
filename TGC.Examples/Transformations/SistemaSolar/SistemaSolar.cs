@@ -20,10 +20,10 @@ namespace TGC.Examples.Transformations.SistemaSolar
     /// </summary>
     public class SistemaSolar : TGCExampleViewer
     {
-        private const float AXIS_ROTATION_SPEED = 0.5f;
-        private const float EARTH_AXIS_ROTATION_SPEED = 10f;
-        private const float EARTH_ORBIT_SPEED = 2f;
-        private const float MOON_ORBIT_SPEED = 10f;
+        private const float AXIS_ROTATION_SPEED = 0.125f;
+        private const float EARTH_AXIS_ROTATION_SPEED = 2.5f;
+        private const float EARTH_ORBIT_SPEED = 0.5f;
+        private const float MOON_ORBIT_SPEED = 2.5f;
 
         private const float EARTH_ORBIT_OFFSET = 700;
         private const float MOON_ORBIT_OFFSET = 80;

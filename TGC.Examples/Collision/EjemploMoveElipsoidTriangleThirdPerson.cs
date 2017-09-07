@@ -84,7 +84,7 @@ namespace TGC.Examples.Collision
             //Configurar animacion inicial
             personaje.playAnimation("StandBy", true);
             //Escalarlo porque es muy grande
-            personaje.Position = new TGCVector3(0, 1000, -150);
+            personaje.Position = new TGCVector3(0, 1000, -450);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.RotateY(Geometry.DegreeToRadian(180f));
             //escalamos un poco el personaje.
