@@ -40,8 +40,6 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         public const int MAX_BONE_COUNT = 26;
 
-        protected bool alphaBlendEnable;
-
         protected Dictionary<string, TgcSkeletalAnimation> animations;
 
         //Variables de animacion
@@ -393,11 +391,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Renderiza la malla, si esta habilitada.
@@ -714,7 +708,7 @@ namespace TGC.Core.SkeletalAnimation
             attachments = new List<TgcSkeletalBoneAttach>();
             meshInstances = new List<TgcSkeletalMesh>();
             renderSkeleton = false;
-            alphaBlendEnable = false;
+            AlphaBlendEnable = false;
 
             //variables de movimiento
             AutoTransform = false;
@@ -1095,7 +1089,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (alphaBlendEnable)
+            if (AlphaBlendEnable)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;

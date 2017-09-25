@@ -6,9 +6,9 @@ using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
+using TGC.Core.Text;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Text;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
@@ -104,8 +104,8 @@ namespace Examples.WorkshopShaders
 
             //Camara en primera personas
             TGCVector3 positionEye = new TGCVector3(-944.1269f, 100f, -1033.307f);
-            Camara = new TgcFpsCamera(positionEye,Input);
-            
+            Camara = new TgcFpsCamera(positionEye, Input);
+
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             // inicializo el render target
@@ -153,7 +153,7 @@ namespace Examples.WorkshopShaders
 
         public override void Update()
         {
-            PreUpdate();         
+            PreUpdate();
             Camara.UpdateCamera(ElapsedTime);
         }
 
@@ -421,7 +421,7 @@ namespace Examples.WorkshopShaders
             terrain.Technique = Technique;
             terrain.Render();
 
-            posicionCam.drawText(Camara.Position.ToString(),0,0,Color.Black);
+            posicionCam.drawText(Camara.Position.ToString(), 0, 0, Color.Black);
         }
 
         public override void Dispose()

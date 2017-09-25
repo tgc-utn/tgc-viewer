@@ -19,7 +19,7 @@ namespace TGC.Core.Geometry
         public TgcConvexPolygon()
         {
             Enabled = true;
-            AlphaBlend = false;
+            AlphaBlendEnable = false;
             Color = Color.Purple;
         }
 
@@ -39,7 +39,7 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Vertices que definen el contorno polígono.

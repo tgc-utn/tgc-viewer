@@ -41,7 +41,7 @@ namespace TGC.Core.Geometry
             rotation = TGCVector3.Empty;
             Enabled = true;
             Color = Color.White;
-            AlphaBlend = false;
+            AlphaBlendEnable = false;
             UVOffset = TGCVector2.Zero;
             UVTiling = TGCVector2.One;
 
@@ -58,7 +58,7 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
@@ -215,7 +215,7 @@ namespace TGC.Core.Geometry
             Effect.EndPass();
             Effect.End();
 
-            //Desactivar AlphaBlend
+            //Desactivar AlphaBlendEnable
             resetAlphaBlend();
         }
 
@@ -390,7 +390,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (AlphaBlend)
+            if (AlphaBlendEnable)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -453,7 +453,7 @@ namespace TGC.Core.Geometry
                 Transform = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * TGCMatrix.Translation(translation);
             }
 
-            return TgcMesh.FromTGCBox(meshName, this.Texture, this.vertices, this.Transform, this.AlphaBlend);
+            return TgcMesh.FromTGCBox(meshName, this.Texture, this.vertices, this.Transform, this.AlphaBlendEnable);
         }
 
         /// <summary>
@@ -472,7 +472,7 @@ namespace TGC.Core.Geometry
             cloneBox.AutoTransform = AutoTransform;
             cloneBox.Transform = Transform;
             cloneBox.rotation = rotation;
-            cloneBox.AlphaBlend = AlphaBlend;
+            cloneBox.AlphaBlendEnable = AlphaBlendEnable;
             cloneBox.UVOffset = UVOffset;
             cloneBox.UVTiling = UVTiling;
 

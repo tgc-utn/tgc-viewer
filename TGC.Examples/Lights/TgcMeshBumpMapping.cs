@@ -274,7 +274,7 @@ namespace TGC.Examples.Lights
             bumpMesh.materials = materials;
             bumpMesh.NormalMaps = normalMaps;
             bumpMesh.layer = mesh.Layer;
-            bumpMesh.AlphaBlend = mesh.AlphaBlend;
+            bumpMesh.AlphaBlendEnable = mesh.AlphaBlendEnable;
             bumpMesh.UserProperties = mesh.UserProperties;
             bumpMesh.boundingBox = mesh.BoundingBox.clone();
             bumpMesh.enabled = true;

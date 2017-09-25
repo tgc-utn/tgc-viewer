@@ -272,7 +272,7 @@ namespace TGC.Core.SceneLoader
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Renderiza la malla, si esta habilitada
@@ -572,7 +572,7 @@ namespace TGC.Core.SceneLoader
             enabled = false;
             parentInstance = null;
             meshInstances = new List<TgcMesh>();
-            AlphaBlend = false;
+            AlphaBlendEnable = false;
 
             AutoTransform = false;
             AutoUpdateBoundingBox = true;
@@ -610,7 +610,7 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (AlphaBlend)
+            if (AlphaBlendEnable)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -941,7 +941,7 @@ namespace TGC.Core.SceneLoader
             cloneMesh.Materials = Materials;
             cloneMesh.layer = layer;
             cloneMesh.boundingBox = boundingBox.clone();
-            cloneMesh.AlphaBlend = AlphaBlend;
+            cloneMesh.AlphaBlendEnable = AlphaBlendEnable;
             cloneMesh.enabled = true;
             cloneMesh.AutoUpdateBoundingBox = AutoUpdateBoundingBox;
 
@@ -1153,7 +1153,7 @@ namespace TGC.Core.SceneLoader
             tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
             tgcMesh.createBoundingBox();
             tgcMesh.Enabled = true;
-            tgcMesh.AlphaBlend = alphaBlendEnable;
+            tgcMesh.AlphaBlendEnable = alphaBlendEnable;
             return tgcMesh;
         }
 
@@ -1262,7 +1262,7 @@ namespace TGC.Core.SceneLoader
                 tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
                 tgcMesh.createBoundingBox();
                 tgcMesh.Enabled = true;
-                tgcMesh.AlphaBlend = alphaBlendEnable;
+                tgcMesh.AlphaBlendEnable = alphaBlendEnable;
                 return tgcMesh;
             }
         }

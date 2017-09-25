@@ -13,7 +13,7 @@ namespace TGC.Core
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Posicion absoluta del objeto

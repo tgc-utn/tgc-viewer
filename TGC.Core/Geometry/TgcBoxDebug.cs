@@ -33,7 +33,7 @@ namespace TGC.Core.Geometry
             Thickness = 1f;
             Enabled = true;
             Color = Color.White;
-            AlphaBlend = false;
+            AlphaBlendEnable = false;
 
             //Shader
             Effect = TgcShaders.Instance.VariosShader;
@@ -87,7 +87,7 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Actualizar parámetros de la caja en base a los valores configurados

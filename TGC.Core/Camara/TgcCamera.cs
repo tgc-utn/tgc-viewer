@@ -34,7 +34,7 @@ namespace TGC.Core.Camara
         {
             Position = pos;
             LookAt = lookAt;
-            UpVector = new TGCVector3(0,1,0);
+            UpVector = TGCVector3.Up;
         }
 
         /// <summary>

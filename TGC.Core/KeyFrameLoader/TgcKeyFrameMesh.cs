@@ -246,7 +246,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Renderiza la malla, si esta habilitada.
@@ -504,7 +504,7 @@ namespace TGC.Core.KeyFrameLoader
             Enabled = false;
             AutoUpdateBoundingBox = true;
             MeshInstances = new List<TgcKeyFrameMesh>();
-            AlphaBlend = false;
+            AlphaBlendEnable = false;
 
             VertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
 
@@ -810,7 +810,7 @@ namespace TGC.Core.KeyFrameLoader
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (AlphaBlend)
+            if (AlphaBlendEnable)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;

@@ -78,7 +78,7 @@ namespace TGC.Examples.GeometryBasics
             sphere.RenderEdges = (bool)Modifiers["edges"];
             sphere.Inflate = (bool)Modifiers["inflate"];
             sphere.BasePoly = (TGCSphere.eBasePoly)Modifiers.getValue("base");
-            
+
             if (bTexture)
             {
                 //Cambiar textura
@@ -108,7 +108,7 @@ namespace TGC.Examples.GeometryBasics
 
             //Tiling de textura
             sphere.UVTiling = (TGCVector2)Modifiers["tiling"];
-            
+
             //Actualizar valores en la caja.
             sphere.updateValues();
         }
@@ -122,7 +122,7 @@ namespace TGC.Examples.GeometryBasics
 
             UserVars.setValue("Vertices", sphere.VertexCount);
             UserVars.setValue("Triangulos", sphere.TriangleCount);
-            
+
             //Renderizar caja
             sphere.Render();
 

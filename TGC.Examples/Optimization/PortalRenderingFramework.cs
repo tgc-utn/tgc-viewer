@@ -95,7 +95,7 @@ namespace TGC.Examples.Optimization
             foreach (var mesh in scene.Meshes)
             {
                 //Contador de modelos
-                if (mesh.Enabled && !mesh.AlphaBlend)
+                if (mesh.Enabled && !mesh.AlphaBlendEnable)
                 {
                     meshCount++;
                 }
@@ -109,7 +109,7 @@ namespace TGC.Examples.Optimization
             foreach (var mesh in scene.Meshes)
             {
                 //Contador de modelos
-                if (mesh.Enabled && mesh.AlphaBlend)
+                if (mesh.Enabled && mesh.AlphaBlendEnable)
                 {
                     meshCount++;
                 }
