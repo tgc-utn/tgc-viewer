@@ -182,7 +182,7 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Offset UV de textura
@@ -341,7 +341,7 @@ namespace TGC.Core.Geometry
             Rotation = TGCVector3.Empty;
             Enabled = true;
             Scale = TGCVector3.One;
-            AlphaBlend = false;
+            AlphaBlendEnable = false;
             uvOffset = TGCVector2.Zero;
 
             //BoundingSphere
@@ -689,7 +689,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (AlphaBlend)
+            if (AlphaBlendEnable)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -821,7 +821,7 @@ namespace TGC.Core.Geometry
             cloneSphere.AutoTransform = AutoTransform;
             cloneSphere.Transform = Transform;
             cloneSphere.Rotation = Rotation;
-            cloneSphere.AlphaBlend = AlphaBlend;
+            cloneSphere.AlphaBlendEnable = AlphaBlendEnable;
             cloneSphere.uvOffset = uvOffset;
 
             cloneSphere.updateValues();
@@ -843,7 +843,7 @@ namespace TGC.Core.Geometry
                             TGCMatrix.Translation(translation);
             }
 
-            return TgcMesh.FromTGCSphere(meshName, Texture, indices, vertices, Transform, AlphaBlend);
+            return TgcMesh.FromTGCSphere(meshName, Texture, indices, vertices, Transform, AlphaBlendEnable);
         }
 
         /// <remarks> http://gamedev.stackexchange.com/questions/31308/algorithm-for-creating-spheres David Lively</remarks>

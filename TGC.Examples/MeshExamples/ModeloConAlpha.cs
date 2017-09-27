@@ -32,7 +32,7 @@ namespace TGC.Examples.MeshExamples
         {
             /* Cargar ecena que tiene un modelo configurado con AlphaBlending
              * Los modelos fueron exportados en 3Ds MAX con el mapa "Opacity" cargado en el "Material Editor"
-             * Entonces el TgcSceneLoader automaticamente hace mesh.AlphaBlend(true);
+             * Entonces el TgcSceneLoader automaticamente hace mesh.AlphaBlendEnable(true);
              */
             var loader = new TgcSceneLoader();
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pino\\Pino-TgcScene.xml");
@@ -52,7 +52,7 @@ namespace TGC.Examples.MeshExamples
 
             foreach (var mesh in scene.Meshes)
             {
-                mesh.AlphaBlend = alpha;
+                mesh.AlphaBlendEnable = alpha;
             }
         }
 

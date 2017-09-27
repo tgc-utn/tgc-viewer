@@ -27,7 +27,7 @@ namespace TGC.Core.Geometry
             C = TGCVector3.Empty;
             Enabled = true;
             Color = Color.Blue;
-            AlphaBlend = false;
+            AlphaBlendEnable = false;
 
             //Shader
             Effect = TgcShaders.Instance.VariosShader;
@@ -81,7 +81,7 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Actualizar parámetros del triángulo en base a los valores configurados

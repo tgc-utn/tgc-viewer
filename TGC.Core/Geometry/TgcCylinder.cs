@@ -118,7 +118,7 @@ namespace TGC.Core.Geometry
             set { BoundingCylinder.Center = value; }
         }
 
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Actualiza la posicion e inclinacion del cilindro
@@ -132,7 +132,7 @@ namespace TGC.Core.Geometry
 
         public void Render()
         {
-            if (AlphaBlend)
+            if (AlphaBlendEnable)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;

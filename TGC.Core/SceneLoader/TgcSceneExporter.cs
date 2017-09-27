@@ -145,7 +145,7 @@ namespace TGC.Core.SceneLoader
                 meshExport.MeshData.pMin = TGCVector3.Vector3ToFloat3Array(tgcMesh.BoundingBox.PMin);
                 meshExport.MeshData.pMax = TGCVector3.Vector3ToFloat3Array(tgcMesh.BoundingBox.PMax);
                 meshExport.MeshData.userProperties = tgcMesh.UserProperties;
-                meshExport.MeshData.alphaBlending = tgcMesh.AlphaBlend;
+                meshExport.MeshData.alphaBlending = tgcMesh.AlphaBlendEnable;
 
                 //Exportar malla original
                 if (tgcMesh.ParentInstance == null)
@@ -537,7 +537,7 @@ namespace TGC.Core.SceneLoader
                     tgcMaterial.SpecularColor.Alpha
                 };
                 materialData.opacity = 1f;
-                materialData.alphaBlendEnable = tgcMesh.AlphaBlend;
+                materialData.alphaBlendEnable = tgcMesh.AlphaBlendEnable;
 
                 //Texture
                 var tgcTexture = tgcMesh.DiffuseMaps[0];
@@ -587,7 +587,7 @@ namespace TGC.Core.SceneLoader
                         tgcMaterial.SpecularColor.Alpha
                     };
                     materialData.opacity = 1f;
-                    materialData.alphaBlendEnable = tgcMesh.AlphaBlend;
+                    materialData.alphaBlendEnable = tgcMesh.AlphaBlendEnable;
 
                     //Texture
                     var tgcTexture = tgcMesh.DiffuseMaps[i];
@@ -1217,7 +1217,7 @@ namespace TGC.Core.SceneLoader
             tgcMesh.createBoundingBox();
             tgcMesh.Materials = materials;
             tgcMesh.DiffuseMaps = textures;
-            tgcMesh.AlphaBlend = mesh1.AlphaBlend;
+            tgcMesh.AlphaBlendEnable = mesh1.AlphaBlendEnable;
             tgcMesh.Enabled = mesh1.Enabled;
 
             //Transformaciones con la identidad (porque ya transformamos los vertices)

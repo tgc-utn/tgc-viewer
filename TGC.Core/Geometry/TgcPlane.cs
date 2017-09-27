@@ -47,7 +47,7 @@ namespace TGC.Core.Geometry
             BoundingBox = new TgcBoundingAxisAlignBox();
             UTile = 1;
             VTile = 1;
-            AlphaBlend = false;
+            AlphaBlendEnable = false;
             UVOffset = TGCVector2.Zero;
 
             //Shader
@@ -179,7 +179,7 @@ namespace TGC.Core.Geometry
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend { get; set; }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         /// La normal del plano. si no se setea se autocalcula
@@ -326,7 +326,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (AlphaBlend)
+            if (AlphaBlendEnable)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -364,7 +364,7 @@ namespace TGC.Core.Geometry
             clonePlane.AutoAdjustUv = AutoAdjustUv;
             clonePlane.UTile = UTile;
             clonePlane.VTile = VTile;
-            clonePlane.AlphaBlend = AlphaBlend;
+            clonePlane.AlphaBlendEnable = AlphaBlendEnable;
             clonePlane.UVOffset = UVOffset;
             clonePlane.setTexture(Texture.Clone());
 

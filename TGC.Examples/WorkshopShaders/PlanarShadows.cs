@@ -130,7 +130,7 @@ namespace Examples.WorkshopShaders
         // helper
         public TGCMatrix CalcularMatriz(TGCVector3 Pos, TGCVector3 Scale, TGCVector3 Dir)
         {
-            TGCVector3 VUP = new TGCVector3(0, 1, 0);
+            TGCVector3 VUP = TGCVector3.Up;
 
             TGCMatrix matWorld = TGCMatrix.Scaling(Scale);
             // determino la orientacion

@@ -8,7 +8,6 @@ using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using TgcViewer.Utils.Gui;
 

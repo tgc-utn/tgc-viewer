@@ -1,14 +1,11 @@
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.UserControls;
 using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
-using TGC.Examples.Camara;
 using TGC.Examples.Example;
 
 namespace Examples.WorkshopShaders
@@ -262,7 +259,7 @@ namespace Examples.WorkshopShaders
             effect.SetValue("phong_lighting", true);
             effect.SetValue("k_alpha", 0.75f);
 
-            Modifiers.addVertex3f("LightDir", new TGCVector3(-1, -1, -1), new TGCVector3(1, 1, 1), new TGCVector3(0, -1, 0));
+            Modifiers.addVertex3f("LightDir", new TGCVector3(-1, -1, -1), new TGCVector3(1, 1, 1), TGCVector3.Down);
             Modifiers.addFloat("minSample", 1f, 10f, 10f);
             Modifiers.addFloat("maxSample", 11f, 50f, 50f);
             Modifiers.addFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
@@ -274,7 +271,7 @@ namespace Examples.WorkshopShaders
             terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "Heightmap3.jpg", 100f, 2.25f, new TGCVector3(0, 0, 0));
             terrain.loadTexture(MediaDir + "Heighmaps\\" + "TerrainTexture3.jpg");
 
-            Camara.SetCamera(new TGCVector3(-350, 1000, -1100), new TGCVector3(0, 0, 0), new TGCVector3(0,1,0));
+            Camara.SetCamera(new TGCVector3(-350, 1000, -1100), new TGCVector3(0, 0, 0), TGCVector3.Up);
         }
 
         public override void Update()
@@ -304,7 +301,7 @@ namespace Examples.WorkshopShaders
             TGCVector2 pos_s = pos + vel * 2;
             TGCVector3 lookFrom = new TGCVector3(pos.X, H + dH, pos.Y);
             TGCVector3 lookAt = new TGCVector3(pos_s.X, H + 1.5f, pos_s.Y);
-            d3dDevice.Transform.View = TGCMatrix.LookAtLH(lookFrom, lookAt, new TGCVector3(0, 1, 0));
+            d3dDevice.Transform.View = TGCMatrix.LookAtLH(lookFrom, lookAt, TGCVector3.Up);
             effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(lookFrom));
         }
 

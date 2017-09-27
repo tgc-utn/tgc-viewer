@@ -85,7 +85,7 @@ namespace Examples.WorkshopShaders
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
             }
 
-            Modifiers.addVertex3f("LightDir", new TGCVector3(-1, -1, -1), new TGCVector3(1, 1, 1), new TGCVector3(0, -1, 0));
+            Modifiers.addVertex3f("LightDir", new TGCVector3(-1, -1, -1), new TGCVector3(1, 1, 1), TGCVector3.Down);
             Modifiers.addFloat("minSample", 1f, 10f, 10f);
             Modifiers.addFloat("maxSample", 11f, 50f, 50f);
             Modifiers.addFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
@@ -205,7 +205,7 @@ namespace Examples.WorkshopShaders
                 mesh.Effect = effect;
                 if (mesh.Name.Contains("Floor"))
                 {
-                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, -1, 0)));
+                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Down));
                     effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
                     effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
                     nro_textura = 0;
@@ -213,7 +213,7 @@ namespace Examples.WorkshopShaders
                 else
                 if (mesh.Name.Contains("Roof"))
                 {
-                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
                     effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
                     effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
                     nro_textura = 0;
@@ -225,7 +225,7 @@ namespace Examples.WorkshopShaders
                 {
                     effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
                     effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
                     nro_textura = 1;
                 }
                 else
@@ -233,7 +233,7 @@ namespace Examples.WorkshopShaders
                 {
                     effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(-1, 0, 0)));
                     effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
                     nro_textura = 1;
                 }
                 else
@@ -241,7 +241,7 @@ namespace Examples.WorkshopShaders
                 {
                     effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, -1)));
                     effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
                     nro_textura = 1;
                 }
                 else
@@ -249,7 +249,7 @@ namespace Examples.WorkshopShaders
                 {
                     effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
                     effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 1, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
                     nro_textura = 1;
                 }
 

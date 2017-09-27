@@ -187,7 +187,7 @@ namespace TGC.Core.SceneLoader
                 tgcMesh.Layer = meshData.layerName;
 
                 //Cargar AlphaBlending
-                tgcMesh.AlphaBlend = meshData.alphaBlending;
+                tgcMesh.AlphaBlendEnable = meshData.alphaBlending;
 
                 //agregar mesh a escena
                 tgcMesh.Enabled = true;

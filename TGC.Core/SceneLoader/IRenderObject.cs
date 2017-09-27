@@ -10,7 +10,7 @@ namespace TGC.Core.SceneLoader
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        bool AlphaBlend { get; set; }
+        bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Inicializacion del objeto.

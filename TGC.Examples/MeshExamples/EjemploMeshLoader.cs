@@ -174,7 +174,7 @@ namespace TGC.Examples.MeshExamples
                 currentAlphaBlending = alphaBlending;
                 foreach (var mesh in currentScene.Meshes)
                 {
-                    mesh.AlphaBlend = currentAlphaBlending;
+                    mesh.AlphaBlendEnable = currentAlphaBlending;
                 }
             }
 

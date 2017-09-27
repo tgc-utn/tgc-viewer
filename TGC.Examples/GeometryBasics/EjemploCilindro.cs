@@ -34,7 +34,7 @@ namespace TGC.Examples.GeometryBasics
             cylinder = new TgcCylinder(TGCVector3.Empty, 2, 4);
             cylinder.AutoTransform = true;
 
-            cylinder.AlphaBlend = true;
+            cylinder.AlphaBlendEnable = true;
 
             Modifiers.addBoolean("boundingCylinder", "boundingCylinder", false);
             Modifiers.addColor("color", Color.White);

@@ -96,14 +96,14 @@ namespace TGC.Core.Terrain
         ///     con textura o colores por vértice de canal Alpha.
         ///     Por default está deshabilitado.
         /// </summary>
-        public bool AlphaBlend
+        public bool AlphaBlendEnable
         {
-            get { return Faces[0].AlphaBlend; }
+            get { return Faces[0].AlphaBlendEnable; }
             set
             {
                 foreach (var face in Faces)
                 {
-                    face.AlphaBlend = value;
+                    face.AlphaBlendEnable = value;
                 }
             }
         }
