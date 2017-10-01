@@ -63,8 +63,7 @@ namespace Examples.WorkshopShaders
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new TGCVector3(-182.3816f, 82.3252f, -811.9061f), Input);
-            //Camara.SetCamera(new TGCVector3(-182.3816f, 82.3252f, -811.9061f), new TGCVector3(-182.0957f, 82.3147f, -810.9479f));
+            Camara = new TgcFpsCamera(new TGCVector3(-182.3816f, 82.3252f, -811.9061f),100,10, Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 

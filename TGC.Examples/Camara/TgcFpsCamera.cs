@@ -166,15 +166,9 @@ namespace TGC.Examples.Camara
             base.SetCamera(positionEye, cameraFinalTarget, cameraRotatedUpVector);
         }
 
-        /// <summary>
-        ///     se hace override para actualizar las posiones internas, estas seran utilizadas en el proximo update.
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="directionView"> debe ser normalizado.</param>
-        public override void SetCamera(TGCVector3 position, TGCVector3 directionView)
+        public override void SetCamera(TGCVector3 pos, TGCVector3 lookAt)
         {
-            positionEye = position;
-            this.directionView = directionView;
+            positionEye = pos;
         }
     }
 }
