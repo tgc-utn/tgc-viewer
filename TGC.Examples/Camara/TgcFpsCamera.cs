@@ -15,56 +15,104 @@ namespace TGC.Examples.Camara
     /// </summary>
     public class TgcFpsCamera : TgcCamera
     {
-        private readonly Point mouseCenter; //Centro de mause 2D para ocultarlo.
+        /// <summary>
+        ///  Centro del mouse 2D para ocultarlo
+        /// </summary>
+        private readonly Point mouseCenter;
 
-        //Se mantiene la matriz rotacion para no hacer este calculo cada vez.
+        /// <summary>
+        ///  Se mantiene la matriz rotacion para no hacer este calculo cada vez.
+        /// </summary>
         private TGCMatrix cameraRotation;
 
-        //Direction view se calcula a partir de donde se quiere ver con la camara inicialmente. por defecto se ve en -Z.
+        /// <summary>
+        ///  Direction view se calcula a partir de donde se quiere ver con la camara inicialmente. por defecto se ve en -Z.
+        /// </summary>
         private TGCVector3 directionView;
 
         //No hace falta la base ya que siempre es la misma, la base se arma segun las rotaciones de esto costados y updown.
         private float leftrightRot;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private float updownRot;
-
+        
+        /// <summary>
+        ///  Se traba la camara, se utiliza para ocultar el puntero del mouse y manejar la rotacion de la camara.
+        /// </summary>
         private bool lockCam;
+
+        /// <summary>
+        ///     Posicion de la camara
+        /// </summary>
         private TGCVector3 positionEye;
 
+        /// <summary>
+        ///     Constructor de la camara a partir de un TgcD3dInput el cual ya tiene por default el positionEye (0,0,0), el mouseCenter a partir del centro del a pantalla, RotationSpeed 1.0f,
+        ///     MovementSpeed y JumpSpeed 500f, el directionView (0,0,-1)
+        /// </summary>
+        /// <param name="input"></param>
         public TgcFpsCamera(TgcD3dInput input)
         {
-            Input = input;
-            positionEye = new TGCVector3();
-            mouseCenter = new Point(D3DDevice.Instance.Device.Viewport.Width / 2, D3DDevice.Instance.Device.Viewport.Height / 2);
-            RotationSpeed = 0.1f;
-            MovementSpeed = 500f;
-            JumpSpeed = 500f;
-            directionView = new TGCVector3(0, 0, -1);
-            leftrightRot = FastMath.PI_HALF;
-            updownRot = -FastMath.PI / 10.0f;
-            cameraRotation = TGCMatrix.RotationX(updownRot) * TGCMatrix.RotationY(leftrightRot);
+            this.Input = input;
+            this.positionEye = new TGCVector3();
+            this.mouseCenter = new Point(D3DDevice.Instance.Device.Viewport.Width / 2, D3DDevice.Instance.Device.Viewport.Height / 2);
+            this.RotationSpeed = 0.1f;
+            this.MovementSpeed = 500f;
+            this.JumpSpeed = 500f;
+            this.directionView = new TGCVector3(0, 0, -1);
+            this.leftrightRot = FastMath.PI_HALF;
+            this.updownRot = -FastMath.PI / 10.0f;
+            this.cameraRotation = TGCMatrix.RotationX(updownRot) * TGCMatrix.RotationY(leftrightRot);
         }
 
+        /// <summary>
+        ///     Constructor de la camara a partir de un TgcD3dInput y un positionEye. Los atributos mouseCenter a partir del centro del a pantalla, RotationSpeed 1.0f,
+        ///     MovementSpeed y JumpSpeed 500f, el directionView (0,0,-1)
+        /// </summary>
+        /// <param name="positionEye"></param>
+        /// <param name="input"></param>
         public TgcFpsCamera(TGCVector3 positionEye, TgcD3dInput input) : this(input)
         {
             this.positionEye = positionEye;
         }
 
+        /// <summary>
+        ///  Constructor de la camara a partir de un TgcD3dInput y un positionEye, moveSpeed y jumpSpeed. Los atributos mouseCenter a partir del centro del a pantalla, RotationSpeed 1.0f,
+        ///  el directionView (0,0,-1)
+        /// </summary>
+        /// <param name="positionEye"></param>
+        /// <param name="moveSpeed"></param>
+        /// <param name="jumpSpeed"></param>
+        /// <param name="input"></param>
         public TgcFpsCamera(TGCVector3 positionEye, float moveSpeed, float jumpSpeed, TgcD3dInput input)
             : this(positionEye, input)
         {
-            MovementSpeed = moveSpeed;
-            JumpSpeed = jumpSpeed;
+            this.MovementSpeed = moveSpeed;
+            this.JumpSpeed = jumpSpeed;
         }
 
+        /// <summary>
+        /// Constructor de la camara a partir de un TgcD3dInput y un positionEye, moveSpeed, jumpSpeed y rotationSpeed. Los atributos mouseCenter a partir del centro del a pantalla, 
+        ///  el directionView (0,0,-1)
+        /// </summary>
+        /// <param name="positionEye"></param>
+        /// <param name="moveSpeed"></param>
+        /// <param name="jumpSpeed"></param>
+        /// <param name="rotationSpeed"></param>
+        /// <param name="input"></param>
         public TgcFpsCamera(TGCVector3 positionEye, float moveSpeed, float jumpSpeed, float rotationSpeed, TgcD3dInput input)
             : this(positionEye, moveSpeed, jumpSpeed, input)
         {
-            RotationSpeed = rotationSpeed;
+            this.RotationSpeed = rotationSpeed;
         }
 
         private TgcD3dInput Input { get; }
 
+        /// <summary>
+        ///  Condicion para trabar y destrabar la camara y ocultar el puntero de mouse.
+        /// </summary>
         public bool LockCam
         {
             get { return lockCam; }
@@ -78,14 +126,23 @@ namespace TGC.Examples.Camara
                 }
                 if (lockCam && !value)
                     Cursor.Show();
-                lockCam = value;
+                this.lockCam = value;
             }
         }
 
+        /// <summary>
+        ///  Velocidad de movimiento
+        /// </summary>
         public float MovementSpeed { get; set; }
 
+        /// <summary>
+        ///  Velocidad de rotacion
+        /// </summary>
         public float RotationSpeed { get; set; }
 
+        /// <summary>
+        ///  Velocidad de Salto
+        /// </summary>
         public float JumpSpeed { get; set; }
 
         /// <summary>
@@ -96,6 +153,11 @@ namespace TGC.Examples.Camara
             LockCam = false;
         }
 
+        /// <summary>
+        ///     Realiza un update de la camara a partir del elapsedTime, actualizando Position,LookAt y UpVector.
+        ///     Presenta movimientos basicos a partir de input de teclado W, A, S, D, Espacio, Control y rotraciones con el mouse.
+        /// </summary>
+        /// <param name="elapsedTime"></param>
         public override void UpdateCamera(float elapsedTime)
         {
             var moveVector = TGCVector3.Empty;
@@ -166,9 +228,17 @@ namespace TGC.Examples.Camara
             base.SetCamera(positionEye, cameraFinalTarget, cameraRotatedUpVector);
         }
 
+        /// <summary>
+        ///     Setea el Position y el LookAt de la camara
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="lookAt"></param>
         public override void SetCamera(TGCVector3 pos, TGCVector3 lookAt)
         {
-            positionEye = pos;
+            this.positionEye = pos;
+            //TODO: calcular el UpVector efectivo a partir de LookFrom y LookAt ya que esta "hardcode" como el vector (0,1,0).
+            //El upVector debe ser perpendicular al vector que forman el LookFrom y el LookAt. Es por este motivo que la camara sufre
+            //inconcistencias al momento de moverse y rotar.
         }
     }
 }
