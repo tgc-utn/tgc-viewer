@@ -90,8 +90,9 @@ namespace Examples.WorkshopShaders
             Modifiers.addFloat("maxSample", 11f, 50f, 50f);
             Modifiers.addFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
 
-            this.Camara = new TgcFpsCamera(Input);
-            this.Camara.SetCamera(new TGCVector3(147.2558f, 8.0536f, 262.2509f), new TGCVector3(148.0797f, 7.7869f, 262.7511f));
+            Camara = new TgcFpsCamera(new TGCVector3(147.2558f, 8.0f, 262.2509f),100f,10f,Input);
+            Camara.SetCamera(new TGCVector3(147.2558f, 8.0f, 262.2509f), new TGCVector3(148.2558f, 8.0f, 263.2509f));
+            
 
             //Cargar personaje con animaciones
             TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
@@ -188,7 +189,7 @@ namespace Examples.WorkshopShaders
             effect.SetValue("min_cant_samples", (float)Modifiers["minSample"]);
             effect.SetValue("max_cant_samples", (float)Modifiers["maxSample"]);
             effect.SetValue("fHeightMapScale", (float)Modifiers["HeightMapScale"]);
-            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(this.Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
 
             effect.SetValue("time", time);
             effect.SetValue("aux_Tex", g_pBaseTexture);
@@ -296,7 +297,7 @@ namespace Examples.WorkshopShaders
             float max_dist = 80;
             foreach (TgcSkeletalMesh m in enemigos)
             {
-                TGCVector3 pos_personaje = this.Camara.Position;
+                TGCVector3 pos_personaje = Camara.Position;
                 TGCVector3 pos_enemigo = m.Position * 1;
                 float dist = (pos_personaje - pos_enemigo).Length();
 
@@ -334,8 +335,8 @@ namespace Examples.WorkshopShaders
             gui.TextOut(20, H - 140, "Elapsed Time:" + Math.Round(time), Color.LightSteelBlue);
 
             // dibujo los enemigos
-            TGCVector3 pos_personaje = this.Camara.Position;
-            TGCVector3 dir_view = this.Camara.LookAt - pos_personaje;
+            TGCVector3 pos_personaje = Camara.Position;
+            TGCVector3 dir_view = Camara.LookAt - pos_personaje;
             TGCVector2 dir_v = new TGCVector2(dir_view.X, dir_view.Z);
             dir_v.Normalize();
             TGCVector2 dir_w = new TGCVector2(dir_v.Y, -dir_v.X);

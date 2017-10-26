@@ -51,8 +51,7 @@ namespace Examples.WorkshopShaders
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new TGCVector3(50, 30, 50), Input);
-            //Camara.SetCamera(new TGCVector3(50, 30, 50), new TGCVector3(0, 10, -50));
+            Camara = new TgcFpsCamera(new TGCVector3(50, 30, 50),100,10,Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 

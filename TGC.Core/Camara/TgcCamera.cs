@@ -12,12 +12,12 @@ namespace TGC.Core.Camara
         /// <summary>
         ///     Posicion de la camara
         /// </summary>
-        public TGCVector3 Position { get; private set; }
+        public TGCVector3 Position { get; protected set; }
 
         /// <summary>
         ///     Posición del punto al que mira la cámara
         /// </summary>
-        public TGCVector3 LookAt { get; private set; }
+        public TGCVector3 LookAt { get; protected set; }
 
         /// <summary>
         ///     Vector direccional hacia arriba (puede diferir si la camara se invierte).

@@ -34,8 +34,6 @@ namespace Examples.WorkshopShaders
 
         private float pupila_time = 0;
         private float MAX_PUPILA_TIME = 3;
-        private bool start = true;
-        private TgcText2D posicionCam;
 
         public enum ToneMapping : int
         {
@@ -58,8 +56,6 @@ namespace Examples.WorkshopShaders
         {
             Device d3dDevice = D3DDevice.Instance.Device;
             MyShaderDir = ShadersDir + "WorkshopShaders\\";
-
-            posicionCam = new TgcText2D();
 
             //Cargamos un escenario
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -104,7 +100,7 @@ namespace Examples.WorkshopShaders
 
             //Camara en primera personas
             TGCVector3 positionEye = new TGCVector3(-944.1269f, 100f, -1033.307f);
-            Camara = new TgcFpsCamera(positionEye, Input);
+            Camara = new TgcFpsCamera(positionEye,300,10, Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
@@ -420,8 +416,6 @@ namespace Examples.WorkshopShaders
             terrain.Effect = effect;
             terrain.Technique = Technique;
             terrain.Render();
-
-            posicionCam.drawText(Camara.Position.ToString(), 0, 0, Color.Black);
         }
 
         public override void Dispose()
