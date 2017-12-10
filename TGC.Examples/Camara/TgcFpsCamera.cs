@@ -222,23 +222,11 @@ namespace TGC.Examples.Camara
             var cameraRotatedTarget = TGCVector3.TransformNormal(directionView, cameraRotation);
             var cameraFinalTarget = positionEye + cameraRotatedTarget;
 
+            //Se calcula el nuevo vector de up producido por el movimiento del update.
             var cameraOriginalUpVector = DEFAULT_UP_VECTOR;
             var cameraRotatedUpVector = TGCVector3.TransformNormal(cameraOriginalUpVector, cameraRotation);
 
             base.SetCamera(positionEye, cameraFinalTarget, cameraRotatedUpVector);
-        }
-
-        /// <summary>
-        ///     Setea el Position y el LookAt de la camara
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="lookAt"></param>
-        public override void SetCamera(TGCVector3 pos, TGCVector3 lookAt)
-        {
-            this.positionEye = pos;
-            //TODO: calcular el UpVector efectivo a partir de LookFrom y LookAt ya que esta "hardcode" como el vector (0,1,0).
-            //El upVector debe ser perpendicular al vector que forman el LookFrom y el LookAt. Es por este motivo que la camara sufre
-            //inconcistencias al momento de moverse y rotar.
         }
     }
 }
