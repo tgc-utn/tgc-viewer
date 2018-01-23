@@ -83,6 +83,7 @@ namespace Examples.WorkshopShaders
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

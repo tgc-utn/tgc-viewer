@@ -64,6 +64,7 @@ namespace TGC.Examples.Optimization
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

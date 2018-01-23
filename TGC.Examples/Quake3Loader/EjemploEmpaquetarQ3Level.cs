@@ -42,6 +42,7 @@ namespace TGC.Examples.Quake3Loader
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

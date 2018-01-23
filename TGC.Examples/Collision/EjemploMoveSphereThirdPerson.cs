@@ -269,6 +269,7 @@ namespace TGC.Examples.Collision
                     objectsInFront.Add(mesh);
                 }
             }
+            PostUpdate();
         }
 
         public override void Render()

@@ -335,7 +335,9 @@ namespace TGC.Examples.Collision
 
                 collisionPoint.Position = collisionManager.Result.collisionPoint;
                 collisionPoint.updateValues();
-            }
+            } 
+
+            PostUpdate();
         }
 
         public override void Render()

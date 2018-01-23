@@ -122,6 +122,7 @@ namespace TGC.Examples.Animation
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

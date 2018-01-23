@@ -331,6 +331,8 @@ namespace TGC.Examples.Collision
                 collisionPoint.Position = collisionManager.LastCollisionPoint;
                 collisionPoint.Render();
             }
+
+            PostUpdate();
         }
 
         public override void Render()

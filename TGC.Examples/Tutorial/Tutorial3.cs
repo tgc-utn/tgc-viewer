@@ -126,6 +126,8 @@ namespace TGC.Examples.Tutorial
 
             //Hacer que la camara en 3ra persona se ajuste a la nueva posicion del objeto
             camaraInterna.Target = mainMesh.Position;
+
+            PostUpdate();
         }
 
         public override void Render()

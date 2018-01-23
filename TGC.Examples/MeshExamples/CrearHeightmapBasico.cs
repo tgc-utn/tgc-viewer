@@ -68,6 +68,7 @@ namespace TGC.Examples.MeshExamples
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         /// <summary>

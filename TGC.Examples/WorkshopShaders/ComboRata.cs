@@ -176,6 +176,8 @@ namespace Examples.WorkshopShaders
 
                 enemigos[t].updateAnimation(ElapsedTime);
             }
+
+            PostUpdate();
         }
 
         public override void Render()

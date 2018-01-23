@@ -101,6 +101,8 @@ namespace TGC.Examples.Engine2D
 
             //Actualizamos el estado de la animacion y renderizamos
             animatedSprite.update(ElapsedTime);
+
+            PostUpdate();
         }
 
         public override void Render()

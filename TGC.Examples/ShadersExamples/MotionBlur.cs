@@ -98,10 +98,13 @@ namespace TGC.Examples.ShadersExamples
         public override void Update()
         {
             PreUpdate();
+
             time += ElapsedTime;
             float r = 40;
             mesh.Position = new TGCVector3(r * (float)Math.Cos(time * 0.5), 0, 0 * (float)Math.Sin(time * 0.5));
             //mesh.rotateY(elapsedTime);
+
+            PostUpdate();
         }
 
         public void renderScene(string technique)

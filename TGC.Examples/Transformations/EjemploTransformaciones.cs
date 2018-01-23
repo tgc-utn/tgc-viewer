@@ -34,6 +34,7 @@ namespace TGC.Examples.Transformations
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

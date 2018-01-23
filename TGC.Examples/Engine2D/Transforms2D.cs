@@ -115,6 +115,8 @@ namespace TGC.Examples.Engine2D
             //Si ElapsedTime es muy chico (como suele pasar con buenas computadoras y poco procesamiento)
             //Al multiplicarlo por nuestra velocidad angular, se transformaran en "pequeñas rotaciones".
             rotationAnimate = rotationAnimate * TGCMatrix.RotationZ(FastMath.ToRad(25) * ElapsedTime);
+
+            PostUpdate();
         }
 
         public override void Render()

@@ -128,6 +128,7 @@ namespace TGC.Examples.Sound
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

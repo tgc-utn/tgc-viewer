@@ -149,6 +149,8 @@ namespace Examples.WorkshopShaders
             PreUpdate();
 
             mesh.RotateY(ElapsedTime * 1.2f);
+
+            PostUpdate();
         }
 
         public override void Render()
