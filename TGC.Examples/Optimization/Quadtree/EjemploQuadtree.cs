@@ -73,6 +73,7 @@ namespace TGC.Examples.Optimization.Quadtree
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

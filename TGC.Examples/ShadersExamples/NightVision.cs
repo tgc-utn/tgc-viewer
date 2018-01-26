@@ -161,6 +161,7 @@ namespace TGC.Examples.ShadersExamples
         public override void Update()
         {
             PreUpdate();
+
             var pos = Camara.Position;
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
@@ -265,6 +266,8 @@ namespace TGC.Examples.ShadersExamples
                     pos_bala[i] = pos_bala[i] + dir_bala[i] * (vel_bala * ElapsedTime);
                 }
             }
+
+            PostUpdate();
         }
 
         public override void Render()

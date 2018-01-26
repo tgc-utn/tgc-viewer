@@ -206,6 +206,8 @@ namespace TGC.Examples.Collision
 
             //Ajustar la posicion de la camara segun la colision con los objetos del escenario
             ajustarPosicionDeCamara();
+
+            PostUpdate();
         }
 
         public override void Render()

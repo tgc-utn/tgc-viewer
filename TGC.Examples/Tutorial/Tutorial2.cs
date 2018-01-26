@@ -62,6 +62,7 @@ namespace TGC.Examples.Tutorial
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

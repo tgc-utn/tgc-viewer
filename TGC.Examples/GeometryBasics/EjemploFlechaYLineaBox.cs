@@ -88,6 +88,8 @@ namespace TGC.Examples.GeometryBasics
             //Actualizar valores para hacerlos efectivos, ADVERTENCIA verificar que estemetodo crea los vertices nuevamente.
             //Recomendado de ser posible realizar transformaciones!!!
             box.updateValues();
+
+            PostUpdate();
         }
 
         public override void Render()

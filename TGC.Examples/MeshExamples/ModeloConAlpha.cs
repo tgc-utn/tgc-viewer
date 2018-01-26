@@ -54,6 +54,8 @@ namespace TGC.Examples.MeshExamples
             {
                 mesh.AlphaBlendEnable = alpha;
             }
+
+            PostUpdate();
         }
 
         public override void Render()

@@ -150,7 +150,10 @@ namespace Examples.WorkshopShaders
         public override void Update()
         {
             PreUpdate();
+
             Camara.UpdateCamera(ElapsedTime);
+
+            PostUpdate();
         }
 
         public override void Render()

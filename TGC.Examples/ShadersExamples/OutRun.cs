@@ -209,6 +209,8 @@ namespace TGC.Examples.ShadersExamples
             Camara.SetCamera(pos - dir * dist_cam + desf, pos + desf);
             //this.Camara.SetCamera(new TGCVector3(500, 4000, 500), TGCVector3.Empty);
             Camara.UpdateCamera(ElapsedTime);
+
+            PostUpdate();
         }
 
         public override void Render()

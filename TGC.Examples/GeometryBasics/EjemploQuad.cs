@@ -53,6 +53,8 @@ namespace TGC.Examples.GeometryBasics
             PreUpdate();
             //Actualizar parametros del quad
             updateQuad();
+
+            PostUpdate();
         }
 
         /// <summary>

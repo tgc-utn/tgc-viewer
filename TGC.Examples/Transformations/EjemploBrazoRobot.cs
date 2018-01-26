@@ -65,6 +65,7 @@ namespace TGC.Examples.Transformations
         public override void Update()
         {
             PreUpdate();
+
             // Los movimientos de teclado no validan que la mesh se atraviecen, solo modifican el angulo o traslacion.
             if (Input.keyDown(Key.A))
             {
@@ -162,6 +163,8 @@ namespace TGC.Examples.Transformations
             B = TGCMatrix.Translation(pivotePinzaDerecha.X, pivotePinzaDerecha.Y, pivotePinzaDerecha.Z);
             // Se calcula la matriz resultante, para utilizarse en render.
             transformacionPinzaDerecha = T * A * Rot * B;
+
+            PostUpdate();
         }
 
         public override void Render()

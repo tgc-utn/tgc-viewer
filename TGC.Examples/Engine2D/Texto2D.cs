@@ -54,6 +54,7 @@ namespace TGC.Examples.Engine2D
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

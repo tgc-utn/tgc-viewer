@@ -74,6 +74,8 @@ namespace TGC.Examples.MeshExamples
             //Se actualiza la posicion del skybox.
             if ((bool)Modifiers.getValue("moveWhitCamera"))
                 skyBox.Center = Camara.Position;
+
+            PostUpdate();
         }
 
         public override void Render()

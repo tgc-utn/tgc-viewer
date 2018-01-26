@@ -285,6 +285,8 @@ namespace TGC.Examples.Collision
 
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = personaje.Position;
+
+            PostUpdate();
         }
 
         private string text = "No colision";

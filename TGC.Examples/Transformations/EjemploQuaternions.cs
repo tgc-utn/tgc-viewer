@@ -56,6 +56,8 @@ namespace TGC.Examples.Transformations
             //Rotacion TGCQuaternion
             var q = TGCQuaternion.RotationYawPitchRoll(rot.Y, rot.X, rot.Z);
             boxTGCQuaternion.Transform = TGCMatrix.RotationTGCQuaternion(q) * TGCMatrix.Translation(boxTGCQuaternion.Position);
+
+            PostUpdate();
         }
 
         public override void Render()

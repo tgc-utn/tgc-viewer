@@ -139,6 +139,8 @@ namespace TGC.Examples.Collision
                     }
                 }
             }
+
+            PostUpdate();
         }
 
         public override void Render()

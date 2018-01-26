@@ -48,6 +48,7 @@ namespace TGC.Examples.Transformations
         public override void Update()
         {
             PreUpdate();
+
             // Los movimientos de teclado no validan que la mesh se atraviecen, solo modifican el angulo o traslacion.
             if (Input.keyDown(Key.W))
             {
@@ -80,6 +81,8 @@ namespace TGC.Examples.Transformations
             var R3 = TGCMatrix.RotationX(angHelice);
 
             transformacionHelice = R3 * T2 * transformacionAvion;
+
+            PostUpdate();
         }
 
         public override void Render()

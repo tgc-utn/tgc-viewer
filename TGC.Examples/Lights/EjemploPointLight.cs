@@ -100,6 +100,8 @@ namespace TGC.Examples.Lights
             lightMesh.Position = (TGCVector3)Modifiers["lightPos"];
             lightMesh.Color = (Color)Modifiers["lightColor"];
             lightMesh.updateValues();
+
+            PostUpdate();
         }
 
         public override void Render()

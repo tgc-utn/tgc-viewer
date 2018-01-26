@@ -63,6 +63,7 @@ namespace TGC.Examples.GeometryBasics
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         /// <summary>

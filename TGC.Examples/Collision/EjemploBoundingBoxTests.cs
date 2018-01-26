@@ -203,6 +203,7 @@ namespace TGC.Examples.Collision
             {
                 obb.setRenderColor(Color.Yellow);
             }
+            PostUpdate();
         }
 
         public override void Render()

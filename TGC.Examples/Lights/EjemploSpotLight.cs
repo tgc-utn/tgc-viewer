@@ -72,6 +72,7 @@ namespace TGC.Examples.Lights
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

@@ -108,6 +108,8 @@ namespace TGC.Examples.Tutorial
             {
                 currentMoveDir *= -1;
             }
+
+            PostUpdate();
         }
 
         /// <summary>

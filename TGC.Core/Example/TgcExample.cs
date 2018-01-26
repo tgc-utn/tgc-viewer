@@ -115,14 +115,22 @@ namespace TGC.Core.Example
 
         /// <summary>
         ///     Metodos a ejecutar antes del update.
+        ///     Se actualiza el Clock y el Input.
         /// </summary>
         protected virtual void PreUpdate()
         {
             UpdateClock();
             UpdateInput();
+            UpdateSounds3D();
+        }
+
+        /// <summary>
+        ///     Metodos a ejecutar despues del update, se acutalizan la Matriz de View y el Frustum de la Camara
+        /// </summary>
+        protected virtual void PostUpdate()
+        {
             UpdateView();
             UpdateFrustum();
-            UpdateSounds3D();
         }
 
         /// <summary>

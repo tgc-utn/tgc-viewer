@@ -70,6 +70,8 @@ namespace TGC.Examples.GeometryBasics
             PreUpdate();
             //Actualizar parametros de la caja
             updateBox();
+
+            PostUpdate();
         }
 
         /// <summary>
