@@ -1,7 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)"
-              GeneratedClassNamespace="TGC.Viewer.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TGC.Viewer.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="ShadersDirectory" Type="System.String" Scope="User">
@@ -20,10 +18,7 @@
       <Value Profile="(Default)">TGC Viewer - Técnicas de Gráficos por Computadora - UTN - FRBA</Value>
     </Setting>
     <Setting Name="CommonShaders" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TgcViewer\</Value>
-    </Setting>
-    <Setting Name="ModifiersPanel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">..\..\..\TGC.Examples\Shaders\TgcViewer\</Value>
     </Setting>
     <Setting Name="MediaLink" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://drive.google.com/open?id=0B8iAMXTVXrJeOGpIbWhUbjJPaE0</Value>

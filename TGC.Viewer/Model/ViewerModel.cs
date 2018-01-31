@@ -32,8 +32,7 @@ namespace TGC.Viewer.Model
         /// </summary>
         public ExampleLoader ExampleLoader { get; private set; }
 
-        public void InitGraphics(ViewerForm form, TreeView treeViewExamples, Panel panel3D,
-            ToolStripStatusLabel toolStripStatusCurrentExample)
+        public void InitGraphics(ViewerForm form, TreeView treeViewExamples, Panel panel3D, ToolStripStatusLabel toolStripStatusCurrentExample)
         {
             ApplicationRunning = true;
 
@@ -51,16 +50,11 @@ namespace TGC.Viewer.Model
             DirectSound = new TgcDirectSound();
             DirectSound.InitializeD3DDevice(panel3D);
 
-            //Directorio actual de ejecucion
-            var currentDirectory = Environment.CurrentDirectory + "\\";
-
             //Cargar shaders del framework
-            TgcShaders.Instance.loadCommonShaders(currentDirectory + Settings.Default.ShadersDirectory +
-                                                  Settings.Default.CommonShaders);
+            TgcShaders.Instance.loadCommonShaders(Settings.Default.CommonShaders);
         }
 
-        public void LoadExamples(TreeView treeViewExamples, FlowLayoutPanel flowLayoutPanelModifiers,
-            DataGridView dataGridUserVars)
+        public void LoadExamples(TreeView treeViewExamples, FlowLayoutPanel flowLayoutPanelModifiers, DataGridView dataGridUserVars)
         {
             //Configuracion
             var settings = Settings.Default;
@@ -69,8 +63,7 @@ namespace TGC.Viewer.Model
             var currentDirectory = Environment.CurrentDirectory + "\\";
 
             //Cargo los ejemplos en el arbol
-            ExampleLoader = new ExampleLoader(currentDirectory + settings.MediaDirectory,
-                currentDirectory + settings.ShadersDirectory, dataGridUserVars, flowLayoutPanelModifiers);
+            ExampleLoader = new ExampleLoader(settings.MediaDirectory, settings.ShadersDirectory, dataGridUserVars, flowLayoutPanelModifiers);
             ExampleLoader.LoadExamplesInGui(treeViewExamples, currentDirectory);
         }
 

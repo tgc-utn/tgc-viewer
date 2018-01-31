@@ -51,13 +51,15 @@
             this.flowLayoutPanelModifiers = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBoxUserVars = new System.Windows.Forms.GroupBox();
             this.dataGridUserVars = new System.Windows.Forms.DataGridView();
+            this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ColumnValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainerIzquierda = new System.Windows.Forms.SplitContainer();
             this.groupBoxExamples = new System.Windows.Forms.GroupBox();
             this.treeViewExamples = new System.Windows.Forms.TreeView();
             this.textBoxExampleDescription = new System.Windows.Forms.TextBox();
             this.panel3D = new System.Windows.Forms.Panel();
-            this.ColumnName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ColumnValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.herramientasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerDerecha)).BeginInit();
@@ -79,6 +81,7 @@
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.archivoToolStripMenuItem,
             this.verToolStripMenuItem,
+            this.herramientasToolStripMenuItem,
             this.ayudaToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
@@ -176,14 +179,14 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.helpToolStripMenuItem.Text = "Ver ayuda";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
             // 
             // acercaDeTgcViewerToolStripMenuItem
             // 
             this.acercaDeTgcViewerToolStripMenuItem.Name = "acercaDeTgcViewerToolStripMenuItem";
-            this.acercaDeTgcViewerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.acercaDeTgcViewerToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.acercaDeTgcViewerToolStripMenuItem.Text = "Acerca de";
             this.acercaDeTgcViewerToolStripMenuItem.Click += new System.EventHandler(this.acercaDeTgcViewerToolStripMenuItem_Click);
             // 
@@ -276,6 +279,25 @@
             this.dataGridUserVars.Size = new System.Drawing.Size(244, 307);
             this.dataGridUserVars.TabIndex = 0;
             // 
+            // ColumnName
+            // 
+            this.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ColumnName.DataPropertyName = "Name";
+            this.ColumnName.HeaderText = "Nombre";
+            this.ColumnName.Name = "ColumnName";
+            this.ColumnName.ReadOnly = true;
+            this.ColumnName.Width = 69;
+            // 
+            // ColumnValue
+            // 
+            this.ColumnValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ColumnValue.DataPropertyName = "Value";
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ColumnValue.DefaultCellStyle = dataGridViewCellStyle1;
+            this.ColumnValue.HeaderText = "Valor";
+            this.ColumnValue.Name = "ColumnValue";
+            this.ColumnValue.ReadOnly = true;
+            // 
             // splitContainerIzquierda
             // 
             this.splitContainerIzquierda.Dock = System.Windows.Forms.DockStyle.Left;
@@ -335,24 +357,20 @@
             this.panel3D.Size = new System.Drawing.Size(354, 515);
             this.panel3D.TabIndex = 9;
             // 
-            // ColumnName
+            // herramientasToolStripMenuItem
             // 
-            this.ColumnName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ColumnName.DataPropertyName = "Name";
-            this.ColumnName.HeaderText = "Nombre";
-            this.ColumnName.Name = "ColumnName";
-            this.ColumnName.ReadOnly = true;
-            this.ColumnName.Width = 69;
+            this.herramientasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.opcionesToolStripMenuItem});
+            this.herramientasToolStripMenuItem.Name = "herramientasToolStripMenuItem";
+            this.herramientasToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
+            this.herramientasToolStripMenuItem.Text = "Herramientas";
             // 
-            // ColumnValue
+            // opcionesToolStripMenuItem
             // 
-            this.ColumnValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ColumnValue.DataPropertyName = "Value";
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ColumnValue.DefaultCellStyle = dataGridViewCellStyle1;
-            this.ColumnValue.HeaderText = "Valor";
-            this.ColumnValue.Name = "ColumnValue";
-            this.ColumnValue.ReadOnly = true;
+            this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
+            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.opcionesToolStripMenuItem.Text = "Opciones";
+            this.opcionesToolStripMenuItem.Click += new System.EventHandler(this.opcionesToolStripMenuItem_Click);
             // 
             // ViewerForm
             // 
@@ -426,6 +444,8 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ColumnValue;
+        private System.Windows.Forms.ToolStripMenuItem herramientasToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem opcionesToolStripMenuItem;
     }
 }
 

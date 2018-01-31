@@ -96,7 +96,7 @@ namespace TGC.Viewer.UI
         private void CheckMediaFolder()
         {
             //Verificamos la carpeta Media
-            var pathMedia = Environment.CurrentDirectory + "\\" + Settings.Default.MediaDirectory;
+            var pathMedia = Settings.Default.MediaDirectory;
 
             if (!Directory.Exists(pathMedia))
             {
@@ -104,8 +104,7 @@ namespace TGC.Viewer.UI
                 Process.Start(Settings.Default.MediaLink);
                 Process.Start(Environment.CurrentDirectory);
                 MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine +
-                                Environment.NewLine +
-                                "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
+                                Environment.NewLine + "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
 
                 //Fuerzo el cierre de la aplicacion.
                 Environment.Exit(0);
@@ -135,7 +134,11 @@ namespace TGC.Viewer.UI
             fpsToolStripMenuItem.Checked = true;
             axisToolStripMenuItem.Checked = true;
             fullExampleToolStripMenuItem.Checked = false;
+            splitContainerIzquierda.Visible = true;
+            splitContainerDerecha.Visible = true;
+            statusStrip.Visible = true;
 
+            Modelo.UpdateAspectRatio(panel3D);
             Modelo.Wireframe(wireframeToolStripMenuItem.Checked);
             Modelo.ContadorFPS(fpsToolStripMenuItem.Checked);
             Modelo.AxisLines(axisToolStripMenuItem.Checked);
@@ -153,6 +156,11 @@ namespace TGC.Viewer.UI
         private void OpenAbout()
         {
             new AboutForm().ShowDialog(this);
+        }
+
+        private void OpenOption()
+        {
+            new OptionForm().ShowDialog(this);
         }
 
         private void Wireframe()
@@ -275,6 +283,11 @@ namespace TGC.Viewer.UI
         private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             OpenHelp();
+        }
+
+        private void opcionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenOption();
         }
 
         #endregion Eventos del form
