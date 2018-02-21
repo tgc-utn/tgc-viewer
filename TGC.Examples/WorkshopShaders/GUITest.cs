@@ -228,22 +228,19 @@ namespace Examples.WorkshopShaders
                             break;
 
                         default:
-                            if (msg.id >= 1000 && msg.id < 1000 + cant_colores)
+                            if (msg.id >= 0 && msg.id < cant_colores)
                             {
                                 // Cambio el color
-                                int color = msg.id - 1000;
-
-                                effect.SetValue("color_global", new TGCVector4(
-                                    (float)lst_colores[color].R / 255.0f,
-                                    (float)lst_colores[color].G / 255.0f,
-                                    (float)lst_colores[color].B / 255.0f, 1));
+                                int color = msg.id;
+                                
+                                effect.SetValue("color_global", new TGCVector4( (float)lst_colores[color].R / 255.0f, (float)lst_colores[color].G / 255.0f, (float)lst_colores[color].B / 255.0f , 1));
                             }
                             break;
                     }
                     break;
 
                 default:
-                    break;
+                break;
             }
             gui.Render();
         }
@@ -270,7 +267,7 @@ namespace Examples.WorkshopShaders
             int s = 0;
             for (int i = 0; i < cant_colores; ++i)
             {
-                GUIItem item = gui.InsertItemColor(pos_x, pos_y, lst_colores[i], 1000 + i);
+                GUIItem item = gui.InsertItemColor(pos_x, pos_y, lst_colores[i], i);
                 if ((i + 1) % 4 == 0)
                 {
                     if (s % 2 == 1)
@@ -310,9 +307,9 @@ namespace Examples.WorkshopShaders
             for (int i = 0; i < cant_textures; ++i)
             {
                 progress_bar.SetPos(i);
-                progress_bar.text = "Descargando archivo: " + MediaDir + "Texturas\\f1\\f1piso3.png";
+                progress_bar.text = "Descargando archivo: " + MediaDir + "Texturas\\f1\\f1piso2.png";
 
-                Texture textura_piso = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MediaDir + "Texturas\\f1\\f1piso3.png"), Usage.None, Pool.Managed);
+                Texture textura_piso = Texture.FromBitmap(d3dDevice, (Bitmap)Bitmap.FromFile(MediaDir + "Texturas\\f1\\f1piso2.png"), Usage.None, Pool.Managed);
                 textura_piso.Dispose();
                 MessageLoop();
             }
@@ -328,17 +325,7 @@ namespace Examples.WorkshopShaders
                 return false;
             TranslateMessage(ref msg);
             DispatchMessage(ref msg);
-
-            Device d3dDevice = D3DDevice.Instance.Device;
-
-            d3dDevice.BeginScene();
-            //render(0);
-            ElapsedTime = 0;
-            Render();
-
-            d3dDevice.EndScene();
-            d3dDevice.Present();
-
+            
             return true;
         }
 

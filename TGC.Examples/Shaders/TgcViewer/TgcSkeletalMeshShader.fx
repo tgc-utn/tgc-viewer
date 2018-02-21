@@ -31,6 +31,8 @@ sampler2D diffuseMap = sampler_state
 static const int MAX_MATRICES = 26;
 float4x3 bonesMatWorldArray[MAX_MATRICES];
 
+float4 color_global = float4(1,1,1,1);
+
 /**************************************************************************************/
 /* VERTEX_COLOR */
 /**************************************************************************************/
@@ -211,7 +213,7 @@ struct PS_DIFFUSE_MAP
 float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 {
 	//Modular color de la textura por color del mesh
-    return tex2D(diffuseMap, input.Texcoord) * input.Color;
+    return tex2D(diffuseMap, input.Texcoord) * input.Color * (color_global);
 }
 
 /*
