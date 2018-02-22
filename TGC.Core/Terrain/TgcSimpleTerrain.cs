@@ -202,10 +202,9 @@ namespace TGC.Core.Terrain
             }
 
             //Rotar e invertir textura
-            ;
             var b = (Bitmap)Image.FromFile(path);
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
-            terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, new Bitmap(path), Usage.AutoGenerateMipMap, Pool.Managed);
+            terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.AutoGenerateMipMap, Pool.Managed);
         }
 
         /// <summary>
