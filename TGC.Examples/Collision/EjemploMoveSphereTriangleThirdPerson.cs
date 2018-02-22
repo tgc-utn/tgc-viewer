@@ -104,6 +104,7 @@ namespace TGC.Examples.Collision
             objetosColisionables.Clear();
             foreach (var mesh in escenario.Meshes)
             {
+                /*
                 //Los objetos del layer "TriangleCollision" son colisiones a nivel de triangulo
                 if (mesh.Layer == "TriangleCollision")
                 {
@@ -113,7 +114,9 @@ namespace TGC.Examples.Collision
                 else
                 {
                     objetosColisionables.Add(BoundingBoxCollider.fromBoundingBox(mesh.BoundingBox));
-                }
+                }*/
+
+                objetosColisionables.Add(BoundingBoxCollider.fromBoundingBox(mesh.BoundingBox));
             }
 
             //Crear linea para mostrar la direccion del movimiento del personaje
@@ -352,6 +355,8 @@ namespace TGC.Examples.Collision
             foreach (var mesh in escenario.Meshes)
             {
                 mesh.Render();
+
+                mesh.BoundingBox.Render();
             }
 
             //Render personaje
