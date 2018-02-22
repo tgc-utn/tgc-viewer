@@ -631,7 +631,7 @@ namespace TGC.Core.Geometry
             //transformacion
             if (AutoTransform)
             {
-                Transform = TGCMatrix.Scaling(radius, radius, radius) * TGCMatrix.Scaling(Scale) *
+                Transform = TGCMatrix.Scaling(radius, radius, radius) *
                             TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *
                             TGCMatrix.Translation(translation);
             }
@@ -945,6 +945,7 @@ namespace TGC.Core.Geometry
                 new TGCVector3(0.65f, 0.65f, -0.65f),
                 new TGCVector3(0.65f, 0.65f, 0.65f)
             });
+                vertices.Add(new TGCVector3());
                 indices.AddRange(new[]
                 {
                 0, 2, 6,
