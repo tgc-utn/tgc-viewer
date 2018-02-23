@@ -276,7 +276,7 @@ namespace TGC.Core.Sound
         #region Metodos aun no probados
 
         /*
-
+        FIXME
         //Especificamos el delegado al que se va a asociar el evento.
         public delegate void ReproductorMessageHandler(string Msg);
         //Declaramos nuestro evento.

@@ -41,6 +41,8 @@
             this.axisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.herramientasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.acercaDeTgcViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,8 +60,6 @@
             this.treeViewExamples = new System.Windows.Forms.TreeView();
             this.textBoxExampleDescription = new System.Windows.Forms.TextBox();
             this.panel3D = new System.Windows.Forms.Panel();
-            this.herramientasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.opcionesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerDerecha)).BeginInit();
@@ -167,6 +167,21 @@
             this.resetToolStripMenuItem.Text = "Reiniciar visualización";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
+            // herramientasToolStripMenuItem
+            // 
+            this.herramientasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.opcionesToolStripMenuItem});
+            this.herramientasToolStripMenuItem.Name = "herramientasToolStripMenuItem";
+            this.herramientasToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
+            this.herramientasToolStripMenuItem.Text = "Herramientas";
+            // 
+            // opcionesToolStripMenuItem
+            // 
+            this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
+            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.opcionesToolStripMenuItem.Text = "Opciones...";
+            this.opcionesToolStripMenuItem.Click += new System.EventHandler(this.opcionesToolStripMenuItem_Click);
+            // 
             // ayudaToolStripMenuItem
             // 
             this.ayudaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -179,15 +194,15 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.helpToolStripMenuItem.Text = "Ver ayuda";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.helpToolStripMenuItem.Text = "Ayuda de TGC";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
             // 
             // acercaDeTgcViewerToolStripMenuItem
             // 
             this.acercaDeTgcViewerToolStripMenuItem.Name = "acercaDeTgcViewerToolStripMenuItem";
-            this.acercaDeTgcViewerToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.acercaDeTgcViewerToolStripMenuItem.Text = "Acerca de";
+            this.acercaDeTgcViewerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.acercaDeTgcViewerToolStripMenuItem.Text = "Acerca de TGC";
             this.acercaDeTgcViewerToolStripMenuItem.Click += new System.EventHandler(this.acercaDeTgcViewerToolStripMenuItem_Click);
             // 
             // statusStrip
@@ -356,21 +371,6 @@
             this.panel3D.Name = "panel3D";
             this.panel3D.Size = new System.Drawing.Size(354, 515);
             this.panel3D.TabIndex = 9;
-            // 
-            // herramientasToolStripMenuItem
-            // 
-            this.herramientasToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.opcionesToolStripMenuItem});
-            this.herramientasToolStripMenuItem.Name = "herramientasToolStripMenuItem";
-            this.herramientasToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
-            this.herramientasToolStripMenuItem.Text = "Herramientas";
-            // 
-            // opcionesToolStripMenuItem
-            // 
-            this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
-            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.opcionesToolStripMenuItem.Text = "Opciones";
-            this.opcionesToolStripMenuItem.Click += new System.EventHandler(this.opcionesToolStripMenuItem_Click);
             // 
             // ViewerForm
             // 

@@ -40,74 +40,80 @@
             this.buttonShadersDirectory = new System.Windows.Forms.Button();
             this.buttonMediaDirectory = new System.Windows.Forms.Button();
             this.buttonCommonShaders = new System.Windows.Forms.Button();
-            this.richTextBoxMediaLink = new System.Windows.Forms.RichTextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.buttonMediaLink = new System.Windows.Forms.Button();
+            this.textBoxMediaLink = new System.Windows.Forms.TextBox();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelShadersDirectory
             // 
             this.labelShadersDirectory.AutoSize = true;
-            this.labelShadersDirectory.Location = new System.Drawing.Point(12, 41);
+            this.labelShadersDirectory.Location = new System.Drawing.Point(12, 48);
             this.labelShadersDirectory.Name = "labelShadersDirectory";
-            this.labelShadersDirectory.Size = new System.Drawing.Size(107, 13);
-            this.labelShadersDirectory.TabIndex = 4;
-            this.labelShadersDirectory.Text = "Directorio de shaders";
+            this.labelShadersDirectory.Size = new System.Drawing.Size(110, 13);
+            this.labelShadersDirectory.TabIndex = 3;
+            this.labelShadersDirectory.Text = "Directorio de shaders:";
             // 
             // textBoxShadersDirectory
             // 
-            this.textBoxShadersDirectory.Location = new System.Drawing.Point(171, 38);
+            this.textBoxShadersDirectory.Location = new System.Drawing.Point(12, 64);
             this.textBoxShadersDirectory.Name = "textBoxShadersDirectory";
             this.textBoxShadersDirectory.ReadOnly = true;
-            this.textBoxShadersDirectory.Size = new System.Drawing.Size(250, 20);
-            this.textBoxShadersDirectory.TabIndex = 5;
+            this.textBoxShadersDirectory.Size = new System.Drawing.Size(379, 20);
+            this.textBoxShadersDirectory.TabIndex = 4;
             // 
             // textBoxMediaDirectory
             // 
-            this.textBoxMediaDirectory.Location = new System.Drawing.Point(171, 12);
+            this.textBoxMediaDirectory.Location = new System.Drawing.Point(12, 25);
             this.textBoxMediaDirectory.Name = "textBoxMediaDirectory";
             this.textBoxMediaDirectory.ReadOnly = true;
-            this.textBoxMediaDirectory.Size = new System.Drawing.Size(250, 20);
+            this.textBoxMediaDirectory.Size = new System.Drawing.Size(379, 20);
             this.textBoxMediaDirectory.TabIndex = 1;
             // 
             // labelMediaDirectory
             // 
             this.labelMediaDirectory.AutoSize = true;
-            this.labelMediaDirectory.Location = new System.Drawing.Point(12, 15);
+            this.labelMediaDirectory.Location = new System.Drawing.Point(12, 9);
             this.labelMediaDirectory.Name = "labelMediaDirectory";
-            this.labelMediaDirectory.Size = new System.Drawing.Size(103, 13);
+            this.labelMediaDirectory.Size = new System.Drawing.Size(113, 13);
             this.labelMediaDirectory.TabIndex = 0;
-            this.labelMediaDirectory.Text = "Directorio de medias";
+            this.labelMediaDirectory.Text = "Directorio de recursos:";
             // 
             // textBoxCommonShaders
             // 
-            this.textBoxCommonShaders.Location = new System.Drawing.Point(171, 64);
+            this.textBoxCommonShaders.Location = new System.Drawing.Point(12, 103);
             this.textBoxCommonShaders.Name = "textBoxCommonShaders";
             this.textBoxCommonShaders.ReadOnly = true;
-            this.textBoxCommonShaders.Size = new System.Drawing.Size(250, 20);
-            this.textBoxCommonShaders.TabIndex = 8;
+            this.textBoxCommonShaders.Size = new System.Drawing.Size(379, 20);
+            this.textBoxCommonShaders.TabIndex = 7;
             // 
             // labelCommonShaders
             // 
             this.labelCommonShaders.AutoSize = true;
-            this.labelCommonShaders.Location = new System.Drawing.Point(12, 67);
+            this.labelCommonShaders.Location = new System.Drawing.Point(12, 87);
             this.labelCommonShaders.Name = "labelCommonShaders";
-            this.labelCommonShaders.Size = new System.Drawing.Size(153, 13);
-            this.labelCommonShaders.TabIndex = 7;
-            this.labelCommonShaders.Text = "Directorio de shaders comunes";
+            this.labelCommonShaders.Size = new System.Drawing.Size(166, 13);
+            this.labelCommonShaders.TabIndex = 6;
+            this.labelCommonShaders.Text = "Subdirectorio de shaders básicos:";
             // 
             // labelMediaLink
             // 
             this.labelMediaLink.AutoSize = true;
-            this.labelMediaLink.Location = new System.Drawing.Point(14, 93);
+            this.labelMediaLink.Location = new System.Drawing.Point(12, 126);
             this.labelMediaLink.Name = "labelMediaLink";
-            this.labelMediaLink.Size = new System.Drawing.Size(151, 13);
-            this.labelMediaLink.TabIndex = 10;
-            this.labelMediaLink.Text = "Link de descarga de los media";
+            this.labelMediaLink.Size = new System.Drawing.Size(156, 13);
+            this.labelMediaLink.TabIndex = 9;
+            this.labelMediaLink.Text = "Enlace de descarga de medios:";
             // 
             // buttonAccept
             // 
             this.buttonAccept.AccessibleRole = System.Windows.Forms.AccessibleRole.Window;
+            this.buttonAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonAccept.Location = new System.Drawing.Point(346, 176);
+            this.buttonAccept.Location = new System.Drawing.Point(316, 5);
             this.buttonAccept.Name = "buttonAccept";
             this.buttonAccept.Size = new System.Drawing.Size(75, 23);
             this.buttonAccept.TabIndex = 12;
@@ -117,8 +123,9 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(430, 176);
+            this.buttonCancel.Location = new System.Drawing.Point(397, 5);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 13;
@@ -127,43 +134,81 @@
             // 
             // buttonShadersDirectory
             // 
-            this.buttonShadersDirectory.Location = new System.Drawing.Point(427, 36);
+            this.buttonShadersDirectory.Location = new System.Drawing.Point(397, 62);
             this.buttonShadersDirectory.Name = "buttonShadersDirectory";
             this.buttonShadersDirectory.Size = new System.Drawing.Size(75, 23);
-            this.buttonShadersDirectory.TabIndex = 6;
+            this.buttonShadersDirectory.TabIndex = 5;
             this.buttonShadersDirectory.Text = "Examinar...";
             this.buttonShadersDirectory.UseVisualStyleBackColor = true;
             this.buttonShadersDirectory.Click += new System.EventHandler(this.buttonShadersDirectory_Click);
             // 
             // buttonMediaDirectory
             // 
-            this.buttonMediaDirectory.Location = new System.Drawing.Point(427, 10);
+            this.buttonMediaDirectory.Location = new System.Drawing.Point(397, 23);
             this.buttonMediaDirectory.Name = "buttonMediaDirectory";
             this.buttonMediaDirectory.Size = new System.Drawing.Size(75, 23);
-            this.buttonMediaDirectory.TabIndex = 3;
+            this.buttonMediaDirectory.TabIndex = 2;
             this.buttonMediaDirectory.Text = "Examinar...";
             this.buttonMediaDirectory.UseVisualStyleBackColor = true;
             this.buttonMediaDirectory.Click += new System.EventHandler(this.buttonMediaDirectory_Click);
             // 
             // buttonCommonShaders
             // 
-            this.buttonCommonShaders.Location = new System.Drawing.Point(427, 62);
+            this.buttonCommonShaders.Location = new System.Drawing.Point(397, 101);
             this.buttonCommonShaders.Name = "buttonCommonShaders";
             this.buttonCommonShaders.Size = new System.Drawing.Size(75, 23);
-            this.buttonCommonShaders.TabIndex = 9;
+            this.buttonCommonShaders.TabIndex = 8;
             this.buttonCommonShaders.Text = "Examinar...";
             this.buttonCommonShaders.UseVisualStyleBackColor = true;
             this.buttonCommonShaders.Click += new System.EventHandler(this.buttonCommonShaders_Click);
             // 
-            // richTextBoxMediaLink
+            // panel1
             // 
-            this.richTextBoxMediaLink.Location = new System.Drawing.Point(171, 90);
-            this.richTextBoxMediaLink.Multiline = false;
-            this.richTextBoxMediaLink.Name = "richTextBoxMediaLink";
-            this.richTextBoxMediaLink.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBoxMediaLink.Size = new System.Drawing.Size(250, 20);
-            this.richTextBoxMediaLink.TabIndex = 11;
-            this.richTextBoxMediaLink.Text = "";
+            this.panel1.Controls.Add(this.buttonAccept);
+            this.panel1.Controls.Add(this.buttonCancel);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 171);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(484, 40);
+            this.panel1.TabIndex = 14;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.buttonMediaLink);
+            this.panel2.Controls.Add(this.textBoxMediaLink);
+            this.panel2.Controls.Add(this.labelMediaDirectory);
+            this.panel2.Controls.Add(this.labelShadersDirectory);
+            this.panel2.Controls.Add(this.textBoxShadersDirectory);
+            this.panel2.Controls.Add(this.buttonCommonShaders);
+            this.panel2.Controls.Add(this.textBoxMediaDirectory);
+            this.panel2.Controls.Add(this.buttonMediaDirectory);
+            this.panel2.Controls.Add(this.labelCommonShaders);
+            this.panel2.Controls.Add(this.buttonShadersDirectory);
+            this.panel2.Controls.Add(this.textBoxCommonShaders);
+            this.panel2.Controls.Add(this.labelMediaLink);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(484, 171);
+            this.panel2.TabIndex = 15;
+            // 
+            // buttonMediaLink
+            // 
+            this.buttonMediaLink.Location = new System.Drawing.Point(397, 140);
+            this.buttonMediaLink.Name = "buttonMediaLink";
+            this.buttonMediaLink.Size = new System.Drawing.Size(75, 23);
+            this.buttonMediaLink.TabIndex = 11;
+            this.buttonMediaLink.Text = "Cambiar";
+            this.buttonMediaLink.UseVisualStyleBackColor = true;
+            this.buttonMediaLink.Click += new System.EventHandler(this.buttonMediaLink_Click);
+            // 
+            // textBoxMediaLink
+            // 
+            this.textBoxMediaLink.Location = new System.Drawing.Point(12, 142);
+            this.textBoxMediaLink.Name = "textBoxMediaLink";
+            this.textBoxMediaLink.ReadOnly = true;
+            this.textBoxMediaLink.Size = new System.Drawing.Size(379, 20);
+            this.textBoxMediaLink.TabIndex = 10;
             // 
             // OptionForm
             // 
@@ -171,26 +216,18 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(517, 211);
-            this.Controls.Add(this.richTextBoxMediaLink);
-            this.Controls.Add(this.buttonCommonShaders);
-            this.Controls.Add(this.buttonMediaDirectory);
-            this.Controls.Add(this.buttonShadersDirectory);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonAccept);
-            this.Controls.Add(this.labelMediaLink);
-            this.Controls.Add(this.textBoxCommonShaders);
-            this.Controls.Add(this.labelCommonShaders);
-            this.Controls.Add(this.textBoxMediaDirectory);
-            this.Controls.Add(this.labelMediaDirectory);
-            this.Controls.Add(this.textBoxShadersDirectory);
-            this.Controls.Add(this.labelShadersDirectory);
+            this.ClientSize = new System.Drawing.Size(484, 211);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "OptionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Opciones";
             this.Load += new System.EventHandler(this.OptionForm_Load);
+            this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -208,6 +245,9 @@
         private System.Windows.Forms.Button buttonShadersDirectory;
         private System.Windows.Forms.Button buttonMediaDirectory;
         private System.Windows.Forms.Button buttonCommonShaders;
-        private System.Windows.Forms.RichTextBox richTextBoxMediaLink;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button buttonMediaLink;
+        private System.Windows.Forms.TextBox textBoxMediaLink;
     }
 }

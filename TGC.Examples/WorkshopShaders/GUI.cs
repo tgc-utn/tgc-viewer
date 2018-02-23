@@ -254,7 +254,7 @@ namespace TgcViewer.Utils.Gui
         }
 
         // interface
-        public void Create(String mediaDir)
+        public void Create(string mediaDir)
         {
             Reset();
             // Creo el sprite
@@ -728,14 +728,14 @@ namespace TgcViewer.Utils.Gui
         }
 
         // Inserta un item generico
-        public GUIItem InsertItem(String s, int x, int y, int dx = 0, int dy = 0)
+        public GUIItem InsertItem(string s, int x, int y, int dx = 0, int dy = 0)
         {
             // Static text = item generico
             return InsertItem(new GUIItem(this, s, x, y, dx, dy));
         }
 
         // Inserta un item imagen estatica
-        public GUIItem InsertImage(String image, int x, int y, string mediaDir)
+        public GUIItem InsertImage(string image, int x, int y, string mediaDir)
         {
             // Agrego un item generico
             GUIItem item = InsertItem(new GUIItem(this, "", x, y));
@@ -747,35 +747,35 @@ namespace TgcViewer.Utils.Gui
         }
 
         // Pop up menu item
-        public gui_menu_item InsertMenuItem(int id, String s, String imagen, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true)
+        public gui_menu_item InsertMenuItem(int id, string s, string imagen, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true)
         {
             return (gui_menu_item)InsertItem(new gui_menu_item(this, s, imagen, id, x, y, mediaDir, dx, dy, penabled));
         }
 
         // Standard push button
-        public gui_button InsertButton(int id, String s, int x, int y, int dx, int dy)
+        public gui_button InsertButton(int id, string s, int x, int y, int dx, int dy)
         {
             return (gui_button)InsertItem(new gui_button(this, s, id, x, y, dx, dy));
         }
 
         // button
-        public gui_circle_button InsertCircleButton(int id, String s, String imagen, int x, int y, string mediaDir, int r)
+        public gui_circle_button InsertCircleButton(int id, string s, string imagen, int x, int y, string mediaDir, int r)
         {
             return (gui_circle_button)InsertItem(new gui_circle_button(this, s, imagen, id, x, y, mediaDir, r));
         }
 
-        public gui_tile_button InsertTileButton(int id, String s, String imagen, int x, int y, string mediaDir, int dx, int dy, bool scrolleable = true)
+        public gui_tile_button InsertTileButton(int id, string s, string imagen, int x, int y, string mediaDir, int dx, int dy, bool scrolleable = true)
         {
             return (gui_tile_button)InsertItem(new gui_tile_button(this, s, imagen, id, x, y, mediaDir, dx, dy, scrolleable));
         }
 
         // Dialog Frame
-        public gui_frame InsertFrame(String s, int x, int y, int dx, int dy, Color c_fondo, frameBorder borde = frameBorder.rectangular)
+        public gui_frame InsertFrame(string s, int x, int y, int dx, int dy, Color c_fondo, frameBorder borde = frameBorder.rectangular)
         {
             return (gui_frame)InsertItem(new gui_frame(this, s, x, y, dx, dy, c_fondo, borde));
         }
 
-        public gui_iframe InsertIFrame(String s, int x, int y, int dx, int dy, Color c_fondo)
+        public gui_iframe InsertIFrame(string s, int x, int y, int dx, int dy, Color c_fondo)
         {
             return (gui_iframe)InsertItem(new gui_iframe(this, s, x, y, dx, dy, c_fondo));
         }
@@ -1417,13 +1417,13 @@ namespace TgcViewer.Utils.Gui
         }
 
         // Helper para cargar una textura
-        public static Texture cargar_textura(String filename, string mediaDir, bool alpha_channel = false)
+        public static Texture cargar_textura(string filename, string mediaDir, bool alpha_channel = false)
         {
             Texture textura = null;
             filename.TrimEnd();
             // cargo la textura
             Device d3dDevice = D3DDevice.Instance.Device;
-            String fname_aux = mediaDir + "WorkshopShaders\\gui\\" + filename;
+            string fname_aux = mediaDir + "WorkshopShaders\\gui\\" + filename;
             if (!File.Exists(fname_aux))
                 // Pruebo con el nombre directo
                 fname_aux = filename;

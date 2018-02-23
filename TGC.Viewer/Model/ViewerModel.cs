@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
@@ -51,7 +52,15 @@ namespace TGC.Viewer.Model
             DirectSound.InitializeD3DDevice(panel3D);
 
             //Cargar shaders del framework
-            TgcShaders.Instance.loadCommonShaders(Settings.Default.CommonShaders);
+            var commonShaders = Settings.Default.ShadersDirectory + Settings.Default.CommonShaders;
+            if (Directory.Exists(commonShaders))
+            {
+                TgcShaders.Instance.loadCommonShaders(commonShaders);
+            }
+            else
+            {
+                MessageBox.Show("Debe configurar correctamente el directorio con los shaders y reiniciar la aplicación.");
+            }
         }
 
         public void LoadExamples(TreeView treeViewExamples, FlowLayoutPanel flowLayoutPanelModifiers, DataGridView dataGridUserVars)
@@ -156,6 +165,14 @@ namespace TGC.Viewer.Model
             //Liberar Device al finalizar la aplicacion
             D3DDevice.Instance.Dispose();
             TexturesPool.Instance.clearAll();
+        }
+
+        /// <summary>
+        /// Actualiza los directorios donde estan los medios y los shaders.
+        /// </summary>
+        public void UpdateMediaAndShaderDirectories()
+        {
+            ExampleLoader.UpdateMediaAndShaderDirectories(Settings.Default.MediaDirectory, Settings.Default.ShadersDirectory);
         }
 
         internal void UpdateAspectRatio(Panel panel)

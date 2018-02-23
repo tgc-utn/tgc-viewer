@@ -19,7 +19,7 @@ namespace TGC.Viewer.UI
             this.textBoxShadersDirectory.Text = Settings.Default.ShadersDirectory;
             this.textBoxMediaDirectory.Text = Settings.Default.MediaDirectory;
             this.textBoxCommonShaders.Text = Settings.Default.CommonShaders;
-            this.richTextBoxMediaLink.Text = Settings.Default.MediaLink;
+            this.textBoxMediaLink.Text = Settings.Default.MediaLink;
             this.folderBrowserDialog = new FolderBrowserDialog();
         }
 
@@ -27,7 +27,7 @@ namespace TGC.Viewer.UI
         {
             if (this.folderBrowserDialog.ShowDialog().Equals(DialogResult.OK))
             {
-                this.textBoxShadersDirectory.Text = folderBrowserDialog.SelectedPath;
+                this.textBoxShadersDirectory.Text = folderBrowserDialog.SelectedPath + "\\";
             }
         }
 
@@ -35,7 +35,7 @@ namespace TGC.Viewer.UI
         {
             if (this.folderBrowserDialog.ShowDialog().Equals(DialogResult.OK))
             {
-                this.textBoxMediaDirectory.Text = folderBrowserDialog.SelectedPath;
+                this.textBoxMediaDirectory.Text = folderBrowserDialog.SelectedPath + "\\";
             }
         }
 
@@ -43,7 +43,7 @@ namespace TGC.Viewer.UI
         {
             if (this.folderBrowserDialog.ShowDialog().Equals(DialogResult.OK))
             {
-                this.textBoxCommonShaders.Text = folderBrowserDialog.SelectedPath;
+                this.textBoxCommonShaders.Text = folderBrowserDialog.SelectedPath + "\\";
             }
         }
 
@@ -52,8 +52,13 @@ namespace TGC.Viewer.UI
             Settings.Default.ShadersDirectory = this.textBoxShadersDirectory.Text;
             Settings.Default.MediaDirectory = this.textBoxMediaDirectory.Text;
             Settings.Default.CommonShaders = this.textBoxCommonShaders.Text;
-            Settings.Default.MediaLink = this.richTextBoxMediaLink.Text;
+            Settings.Default.MediaLink = this.textBoxMediaLink.Text;
             Settings.Default.Save();
+        }
+
+        private void buttonMediaLink_Click(object sender, EventArgs e)
+        {
+            this.textBoxMediaLink.ReadOnly = !this.textBoxMediaLink.ReadOnly;
         }
     }
 }

@@ -46,14 +46,12 @@ namespace TGC.Viewer.UI
             {
                 //Cargo los ejemplos en el arbol
                 Modelo.LoadExamples(treeViewExamples, flowLayoutPanelModifiers, dataGridUserVars);
-                var defaultExample = Modelo.ExampleLoader.GetExampleByName(settings.DefaultExampleName,
-                    settings.DefaultExampleCategory);
+                var defaultExample = Modelo.ExampleLoader.GetExampleByName(settings.DefaultExampleName, settings.DefaultExampleCategory);
                 ExecuteExample(defaultExample);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + settings.DefaultExampleName,
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + settings.DefaultExampleName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -63,9 +61,7 @@ namespace TGC.Viewer.UI
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message,
-                    "Error en RenderLoop del ejemplo: " + Modelo.ExampleLoader.CurrentExample.Name, MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, "Error en RenderLoop del ejemplo: " + Modelo.ExampleLoader.CurrentExample.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             panel3D.Focus();
@@ -103,8 +99,7 @@ namespace TGC.Viewer.UI
                 //modelo.DownloadMediaFolder();
                 Process.Start(Settings.Default.MediaLink);
                 Process.Start(Environment.CurrentDirectory);
-                MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine +
-                                Environment.NewLine + "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
+                MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine + Environment.NewLine + "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
 
                 //Fuerzo el cierre de la aplicacion.
                 Environment.Exit(0);
@@ -146,10 +141,8 @@ namespace TGC.Viewer.UI
 
         private void OpenHelp()
         {
-            var pathMedia = Environment.CurrentDirectory + "\\" + Settings.Default.MediaDirectory;
-
             //Help form
-            var helpRtf = File.ReadAllText(pathMedia + "\\help.rtf");
+            var helpRtf = File.ReadAllText(Settings.Default.MediaDirectory + "\\help.rtf");
             new EjemploDefaultHelpForm(helpRtf).ShowDialog();
         }
 
@@ -161,6 +154,7 @@ namespace TGC.Viewer.UI
         private void OpenOption()
         {
             new OptionForm().ShowDialog(this);
+            Modelo.UpdateMediaAndShaderDirectories();
         }
 
         private void Wireframe()
