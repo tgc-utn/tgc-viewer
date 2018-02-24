@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
@@ -10,7 +9,6 @@ using TGC.Core.Input;
 using TGC.Core.Shaders;
 using TGC.Core.Sound;
 using TGC.Core.Textures;
-using TGC.Viewer.Properties;
 using TGC.Viewer.UI;
 
 namespace TGC.Viewer.Model
@@ -33,10 +31,9 @@ namespace TGC.Viewer.Model
         /// </summary>
         public ExampleLoader ExampleLoader { get; private set; }
 
-        public void InitGraphics(ViewerForm form, TreeView treeViewExamples, Panel panel3D, ToolStripStatusLabel toolStripStatusCurrentExample)
+        public void InitGraphics(ViewerForm form, Panel panel3D, string pathCommonShaders)
         {
             ApplicationRunning = true;
-
             Form = form;
 
             //Inicio Device
@@ -52,27 +49,16 @@ namespace TGC.Viewer.Model
             DirectSound.InitializeD3DDevice(panel3D);
 
             //Cargar shaders del framework
-            var commonShaders = Settings.Default.ShadersDirectory + Settings.Default.CommonShaders;
-            if (Directory.Exists(commonShaders))
-            {
-                TgcShaders.Instance.loadCommonShaders(commonShaders);
-            }
-            else
-            {
-                MessageBox.Show("Debe configurar correctamente el directorio con los shaders y reiniciar la aplicación.");
-            }
+            TgcShaders.Instance.loadCommonShaders(pathCommonShaders);
         }
 
-        public void LoadExamples(TreeView treeViewExamples, FlowLayoutPanel flowLayoutPanelModifiers, DataGridView dataGridUserVars)
+        public void LoadExamples(TreeView treeViewExamples, FlowLayoutPanel flowLayoutPanelModifiers, DataGridView dataGridUserVars, string mediaDirectory, string shadersDirectory)
         {
-            //Configuracion
-            var settings = Settings.Default;
-
             //Directorio actual de ejecucion
             var currentDirectory = Environment.CurrentDirectory + "\\";
 
             //Cargo los ejemplos en el arbol
-            ExampleLoader = new ExampleLoader(settings.MediaDirectory, settings.ShadersDirectory, dataGridUserVars, flowLayoutPanelModifiers);
+            ExampleLoader = new ExampleLoader(mediaDirectory, shadersDirectory, dataGridUserVars, flowLayoutPanelModifiers);
             ExampleLoader.LoadExamplesInGui(treeViewExamples, currentDirectory);
         }
 
@@ -170,9 +156,12 @@ namespace TGC.Viewer.Model
         /// <summary>
         /// Actualiza los directorios donde estan los medios y los shaders.
         /// </summary>
-        public void UpdateMediaAndShaderDirectories()
+        public void UpdateMediaAndShaderDirectories(string mediaDirectory, string shadersDirectory)
         {
-            ExampleLoader.UpdateMediaAndShaderDirectories(Settings.Default.MediaDirectory, Settings.Default.ShadersDirectory);
+            if (ExampleLoader != null)
+            {
+                ExampleLoader.UpdateMediaAndShaderDirectories(mediaDirectory, shadersDirectory);
+            }
         }
 
         internal void UpdateAspectRatio(Panel panel)
