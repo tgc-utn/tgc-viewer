@@ -39,21 +39,29 @@ namespace TGC.Viewer.UI
 
             CheckMediaFolder();
 
+            //Generic TGC shaders
+            var commonShaders = Settings.Default.ShadersDirectory + Settings.Default.CommonShaders;
+
+            if (!Directory.Exists(commonShaders))
+            {
+                //TODO mejorar esta valicacion ya que si esta la carpeta pero no los shaders necesarios pasaria lo mismo.
+                MessageBox.Show("Debe configurar correctamente el directorio con los shaders comunes y reiniciar la aplicación.", "No se encontro la carpeta de shaders", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             //Iniciar graficos
-            Modelo.InitGraphics(this, treeViewExamples, panel3D, toolStripStatusCurrentExample);
+            Modelo.InitGraphics(this, panel3D, commonShaders);
 
             try
             {
                 //Cargo los ejemplos en el arbol
-                Modelo.LoadExamples(treeViewExamples, flowLayoutPanelModifiers, dataGridUserVars);
-                var defaultExample = Modelo.ExampleLoader.GetExampleByName(settings.DefaultExampleName,
-                    settings.DefaultExampleCategory);
+                Modelo.LoadExamples(treeViewExamples, flowLayoutPanelModifiers, dataGridUserVars, settings.MediaDirectory, settings.ShadersDirectory);
+                var defaultExample = Modelo.ExampleLoader.GetExampleByName(settings.DefaultExampleName, settings.DefaultExampleCategory);
                 ExecuteExample(defaultExample);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + settings.DefaultExampleName,
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + settings.DefaultExampleName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -61,11 +69,9 @@ namespace TGC.Viewer.UI
             {
                 Modelo.InitRenderLoop();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show(e.Message,
-                    "Error en RenderLoop del ejemplo: " + Modelo.ExampleLoader.CurrentExample.Name, MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error en RenderLoop del ejemplo: " + Modelo.ExampleLoader.CurrentExample.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             panel3D.Focus();
@@ -96,16 +102,14 @@ namespace TGC.Viewer.UI
         private void CheckMediaFolder()
         {
             //Verificamos la carpeta Media
-            var pathMedia = Environment.CurrentDirectory + "\\" + Settings.Default.MediaDirectory;
+            var pathMedia = Settings.Default.MediaDirectory;
 
             if (!Directory.Exists(pathMedia))
             {
                 //modelo.DownloadMediaFolder();
                 Process.Start(Settings.Default.MediaLink);
                 Process.Start(Environment.CurrentDirectory);
-                MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine +
-                                Environment.NewLine +
-                                "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
+                MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine + Environment.NewLine + "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
 
                 //Fuerzo el cierre de la aplicacion.
                 Environment.Exit(0);
@@ -135,7 +139,11 @@ namespace TGC.Viewer.UI
             fpsToolStripMenuItem.Checked = true;
             axisToolStripMenuItem.Checked = true;
             fullExampleToolStripMenuItem.Checked = false;
+            splitContainerIzquierda.Visible = true;
+            splitContainerDerecha.Visible = true;
+            statusStrip.Visible = true;
 
+            Modelo.UpdateAspectRatio(panel3D);
             Modelo.Wireframe(wireframeToolStripMenuItem.Checked);
             Modelo.ContadorFPS(fpsToolStripMenuItem.Checked);
             Modelo.AxisLines(axisToolStripMenuItem.Checked);
@@ -143,16 +151,20 @@ namespace TGC.Viewer.UI
 
         private void OpenHelp()
         {
-            var pathMedia = Environment.CurrentDirectory + "\\" + Settings.Default.MediaDirectory;
-
             //Help form
-            var helpRtf = File.ReadAllText(pathMedia + "\\help.rtf");
+            var helpRtf = File.ReadAllText(Settings.Default.MediaDirectory + "\\help.rtf");
             new EjemploDefaultHelpForm(helpRtf).ShowDialog();
         }
 
         private void OpenAbout()
         {
             new AboutForm().ShowDialog(this);
+        }
+
+        private void OpenOption()
+        {
+            new OptionForm().ShowDialog(this);
+            Modelo.UpdateMediaAndShaderDirectories(Settings.Default.MediaDirectory, Settings.Default.ShadersDirectory);
         }
 
         private void Wireframe()
@@ -275,6 +287,11 @@ namespace TGC.Viewer.UI
         private void helpToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             OpenHelp();
+        }
+
+        private void opcionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenOption();
         }
 
         #endregion Eventos del form

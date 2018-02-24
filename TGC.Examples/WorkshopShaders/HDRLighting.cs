@@ -382,7 +382,7 @@ namespace Examples.WorkshopShaders
             PostRender();
         }
 
-        public void renderScene(float elapsedTime, String Technique)
+        public void renderScene(float elapsedTime, string Technique)
         {
             //Dibujamos todos los meshes del escenario
             Random rnd = new Random(1);

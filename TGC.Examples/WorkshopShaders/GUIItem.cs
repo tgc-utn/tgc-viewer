@@ -13,7 +13,7 @@ namespace TgcViewer.Utils.Gui
         public int nro_item;
         public int flags;
         public Rectangle rc;
-        public String text;
+        public string text;
         public Texture textura;
         public int image_width;
         public int image_height;
@@ -68,7 +68,7 @@ namespace TgcViewer.Utils.Gui
             image_centrada = true;
         }
 
-        public GUIItem(DXGui gui, String s, int x, int y, int dx = 0, int dy = 0, int id = -1)
+        public GUIItem(DXGui gui, string s, int x, int y, int dx = 0, int dy = 0, int id = -1)
         {
             Clean();
             item_id = id;
@@ -80,7 +80,7 @@ namespace TgcViewer.Utils.Gui
             len = s.Length;
         }
 
-        public void cargar_textura(String imagen, string mediaDir)
+        public void cargar_textura(string imagen, string mediaDir)
         {
             // Cargo la imagen en el gui
             if ((textura = DXGui.cargar_textura(imagen, mediaDir, true)) != null)
@@ -207,7 +207,7 @@ namespace TgcViewer.Utils.Gui
     // menu item
     public class gui_menu_item : GUIItem
     {
-        public gui_menu_item(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true) :
+        public gui_menu_item(DXGui gui, string s, string imagen, int id, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true) :
             base(gui, s, x, y, dx, dy, id)
         {
             disabled = !penabled;
@@ -219,7 +219,7 @@ namespace TgcViewer.Utils.Gui
     // standard button
     public class gui_button : GUIItem
     {
-        public gui_button(DXGui gui, String s, int id, int x, int y, int dx = 0, int dy = 0) :
+        public gui_button(DXGui gui, string s, int id, int x, int y, int dx = 0, int dy = 0) :
             base(gui, s, x, y, dx, dy, id)
         {
             seleccionable = true;
@@ -250,7 +250,7 @@ namespace TgcViewer.Utils.Gui
 
     public class gui_color : GUIItem
     {
-        public gui_color(DXGui gui, String s, int id, int x, int y) : base(gui, s, x, y, 50, 50, id)
+        public gui_color(DXGui gui, string s, int id, int x, int y) : base(gui, s, x, y, 50, 50, id)
         {
             seleccionable = true;
         }
@@ -314,7 +314,7 @@ namespace TgcViewer.Utils.Gui
             if (foco)
             {
                 // si esta vacio, le agrego una I para que cuente bien el alto del caracter
-                String p = text;
+                string p = text;
                 if (p.Length == 0)
                     p += "I";
                 Rectangle tw = gui.font.MeasureString(gui.sprite, p, DrawTextFormat.Top | DrawTextFormat.NoClip, color);
@@ -343,7 +343,7 @@ namespace TgcViewer.Utils.Gui
     {
         public frameBorder borde;
 
-        public gui_frame(DXGui gui, String s, int x, int y, int dx, int dy, Color color, frameBorder tipo_borde = frameBorder.rectangular) :
+        public gui_frame(DXGui gui, string s, int x, int y, int dx, int dy, Color color, frameBorder tipo_borde = frameBorder.rectangular) :
             base(gui, s, x, y, dx, dy)
         {
             c_fondo = color;
@@ -414,7 +414,7 @@ namespace TgcViewer.Utils.Gui
     // Irregular frame
     public class gui_iframe : GUIItem
     {
-        public gui_iframe(DXGui gui, String s, int x, int y, int dx, int dy, Color color) :
+        public gui_iframe(DXGui gui, string s, int x, int y, int dx, int dy, Color color) :
             base(gui, s, x, y, dx, dy)
         {
             c_fondo = color;
@@ -569,7 +569,7 @@ namespace TgcViewer.Utils.Gui
         public DXGui gui;
         public bool border;
 
-        public gui_tile_button(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int dx, int dy, bool bscrolleable = true) :
+        public gui_tile_button(DXGui gui, string s, string imagen, int id, int x, int y, string mediaDir, int dx, int dy, bool bscrolleable = true) :
             base(gui, s, x, y, dx, dy, id)
         {
             seleccionable = true;
@@ -621,7 +621,7 @@ namespace TgcViewer.Utils.Gui
         public virtual void RenderText()
         {
             // dibujo el texto pp dicho
-            String buffer = text;
+            string buffer = text;
             Color color = sel ? Color.FromArgb(gui.alpha, c_selected) : Color.FromArgb(gui.alpha, c_font);
             Rectangle pos_texto = new Rectangle((int)ox + rc.Left, (int)oy + rc.Bottom + 15, rc.Width, 32);
             gui.font.DrawText(gui.sprite, buffer, pos_texto, DrawTextFormat.NoClip | DrawTextFormat.Top | DrawTextFormat.Center, sel ? Color.FromArgb(gui.alpha, 0, 32, 128) : Color.FromArgb(gui.alpha, c_font));
@@ -691,7 +691,7 @@ namespace TgcViewer.Utils.Gui
         public Color c_interior_sel = Color.FromArgb(30, 240, 40);
         public bool texto_derecha;
 
-        public gui_circle_button(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int r) :
+        public gui_circle_button(DXGui gui, string s, string imagen, int id, int x, int y, string mediaDir, int r) :
             base(gui, s, imagen, id, x, y, mediaDir, r, r)
 
         {
@@ -701,7 +701,7 @@ namespace TgcViewer.Utils.Gui
         public override void RenderText()
         {
             // dibujo el texto pp dicho
-            String buffer = text;
+            string buffer = text;
             Color color = sel ? Color.FromArgb(gui.alpha, c_selected) : Color.FromArgb(gui.alpha, c_font);
             if (texto_derecha)
             {

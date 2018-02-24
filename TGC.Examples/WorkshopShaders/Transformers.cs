@@ -17,7 +17,7 @@ namespace Examples.WorkshopShaders
     {
         public TGCVector3 pos_imagen = new TGCVector3(500, 60, 0);
 
-        public menu_item(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true) :
+        public menu_item(DXGui gui, string s, string imagen, int id, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true) :
             base(gui, s, x, y, dx, dy, id)
         {
             disabled = !penabled;
@@ -65,7 +65,7 @@ namespace Examples.WorkshopShaders
     // menu item secundario
     public class menu_item2 : GUIItem
     {
-        public menu_item2(DXGui gui, String s, String imagen, int id, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true) :
+        public menu_item2(DXGui gui, string s, string imagen, int id, int x, int y, string mediaDir, int dx = 0, int dy = 0, bool penabled = true) :
             base(gui, s, x, y, dx, dy, id)
         {
             disabled = !penabled;
@@ -148,7 +148,7 @@ namespace Examples.WorkshopShaders
     // static text
     public class static_text : GUIItem
     {
-        public static_text(DXGui gui, String s, int x, int y, int dx = 0, int dy = 0) :
+        public static_text(DXGui gui, string s, int x, int y, int dx = 0, int dy = 0) :
             base(gui, s, x, y, dx, dy, -1)
         {
             disabled = false;
