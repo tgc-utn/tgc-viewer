@@ -48,6 +48,7 @@ namespace TGC.Examples.Collision
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
         private TgcTriangle triangulo;
+        private TgcMesh trianguloMesh;
 
         public EjemploMoveSphereTriangleThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -61,8 +62,8 @@ namespace TGC.Examples.Collision
         public override void Init()
         {
             //Cargar escenario específico para este ejemplo
-            //var loader = new TgcSceneLoader();
-            //escenario = loader.loadSceneFromFile(MediaDir + "\\MeshCreator\\Scenes\\Selva\\Selva-TgcScene.xml");
+            var loader = new TgcSceneLoader();
+            escenario = loader.loadSceneFromFile(MediaDir + "\\MeshCreator\\Scenes\\Mountains\\Mountains-TgcScene.xml");
 
             triangulo = new TgcTriangle();
             triangulo.A = new TGCVector3();
@@ -73,6 +74,8 @@ namespace TGC.Examples.Collision
             triangulo.computeNormal();
             triangulo.Enabled = true;
             triangulo.updateValues();
+
+            trianguloMesh = triangulo.toMesh("trianguloA");
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -100,7 +103,7 @@ namespace TGC.Examples.Collision
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
             //Escalarlo porque es muy grande
-            personaje.Position = new TGCVector3(0, 700, 0);
+            personaje.Position = new TGCVector3(20, 900, 20);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.RotateY(Geometry.DegreeToRadian(180f));
             //escalamos el personaje porque es muy grande.
@@ -119,9 +122,11 @@ namespace TGC.Examples.Collision
             {
                 
                 //Los objetos del layer "TriangleCollision" son colisiones a nivel de triangulo
-                if (mesh.Layer == "Suelo")
+                if (mesh.Layer == "TriangleCollision")
                 {
-                    objetosColisionables.Add(TriangleMeshCollider.fromMesh(mesh));
+                    var trianguloToCollide = TriangleMeshCollider.fromMesh(mesh);
+                    trianguloToCollide.Enable = true;
+                    objetosColisionables.Add(trianguloToCollide);
                 }
                 //El resto de los objetos son colisiones de BoundingBox
                 else
@@ -129,6 +134,7 @@ namespace TGC.Examples.Collision
                     objetosColisionables.Add(BoundingBoxCollider.fromBoundingBox(mesh.BoundingBox));
                 }
             }*/
+            objetosColisionables.Add(TriangleMeshCollider.fromMesh(trianguloMesh));
 
             //Crear linea para mostrar la direccion del movimiento del personaje
             directionArrow = new TgcArrow();
@@ -369,8 +375,8 @@ namespace TGC.Examples.Collision
                 mesh.Render();
 
                 mesh.BoundingBox.Render();
-            }
-            /*
+            }*/
+            
             //Pintamos de rojo aquellos bounding boxes que colisionan
             foreach (var colisionable in objetosColisionables)
             {
@@ -381,9 +387,9 @@ namespace TGC.Examples.Collision
                     colisionable.BoundingSphere.setRenderColor( Color.Red);
                     colisionable.BoundingSphere.Render();
                 }
-            }*/
+            }
 
-            triangulo.Render();
+            trianguloMesh.Render();
 
             //Render personaje
             personaje.animateAndRender(ElapsedTime);
