@@ -104,6 +104,7 @@
     <Compile Include="Collision\SphereCollision\Collider.cs" />
     <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
     <Compile Include="Collision\SphereCollision\SphereTriangleCollisionManager.cs" />
+    <Compile Include="Collision\SphereCollision\Triangle.cs" />
     <Compile Include="Collision\SphereCollision\TriangleMeshCollider.cs" />
     <Compile Include="DirectX\DirectXBox.cs" />
     <Compile Include="DirectX\DirectXLight.cs" />

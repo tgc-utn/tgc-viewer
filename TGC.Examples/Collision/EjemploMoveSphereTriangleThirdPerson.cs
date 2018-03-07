@@ -103,7 +103,7 @@ namespace TGC.Examples.Collision
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
             //Escalarlo porque es muy grande
-            personaje.Position = new TGCVector3(20, 900, 20);
+            personaje.Position = new TGCVector3(20, 1500, 20);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.RotateY(Geometry.DegreeToRadian(180f));
             //escalamos el personaje porque es muy grande.
@@ -117,23 +117,21 @@ namespace TGC.Examples.Collision
 
             //Almacenar volumenes de colision del escenario
             objetosColisionables.Clear();
-            /*
+            
             foreach (var mesh in escenario.Meshes)
             {
                 
                 //Los objetos del layer "TriangleCollision" son colisiones a nivel de triangulo
                 if (mesh.Layer == "TriangleCollision")
                 {
-                    var trianguloToCollide = TriangleMeshCollider.fromMesh(mesh);
-                    trianguloToCollide.Enable = true;
-                    objetosColisionables.Add(trianguloToCollide);
+                    objetosColisionables.Add(TriangleMeshCollider.fromMesh(mesh));
                 }
                 //El resto de los objetos son colisiones de BoundingBox
                 else
                 {
                     objetosColisionables.Add(BoundingBoxCollider.fromBoundingBox(mesh.BoundingBox));
                 }
-            }*/
+            }
             objetosColisionables.Add(TriangleMeshCollider.fromMesh(trianguloMesh));
 
             //Crear linea para mostrar la direccion del movimiento del personaje
@@ -176,7 +174,7 @@ namespace TGC.Examples.Collision
             skyBox.Init();
 
             //Modifier para ver BoundingBox
-            Modifiers.addBoolean("Collisions", "Collisions", true);
+            Modifiers.addBoolean("Collisions", "Collisions", false);
             Modifiers.addBoolean("showBoundingBox", "Bouding Box", true);
 
             //Modifiers para desplazamiento del personaje
@@ -368,14 +366,14 @@ namespace TGC.Examples.Collision
                 collisionPoint.Render();
             }
 
-            /*
+            
             //Render de mallas
             foreach (var mesh in escenario.Meshes)
             {
                 mesh.Render();
 
                 mesh.BoundingBox.Render();
-            }*/
+            }
             
             //Pintamos de rojo aquellos bounding boxes que colisionan
             foreach (var colisionable in objetosColisionables)

@@ -43,6 +43,8 @@ namespace TGC.Examples.Collision.SphereCollision
             //Crear BoundingSphere
             collider.BoundingSphere = TgcBoundingSphere.computeFromMesh(mesh);
 
+            collider.Enable = true;
+            
             return collider;
         }
 
@@ -262,50 +264,6 @@ namespace TGC.Examples.Collision.SphereCollision
 
             // Segment intersects cylinder between the endcaps; t is correct
             return true;
-        }
-
-        /// <summary>
-        ///     Triangulo del Collider
-        /// </summary>
-        public class Triangle
-        {
-            /// <summary>
-            ///     Crear triangulo.
-            ///     Calcula su plano y BoundingSphere
-            /// </summary>
-            public Triangle(TGCVector3 a, TGCVector3 b, TGCVector3 c)
-            {
-                A = a;
-                B = b;
-                C = c;
-                Plane = TGCPlane.FromPoints(a, b, c);
-                BoundingSphere = TgcBoundingSphere.computeFromPoints(new[] { a, b, c }).toClass();
-            }
-
-            /// <summary>
-            ///     Vertice A
-            /// </summary>
-            public TGCVector3 A { get; set; }
-
-            /// <summary>
-            ///     Vertice B
-            /// </summary>
-            public TGCVector3 B { get; set; }
-
-            /// <summary>
-            ///     Vertice C
-            /// </summary>
-            public TGCVector3 C { get; set; }
-
-            /// <summary>
-            ///     Ecuacion del plano del triangulo
-            /// </summary>
-            public TGCPlane Plane { get; set; }
-
-            /// <summary>
-            ///     BoundingSphere
-            /// </summary>
-            public TgcBoundingSphere BoundingSphere { get; set; }
         }
     }
 }
