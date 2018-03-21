@@ -40,9 +40,9 @@ namespace TGC.Examples.GeometryBasics
             //No recomendamos utilizar AutoTransformEnable, con juegos complejos se pierde el control.
             sphere.AutoTransform = true;
             currentTexture = null;
-            
+
             //Modifiers para vararis sus parametros
-            Modifiers.addEnum("base", typeof(TGCSphere.eBasePoly), TGCSphere.eBasePoly.CUBE);
+            Modifiers.addEnum("base", typeof(TGCSphere.eBasePoly), TGCSphere.eBasePoly.ICOSAHEDRON);
             Modifiers.addBoolean("inflate", "yes", true);
             Modifiers.addInterval("level of detail", new object[] { 0, 1, 2, 3, 4 }, 2);
             Modifiers.addBoolean("edges", "show", false);
@@ -56,7 +56,7 @@ namespace TGC.Examples.GeometryBasics
 
             Modifiers.addColor("color", Color.White);
             Modifiers.addBoolean("boundingsphere", "show", false);
-            
+
             UserVars.addVar("Vertices");
             UserVars.addVar("Triangulos");
 
@@ -79,7 +79,7 @@ namespace TGC.Examples.GeometryBasics
             sphere.RenderEdges = (bool)Modifiers["edges"];
             sphere.Inflate = (bool)Modifiers["inflate"];
             sphere.BasePoly = (TGCSphere.eBasePoly)Modifiers.getValue("base");
-            
+
             if (bTexture)
             {
                 //Cambiar textura
@@ -99,7 +99,7 @@ namespace TGC.Examples.GeometryBasics
             sphere.Radius = (float)Modifiers["radius"];
             sphere.Position = (TGCVector3)Modifiers["position"];
             sphere.LevelOfDetail = (int)Modifiers["level of detail"];
-            
+
             //Rotación, converitr a radianes
             var rotation = (TGCVector3)Modifiers["rotation"];
             sphere.Rotation = new TGCVector3(Geometry.DegreeToRadian(rotation.X), Geometry.DegreeToRadian(rotation.Y), Geometry.DegreeToRadian(rotation.Z));
@@ -109,7 +109,7 @@ namespace TGC.Examples.GeometryBasics
 
             //Tiling de textura
             sphere.UVTiling = (TGCVector2)Modifiers["tiling"];
-            
+
             //Actualizar valores en la caja.
             sphere.updateValues();
         }
@@ -120,10 +120,10 @@ namespace TGC.Examples.GeometryBasics
 
             //Actualizar parametros de la caja
             updateSphere();
-           
+
             UserVars.setValue("Vertices", sphere.VertexCount);
             UserVars.setValue("Triangulos", sphere.TriangleCount);
-            
+
             //Renderizar caja
             sphere.Render();
 
