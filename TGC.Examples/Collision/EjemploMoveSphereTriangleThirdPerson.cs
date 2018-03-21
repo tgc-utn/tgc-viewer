@@ -35,7 +35,6 @@ namespace TGC.Examples.Collision
     public class EjemploMoveSphereTriangleThirdPerson : TGCExampleViewer
     {
         private readonly List<Collider> objetosColisionables = new List<Collider>();
-        private List<TgcBoundingAxisAlignBox> cajas = new List<TgcBoundingAxisAlignBox>();
         private TgcThirdPersonCamera camaraInterna;
         private TgcBoundingSphere characterSphere;
         private SphereTriangleCollisionManager collisionManager;
@@ -47,8 +46,6 @@ namespace TGC.Examples.Collision
         private float jumpingElapsedTime;
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
-        private TgcTriangle triangulo;
-        private TgcMesh trianguloMesh;
 
         public EjemploMoveSphereTriangleThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
             : base(mediaDir, shadersDir, userVars, modifiers)
@@ -64,18 +61,6 @@ namespace TGC.Examples.Collision
             //Cargar escenario específico para este ejemplo
             var loader = new TgcSceneLoader();
             escenario = loader.loadSceneFromFile(MediaDir + "\\MeshCreator\\Scenes\\Mountains\\Mountains-TgcScene.xml");
-
-            triangulo = new TgcTriangle();
-            triangulo.A = new TGCVector3();
-            triangulo.B = new TGCVector3(50,0,0);
-            triangulo.C = new TGCVector3(0,0,50);
-            triangulo.Color = Color.Red;
-            triangulo.computeCenter();
-            triangulo.computeNormal();
-            triangulo.Enabled = true;
-            triangulo.updateValues();
-
-            trianguloMesh = triangulo.toMesh("trianguloA");
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -103,7 +88,7 @@ namespace TGC.Examples.Collision
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
             //Escalarlo porque es muy grande
-            personaje.Position = new TGCVector3(20, 1500, 20);
+            personaje.Position = new TGCVector3(0, 2500, -150);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.RotateY(Geometry.DegreeToRadian(180f));
             //escalamos el personaje porque es muy grande.
@@ -117,10 +102,8 @@ namespace TGC.Examples.Collision
 
             //Almacenar volumenes de colision del escenario
             objetosColisionables.Clear();
-            
             foreach (var mesh in escenario.Meshes)
             {
-                
                 //Los objetos del layer "TriangleCollision" son colisiones a nivel de triangulo
                 if (mesh.Layer == "TriangleCollision")
                 {
@@ -132,7 +115,6 @@ namespace TGC.Examples.Collision
                     objetosColisionables.Add(BoundingBoxCollider.fromBoundingBox(mesh.BoundingBox));
                 }
             }
-            objetosColisionables.Add(TriangleMeshCollider.fromMesh(trianguloMesh));
 
             //Crear linea para mostrar la direccion del movimiento del personaje
             directionArrow = new TgcArrow();
@@ -174,7 +156,7 @@ namespace TGC.Examples.Collision
             skyBox.Init();
 
             //Modifier para ver BoundingBox
-            Modifiers.addBoolean("Collisions", "Collisions", false);
+            Modifiers.addBoolean("Collisions", "Collisions", true);
             Modifiers.addBoolean("showBoundingBox", "Bouding Box", true);
 
             //Modifiers para desplazamiento del personaje
@@ -366,28 +348,11 @@ namespace TGC.Examples.Collision
                 collisionPoint.Render();
             }
 
-            
             //Render de mallas
             foreach (var mesh in escenario.Meshes)
             {
                 mesh.Render();
-
-                mesh.BoundingBox.Render();
             }
-            
-            //Pintamos de rojo aquellos bounding boxes que colisionan
-            foreach (var colisionable in objetosColisionables)
-            {
-                colisionable.BoundingSphere.setRenderColor(Color.Yellow);
-                //colisionable.setRenderColor(Color.Yellow);
-                if (Core.Collision.TgcCollisionUtils.testSphereSphere(characterSphere, colisionable.BoundingSphere))
-                {
-                    colisionable.BoundingSphere.setRenderColor( Color.Red);
-                    colisionable.BoundingSphere.Render();
-                }
-            }
-
-            trianguloMesh.Render();
 
             //Render personaje
             personaje.animateAndRender(ElapsedTime);
@@ -407,7 +372,7 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            //escenario.DisposeAll();
+            escenario.DisposeAll();
             personaje.Dispose();
             skyBox.Dispose();
             collisionNormalArrow.Dispose();

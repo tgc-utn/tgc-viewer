@@ -631,7 +631,7 @@ namespace TGC.Core.Geometry
             //transformacion
             if (AutoTransform)
             {
-                Transform = TGCMatrix.Scaling(radius, radius, radius) * TGCMatrix.Scaling(Scale) *
+                Transform = TGCMatrix.Scaling(radius, radius, radius) *
                             TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *
                             TGCMatrix.Translation(translation);
             }
