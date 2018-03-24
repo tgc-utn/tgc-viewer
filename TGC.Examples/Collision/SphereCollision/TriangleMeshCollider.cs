@@ -244,7 +244,6 @@ namespace TGC.Examples.Collision.SphereCollision
             if (t < 0.0f || t > 1.0f) return false; // Intersection lies outside segment
 
             /* No chequear EndCaps
-
             if (md + t * nd < 0.0f) {
                 // Intersection outside cylinder on 'p' side
                 if (nd <= 0.0f) return false; // Segment pointing away from endcap
