@@ -3,23 +3,25 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
 {
     public class NightVision : TGCExampleViewer
     {
-        private readonly int[] bot_status = new int[100];
+        private TGCBooleanModifier activarEfectoModifier;
 
+        private readonly int[] bot_status = new int[100];
         private readonly int cant_balas = 100;
         private readonly int cant_pasadas = 3;
         private readonly List<TgcSkeletalMesh> enemigos = new List<TgcSkeletalMesh>();
@@ -37,8 +39,8 @@ namespace TGC.Examples.ShadersExamples
         private TGCVector3[] pos_bala;
         private float[] timer_firing;
 
-        public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "NightVision";
@@ -56,17 +58,13 @@ namespace TGC.Examples.ShadersExamples
             //TgcScene scene = loader.loadSceneFromFile(this.MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
             var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Selva\\Selva-TgcScene.xml");
             meshes = scene.Meshes;
-            var scene2 =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pasto\\Pasto-TgcScene.xml");
+            var scene2 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pasto\\Pasto-TgcScene.xml");
             pasto = scene2.Meshes[0];
             pasto.AutoTransform = true;
-            var scene3 =
-                loader.loadSceneFromFile(MediaDir +
-                                         "MeshCreator\\Meshes\\Vegetacion\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml");
+            var scene3 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml");
             arbol = scene3.Meshes[0];
             arbol.AutoTransform = true;
-            var scene4 =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Arbusto2\\Arbusto2-TgcScene.xml");
+            var scene4 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Arbusto2\\Arbusto2-TgcScene.xml");
             arbusto = scene4.Meshes[0];
             arbusto.AutoTransform = true;
 
@@ -94,8 +92,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(D3DDevice.Instance.Device, MyShaderDir + "GaussianBlur.fx",
-                null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
+            effect = Effect.FromFile(D3DDevice.Instance.Device, MyShaderDir + "GaussianBlur.fx", null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
             {
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
@@ -106,25 +103,20 @@ namespace TGC.Examples.ShadersExamples
             //Camara en primera personas
             Camara = new TgcFpsCamera(new TGCVector3(-1000, 250, -1000), 1000f, 600f, Input);
 
-            g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
-                d3dDevice.PresentationParameters.BackBufferHeight,
+            g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight,
                 DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             // inicializo el render target
-            g_pRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            g_pRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
-            g_pGlowMap = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            g_pGlowMap = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
-            g_pRenderTarget4 = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
-                , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
+            g_pRenderTarget4 = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4, d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
-            g_pRenderTarget4Aux = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
-                , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
+            g_pRenderTarget4Aux = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4, d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
             effect.SetValue("g_RenderTarget", g_pRenderTarget);
@@ -141,12 +133,10 @@ namespace TGC.Examples.ShadersExamples
                 new CustomVertex.PositionTextured(1, -1, 1, 1, 1)
             };
             //vertex buffer de los triangulos
-            g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured),
-                4, d3dDevice, Usage.Dynamic | Usage.WriteOnly,
-                CustomVertex.PositionTextured.Format, Pool.Default);
+            g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured), 4, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
-            Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
+            activarEfectoModifier = AddBoolean("activar_efecto", "Activar efecto", true);
 
             timer_firing = new float[100];
             pos_bala = new TGCVector3[100];
@@ -274,7 +264,7 @@ namespace TGC.Examples.ShadersExamples
         {
             ClearTextures();
 
-            if ((bool)Modifiers["activar_efecto"])
+            if (activarEfectoModifier.Value)
                 renderConEfectos(ElapsedTime);
             else
                 renderSinEfectos(ElapsedTime);

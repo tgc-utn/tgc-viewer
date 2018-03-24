@@ -1,15 +1,16 @@
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -19,6 +20,11 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploBoundingCylinder : TGCExampleViewer
     {
+        private TGCBooleanModifier fixedYModifier;
+        private TGCBooleanModifier showBoundingBoxModifier;
+        private TGCVertex2fModifier sizeModifier;
+        private TGCVertex3fModifier rotationModifier;
+
         private const float PICKING_TIME = 0.5f;
         private readonly Color collisionColor = Color.Red;
 
@@ -34,8 +40,8 @@ namespace TGC.Examples.Collision
         private TgcThirdPersonCamera camaraInterna;
         private TgcSkeletalMesh personaje;
 
-        public EjemploBoundingCylinder(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploBoundingCylinder(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Collision";
             Name = "Bounding Cylinder Tests";
@@ -81,13 +87,12 @@ namespace TGC.Examples.Collision
             collisionableCylinder = new TgcBoundingCylinderFixedY(new TGCVector3(-6, 0, 0), 2, 2);
             collisionableSphere = new TgcBoundingSphere(new TGCVector3(-3, 0, 10), 3);
 
-            Modifiers.addBoolean("fixedY", "use fixed Y", true);
+            fixedYModifier = AddBoolean("fixedY", "use fixed Y", true);
             //Modifier para ver BoundingBox del personaje
-            Modifiers.addBoolean("showBoundingBox", "Personaje Bouding Box", false);
-            Modifiers.addVertex2f("size", TGCVector2.One, new TGCVector2(5, 10), new TGCVector2(2, 5));
+            showBoundingBoxModifier = AddBoolean("showBoundingBox", "Personaje Bouding Box", false);
+            sizeModifier = AddVertex2f("size", TGCVector2.One, new TGCVector2(5, 10), new TGCVector2(2, 5));
             var angle = FastMath.TWO_PI;
-            Modifiers.addVertex3f("rotation", new TGCVector3(-angle, -angle, -angle), new TGCVector3(angle, angle, angle),
-                new TGCVector3(FastMath.TWO_PI / 8, 0, FastMath.TWO_PI / 8));
+            rotationModifier = AddVertex3f("rotation", new TGCVector3(-angle, -angle, -angle), new TGCVector3(angle, angle, angle), new TGCVector3(FastMath.TWO_PI / 8, 0, FastMath.TWO_PI / 8));
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 25, -45);
@@ -147,8 +152,8 @@ namespace TGC.Examples.Collision
                 personaje.playAnimation("Parado", true);
             }
 
-            var size = (TGCVector2)Modifiers.getValue("size");
-            var rotation = (TGCVector3)Modifiers.getValue("rotation");
+            var size = sizeModifier.Value;
+            var rotation = rotationModifier.Value;
             //Se tienen dos coliders, un cilindro con rotacion y otro orientado al eje Y.
             colliderCylinder.Rotation = rotation;
             colliderCylinder.Radius = size.X;
@@ -161,7 +166,7 @@ namespace TGC.Examples.Collision
             //Un cilindro orientado es facil de actualizar.
             colliderCylinderFixedY.updateValues();
 
-            if ((bool)Modifiers["fixedY"])
+            if (fixedYModifier.Value)
             {
                 //Test de colisiones del cilindro orientado en Y, al ser mucho mas simple tiene mas test soportados por el framework.
                 if (TgcCollisionUtils.testSphereCylinder(collisionableSphere, colliderCylinderFixedY))
@@ -227,7 +232,7 @@ namespace TGC.Examples.Collision
 
             //Bounding volumes.
             //Los bounding volumes realizan un update de los vertices en momento de render, por ello pueden ser mas lentos que utilizar transformadas.
-            if ((bool)Modifiers["fixedY"])
+            if (fixedYModifier.Value)
                 colliderCylinderFixedY.Render();
             else
                 colliderCylinder.Render();
@@ -238,7 +243,7 @@ namespace TGC.Examples.Collision
                             * TGCMatrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z)
                             * TGCMatrix.Translation(personaje.Position);
             personaje.animateAndRender(ElapsedTime);
-            if ((bool)Modifiers["showBoundingBox"])
+            if (fixedYModifier.Value)
             {
                 personaje.BoundingBox.Render();
             }

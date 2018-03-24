@@ -58,6 +58,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -159,57 +160,6 @@
     <Compile Include="Textures\TexturesPool.cs" />
     <Compile Include="Textures\TgcTexture.cs" />
     <Compile Include="TgcAxisLines.cs" />
-    <Compile Include="UserControls\Modifier\TgcBooleanModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcButtonModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcColorModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcEnumModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcFileModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcFloatModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcIntervalModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcIntModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcMeshBrowser.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserControls\Modifier\TgcMeshBrowser.Designer.cs">
-      <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Modifier\TgcModifierPanel.cs" />
-    <Compile Include="UserControls\Modifier\TgcModifiers.cs" />
-    <Compile Include="UserControls\Modifier\TgcTextureBrowser.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserControls\Modifier\TgcTextureBrowser.Designer.cs">
-      <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Modifier\TgcTextureModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcVertex2fModifier.cs" />
-    <Compile Include="UserControls\Modifier\TgcVertex3fModifier.cs" />
-    <Compile Include="UserControls\Networking\TgcLanBrowser.cs" />
-    <Compile Include="UserControls\Networking\TgcNetworkingModifier.cs" />
-    <Compile Include="UserControls\Networking\TgcNetworkingModifierClientsDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserControls\Networking\TgcNetworkingModifierClientsDialog.Designer.cs">
-      <DependentUpon>TgcNetworkingModifierClientsDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Networking\TgcNetworkingModifierControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\Networking\TgcNetworkingModifierControl.Designer.cs">
-      <DependentUpon>TgcNetworkingModifierControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Networking\TgcNetworkingModifierServersDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserControls\Networking\TgcNetworkingModifierServersDialog.Designer.cs">
-      <DependentUpon>TgcNetworkingModifierServersDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\Networking\TgcSocketClient.cs" />
-    <Compile Include="UserControls\Networking\TgcSocketClientInfo.cs" />
-    <Compile Include="UserControls\Networking\TgcSocketMessages.cs" />
-    <Compile Include="UserControls\Networking\TgcSocketServer.cs" />
-    <Compile Include="UserControls\Networking\TgcSocketServerInfo.cs" />
-    <Compile Include="UserControls\TgcUserVars.cs" />
     <Compile Include="Mathematica\FastMath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\TgcParserUtils.cs" />
@@ -217,28 +167,6 @@
     <Compile Include="Collision\TgcPickingRay.cs" />
     <Compile Include="Collision\TgcRay.cs" />
     <Compile Include="Geometry\TGCGeometry.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UserControls\Modifier\TgcMeshBrowser.resx">
-      <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\Modifier\TgcTextureBrowser.resx">
-      <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\Networking\TgcNetworkingModifierClientsDialog.resx">
-      <DependentUpon>TgcNetworkingModifierClientsDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\Networking\TgcNetworkingModifierControl.resx">
-      <DependentUpon>TgcNetworkingModifierControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\Networking\TgcNetworkingModifierServersDialog.resx">
-      <DependentUpon>TgcNetworkingModifierServersDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

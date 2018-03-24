@@ -1,13 +1,13 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace Examples.WorkshopShaders
 {
@@ -28,7 +28,8 @@ namespace Examples.WorkshopShaders
         private TgcMesh mesh;
         private float time;
 
-        public BasicShader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public BasicShader(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Shaders";
             Name = "Workshop-BasicShader";

@@ -1,11 +1,12 @@
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 using TGC.Core.Sound;
 using TGC.Core.Text;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Sound
 {
@@ -18,13 +19,15 @@ namespace TGC.Examples.Sound
     /// </summary>
     public class PlayMp3 : TGCExampleViewer
     {
-        private string currentFile;
-        private TgcText2D currentMusicText;
-        private TgcText2D instruccionesText;
         private TgcMp3Player mp3Player;
 
-        public PlayMp3(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        private string currentFile;
+        private TGCFileModifier mp3FileModifier;
+        private TgcText2D currentMusicText;
+        private TgcText2D instruccionesText;
+
+        public PlayMp3(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Sound";
             Name = "Play Mp3";
@@ -49,7 +52,7 @@ namespace TGC.Examples.Sound
 
             //Modifier para archivo MP3
             currentFile = null;
-            Modifiers.addFile("MP3-File", MediaDir + "Music\\I am The Money.mp3", "MP3s|*.mp3");
+            mp3FileModifier = AddFile("MP3-File", MediaDir + "Music\\I am The Money.mp3", "MP3s|*.mp3");
 
             mp3Player = new TgcMp3Player();
         }
@@ -82,7 +85,7 @@ namespace TGC.Examples.Sound
             PreRender();
 
             //Ver si cambio el MP3
-            var filePath = (string)Modifiers["MP3-File"];
+            var filePath = mp3FileModifier.Value;
             loadMp3(filePath);
 
             //Contro del reproductor por teclado

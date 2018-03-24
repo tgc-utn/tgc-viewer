@@ -1,12 +1,13 @@
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -17,16 +18,24 @@ namespace TGC.Examples.GeometryBasics
     /// </summary>
     public class EjemploCilindro : TGCExampleViewer
     {
+        private TGCBooleanModifier boundingCylinderModifier;
+        private TGCColorModifier colorModifier;
+        private TGCIntModifier alphaModifier;
+        private TGCTextureModifier textureModifier;
+        private TGCBooleanModifier useTextureModifier;
+        private TGCVertex3fModifier sizeModifier;
+        private TGCVertex3fModifier positionModifier;
+        private TGCVertex3fModifier rotationModifier;
+
         private string currentTexture;
         private TgcCylinder cylinder;
 
-        public EjemploCilindro(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploCilindro(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Geometry Basics";
             Name = "Cilindro";
-            Description =
-                "Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parametros pueden ser modificados. Movimiento con mouse.";
+            Description = "Muestra como crear un cilindro 3D con la herramienta TgcCylinder, cuyos parametros pueden ser modificados. Movimiento con mouse.";
         }
 
         public override void Init()
@@ -36,17 +45,16 @@ namespace TGC.Examples.GeometryBasics
 
             cylinder.AlphaBlendEnable = true;
 
-            Modifiers.addBoolean("boundingCylinder", "boundingCylinder", false);
-            Modifiers.addColor("color", Color.White);
-            Modifiers.addInt("alpha", 0, 255, 255);
-            Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
-            Modifiers.addBoolean("useTexture", "useTexture", true);
+            boundingCylinderModifier = AddBoolean("boundingCylinder", "boundingCylinder", false);
+            colorModifier = AddColor("color", Color.White);
+            alphaModifier = AddInt("alpha", 0, 255, 255);
+            textureModifier = AddTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
+            useTextureModifier = AddBoolean("useTexture", "useTexture", true);
 
-            Modifiers.addVertex3f("size", new TGCVector3(-3, -3, 1), new TGCVector3(7, 7, 10), new TGCVector3(2, 2, 5));
-            Modifiers.addVertex3f("position", new TGCVector3(-20, -20, -20), new TGCVector3(20, 20, 20), TGCVector3.Empty);
+            sizeModifier = AddVertex3f("size", new TGCVector3(-3, -3, 1), new TGCVector3(7, 7, 10), new TGCVector3(2, 2, 5));
+            positionModifier = AddVertex3f("position", new TGCVector3(-20, -20, -20), new TGCVector3(20, 20, 20), TGCVector3.Empty);
             var angle = FastMath.TWO_PI;
-            Modifiers.addVertex3f("rotation", new TGCVector3(-angle, -angle, -angle), new TGCVector3(angle, angle, angle),
-                TGCVector3.Empty);
+            rotationModifier = AddVertex3f("rotation", new TGCVector3(-angle, -angle, -angle), new TGCVector3(angle, angle, angle), TGCVector3.Empty);
 
             Camara = new TgcRotationalCamera(Input);
         }
@@ -61,19 +69,18 @@ namespace TGC.Examples.GeometryBasics
         {
             PreRender();
 
-            var modifiers = Modifiers;
-            var size = (TGCVector3)modifiers.getValue("size");
-            var position = (TGCVector3)modifiers.getValue("position");
-            var rotation = (TGCVector3)modifiers.getValue("rotation");
+            var size = sizeModifier.Value;
+            var position = positionModifier.Value;
+            var rotation = rotationModifier.Value;
 
-            var texturePath = (string)modifiers.getValue("texture");
+            var texturePath = textureModifier.Value;
             if (texturePath != currentTexture)
             {
                 currentTexture = texturePath;
                 cylinder.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
-            cylinder.UseTexture = (bool)modifiers.getValue("useTexture");
+            cylinder.UseTexture = useTextureModifier.Value;
 
             cylinder.Position = position;
             cylinder.Rotation = rotation;
@@ -81,13 +88,13 @@ namespace TGC.Examples.GeometryBasics
             cylinder.BottomRadius = size.Y;
             cylinder.Length = size.Z;
 
-            var alpha = (int)modifiers.getValue("alpha");
-            var color = (Color)modifiers.getValue("color");
+            var alpha = alphaModifier.Value;
+            var color = colorModifier.Value;
             cylinder.Color = Color.FromArgb(alpha, color);
 
             cylinder.updateValues();
 
-            if ((bool)modifiers.getValue("boundingCylinder"))
+            if (boundingCylinderModifier.Value)
                 cylinder.BoundingCylinder.Render();
             else
                 cylinder.Render();

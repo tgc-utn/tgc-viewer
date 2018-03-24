@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Optimization.GrillaRegular
 {
@@ -19,18 +20,20 @@ namespace TGC.Examples.Optimization.GrillaRegular
     /// </summary>
     public class EjemploGrillaRegular : TGCExampleViewer
     {
+        private TGCBooleanModifier showGridModifier;
+        private TGCBooleanModifier showTerrainModifier;
+
         private GrillaRegular grilla;
         private List<TgcMesh> objetosIsla;
         private TgcSkyBox skyBox;
         private TgcMesh terreno;
 
-        public EjemploGrillaRegular(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploGrillaRegular(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Optimization";
             Name = "GrillaRegular";
-            Description =
-                "Muestra como crear y utilizar una Grilla Regular para optimizar el renderizado de un escenario por Frustum Culling.";
+            Description = "Muestra como crear y utilizar una Grilla Regular para optimizar el renderizado de un escenario por Frustum Culling.";
         }
 
         public override void Init()
@@ -50,8 +53,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
 
             //Cargar escenario de Isla
             var loader = new TgcSceneLoader();
-            var scene =
-                loader.loadSceneFromFile(MediaDir + "Isla\\Isla-TgcScene.xml");
+            var scene = loader.loadSceneFromFile(MediaDir + "Isla\\Isla-TgcScene.xml");
 
             //Separar el Terreno del resto de los objetos
             var list1 = new List<TgcMesh>();
@@ -66,8 +68,8 @@ namespace TGC.Examples.Optimization.GrillaRegular
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
-            Modifiers.addBoolean("showGrid", "Show Grid", false);
-            Modifiers.addBoolean("showTerrain", "Show Terrain", true);
+            showGridModifier = AddBoolean("showGrid", "Show Grid", false);
+            showTerrainModifier = AddBoolean("showTerrain", "Show Terrain", true);
         }
 
         public override void Update()
@@ -80,8 +82,8 @@ namespace TGC.Examples.Optimization.GrillaRegular
         {
             PreRender();
 
-            var showGrid = (bool)Modifiers["showGrid"];
-            var showTerrain = (bool)Modifiers["showTerrain"];
+            var showGrid = showGridModifier.Value;
+            var showTerrain = showTerrainModifier.Value;
 
             skyBox.Render();
             if (showTerrain)

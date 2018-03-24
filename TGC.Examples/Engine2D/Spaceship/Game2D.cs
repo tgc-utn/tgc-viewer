@@ -1,6 +1,6 @@
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
+using System.Windows.Forms;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Engine2D.Spaceship
 {
@@ -17,8 +17,8 @@ namespace TGC.Examples.Engine2D.Spaceship
     {
         private GameManager gameManager;
 
-        public Game2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public Game2D(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "2D";
             Name = "Game 2D";

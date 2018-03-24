@@ -1,15 +1,16 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Fog;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Terrain;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.PostProcess
 {
@@ -26,9 +27,14 @@ namespace TGC.Examples.PostProcess
         private TgcFog fog;
         private TgcScene scene;
         private TgcSkyBox skyBox;
+        private TGCBooleanModifier fogShaderModifier;
+        private TGCFloatModifier startDistanceModifier;
+        private TGCFloatModifier endDistanceModifier;
+        private TGCFloatModifier densityModifier;
+        private TGCColorModifier colorModifier;
 
-        public EfectoNiebla(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EfectoNiebla(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel Shaders";
             Name = "Efecto Niebla";
@@ -61,11 +67,11 @@ namespace TGC.Examples.PostProcess
             Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
             //Modifiers para configurar valores de niebla
-            Modifiers.addBoolean("FogShader", "FogShader", true);
-            Modifiers.addFloat("startDistance", 1, 10000, 2000);
-            Modifiers.addFloat("endDistance", 1, 10000, 5000);
-            Modifiers.addFloat("density", 0, 1, 0.0025f);
-            Modifiers.addColor("color", Color.LightGray);
+            fogShaderModifier = AddBoolean("FogShader", "FogShader", true);
+            startDistanceModifier = AddFloat("startDistance", 1, 10000, 2000);
+            endDistanceModifier = AddFloat("endDistance", 1, 10000, 5000);
+            densityModifier = AddFloat("density", 0, 1, 0.0025f);
+            colorModifier = AddColor("color", Color.LightGray);
 
             fog = new TgcFog();
         }
@@ -83,12 +89,12 @@ namespace TGC.Examples.PostProcess
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Cargar valores de niebla
-            var fogShader = (bool)Modifiers["FogShader"];
-            fog.Enabled = !(bool)Modifiers["FogShader"];
-            fog.StartDistance = (float)Modifiers["startDistance"];
-            fog.EndDistance = (float)Modifiers["endDistance"];
-            fog.Density = (float)Modifiers["density"];
-            fog.Color = (Color)Modifiers["color"];
+            var fogShader = fogShaderModifier.Value;
+            fog.Enabled = !fogShaderModifier.Value;
+            fog.StartDistance = startDistanceModifier.Value;
+            fog.EndDistance = endDistanceModifier.Value;
+            fog.Density = densityModifier.Value;
+            fog.Color = colorModifier.Value;
 
             if (fog.Enabled)
             {

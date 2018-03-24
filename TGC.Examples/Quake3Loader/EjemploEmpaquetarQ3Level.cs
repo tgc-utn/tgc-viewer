@@ -1,9 +1,9 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -19,10 +19,13 @@ namespace TGC.Examples.Quake3Loader
     /// </summary>
     public class EjemploEmpaquetarQ3Level : TGCExampleViewer
     {
+        private TGCFileModifier openFileModifier;
+
         private string currentFile;
         private string quake3MediaPath;
 
-        public EjemploEmpaquetarQ3Level(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploEmpaquetarQ3Level(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             this.Category = "Quake3";
             this.Name = "Pack level";
@@ -36,7 +39,7 @@ namespace TGC.Examples.Quake3Loader
 
             //Modifier para abrir archivo
             currentFile = "C:\\Program Files\\Quake III Arena\\baseq3\\maps\\prueba.bsp";
-            this.Modifiers.addFile("BspFile", currentFile, ".Niveles Quake 3|*.bsp");
+            openFileModifier = AddFile("BspFile", currentFile, ".Niveles Quake 3|*.bsp");
         }
 
         public override void Update()
@@ -50,7 +53,7 @@ namespace TGC.Examples.Quake3Loader
             PreRender();
 
             //Ver si se seleccionó alguno nivel a empaquetar
-            var selectedFile = (string)this.Modifiers["BspFile"];
+            var selectedFile = openFileModifier.Value;
 
             if (selectedFile != currentFile)
             {

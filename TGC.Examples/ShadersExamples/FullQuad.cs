@@ -2,18 +2,21 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.ShadersExamples
 {
     public class FullScreenQuad : TGCExampleViewer
     {
+        private TGCBooleanModifier activarEfectoModifier;
+
         private Effect effect;
         private Surface g_pDepthStencil; // Depth-stencil buffer
         private Texture g_pRenderTarget;
@@ -22,8 +25,8 @@ namespace TGC.Examples.ShadersExamples
         private string MyShaderDir;
         public float time;
 
-        public FullScreenQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public FullScreenQuad(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "Full Screen Quad";
@@ -84,7 +87,7 @@ namespace TGC.Examples.ShadersExamples
                 CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
-            Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
+            activarEfectoModifier = AddBoolean("activar_efecto", "Activar efecto", true);
         }
 
         public override void Update()
@@ -100,7 +103,7 @@ namespace TGC.Examples.ShadersExamples
             var device = D3DDevice.Instance.Device;
 
             time += ElapsedTime;
-            var activar_efecto = (bool)Modifiers["activar_efecto"];
+            var activar_efecto = activarEfectoModifier.Value;
 
             //Cargar variables de shader
 

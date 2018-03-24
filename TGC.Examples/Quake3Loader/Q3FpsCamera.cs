@@ -29,13 +29,13 @@ namespace TGC.Examples.Quake3Loader
          * Entonces se puede cambiar el angulo de la direccion desplazando proporcionalmente a la cantidad de grados el punto
          * target sobre las caras del cubo.
          */
-        private TGCVector3 eye = new TGCVector3();
+        private TGCVector3 eye = TGCVector3.Empty;
         private float latitud;
         private bool lockCam;
         private float longitud;
         protected Point mouseCenter;
-        private TGCVector3 sideDirection = new TGCVector3();
-        private TGCVector3 target = new TGCVector3();
+        private TGCVector3 sideDirection = TGCVector3.Empty;
+        private TGCVector3 target = TGCVector3.Empty;
         private TGCMatrix viewMatrix = TGCMatrix.Identity;
 
         public Q3FpsCamera()
@@ -48,7 +48,7 @@ namespace TGC.Examples.Quake3Loader
                 );
         }
 
-        public TGCVector3 ForwardDirection { get; private set; } = new TGCVector3();
+        public TGCVector3 ForwardDirection { get; private set; } = TGCVector3.Empty;
 
         public TGCVector3 SideDirection
         {

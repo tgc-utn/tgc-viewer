@@ -1,11 +1,11 @@
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Tutorial
 {
@@ -36,8 +36,8 @@ namespace TGC.Examples.Tutorial
         //Variable direccion de movimiento
         private float currentMoveDir = 1f;
 
-        public Tutorial1(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public Tutorial1(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Tutorial";
             Name = "Tutorial 1";

@@ -2,20 +2,26 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace Examples.WorkshopShaders
 {
     public class Distorsiones : TGCExampleViewer
     {
-        private string MyMediaDir;
-        private string MyShaderDir;
+        private TGCEnumModifier distorcionadorModifier;
+        private TGCBooleanModifier gridModifier;
+        private TGCFloatModifier kuModifier;
+        private TGCFloatModifier kvModifier;
+        private TGCFloatModifier ocScaleInModifier;
+        private TGCFloatModifier ocScaleModifier;
+
         private List<TgcMesh> meshes;
         private Effect effect;
         private Surface g_pDepthStencil;     // Depth-stencil buffer
@@ -32,7 +38,8 @@ namespace Examples.WorkshopShaders
             OculusRift = 4,
         }
 
-        public Distorsiones(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public Distorsiones(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Shaders";
             Name = "Workshop-Distorsionador";
@@ -44,8 +51,6 @@ namespace Examples.WorkshopShaders
             time = 0;
 
             Device d3dDevice = D3DDevice.Instance.Device;
-            MyMediaDir = MediaDir + "WorkshopShaders\\";
-            MyShaderDir = ShadersDir + "WorkshopShaders\\";
 
             //Cargamos un escenario
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -63,7 +68,7 @@ namespace Examples.WorkshopShaders
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new TGCVector3(-182.3816f, 82.3252f, -811.9061f),100,10, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(-182.3816f, 82.3252f, -811.9061f), 100, 10, Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
@@ -87,13 +92,13 @@ namespace Examples.WorkshopShaders
             g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured), 4, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
-            Modifiers.addEnum("distorcionador", typeof(Distorciones), Distorciones.Pincushion);
-            Modifiers.addBoolean("grid", "mostrar grilla", false);
-            Modifiers.addFloat("Ku", 0, 1, 0.1f);
-            Modifiers.addFloat("Kv", 0, 1, 0.1f);
+            distorcionadorModifier = AddEnum("distorcionador", typeof(Distorciones), Distorciones.Pincushion);
+            gridModifier = AddBoolean("grid", "mostrar grilla", false);
+            kuModifier = AddFloat("Ku", 0, 1, 0.1f);
+            kvModifier = AddFloat("Kv", 0, 1, 0.1f);
 
-            Modifiers.addFloat("oc_scale_in", 0.1f, 4, 2.5f);
-            Modifiers.addFloat("oc_scale", 0.01f, 1f, 0.35f);
+            ocScaleInModifier = AddFloat("oc_scale_in", 0.1f, 4, 2.5f);
+            ocScaleModifier = AddFloat("oc_scale", 0.01f, 1f, 0.35f);
         }
 
         public override void Update()
@@ -131,7 +136,7 @@ namespace Examples.WorkshopShaders
             d3dDevice.EndScene();
             pSurf.Dispose();
 
-            int distorcionador = (int)Modifiers["distorcionador"];
+            int distorcionador = (int)distorcionadorModifier.Value;
             // restuaro el render target y el stencil
             d3dDevice.DepthStencilSurface = pOldDS;
             d3dDevice.SetRenderTarget(0, pOldRT);
@@ -162,11 +167,11 @@ namespace Examples.WorkshopShaders
                     break;
             }
             effect.SetValue("time", time);
-            effect.SetValue("fish_kU", (float)Modifiers["Ku"]);
-            effect.SetValue("fish_kV", (float)Modifiers["Kv"]);
-            effect.SetValue("grid", (bool)Modifiers["grid"]);
-            effect.SetValue("ScaleIn", (float)Modifiers["oc_scale_in"]);
-            effect.SetValue("Scale", (float)Modifiers["oc_scale"]);
+            effect.SetValue("fish_kU", kuModifier.Value);
+            effect.SetValue("fish_kV", kvModifier.Value);
+            effect.SetValue("grid", gridModifier.Value);
+            effect.SetValue("ScaleIn", ocScaleInModifier.Value);
+            effect.SetValue("Scale", ocScaleModifier.Value);
 
             d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
             d3dDevice.SetStreamSource(0, g_pVBV3D, 0);

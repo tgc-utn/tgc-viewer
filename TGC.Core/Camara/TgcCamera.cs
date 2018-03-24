@@ -35,11 +35,11 @@ namespace TGC.Core.Camara
             //Direccion efectiva de la vista.
             TGCVector3 direction = lookAt - pos;
 
-            //Se busca el vector que es producto del (0,1,0)Up y la direccion de vista. 
+            //Se busca el vector que es producto del (0,1,0)Up y la direccion de vista.
             TGCVector3 crossDirection = TGCVector3.Cross(TGCVector3.Up, direction);
 
             //El vector de Up correcto dependiendo del LookAt
-            TGCVector3 finalUp = TGCVector3.Cross(direction,crossDirection);
+            TGCVector3 finalUp = TGCVector3.Cross(direction, crossDirection);
 
             Position = pos;
             LookAt = lookAt;

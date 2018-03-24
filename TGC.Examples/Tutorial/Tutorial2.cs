@@ -1,9 +1,9 @@
+using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Tutorial
 {
@@ -23,8 +23,8 @@ namespace TGC.Examples.Tutorial
         //Variable para la escena 3D
         private TgcScene scene;
 
-        public Tutorial2(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public Tutorial2(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Tutorial";
             Name = "Tutorial 2";

@@ -2,16 +2,16 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.UserControls.Networking;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Networking;
 
 namespace TGC.Examples.Multiplayer
 {
@@ -30,9 +30,10 @@ namespace TGC.Examples.Multiplayer
     public class VehiculosMultiplayer : TGCExampleViewer
     {
         private float acumulatedTime;
-        private TgcNetworkingModifier networkingMod;
+        private TGCNetworkingModifier networkingMod;
 
-        public VehiculosMultiplayer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public VehiculosMultiplayer(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Multiplayer";
             Name = "Vehiculos Multiplayer";
@@ -42,7 +43,7 @@ namespace TGC.Examples.Multiplayer
         public override void Init()
         {
             //Crear Modifier de Networking
-            networkingMod = Modifiers.addNetworking("Networking", "VehiculosServer", "VehiculosClient");
+            networkingMod = AddNetworking("Networking", "VehiculosServer", "VehiculosClient");
 
             acumulatedTime = 0;
 

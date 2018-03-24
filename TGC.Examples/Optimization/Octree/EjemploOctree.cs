@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Optimization.Octree
 {
@@ -19,13 +20,16 @@ namespace TGC.Examples.Optimization.Octree
     /// </summary>
     public class EjemploOctree : TGCExampleViewer
     {
+        private TGCBooleanModifier showOctreeModifier;
+        private TGCBooleanModifier showTerrainModifier;
+
         private List<TgcMesh> objetosIsla;
         private Octree octree;
         private TgcSkyBox skyBox;
         private TgcMesh terreno;
 
-        public EjemploOctree(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploOctree(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Optimization";
             Name = "Octree";
@@ -65,8 +69,8 @@ namespace TGC.Examples.Optimization.Octree
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
-            Modifiers.addBoolean("showOctree", "Show Octree", false);
-            Modifiers.addBoolean("showTerrain", "Show Terrain", true);
+            showOctreeModifier = AddBoolean("showOctree", "Show Octree", false);
+            showTerrainModifier = AddBoolean("showTerrain", "Show Terrain", true);
         }
 
         public override void Update()
@@ -79,8 +83,8 @@ namespace TGC.Examples.Optimization.Octree
         {
             PreRender();
 
-            var showOctree = (bool)Modifiers["showOctree"];
-            var showTerrain = (bool)Modifiers["showTerrain"];
+            var showOctree = showOctreeModifier.Value;
+            var showTerrain = showTerrainModifier.Value;
 
             skyBox.Render();
             if (showTerrain)

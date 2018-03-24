@@ -98,7 +98,7 @@ namespace TGC.Examples.Engine2D.Spaceship
             Position.Y = GameManager.ScreenHeight * (float)rnd.NextDouble();
 
             //Busco el angulo del asteroide para que vaya al centro de la pantalla.
-            var ScreenCenterVector = new TGCVector2();
+            var ScreenCenterVector = TGCVector2.Zero;
             var ScreenCenter = new TGCVector2(GameManager.ScreenWidth / 2, GameManager.ScreenHeight / 2);
             ScreenCenterVector = TGCVector2.Subtract(ScreenCenter, Position);
 

@@ -1,10 +1,11 @@
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.KeyFrameLoader;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Animation
 {
@@ -25,13 +26,18 @@ namespace TGC.Examples.Animation
     /// </summary>
     public class KeyFrameAnimation : TGCExampleViewer
     {
+        private TGCIntervalModifier animationModifier;
+        private TGCBooleanModifier boundingBoxModifier;
+        private TGCColorModifier colorModifier;
+        private TGCBooleanModifier loopModifier;
+
         private bool animateWithLoop;
         private Color currentColor;
         private TgcKeyFrameMesh mesh;
         private string selectedAnim;
 
-        public KeyFrameAnimation(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public KeyFrameAnimation(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Animation";
             Name = "KeyFrame Animation";
@@ -72,19 +78,19 @@ namespace TGC.Examples.Animation
             mesh = loader.loadMeshAndAnimationsFromFile(pathMesh, mediaPath, animationsPath);
 
             //Agregar combo para elegir animacion
-            Modifiers.addInterval("animation", animationList, 0);
             selectedAnim = animationList[0];
+            animationModifier = AddInterval("animation", animationList, 0);
 
             //Modifier para especificar si la animacion se anima con loop
             animateWithLoop = true;
-            Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
+            loopModifier = AddBoolean("loop", "Loop anim:", animateWithLoop);
 
             //Modifier para color
             currentColor = Color.White;
-            Modifiers.addColor("Color", currentColor);
+            colorModifier = AddColor("Color", currentColor);
 
             //Modifier para BoundingBox
-            Modifiers.addBoolean("BoundingBox", "BoundingBox:", false);
+            boundingBoxModifier = AddBoolean("BoundingBox", "BoundingBox:", false);
 
             //Elegir animacion Caminando
             mesh.playAnimation(selectedAnim, true);
@@ -96,6 +102,7 @@ namespace TGC.Examples.Animation
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -103,11 +110,11 @@ namespace TGC.Examples.Animation
             PreRender();
 
             //Ver si cambio la animacion
-            var anim = (string)Modifiers.getValue("animation");
+            var anim = animationModifier.Value.ToString();
             if (!anim.Equals(selectedAnim))
             {
                 //Ver si animamos con o sin loop
-                animateWithLoop = (bool)Modifiers.getValue("loop");
+                animateWithLoop = loopModifier.Value;
 
                 //Cargar nueva animacion elegida
                 selectedAnim = anim;
@@ -115,7 +122,7 @@ namespace TGC.Examples.Animation
             }
 
             //Ver si cambio el color
-            var selectedColor = (Color)Modifiers.getValue("Color");
+            var selectedColor = colorModifier.Value;
             if (currentColor != selectedColor)
             {
                 currentColor = selectedColor;
@@ -127,7 +134,7 @@ namespace TGC.Examples.Animation
             mesh.animateAndRender(ElapsedTime);
 
             //BoundingBox
-            var showBB = (bool)Modifiers["BoundingBox"];
+            var showBB = boundingBoxModifier.Value;
             if (showBB)
             {
                 mesh.BoundingBox.Render();

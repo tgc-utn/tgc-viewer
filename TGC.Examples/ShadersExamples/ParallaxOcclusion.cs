@@ -2,13 +2,14 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
@@ -30,6 +31,11 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class ParallaxOcclusion : TGCExampleViewer
     {
+        private TGCVertex3fModifier lightDirModifier;
+        private TGCFloatModifier minSampleModifier;
+        private TGCFloatModifier maxSampleModifier;
+        private TGCFloatModifier heightMapScaleModifier;
+
         private Effect effect;
         private Texture g_pBaseTexture;
         private Texture g_pBaseTexture2;
@@ -45,8 +51,8 @@ namespace TGC.Examples.ShadersExamples
 
         private float time;
 
-        public ParallaxOcclusion(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public ParallaxOcclusion(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel Shaders";
             Name = "Bump Mapping vs Parallax Occlusion";
@@ -81,21 +87,19 @@ namespace TGC.Examples.ShadersExamples
 
             //Cargar Shader
             string compilationErrors;
-            effect = Effect.FromFile(d3dDevice, MyShaderDir + "Parallax.fx", null, null, ShaderFlags.None, null,
-                out compilationErrors);
+            effect = Effect.FromFile(d3dDevice, MyShaderDir + "Parallax.fx", null, null, ShaderFlags.None, null, out compilationErrors);
             if (effect == null)
             {
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
             }
 
-            Modifiers.addVertex3f("LightDir", new TGCVector3(-1, -1, -1), TGCVector3.One, TGCVector3.Down);
-            Modifiers.addFloat("minSample", 1f, 10f, 10f);
-            Modifiers.addFloat("maxSample", 11f, 50f, 50f);
-            Modifiers.addFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
+            lightDirModifier = AddVertex3f("LightDir", new TGCVector3(-1, -1, -1), TGCVector3.One, TGCVector3.Down);
+            minSampleModifier = AddFloat("minSample", 1f, 10f, 10f);
+            maxSampleModifier = AddFloat("maxSample", 11f, 50f, 50f);
+            heightMapScaleModifier = AddFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
 
             //Centrar camara rotacional respecto a este mesh
-            var rotCamera = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
+            var rotCamera = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
             rotCamera.CameraCenter = rotCamera.CameraCenter + new TGCVector3(0, 20f, 0);
             rotCamera.CameraDistance = 75;
             rotCamera.RotationSpeed = 50f;
@@ -129,11 +133,11 @@ namespace TGC.Examples.ShadersExamples
                     nro_textura = 0;
             }
 
-            var lightDir = (TGCVector3)Modifiers["LightDir"];
+            var lightDir = lightDirModifier.Value;
             effect.SetValue("g_LightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
-            effect.SetValue("min_cant_samples", (float)Modifiers["minSample"]);
-            effect.SetValue("max_cant_samples", (float)Modifiers["maxSample"]);
-            effect.SetValue("fHeightMapScale", (float)Modifiers["HeightMapScale"]);
+            effect.SetValue("min_cant_samples", minSampleModifier.Value);
+            effect.SetValue("max_cant_samples", maxSampleModifier.Value);
+            effect.SetValue("fHeightMapScale", heightMapScaleModifier.Value);
             effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
 
             device.EndScene();
@@ -164,9 +168,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.Technique = pom ? "ParallaxOcclusion" : "BumpMap";
             mesh.Render();
 
-            DrawText.drawText(
-                (pom ? "ParallaxOcclusion" : "BumpMap") + "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0,
-                20, Color.Yellow);
+            DrawText.drawText((pom ? "ParallaxOcclusion" : "BumpMap") + "  " + (phong ? "Phong Lighting" : "Iluminación estática"), 0, 20, Color.Yellow);
 
             RenderFPS();
             RenderAxis();

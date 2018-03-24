@@ -1,9 +1,9 @@
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Transformations
 {
@@ -18,8 +18,8 @@ namespace TGC.Examples.Transformations
     /// </summary>
     public class EjemploTransformaciones : TGCExampleViewer
     {
-        public EjemploTransformaciones(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploTransformaciones(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Transformations";
             Name = "Operaciones con matrices";
@@ -101,7 +101,7 @@ namespace TGC.Examples.Transformations
 
             // 11) Con vertir de un punto 2D a uno 3D, al revez de lo que se hizo antes (normalmente para hacer picking con el mouse)
             var screenPoint2 = new Point(15, 100); //punto 2D de la pantalla
-            var vAux = new TGCVector3();
+            var vAux = TGCVector3.Empty;
             vAux.X = (2.0f * screenPoint2.X / D3DDevice.Instance.Device.Viewport.Width - 1) /
                      D3DDevice.Instance.Device.Transform.Projection.M11;
             vAux.Y = -(2.0f * screenPoint2.Y / D3DDevice.Instance.Device.Viewport.Height - 1) /

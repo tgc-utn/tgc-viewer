@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Optimization.Quadtree
 {
@@ -19,18 +20,20 @@ namespace TGC.Examples.Optimization.Quadtree
     /// </summary>
     public class EjemploQuadtree : TGCExampleViewer
     {
+        private TGCBooleanModifier showQuadtreeModifier;
+        private TGCBooleanModifier showTerrainModifier;
+
         private List<TgcMesh> objetosIsla;
         private Quadtree quadtree;
         private TgcSkyBox skyBox;
         private TgcMesh terreno;
 
-        public EjemploQuadtree(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploQuadtree(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Optimization";
             Name = "Quadtree";
-            Description =
-                "Muestra como crear y utilizar una Quadtree para optimizar el renderizado de un escenario por Frustum Culling.";
+            Description = "Muestra como crear y utilizar una Quadtree para optimizar el renderizado de un escenario por Frustum Culling.";
         }
 
         public override void Init()
@@ -66,8 +69,8 @@ namespace TGC.Examples.Optimization.Quadtree
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
-            Modifiers.addBoolean("showQuadtree", "Show Quadtree", false);
-            Modifiers.addBoolean("showTerrain", "Show Terrain", true);
+            showQuadtreeModifier = AddBoolean("showQuadtree", "Show Quadtree", false);
+            showTerrainModifier = AddBoolean("showTerrain", "Show Terrain", true);
         }
 
         public override void Update()
@@ -80,8 +83,8 @@ namespace TGC.Examples.Optimization.Quadtree
         {
             PreRender();
 
-            var showQuadtree = (bool)Modifiers["showQuadtree"];
-            var showTerrain = (bool)Modifiers["showTerrain"];
+            var showQuadtree = showQuadtreeModifier.Value;
+            var showTerrain = showTerrainModifier.Value;
 
             skyBox.Render();
             if (showTerrain)

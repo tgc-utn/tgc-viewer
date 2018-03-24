@@ -1,22 +1,24 @@
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace Examples.WorkshopShaders
 {
     public class PlanarShadows : TGCExampleViewer
     {
+        private TGCVertex3fModifier lightLookFromModifier;
+
         private string MyMediaDir;
-        private string MyShaderDir;
         private TgcScene scene, scene2;
         private TGCBox box;
         private Effect effect;
@@ -31,8 +33,8 @@ namespace Examples.WorkshopShaders
         private TGCVector3 dir_avion;
         private float time;
 
-        public PlanarShadows(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public PlanarShadows(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Shaders";
             Name = "Workshop-PlanarShadows";
@@ -42,7 +44,6 @@ namespace Examples.WorkshopShaders
         public override void Init()
         {
             MyMediaDir = MediaDir + "WorkshopShaders\\";
-            MyShaderDir = ShadersDir + "WorkshopShaders\\";
 
             //Crear loader
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -77,7 +78,7 @@ namespace Examples.WorkshopShaders
 
             //GuiController.Instance.RotCamera.targetObject(scene.Meshes[0].BoundingBox);
             float K = 300;
-            Modifiers.addVertex3f("LightLookFrom", new TGCVector3(-K, -K, -K), new TGCVector3(K, K, K), new TGCVector3(80, 120, 0));
+            lightLookFromModifier = AddVertex3f("LightLookFrom", new TGCVector3(-K, -K, -K), new TGCVector3(K, K, K), new TGCVector3(80, 120, 0));
         }
 
         public override void Update()
@@ -96,7 +97,7 @@ namespace Examples.WorkshopShaders
             avion.Position = new TGCVector3(80f * (float)Math.Cos(alfa), 20 - 20 * (float)Math.Sin(alfa), 80f * (float)Math.Sin(alfa));
             dir_avion = new TGCVector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
-            g_LightPos = (TGCVector3)Modifiers["LightLookFrom"];
+            g_LightPos = lightLookFromModifier.Value;
 
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 

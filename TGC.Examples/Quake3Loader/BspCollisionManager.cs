@@ -54,7 +54,7 @@ namespace TGC.Examples.Quake3Loader
             MaxStepHeight = 40;
 
             NoClip = false;
-            velocidad = new TGCVector3();
+            velocidad = TGCVector3.Empty;
             antCamPos = TGCVector3.Empty;
             time = 0;
             firstTime = true;
@@ -543,7 +543,7 @@ namespace TGC.Examples.Quake3Loader
                 // If we are using AABB collision
                 if (traceType == TYPE_BOX)
                 {
-                    var vOffset = new TGCVector3();
+                    var vOffset = TGCVector3.Empty;
                     // Grab the closest corner (x, y, or z value) that is closest to the plane
                     vOffset.X = pPlane.normal.X < 0 ? vTraceMaxs.X : vTraceMins.X;
                     vOffset.Y = pPlane.normal.Y < 0 ? vTraceMaxs.Y : vTraceMins.Y;

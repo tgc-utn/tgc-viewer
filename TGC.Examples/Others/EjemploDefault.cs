@@ -2,15 +2,15 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Text;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 using Font = System.Drawing.Font;
 
 namespace TGC.Examples.Others
@@ -25,8 +25,8 @@ namespace TGC.Examples.Others
         private TgcMesh mesh;
         private TgcText2D textHelp;
 
-        public EjemploDefault(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploDefault(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Others";
             Name = "Logo de TGC";
@@ -58,7 +58,7 @@ namespace TGC.Examples.Others
             helpForm = new EjemploDefaultHelpForm(helpRtf);
 
             //Camara
-            Camara = new TgcRotationalCamera(new TGCVector3(), 150f, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 150f, Input);
         }
 
         public override void Update()

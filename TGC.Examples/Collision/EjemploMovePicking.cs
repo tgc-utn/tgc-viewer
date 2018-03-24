@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -6,10 +7,10 @@ using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -24,6 +25,8 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploMovePicking : TGCExampleViewer
     {
+        private TGCFloatModifier speedModifier;
+
         private bool applyMovement;
         private TgcThirdPersonCamera camaraInterna;
         private TGCBox collisionPointMesh;
@@ -35,8 +38,8 @@ namespace TGC.Examples.Collision
         private TgcPickingRay pickingRay;
         private TgcPlane suelo;
 
-        public EjemploMovePicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploMovePicking(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Collision";
             Name = "Colisiones con movimiento mouse";
@@ -81,7 +84,7 @@ namespace TGC.Examples.Collision
             //Camara en tercera persona
             camaraInterna = new TgcThirdPersonCamera(mesh.Position, 800, 1500);
             Camara = camaraInterna;
-            Modifiers.addFloat("speed", 1000, 5000, 2500);
+            speedModifier = AddFloat("speed", 1000, 5000, 2500);
         }
 
         public override void Update()
@@ -117,7 +120,7 @@ namespace TGC.Examples.Collision
                 }
             }
 
-            var speed = (float)Modifiers["speed"];
+            var speed = speedModifier.Value;
 
             //Interporlar movimiento, si hay que mover
             if (applyMovement)

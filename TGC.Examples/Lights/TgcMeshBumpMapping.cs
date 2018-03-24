@@ -354,13 +354,13 @@ namespace TGC.Examples.Lights
             {
                 det = 1.0f / det;
 
-                tangent = new TGCVector3();
+                tangent = TGCVector3.Empty;
                 tangent.X = (texEdge2.Y * edge1.X - texEdge1.Y * edge2.X) * det;
                 tangent.Y = (texEdge2.Y * edge1.Y - texEdge1.Y * edge2.Y) * det;
                 tangent.Z = (texEdge2.Y * edge1.Z - texEdge1.Y * edge2.Z) * det;
                 //tangent.W = 0.0f;
 
-                binormal = new TGCVector3();
+                binormal = TGCVector3.Empty;
                 binormal.X = (-texEdge2.X * edge1.X + texEdge1.X * edge2.X) * det;
                 binormal.Y = (-texEdge2.X * edge1.Y + texEdge1.X * edge2.Y) * det;
                 binormal.Z = (-texEdge2.X * edge1.Z + texEdge1.X * edge2.Z) * det;

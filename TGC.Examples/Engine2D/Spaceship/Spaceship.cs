@@ -166,7 +166,7 @@ namespace TGC.Examples.Engine2D.Spaceship
             const float deacceleration = 300.0f;
             //const float Epsilon = 0.2f;
 
-            var spriteMouseVector = new TGCVector2();
+            var spriteMouseVector = TGCVector2.Zero;
             var mouseVector = new TGCVector2(Input.Xpos, Input.Ypos);
             spriteMouseVector = TGCVector2.Subtract(mouseVector,
                 Position + new TGCVector2(spriteSize.X / 2 * size, spriteSize.Y / 2 * size));

@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -21,28 +22,30 @@ namespace TGC.Examples.MeshExamples
     /// </summary>
     public class EjemploTriangulosYPlanos : TGCExampleViewer
     {
+        private TGCBooleanModifier meshModifier;
+        private TGCBooleanModifier trianglesModifier;
+        private TGCBooleanModifier normalsModifier;
+        private TGCBooleanModifier planesModifier;
+
         private readonly Random random = new Random();
         private TgcMesh mesh;
         private List<TgcArrow> normals;
         private List<TGCQuad> planes;
         private List<TgcTriangle> triangles;
 
-        public EjemploTriangulosYPlanos(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploTriangulosYPlanos(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Obtener triangulos y planos";
-            Description =
-                "Muestra como obtener los triangulos de un TgcMesh y generar un plano y un vector normal por cada uno.";
+            Description = "Muestra como obtener los triangulos de un TgcMesh y generar un plano y un vector normal por cada uno.";
         }
 
         public override void Init()
         {
             //Cargar un mesh
             var loader = new TgcSceneLoader();
-            var scene =
-                loader.loadSceneFromFile(MediaDir +
-                                         "MeshCreator\\Meshes\\Cimientos\\PilarEgipcio\\PilarEgipcio-TgcScene.xml");
+            var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Cimientos\\PilarEgipcio\\PilarEgipcio-TgcScene.xml");
             mesh = scene.Meshes[0];
 
             //Obtener los vértices del mesh (esta operacion es lenta, copia de la GPU a la CPU, no hacer a cada rato)
@@ -96,14 +99,13 @@ namespace TGC.Examples.MeshExamples
             }
 
             //Modifiers
-            Modifiers.addBoolean("mesh", "mesh", true);
-            Modifiers.addBoolean("triangles", "triangles", true);
-            Modifiers.addBoolean("normals", "normals", true);
-            Modifiers.addBoolean("planes", "planes", false);
+            meshModifier = AddBoolean("mesh", "mesh", true);
+            trianglesModifier = AddBoolean("triangles", "triangles", true);
+            normalsModifier = AddBoolean("normals", "normals", true);
+            planesModifier = AddBoolean("planes", "planes", false);
 
             //Camera
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
@@ -117,14 +119,14 @@ namespace TGC.Examples.MeshExamples
             PreRender();
 
             //Draw mesh
-            var drawMesh = (bool)Modifiers["mesh"];
+            var drawMesh = meshModifier.Value;
             if (drawMesh)
             {
                 mesh.Render();
             }
 
             //Draw triangles (Ojo: renderizar triangulos asi es extremadamene lento, para algo eficiente se usa un VertexBuffer)
-            var drawTriangles = (bool)Modifiers["triangles"];
+            var drawTriangles = trianglesModifier.Value;
             if (drawTriangles)
             {
                 foreach (var t in triangles)
@@ -134,7 +136,7 @@ namespace TGC.Examples.MeshExamples
             }
 
             //Draw normals
-            var drawNormals = (bool)Modifiers["normals"];
+            var drawNormals = normalsModifier.Value;
             if (drawNormals)
             {
                 foreach (var a in normals)
@@ -144,7 +146,7 @@ namespace TGC.Examples.MeshExamples
             }
 
             //Draw planes
-            var drawPlanes = (bool)Modifiers["planes"];
+            var drawPlanes = planesModifier.Value;
             if (drawPlanes)
             {
                 foreach (var p in planes)

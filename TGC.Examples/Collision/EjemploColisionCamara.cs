@@ -1,16 +1,17 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -25,13 +26,17 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploColisionCamara : TGCExampleViewer
     {
+        private TGCFloatModifier offsetHeightModifier;
+        private TGCFloatModifier offsetForwardModifier;
+        private TGCVertex2fModifier displacementModifier;
+
         private TgcThirdPersonCamera camaraInterna;
         private List<TGCBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcPlane piso;
 
-        public EjemploColisionCamara(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploColisionCamara(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Collision";
             Name = "Colision con Camara";
@@ -43,7 +48,7 @@ namespace TGC.Examples.Collision
         {
             //Crear piso
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
-            piso = new TgcPlane(new TGCVector3(), new TGCVector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 50f, 50f);
+            piso = new TgcPlane(TGCVector3.Empty, new TGCVector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 50f, 50f);
             //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
             obstaculos = new List<TGCBox>();
             TGCBox obstaculo;
@@ -108,9 +113,9 @@ namespace TGC.Examples.Collision
             Camara = camaraInterna;
 
             //Modifiers para modificar propiedades de la camara
-            Modifiers.addFloat("offsetHeight", 0, 300, 100);
-            Modifiers.addFloat("offsetForward", -400, 0, -220);
-            Modifiers.addVertex2f("displacement", TGCVector2.Zero, new TGCVector2(100, 200), new TGCVector2(0, 100));
+            offsetHeightModifier = AddFloat("offsetHeight", 0, 300, 100);
+            offsetForwardModifier = AddFloat("offsetForward", -400, 0, -220);
+            displacementModifier = AddVertex2f("displacement", TGCVector2.Zero, new TGCVector2(100, 200), new TGCVector2(0, 100));
         }
 
         public override void Update()
@@ -240,9 +245,9 @@ namespace TGC.Examples.Collision
         private void ajustarPosicionDeCamara()
         {
             //Actualizar valores de camara segun modifiers
-            camaraInterna.OffsetHeight = (float)Modifiers["offsetHeight"];
-            camaraInterna.OffsetForward = (float)Modifiers["offsetForward"];
-            var displacement = (TGCVector2)Modifiers["displacement"];
+            camaraInterna.OffsetHeight = offsetHeightModifier.Value;
+            camaraInterna.OffsetForward = offsetForwardModifier.Value;
+            var displacement = displacementModifier.Value;
             camaraInterna.TargetDisplacement = new TGCVector3(displacement.X, displacement.Y, 0);
 
             //Pedirle a la camara cual va a ser su proxima posicion

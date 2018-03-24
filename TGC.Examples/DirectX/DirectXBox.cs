@@ -1,12 +1,12 @@
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.DirectX
 {
@@ -100,8 +100,8 @@ namespace TGC.Examples.DirectX
         private MyCustomVertex[] vertexData;
         private VertexDeclaration vertexDeclaration;
 
-        public DirectXBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public DirectXBox(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "DirectX";
             Name = "DirectX Box";
@@ -247,7 +247,7 @@ namespace TGC.Examples.DirectX
 
             dir = 1;
 
-            Camara = new TgcRotationalCamera(new TGCVector3(), 20f, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 20f, Input);
         }
 
         public override void Update()

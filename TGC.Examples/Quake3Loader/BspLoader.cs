@@ -809,10 +809,10 @@ namespace TGC.Examples.Quake3Loader
 
                         for (var j2 = 0; j2 < Lj; j2++, vertexNum++)
                         {
-                            vertices[vertexNum] = new TGCVector3();
-                            normals[vertexNum] = new TGCVector3();
-                            textCords[vertexNum] = new TGCVector2();
-                            textCords2[vertexNum] = new TGCVector2();
+                            vertices[vertexNum] = TGCVector3.Empty;
+                            normals[vertexNum] = TGCVector3.Empty;
+                            textCords[vertexNum] = TGCVector2.Zero;
+                            textCords2[vertexNum] = TGCVector2.Zero;
 
                             for (var i3 = 0; i3 < 3; i3++)
                             {

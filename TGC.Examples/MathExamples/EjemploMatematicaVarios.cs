@@ -1,8 +1,8 @@
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.MathExamples
 {
@@ -17,8 +17,8 @@ namespace TGC.Examples.MathExamples
     /// </summary>
     public class EjemploMatematicaVarios : TGCExampleViewer
     {
-        public EjemploMatematicaVarios(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploMatematicaVarios(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Math Examples";
             Name = "Operaciones con vectores";

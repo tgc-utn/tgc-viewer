@@ -2,6 +2,7 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
@@ -11,11 +12,11 @@ using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Terrain;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Collision.SphereCollision;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -35,6 +36,13 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploMoveSphereThirdPerson : TGCExampleViewer
     {
+        private TGCBooleanModifier showBoundingBoxModifier;
+        private TGCFloatModifier velocidadCaminarModifier;
+        private TGCFloatModifier velocidadRotacionModifier;
+        private TGCBooleanModifier habilitarGravedadModifier;
+        private TGCVertex3fModifier gravedadModifier;
+        private TGCFloatModifier slideFactorModifier;
+
         private readonly List<TgcMesh> objectsBehind = new List<TgcMesh>();
         private readonly List<TgcMesh> objectsInFront = new List<TgcMesh>();
         private readonly List<TgcBoundingAxisAlignBox> objetosColisionables = new List<TgcBoundingAxisAlignBox>();
@@ -46,8 +54,10 @@ namespace TGC.Examples.Collision
         private TgcSkeletalMesh personaje;
         private TgcSkyBox skyBox;
 
-        public EjemploMoveSphereThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        private float jumping;
+
+        public EjemploMoveSphereThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Collision";
             Name = "Movimientos Esfera 3ra Persona";
@@ -63,8 +73,7 @@ namespace TGC.Examples.Collision
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
-            personaje =
-                skeletalLoader.loadMeshAndAnimationsFromFile(
+            personaje = skeletalLoader.loadMeshAndAnimationsFromFile(
                     MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml",
                     MediaDir + "SkeletalAnimations\\Robot\\",
                     new[]
@@ -94,8 +103,7 @@ namespace TGC.Examples.Collision
             personaje.Scale = new TGCVector3(1.5f, 1.5f, 1.5f);
             //BoundingSphere que va a usar el personaje
             personaje.AutoUpdateBoundingBox = false;
-            characterSphere = new TgcBoundingSphere(personaje.BoundingBox.calculateBoxCenter(),
-                personaje.BoundingBox.calculateBoxRadius());
+            characterSphere = new TgcBoundingSphere(personaje.BoundingBox.calculateBoxCenter(), personaje.BoundingBox.calculateBoxRadius());
 
             //Almacenar volumenes de colision del escenario
             objetosColisionables.Clear();
@@ -133,28 +141,25 @@ namespace TGC.Examples.Collision
             skyBox.Init();
 
             //Modifier para ver BoundingBox
-            Modifiers.addBoolean("showBoundingBox", "Bouding Box", true);
+            showBoundingBoxModifier = AddBoolean("showBoundingBox", "Bouding Box", true);
 
             //Modifiers para desplazamiento del personaje
-            Modifiers.addFloat("VelocidadCaminar", 0, 20, 10);
-            Modifiers.addFloat("VelocidadRotacion", 1f, 360f, 150f);
-            Modifiers.addBoolean("HabilitarGravedad", "Habilitar Gravedad", true);
-            Modifiers.addVertex3f("Gravedad", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50),
-                new TGCVector3(0, -10, 0));
-            Modifiers.addFloat("SlideFactor", 1f, 2f, 1.3f);
+            velocidadCaminarModifier = AddFloat("VelocidadCaminar", 0, 20, 10);
+            velocidadRotacionModifier = AddFloat("VelocidadRotacion", 1f, 360f, 150f);
+            habilitarGravedadModifier = AddBoolean("HabilitarGravedad", "Habilitar Gravedad", true);
+            gravedadModifier = AddVertex3f("Gravedad", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50), new TGCVector3(0, -10, 0));
+            slideFactorModifier = AddFloat("SlideFactor", 1f, 2f, 1.3f);
 
             UserVars.addVar("Movement");
         }
-
-        private float jumping = 0;
 
         public override void Update()
         {
             PreUpdate();
 
             //obtener velocidades de Modifiers
-            var velocidadCaminar = (float)Modifiers.getValue("VelocidadCaminar");
-            var velocidadRotacion = (float)Modifiers.getValue("VelocidadRotacion");
+            var velocidadCaminar = velocidadCaminarModifier.Value;
+            var velocidadRotacion = velocidadRotacionModifier.Value;
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
@@ -234,9 +239,9 @@ namespace TGC.Examples.Collision
             }
 
             //Actualizar valores de gravedad
-            collisionManager.GravityEnabled = (bool)Modifiers["HabilitarGravedad"];
-            collisionManager.GravityForce = (TGCVector3)Modifiers["Gravedad"];
-            collisionManager.SlideFactor = (float)Modifiers["SlideFactor"];
+            collisionManager.GravityEnabled = habilitarGravedadModifier.Value;
+            collisionManager.GravityForce = gravedadModifier.Value;
+            collisionManager.SlideFactor = slideFactorModifier.Value;
 
             //Mover personaje con detección de colisiones, sliding y gravedad
             var realMovement = collisionManager.moveCharacter(characterSphere, movementVector, objetosColisionables);
@@ -277,7 +282,7 @@ namespace TGC.Examples.Collision
             PreRender();
 
             //Obtener boolean para saber si hay que mostrar Bounding Box
-            var showBB = (bool)Modifiers.getValue("showBoundingBox");
+            var showBB = showBoundingBoxModifier.Value;
 
             //Render mallas que no se interponen
             foreach (var mesh in objectsInFront)

@@ -552,7 +552,7 @@ namespace TGC.Core.SceneLoader
             //TODO revisar que esta conversion a Euler ande bien
 
             var mat = TGCMatrix.RotationTGCQuaternion(quat);
-            var matrixGetRotation = new TGCVector3();
+            var matrixGetRotation = TGCVector3.Empty;
 
             //gets the x axis rotation from the matrix
             matrixGetRotation.X = (float)Math.Asin(mat.M32);
