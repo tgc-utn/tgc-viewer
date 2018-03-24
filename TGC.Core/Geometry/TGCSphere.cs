@@ -631,7 +631,7 @@ namespace TGC.Core.Geometry
             //transformacion
             if (AutoTransform)
             {
-                Transform = TGCMatrix.Scaling(radius, radius, radius) * TGCMatrix.Scaling(Scale) *
+                Transform = TGCMatrix.Scaling(radius, radius, radius) *
                             TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *
                             TGCMatrix.Translation(translation);
             }
@@ -838,7 +838,7 @@ namespace TGC.Core.Geometry
             //Obtener matriz para transformar vertices
             if (AutoTransform)
             {
-                Transform = TGCMatrix.Scaling(radius, radius, radius) * TGCMatrix.Scaling(Scale) *
+                Transform = TGCMatrix.Scaling(radius, radius, radius) *
                             TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *
                             TGCMatrix.Translation(translation);
             }
