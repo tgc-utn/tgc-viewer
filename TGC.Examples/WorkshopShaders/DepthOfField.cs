@@ -1,27 +1,31 @@
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace Examples.WorkshopShaders
 {
     public class DepthOfField : TGCExampleViewer
     {
-        private string MyMediaDir;
-        private string MyShaderDir;
+        private TGCBooleanModifier activarEfectoModifier;
+        private TGCFloatModifier focusPlaneModifier;
+        private TGCFloatModifier blurFactorModifier;
+
         private TgcMesh mesh;
         private Effect effect;
         private Surface g_pDepthStencil;     // Depth-stencil buffer
         private Texture g_pRenderTarget, g_pBlurFactor;
         private VertexBuffer g_pVBV3D;
 
-        public DepthOfField(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public DepthOfField(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Shaders";
             Name = "Workshop-DepthOfField";
@@ -31,8 +35,6 @@ namespace Examples.WorkshopShaders
         public override void Init()
         {
             Device d3dDevice = D3DDevice.Instance.Device;
-            MyMediaDir = MediaDir + "WorkshopShaders\\";
-            MyShaderDir = ShadersDir + "WorkshopShaders\\";
 
             //Cargamos un escenario
 
@@ -51,7 +53,7 @@ namespace Examples.WorkshopShaders
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new TGCVector3(50, 30, 50),100,10,Input);
+            Camara = new TgcFpsCamera(new TGCVector3(50, 30, 50), 100, 10, Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
@@ -78,9 +80,9 @@ namespace Examples.WorkshopShaders
             g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured), 4, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
-            Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
-            Modifiers.addFloat("focus_plane", 1, 300, 10);
-            Modifiers.addFloat("blur_factor", 0.1f, 5f, 0.5f);
+            activarEfectoModifier = AddBoolean("activar_efecto", "Activar efecto", true);
+            focusPlaneModifier = AddFloat("focus_plane", 1, 300, 10);
+            blurFactorModifier = AddFloat("blur_factor", 0.1f, 5f, 0.5f);
         }
 
         public override void Update()
@@ -93,9 +95,9 @@ namespace Examples.WorkshopShaders
         {
             var d3dDevice = D3DDevice.Instance.Device;
 
-            bool activar_efecto = (bool)Modifiers["activar_efecto"];
-            effect.SetValue("zfoco", (float)Modifiers["focus_plane"]);
-            effect.SetValue("blur_k", (float)Modifiers["blur_factor"]);
+            bool activar_efecto = activarEfectoModifier.Value;
+            effect.SetValue("zfoco", focusPlaneModifier.Value);
+            effect.SetValue("blur_k", blurFactorModifier.Value);
 
             // dibujo la escena una textura
             // guardo el Render target anterior y seteo la textura como render target

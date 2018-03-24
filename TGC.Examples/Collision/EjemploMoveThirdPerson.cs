@@ -1,16 +1,17 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -32,18 +33,23 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploMoveThirdPerson : TGCExampleViewer
     {
+        private TGCBooleanModifier showBoundingBoxModifier;
+        private TGCBooleanModifier activateSlidingModifier;
+        private TGCFloatModifier velocidadCaminarModifier;
+        private TGCFloatModifier velocidadRotacionModifier;
+
         private TgcThirdPersonCamera camaraInterna;
         private List<TGCBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcPlane piso;
+        private string text = "No colision";
 
-        public EjemploMoveThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars,
-            TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploMoveThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Collision";
             Name = "Movimientos AABB 3ra Persona";
-            Description =
-                "Ejemplo de Detección de Colisiones de un personaje, utilizando la cámara en Tercera Persona. Movimiento con W, A, S, D.";
+            Description = "Ejemplo de Detección de Colisiones de un personaje, utilizando la cámara en Tercera Persona. Movimiento con W, A, S, D.";
         }
 
         public override void Init()
@@ -57,22 +63,19 @@ namespace TGC.Examples.Collision
             TGCBox obstaculo;
 
             //Obstaculo 1
-            obstaculo = TGCBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80),
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
+            obstaculo = TGCBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
-            obstaculo = TGCBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80),
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
+            obstaculo = TGCBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
-            obstaculo = TGCBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150),
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
+            obstaculo = TGCBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
             obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
@@ -92,8 +95,7 @@ namespace TGC.Examples.Collision
             //Le cambiamos la textura para diferenciarlo un poco
             personaje.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
             });
 
             //Configurar animacion inicial
@@ -112,20 +114,20 @@ namespace TGC.Examples.Collision
             Camara = camaraInterna;
 
             //Modifier para ver BoundingBox
-            Modifiers.addBoolean("showBoundingBox", "Bouding Box", false);
-            Modifiers.addBoolean("activateSliding", "Activate Sliding", false);
+            showBoundingBoxModifier = AddBoolean("showBoundingBox", "Bouding Box", false);
+            activateSlidingModifier = AddBoolean("activateSliding", "Activate Sliding", false);
 
             //Modifiers para desplazamiento del personaje
-            Modifiers.addFloat("VelocidadCaminar", 1f, 400f, 250f);
-            Modifiers.addFloat("VelocidadRotacion", 1f, 360f, 120f);
+            velocidadCaminarModifier = AddFloat("VelocidadCaminar", 1f, 400f, 250f);
+            velocidadRotacionModifier = AddFloat("VelocidadRotacion", 1f, 360f, 120f);
         }
 
         public override void Update()
         {
             PreUpdate();
             //obtener velocidades de Modifiers
-            var velocidadCaminar = (float)Modifiers.getValue("VelocidadCaminar");
-            var velocidadRotacion = (float)Modifiers.getValue("VelocidadRotacion");
+            var velocidadCaminar = velocidadCaminarModifier.Value;
+            var velocidadRotacion = velocidadRotacionModifier.Value;
 
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
@@ -207,7 +209,7 @@ namespace TGC.Examples.Collision
                 if (collide)
                 {
                     //si no esta activo el sliding es la solucion anterior de este ejemplo.
-                    if (!(bool)Modifiers["activateSliding"])
+                    if (!activateSlidingModifier.Value)
                     {
                         personaje.Position = lastPos; //Por como esta el framework actualmente esto actualiza el BoundingBox.
                         text = "";
@@ -238,15 +240,13 @@ namespace TGC.Examples.Collision
                                 "Last X: " + (lastPos.X - rs.X) + " - Z: " + (lastPos.Z - rs.Z) + "\n" +
                                 "Actual X: " + (personaje.Position.X) + " - Z: " + (personaje.Position.Z) + "\n" +
                                 "move X: " + (movementRay.X) + " - Z: " + (movementRay.Z);
-                            if (personaje.Position.X > collider.BoundingBox.PMin.X &&
-                                personaje.Position.X < collider.BoundingBox.PMax.X)
+                            if (personaje.Position.X > collider.BoundingBox.PMin.X && personaje.Position.X < collider.BoundingBox.PMax.X)
                             {
                                 //El personaje esta contenido en el bounding X
                                 t += "\n Sliding Z Dentro de X";
                                 rs = new TGCVector3(movementRay.X, movementRay.Y, 0);
                             }
-                            if (personaje.Position.Z > collider.BoundingBox.PMin.Z &&
-                                personaje.Position.Z < collider.BoundingBox.PMax.Z)
+                            if (personaje.Position.Z > collider.BoundingBox.PMin.Z && personaje.Position.Z < collider.BoundingBox.PMax.Z)
                             {
                                 //El personaje esta contenido en el bounding Z
                                 t += "\n Sliding X Dentro de Z";
@@ -289,14 +289,12 @@ namespace TGC.Examples.Collision
             PostUpdate();
         }
 
-        private string text = "No colision";
-
         public override void Render()
         {
             PreRender();
 
             //Obtener boolean para saber si hay que mostrar Bounding Box
-            var showBB = (bool)Modifiers.getValue("showBoundingBox");
+            var showBB = showBoundingBoxModifier.Value;
 
             DrawText.drawText(text, 5, 20, System.Drawing.Color.Red);
 

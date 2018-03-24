@@ -52,13 +52,13 @@ namespace TGC.Viewer.Model
             TgcShaders.Instance.loadCommonShaders(pathCommonShaders);
         }
 
-        public void LoadExamples(TreeView treeViewExamples, FlowLayoutPanel flowLayoutPanelModifiers, DataGridView dataGridUserVars, string mediaDirectory, string shadersDirectory)
+        public void LoadExamples(TreeView treeViewExamples, Panel panelModifiers, DataGridView dataGridUserVars, string mediaDirectory, string shadersDirectory)
         {
             //Directorio actual de ejecucion
             var currentDirectory = Environment.CurrentDirectory + "\\";
 
             //Cargo los ejemplos en el arbol
-            ExampleLoader = new ExampleLoader(mediaDirectory, shadersDirectory, dataGridUserVars, flowLayoutPanelModifiers);
+            ExampleLoader = new ExampleLoader(mediaDirectory, shadersDirectory, dataGridUserVars, panelModifiers);
             ExampleLoader.LoadExamplesInGui(treeViewExamples, currentDirectory);
         }
 

@@ -6,9 +6,8 @@ using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 using TgcViewer.Utils.Gui;
 
 namespace Examples.WorkshopShaders
@@ -73,8 +72,8 @@ namespace Examples.WorkshopShaders
         // gui
         private DXGui gui = new DXGui();
 
-        public GuiTest(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public GuiTest(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Shaders";
             Name = "Workshop-GuiTest";
@@ -232,15 +231,15 @@ namespace Examples.WorkshopShaders
                             {
                                 // Cambio el color
                                 int color = msg.id;
-                                
-                                effect.SetValue("color_global", new TGCVector4( (float)lst_colores[color].R / 255.0f, (float)lst_colores[color].G / 255.0f, (float)lst_colores[color].B / 255.0f , 1));
+
+                                effect.SetValue("color_global", new TGCVector4((float)lst_colores[color].R / 255.0f, (float)lst_colores[color].G / 255.0f, (float)lst_colores[color].B / 255.0f, 1));
                             }
                             break;
                     }
                     break;
 
                 default:
-                break;
+                    break;
             }
             gui.Render();
         }
@@ -325,7 +324,7 @@ namespace Examples.WorkshopShaders
                 return false;
             TranslateMessage(ref msg);
             DispatchMessage(ref msg);
-            
+
             return true;
         }
 

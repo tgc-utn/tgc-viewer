@@ -1,13 +1,13 @@
 ﻿using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -24,8 +24,8 @@ namespace TGC.Examples.ShadersExamples
         private string MyShaderDir;
         private float time;
 
-        public MotionBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public MotionBlur(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "MotionBlur";
@@ -55,7 +55,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.Effect = effect;
 
             //Camara
-            Camara = new TgcRotationalCamera(new TGCVector3(), 150f, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 150f, Input);
 
             // stencil
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,

@@ -1,9 +1,9 @@
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Engine2D.Spaceship.Core;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Engine2D
 {
@@ -31,8 +31,8 @@ namespace TGC.Examples.Engine2D
         private TGCMatrix rotationAnimateFrameDepend;
         private TGCMatrix rotationAnimateOneSec;
 
-        public Transforms2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public Transforms2D(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "2D";
             Name = "Transforms 2D";

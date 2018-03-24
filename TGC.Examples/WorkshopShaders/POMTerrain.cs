@@ -1,12 +1,13 @@
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace Examples.WorkshopShaders
 {
@@ -217,6 +218,11 @@ namespace Examples.WorkshopShaders
 
     public class POMTerrainSample : TGCExampleViewer
     {
+        private TGCVertex3fModifier lightDirModifier;
+        private TGCFloatModifier minSampleModifier;
+        private TGCFloatModifier maxSampleModifier;
+        private TGCFloatModifier heightMapScaleModifier;
+
         private string MyShaderDir;
         private Effect effect;
         private Texture g_pBaseTexture;
@@ -228,8 +234,8 @@ namespace Examples.WorkshopShaders
 
         private float time;
 
-        public POMTerrainSample(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public POMTerrainSample(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Shaders";
             Name = "Workshop-POMTerrain";
@@ -259,10 +265,10 @@ namespace Examples.WorkshopShaders
             effect.SetValue("phong_lighting", true);
             effect.SetValue("k_alpha", 0.75f);
 
-            Modifiers.addVertex3f("LightDir", new TGCVector3(-1, -1, -1), new TGCVector3(1, 1, 1), TGCVector3.Down);
-            Modifiers.addFloat("minSample", 1f, 10f, 10f);
-            Modifiers.addFloat("maxSample", 11f, 50f, 50f);
-            Modifiers.addFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
+            lightDirModifier = AddVertex3f("LightDir", new TGCVector3(-1, -1, -1), new TGCVector3(1, 1, 1), TGCVector3.Down);
+            minSampleModifier = AddFloat("minSample", 1f, 10f, 10f);
+            maxSampleModifier = AddFloat("maxSample", 11f, 50f, 50f);
+            heightMapScaleModifier = AddFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
 
             // ------------------------------------------------------------
             // Creo el Heightmap para el terreno:
@@ -311,11 +317,11 @@ namespace Examples.WorkshopShaders
 
             time += ElapsedTime;
 
-            TGCVector3 lightDir = (TGCVector3)Modifiers["LightDir"];
+            TGCVector3 lightDir = lightDirModifier.Value;
             effect.SetValue("g_LightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
-            effect.SetValue("min_cant_samples", (float)Modifiers["minSample"]);
-            effect.SetValue("max_cant_samples", (float)Modifiers["maxSample"]);
-            effect.SetValue("fHeightMapScale", (float)Modifiers["HeightMapScale"]);
+            effect.SetValue("min_cant_samples", minSampleModifier.Value);
+            effect.SetValue("max_cant_samples", maxSampleModifier.Value);
+            effect.SetValue("fHeightMapScale", heightMapScaleModifier.Value);
             //effect.SetValue("fvEyePosition", TgcParserUtils.TGCVector3ToFloat3Array(GuiController.Instance.FpsCamera.getPosition()));
             effect.SetValue("time", time);
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);

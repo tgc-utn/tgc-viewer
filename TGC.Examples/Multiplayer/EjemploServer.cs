@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
+using System.Windows.Forms;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Multiplayer
 {
@@ -18,7 +18,8 @@ namespace TGC.Examples.Multiplayer
         private int recibido;
         private Socket serverSocket;
 
-        public EjemploServer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploServer(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Multiplayer";
             Name = "EjemploServer";

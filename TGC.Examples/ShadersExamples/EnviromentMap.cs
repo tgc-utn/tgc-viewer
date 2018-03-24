@@ -4,15 +4,16 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Terrain;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
@@ -27,6 +28,10 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class EnviromentMap : TGCExampleViewer
     {
+        private TGCFloatModifier reflexionModifier;
+        private TGCFloatModifier refraccionModifier;
+        private TGCBooleanModifier fresnelModifier;
+
         private List<TgcMesh> bosque;
         private TgcRotationalCamera CamaraRot;
 
@@ -44,21 +49,19 @@ namespace TGC.Examples.ShadersExamples
         private float largo_tanque, alto_tanque;
         private TgcMesh mesh, meshX;
         private string MyMediaDir;
-        private string MyShaderDir;
         private TgcMesh palmera, avion;
         private TgcScene scene, scene2, scene3, sceneX;
         private TgcSkyBox skyBox;
 
         // enviroment map
-        private TgcSimpleTerrain
-            terrain;
+        private TgcSimpleTerrain terrain;
 
         private float time;
         private float vel_tanque; // grados x segundo
         private bool volar;
 
-        public EnviromentMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EnviromentMap(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel Shaders";
             Name = "Enviroment Map";
@@ -69,7 +72,6 @@ namespace TGC.Examples.ShadersExamples
         public override void Init()
         {
             MyMediaDir = MediaDir;
-            MyShaderDir = ShadersDir + "WorkshopShaders\\";
 
             //Crear loader
             var loader = new TgcSceneLoader();
@@ -102,22 +104,18 @@ namespace TGC.Examples.ShadersExamples
 
             // ------------------------------------------------------------
             //Cargar los mesh:
-            scene =
-                loader.loadSceneFromFile(MediaDir +
-                                         "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml");
+            scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml");
             mesh = scene.Meshes[0];
 
             sceneX = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml");
             meshX = sceneX.Meshes[0];
             meshX.AutoTransform = true;
 
-            scene2 =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
+            scene2 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
             palmera = scene2.Meshes[0];
             palmera.AutoTransform = true;
 
-            scene3 =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
+            scene3 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
             avion = scene3.Meshes[0];
 
             mesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
@@ -159,8 +157,7 @@ namespace TGC.Examples.ShadersExamples
             }
 
             //Cargar Shader personalizado
-            effect =
-                TgcShaders.loadEffect(ShadersDir + "WorkshopShaders\\EnvMap.fx");
+            effect = TgcShaders.loadEffect(ShadersDir + "WorkshopShaders\\EnvMap.fx");
 
             // le asigno el efecto a la malla
             mesh.Effect = effect;
@@ -169,16 +166,15 @@ namespace TGC.Examples.ShadersExamples
             vel_tanque = 10;
 
             //Centrar camara rotacional respecto a este mesh
-            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
+            CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
             Camara = CamaraRot;
 
             kx = kc = 0.5f;
-            Modifiers.addFloat("Reflexion", 0, 1, kx);
-            Modifiers.addFloat("Refraccion", 0, 1, kc);
-            Modifiers.addBoolean("Fresnel", "fresnel", true);
+            reflexionModifier = AddFloat("Reflexion", 0, 1, kx);
+            refraccionModifier = AddFloat("Refraccion", 0, 1, kc);
+            fresnelModifier = AddBoolean("Fresnel", "fresnel", true);
         }
 
         public override void Update()
@@ -212,9 +208,9 @@ namespace TGC.Examples.ShadersExamples
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", new Vector4(0, 400, 0, 0));
             effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
-            effect.SetValue("kx", (float)Modifiers["Reflexion"]);
-            effect.SetValue("kc", (float)Modifiers["Refraccion"]);
-            effect.SetValue("usar_fresnel", (bool)Modifiers["Fresnel"]);
+            effect.SetValue("kx", reflexionModifier.Value);
+            effect.SetValue("kc", refraccionModifier.Value);
+            effect.SetValue("usar_fresnel", fresnelModifier.Value);
 
             time += ElapsedTime;
             // animar tanque
@@ -242,20 +238,17 @@ namespace TGC.Examples.ShadersExamples
             mesh.Transform = CalcularMatriz(mesh.Position, mesh.Scale, Vel);
 
             var beta = -time * Geometry.DegreeToRadian(120.0f);
-            avion.Position = new TGCVector3(x0 + 300f * (float)Math.Cos(beta),
-                400 + H, z0 + 300f * (float)Math.Sin(alfa));
+            avion.Position = new TGCVector3(x0 + 300f * (float)Math.Cos(beta), 400 + H, z0 + 300f * (float)Math.Sin(alfa));
             dir_avion = new TGCVector3(-(float)Math.Sin(beta), 0, (float)Math.Cos(beta));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
             // --------------------------------------------------------------------
             D3DDevice.Instance.Device.EndScene();
-            var g_pCubeMap = new CubeTexture(D3DDevice.Instance.Device, 256, 1, Usage.RenderTarget,
-                Format.A16B16G16R16F, Pool.Default);
+            var g_pCubeMap = new CubeTexture(D3DDevice.Instance.Device, 256, 1, Usage.RenderTarget, Format.A16B16G16R16F, Pool.Default);
             var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             // ojo: es fundamental que el fov sea de 90 grados.
             // asi que re-genero la matriz de proyeccion
-            D3DDevice.Instance.Device.Transform.Projection =
-                TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f), 1f, 1f, 10000f).ToMatrix();
+            D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f), 1f, 1f, 10000f).ToMatrix();
 
             // Genero las caras del enviroment map
             for (var nFace = CubeMapFace.PositiveX; nFace <= CubeMapFace.NegativeZ; ++nFace)
@@ -332,8 +325,7 @@ namespace TGC.Examples.ShadersExamples
 
             // Restauro el estado de las transformaciones
             D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix().ToMatrix();
-            D3DDevice.Instance.Device.Transform.Projection =
-                TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, 1f, 10000f).ToMatrix();
+            D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, 1f, 10000f).ToMatrix();
 
             // dibujo pp dicho
             D3DDevice.Instance.Device.BeginScene();
@@ -474,8 +466,7 @@ namespace TGC.Examples.ShadersExamples
             var H1 = terrain.HeightmapData[pi1, pj] * currentScaleY;
             var H2 = terrain.HeightmapData[pi, pj1] * currentScaleY;
             var H3 = terrain.HeightmapData[pi1, pj1] * currentScaleY;
-            var H = (H0 * (1 - fracc_i) + H1 * fracc_i) * (1 - fracc_j) +
-                    (H2 * (1 - fracc_i) + H3 * fracc_i) * fracc_j;
+            var H = (H0 * (1 - fracc_i) + H1 * fracc_i) * (1 - fracc_j) + (H2 * (1 - fracc_i) + H3 * fracc_i) * fracc_j;
 
             return H;
         }

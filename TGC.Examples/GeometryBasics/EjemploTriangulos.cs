@@ -1,11 +1,12 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -30,24 +31,35 @@ namespace TGC.Examples.GeometryBasics
     /// </summary>
     public class EjemploTriangulos : TGCExampleViewer
     {
+        private Texture texture;
+        private TGCVertex3fModifier vertex1Modifier;
+        private TGCVertex2fModifier texCoord1Modifier;
+        private TGCColorModifier color1Modifier;
+        private TGCVertex3fModifier vertex2Modifier;
+        private TGCVertex2fModifier texCoord2Modifier;
+        private TGCColorModifier color2Modifier;
+        private TGCVertex3fModifier vertex3Modifier;
+        private TGCVertex2fModifier texCoord3Modifier;
+        private TGCColorModifier color3Modifier;
+        private TGCFloatModifier rotationModifier;
+        private TGCBooleanModifier textureEnableModifier;
+        private TGCTextureModifier textureImageModifier;
+
         //Para 2. Triangulo editable.
         private string currentTexurePah;
 
         //Para 1. Array de vertices para crear el triangulo
         private CustomVertex.PositionColored[] simpleTriangleData;
 
-        private Texture texture;
-
         //Para 3. Vertex buffer que se va a utilizar
         private VertexBuffer vertexBuffer;
 
-        public EjemploTriangulos(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploTriangulos(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Geometry Basics";
             Name = "Triangulos";
-            Description =
-                "Crea tres triangulos 3D, 1. basico con color. 2. acepta modificaciones de atributos basicos. 3. Utilizando Vertex Buffer";
+            Description = "Crea tres triangulos 3D, 1. basico con color. 2. acepta modificaciones de atributos basicos. 3. Utilizando Vertex Buffer";
         }
 
         public override void Init()
@@ -70,32 +82,25 @@ namespace TGC.Examples.GeometryBasics
             texture = TextureLoader.FromFile(D3DDevice.Instance.Device, currentTexurePah);
 
             //Modifiers
-            Modifiers.addVertex3f("vertex1", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
-                new TGCVector3(-1, 0, 0));
-            Modifiers.addVertex2f("texCoord1", TGCVector2.Zero, TGCVector2.One,
-                new TGCVector2(1, 0));
-            Modifiers.addColor("color1", Color.White);
+            vertex1Modifier = AddVertex3f("vertex1", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3), new TGCVector3(-1, 0, 0));
+            texCoord1Modifier = AddVertex2f("texCoord1", TGCVector2.Zero, TGCVector2.One, new TGCVector2(1, 0));
+            color1Modifier = AddColor("color1", Color.White);
 
-            Modifiers.addVertex3f("vertex2", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
-                new TGCVector3(1, 0, 0));
-            Modifiers.addVertex2f("texCoord2", TGCVector2.Zero, TGCVector2.One,
-                new TGCVector2(0, 1));
-            Modifiers.addColor("color2", Color.White);
+            vertex2Modifier = AddVertex3f("vertex2", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3), new TGCVector3(1, 0, 0));
+            texCoord2Modifier = AddVertex2f("texCoord2", TGCVector2.Zero, TGCVector2.One, new TGCVector2(0, 1));
+            color2Modifier = AddColor("color2", Color.White);
 
-            Modifiers.addVertex3f("vertex3", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3),
-                TGCVector3.Up);
-            Modifiers.addVertex2f("texCoord3", TGCVector2.Zero, TGCVector2.One,
-                TGCVector2.One);
-            Modifiers.addColor("color3", Color.White);
+            vertex3Modifier = AddVertex3f("vertex3", new TGCVector3(-3, -3, -3), new TGCVector3(3, 3, 3), TGCVector3.Up);
+            texCoord3Modifier = AddVertex2f("texCoord3", TGCVector2.Zero, TGCVector2.One, TGCVector2.One);
+            color3Modifier = AddColor("color3", Color.White);
 
-            Modifiers.addFloat("rotation", -2, 2f, 0f);
-            Modifiers.addBoolean("TextureEnable", "Con textura", true);
-            Modifiers.addTexture("Texture image", currentTexurePah);
+            rotationModifier = AddFloat("rotation", -2, 2f, 0f);
+            textureEnableModifier = AddBoolean("TextureEnable", "Con textura", true);
+            textureImageModifier = AddTexture("Texture image", currentTexurePah);
 
             //Triangulo 3.
             //Crear vertexBuffer
-            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, D3DDevice.Instance.Device,
-                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
 
             //Cargar informacion de vertices: (X,Y,Z) + Color
             var data = new CustomVertex.PositionColored[3];
@@ -139,7 +144,7 @@ namespace TGC.Examples.GeometryBasics
 
             //Triangulo 2 centro.
             //Ver si cambio la textura
-            var selectedTexture = (string)Modifiers["Texture image"];
+            var selectedTexture = textureImageModifier.Value;
             if (currentTexurePah != selectedTexture)
             {
                 currentTexurePah = selectedTexture;
@@ -150,44 +155,26 @@ namespace TGC.Examples.GeometryBasics
             var data = new CustomVertex.PositionColoredTextured[3];
 
             //vertice 1
-            var v1 = (TGCVector3)Modifiers["vertex1"];
-            var t1 = (TGCVector2)Modifiers["texCoord1"];
-            data[0] = new CustomVertex.PositionColoredTextured(
-                v1.X,
-                v1.Y,
-                v1.Z,
-                ((Color)Modifiers["color1"]).ToArgb(),
-                t1.X,
-                t1.Y);
+            var v1 = vertex1Modifier.Value;
+            var t1 = texCoord1Modifier.Value;
+            data[0] = new CustomVertex.PositionColoredTextured(v1.X, v1.Y, v1.Z, color1Modifier.Value.ToArgb(), t1.X, t1.Y);
 
             //vertice 2
-            var v2 = (TGCVector3)Modifiers["vertex2"];
-            var t2 = (TGCVector2)Modifiers["texCoord2"];
-            data[1] = new CustomVertex.PositionColoredTextured(
-                v2.X,
-                v2.Y,
-                v2.Z,
-                ((Color)Modifiers["color2"]).ToArgb(),
-                t2.X,
-                t2.Y);
+            var v2 = vertex2Modifier.Value;
+            var t2 = texCoord2Modifier.Value;
+            data[1] = new CustomVertex.PositionColoredTextured(v2.X, v2.Y, v2.Z, color2Modifier.Value.ToArgb(), t2.X, t2.Y);
 
             //vertice 3
-            var v3 = (TGCVector3)Modifiers["vertex3"];
-            var t3 = (TGCVector2)Modifiers["texCoord3"];
-            data[2] = new CustomVertex.PositionColoredTextured(
-                v3.X,
-                v3.Y,
-                v3.Z,
-                ((Color)Modifiers["color3"]).ToArgb(),
-                t3.X,
-                t3.Y);
+            var v3 = vertex3Modifier.Value;
+            var t3 = texCoord3Modifier.Value;
+            data[2] = new CustomVertex.PositionColoredTextured(v3.X, v3.Y, v3.Z, color3Modifier.Value.ToArgb(), t3.X, t3.Y);
 
             //Rotacion
-            var rotation = (float)Modifiers["rotation"];
+            var rotation = rotationModifier.Value;
             D3DDevice.Instance.Device.Transform.World = (TGCMatrix.Identity * TGCMatrix.RotationY(rotation)).ToMatrix();
 
             //Habilitar textura
-            var textureEnable = (bool)Modifiers["TextureEnable"];
+            var textureEnable = textureEnableModifier.Value;
             if (textureEnable)
             {
                 D3DDevice.Instance.Device.SetTexture(0, texture);

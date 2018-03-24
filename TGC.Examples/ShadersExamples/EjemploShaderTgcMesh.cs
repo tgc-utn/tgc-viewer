@@ -1,10 +1,11 @@
 using System;
+using System.Windows.Forms;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -19,11 +20,15 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class EjemploShaderTgcMesh : TGCExampleViewer
     {
+        private TGCIntervalModifier techniqueModifier;
+        private TGCFloatModifier darkFactorModifier;
+        private TGCFloatModifier textureOffsetModifier;
+
         private TgcMesh mesh;
         private Random r;
 
-        public EjemploShaderTgcMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploShaderTgcMesh(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel y Vertex Shaders";
             Name = "TgcMesh Shaders Basicos";
@@ -37,16 +42,15 @@ namespace TGC.Examples.ShadersExamples
 
             //Cargar mesh
             var scene =
-                loader.loadSceneFromFile(MediaDir +
-                                         "MeshCreator\\Meshes\\Vehiculos\\GruaExcavadora\\GruaExcavadora-TgcScene.xml");
+                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\GruaExcavadora\\GruaExcavadora-TgcScene.xml");
             mesh = scene.Meshes[0];
 
             //Cargar Shader personalizado
             mesh.Effect = TgcShaders.loadEffect(ShadersDir + "Ejemplo1.fx");
 
             //Modifier para Technique de shader
-            Modifiers.addInterval("Technique", new[]
-            {
+            techniqueModifier = AddInterval("Technique", new[]
+             {
                 "OnlyTexture",
                 "OnlyColor",
                 "Darkening",
@@ -59,13 +63,12 @@ namespace TGC.Examples.ShadersExamples
             }, 0);
 
             //Modifier para variables de shader
-            Modifiers.addFloat("darkFactor", 0f, 1f, 0.5f);
-            Modifiers.addFloat("textureOffset", 0f, 1f, 0.5f);
+            darkFactorModifier = AddFloat("darkFactor", 0f, 1f, 0.5f);
+            textureOffsetModifier = AddFloat("textureOffset", 0f, 1f, 0.5f);
             r = new Random();
 
             //Centrar camara rotacional respecto a este mesh
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
@@ -79,12 +82,12 @@ namespace TGC.Examples.ShadersExamples
             PreRender();
 
             //Actualizar Technique
-            mesh.Technique = (string)Modifiers["Technique"];
+            mesh.Technique = techniqueModifier.Value.ToString();
 
             //Cargar variables de shader
-            mesh.Effect.SetValue("darkFactor", (float)Modifiers["darkFactor"]);
+            mesh.Effect.SetValue("darkFactor", darkFactorModifier.Value);
             mesh.Effect.SetValue("random", (float)r.NextDouble());
-            mesh.Effect.SetValue("textureOffset", (float)Modifiers["textureOffset"]);
+            mesh.Effect.SetValue("textureOffset", textureOffsetModifier.Value);
 
             mesh.Render();
 

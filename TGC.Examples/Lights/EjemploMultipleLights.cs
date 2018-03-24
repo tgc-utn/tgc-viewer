@@ -2,14 +2,15 @@ using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Lights
 {
@@ -30,11 +31,20 @@ namespace TGC.Examples.Lights
     /// </summary>
     public class EjemploMultipleLights : TGCExampleViewer
     {
+        private TGCBooleanModifier lightEnableModifier;
+        private TGCFloatModifier lightIntensityModifier;
+        private TGCFloatModifier lightAttenuationModifier;
+        private TGCFloatModifier specularExModifier;
+        private TGCColorModifier mEmissiveModifier;
+        private TGCColorModifier mAmbientModifier;
+        private TGCColorModifier mDiffuseModifier;
+        private TGCColorModifier mSpecularModifier;
+
         private List<LightData> lights;
         private TgcScene scene;
 
-        public EjemploMultipleLights(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploMultipleLights(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel Shaders";
             Name = "Multiple Lights";
@@ -61,8 +71,7 @@ namespace TGC.Examples.Lights
                 {
                     //Guardar datos de luz
                     var light = new LightData();
-                    light.color = Color.FromArgb((int)meshData.color[0], (int)meshData.color[1],
-                        (int)meshData.color[2]);
+                    light.color = Color.FromArgb((int)meshData.color[0], (int)meshData.color[1], (int)meshData.color[2]);
                     light.aabb = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(meshData.pMin), TGCVector3.Float3ArrayToVector3(meshData.pMax));
                     light.pos = light.aabb.calculateBoxCenter();
                     lights.Add(light);
@@ -85,16 +94,16 @@ namespace TGC.Examples.Lights
             Camara = new TgcFpsCamera(new TGCVector3(-20, 80, 450), 400f, 300f, Input);
 
             //Modifiers para variables de luz
-            Modifiers.addBoolean("lightEnable", "lightEnable", true);
-            Modifiers.addFloat("lightIntensity", 0, 150, 20);
-            Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
-            Modifiers.addFloat("specularEx", 0, 20, 9f);
+            lightEnableModifier = AddBoolean("lightEnable", "lightEnable", true);
+            lightIntensityModifier = AddFloat("lightIntensity", 0, 150, 20);
+            lightAttenuationModifier = AddFloat("lightAttenuation", 0.1f, 2, 0.3f);
+            specularExModifier = AddFloat("specularEx", 0, 20, 9f);
 
             //Modifiers para material
-            Modifiers.addColor("mEmissive", Color.Black);
-            Modifiers.addColor("mAmbient", Color.White);
-            Modifiers.addColor("mDiffuse", Color.White);
-            Modifiers.addColor("mSpecular", Color.White);
+            mEmissiveModifier = AddColor("mEmissive", Color.Black);
+            mAmbientModifier = AddColor("mAmbient", Color.White);
+            mDiffuseModifier = AddColor("mDiffuse", Color.White);
+            mSpecularModifier = AddColor("mSpecular", Color.White);
         }
 
         public override void Update()
@@ -108,7 +117,7 @@ namespace TGC.Examples.Lights
             PreRender();
 
             //Habilitar luz
-            var lightEnable = (bool)Modifiers["lightEnable"];
+            var lightEnable = lightEnableModifier.Value;
             Effect currentShader;
             if (lightEnable)
             {
@@ -174,15 +183,15 @@ namespace TGC.Examples.Lights
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(light.color));
                     mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(light.pos));
                     mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
-                    mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
-                    mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
+                    mesh.Effect.SetValue("lightIntensity", lightIntensityModifier.Value);
+                    mesh.Effect.SetValue("lightAttenuation", lightAttenuationModifier.Value);
 
                     //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color)Modifiers["mEmissive"]));
-                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color)Modifiers["mAmbient"]));
-                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color)Modifiers["mDiffuse"]));
-                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color)Modifiers["mSpecular"]));
-                    mesh.Effect.SetValue("materialSpecularExp", (float)Modifiers["specularEx"]);
+                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(mEmissiveModifier.Value));
+                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(mAmbientModifier.Value));
+                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(mDiffuseModifier.Value));
+                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(mSpecularModifier.Value));
+                    mesh.Effect.SetValue("materialSpecularExp", specularExModifier.Value);
                 }
 
                 //Renderizar modelo

@@ -1,11 +1,11 @@
 ﻿using Microsoft.DirectX.DirectInput;
+using System.Windows.Forms;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Transformations
 {
@@ -41,8 +41,8 @@ namespace TGC.Examples.Transformations
         private TGCMatrix transformacionPinzaDerecha;
         private TGCMatrix transformacionPinzaIzquierda;
 
-        public EjemploBrazoRobot(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploBrazoRobot(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Transformations";
             Name = "Brazo de robot";

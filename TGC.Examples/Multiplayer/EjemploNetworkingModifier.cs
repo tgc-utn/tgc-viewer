@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Drawing;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.UserControls.Networking;
+using System.Windows.Forms;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Networking;
 
 namespace TGC.Examples.Multiplayer
 {
@@ -19,9 +19,10 @@ namespace TGC.Examples.Multiplayer
     public class EjemploNetworkingModifier : TGCExampleViewer
     {
         private float acumulatedTime;
-        private TgcNetworkingModifier networkingMod;
+        private TGCNetworkingModifier networkingMod;
 
-        public EjemploNetworkingModifier(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploNetworkingModifier(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Multiplayer";
             Name = "NetworkingModifier";
@@ -31,7 +32,7 @@ namespace TGC.Examples.Multiplayer
         public override void Init()
         {
             //Crear Modifier de Networking
-            networkingMod = Modifiers.addNetworking("Networking", "MyServer", "MyClient");
+            networkingMod = AddNetworking("Networking", "MyServer", "MyClient");
 
             acumulatedTime = 0;
         }

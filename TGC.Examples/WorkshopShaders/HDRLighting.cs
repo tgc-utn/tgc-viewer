@@ -2,21 +2,26 @@ using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
-using TGC.Core.Text;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace Examples.WorkshopShaders
 {
     public class HDRLighting : TGCExampleViewer
     {
-        private string MyShaderDir;
+        private TGCBooleanModifier activarGlowModifier;
+        private TGCBooleanModifier pantallaCompletaModifier;
+        private TGCEnumModifier tmIzqModifier;
+        private TGCEnumModifier tmDerModifier;
+        private TGCIntervalModifier adaptacionPupilaModifier;
+
         private List<TgcMesh> meshes;
         private TgcSkyBox skyBox;
         private TgcSimpleTerrain terrain;
@@ -44,8 +49,8 @@ namespace Examples.WorkshopShaders
             MiddleGray = 4
         };
 
-        public HDRLighting(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public HDRLighting(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Shaders";
             Name = "Workshop-HDRLighting";
@@ -55,7 +60,6 @@ namespace Examples.WorkshopShaders
         public override void Init()
         {
             Device d3dDevice = D3DDevice.Instance.Device;
-            MyShaderDir = ShadersDir + "WorkshopShaders\\";
 
             //Cargamos un escenario
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -100,7 +104,7 @@ namespace Examples.WorkshopShaders
 
             //Camara en primera personas
             TGCVector3 positionEye = new TGCVector3(-944.1269f, 100f, -1033.307f);
-            Camara = new TgcFpsCamera(positionEye,300,10, Input);
+            Camara = new TgcFpsCamera(positionEye, 300, 10, Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
@@ -140,11 +144,11 @@ namespace Examples.WorkshopShaders
             g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured), 4, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
-            Modifiers.addBoolean("activar_glow", "Activar Glow", true);
-            Modifiers.addBoolean("pantalla_completa", "Pant.completa", true);
-            Modifiers.addEnum("tm_izq", typeof(ToneMapping), ToneMapping.MiddleGray);
-            Modifiers.addEnum("tm_der", typeof(ToneMapping), ToneMapping.Nada);
-            Modifiers.addInterval("adaptacion_pupila", new object[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f }, 2);
+            activarGlowModifier = AddBoolean("activar_glow", "Activar Glow", true);
+            pantallaCompletaModifier = AddBoolean("pantalla_completa", "Pant.completa", true);
+            tmIzqModifier = AddEnum("tm_izq", typeof(ToneMapping), ToneMapping.MiddleGray);
+            tmDerModifier = AddEnum("tm_der", typeof(ToneMapping), ToneMapping.Nada);
+            adaptacionPupilaModifier = AddInterval("adaptacion_pupila", new object[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f }, 2);
         }
 
         public override void Update()
@@ -206,8 +210,8 @@ namespace Examples.WorkshopShaders
             d3dDevice.EndScene();
             pSurf.Dispose();
 
-            MAX_PUPILA_TIME = (float)Modifiers["adaptacion_pupila"];
-            bool glow = (bool)Modifiers["activar_glow"];
+            MAX_PUPILA_TIME = (float)adaptacionPupilaModifier.Value;
+            bool glow = activarGlowModifier.Value;
             effect.SetValue("glow", glow);
             if (glow)
             {
@@ -345,9 +349,9 @@ namespace Examples.WorkshopShaders
 
             //  Tone mapping
             // -----------------------------------------------------
-            effect.SetValue("tone_mapping_izq", (int)Modifiers["tm_izq"]);
-            effect.SetValue("tone_mapping_der", (int)Modifiers["tm_der"]);
-            effect.SetValue("pantalla_completa", (bool)Modifiers["pantalla_completa"]);
+            effect.SetValue("tone_mapping_izq", (int)tmIzqModifier.Value);
+            effect.SetValue("tone_mapping_der", (int)tmDerModifier.Value);
+            effect.SetValue("pantalla_completa", pantallaCompletaModifier.Value);
             effect.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
             effect.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
             d3dDevice.SetRenderTarget(0, pOldRT);

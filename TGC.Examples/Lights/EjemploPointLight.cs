@@ -1,14 +1,15 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.SkeletalAnimation;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Lights
 {
@@ -29,12 +30,23 @@ namespace TGC.Examples.Lights
     /// </summary>
     public class EjemploPointLight : TGCExampleViewer
     {
+        private TGCBooleanModifier lightEnableModifier;
+        private TGCVertex3fModifier lightPosModifier;
+        private TGCColorModifier lightColorModifier;
+        private TGCFloatModifier lightIntensityModifier;
+        private TGCFloatModifier lightAttenuationModifier;
+        private TGCFloatModifier specularExModifier;
+        private TGCColorModifier mEmissiveModifier;
+        private TGCColorModifier mAmbientModifier;
+        private TGCColorModifier mDiffuseModifier;
+        private TGCColorModifier mSpecularModifier;
+
         private TGCBox lightMesh;
         private TgcScene scene;
         private TgcSkeletalMesh skeletalMesh;
 
-        public EjemploPointLight(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploPointLight(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel Shaders";
             Name = "TGC Point light skeletal pong shading";
@@ -49,9 +61,7 @@ namespace TGC.Examples.Lights
 
             //Cargar mesh con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
-            skeletalMesh =
-                skeletalLoader.loadMeshAndAnimationsFromFile(
-                    MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml",
+            skeletalMesh = skeletalLoader.loadMeshAndAnimationsFromFile(MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml",
                     new[] { MediaDir + "SkeletalAnimations\\Robot\\Parado-TgcSkeletalAnim.xml" });
 
             //Configurar animacion inicial
@@ -76,19 +86,18 @@ namespace TGC.Examples.Lights
             lightMesh.Position = new TGCVector3(0, 150, 150);
 
             //Modifiers de la luz
-            Modifiers.addBoolean("lightEnable", "lightEnable", lightMesh.Enabled);
-            Modifiers.addVertex3f("lightPos", new TGCVector3(-200, -100, -200), new TGCVector3(200, 200, 300),
-                lightMesh.Position);
-            Modifiers.addColor("lightColor", lightMesh.Color);
-            Modifiers.addFloat("lightIntensity", 0, 150, 20);
-            Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
-            Modifiers.addFloat("specularEx", 0, 20, 9f);
+            lightEnableModifier = AddBoolean("lightEnable", "lightEnable", lightMesh.Enabled);
+            lightPosModifier = AddVertex3f("lightPos", new TGCVector3(-200, -100, -200), new TGCVector3(200, 200, 300), lightMesh.Position);
+            lightColorModifier = AddColor("lightColor", lightMesh.Color);
+            lightIntensityModifier = AddFloat("lightIntensity", 0, 150, 20);
+            lightAttenuationModifier = AddFloat("lightAttenuation", 0.1f, 2, 0.3f);
+            specularExModifier = AddFloat("specularEx", 0, 20, 9f);
 
             //Modifiers de material
-            Modifiers.addColor("mEmissive", Color.Black);
-            Modifiers.addColor("mAmbient", Color.White);
-            Modifiers.addColor("mDiffuse", Color.White);
-            Modifiers.addColor("mSpecular", Color.White);
+            mEmissiveModifier = AddColor("mEmissive", Color.Black);
+            mAmbientModifier = AddColor("mAmbient", Color.White);
+            mDiffuseModifier = AddColor("mDiffuse", Color.White);
+            mSpecularModifier = AddColor("mSpecular", Color.White);
         }
 
         public override void Update()
@@ -96,9 +105,9 @@ namespace TGC.Examples.Lights
             PreUpdate();
 
             //Actualizo los valores de la luz
-            lightMesh.Enabled = (bool)Modifiers["lightEnable"];
-            lightMesh.Position = (TGCVector3)Modifiers["lightPos"];
-            lightMesh.Color = (Color)Modifiers["lightColor"];
+            lightMesh.Enabled = lightEnableModifier.Value;
+            lightMesh.Position = lightPosModifier.Value;
+            lightMesh.Color = lightColorModifier.Value;
             lightMesh.updateValues();
 
             PostUpdate();
@@ -147,15 +156,15 @@ namespace TGC.Examples.Lights
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(lightMesh.Color));
                     mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightMesh.Position));
                     mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
-                    mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
-                    mesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
+                    mesh.Effect.SetValue("lightIntensity", lightIntensityModifier.Value);
+                    mesh.Effect.SetValue("lightAttenuation", lightAttenuationModifier.Value);
 
                     //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color)Modifiers["mEmissive"]));
-                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color)Modifiers["mAmbient"]));
-                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color)Modifiers["mDiffuse"]));
-                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color)Modifiers["mSpecular"]));
-                    mesh.Effect.SetValue("materialSpecularExp", (float)Modifiers["specularEx"]);
+                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(mEmissiveModifier.Value));
+                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(mAmbientModifier.Value));
+                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(mDiffuseModifier.Value));
+                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(mSpecularModifier.Value));
+                    mesh.Effect.SetValue("materialSpecularExp", specularExModifier.Value);
                 }
 
                 //Renderizar modelo
@@ -169,17 +178,15 @@ namespace TGC.Examples.Lights
                 skeletalMesh.Effect.SetValue("lightColor", ColorValue.FromColor(lightMesh.Color));
                 skeletalMesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightMesh.Position));
                 skeletalMesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
-                skeletalMesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
-                skeletalMesh.Effect.SetValue("lightAttenuation", (float)Modifiers["lightAttenuation"]);
+                skeletalMesh.Effect.SetValue("lightIntensity", lightIntensityModifier.Value);
+                skeletalMesh.Effect.SetValue("lightAttenuation", lightAttenuationModifier.Value);
 
                 //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                skeletalMesh.Effect.SetValue("materialEmissiveColor",
-                    ColorValue.FromColor((Color)Modifiers["mEmissive"]));
-                skeletalMesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color)Modifiers["mAmbient"]));
-                skeletalMesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color)Modifiers["mDiffuse"]));
-                skeletalMesh.Effect.SetValue("materialSpecularColor",
-                    ColorValue.FromColor((Color)Modifiers["mSpecular"]));
-                skeletalMesh.Effect.SetValue("materialSpecularExp", (float)Modifiers["specularEx"]);
+                skeletalMesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(mEmissiveModifier.Value));
+                skeletalMesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(mAmbientModifier.Value));
+                skeletalMesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(mDiffuseModifier.Value));
+                skeletalMesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(mSpecularModifier.Value));
+                skeletalMesh.Effect.SetValue("materialSpecularExp", specularExModifier.Value);
             }
             skeletalMesh.animateAndRender(ElapsedTime);
 

@@ -1,13 +1,14 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -23,11 +24,18 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class PhongShadingTgc : TGCExampleViewer
     {
+        private TGCBooleanModifier lightEnableModifier;
+        private TGCVertex3fModifier lightPosModifier;
+        private TGCColorModifier ambientModifier;
+        private TGCColorModifier diffuseModifier;
+        private TGCColorModifier specularModifier;
+        private TGCFloatModifier specularExModifier;
+
         private TgcMesh lightMesh;
         private TgcMesh mesh;
 
-        public PhongShadingTgc(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public PhongShadingTgc(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel Shaders";
             Name = "TGC Phong Shading";
@@ -47,17 +55,15 @@ namespace TGC.Examples.ShadersExamples
             lightMesh = TGCBox.fromSize(new TGCVector3(20, 20, 20), Color.Yellow).ToMesh("Box");
 
             //Modifiers de la luz
-            Modifiers.addBoolean("lightEnable", "lightEnable", true);
-            Modifiers.addVertex3f("lightPos", new TGCVector3(-500, -500, -500), new TGCVector3(500, 800, 500),
-                new TGCVector3(0, 500, 0));
-            Modifiers.addColor("ambient", Color.Gray);
-            Modifiers.addColor("diffuse", Color.Blue);
-            Modifiers.addColor("specular", Color.White);
-            Modifiers.addFloat("specularEx", 0, 40, 20f);
+            lightEnableModifier = AddBoolean("lightEnable", "lightEnable", true);
+            lightPosModifier = AddVertex3f("lightPos", new TGCVector3(-500, -500, -500), new TGCVector3(500, 800, 500), new TGCVector3(0, 500, 0));
+            ambientModifier = AddColor("ambient", Color.Gray);
+            diffuseModifier = AddColor("diffuse", Color.Blue);
+            specularModifier = AddColor("specular", Color.White);
+            specularExModifier = AddFloat("specularEx", 0, 40, 20f);
 
             //Centrar camara rotacional respecto a este mesh
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
@@ -71,7 +77,7 @@ namespace TGC.Examples.ShadersExamples
             PreRender();
 
             //Habilitar luz
-            var lightEnable = (bool)Modifiers["lightEnable"];
+            var lightEnable = lightEnableModifier.Value;
             Effect currentShader;
             if (lightEnable)
             {
@@ -90,7 +96,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
 
             //Actualzar posicion de la luz
-            var lightPos = (TGCVector3)Modifiers["lightPos"];
+            var lightPos = lightPosModifier.Value;
             lightMesh.Position = lightPos;
 
             if (lightEnable)
@@ -98,10 +104,10 @@ namespace TGC.Examples.ShadersExamples
                 //Cargar variables shader
                 mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightPos));
                 mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
-                mesh.Effect.SetValue("ambientColor", ColorValue.FromColor((Color)Modifiers["ambient"]));
-                mesh.Effect.SetValue("diffuseColor", ColorValue.FromColor((Color)Modifiers["diffuse"]));
-                mesh.Effect.SetValue("specularColor", ColorValue.FromColor((Color)Modifiers["specular"]));
-                mesh.Effect.SetValue("specularExp", (float)Modifiers["specularEx"]);
+                mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(ambientModifier.Value));
+                mesh.Effect.SetValue("diffuseColor", ColorValue.FromColor(diffuseModifier.Value));
+                mesh.Effect.SetValue("specularColor", ColorValue.FromColor(specularModifier.Value));
+                mesh.Effect.SetValue("specularExp", specularExModifier.Value);
             }
 
             //No hace falta actualizar la matriz de transformacion ya que es un objeto estatico.

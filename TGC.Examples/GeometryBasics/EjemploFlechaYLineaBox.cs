@@ -1,10 +1,11 @@
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -18,11 +19,19 @@ namespace TGC.Examples.GeometryBasics
     /// </summary>
     public class EjemploFlechaYLineaBox : TGCExampleViewer
     {
+        private TGCVertex3fModifier startModifier;
+        private TGCVertex3fModifier endModifier;
+        private TGCFloatModifier thicknessModifier;
+        private TGCVertex2fModifier headSizeModifier;
+        private TGCColorModifier bodyColorModifier;
+        private TGCColorModifier headColorModifier;
+        private TGCColorModifier boxColorModifier;
+
         private TgcArrow arrow;
         private TgcBoxDebug box;
 
-        public EjemploFlechaYLineaBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploFlechaYLineaBox(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Geometry Basics";
             Name = "Flecha y linea box";
@@ -36,18 +45,18 @@ namespace TGC.Examples.GeometryBasics
             arrow = new TgcArrow();
 
             //Crear modifiers
-            Modifiers.addVertex3f("start", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50), TGCVector3.Empty);
-            Modifiers.addVertex3f("end", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50), new TGCVector3(0, 10, 0));
-            Modifiers.addFloat("thickness", 0.01f, 1, 0.06f);
-            Modifiers.addVertex2f("headSize", new TGCVector2(0.01f, 0.01f), TGCVector2.One, new TGCVector2(0.3f, 0.6f));
-            Modifiers.addColor("bodyColor", Color.Blue);
-            Modifiers.addColor("headColor", Color.LightBlue);
+            startModifier = AddVertex3f("start", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50), TGCVector3.Empty);
+            endModifier = AddVertex3f("end", new TGCVector3(-50, -50, -50), new TGCVector3(50, 50, 50), new TGCVector3(0, 10, 0));
+            thicknessModifier = AddFloat("thickness", 0.01f, 1, 0.06f);
+            headSizeModifier = AddVertex2f("headSize", new TGCVector2(0.01f, 0.01f), TGCVector2.One, new TGCVector2(0.3f, 0.6f));
+            bodyColorModifier = AddColor("bodyColor", Color.Blue);
+            headColorModifier = AddColor("headColor", Color.LightBlue);
 
             //Crea linea generica
             box = new TgcBoxDebug();
 
             //Crear modifiers
-            Modifiers.addColor("boxColor", Color.Red);
+            boxColorModifier = AddColor("boxColor", Color.Red);
 
             //Camara FPS
             Camara = new TgcRotationalCamera(new TGCVector3(0, 10f, 0), 30f, Input);
@@ -57,12 +66,12 @@ namespace TGC.Examples.GeometryBasics
         {
             PreUpdate();
 
-            var start = (TGCVector3)Modifiers["start"];
-            var end = (TGCVector3)Modifiers["end"];
-            var thickness = (float)Modifiers["thickness"];
-            var headSize = (TGCVector2)Modifiers["headSize"];
-            var bodyColor = (Color)Modifiers["bodyColor"];
-            var headColor = (Color)Modifiers["headColor"];
+            var start = startModifier.Value;
+            var end = endModifier.Value;
+            var thickness = thicknessModifier.Value;
+            var headSize = headSizeModifier.Value;
+            var bodyColor = bodyColorModifier.Value;
+            var headColor = headColorModifier.Value;
 
             var offset = new TGCVector3(10, 0, 0);
             //Cargar valores de la flecha
@@ -77,7 +86,7 @@ namespace TGC.Examples.GeometryBasics
             //Recomendado de ser posible realizar transformaciones!!!
             arrow.updateValues();
 
-            var boxColor = (Color)Modifiers["boxColor"];
+            var boxColor = boxColorModifier.Value;
 
             //Cargar valores de la linea
             box.PMin = start + offset;

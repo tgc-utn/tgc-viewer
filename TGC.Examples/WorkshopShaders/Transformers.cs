@@ -5,9 +5,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 using TgcViewer.Utils.Gui;
 
 namespace Examples.WorkshopShaders
@@ -215,8 +214,8 @@ namespace Examples.WorkshopShaders
         // gui
         private DXGui gui = new DXGui();
 
-        public Transformers(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public Transformers(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Shaders";
             Name = "Workshop-Transformers";

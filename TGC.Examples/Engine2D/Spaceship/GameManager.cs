@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
 using TGC.Examples.Engine2D.Spaceship.Core;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Engine2D.Spaceship
 {

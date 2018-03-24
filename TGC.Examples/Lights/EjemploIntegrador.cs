@@ -2,16 +2,17 @@ using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Lights
 {
@@ -36,14 +37,24 @@ namespace TGC.Examples.Lights
     /// </summary>
     public class EjemploIntegrador : TGCExampleViewer
     {
+        private TGCFloatModifier reflectionModifier;
+        private TGCFloatModifier bumpinessModifier;
+        private TGCFloatModifier lightIntensityModifier;
+        private TGCFloatModifier lightAttenuationModifier;
+        private TGCFloatModifier specularExModifier;
+        private TGCColorModifier mEmissiveModifier;
+        private TGCColorModifier mAmbientModifier;
+        private TGCColorModifier mDiffuseModifier;
+        private TGCColorModifier mSpecularModifier;
+
         private List<TgcMeshBumpMapping> bumpMeshes;
         private List<TgcMesh> commonMeshes;
         private CubeTexture cubeMap;
         private Effect effect;
         private List<LightData> lights;
 
-        public EjemploIntegrador(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploIntegrador(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel y Vertex Shaders";
             Name = "BumpMap + EnvMap + 1 Point Light por Proximidad";
@@ -53,8 +64,7 @@ namespace TGC.Examples.Lights
         public override void Init()
         {
             //Cargar textura de CubeMap para Environment Map, fijo para todos los meshes
-            cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device,
-                MediaDir + "CubeMap.dds");
+            cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device, MediaDir + "CubeMap.dds");
 
             //Cargar Shader personalizado de EnvironmentMap
             effect = TgcShaders.loadEffect(ShadersDir + "EnvironmentMap.fx");
@@ -77,8 +87,7 @@ namespace TGC.Examples.Lights
                 {
                     //Guardar datos de luz
                     var light = new LightData();
-                    light.color = Color.FromArgb((int)meshData.color[0], (int)meshData.color[1],
-                        (int)meshData.color[2]);
+                    light.color = Color.FromArgb((int)meshData.color[0], (int)meshData.color[1], (int)meshData.color[2]);
                     light.aabb = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(meshData.pMin), TGCVector3.Float3ArrayToVector3(meshData.pMax));
                     light.pos = light.aabb.calculateBoxCenter();
                     lights.Add(light);
@@ -132,16 +141,16 @@ namespace TGC.Examples.Lights
             Camara = new TgcFpsCamera(new TGCVector3(0, 50, 100), Input);
 
             //Modifiers
-            Modifiers.addFloat("reflection", 0, 1, 0.2f);
-            Modifiers.addFloat("bumpiness", 0, 2, 1f);
-            Modifiers.addFloat("lightIntensity", 0, 150, 20);
-            Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
-            Modifiers.addFloat("specularEx", 0, 20, 9f);
+            reflectionModifier = AddFloat("reflection", 0, 1, 0.2f);
+            bumpinessModifier = AddFloat("bumpiness", 0, 2, 1f);
+            lightIntensityModifier = AddFloat("lightIntensity", 0, 150, 20);
+            lightAttenuationModifier = AddFloat("lightAttenuation", 0.1f, 2, 0.3f);
+            specularExModifier = AddFloat("specularEx", 0, 20, 9f);
 
-            Modifiers.addColor("mEmissive", Color.Black);
-            Modifiers.addColor("mAmbient", Color.White);
-            Modifiers.addColor("mDiffuse", Color.White);
-            Modifiers.addColor("mSpecular", Color.White);
+            mEmissiveModifier = AddColor("mEmissive", Color.Black);
+            mAmbientModifier = AddColor("mAmbient", Color.White);
+            mDiffuseModifier = AddColor("mDiffuse", Color.White);
+            mSpecularModifier = AddColor("mSpecular", Color.White);
         }
 
         public override void Update()
@@ -179,26 +188,21 @@ namespace TGC.Examples.Lights
                     var light = getClosestLight(mesh.BoundingBox.calculateBoxCenter());
 
                     mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(eyePosition));
-                    mesh.Effect.SetValue("bumpiness", (float)Modifiers["bumpiness"]);
-                    mesh.Effect.SetValue("reflection", (float)Modifiers["reflection"]);
-                    mesh.Effect.SetValue("lightIntensity", (float)Modifiers["lightIntensity"]);
-                    mesh.Effect.SetValue("lightAttenuation",
-                        (float)Modifiers["lightAttenuation"]);
+                    mesh.Effect.SetValue("bumpiness", bumpinessModifier.Value);
+                    mesh.Effect.SetValue("reflection", reflectionModifier.Value);
+                    mesh.Effect.SetValue("lightIntensity", lightIntensityModifier.Value);
+                    mesh.Effect.SetValue("lightAttenuation", lightAttenuationModifier.Value);
 
                     //Cargar variables de shader de la luz
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(light.color));
                     mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(light.pos));
 
                     //Cargar variables de shader del Material
-                    mesh.Effect.SetValue("materialEmissiveColor",
-                        ColorValue.FromColor((Color)Modifiers["mEmissive"]));
-                    mesh.Effect.SetValue("materialAmbientColor",
-                        ColorValue.FromColor((Color)Modifiers["mAmbient"]));
-                    mesh.Effect.SetValue("materialDiffuseColor",
-                        ColorValue.FromColor((Color)Modifiers["mDiffuse"]));
-                    mesh.Effect.SetValue("materialSpecularColor",
-                        ColorValue.FromColor((Color)Modifiers["mSpecular"]));
-                    mesh.Effect.SetValue("materialSpecularExp", (float)Modifiers["specularEx"]);
+                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(mEmissiveModifier.Value));
+                    mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(mAmbientModifier.Value));
+                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(mDiffuseModifier.Value));
+                    mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(mSpecularModifier.Value));
+                    mesh.Effect.SetValue("materialSpecularExp", specularExModifier.Value);
 
                     //CubeMap
                     mesh.Effect.SetValue("texCubeMap", cubeMap);

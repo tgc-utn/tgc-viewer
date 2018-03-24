@@ -1,11 +1,12 @@
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 using TGC.Core.Sound;
 using TGC.Core.Text;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Sound
 {
@@ -18,13 +19,16 @@ namespace TGC.Examples.Sound
     /// </summary>
     public class PlayStaticSound : TGCExampleViewer
     {
+        private TGCFileModifier wavFileModifier;
+        private TGCBooleanModifier playLoopModifier;
+
         private string currentFile;
         private TgcText2D currentSoundText;
         private TgcText2D instruccionesText;
         private TgcStaticSound sound;
 
-        public PlayStaticSound(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public PlayStaticSound(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Sound";
             Name = "Play StaticSound";
@@ -49,12 +53,12 @@ namespace TGC.Examples.Sound
 
             //Modifier para archivo MP3
             currentFile = null;
-            Modifiers.addFile("WAV-File", MediaDir + "Sound\\campanadas horas.wav", "WAVs|*.wav");
+            wavFileModifier = AddFile("WAV-File", MediaDir + "Sound\\campanadas horas.wav", "WAVs|*.wav");
 
             //Modifier para loop
-            Modifiers.addBoolean("PlayLoop", "Play Loop", false);
+            playLoopModifier = AddBoolean("PlayLoop", "Play Loop", false);
 
-            var filePath = (string)Modifiers["WAV-File"];
+            var filePath = wavFileModifier.Value;
             loadSound(filePath);
         }
 
@@ -93,13 +97,13 @@ namespace TGC.Examples.Sound
             PreRender();
 
             //Ver si cambio el WAV
-            var filePath = (string)Modifiers["WAV-File"];
+            var filePath = wavFileModifier.Value;
             loadSound(filePath);
 
             //Contro el input de teclado
             if (Input.keyPressed(Key.Y))
             {
-                var playLoop = (bool)Modifiers["PlayLoop"];
+                var playLoop = playLoopModifier.Value;
                 sound.play(playLoop);
             }
             else if (Input.keyPressed(Key.O))

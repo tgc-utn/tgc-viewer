@@ -34,10 +34,10 @@ namespace TGC.Examples.Camara
         private float leftrightRot;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private float updownRot;
-        
+
         /// <summary>
         ///  Se traba la camara, se utiliza para ocultar el puntero del mouse y manejar la rotacion de la camara.
         /// </summary>
@@ -56,7 +56,7 @@ namespace TGC.Examples.Camara
         public TgcFpsCamera(TgcD3dInput input)
         {
             this.Input = input;
-            this.positionEye = new TGCVector3();
+            this.positionEye = TGCVector3.Empty;
             this.mouseCenter = new Point(D3DDevice.Instance.Device.Viewport.Width / 2, D3DDevice.Instance.Device.Viewport.Height / 2);
             this.RotationSpeed = 0.1f;
             this.MovementSpeed = 500f;
@@ -94,7 +94,7 @@ namespace TGC.Examples.Camara
         }
 
         /// <summary>
-        /// Constructor de la camara a partir de un TgcD3dInput y un positionEye, moveSpeed, jumpSpeed y rotationSpeed. Los atributos mouseCenter a partir del centro del a pantalla, 
+        /// Constructor de la camara a partir de un TgcD3dInput y un positionEye, moveSpeed, jumpSpeed y rotationSpeed. Los atributos mouseCenter a partir del centro del a pantalla,
         ///  el directionView (0,0,-1)
         /// </summary>
         /// <param name="positionEye"></param>

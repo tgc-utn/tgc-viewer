@@ -1,11 +1,12 @@
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.Terrain;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -20,15 +21,16 @@ namespace TGC.Examples.MeshExamples
     /// </summary>
     public class CrearSkyBox : TGCExampleViewer
     {
+        private TGCBooleanModifier moveWithCameraModifier;
+
         private TgcSkyBox skyBox;
 
-        public CrearSkyBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public CrearSkyBox(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "SkyBox";
-            Description =
-                "Muestra como utilizar la herramienta TgcSkyBox para crear un cielo envolvente en la escena. Movimiento con mouse.";
+            Description = "Muestra como utilizar la herramienta TgcSkyBox para crear un cielo envolvente en la escena. Movimiento con mouse.";
         }
 
         public override void Init()
@@ -57,7 +59,7 @@ namespace TGC.Examples.MeshExamples
             skyBox.Init();
 
             //Modifier para mover el skybox con la posicion de la caja con traslaciones.
-            Modifiers.addBoolean("moveWhitCamera", "Move Whit Camera", false);
+            moveWithCameraModifier = AddBoolean("moveWithCamera", "Move With Camera", false);
 
             Camara = new TgcFpsCamera(Input);
         }
@@ -67,12 +69,11 @@ namespace TGC.Examples.MeshExamples
             PreUpdate();
 
             //Se cambia el valor por defecto del farplane para evitar cliping de farplane.
-            D3DDevice.Instance.Device.Transform.Projection =
-                TGCMatrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView, D3DDevice.Instance.AspectRatio,
+            D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView, D3DDevice.Instance.AspectRatio,
                     D3DDevice.Instance.ZNearPlaneDistance, D3DDevice.Instance.ZFarPlaneDistance * 2f).ToMatrix();
 
             //Se actualiza la posicion del skybox.
-            if ((bool)Modifiers.getValue("moveWhitCamera"))
+            if (moveWithCameraModifier.Value)
                 skyBox.Center = Camara.Position;
 
             PostUpdate();

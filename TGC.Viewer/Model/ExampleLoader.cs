@@ -4,9 +4,8 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using TGC.Core.Example;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Viewer.Model
 {
@@ -15,17 +14,16 @@ namespace TGC.Viewer.Model
     /// </summary>
     public class ExampleLoader
     {
-        private readonly TgcModifiers modifiers;
         private readonly Dictionary<TreeNode, TgcExample> treeExamplesDict;
         private readonly TgcUserVars userVars;
 
-        public ExampleLoader(string mediaDirectory, string shadersDirectory, DataGridView dataGridUserVars, FlowLayoutPanel flowLayoutPanelModifiers)
+        public ExampleLoader(string mediaDirectory, string shadersDirectory, DataGridView dataGridUserVars, Panel modifiersPanel)
         {
             treeExamplesDict = new Dictionary<TreeNode, TgcExample>();
             MediaDirectory = mediaDirectory;
             ShadersDirectory = shadersDirectory;
             userVars = new TgcUserVars(dataGridUserVars);
-            modifiers = new TgcModifiers(flowLayoutPanelModifiers);
+            ModifiersPanel = modifiersPanel;
         }
 
         /// <summary>
@@ -47,6 +45,8 @@ namespace TGC.Viewer.Model
         ///     Path de la carpeta Shaders que contiene todo los shaders genericos
         /// </summary>
         public string ShadersDirectory { get; set; }
+
+        public Panel ModifiersPanel { get; set; }
 
         /// <summary>
         ///     Carga los ejemplos dinamicamente en el TreeView de Ejemplo
@@ -145,7 +145,7 @@ namespace TGC.Viewer.Model
 
                         if (type.BaseType.Equals(typeof(TGCExampleViewer)))
                         {
-                            var obj = Activator.CreateInstance(type, MediaDirectory, ShadersDirectory, userVars, modifiers);
+                            var obj = Activator.CreateInstance(type, MediaDirectory, ShadersDirectory, userVars, ModifiersPanel);
                             var example = (TGCExampleViewer)obj;
                             examples.Add(example);
                         }
@@ -153,8 +153,7 @@ namespace TGC.Viewer.Model
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.Message, "No se pudo cargar la dll: " + file, MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MessageBox.Show(e.Message, "No se pudo cargar la dll: " + file, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 

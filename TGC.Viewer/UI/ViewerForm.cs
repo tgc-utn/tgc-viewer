@@ -55,7 +55,7 @@ namespace TGC.Viewer.UI
             try
             {
                 //Cargo los ejemplos en el arbol
-                Modelo.LoadExamples(treeViewExamples, flowLayoutPanelModifiers, dataGridUserVars, settings.MediaDirectory, settings.ShadersDirectory);
+                Modelo.LoadExamples(treeViewExamples, panelModifiers, dataGridUserVars, settings.MediaDirectory, settings.ShadersDirectory);
                 var defaultExample = Modelo.ExampleLoader.GetExampleByName(settings.DefaultExampleName, settings.DefaultExampleCategory);
                 ExecuteExample(defaultExample);
             }
@@ -205,7 +205,6 @@ namespace TGC.Viewer.UI
 
                 //TODO mejorar esta llamada con un metodo de model
                 Modelo.ExampleLoader.CurrentExample = null;
-                return;
             }
         }
 

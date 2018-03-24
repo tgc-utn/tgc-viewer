@@ -2,15 +2,16 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -24,6 +25,9 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class ShadowMap : TGCExampleViewer
     {
+        private TGCVertex3fModifier lightLookFromModifier;
+        private TGCVertex3fModifier lightLookAtModifier;
+
         private readonly float far_plane = 1500f;
         private readonly float near_plane = 2f;
 
@@ -47,8 +51,8 @@ namespace TGC.Examples.ShadersExamples
         private TgcScene scene, scene2;
         private float time;
 
-        public ShadowMap(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public ShadowMap(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel y Vertex Shaders";
             Name = "ShadowMap";
@@ -67,8 +71,7 @@ namespace TGC.Examples.ShadersExamples
             //Cargar la escena
             scene = loader.loadSceneFromFile(MyMediaDir + "shadowTest\\ShadowTest-TgcScene.xml");
 
-            scene2 =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
+            scene2 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\AvionCaza\\AvionCaza-TgcScene.xml");
             avion = scene2.Meshes[0];
 
             avion.Scale = new TGCVector3(0.1f, 0.1f, 0.1f);
@@ -77,8 +80,7 @@ namespace TGC.Examples.ShadersExamples
             dir_avion = new TGCVector3(0, 0, 1);
 
             //Cargar Shader personalizado
-            effect =
-                TgcShaders.loadEffect(MyShaderDir + "ShadowMap.fx");
+            effect = TgcShaders.loadEffect(MyShaderDir + "ShadowMap.fx");
 
             // le asigno el efecto a las mallas
             foreach (var T in scene.Meshes)
@@ -92,19 +94,12 @@ namespace TGC.Examples.ShadersExamples
             // Creo el shadowmap.
             // Format.R32F
             // Format.X8R8G8B8
-            g_pShadowMap = new Texture(D3DDevice.Instance.Device, SHADOWMAP_SIZE, SHADOWMAP_SIZE,
-                1, Usage.RenderTarget, Format.R32F,
-                Pool.Default);
+            g_pShadowMap = new Texture(D3DDevice.Instance.Device, SHADOWMAP_SIZE, SHADOWMAP_SIZE, 1, Usage.RenderTarget, Format.R32F, Pool.Default);
 
             // tengo que crear un stencilbuffer para el shadowmap manualmente
             // para asegurarme que tenga la el mismo tamano que el shadowmap, y que no tenga
             // multisample, etc etc.
-            g_pDSShadow = D3DDevice.Instance.Device.CreateDepthStencilSurface(SHADOWMAP_SIZE,
-                SHADOWMAP_SIZE,
-                DepthFormat.D24S8,
-                MultiSampleType.None,
-                0,
-                true);
+            g_pDSShadow = D3DDevice.Instance.Device.CreateDepthStencilSurface(SHADOWMAP_SIZE, SHADOWMAP_SIZE, DepthFormat.D24S8, MultiSampleType.None, 0, true);
             // por ultimo necesito una matriz de proyeccion para el shadowmap, ya
             // que voy a dibujar desde el pto de vista de la luz.
             // El angulo tiene que ser mayor a 45 para que la sombra no falle en los extremos del cono de luz
@@ -112,8 +107,7 @@ namespace TGC.Examples.ShadersExamples
             // lograr que los objetos del borde generen sombras
             var aspectRatio = D3DDevice.Instance.AspectRatio;
             g_mShadowProj = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(80), aspectRatio, 50, 5000);
-            D3DDevice.Instance.Device.Transform.Projection =
-                TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, near_plane, far_plane).ToMatrix();
+            D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, near_plane, far_plane).ToMatrix();
 
             arrow = new TgcArrow();
             arrow.Thickness = 1f;
@@ -121,15 +115,11 @@ namespace TGC.Examples.ShadersExamples
             arrow.BodyColor = Color.Blue;
 
             float K = 300;
-            Modifiers.addVertex3f("LightLookFrom", new TGCVector3(-K, -K, -K), new TGCVector3(K, K, K),
-                new TGCVector3(80, 120, 0));
-            Modifiers.addVertex3f("LightLookAt", new TGCVector3(-K, -K, -K), new TGCVector3(K, K, K),
-                TGCVector3.Empty);
+            lightLookFromModifier = AddVertex3f("LightLookFrom", new TGCVector3(-K, -K, -K), new TGCVector3(K, K, K), new TGCVector3(80, 120, 0));
+            lightLookAtModifier = AddVertex3f("LightLookAt", new TGCVector3(-K, -K, -K), new TGCVector3(K, K, K), TGCVector3.Empty);
 
-            var rotCamera = new TgcRotationalCamera(scene.Meshes[0].BoundingBox.calculateBoxCenter(),
-                scene.Meshes[0].BoundingBox.calculateBoxRadius() * 2, Input);
-            rotCamera.CameraCenter = rotCamera.CameraCenter +
-                                     new TGCVector3(0, 50f, 0);
+            var rotCamera = new TgcRotationalCamera(scene.Meshes[0].BoundingBox.calculateBoxCenter(), scene.Meshes[0].BoundingBox.calculateBoxRadius() * 2, Input);
+            rotCamera.CameraCenter = rotCamera.CameraCenter + new TGCVector3(0, 50f, 0);
             rotCamera.CameraDistance = 300;
             rotCamera.RotationSpeed = 50f;
             Camara = rotCamera;
@@ -151,13 +141,12 @@ namespace TGC.Examples.ShadersExamples
             time += ElapsedTime;
             // animo la pos del avion
             var alfa = -time * Geometry.DegreeToRadian(15.0f);
-            avion.Position = new TGCVector3(80f * (float)Math.Cos(alfa), 40 - 20 * (float)Math.Sin(alfa),
-                80f * (float)Math.Sin(alfa));
+            avion.Position = new TGCVector3(80f * (float)Math.Cos(alfa), 40 - 20 * (float)Math.Sin(alfa), 80f * (float)Math.Sin(alfa));
             dir_avion = new TGCVector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 
-            g_LightPos = (TGCVector3)Modifiers["LightLookFrom"];
-            g_LightDir = (TGCVector3)Modifiers["LightLookAt"] - g_LightPos;
+            g_LightPos = lightLookFromModifier.Value;
+            g_LightDir = lightLookAtModifier.Value - g_LightPos;
             g_LightDir.Normalize();
 
             arrow.PStart = g_LightPos;

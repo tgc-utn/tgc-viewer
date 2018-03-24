@@ -1,14 +1,15 @@
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.PostProcess
 {
@@ -27,6 +28,10 @@ namespace TGC.Examples.PostProcess
     /// </summary>
     public class EfectoOndas : TGCExampleViewer
     {
+        private TGCBooleanModifier activarEfectoModifier;
+        private TGCFloatModifier waveLengthModifier;
+        private TGCFloatModifier waveSizeModifier;
+
         private Surface depthStencil; // Depth-stencil buffer
         private Effect effect;
         private List<TgcMesh> meshes;
@@ -35,13 +40,12 @@ namespace TGC.Examples.PostProcess
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
-        public EfectoOndas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EfectoOndas(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "Texture Distortion Ondas";
-            Description =
-                "Graba la escena a un Render Target y luego con un pixel shader distorsiona la imagen con ondas de senos.";
+            Description = "Graba la escena a un Render Target y luego con un pixel shader distorsiona la imagen con ondas de senos.";
         }
 
         public override void Init()
@@ -58,23 +62,17 @@ namespace TGC.Examples.PostProcess
                 new CustomVertex.PositionTextured(1, -1, 1, 1, 1)
             };
             //vertex buffer de los triangulos
-            screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured),
-                4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
+            screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured), 4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
                 CustomVertex.PositionTextured.Format, Pool.Default);
             screenQuadVB.SetData(screenQuadVertices, 0, LockFlags.None);
 
             //Creamos un Render Targer sobre el cual se va a dibujar la pantalla
-            renderTarget2D = new Texture(D3DDevice.Instance.Device,
-                D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
-                , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                Format.X8R8G8B8, Pool.Default);
+            renderTarget2D = new Texture(D3DDevice.Instance.Device, D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
 
             //Creamos un DepthStencil que debe ser compatible con nuestra definicion de renderTarget2D.
-            depthStencil =
-                D3DDevice.Instance.Device.CreateDepthStencilSurface(
-                    D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
-                    D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
-                    DepthFormat.D24S8, MultiSampleType.None, 0, true);
+            depthStencil = D3DDevice.Instance.Device.CreateDepthStencilSurface(D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                    D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             //Cargar shader con efectos de Post-Procesado
             effect = TgcShaders.loadEffect(ShadersDir + "PostProcess.fx");
@@ -91,9 +89,9 @@ namespace TGC.Examples.PostProcess
             Camara = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
 
             //Modifier para variar tamano de ondas
-            Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
-            Modifiers.addFloat("wave_length", 0, 300, 200);
-            Modifiers.addFloat("wave_size", 0.01f, 1, 0.01f);
+            activarEfectoModifier = AddBoolean("activar_efecto", "Activar efecto", true);
+            waveLengthModifier = AddFloat("wave_length", 0, 300, 200);
+            waveSizeModifier = AddFloat("wave_size", 0.01f, 1, 0.01f);
         }
 
         public override void Update()
@@ -164,7 +162,7 @@ namespace TGC.Examples.PostProcess
             d3dDevice.SetStreamSource(0, screenQuadVB, 0);
 
             //Ver si el efecto de oscurecer esta activado, configurar Technique del shader segun corresponda
-            var activar_efecto = (bool)Modifiers["activar_efecto"];
+            var activar_efecto = activarEfectoModifier.Value;
 
             if (activar_efecto)
             {
@@ -177,8 +175,8 @@ namespace TGC.Examples.PostProcess
 
             //Cargamos parametros en el shader de Post-Procesado
             effect.SetValue("render_target2D", renderTarget2D);
-            effect.SetValue("ondas_vertical_length", (float)Modifiers["wave_length"]);
-            effect.SetValue("ondas_size", (float)Modifiers["wave_size"]);
+            effect.SetValue("ondas_vertical_length", waveLengthModifier.Value);
+            effect.SetValue("ondas_size", waveSizeModifier.Value);
 
             //Limiamos la pantalla y ejecutamos el render del shader
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);

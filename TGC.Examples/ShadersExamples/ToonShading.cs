@@ -1,14 +1,15 @@
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
@@ -23,6 +24,13 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class ToonShading : TGCExampleViewer
     {
+        private TGCBooleanModifier blurActivatedModifier;
+        private TGCVertex3fModifier lightPositionModifier;
+        private TGCFloatModifier ambientModifier;
+        private TGCFloatModifier diffuseModifier;
+        private TGCFloatModifier specularModifier;
+        private TGCFloatModifier specularPowerModifier;
+
         private Effect effect;
         private Surface g_pDepthStencil; // Depth-stencil buffer
         private Texture g_pNormals;
@@ -30,11 +38,10 @@ namespace TGC.Examples.ShadersExamples
         private VertexBuffer g_pVBV3D;
         private List<TgcMesh> instances;
         private TgcMesh mesh;
-        private string MyShaderDir;
         private TgcScene scene;
 
-        public ToonShading(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public ToonShading(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "Toon Shading";
@@ -43,8 +50,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Init()
         {
-            MyShaderDir = ShadersDir + "WorkshopShaders\\";
-
             //Crear loader
             var loader = new TgcSceneLoader();
 
@@ -61,8 +66,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.D3dMesh.ComputeNormals(adj);
 
             //Cargar Shader personalizado
-            effect =
-                TgcShaders.loadEffect(MyShaderDir + "ToonShading.fx");
+            effect = TgcShaders.loadEffect(ShadersDir + "WorkshopShaders\\ToonShading.fx");
 
             // le asigno el efecto a la malla
             mesh.Effect = effect;
@@ -78,16 +82,14 @@ namespace TGC.Examples.ShadersExamples
                     instances.Add(instance);
                 }
 
-            Modifiers.addBoolean("blurActivated", "activar blur", false);
-            Modifiers.addVertex3f("LightPosition", new TGCVector3(-100, -100, -100),
-                new TGCVector3(100, 100, 100), new TGCVector3(0, 40, 0));
-            Modifiers.addFloat("Ambient", 0, 1, 0.5f);
-            Modifiers.addFloat("Diffuse", 0, 1, 0.6f);
-            Modifiers.addFloat("Specular", 0, 1, 0.5f);
-            Modifiers.addFloat("SpecularPower", 1, 100, 16);
+            blurActivatedModifier = AddBoolean("blurActivated", "activar blur", false);
+            lightPositionModifier = AddVertex3f("LightPosition", new TGCVector3(-100, -100, -100), new TGCVector3(100, 100, 100), new TGCVector3(0, 40, 0));
+            ambientModifier = AddFloat("Ambient", 0, 1, 0.5f);
+            diffuseModifier = AddFloat("Diffuse", 0, 1, 0.6f);
+            specularModifier = AddFloat("Specular", 0, 1, 0.5f);
+            specularPowerModifier = AddFloat("SpecularPower", 1, 100, 16);
 
-            Camara = new TgcRotationalCamera(new TGCVector3(20, 20, 0), 300, TgcRotationalCamera.DEFAULT_ZOOM_FACTOR, 1.5f,
-                Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(20, 20, 0), 300, TgcRotationalCamera.DEFAULT_ZOOM_FACTOR, 1.5f, Input);
 
             // Creo un depthbuffer sin multisampling, para que sea compatible con el render to texture
 
@@ -124,25 +126,18 @@ namespace TGC.Examples.ShadersExamples
             // no es lo mismo que lockear una textura para acceder desde la CPU, que tiene el problema
             // de transferencia via AGP.
 
-            g_pDepthStencil =
-                D3DDevice.Instance.Device.CreateDepthStencilSurface(
-                    D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
-                    D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
-                    DepthFormat.D24S8, MultiSampleType.None, 0, true);
+            g_pDepthStencil = D3DDevice.Instance.Device.CreateDepthStencilSurface(D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                    D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             // inicializo el render target
-            g_pRenderTarget = new Texture(D3DDevice.Instance.Device,
-                D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
-                , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                Format.X8R8G8B8, Pool.Default);
+            g_pRenderTarget = new Texture(D3DDevice.Instance.Device, D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
 
             effect.SetValue("g_RenderTarget", g_pRenderTarget);
 
             // inicializo el mapa de normales
-            g_pNormals = new Texture(D3DDevice.Instance.Device,
-                D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
-                , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                Format.A16B16G16R16F, Pool.Default);
+            g_pNormals = new Texture(D3DDevice.Instance.Device, D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.A16B16G16R16F, Pool.Default);
 
             effect.SetValue("g_Normals", g_pNormals);
 
@@ -162,8 +157,7 @@ namespace TGC.Examples.ShadersExamples
                 new CustomVertex.PositionTextured(1, -1, 1, 1, 1)
             };
             //vertex buffer de los triangulos
-            g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured),
-                4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
+            g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured), 4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
                 CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
         }
@@ -178,15 +172,15 @@ namespace TGC.Examples.ShadersExamples
         {
             PreRender();
 
-            var lightPosition = (TGCVector3)Modifiers["LightPosition"];
+            var lightPosition = lightPositionModifier.Value;
 
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", TGCVector3.Vector3ToFloat3Array(lightPosition));
             effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
-            effect.SetValue("k_la", (float)Modifiers["Ambient"]);
-            effect.SetValue("k_ld", (float)Modifiers["Diffuse"]);
-            effect.SetValue("k_ls", (float)Modifiers["Specular"]);
-            effect.SetValue("fSpecularPower", (float)Modifiers["SpecularPower"]);
+            effect.SetValue("k_la", ambientModifier.Value);
+            effect.SetValue("k_ld", diffuseModifier.Value);
+            effect.SetValue("k_ls", specularModifier.Value);
+            effect.SetValue("fSpecularPower", specularPowerModifier.Value);
 
             D3DDevice.Instance.Device.EndScene();
 
@@ -233,7 +227,7 @@ namespace TGC.Examples.ShadersExamples
 
             // dibujo el quad pp dicho :
             D3DDevice.Instance.Device.BeginScene();
-            effect.Technique = (bool)Modifiers["blurActivated"] ? "CopyScreen" : "EdgeDetect";
+            effect.Technique = blurActivatedModifier.Value ? "CopyScreen" : "EdgeDetect";
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
             D3DDevice.Instance.Device.SetStreamSource(0, g_pVBV3D, 0);
             effect.SetValue("g_Normals", g_pNormals);

@@ -1,11 +1,12 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.DirectX
 {
@@ -18,6 +19,20 @@ namespace TGC.Examples.DirectX
     /// </summary>
     public class DirectXLight : TGCExampleViewer
     {
+        private TGCIntervalModifier selectedMeshModifier;
+        private TGCIntervalModifier shaderModeModifier;
+        private TGCBooleanModifier normalesModifier;
+        private TGCFloatModifier specularSharpnessModifier;
+        private TGCBooleanModifier specularEnabledModifier;
+        private TGCColorModifier ambientModifier;
+        private TGCColorModifier diffuseModifier;
+        private TGCColorModifier specularModifier;
+        private TGCBooleanModifier wireframeModifier;
+        private TGCBooleanModifier backFaceCullModifier;
+        private TGCFloatModifier angleXModifier;
+        private TGCFloatModifier angleYModifier;
+        private TGCFloatModifier angleZModifier;
+
         private readonly float lightDistance = 7;
         private float angleX;
         private float angleY;
@@ -31,8 +46,8 @@ namespace TGC.Examples.DirectX
         private Mesh teapotMesh, faceMesh;
         private CustomVertex.PositionColored[] teapotMeshNormalsVB;
 
-        public DirectXLight(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public DirectXLight(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "DirectX";
             Name = "DirectX Light";
@@ -61,35 +76,35 @@ namespace TGC.Examples.DirectX
             Camara = new TgcRotationalCamera(TGCVector3.Empty, 10f, Input);
 
             //El tipo de mesh para seleccionar.
-            Modifiers.addInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
+            selectedMeshModifier = AddInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
 
             //Selecciona el modo de shading.
-            Modifiers.addInterval("ShaderMode", new[] { "Gouraud", "Flat" }, 1);
+            shaderModeModifier = AddInterval("ShaderMode", new[] { "Gouraud", "Flat" }, 1);
 
             //Habilito o deshabilito mostrar las normales
-            Modifiers.addBoolean("Normales", "Mostrar normales", false);
+            normalesModifier = AddBoolean("Normales", "Mostrar normales", false);
 
             //El exponente del nivel de brillo de la iluminacion especular.
-            Modifiers.addFloat("SpecularSharpness", 0, 500f, 100.00f);
+            specularSharpnessModifier = AddFloat("SpecularSharpness", 0, 500f, 100.00f);
 
             //Habilita o deshabilita el brillo especular.
-            Modifiers.addBoolean("SpecularEnabled", "Enable Specular", true);
+            specularEnabledModifier = AddBoolean("SpecularEnabled", "Enable Specular", true);
 
             //Los distintos colores e intensidades de cada uno de los tipos de iluminacion.
-            Modifiers.addColor("Ambient", Color.LightSlateGray);
-            Modifiers.addColor("Diffuse", Color.Gray);
-            Modifiers.addColor("Specular", Color.LightSteelBlue);
+            ambientModifier = AddColor("Ambient", Color.LightSlateGray);
+            diffuseModifier = AddColor("Diffuse", Color.Gray);
+            specularModifier = AddColor("Specular", Color.LightSteelBlue);
 
             //Habilita o deshabilita el remarcado de los bordes de cada triangulo.
-            Modifiers.addBoolean("Wireframe", "Enable Wireframe", false);
+            wireframeModifier = AddBoolean("Wireframe", "Enable Wireframe", false);
 
             //Habilita o deshabilita el back face culling
-            Modifiers.addBoolean("BackFaceCull", "Enable BackFaceCulling", false);
+            backFaceCullModifier = AddBoolean("BackFaceCull", "Enable BackFaceCulling", false);
 
             //Modifiers para angulos de rotacion de la luz
-            Modifiers.addFloat("angleX", 0, 0.005f, 0.0f);
-            Modifiers.addFloat("angleY", 0, 0.005f, 0.0f);
-            Modifiers.addFloat("angleZ", 0, 0.005f, 0.0f);
+            angleXModifier = AddFloat("angleX", 0, 0.005f, 0.0f);
+            angleYModifier = AddFloat("angleY", 0, 0.005f, 0.0f);
+            angleZModifier = AddFloat("angleZ", 0, 0.005f, 0.0f);
         }
 
         public override void Update()
@@ -106,9 +121,9 @@ namespace TGC.Examples.DirectX
             ClearTextures();
 
             //Obtener valores de Modifiers
-            var vAngleX = (float)Modifiers["angleX"];
-            var vAngleY = (float)Modifiers["angleY"];
-            var vAngleZ = (float)Modifiers["angleZ"];
+            var vAngleX = angleXModifier.Value;
+            var vAngleY = angleYModifier.Value;
+            var vAngleZ = angleZModifier.Value;
 
             //Rotar la luz en base los angulos especificados
             angleX += vAngleX;
@@ -132,15 +147,15 @@ namespace TGC.Examples.DirectX
             lightVectorVB[1].Color = Color.Blue.ToArgb();
 
             //Variar el color del material
-            material.Ambient = (Color)Modifiers["Ambient"];
-            material.Diffuse = (Color)Modifiers["Diffuse"];
-            material.Specular = (Color)Modifiers["Specular"];
+            material.Ambient = ambientModifier.Value;
+            material.Diffuse = diffuseModifier.Value;
+            material.Specular = specularModifier.Value;
 
-            material.SpecularSharpness = (float)Modifiers["SpecularSharpness"];
+            material.SpecularSharpness = specularSharpnessModifier.Value;
 
             D3DDevice.Instance.Device.Material = material;
 
-            switch ((string)Modifiers["ShaderMode"])
+            switch (shaderModeModifier.Value.ToString())
             {
                 case "Gouraud":
                     D3DDevice.Instance.Device.RenderState.ShadeMode = ShadeMode.Gouraud;
@@ -151,13 +166,12 @@ namespace TGC.Examples.DirectX
                     break;
             }
 
-            D3DDevice.Instance.Device.RenderState.SpecularEnable =
-                (bool)Modifiers["SpecularEnabled"];
+            D3DDevice.Instance.Device.RenderState.SpecularEnable = specularEnabledModifier.Value;
 
             D3DDevice.Instance.Device.RenderState.ColorVertex = true;
 
             //Habilito o deshabilito el backface culling.
-            if ((bool)Modifiers["BackFaceCull"])
+            if (backFaceCullModifier.Value)
             {
                 D3DDevice.Instance.Device.RenderState.CullMode = Cull.CounterClockwise;
             }
@@ -167,7 +181,7 @@ namespace TGC.Examples.DirectX
             }
 
             //Selecciono el mesh y el vertex buffer del modelo.
-            switch ((string)Modifiers["SelectedMesh"])
+            switch (selectedMeshModifier.Value.ToString())
             {
                 case "Teapot":
                     SelectedMesh = teapotMesh;
@@ -187,7 +201,7 @@ namespace TGC.Examples.DirectX
             SelectedMesh.DrawSubset(0);
 
             //Para dibujar el wireframe se desabilita la luz y se pone el fill mode en modo wireframe.
-            if ((bool)Modifiers["Wireframe"])
+            if (wireframeModifier.Value)
             {
                 D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
                 D3DDevice.Instance.Device.RenderState.Lighting = false;
@@ -205,17 +219,13 @@ namespace TGC.Examples.DirectX
             //Dibujo la linea que va desde la luz al centro.
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionColored.Format;
 
-            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList,
-                1,
-                lightVectorVB);
+            D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, 1, lightVectorVB);
 
             D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
 
             //Dibujo las normales si estan habilitadas y si es la tetera.
-            if (selectedNormalVB != null && (bool)Modifiers["Normales"])
-                D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList,
-                    selectedNormalVB.Length / 2,
-                    selectedNormalVB);
+            if (selectedNormalVB != null && normalesModifier.Value)
+                D3DDevice.Instance.Device.DrawUserPrimitives(PrimitiveType.LineList, selectedNormalVB.Length / 2, selectedNormalVB);
 
             //Traslado y renderizo la esfera que hace de lampara.
             D3DDevice.Instance.Device.Transform.World *= TGCMatrix.Translation(lightVectorToCenter).ToMatrix();
@@ -231,17 +241,14 @@ namespace TGC.Examples.DirectX
             teapotMesh.ComputeNormals();
 
             //Cargar cara
-            faceMesh = Mesh.FromFile(MediaDir + "ModelosX" + "\\" + "Cara.x", MeshFlags.Managed,
-                D3DDevice.Instance.Device);
+            faceMesh = Mesh.FromFile(MediaDir + "ModelosX" + "\\" + "Cara.x", MeshFlags.Managed, D3DDevice.Instance.Device);
             faceMesh.ComputeNormals();
 
             //El vertex buffer con la linea que apunta a la direccion de la luz.
             lightVectorVB = new CustomVertex.PositionColored[2];
 
             //Obtener los vertices para obtener las normales de la tetera.
-            var verts = (CustomVertex.PositionNormal[])
-                teapotMesh.VertexBuffer.Lock(0, typeof(CustomVertex.PositionNormal), LockFlags.None,
-                    teapotMesh.NumberVertices);
+            var verts = (CustomVertex.PositionNormal[])teapotMesh.VertexBuffer.Lock(0, typeof(CustomVertex.PositionNormal), LockFlags.None, teapotMesh.NumberVertices);
 
             //El vertex buffer que tiene las lineas de las normales de la tetera;
             teapotMeshNormalsVB = new CustomVertex.PositionColored[verts.Length * 2];

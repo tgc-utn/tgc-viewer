@@ -130,6 +130,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="IconoTgc.ico" />
+    <None Include="Resources\16x16\ICON_RENDER_ANIMATION.png" />
+    <None Include="Resources\16x16\ICON_WIRE.png" />
+    <None Include="Resources\16x16\ICON_MANIPUL.png" />
+    <None Include="Resources\16x16\edit-clear-all.png" />
+    <None Include="Resources\16x16\view-fullscreen.png" />
+    <None Include="Resources\16x16\preferences-desktop.png" />
+    <None Include="Resources\16x16\help-contents.png" />
+    <None Include="Resources\16x16\help-about.png" />
+    <None Include="Resources\16x16\application-exit.png" />
     <None Include="Resources\robotgc.png" />
   </ItemGroup>
   <ItemGroup>

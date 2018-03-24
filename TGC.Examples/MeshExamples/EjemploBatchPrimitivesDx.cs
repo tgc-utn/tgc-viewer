@@ -1,10 +1,11 @@
 using Microsoft.DirectX.Direct3D;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -13,23 +14,23 @@ namespace TGC.Examples.MeshExamples
     /// </summary>
     public class EjemploBatchPrimitivesDx : TGCExampleViewer
     {
+        private TGCEnumModifier renderMethodModifier;
+
         private const float boxSize = 3f;
         private const int boxPerSquare = 50;
         private readonly int totalBoxes = boxPerSquare * boxPerSquare;
         private TgcTexture box1Texture;
         private TgcTexture box2Texture;
         private TgcTexture box3Texture;
-
         private RenderMethod currentRenderMethod;
         private Mesh[] meshes;
 
-        public EjemploBatchPrimitivesDx(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploBatchPrimitivesDx(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Texture primitive Mesh render order";
-            Description =
-                "En este ejemplo podemos ver como afecta el orden de renderisado cuando tenemos un mismo mesh" +
+            Description = "En este ejemplo podemos ver como afecta el orden de renderisado cuando tenemos un mismo mesh" +
                 " con diferentes texturas. si realizamos multiples render set se nota el costo que tiene. en cambio si " +
                 "asignamos la textura y luego renderisamos todos los mesh de esa textura tiene menos costo.";
         }
@@ -40,7 +41,7 @@ namespace TGC.Examples.MeshExamples
             box2Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             box3Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg");
 
-            Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
+            renderMethodModifier = AddEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(D3DDevice.Instance.Device);
 
             Camara.SetCamera(new TGCVector3(40f, 20f, -70f), new TGCVector3(40f, 20f, -60f));
@@ -130,7 +131,7 @@ namespace TGC.Examples.MeshExamples
         {
             PreRender();
 
-            var renderMethod = (RenderMethod)Modifiers["Render Method"];
+            var renderMethod = (RenderMethod)renderMethodModifier.Value;
             doRender(renderMethod);
 
             PostRender();
