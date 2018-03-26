@@ -2,6 +2,7 @@
 using System;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
+using TGC.Core.MeshFactory;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 
@@ -398,7 +399,7 @@ namespace TGC.Examples.Lights
     /// <summary>
     ///     Factory customizado para poder crear clase TgcMeshBumpMapping
     /// </summary>
-    public class TgcMeshBumpMappingFactory : TgcSceneLoader.IMeshFactory
+    public class TgcMeshBumpMappingFactory : IMeshFactory
     {
         public TgcMesh createNewMesh(Mesh d3dMesh, string meshName, TgcMesh.MeshRenderType renderType)
         {
