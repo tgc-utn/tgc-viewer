@@ -21,7 +21,7 @@
       <Value Profile="(Default)">TgcViewer\</Value>
     </Setting>
     <Setting Name="MediaLink" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://drive.google.com/open?id=0B8iAMXTVXrJeOGpIbWhUbjJPaE0</Value>
+      <Value Profile="(Default)">https://drive.google.com/open?id=1OII2l6ZZyQcm8woV4HJ2_pnZyh_ym5EU</Value>
     </Setting>
   </Settings>
 </SettingsFile>

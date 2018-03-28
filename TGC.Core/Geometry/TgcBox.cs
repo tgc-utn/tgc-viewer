@@ -220,7 +220,7 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Liberar los recursos de la cja
+        ///     Liberar los recursos de la caja
         /// </summary>
         public void Dispose()
         {
