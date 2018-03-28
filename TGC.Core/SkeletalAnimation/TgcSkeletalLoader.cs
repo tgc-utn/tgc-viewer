@@ -6,6 +6,7 @@ using System.IO;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
+using TGC.Core.MeshFactory;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 
@@ -24,14 +25,14 @@ namespace TGC.Core.SkeletalAnimation
         public TgcSkeletalLoader()
         {
             texturesDict = new Dictionary<string, TgcTexture>();
-            MeshFactory = new DefaultMeshFactory();
+            MeshFactory = new DefaultSkeletalMeshFactory();
         }
 
         /// <summary>
         ///     Factory utilizado para crear una instancia de TgcSkeletalMesh.
         ///     Por default se utiliza la clase DefaultMeshFactory.
         /// </summary>
-        public IMeshFactory MeshFactory { get; set; }
+        public ISkeletalMeshFactory MeshFactory { get; set; }
 
         /// <summary>
         ///     Carga un modelo a partir de un archivo
@@ -494,7 +495,7 @@ namespace TGC.Core.SkeletalAnimation
             }
 
             //Crear mesh de TGC
-            var tgcMesh = MeshFactory.createNewMesh(mesh, meshData.name, TgcSkeletalMesh.MeshRenderType.DIFFUSE_MAP,
+            var tgcMesh = MeshFactory.createNewSkeletalMesh(mesh, meshData.name, TgcSkeletalMesh.MeshRenderType.DIFFUSE_MAP,
                 bones);
             tgcMesh.Materials = meshMaterials;
             tgcMesh.DiffuseMaps = meshTextures;
@@ -598,7 +599,7 @@ namespace TGC.Core.SkeletalAnimation
             }
 
             //Crear mesh de TGC
-            var tgcMesh = MeshFactory.createNewMesh(mesh, meshData.name, TgcSkeletalMesh.MeshRenderType.VERTEX_COLOR,
+            var tgcMesh = MeshFactory.createNewSkeletalMesh(mesh, meshData.name, TgcSkeletalMesh.MeshRenderType.VERTEX_COLOR,
                 bones);
             return tgcMesh;
         }
@@ -763,37 +764,5 @@ namespace TGC.Core.SkeletalAnimation
 
         #endregion Mesh FVF
 
-        #region MeshFactory
-
-        /// <summary>
-        ///     Factory para permitir crear una instancia especifica de la clase TgcMesh
-        /// </summary>
-        public interface IMeshFactory
-        {
-            /// <summary>
-            ///     Crear una nueva instancia de la clase TgcSkeletalMesh o derivados
-            /// </summary>
-            /// <param name="d3dMesh">Mesh de Direct3D</param>
-            /// <param name="meshName">Nombre de la malla</param>
-            /// <param name="renderType">Tipo de renderizado de la malla</param>
-            /// <param name="bones">Huesos de la malla</param>
-            /// <returns>Instancia de TgcMesh creada</returns>
-            TgcSkeletalMesh createNewMesh(Mesh d3dMesh, string meshName, TgcSkeletalMesh.MeshRenderType renderType,
-                TgcSkeletalBone[] bones);
-        }
-
-        /// <summary>
-        ///     Factory default que crea una instancia de la clase TgcMesh
-        /// </summary>
-        public class DefaultMeshFactory : IMeshFactory
-        {
-            public TgcSkeletalMesh createNewMesh(Mesh d3dMesh, string meshName,
-                TgcSkeletalMesh.MeshRenderType renderType, TgcSkeletalBone[] bones)
-            {
-                return new TgcSkeletalMesh(d3dMesh, meshName, renderType, bones);
-            }
-        }
-
-        #endregion MeshFactory
     }
 }

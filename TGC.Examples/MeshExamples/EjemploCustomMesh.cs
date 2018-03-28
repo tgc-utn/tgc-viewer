@@ -2,6 +2,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
+using TGC.Core.MeshFactory;
 using TGC.Core.SceneLoader;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
@@ -118,7 +119,7 @@ namespace TGC.Examples.MeshExamples
     ///     Debe implementar la interfaz TgcSceneLoader.IMeshFactory
     ///     En ambos métodos crea una instancia de MyCustomMesh.
     /// </summary>
-    public class MyCustomMeshFactory : TgcSceneLoader.IMeshFactory
+    public class MyCustomMeshFactory : IMeshFactory
     {
         public TgcMesh createNewMesh(Mesh d3dMesh, string meshName, TgcMesh.MeshRenderType renderType)
         {

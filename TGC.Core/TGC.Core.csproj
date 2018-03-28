@@ -72,6 +72,10 @@
     <Compile Include="Mathematica\TGCVector2.cs" />
     <Compile Include="Mathematica\TGCVector3.cs" />
     <Compile Include="Mathematica\TGCVector4.cs" />
+    <Compile Include="MeshFactory\DefaultMeshFactory.cs" />
+    <Compile Include="MeshFactory\DefaultSkeletalMeshFactory.cs" />
+    <Compile Include="MeshFactory\IMeshFactory.cs" />
+    <Compile Include="MeshFactory\ISkeletalMeshFactory.cs" />
     <Compile Include="Text\TgcText2D.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
     <Compile Include="Direct3D\D3DDevice.cs" />
