@@ -22,6 +22,31 @@ namespace TGC.Core.Mathematica
         }
 
         /// <summary>
+        /// Initializes a new instance of the TGCMatrix class.
+        /// </summary>
+        /// <param name="m">Bullet Matrix.</param>
+        public TGCMatrix(BulletSharp.Math.Matrix m)
+        {
+            this.dxMatrix = new Matrix();
+            this.dxMatrix.M11 = m.M11;
+            this.dxMatrix.M12 = m.M12;
+            this.dxMatrix.M13 = m.M13;
+            this.dxMatrix.M14 = m.M14;
+            this.dxMatrix.M21 = m.M21;
+            this.dxMatrix.M22 = m.M22;
+            this.dxMatrix.M23 = m.M23;
+            this.dxMatrix.M24 = m.M24;
+            this.dxMatrix.M31 = m.M31;
+            this.dxMatrix.M32 = m.M32;
+            this.dxMatrix.M33 = m.M33;
+            this.dxMatrix.M34 = m.M34;
+            this.dxMatrix.M41 = m.M41;
+            this.dxMatrix.M42 = m.M42;
+            this.dxMatrix.M43 = m.M43;
+            this.dxMatrix.M44 = m.M44;
+        }
+
+        /// <summary>
         /// Retrieves the determinant of the matrix.
         /// </summary>
         public float Determinant
@@ -871,6 +896,28 @@ namespace TGC.Core.Mathematica
         {
             //TODO deprecar.
             return new TGCMatrix(matrix);
+        }
+
+        /// <summary>
+        /// Transform TGCMatrix to Bullet Matrix.
+        /// </summary>
+        public BulletSharp.Math.Matrix ToBsMatrix
+        {
+            get
+            {
+                return new BulletSharp.Math.Matrix(this.M11, this.M12, this.M13, this.M14, this.M21, this.M22, this.M23, this.M24, this.M31, this.M32, this.M33, this.M34, this.M41, this.M42, this.M43, this.M44);
+            }
+        }
+
+        public TGCVector3 Origin
+        {
+            get { return new TGCVector3(M41, M42, M43); }
+            set
+            {
+                M41 = value.X;
+                M42 = value.Y;
+                M43 = value.Z;
+            }
         }
     }
 }

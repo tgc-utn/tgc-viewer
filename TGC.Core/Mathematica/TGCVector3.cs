@@ -34,6 +34,15 @@ namespace TGC.Core.Mathematica
         }
 
         /// <summary>
+        /// Initializes a new instance of the TGCVector3 class from a Bullet Vector3.
+        /// </summary>
+        /// <param name="v"></param>
+        public TGCVector3(BulletSharp.Math.Vector3 v)
+        {
+            this.dxVector3 = new Vector3(v.X, v.Y, v.Z);
+        }
+
+        /// <summary>
         /// Retrieves or sets the x component of a 3-D vector.
         /// </summary>
         public float X
@@ -760,6 +769,14 @@ namespace TGC.Core.Mathematica
             return "[" + TgcParserUtils.printFloat(x) +
                    "," + TgcParserUtils.printFloat(y) +
                    "," + TgcParserUtils.printFloat(z) + "]";
+        }
+
+        /// <summary>
+        /// Retorna un vector 3 de Bullet.
+        /// </summary>
+        public BulletSharp.Math.Vector3 ToBsVector
+        {
+            get { return new BulletSharp.Math.Vector3(X, Y, Z); }
         }
 
         #endregion Old TGCVectorUtils
