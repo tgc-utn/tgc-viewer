@@ -763,6 +763,5 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         #endregion Mesh FVF
-
     }
 }

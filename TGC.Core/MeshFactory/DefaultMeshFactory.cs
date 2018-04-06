@@ -19,8 +19,5 @@ namespace TGC.Core.MeshFactory
         {
             return new TgcMesh(meshName, originalMesh, translation, rotation, scale);
         }
-
-
     }
-
 }

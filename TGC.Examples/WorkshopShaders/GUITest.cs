@@ -8,9 +8,8 @@ using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
-using TgcViewer.Utils.Gui;
 
-namespace Examples.WorkshopShaders
+namespace TGC.Examples.WorkshopShaders
 {
     public class GuiTest : TGCExampleViewer
     {

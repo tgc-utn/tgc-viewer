@@ -12,7 +12,7 @@ using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 using TGC.Examples.UserControls.Modifier;
 
-namespace Examples.WorkshopShaders
+namespace TGC.Examples.WorkshopShaders
 {
     public class PlanarShadows : TGCExampleViewer
     {

@@ -1,7 +1,7 @@
 ﻿using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
-namespace TGC.Core
+namespace TGC.Core.Geometry
 {
     /// <summary>
     ///     Abstraccion con el comportamiento y estado interno comun de las geometrias.

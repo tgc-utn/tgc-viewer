@@ -7,7 +7,7 @@ namespace TGC.Core.MeshFactory
     /// <summary>
     ///     Factory default que crea una instancia de la clase TgcMesh
     /// </summary>
-    public class DefaultSkeletalMeshFactory: ISkeletalMeshFactory
+    public class DefaultSkeletalMeshFactory : ISkeletalMeshFactory
     {
         public TgcMesh createNewMesh(Mesh d3dMesh, string meshName, TgcMesh.MeshRenderType renderType)
         {

@@ -8,7 +8,7 @@ using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Examples.Camara;
 
-namespace TgcViewer.Utils.Gui
+namespace TGC.Examples.WorkshopShaders
 {
     public enum tipoCursor
     {
