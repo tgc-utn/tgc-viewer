@@ -90,6 +90,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bullet\BulletExample.cs" />
+    <Compile Include="Bullet\BulletExample2.cs" />
+    <Compile Include="Bullet\BulletExample3.cs" />
     <Compile Include="Bullet\Physics\HelloWorldBullet.cs" />
     <Compile Include="Bullet\Physics\HelloWorldBullet2.cs" />
     <Compile Include="Bullet\Physics\PhysicsGame.cs" />

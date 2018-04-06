@@ -1,4 +1,8 @@
-﻿using Microsoft.DirectX.DirectInput;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Examples.Bullet.Physics;
@@ -8,31 +12,31 @@ using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Bullet
 {
-    public class BulletExample : TGCExampleViewer
+    public class BulletExample2 : TGCExampleViewer
     {
         private PhysicsGame physicsExample;
 
-        public BulletExample(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+        public BulletExample2(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Bullet";
-            Name = "BulletSharp";
+            Name = "BulletSharp2";
             Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\".";
         }
 
         public override void Init()
         {
-            physicsExample = new WallBullet();
-            //physicsExample = new HelloWorldBullet2();
+            //physicsExample = new HelloWorldBullet();
+            physicsExample = new HelloWorldBullet2();
             //physicsExample = new WallBullet();
-
-            physicsExample.Init(this);
+            var bulletExampleBase = new BulletExample(MediaDir, ShadersDir, UserVars, new Panel());
+            physicsExample.Init(bulletExampleBase);
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();           
+            PreUpdate();
             physicsExample.Update();
             PostUpdate();
         }

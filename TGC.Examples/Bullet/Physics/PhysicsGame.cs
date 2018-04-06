@@ -6,6 +6,7 @@ namespace TGC.Examples.Bullet.Physics
     public abstract class PhysicsGame
     {
         protected BulletExample Ctx;
+        protected BulletExample2 Ctx2;
         protected DiscreteDynamicsWorld dynamicsWorld;
         protected CollisionDispatcher dispatcher;
         protected DefaultCollisionConfiguration collisionConfiguration;
