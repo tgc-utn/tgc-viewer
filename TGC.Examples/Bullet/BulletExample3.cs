@@ -20,17 +20,17 @@ namespace TGC.Examples.Bullet
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Bullet";
-            Name = "BulletSharp3";
+            Name = "Box and Sphere";
             Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\".";
         }
 
         public override void Init()
         {
-            //physicsExample = new HelloWorldBullet();
-            physicsExample = new WallBullet();
-            //physicsExample = new WallBullet();
-            var bulletExampleBase = new BulletExample(MediaDir, ShadersDir, UserVars, new Panel());
+            physicsExample = new HelloWorldBullet2();
+
+            var bulletExampleBase = new BulletExampleWall(MediaDir, ShadersDir, UserVars, new Panel());
             physicsExample.Init(bulletExampleBase);
+
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
 

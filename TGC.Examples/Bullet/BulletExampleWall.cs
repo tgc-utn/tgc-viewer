@@ -8,15 +8,15 @@ using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Bullet
 {
-    public class BulletExample : TGCExampleViewer
+    public class BulletExampleWall : TGCExampleViewer
     {
         private PhysicsGame physicsExample;
 
-        public BulletExample(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+        public BulletExampleWall(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Bullet";
-            Name = "BulletSharp";
+            Name = "Wall vs Balls";
             Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\".";
         }
 

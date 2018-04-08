@@ -11,26 +11,29 @@ using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Bullet
-{/*
-    public class BulletExample2 : TGCExampleViewer
+{
+    public class BulletSurface : TGCExampleViewer
     {
         private PhysicsGame physicsExample;
 
-        public BulletExample2(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+        public BulletSurface(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Bullet";
-            Name = "BulletSharp2";
+            Name = "Triangle Surface";
             Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\".";
         }
 
         public override void Init()
         {
-            //physicsExample = new HelloWorldBullet();
             physicsExample = new HelloWorldBullet2();
-            //physicsExample = new WallBullet();
-            var bulletExampleBase = new BulletExample(MediaDir, ShadersDir, UserVars, new Panel());
+
+            var bulletExampleBase = new BulletExampleWall(MediaDir, ShadersDir, UserVars, new Panel());
             physicsExample.Init(bulletExampleBase);
+
+            //TODO: cuando este terminado el modelo de fisica del ejemplo utilizar lo de abajo
+            //physicsExample.Init();
+;
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
 
@@ -56,5 +59,5 @@ namespace TGC.Examples.Bullet
         {
             physicsExample.Dispose();
         }
-    }*/
+    }
 }

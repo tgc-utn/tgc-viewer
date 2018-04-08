@@ -5,15 +5,14 @@ namespace TGC.Examples.Bullet.Physics
 {
     public abstract class PhysicsGame
     {
-        protected BulletExample Ctx;
-        protected BulletExample2 Ctx2;
+        protected BulletExampleWall Ctx;
         protected DiscreteDynamicsWorld dynamicsWorld;
         protected CollisionDispatcher dispatcher;
         protected DefaultCollisionConfiguration collisionConfiguration;
         protected SequentialImpulseConstraintSolver constraintSolver;
         protected BroadphaseInterface overlappingPairCache;
 
-        public virtual void Init(BulletExample ctx)
+        public virtual void Init(BulletExampleWall ctx)
         {
             Ctx = ctx;
             //Creamos el mundo fisico por defecto.

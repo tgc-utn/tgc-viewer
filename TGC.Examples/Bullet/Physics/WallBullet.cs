@@ -23,7 +23,7 @@ namespace TGC.Examples.Bullet.Physics
         private List<RigidBody> ballBodys = new List<RigidBody>();
         private List<RigidBody> boxBodys = new List<RigidBody>();
 
-        public override void Init(BulletExample ctx)
+        public override void Init(BulletExampleWall ctx)
         {
             base.Init(ctx);
 
@@ -81,7 +81,7 @@ namespace TGC.Examples.Bullet.Physics
                 var ballBody = this.CreateBall(10f, 1f, Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z);
                 var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBsVector;
                 dir.Normalize();
-                ballBody.LinearVelocity = dir * 250;
+                ballBody.LinearVelocity = dir * 900;
                 ballBody.LinearFactor = TGCVector3.One.ToBsVector;
                 ballBody.SetDamping(0.1f, 0.5f);
                 ballBody.Restitution = 0.5f;
@@ -94,7 +94,7 @@ namespace TGC.Examples.Bullet.Physics
                 var ballBody = this.CreateBall(10f, 10f, Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z);
                 var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBsVector;
                 dir.Normalize();
-                ballBody.LinearVelocity = dir * 250;
+                ballBody.LinearVelocity = dir * 900;
                 ballBody.LinearFactor = TGCVector3.One.ToBsVector;
                 ballBody.SetDamping(0.1f, 0.5f);
                 ballBody.Restitution = 0.5f;
@@ -107,7 +107,7 @@ namespace TGC.Examples.Bullet.Physics
                 var ballBody = this.CreateBall(10f, 0.1f, Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z);
                 var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBsVector;
                 dir.Normalize();
-                ballBody.LinearVelocity = dir * 250;
+                ballBody.LinearVelocity = dir * 900;
                 ballBody.LinearFactor = TGCVector3.One.ToBsVector;
                 ballBody.SetDamping(0.1f, 0.1f);
                 ballBody.Restitution = 0.9f;

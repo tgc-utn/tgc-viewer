@@ -7,7 +7,7 @@ using TGC.Core.Textures;
 namespace TGC.Examples.Bullet.Physics
 {
     public class HelloWorldBullet : PhysicsGame
-    {
+    { 
         private TgcPlane floorMesh;
         private TGCBox boxMesh;
         private TGCSphere sphereMesh;
@@ -18,7 +18,7 @@ namespace TGC.Examples.Bullet.Physics
         private RigidBody boxBody;
         private RigidBody ballBody;
 
-        public override void Init(BulletExample ctx)
+        public override void Init(BulletExampleWall ctx)
         {
             base.Init(ctx);
 
