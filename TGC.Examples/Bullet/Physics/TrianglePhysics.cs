@@ -7,13 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using BulletSharp.Math;
 using System.IO;
+using System.Globalization;
+using System.Windows.Forms;
 
 namespace TGC.Examples.Bullet.Physics
 {
     public class TrianglePhysics
     {
         //Rigid Bodies:
-        private RigidBody floorBody;
+        private BvhTriangleMeshShape floorBody;
         private List<RigidBody> ballBodys;
 
         private DiscreteDynamicsWorld dynamicsWorld;
@@ -21,6 +23,25 @@ namespace TGC.Examples.Bullet.Physics
         private DefaultCollisionConfiguration collisionConfiguration;
         private SequentialImpulseConstraintSolver constraintSolver;
         private BroadphaseInterface overlappingPairCache;
+
+        private const float TriangleSize = 8.0f;
+        private const int NumVertsX = 30;
+        private const int NumVertsY = 30;
+        private const float WaveHeight = 3.0f;
+        private const int NumDynamicBoxesX = 30;
+        private const int NumDynamicBoxesY = 30;
+
+        private bool _animatedMesh = true;
+        private Stream _vertexStream;
+        private BinaryWriter _vertexWriter;
+
+        private TGCVector3 _worldMin = new TGCVector3(-1000, -1000, -1000);
+        private TGCVector3 _worldMax = new TGCVector3(1000, 1000, 1000);
+
+        private TriangleIndexVertexArray _indexVertexArrays;
+        //private ConvexcastBatch _convexcastBatch;
+        private RigidBody _groundObject;
+        private ClosestConvexResultCallback _callback;
 
         public void Init()
         {
@@ -37,8 +58,8 @@ namespace TGC.Examples.Bullet.Physics
             var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 0);
             var floorMotionState = new DefaultMotionState();
             var floorInfo = new RigidBodyConstructionInfo(0, floorMotionState, floorShape);
-            floorBody = new RigidBody(floorInfo);
-            dynamicsWorld.AddRigidBody(floorBody);
+           // floorBody = new RigidBody(floorInfo);
+            //dynamicsWorld.AddRigidBody(floorBody);
 
             //Creamos una esfera
             var ballBody = this.CreateBall(10f, 1f, 0f, 50f, 0f);
@@ -78,8 +99,15 @@ namespace TGC.Examples.Bullet.Physics
             ballBody.Restitution = 0.5f;
             return ballBody;
         }
+
         //Ideas para generar el terreno para Bullet
-        /*
+        //We are getting a llitle bit crazy xD https://es.wikipedia.org/wiki/Paraboloide
+        //Paraboloide Hiperbolico 
+        // definicion matematica
+        //(x / a) ^ 2 - ( y / b) ^ 2 - z = 0.
+        //
+        //DirectX
+        //(x / a) ^ 2 - ( z / b) ^ 2 - y = 0.
         private void CreateGround()
         {
             const int totalVerts = NumVertsX * NumVertsY;
@@ -116,9 +144,9 @@ namespace TGC.Examples.Bullet.Physics
             SetVertexPositions(WaveHeight, 0.0f);
 
             const bool useQuantizedAabbCompression = true;
-            GroundShape = new BvhTriangleMeshShape(_indexVertexArrays, useQuantizedAabbCompression);
+            floorBody = new BvhTriangleMeshShape(_indexVertexArrays, useQuantizedAabbCompression);
 
-            _groundObject = PhysicsHelper.CreateStaticBody(Matrix.Identity, GroundShape, World);
+           // _groundObject = PhysicsHelper.CreateStaticBody(Matrix.Identity, floorBody, World);
             _groundObject.CollisionFlags |= CollisionFlags.StaticObject;
             _groundObject.UserObject = "Ground";
         }
@@ -141,7 +169,7 @@ namespace TGC.Examples.Bullet.Physics
                 }
             }
         }
-
+        /*
         private void CreateTrimeshGround()
         {
             const float scale = 20.0f;
