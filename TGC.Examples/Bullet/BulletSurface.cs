@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
+using TGC.Core.Textures;
 using TGC.Examples.Bullet.Physics;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
@@ -21,6 +24,10 @@ namespace TGC.Examples.Bullet
         private PhysicsGame physicsExample;
         //Vertex buffer que se va a utilizar
         private VertexBuffer vertexBuffer;
+        private int totalVertices;
+        private Effect effect;
+        private string technique;
+        private Texture terrainTexture;
 
         public BulletSurface(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -43,31 +50,92 @@ namespace TGC.Examples.Bullet
             //DirectX
             //(x / a) ^ 2 - ( z / b) ^ 2 - y = 0.
 
+            //Paraboloide Circular
+            //definicion matematica
+            //(x / a) ^ 2 + ( y / b) ^ 2 - z = 0 ; a=b.
+            //
+            //DirectX
+            //(x / a) ^ 2 + ( z / a) ^ 2 - y = 0.
+
             //Crear vertexBuffer
-            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), 3, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
-
-            //Cargar informacion de vertices: (X,Y,Z) + Color
-            var data = new CustomVertex.PositionColored[3];
-            data[0] = new CustomVertex.PositionColored(-1, 0, 0, Color.Red.ToArgb());
-            data[1] = new CustomVertex.PositionColored(1, 0, 0, Color.Green.ToArgb());
-            data[2] = new CustomVertex.PositionColored(0, 1, 0, Color.Blue.ToArgb());
-
+            int width = 1000;
+            int length = 1000;
+            totalVertices = 2 * 3 * (width - 1) * (length - 1);
+            vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
             //Almacenar informacion en VertexBuffer
+
+            //Cargar vertices
+            var dataIdx = 0;
+            var data = new CustomVertex.PositionTextured[totalVertices];
+
+            TGCVector3 center = new TGCVector3();
+
+            center.X = center.X - width / 2 ;
+            center.Z = center.Z - length / 2;
+
+            int size = 80;
+            int n = 0;
+            for (var i = 0; i < width - 1; i = i + size)
+            {
+                for (var j = 0; j < length - 1; j = j + size)
+                {
+                    //Vertices
+                    var v1 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / 32 ) - FastMath.Pow2( (center.Z + j) / 32) ) , center.Z + j);
+                    var v2 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / 32) - FastMath.Pow2( (center.Z + j + size ) / 32) ), center.Z + (j + size));
+                    var v3 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) - FastMath.Pow2((center.Z + j) / 32)), center.Z + j);
+                    var v4 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) - FastMath.Pow2((center.Z + j + size) / 32)), center.Z + (j + size) );
+
+                    //Coordendas de textura
+                    /*
+                    var t1 = new TGCVector2(i - n*size / width, j - n*size / length);
+                    var t2 = new TGCVector2(i - n * size / width, (j - n * size + size) / length);
+                    var t3 = new TGCVector2((i - n * size + size) / width, j - n * size / length);
+                    var t4 = new TGCVector2((i - n * size + size) / width, (j - n * size + size) / length);
+                    */
+                    var t1 = new TGCVector2(0, 0);
+                    var t2 = new TGCVector2(0, 1);
+                    var t3 = new TGCVector2(1, 0);
+                    var t4 = new TGCVector2(1, 1);
+
+                    //Cargar triangulo 1
+                    data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
+                    data[dataIdx + 1] = new CustomVertex.PositionTextured(v2, t2.X, t2.Y);
+                    data[dataIdx + 2] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
+
+                    //Cargar triangulo 2
+                    data[dataIdx + 3] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
+                    data[dataIdx + 4] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
+                    data[dataIdx + 5] = new CustomVertex.PositionTextured(v3, t3.X, t3.Y);
+
+                    dataIdx += 6;
+                    n++;
+                }
+            }
+
             vertexBuffer.SetData(data, 0, LockFlags.None);
+
+            //Rotar e invertir textura
+            var b = (Bitmap)Image.FromFile(MediaDir + "//Texturas//pasto.jpg");
+            b.RotateFlip(RotateFlipType.Rotate90FlipX);
+            terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.AutoGenerateMipMap, Pool.Managed);
 
             var bulletExampleBase = new BulletExampleWall(MediaDir, ShadersDir, UserVars, new Panel());
             physicsExample.Init(bulletExampleBase);
 
+            //Shader
+            effect = TgcShaders.Instance.VariosShader;
+            technique = TgcShaders.T_POSITION_TEXTURED;
+
             //TODO: cuando este terminado el modelo de fisica del ejemplo utilizar lo de abajo
             //physicsExample.Init();
-;
+            ;
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
-            physicsExample.Update();
+            //physicsExample.Update();
             PostUpdate();
         }
 
@@ -76,7 +144,23 @@ namespace TGC.Examples.Bullet
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
 
-            physicsExample.Render();
+            //physicsExample.Render();
+
+            //Textura
+            effect.SetValue("texDiffuseMap", terrainTexture);
+            TexturesManager.Instance.clear(1);
+
+            TgcShaders.Instance.setShaderMatrix(effect, TGCMatrix.Identity);
+            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionTextured;
+            effect.Technique = technique;
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
+
+            //Render con shader
+            effect.Begin(0);
+            effect.BeginPass(0);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
+            effect.EndPass();
+            effect.End();
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
             PostRender();
