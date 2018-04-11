@@ -18,10 +18,10 @@ using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Bullet
 {
-    public class BulletSurface : TGCExampleViewer
+    /*public */class BulletSurface : TGCExampleViewer
     {
         //Fisica 
-        private PhysicsGame physicsExample;
+        private TrianglePhysics physicsExample;
         //Vertex buffer que se va a utilizar
         private VertexBuffer vertexBuffer;
         private int totalVertices;
@@ -39,8 +39,6 @@ namespace TGC.Examples.Bullet
 
         public override void Init()
         {
-            physicsExample = new HelloWorldBullet2();
-
             //Ideas para generar el terreno para Bullet
             //We are getting a llitle bit crazy xD https://es.wikipedia.org/wiki/Paraboloide
             //Paraboloide Hiperbolico 
@@ -56,7 +54,7 @@ namespace TGC.Examples.Bullet
             //
             //DirectX
             //(x / a) ^ 2 + ( z / a) ^ 2 - y = 0.
-
+            
             //Crear vertexBuffer
             int width = 1000;
             int length = 1000;
@@ -75,6 +73,7 @@ namespace TGC.Examples.Bullet
 
             int size = 80;
             int n = 0;
+            int triangles = 0;
             for (var i = 0; i < width - 1; i = i + size)
             {
                 for (var j = 0; j < length - 1; j = j + size)
@@ -86,12 +85,6 @@ namespace TGC.Examples.Bullet
                     var v4 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) - FastMath.Pow2((center.Z + j + size) / 32)), center.Z + (j + size) );
 
                     //Coordendas de textura
-                    /*
-                    var t1 = new TGCVector2(i - n*size / width, j - n*size / length);
-                    var t2 = new TGCVector2(i - n * size / width, (j - n * size + size) / length);
-                    var t3 = new TGCVector2((i - n * size + size) / width, j - n * size / length);
-                    var t4 = new TGCVector2((i - n * size + size) / width, (j - n * size + size) / length);
-                    */
                     var t1 = new TGCVector2(0, 0);
                     var t2 = new TGCVector2(0, 1);
                     var t3 = new TGCVector2(1, 0);
@@ -101,11 +94,13 @@ namespace TGC.Examples.Bullet
                     data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
                     data[dataIdx + 1] = new CustomVertex.PositionTextured(v2, t2.X, t2.Y);
                     data[dataIdx + 2] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
+                    triangles++;
 
                     //Cargar triangulo 2
                     data[dataIdx + 3] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
                     data[dataIdx + 4] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
                     data[dataIdx + 5] = new CustomVertex.PositionTextured(v3, t3.X, t3.Y);
+                    triangles++;
 
                     dataIdx += 6;
                     n++;
@@ -113,22 +108,23 @@ namespace TGC.Examples.Bullet
             }
 
             vertexBuffer.SetData(data, 0, LockFlags.None);
-
+            
             //Rotar e invertir textura
             var b = (Bitmap)Image.FromFile(MediaDir + "//Texturas//pasto.jpg");
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
             terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.AutoGenerateMipMap, Pool.Managed);
 
-            var bulletExampleBase = new BulletExampleWall(MediaDir, ShadersDir, UserVars, new Panel());
-            physicsExample.Init(bulletExampleBase);
-
             //Shader
             effect = TgcShaders.Instance.VariosShader;
             technique = TgcShaders.T_POSITION_TEXTURED;
 
+            physicsExample = new TrianglePhysics();
+            physicsExample.setTriangleDataVB(data);
             //TODO: cuando este terminado el modelo de fisica del ejemplo utilizar lo de abajo
             //physicsExample.Init();
-            ;
+
+
+
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
 

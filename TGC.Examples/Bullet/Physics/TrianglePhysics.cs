@@ -9,6 +9,7 @@ using BulletSharp.Math;
 using System.IO;
 using System.Globalization;
 using System.Windows.Forms;
+using Microsoft.DirectX.Direct3D;
 
 namespace TGC.Examples.Bullet.Physics
 {
@@ -43,6 +44,14 @@ namespace TGC.Examples.Bullet.Physics
         private RigidBody _groundObject;
         private ClosestConvexResultCallback _callback;
 
+        //Datos del los triangulos del VertexBuffer
+        private CustomVertex.PositionTextured[] triangleDataVB;
+
+        public void setTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
+        {
+            triangleDataVB = newTriangleData;
+        }
+
         public void Init()
         {
             //Creamos el mundo fisico por defecto.
@@ -58,6 +67,7 @@ namespace TGC.Examples.Bullet.Physics
             var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 0);
             var floorMotionState = new DefaultMotionState();
             var floorInfo = new RigidBodyConstructionInfo(0, floorMotionState, floorShape);
+            CreateGround();
            // floorBody = new RigidBody(floorInfo);
             //dynamicsWorld.AddRigidBody(floorBody);
 
@@ -78,7 +88,7 @@ namespace TGC.Examples.Bullet.Physics
 
         }
 
-        public void Dispoose()
+        public void Dispose()
         {
 
         }
@@ -100,17 +110,11 @@ namespace TGC.Examples.Bullet.Physics
             return ballBody;
         }
 
-        //Ideas para generar el terreno para Bullet
-        //We are getting a llitle bit crazy xD https://es.wikipedia.org/wiki/Paraboloide
-        //Paraboloide Hiperbolico 
-        // definicion matematica
-        //(x / a) ^ 2 - ( y / b) ^ 2 - z = 0.
-        //
-        //DirectX
-        //(x / a) ^ 2 - ( z / b) ^ 2 - y = 0.
         private void CreateGround()
         {
-            const int totalVerts = NumVertsX * NumVertsY;
+            
+            //const int totalVerts = NumVertsX * NumVertsY;
+            int totalVerts = triangleDataVB.Length / 3;
             const int totalTriangles = 2 * (NumVertsX - 1) * (NumVertsY - 1);
             const int triangleIndexStride = 3 * sizeof(int);
             const int vertexStride = Vector3.SizeInBytes;
@@ -137,7 +141,7 @@ namespace TGC.Examples.Bullet.Physics
                     }
                 }
             }
-
+            
             _indexVertexArrays = new TriangleIndexVertexArray();
             _indexVertexArrays.AddIndexedMesh(mesh);
 
