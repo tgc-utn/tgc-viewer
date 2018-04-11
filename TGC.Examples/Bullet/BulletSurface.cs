@@ -18,7 +18,7 @@ using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Bullet
 {
-    /*public */class BulletSurface : TGCExampleViewer
+    public class BulletSurface : TGCExampleViewer
     {
         //Fisica 
         private TrianglePhysics physicsExample;
@@ -74,6 +74,7 @@ namespace TGC.Examples.Bullet
             int size = 80;
             int n = 0;
             int triangles = 0;
+            int vertexes = 0;
             for (var i = 0; i < width - 1; i = i + size)
             {
                 for (var j = 0; j < length - 1; j = j + size)
@@ -83,6 +84,7 @@ namespace TGC.Examples.Bullet
                     var v2 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / 32) - FastMath.Pow2( (center.Z + j + size ) / 32) ), center.Z + (j + size));
                     var v3 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) - FastMath.Pow2((center.Z + j) / 32)), center.Z + j);
                     var v4 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) - FastMath.Pow2((center.Z + j + size) / 32)), center.Z + (j + size) );
+                    vertexes = +vertexes + 4;
 
                     //Coordendas de textura
                     var t1 = new TGCVector2(0, 0);
@@ -118,12 +120,12 @@ namespace TGC.Examples.Bullet
             effect = TgcShaders.Instance.VariosShader;
             technique = TgcShaders.T_POSITION_TEXTURED;
 
-            physicsExample = new TrianglePhysics();
-            physicsExample.setTriangleDataVB(data);
+            //physicsExample = new TrianglePhysics();
+            //physicsExample.setTriangleDataVB(data);
+            //physicsExample.setTotalTriangles(triangles);
+            //physicsExample.setTotalVerts(vertexes);
             //TODO: cuando este terminado el modelo de fisica del ejemplo utilizar lo de abajo
             //physicsExample.Init();
-
-
 
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }

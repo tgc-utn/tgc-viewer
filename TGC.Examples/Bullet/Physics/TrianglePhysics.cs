@@ -25,10 +25,9 @@ namespace TGC.Examples.Bullet.Physics
         private SequentialImpulseConstraintSolver constraintSolver;
         private BroadphaseInterface overlappingPairCache;
 
-        private const float TriangleSize = 8.0f;
+        private float TriangleSize = 8.0f;
         private const int NumVertsX = 30;
         private const int NumVertsY = 30;
-        private const float WaveHeight = 3.0f;
         private const int NumDynamicBoxesX = 30;
         private const int NumDynamicBoxesY = 30;
 
@@ -46,10 +45,22 @@ namespace TGC.Examples.Bullet.Physics
 
         //Datos del los triangulos del VertexBuffer
         private CustomVertex.PositionTextured[] triangleDataVB;
+        private int totalTriangles;
+        private int totalVerts;
 
         public void setTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
         {
             triangleDataVB = newTriangleData;
+        }
+
+        public void setTotalTriangles(int triangles)
+        {
+            totalTriangles = triangles;
+        }
+
+        public void setTotalVerts(int vertexes)
+        {
+            totalVerts = vertexes;
         }
 
         public void Init()
@@ -114,15 +125,18 @@ namespace TGC.Examples.Bullet.Physics
         {
             
             //const int totalVerts = NumVertsX * NumVertsY;
-            int totalVerts = triangleDataVB.Length / 3;
-            const int totalTriangles = 2 * (NumVertsX - 1) * (NumVertsY - 1);
+
+            //const int totalTriangles = 2 * (NumVertsX - 1) * (NumVertsY - 1);
+
             const int triangleIndexStride = 3 * sizeof(int);
             const int vertexStride = Vector3.SizeInBytes;
 
             var mesh = new IndexedMesh();
             mesh.Allocate(totalTriangles, totalVerts, triangleIndexStride, vertexStride);
 
+            //los vertices X e Y de aqui representan vertice X y vertice Z
             var indicesStream = mesh.GetTriangleStream();
+            // Hay que ciclar por los vertices que se cargaron en el VertexBuffer
             using (var indices = new BinaryWriter(indicesStream))
             {
                 for (int x = 0; x < NumVertsX - 1; x++)
@@ -145,7 +159,10 @@ namespace TGC.Examples.Bullet.Physics
             _indexVertexArrays = new TriangleIndexVertexArray();
             _indexVertexArrays.AddIndexedMesh(mesh);
 
-            SetVertexPositions(WaveHeight, 0.0f);
+            //Posiciona los vertices segun las posiciones del modelo en xyz
+            // o por lo menos deberia hacer esto. En el ejemplo original, armaba unas olas 
+            //a partir de una altura y un offset
+            SetVertexPositions(); //TODO: ver como pasar la data del VertexBuffer para no tener que recalcular las posiciones
 
             const bool useQuantizedAabbCompression = true;
             floorBody = new BvhTriangleMeshShape(_indexVertexArrays, useQuantizedAabbCompression);
@@ -155,7 +172,7 @@ namespace TGC.Examples.Bullet.Physics
             _groundObject.UserObject = "Ground";
         }
 
-        private void SetVertexPositions(float waveHeight, float offset)
+        private void SetVertexPositions()
         {
             if (_vertexWriter == null)
             {
@@ -168,76 +185,10 @@ namespace TGC.Examples.Bullet.Physics
                 for (int j = 0; j < NumVertsY; j++)
                 {
                     _vertexWriter.Write((i - NumVertsX * 0.5f) * TriangleSize);
-                    _vertexWriter.Write(waveHeight * (float)Math.Sin(i + offset) * (float)Math.Cos(j + offset));
+                    _vertexWriter.Write((float)Math.Sin(i) * (float)Math.Cos(j));
                     _vertexWriter.Write((j - NumVertsY * 0.5f) * TriangleSize);
                 }
             }
         }
-        /*
-        private void CreateTrimeshGround()
-        {
-            const float scale = 20.0f;
-
-            //create a triangle-mesh ground
-            const int NumVertsX = 20;
-            const int NumVertsY = 20;
-            const int totalVerts = NumVertsX * NumVertsY;
-
-            const int totalTriangles = 2 * (NumVertsX - 1) * (NumVertsY - 1);
-
-            var vertexArray = new TriangleIndexVertexArray();
-            var mesh = new IndexedMesh();
-            mesh.Allocate(totalTriangles, totalVerts);
-            mesh.NumTriangles = totalTriangles;
-            mesh.NumVertices = totalVerts;
-            mesh.TriangleIndexStride = 3 * sizeof(int);
-            mesh.VertexStride = Vector3.SizeInBytes;
-            using (var indicesStream = mesh.GetTriangleStream())
-            {
-                var indices = new BinaryWriter(indicesStream);
-                for (int i = 0; i < NumVertsX - 1; i++)
-                {
-                    for (int j = 0; j < NumVertsY - 1; j++)
-                    {
-                        indices.Write(j * NumVertsX + i);
-                        indices.Write(j * NumVertsX + i + 1);
-                        indices.Write((j + 1) * NumVertsX + i + 1);
-
-                        indices.Write(j * NumVertsX + i);
-                        indices.Write((j + 1) * NumVertsX + i + 1);
-                        indices.Write((j + 1) * NumVertsX + i);
-                    }
-                }
-                indices.Dispose();
-            }
-
-            using (var vertexStream = mesh.GetVertexStream())
-            {
-                var vertices = new BinaryWriter(vertexStream);
-                for (int i = 0; i < NumVertsX; i++)
-                {
-                    for (int j = 0; j < NumVertsY; j++)
-                    {
-                        const float waveLength = .2f;
-                        float height = (float)(Math.Sin(i * waveLength) * Math.Cos(j * waveLength));
-
-                        vertices.Write(i - NumVertsX * 0.5f);
-                        vertices.Write(height);
-                        vertices.Write(j - NumVertsY * 0.5f);
-                    }
-                }
-                vertices.Dispose();
-            }
-
-            vertexArray.AddIndexedMesh(mesh);
-            var groundShape = new BvhTriangleMeshShape(vertexArray, true);
-            var groundScaled = new ScaledBvhTriangleMeshShape(groundShape, new Vector3(scale));
-
-            RigidBody ground = PhysicsHelper.CreateStaticBody(Matrix.Identity, groundScaled, World);
-            ground.UserObject = "Ground";
-
-            Matrix vehicleTransform = Matrix.Translation(0, -2, 0);
-            CreateVehicle(vehicleTransform);
-        }*/
     }
 }
