@@ -16,6 +16,15 @@ namespace TGC.Core
         // Members
         private long _startTime;
 
+        // Constructors
+        /// <summary>
+        ///     Creates a new HighResolutionTimer
+        /// </summary>
+        public HighResolutionTimer()
+        {
+            this._startTime = Ticks;
+        }
+
         /// <summary>
         ///     Gets the frequency that all timers performs at.
         /// </summary>
