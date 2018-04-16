@@ -25,7 +25,7 @@ namespace TGC.Core.Example
             FPS = true;
             Camara = new TgcCamera();
             ElapsedTime = -1;
-            HighResolutionTimer = new HighResolutionTimer();
+            Timer = new HighResolutionTimer();
             Frustum = new TgcFrustum();
             //DirectSound = new TgcDirectSound(); Por ahora se carga por afuera
             DrawText = new TgcText2D();
@@ -87,7 +87,7 @@ namespace TGC.Core.Example
         /// </summary>
         public TgcCamera Camara { get; set; }
 
-        private HighResolutionTimer HighResolutionTimer { get; }
+        private HighResolutionTimer Timer { get; }
 
         public TgcFrustum Frustum { get; set; }
 
@@ -157,8 +157,8 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateClock()
         {
-            ElapsedTime = HighResolutionTimer.FrameTime;
-            HighResolutionTimer.Set();
+            ElapsedTime = Timer.FrameTime;
+            Timer.Set();
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace TGC.Core.Example
         {
             if (FPS)
             {
-                DrawText.drawText(HighResolutionTimer.FramesPerSecondText(), 0, 0, Color.Yellow);
+                DrawText.drawText(Timer.FramesPerSecondText(), 0, 0, Color.Yellow);
             }
         }
 
@@ -266,7 +266,7 @@ namespace TGC.Core.Example
 
         public void ResetTimer()
         {
-            HighResolutionTimer.Reset();
+            Timer.Reset();
         }
 
         /// <summary>
