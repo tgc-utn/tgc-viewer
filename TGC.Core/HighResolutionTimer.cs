@@ -7,13 +7,9 @@ namespace TGC.Core
     /// </summary>
     public class HighResolutionTimer
     {
-        // Static Members
         private int _fps;
-
         private int _frameCount;
         private float _frameSecond;
-
-        // Members
         private long _startTime;
 
         // Constructors
@@ -22,7 +18,7 @@ namespace TGC.Core
         /// </summary>
         public HighResolutionTimer()
         {
-            this._startTime = Ticks;
+            Reset();
         }
 
         /// <summary>
@@ -32,9 +28,7 @@ namespace TGC.Core
         {
             get
             {
-                long freq = 0;
-                QueryPerformanceFrequency(out freq);
-
+                QueryPerformanceFrequency(out var freq);
                 return freq;
             }
         }
@@ -46,14 +40,10 @@ namespace TGC.Core
         {
             get
             {
-                long ticks = 0;
-                QueryPerformanceCounter(out ticks);
-
+                QueryPerformanceCounter(out var ticks);
                 return ticks;
             }
         }
-
-        // Properties
 
         /// <summary>
         ///     Gets the time recorded between frames.
