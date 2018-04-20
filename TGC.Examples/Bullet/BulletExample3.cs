@@ -28,8 +28,8 @@ namespace TGC.Examples.Bullet
         {
             physicsExample = new HelloWorldBullet2();
 
-            var bulletExampleBase = new BulletExampleWall(MediaDir, ShadersDir, UserVars, new Panel());
-            physicsExample.Init(bulletExampleBase);
+            //var bulletExampleBase = new BulletExampleWall(MediaDir, ShadersDir, UserVars, new Panel());
+            physicsExample.Init(this);
 
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
