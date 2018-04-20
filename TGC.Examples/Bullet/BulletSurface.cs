@@ -119,13 +119,15 @@ namespace TGC.Examples.Bullet
             //Shader
             effect = TgcShaders.Instance.VariosShader;
             technique = TgcShaders.T_POSITION_TEXTURED;
-
-            //physicsExample = new TrianglePhysics();
+            
+            physicsExample = new TrianglePhysics();
             //physicsExample.setTriangleDataVB(data);
-            //physicsExample.setTotalTriangles(triangles);
-            //physicsExample.setTotalVerts(vertexes);
+            /*physicsExample.setNumVertsX(25);
+            physicsExample.setNumVertsY(25);
+            physicsExample.setTotalTriangles(triangles);
+            physicsExample.setTotalVerts(vertexes);*/
             //TODO: cuando este terminado el modelo de fisica del ejemplo utilizar lo de abajo
-            //physicsExample.Init();
+            physicsExample.Init(MediaDir); 
 
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
@@ -133,7 +135,7 @@ namespace TGC.Examples.Bullet
         public override void Update()
         {
             PreUpdate();
-            //physicsExample.Update();
+            physicsExample.Update(Input);
             PostUpdate();
         }
 
@@ -142,8 +144,8 @@ namespace TGC.Examples.Bullet
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
 
-            //physicsExample.Render();
-
+            physicsExample.Render();
+            /*
             //Textura
             effect.SetValue("texDiffuseMap", terrainTexture);
             TexturesManager.Instance.clear(1);
@@ -158,7 +160,7 @@ namespace TGC.Examples.Bullet
             effect.BeginPass(0);
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
             effect.EndPass();
-            effect.End();
+            effect.End();*/
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
             PostRender();
