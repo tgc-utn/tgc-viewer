@@ -18,6 +18,11 @@ namespace TGC.Examples.Bullet.Physics
         private RigidBody boxBody;
         private RigidBody ballBody;
 
+        public override int getElements()
+        {
+            return 2;
+        }
+
         public override void Init(BulletExampleWall ctx)
         {
             base.Init(ctx);

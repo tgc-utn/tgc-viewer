@@ -45,6 +45,8 @@ namespace TGC.Examples.Bullet.Physics
 
         public abstract void Dispose();
 
+        public abstract int getElements();
+
         //TODO Wrapper Builder bodys.
         public RigidBody CreateBall(float size, float mass, float originX, float originY, float originZ)
         {

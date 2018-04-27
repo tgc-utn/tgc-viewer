@@ -121,13 +121,15 @@ namespace TGC.Examples.Bullet
             technique = TgcShaders.T_POSITION_TEXTURED;
             
             physicsExample = new TrianglePhysics();
-            //physicsExample.setTriangleDataVB(data);
+            physicsExample.setTriangleDataVB(data);
             /*physicsExample.setNumVertsX(25);
             physicsExample.setNumVertsY(25);
             physicsExample.setTotalTriangles(triangles);
             physicsExample.setTotalVerts(vertexes);*/
             //TODO: cuando este terminado el modelo de fisica del ejemplo utilizar lo de abajo
-            physicsExample.Init(MediaDir); 
+            physicsExample.Init(MediaDir);
+
+            UserVars.addVar("BallPosition");
 
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
@@ -136,6 +138,7 @@ namespace TGC.Examples.Bullet
         {
             PreUpdate();
             physicsExample.Update(Input);
+            UserVars.setValue("BallPosition", physicsExample.getBallPosition());
             PostUpdate();
         }
 
@@ -145,7 +148,7 @@ namespace TGC.Examples.Bullet
             PreRender();
 
             physicsExample.Render();
-            /*
+            
             //Textura
             effect.SetValue("texDiffuseMap", terrainTexture);
             TexturesManager.Instance.clear(1);
@@ -160,7 +163,7 @@ namespace TGC.Examples.Bullet
             effect.BeginPass(0);
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
             effect.EndPass();
-            effect.End();*/
+            effect.End();
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
             PostRender();

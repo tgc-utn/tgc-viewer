@@ -23,6 +23,11 @@ namespace TGC.Examples.Bullet.Physics
         private List<RigidBody> ballBodys = new List<RigidBody>();
         private List<RigidBody> boxBodys = new List<RigidBody>();
 
+        public override int getElements()
+        {
+            return ballBodys.Count + boxBodys.Count;
+        }
+
         public override void Init(BulletExampleWall ctx)
         {
             base.Init(ctx);

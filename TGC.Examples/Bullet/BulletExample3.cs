@@ -31,6 +31,8 @@ namespace TGC.Examples.Bullet
             //var bulletExampleBase = new BulletExampleWall(MediaDir, ShadersDir, UserVars, new Panel());
             physicsExample.Init(this);
 
+            UserVars.addVar("MeshCount");
+
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
 
@@ -38,6 +40,9 @@ namespace TGC.Examples.Bullet
         {
             PreUpdate();
             physicsExample.Update();
+
+            UserVars.setValue("MeshCount", physicsExample.getElements());
+
             PostUpdate();
         }
 

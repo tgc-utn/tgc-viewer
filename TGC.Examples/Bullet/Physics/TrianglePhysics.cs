@@ -25,6 +25,7 @@ namespace TGC.Examples.Bullet.Physics
 
         //Rigid Bodies:
         private RigidBody floorBody;
+        private BvhTriangleMeshShape GroundShape;
         //private BvhTriangleMeshShape floorBody;
         private List<RigidBody> ballBodys;
 
@@ -59,6 +60,11 @@ namespace TGC.Examples.Bullet.Physics
         //Capsula
         private RigidBody capsule;
         private TGCSphere sphereMesh;
+
+        public TGCVector3 getBallPosition()
+        {
+           return new TGCVector3(capsule.CenterOfMassPosition.X,capsule.CenterOfMassPosition.Y,capsule.CenterOfMassPosition.Z);
+        }
 
         public void setTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
         {
@@ -107,7 +113,7 @@ namespace TGC.Examples.Bullet.Physics
             floorBody = new RigidBody(floorInfo);
             dynamicsWorld.AddRigidBody(floorBody);
 
-            capsule = CreateBall(10, 1, 0, 100, 0);
+            capsule = CreateBall(10f, 1f, 10f, 500f, 10f);
             dynamicsWorld.AddRigidBody(capsule);
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\pokeball.jpg");
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
@@ -126,12 +132,12 @@ namespace TGC.Examples.Bullet.Physics
         public void Update(TgcD3dInput input)
         {
             dynamicsWorld.StepSimulation(1 / 60f, 100);
-
+            /*
             if (input.keyUp(Key.W))
             {
-                capsule.LinearVelocity = new TGCVector3(1,0,0).ToBsVector;
-                capsule.ApplyCentralForce(new TGCVector3(1,0,0).ToBsVector);
-                capsule.ApplyCentralImpulse(new TGCVector3(1,0,0).ToBsVector);
+                capsule.LinearVelocity = new TGCVector3(1, 0, 0).ToBsVector;
+                capsule.ApplyCentralForce(new TGCVector3(1, 0, 0).ToBsVector);
+                capsule.ApplyCentralImpulse(new TGCVector3(1, 0, 0).ToBsVector);
                 capsule.UpdateInertiaTensor();
             }
 
@@ -148,7 +154,7 @@ namespace TGC.Examples.Bullet.Physics
             if (input.keyUp(Key.D))
             {
 
-            }
+            }*/
         }
 
         public void Render()
@@ -157,7 +163,7 @@ namespace TGC.Examples.Bullet.Physics
             sphereMesh.Render();
 
             //El render del piso deberia manejarse con el shader de tgcterrain
-            floorMesh.Render();
+            //floorMesh.Render();
         }
 
         public void Dispose()
@@ -174,17 +180,17 @@ namespace TGC.Examples.Bullet.Physics
             var ballMotionState = new DefaultMotionState(ballTransform.ToBsMatrix);
             //Podriamos no calcular la inercia para que no rote, pero es correcto que rote tambien.
             var ballLocalInertia = ballShape.CalculateLocalInertia(mass);
-            var ballInfo = new RigidBodyConstructionInfo(1, ballMotionState, ballShape, ballLocalInertia);
+            var ballInfo = new RigidBodyConstructionInfo(10, ballMotionState, ballShape, ballLocalInertia);
             var ballBody = new RigidBody(ballInfo);
             ballBody.LinearFactor = TGCVector3.One.ToBsVector;
             ballBody.SetDamping(0.1f, 0.5f);
-            ballBody.Restitution = 0.5f;
+            ballBody.Restitution = 0.9f;
             return ballBody;
         }
-        /*
+
         private void CreateGround()
         {
-            
+
             int totalVertsI = NumVertsX * NumVertsY;
 
             int totalTrianglesI = 2 * (NumVertsX - 1) * (NumVertsY - 1);
@@ -194,14 +200,14 @@ namespace TGC.Examples.Bullet.Physics
 
             //triangleDataVB.Length;
 
-            foreach(var vertex in triangleDataVB)
+            foreach (var vertex in triangleDataVB)
             {
-                
+
             }
 
-            //var mesh = new IndexedMesh();
-            //mesh.Allocate(totalTrianglesI, totalVertsI, triangleIndexStride, vertexStride);
-            /*
+            var mesh = new IndexedMesh();
+            mesh.Allocate(338, 196, triangleIndexStride, vertexStride);
+
             //los vertices X e Y de aqui representan vertice X y vertice Z
             var indicesStream = mesh.GetTriangleStream();
             // Hay que ciclar por los vertices que se cargaron en el VertexBuffer
@@ -222,44 +228,51 @@ namespace TGC.Examples.Bullet.Physics
                         indices.Write(row2Index);
                     }
                 }
-            }*/
-            
-            //_indexVertexArrays = new TriangleIndexVertexArray();
-            //_indexVertexArrays.AddIndexedMesh(mesh);
-            
+            }
+
+            _indexVertexArrays = new TriangleIndexVertexArray();
+            _indexVertexArrays.AddIndexedMesh(mesh);
+
             //Posiciona los vertices segun las posiciones del modelo en xyz
             // o por lo menos deberia hacer esto. En el ejemplo original, armaba unas olas 
             //a partir de una altura y un offset
             //Copiar la construccion de la superficie que este en la clase BulletSurface
-            //SetVertexPositions(); //TODO: ver como pasar la data del VertexBuffer para no tener que recalcular las posiciones
+            SetVertexPositions(); //TODO: ver como pasar la data del VertexBuffer para no tener que recalcular las posiciones
             /*
             const bool useQuantizedAabbCompression = true;
             floorBody = new BvhTriangleMeshShape(_indexVertexArrays, useQuantizedAabbCompression);
             */
-            //_groundObject = PhysicsHelper.CreateStaticBody(Matrix.Identity, floorBody, dynamicsWorld);
-           /* _groundObject.CollisionFlags |= CollisionFlags.StaticObject;
-            _groundObject.UserObject = "Ground";
-        }
 
-        private void SetVertexPositions()
-        {
-            if (_vertexWriter == null)
-            {
-                _vertexStream = _indexVertexArrays.GetVertexStream();
-                _vertexWriter = new BinaryWriter(_vertexStream);
-            }
-            _vertexStream.Position = 0;
-            for (int i = 0; i < NumVertsX; i++)
-            {
-                for (int j = 0; j < NumVertsY; j++)
-                {
-                    var x = (i - NumVertsX * 0.5f) * TriangleSize;
-                    var z = (j - NumVertsY * 0.5f) * TriangleSize;
+            const bool useQuantizedAabbCompression = true;
+            GroundShape = new BvhTriangleMeshShape(_indexVertexArrays, useQuantizedAabbCompression);
+
+            _groundObject = PhysicsHelper.CreateStaticBody(Matrix.Identity, GroundShape, dynamicsWorld);
+            _groundObject.CollisionFlags |= CollisionFlags.StaticObject;
+            _groundObject.UserObject = "Ground";
+         }
+
+         
+         private void SetVertexPositions()
+         {
+             if (_vertexWriter == null)
+             {
+                 _vertexStream = _indexVertexArrays.GetVertexStream();
+                 _vertexWriter = new BinaryWriter(_vertexStream);
+             }
+             _vertexStream.Position = 0;
+             for (int i = 0; i < 14; i++)
+             {
+                 for (int j = 0; j < 14; j++)
+                 {
+                    var x = (i - 14 ) * TriangleSize;
+                    var z = (j - 14 ) * TriangleSize;
                     _vertexWriter.Write(x);
-                    _vertexWriter.Write((FastMath.Pow2((i) / 32) - FastMath.Pow2((j) / 32)));// (float)Math.Sin(i) * (float)Math.Cos(j));
+                    _vertexWriter.Write(30);
+                     //_vertexWriter.Write((FastMath.Pow2((x) / 32) - FastMath.Pow2((z) / 32)));// (float)Math.Sin(i) * (float)Math.Cos(j));
                     _vertexWriter.Write(z);
-                }
-            }
-        }*/
+                 }
+             }
+         }
+        }
     }
-}
+
