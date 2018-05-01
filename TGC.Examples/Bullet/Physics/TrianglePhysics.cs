@@ -113,6 +113,88 @@ namespace TGC.Examples.Bullet.Physics
             floorBody = new RigidBody(floorInfo);
             dynamicsWorld.AddRigidBody(floorBody);
 
+            int i;
+            Matrix tr;
+            Matrix vehicleTr;
+            //if (UseTrimeshGround)
+            //{
+            const float scale = 20.0f;
+
+            //create a triangle-mesh ground
+            int vertStride = Vector3.SizeInBytes;
+            int indexStride = 3 * sizeof(int);
+
+            const int NUM_VERTS_X = 20;
+            const int NUM_VERTS_Y = 20;
+            const int totalVerts = NUM_VERTS_X * NUM_VERTS_Y;
+
+            const int totalTriangles = 2 * (NUM_VERTS_X - 1) * (NUM_VERTS_Y - 1);
+
+            TriangleIndexVertexArray vertexArray = new TriangleIndexVertexArray();
+            IndexedMesh mesh = new IndexedMesh();
+            mesh.Allocate(totalTriangles, totalVerts, indexStride, vertStride);
+
+            if (_vertexWriter == null)
+            {
+                _vertexStream = _indexVertexArrays.GetVertexStream();
+                _vertexWriter = new BinaryWriter(_vertexStream);
+            }
+            _vertexStream.Position = 0;
+            for (i = 0; i < NUM_VERTS_X; i++)
+            {
+                for (int j = 0; j < NUM_VERTS_Y; j++)
+                {
+                    float wl = .2f;
+                    float height = 20.0f * (float)(Math.Sin(i * wl) * Math.Cos(j * wl));
+
+                    _vertexWriter.Write((i - NUM_VERTS_X * 0.5f) * scale);
+                    _vertexWriter.Write(height);
+                    _vertexWriter.Write((j - NUM_VERTS_Y * 0.5f) * scale);
+                }
+            }
+
+            //int index = 0;
+            var idata = mesh.GetTriangleStream();
+            using (var indices = new BinaryWriter(idata))
+            {
+                for (i = 0; i < NUM_VERTS_X - 1; i++)
+                {
+                    for (int j = 0; j < NUM_VERTS_Y - 1; j++)
+                    {
+                        int row1Index = i + j;
+                        int row2Index = row1Index + i;
+                        indices.Write(row1Index);
+                        indices.Write(row1Index + 1);
+                        indices.Write(row2Index + 1);
+
+                        indices.Write(row1Index);
+                        indices.Write(row2Index + 1);
+                        indices.Write(row2Index);
+                        /*
+                        idata[index++] = j * NUM_VERTS_X + i;
+                        idata[index++] = j * NUM_VERTS_X + i + 1;
+                        idata[index++] = (j + 1) * NUM_VERTS_X + i + 1;
+
+                        idata[index++] = j * NUM_VERTS_X + i;
+                        idata[index++] = (j + 1) * NUM_VERTS_X + i + 1;
+                        idata[index++] = (j + 1) * NUM_VERTS_X + i;
+                        */
+                    }
+                }
+            }
+
+            vertexArray.AddIndexedMesh(mesh);
+            GroundShape = new BvhTriangleMeshShape(vertexArray, true);
+
+            tr = Matrix.Identity;
+            vehicleTr = Matrix.Translation(0, -2, 0);
+
+            //create ground object
+            RigidBody ground = PhysicsHelper.CreateStaticBody(tr, GroundShape, dynamicsWorld);
+            ground.UserObject = "Ground";
+
+            //CreateGround();
+
             capsule = CreateBall(10f, 1f, 10f, 500f, 10f);
             dynamicsWorld.AddRigidBody(capsule);
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\pokeball.jpg");
@@ -237,7 +319,7 @@ namespace TGC.Examples.Bullet.Physics
             // o por lo menos deberia hacer esto. En el ejemplo original, armaba unas olas 
             //a partir de una altura y un offset
             //Copiar la construccion de la superficie que este en la clase BulletSurface
-            SetVertexPositions(); //TODO: ver como pasar la data del VertexBuffer para no tener que recalcular las posiciones
+            //SetVertexPositions(); //TODO: ver como pasar la data del VertexBuffer para no tener que recalcular las posiciones
             /*
             const bool useQuantizedAabbCompression = true;
             floorBody = new BvhTriangleMeshShape(_indexVertexArrays, useQuantizedAabbCompression);
