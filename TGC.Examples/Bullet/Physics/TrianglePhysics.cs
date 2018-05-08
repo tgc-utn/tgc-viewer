@@ -16,6 +16,7 @@ using TGC.Core.Direct3D;
 using TGC.Core.Textures;
 using TGC.Core.Input;
 using Microsoft.DirectX.DirectInput;
+using TGC.Core.Terrain;
 
 namespace TGC.Examples.Bullet.Physics
 {
@@ -26,6 +27,8 @@ namespace TGC.Examples.Bullet.Physics
         //Rigid Bodies:
         private RigidBody floorBody;
         private BvhTriangleMeshShape GroundShape;
+        private HeightfieldTerrainShape heightfield;
+
         //private BvhTriangleMeshShape floorBody;
         private List<RigidBody> ballBodys;
 
@@ -104,7 +107,7 @@ namespace TGC.Examples.Bullet.Physics
             constraintSolver = new SequentialImpulseConstraintSolver();
             overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
-            dynamicsWorld.Gravity = new TGCVector3(0, -10f, 0).ToBsVector;
+            dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
 
             //El piso es un plano estatico se dice que si tiene masa 0 es estatico.
             var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 0);
@@ -113,6 +116,22 @@ namespace TGC.Examples.Bullet.Physics
             floorBody = new RigidBody(floorInfo);
             dynamicsWorld.AddRigidBody(floorBody);
 
+            //Heighmap ??
+            int widht=100;
+            int lenght=100;
+            float scale=10;
+            float minheight=10;
+            float maxheight=100;
+            int upaxis=3;
+            bool flipquads = false;
+            var terrain = new TgcSimpleTerrain();
+            terrain.loadHeightmap(currentHeightmap, widht, maxheight-minheight, TGCVector3.Empty);
+            terrain.loadTexture(currentTexture);
+            int y = terrain.HeightmapData[0, 0];
+            IntPtr data;
+            heightfield = new HeightfieldTerrainShape(widht, lenght, data, scale, minheight, maxheight, upaxis, PhyScalarType.Byte, flipquads);
+            
+            /*
             int i;
             Matrix tr;
             Matrix vehicleTr;
@@ -178,7 +197,7 @@ namespace TGC.Examples.Bullet.Physics
                         idata[index++] = j * NUM_VERTS_X + i;
                         idata[index++] = (j + 1) * NUM_VERTS_X + i + 1;
                         idata[index++] = (j + 1) * NUM_VERTS_X + i;
-                        */
+                        
                     }
                 }
             }
@@ -188,11 +207,11 @@ namespace TGC.Examples.Bullet.Physics
 
             tr = Matrix.Identity;
             vehicleTr = Matrix.Translation(0, -2, 0);
-
+            
             //create ground object
             RigidBody ground = PhysicsHelper.CreateStaticBody(tr, GroundShape, dynamicsWorld);
             ground.UserObject = "Ground";
-
+            */
             //CreateGround();
 
             capsule = CreateBall(10f, 1f, 10f, 500f, 10f);
@@ -245,7 +264,7 @@ namespace TGC.Examples.Bullet.Physics
             sphereMesh.Render();
 
             //El render del piso deberia manejarse con el shader de tgcterrain
-            //floorMesh.Render();
+            floorMesh.Render();
         }
 
         public void Dispose()
