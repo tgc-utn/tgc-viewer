@@ -80,10 +80,10 @@ namespace TGC.Examples.Bullet
                 for (var j = 0; j < length - 1; j = j + size)
                 {
                     //Vertices
-                    var v1 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / 32 ) - FastMath.Pow2( (center.Z + j) / 32) ) , center.Z + j);
-                    var v2 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / 32) - FastMath.Pow2( (center.Z + j + size ) / 32) ), center.Z + (j + size));
-                    var v3 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) - FastMath.Pow2((center.Z + j) / 32)), center.Z + j);
-                    var v4 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) - FastMath.Pow2((center.Z + j + size) / 32)), center.Z + (j + size) );
+                    var v1 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / 32 ) + FastMath.Pow2( (center.Z + j) / 32) ) , center.Z + j);
+                    var v2 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / 32) + FastMath.Pow2( (center.Z + j + size ) / 32) ), center.Z + (j + size));
+                    var v3 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) + FastMath.Pow2((center.Z + j) / 32)), center.Z + j);
+                    var v4 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) + FastMath.Pow2((center.Z + j + size) / 32)), center.Z + (j + size) );
                     vertexes = +vertexes + 4;
 
                     //Coordendas de textura

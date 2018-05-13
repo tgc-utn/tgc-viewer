@@ -27,7 +27,6 @@ namespace TGC.Examples.Bullet.Physics
         //Rigid Bodies:
         private RigidBody floorBody;
         private BvhTriangleMeshShape GroundShape;
-        private HeightfieldTerrainShape heightfield;
 
         //private BvhTriangleMeshShape floorBody;
         private List<RigidBody> ballBodys;
@@ -41,8 +40,6 @@ namespace TGC.Examples.Bullet.Physics
         private float TriangleSize = 80f;
         private int NumVertsX = 30;
         private int NumVertsY = 30;
-        private int NumDynamicBoxesX = 30;
-        private int NumDynamicBoxesY = 30;
 
         private Stream _vertexStream;
         private BinaryWriter _vertexWriter;
@@ -51,9 +48,7 @@ namespace TGC.Examples.Bullet.Physics
         private TGCVector3 _worldMax = new TGCVector3(1000, 1000, 1000);
 
         private TriangleIndexVertexArray _indexVertexArrays;
-        //private ConvexcastBatch _convexcastBatch;
         private RigidBody _groundObject;
-        private ClosestConvexResultCallback _callback;
 
         //Datos del los triangulos del VertexBuffer
         private CustomVertex.PositionTextured[] triangleDataVB;
@@ -108,113 +103,71 @@ namespace TGC.Examples.Bullet.Physics
             overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
-
+            /*
             //El piso es un plano estatico se dice que si tiene masa 0 es estatico.
             var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 0);
             var floorMotionState = new DefaultMotionState();
             var floorInfo = new RigidBodyConstructionInfo(0, floorMotionState, floorShape);
             floorBody = new RigidBody(floorInfo);
-            dynamicsWorld.AddRigidBody(floorBody);
+            dynamicsWorld.AddRigidBody(floorBody);*/
 
-            //Heighmap ??
-            int widht=100;
-            int lenght=100;
-            float scale=10;
-            float minheight=10;
-            float maxheight=100;
-            int upaxis=3;
-            bool flipquads = false;
-            var terrain = new TgcSimpleTerrain();
-            terrain.loadHeightmap(currentHeightmap, widht, maxheight-minheight, TGCVector3.Empty);
-            terrain.loadTexture(currentTexture);
-            int y = terrain.HeightmapData[0, 0];
-            IntPtr data;
-            heightfield = new HeightfieldTerrainShape(widht, lenght, data, scale, minheight, maxheight, upaxis, PhyScalarType.Byte, flipquads);
-            
             /*
-            int i;
-            Matrix tr;
-            Matrix vehicleTr;
-            //if (UseTrimeshGround)
-            //{
-            const float scale = 20.0f;
+             * This come from a bullet page
+             * http://www.bulletphysics.org/mediawiki-1.5.8/index.php?title=Code_Snippets
+            btTriangleMesh *mTriMesh = new btTriangleMesh();
 
-            //create a triangle-mesh ground
-            int vertStride = Vector3.SizeInBytes;
-            int indexStride = 3 * sizeof(int);
+            while(!done) {
+                // For whatever your source of triangles is
+                //   give the three points of each triangle:
+                btVector3 v0(x0,y0,z0);
+                btVector3 v1(x1,y1,z1);
+                btVector3 v2(x2,y2,z2);
 
-            const int NUM_VERTS_X = 20;
-            const int NUM_VERTS_Y = 20;
-            const int totalVerts = NUM_VERTS_X * NUM_VERTS_Y;
-
-            const int totalTriangles = 2 * (NUM_VERTS_X - 1) * (NUM_VERTS_Y - 1);
-
-            TriangleIndexVertexArray vertexArray = new TriangleIndexVertexArray();
-            IndexedMesh mesh = new IndexedMesh();
-            mesh.Allocate(totalTriangles, totalVerts, indexStride, vertStride);
-
-            if (_vertexWriter == null)
-            {
-                _vertexStream = _indexVertexArrays.GetVertexStream();
-                _vertexWriter = new BinaryWriter(_vertexStream);
-            }
-            _vertexStream.Position = 0;
-            for (i = 0; i < NUM_VERTS_X; i++)
-            {
-                for (int j = 0; j < NUM_VERTS_Y; j++)
-                {
-                    float wl = .2f;
-                    float height = 20.0f * (float)(Math.Sin(i * wl) * Math.Cos(j * wl));
-
-                    _vertexWriter.Write((i - NUM_VERTS_X * 0.5f) * scale);
-                    _vertexWriter.Write(height);
-                    _vertexWriter.Write((j - NUM_VERTS_Y * 0.5f) * scale);
-                }
+                // Then add the triangle to the mesh:
+                mTriMesh->addTriangle(v0,v1,v2);
             }
 
-            //int index = 0;
-            var idata = mesh.GetTriangleStream();
-            using (var indices = new BinaryWriter(idata))
-            {
-                for (i = 0; i < NUM_VERTS_X - 1; i++)
-                {
-                    for (int j = 0; j < NUM_VERTS_Y - 1; j++)
-                    {
-                        int row1Index = i + j;
-                        int row2Index = row1Index + i;
-                        indices.Write(row1Index);
-                        indices.Write(row1Index + 1);
-                        indices.Write(row2Index + 1);
+            btCollisionShape *mTriMeshShape = new btBvhTriangleMeshShape(mTriMesh,true);
 
-                        indices.Write(row1Index);
-                        indices.Write(row2Index + 1);
-                        indices.Write(row2Index);
-                        /*
-                        idata[index++] = j * NUM_VERTS_X + i;
-                        idata[index++] = j * NUM_VERTS_X + i + 1;
-                        idata[index++] = (j + 1) * NUM_VERTS_X + i + 1;
-
-                        idata[index++] = j * NUM_VERTS_X + i;
-                        idata[index++] = (j + 1) * NUM_VERTS_X + i + 1;
-                        idata[index++] = (j + 1) * NUM_VERTS_X + i;
-                        
-                    }
-                }
-            }
-
-            vertexArray.AddIndexedMesh(mesh);
-            GroundShape = new BvhTriangleMeshShape(vertexArray, true);
-
-            tr = Matrix.Identity;
-            vehicleTr = Matrix.Translation(0, -2, 0);
-            
-            //create ground object
-            RigidBody ground = PhysicsHelper.CreateStaticBody(tr, GroundShape, dynamicsWorld);
-            ground.UserObject = "Ground";
+            // Now use mTriMeshShape as your collision shape.
+            // Everything else is like a normal rigid body
             */
-            //CreateGround();
 
-            capsule = CreateBall(10f, 1f, 10f, 500f, 10f);
+            //Triangulos
+            var triangleMesh = new TriangleMesh();
+            int i = 0;
+
+            while (i < triangleDataVB.Length)
+            {
+                var triangle = new Triangle();
+                TGCVector3 vector0 = new TGCVector3( triangleDataVB[i].X, triangleDataVB[i].Y, triangleDataVB[i].Z);
+                TGCVector3 vector1 = new TGCVector3(triangleDataVB[i + 1].X, triangleDataVB[i + 1].Y, triangleDataVB[i + 1].Z);
+                TGCVector3 vector2 = new TGCVector3(triangleDataVB[i + 2].X, triangleDataVB[i + 2].Y, triangleDataVB[i + 2].Z);
+
+                i++;
+                i++;
+                i++;
+
+                triangleMesh.AddTriangle(vector0.ToBsVector, vector1.ToBsVector, vector2.ToBsVector, false);
+            }
+
+            /*
+             * Para 1 solo triangulo
+            var triangle = new Triangle();
+            TGCVector3 vector0 = new TGCVector3(0, 0, 0);
+            TGCVector3 vector1 = new TGCVector3(100, 0, 0);
+            TGCVector3 vector2 = new TGCVector3(0, 0, 100);
+            
+            triangleMesh.AddTriangle(vector0.ToBsVector,vector1.ToBsVector,vector2.ToBsVector,false);
+            */
+
+            CollisionShape meshCollisionShape = new BvhTriangleMeshShape(triangleMesh, true);
+            var meshMotionState = new DefaultMotionState();
+            var meshRigidBodyInfo = new RigidBodyConstructionInfo(0,meshMotionState,meshCollisionShape);
+            RigidBody meshRigidBody = new RigidBody(meshRigidBodyInfo);
+            dynamicsWorld.AddRigidBody(meshRigidBody);
+            
+            capsule = CreateBall(10f, 1f, 200f, 500f, 200f);
             dynamicsWorld.AddRigidBody(capsule);
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\pokeball.jpg");
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
@@ -264,7 +217,7 @@ namespace TGC.Examples.Bullet.Physics
             sphereMesh.Render();
 
             //El render del piso deberia manejarse con el shader de tgcterrain
-            floorMesh.Render();
+            //floorMesh.Render();
         }
 
         public void Dispose()
@@ -289,91 +242,6 @@ namespace TGC.Examples.Bullet.Physics
             return ballBody;
         }
 
-        private void CreateGround()
-        {
-
-            int totalVertsI = NumVertsX * NumVertsY;
-
-            int totalTrianglesI = 2 * (NumVertsX - 1) * (NumVertsY - 1);
-
-            const int triangleIndexStride = 3 * sizeof(int);
-            const int vertexStride = Vector3.SizeInBytes;
-
-            //triangleDataVB.Length;
-
-            foreach (var vertex in triangleDataVB)
-            {
-
-            }
-
-            var mesh = new IndexedMesh();
-            mesh.Allocate(338, 196, triangleIndexStride, vertexStride);
-
-            //los vertices X e Y de aqui representan vertice X y vertice Z
-            var indicesStream = mesh.GetTriangleStream();
-            // Hay que ciclar por los vertices que se cargaron en el VertexBuffer
-            using (var indices = new BinaryWriter(indicesStream))
-            {
-                for (int x = 0; x < NumVertsX - 1; x++)
-                {
-                    for (int y = 0; y < NumVertsY - 1; y++)
-                    {
-                        int row1Index = x + y;
-                        int row2Index = row1Index + x;
-                        indices.Write(row1Index);
-                        indices.Write(row1Index + 1);
-                        indices.Write(row2Index + 1);
-
-                        indices.Write(row1Index);
-                        indices.Write(row2Index + 1);
-                        indices.Write(row2Index);
-                    }
-                }
-            }
-
-            _indexVertexArrays = new TriangleIndexVertexArray();
-            _indexVertexArrays.AddIndexedMesh(mesh);
-
-            //Posiciona los vertices segun las posiciones del modelo en xyz
-            // o por lo menos deberia hacer esto. En el ejemplo original, armaba unas olas 
-            //a partir de una altura y un offset
-            //Copiar la construccion de la superficie que este en la clase BulletSurface
-            //SetVertexPositions(); //TODO: ver como pasar la data del VertexBuffer para no tener que recalcular las posiciones
-            /*
-            const bool useQuantizedAabbCompression = true;
-            floorBody = new BvhTriangleMeshShape(_indexVertexArrays, useQuantizedAabbCompression);
-            */
-
-            const bool useQuantizedAabbCompression = true;
-            GroundShape = new BvhTriangleMeshShape(_indexVertexArrays, useQuantizedAabbCompression);
-
-            _groundObject = PhysicsHelper.CreateStaticBody(Matrix.Identity, GroundShape, dynamicsWorld);
-            _groundObject.CollisionFlags |= CollisionFlags.StaticObject;
-            _groundObject.UserObject = "Ground";
-         }
-
-         
-         private void SetVertexPositions()
-         {
-             if (_vertexWriter == null)
-             {
-                 _vertexStream = _indexVertexArrays.GetVertexStream();
-                 _vertexWriter = new BinaryWriter(_vertexStream);
-             }
-             _vertexStream.Position = 0;
-             for (int i = 0; i < 14; i++)
-             {
-                 for (int j = 0; j < 14; j++)
-                 {
-                    var x = (i - 14 ) * TriangleSize;
-                    var z = (j - 14 ) * TriangleSize;
-                    _vertexWriter.Write(x);
-                    _vertexWriter.Write(30);
-                     //_vertexWriter.Write((FastMath.Pow2((x) / 32) - FastMath.Pow2((z) / 32)));// (float)Math.Sin(i) * (float)Math.Cos(j));
-                    _vertexWriter.Write(z);
-                 }
-             }
-         }
         }
     }
 
