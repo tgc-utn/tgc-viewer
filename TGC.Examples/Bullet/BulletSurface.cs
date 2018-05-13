@@ -122,16 +122,11 @@ namespace TGC.Examples.Bullet
             
             physicsExample = new TrianglePhysics();
             physicsExample.setTriangleDataVB(data);
-            /*physicsExample.setNumVertsX(25);
-            physicsExample.setNumVertsY(25);
-            physicsExample.setTotalTriangles(triangles);
-            physicsExample.setTotalVerts(vertexes);*/
-            //TODO: cuando este terminado el modelo de fisica del ejemplo utilizar lo de abajo
             physicsExample.Init(MediaDir);
 
             UserVars.addVar("BallPosition");
 
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 1000, Input);
         }
 
         public override void Update()

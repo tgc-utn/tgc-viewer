@@ -24,36 +24,17 @@ namespace TGC.Examples.Bullet.Physics
     {
         private TgcPlane floorMesh;
 
-        //Rigid Bodies:
-        private RigidBody floorBody;
-        private BvhTriangleMeshShape GroundShape;
-
-        //private BvhTriangleMeshShape floorBody;
-        private List<RigidBody> ballBodys;
-
         private DiscreteDynamicsWorld dynamicsWorld;
         private CollisionDispatcher dispatcher;
         private DefaultCollisionConfiguration collisionConfiguration;
         private SequentialImpulseConstraintSolver constraintSolver;
         private BroadphaseInterface overlappingPairCache;
 
-        private float TriangleSize = 80f;
-        private int NumVertsX = 30;
-        private int NumVertsY = 30;
-
-        private Stream _vertexStream;
-        private BinaryWriter _vertexWriter;
-
         private TGCVector3 _worldMin = new TGCVector3(-1000, -1000, -1000);
         private TGCVector3 _worldMax = new TGCVector3(1000, 1000, 1000);
 
-        private TriangleIndexVertexArray _indexVertexArrays;
-        private RigidBody _groundObject;
-
         //Datos del los triangulos del VertexBuffer
         private CustomVertex.PositionTextured[] triangleDataVB;
-        private int totalTriangles;
-        private int totalVerts;
 
         //Capsula
         private RigidBody capsule;
@@ -67,26 +48,6 @@ namespace TGC.Examples.Bullet.Physics
         public void setTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
         {
             triangleDataVB = newTriangleData;
-        }
-
-        public void setTotalTriangles(int triangles)
-        {
-            totalTriangles = triangles;
-        }
-
-        public void setTotalVerts(int vertexes)
-        {
-            totalVerts = vertexes;
-        }
-
-        public void setNumVertsX(int vertsX)
-        {
-            NumVertsX = vertsX;
-        }
-
-        public void setNumVertsY(int vertsY)
-        {
-            NumVertsY = vertsY;
         }
 
         public void Init(String MediaDir)
@@ -103,13 +64,6 @@ namespace TGC.Examples.Bullet.Physics
             overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
-            /*
-            //El piso es un plano estatico se dice que si tiene masa 0 es estatico.
-            var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 0);
-            var floorMotionState = new DefaultMotionState();
-            var floorInfo = new RigidBodyConstructionInfo(0, floorMotionState, floorShape);
-            floorBody = new RigidBody(floorInfo);
-            dynamicsWorld.AddRigidBody(floorBody);*/
 
             /*
              * This come from a bullet page
@@ -133,6 +87,16 @@ namespace TGC.Examples.Bullet.Physics
             // Everything else is like a normal rigid body
             */
 
+            /*
+            * Para 1 solo triangulo
+            var triangle = new Triangle();
+            TGCVector3 vector0 = new TGCVector3(0, 0, 0);
+            TGCVector3 vector1 = new TGCVector3(100, 0, 0);
+            TGCVector3 vector2 = new TGCVector3(0, 0, 100);
+
+            triangleMesh.AddTriangle(vector0.ToBsVector,vector1.ToBsVector,vector2.ToBsVector,false);
+            */
+
             //Triangulos
             var triangleMesh = new TriangleMesh();
             int i = 0;
@@ -150,16 +114,6 @@ namespace TGC.Examples.Bullet.Physics
 
                 triangleMesh.AddTriangle(vector0.ToBsVector, vector1.ToBsVector, vector2.ToBsVector, false);
             }
-
-            /*
-             * Para 1 solo triangulo
-            var triangle = new Triangle();
-            TGCVector3 vector0 = new TGCVector3(0, 0, 0);
-            TGCVector3 vector1 = new TGCVector3(100, 0, 0);
-            TGCVector3 vector2 = new TGCVector3(0, 0, 100);
-            
-            triangleMesh.AddTriangle(vector0.ToBsVector,vector1.ToBsVector,vector2.ToBsVector,false);
-            */
 
             CollisionShape meshCollisionShape = new BvhTriangleMeshShape(triangleMesh, true);
             var meshMotionState = new DefaultMotionState();
@@ -186,38 +140,33 @@ namespace TGC.Examples.Bullet.Physics
         public void Update(TgcD3dInput input)
         {
             dynamicsWorld.StepSimulation(1 / 60f, 100);
-            /*
-            if (input.keyUp(Key.W))
+            var velocity = 3;
+
+            if (input.keyDown(Key.W) && !( input.keyDown(Key.A) || input.keyDown(Key.D) ))
             {
-                capsule.LinearVelocity = new TGCVector3(1, 0, 0).ToBsVector;
-                capsule.ApplyCentralForce(new TGCVector3(1, 0, 0).ToBsVector);
-                capsule.ApplyCentralImpulse(new TGCVector3(1, 0, 0).ToBsVector);
-                capsule.UpdateInertiaTensor();
+                capsule.ApplyImpulse(new TGCVector3(velocity, 0, 0).ToBsVector,capsule.CenterOfMassPosition);
             }
 
-            if (input.keyUp(Key.S))
+            if (input.keyDown(Key.S))
             {
-
+                capsule.LinearVelocity = new TGCVector3(-velocity, 0, 0).ToBsVector;
+            }
+            
+            if (input.keyDown(Key.A))
+            {
+                capsule.LinearVelocity = new TGCVector3(0, 0, velocity).ToBsVector;
             }
 
-            if (input.keyUp(Key.A))
+            if (input.keyDown(Key.D))
             {
-
+                capsule.LinearVelocity = new TGCVector3(0, 0, -velocity).ToBsVector;
             }
-
-            if (input.keyUp(Key.D))
-            {
-
-            }*/
         }
 
         public void Render()
         {
             sphereMesh.Transform = TGCMatrix.Scaling(10, 10, 10) * new TGCMatrix(capsule.InterpolationWorldTransform);
             sphereMesh.Render();
-
-            //El render del piso deberia manejarse con el shader de tgcterrain
-            //floorMesh.Render();
         }
 
         public void Dispose()
