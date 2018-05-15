@@ -71,7 +71,8 @@ namespace TGC.Examples.Bullet
             center.X = center.X - width / 2 ;
             center.Z = center.Z - length / 2;
 
-            int size = 80;
+            int a = 80;
+            int size = 50;
             int n = 0;
             int triangles = 0;
             int vertexes = 0;
@@ -80,10 +81,10 @@ namespace TGC.Examples.Bullet
                 for (var j = 0; j < length - 1; j = j + size)
                 {
                     //Vertices
-                    var v1 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / 32 ) + FastMath.Pow2( (center.Z + j) / 32) ) , center.Z + j);
-                    var v2 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / 32) + FastMath.Pow2( (center.Z + j + size ) / 32) ), center.Z + (j + size));
-                    var v3 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) + FastMath.Pow2((center.Z + j) / 32)), center.Z + j);
-                    var v4 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / 32) + FastMath.Pow2((center.Z + j + size) / 32)), center.Z + (j + size) );
+                    var v1 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / a ) + FastMath.Pow2( (center.Z + j) / a ) ) , center.Z + j);
+                    var v2 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / a ) + FastMath.Pow2( (center.Z + j + size ) / a ) ), center.Z + (j + size));
+                    var v3 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / a ) + FastMath.Pow2((center.Z + j) / a )), center.Z + j);
+                    var v4 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / a ) + FastMath.Pow2((center.Z + j + size) / a )), center.Z + (j + size) );
                     vertexes = +vertexes + 4;
 
                     //Coordendas de textura
@@ -124,7 +125,7 @@ namespace TGC.Examples.Bullet
             physicsExample.setTriangleDataVB(data);
             physicsExample.Init(MediaDir);
 
-            UserVars.addVar("BallPosition");
+            UserVars.addVar("Tgccito_Position");
 
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 1000, Input);
         }
@@ -133,7 +134,7 @@ namespace TGC.Examples.Bullet
         {
             PreUpdate();
             physicsExample.Update(Input);
-            UserVars.setValue("BallPosition", physicsExample.getBallPosition());
+            UserVars.setValue("Tgccito_Position", physicsExample.getBallPosition());
             PostUpdate();
         }
 

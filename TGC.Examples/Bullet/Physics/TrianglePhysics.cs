@@ -17,6 +17,7 @@ using TGC.Core.Textures;
 using TGC.Core.Input;
 using Microsoft.DirectX.DirectInput;
 using TGC.Core.Terrain;
+using TGC.Core.SkeletalAnimation;
 
 namespace TGC.Examples.Bullet.Physics
 {
@@ -39,6 +40,11 @@ namespace TGC.Examples.Bullet.Physics
         //Capsula
         private RigidBody capsule;
         private TGCSphere sphereMesh;
+        private TgcSkeletalMesh personaje;
+        private RigidBody box;
+        private RigidBody boxB;
+        private TGCBox boxMesh;
+        private TGCBox boxMeshB;
 
         public TGCVector3 getBallPosition()
         {
@@ -121,52 +127,92 @@ namespace TGC.Examples.Bullet.Physics
             RigidBody meshRigidBody = new RigidBody(meshRigidBodyInfo);
             dynamicsWorld.AddRigidBody(meshRigidBody);
             
-            capsule = CreateBall(10f, 1f, 200f, 500f, 200f);
+            capsule = CreateBall(10f, 1000f, 200f, 500f, 200f);
             dynamicsWorld.AddRigidBody(capsule);
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\pokeball.jpg");
+            var textureBox = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"MeshCreator\Textures\Madera\cajaMadera2.jpg");
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
             sphereMesh = new TGCSphere(1, texture, TGCVector3.Empty);
             //Tgc no crea el vertex buffer hasta invocar a update values.
             sphereMesh.updateValues();
 
-            /*
-            //Creamos una esfera
-            var ballBody = this.CreateBall(10f, 1f, 0f, 50f, 0f);
-            ballBodys.Add(ballBody);
-            dynamicsWorld.AddRigidBody(ballBody);*/
+            //Cargamos personaje
+            var skeletalLoader = new TgcSkeletalLoader();
+            personaje = skeletalLoader.loadMeshAndAnimationsFromFile(
+                    MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml",
+                    MediaDir + "SkeletalAnimations\\Robot\\",
+                    new[]
+                    {
+                        MediaDir + "SkeletalAnimations\\Robot\\Caminando-TgcSkeletalAnim.xml",
+                        MediaDir + "SkeletalAnimations\\Robot\\Parado-TgcSkeletalAnim.xml"
+                    });
 
+            //Le cambiamos la textura para diferenciarlo un poco
+            personaje.changeDiffuseMaps(new[]
+            {
+                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                    MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
+            });
+
+            //Configurar animacion inicial
+            personaje.playAnimation("Parado", true);
+
+            box = CreateStaticBox(20, new Vector3(0,10,0));
+            dynamicsWorld.AddRigidBody(box);
+            boxMesh = TGCBox.fromSize(new TGCVector3(30f, 30f, 30f), textureBox);
+            boxMesh.updateValues();
+
+            boxB = CreateStaticBox(40, new Vector3(100, 10, 0));
+            dynamicsWorld.AddRigidBody(boxB);
+            boxMeshB = TGCBox.fromSize(new TGCVector3(50f, 50f, 50f), textureBox);
+            boxMeshB.updateValues();
         }
 
         public void Update(TgcD3dInput input)
         {
             dynamicsWorld.StepSimulation(1 / 60f, 100);
-            var velocity = 3;
-
-            if (input.keyDown(Key.W) && !( input.keyDown(Key.A) || input.keyDown(Key.D) ))
+            var strenght = 30;
+            var angle = 5;
+            
+            if (input.keyDown(Key.W))
             {
-                capsule.ApplyImpulse(new TGCVector3(velocity, 0, 0).ToBsVector,capsule.CenterOfMassPosition);
+                capsule.ApplyCentralImpulse(new TGCVector3(strenght, 0, 0).ToBsVector);
             }
 
             if (input.keyDown(Key.S))
             {
-                capsule.LinearVelocity = new TGCVector3(-velocity, 0, 0).ToBsVector;
+                capsule.ApplyCentralImpulse( new TGCVector3(-strenght, 0, 0).ToBsVector);
             }
             
             if (input.keyDown(Key.A))
             {
-                capsule.LinearVelocity = new TGCVector3(0, 0, velocity).ToBsVector;
+                capsule.ApplyCentralImpulse(new TGCVector3(0, 0, strenght).ToBsVector);
             }
 
             if (input.keyDown(Key.D))
             {
-                capsule.LinearVelocity = new TGCVector3(0, 0, -velocity).ToBsVector;
+                capsule.ApplyCentralImpulse(new TGCVector3(0, 0, -strenght).ToBsVector);
+            }
+            
+            if (input.keyDown(Key.Space))
+            {
+                capsule.ApplyCentralImpulse(new TGCVector3(0,strenght,0).ToBsVector);
             }
         }
 
         public void Render()
         {
-            sphereMesh.Transform = TGCMatrix.Scaling(10, 10, 10) * new TGCMatrix(capsule.InterpolationWorldTransform);
-            sphereMesh.Render();
+            //sphereMesh.Transform = TGCMatrix.Scaling(10, 10, 10) * new TGCMatrix(capsule.InterpolationWorldTransform);
+            //sphereMesh.Render();
+
+            personaje.Transform = TGCMatrix.Scaling(0.5f, 0.5f, 0.5f) * TGCMatrix.Translation(capsule.CenterOfMassPosition.X, capsule.CenterOfMassPosition.Y - 10, capsule.CenterOfMassPosition.Z);
+            personaje.Render();
+
+            boxMesh.Transform = new TGCMatrix(box.InterpolationWorldTransform) * TGCMatrix.Translation(box.CenterOfMassPosition.X, box.CenterOfMassPosition.Y - 3.5f, box.CenterOfMassPosition.Z);
+            boxMesh.Render();
+
+            boxMeshB.Transform = new TGCMatrix(boxB.InterpolationWorldTransform) * TGCMatrix.Translation(15, 15f, 0);
+            boxMeshB.Render();
         }
 
         public void Dispose()
@@ -187,10 +233,48 @@ namespace TGC.Examples.Bullet.Physics
             var ballBody = new RigidBody(ballInfo);
             ballBody.LinearFactor = TGCVector3.One.ToBsVector;
             ballBody.SetDamping(0.1f, 0.5f);
-            ballBody.Restitution = 0.9f;
+            ballBody.Restitution = 1f;
             return ballBody;
         }
 
+        /// <summary>
+        /// Crea un box sin masa, por lo tanto sin inercia que actua como elemnto estatico
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public RigidBody CreateStaticBox(float size, Vector3 position)
+        {
+            CollisionShape boxShape = new BoxShape(size, size, size);
+            Matrix boxMatrix = Matrix.Identity;
+            boxMatrix.Origin = position;
+
+            var boxMotionState = new DefaultMotionState(boxMatrix);
+            var boxRigidBodyInfo = new RigidBodyConstructionInfo(0, boxMotionState, boxShape);
+
+            var boxBody = new RigidBody(boxRigidBodyInfo);
+            
+            return boxBody;
         }
+
+        public RigidBody CreateBox(float size, float mass, float x, float y, float z, float yaw, float pitch, float roll)
+        {
+            //Se crea una caja de tamaño 20 con rotaciones y origien en 10,100,10 y 1kg de masa.
+            var boxShape = new BoxShape(size, size, size);
+            var boxTransform = TGCMatrix.RotationYawPitchRoll(yaw, pitch, roll).ToBsMatrix;
+            boxTransform.Origin = new TGCVector3(x, y, z).ToBsVector;
+            DefaultMotionState boxMotionState = new DefaultMotionState(boxTransform);
+            //Es importante calcular la inercia caso contrario el objeto no rotara.
+            var boxLocalInertia = boxShape.CalculateLocalInertia(mass);
+            var boxInfo = new RigidBodyConstructionInfo(1f, boxMotionState, boxShape, boxLocalInertia);
+            var boxBody = new RigidBody(boxInfo);
+            boxBody.LinearFactor = TGCVector3.One.ToBsVector;
+            //boxBody.SetDamping(0.7f, 0.9f);
+            //boxBody.Restitution = 1f;
+            boxBody.Friction = 0f;
+            return boxBody;
+        }
+
+    }
     }
 
