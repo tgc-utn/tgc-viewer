@@ -38,6 +38,8 @@ namespace TGC.Examples.Bullet.Physics
         private CustomVertex.PositionTextured[] triangleDataVB;
 
         //Capsula
+        private CapsuleShape capsulilla;
+        private RigidBody capsuleRigidBody;
         private RigidBody capsule;
         private TGCSphere sphereMesh;
         private TgcSkeletalMesh personaje;
@@ -48,7 +50,7 @@ namespace TGC.Examples.Bullet.Physics
 
         public TGCVector3 getBallPosition()
         {
-           return new TGCVector3(capsule.CenterOfMassPosition.X,capsule.CenterOfMassPosition.Y,capsule.CenterOfMassPosition.Z);
+           return new TGCVector3(capsuleRigidBody.CenterOfMassPosition.X, capsuleRigidBody.CenterOfMassPosition.Y, capsuleRigidBody.CenterOfMassPosition.Z);
         }
 
         public void setTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
@@ -70,6 +72,21 @@ namespace TGC.Examples.Bullet.Physics
             overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
+
+            //Capsula?
+            capsulilla = new CapsuleShape(10, 50);
+            
+            var capsuleTransform = TGCMatrix.Identity;
+            capsuleTransform.Origin = new TGCVector3(200, 500, 200);
+            var capsuleMotionState = new DefaultMotionState(capsuleTransform.ToBsMatrix);
+            var capsuleInertia = capsulilla.CalculateLocalInertia(1000);
+            var capsuleRigidBodyInfo = new RigidBodyConstructionInfo(1, capsuleMotionState, capsulilla, capsuleInertia);
+            capsuleRigidBody = new RigidBody(capsuleRigidBodyInfo);
+            capsuleRigidBody.LinearFactor = TGCVector3.One.ToBsVector;
+            capsuleRigidBody.SetDamping(0.1f, 0f);
+            capsuleRigidBody.Restitution = 1f;
+
+            dynamicsWorld.AddRigidBody(capsuleRigidBody);
 
             /*
              * This come from a bullet page
@@ -126,9 +143,11 @@ namespace TGC.Examples.Bullet.Physics
             var meshRigidBodyInfo = new RigidBodyConstructionInfo(0,meshMotionState,meshCollisionShape);
             RigidBody meshRigidBody = new RigidBody(meshRigidBodyInfo);
             dynamicsWorld.AddRigidBody(meshRigidBody);
-            
+
+            /*
             capsule = CreateBall(10f, 1000f, 200f, 500f, 200f);
-            dynamicsWorld.AddRigidBody(capsule);
+            dynamicsWorld.AddRigidBody(capsule);*/
+
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\pokeball.jpg");
             var textureBox = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"MeshCreator\Textures\Madera\cajaMadera2.jpg");
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
@@ -162,41 +181,92 @@ namespace TGC.Examples.Bullet.Physics
             boxMesh = TGCBox.fromSize(new TGCVector3(30f, 30f, 30f), textureBox);
             boxMesh.updateValues();
 
-            boxB = CreateStaticBox(40, new Vector3(100, 10, 0));
+            boxB = CreateStaticBox(40, new Vector3(100, 40, 0));
             dynamicsWorld.AddRigidBody(boxB);
-            boxMeshB = TGCBox.fromSize(new TGCVector3(50f, 50f, 50f), textureBox);
+            boxMeshB = TGCBox.fromSize(new TGCVector3(80f, 80f, 80f), textureBox);
             boxMeshB.updateValues();
         }
 
         public void Update(TgcD3dInput input)
         {
-            dynamicsWorld.StepSimulation(1 / 60f, 100);
+            dynamicsWorld.StepSimulation(1 / 60f, 1000);
             var strenght = 30;
             var angle = 5;
             
+            /*
             if (input.keyDown(Key.W))
             {
+                //Activa el comportamiento de la simulacion fisica
+                capsule.ActivationState = ActivationState.ActiveTag;
                 capsule.ApplyCentralImpulse(new TGCVector3(strenght, 0, 0).ToBsVector);
             }
 
             if (input.keyDown(Key.S))
             {
+                //Activa el comportamiento de la simulacion fisica
+                capsule.ActivationState = ActivationState.ActiveTag;
                 capsule.ApplyCentralImpulse( new TGCVector3(-strenght, 0, 0).ToBsVector);
             }
             
             if (input.keyDown(Key.A))
             {
+                //Activa el comportamiento de la simulacion fisica
+                capsule.ActivationState = ActivationState.ActiveTag;
                 capsule.ApplyCentralImpulse(new TGCVector3(0, 0, strenght).ToBsVector);
             }
 
             if (input.keyDown(Key.D))
             {
+                //Activa el comportamiento de la simulacion fisica
+                capsule.ActivationState = ActivationState.ActiveTag;
                 capsule.ApplyCentralImpulse(new TGCVector3(0, 0, -strenght).ToBsVector);
             }
             
             if (input.keyDown(Key.Space))
             {
+                //Activa el comportamiento de la simulacion fisica
+                capsule.ActivationState = ActivationState.ActiveTag;
                 capsule.ApplyCentralImpulse(new TGCVector3(0,strenght,0).ToBsVector);
+            }*/
+            
+            if (input.keyDown(Key.W))
+            {
+                //Activa el comportamiento de la simulacion fisica
+                capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
+                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(strenght, 0, 0).ToBsVector);
+                capsuleRigidBody.LinearVelocity = (new TGCVector3(strenght, 0, 0).ToBsVector);
+            }
+
+            if (input.keyDown(Key.S))
+            {
+                //Activa el comportamiento de la simulacion fisica
+                capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
+                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(-strenght, 0, 0).ToBsVector);
+                capsuleRigidBody.LinearVelocity = (new TGCVector3(-strenght, 0, 0).ToBsVector);
+            }
+
+            if (input.keyDown(Key.A))
+            {
+                //Activa el comportamiento de la simulacion fisica
+                capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
+                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, 0, strenght).ToBsVector);
+                capsuleRigidBody.LinearVelocity = (new TGCVector3(0, 0, strenght).ToBsVector);
+            }
+
+            if (input.keyDown(Key.D))
+            {
+                //Activa el comportamiento de la simulacion fisica
+                capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
+                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, 0, -strenght).ToBsVector);
+                capsuleRigidBody.LinearVelocity = (new TGCVector3(0, 0, -strenght).ToBsVector);
+            }
+
+            if (input.keyDown(Key.Space))
+            {
+                //Activa el comportamiento de la simulacion fisica
+                capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
+                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, strenght, 0).ToBsVector);
+                capsuleRigidBody.LinearVelocity = (new TGCVector3(0, strenght, 0).ToBsVector);
             }
         }
 
@@ -205,13 +275,13 @@ namespace TGC.Examples.Bullet.Physics
             //sphereMesh.Transform = TGCMatrix.Scaling(10, 10, 10) * new TGCMatrix(capsule.InterpolationWorldTransform);
             //sphereMesh.Render();
 
-            personaje.Transform = TGCMatrix.Scaling(0.5f, 0.5f, 0.5f) * TGCMatrix.Translation(capsule.CenterOfMassPosition.X, capsule.CenterOfMassPosition.Y - 10, capsule.CenterOfMassPosition.Z);
+            personaje.Transform = TGCMatrix.Scaling(0.5f, 0.5f, 0.5f) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform) * TGCMatrix.Translation(capsuleRigidBody.CenterOfMassPosition.X, capsuleRigidBody.CenterOfMassPosition.Y - 45, capsuleRigidBody.CenterOfMassPosition.Z);
             personaje.Render();
 
             boxMesh.Transform = new TGCMatrix(box.InterpolationWorldTransform) * TGCMatrix.Translation(box.CenterOfMassPosition.X, box.CenterOfMassPosition.Y - 3.5f, box.CenterOfMassPosition.Z);
             boxMesh.Render();
 
-            boxMeshB.Transform = new TGCMatrix(boxB.InterpolationWorldTransform) * TGCMatrix.Translation(15, 15f, 0);
+            boxMeshB.Transform = /*new TGCMatrix(boxB.InterpolationWorldTransform) */ TGCMatrix.Translation(boxB.CenterOfMassPosition.X, boxB.CenterOfMassPosition.Y, boxB.CenterOfMassPosition.Z);
             boxMeshB.Render();
         }
 
