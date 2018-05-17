@@ -85,7 +85,7 @@ namespace TGC.Examples.Bullet.Physics
             capsuleRigidBody.LinearFactor = TGCVector3.One.ToBsVector;
             capsuleRigidBody.SetDamping(0.1f, 0f);
             capsuleRigidBody.Restitution = 1f;
-
+            
             dynamicsWorld.AddRigidBody(capsuleRigidBody);
 
             /*
@@ -123,17 +123,18 @@ namespace TGC.Examples.Bullet.Physics
             //Triangulos
             var triangleMesh = new TriangleMesh();
             int i = 0;
+            TGCVector3 vector0;
+            TGCVector3 vector1;
+            TGCVector3 vector2;
 
             while (i < triangleDataVB.Length)
             {
                 var triangle = new Triangle();
-                TGCVector3 vector0 = new TGCVector3( triangleDataVB[i].X, triangleDataVB[i].Y, triangleDataVB[i].Z);
-                TGCVector3 vector1 = new TGCVector3(triangleDataVB[i + 1].X, triangleDataVB[i + 1].Y, triangleDataVB[i + 1].Z);
-                TGCVector3 vector2 = new TGCVector3(triangleDataVB[i + 2].X, triangleDataVB[i + 2].Y, triangleDataVB[i + 2].Z);
+                vector0 = new TGCVector3( triangleDataVB[i].X, triangleDataVB[i].Y, triangleDataVB[i].Z);
+                vector1 = new TGCVector3(triangleDataVB[i + 1].X, triangleDataVB[i + 1].Y, triangleDataVB[i + 1].Z);
+                vector2 = new TGCVector3(triangleDataVB[i + 2].X, triangleDataVB[i + 2].Y, triangleDataVB[i + 2].Z);
 
-                i++;
-                i++;
-                i++;
+                i = i + 3;
 
                 triangleMesh.AddTriangle(vector0.ToBsVector, vector1.ToBsVector, vector2.ToBsVector, false);
             }
@@ -189,8 +190,8 @@ namespace TGC.Examples.Bullet.Physics
 
         public void Update(TgcD3dInput input)
         {
-            dynamicsWorld.StepSimulation(1 / 60f, 1000);
-            var strenght = 30;
+            dynamicsWorld.StepSimulation(1 / 60f, 100);
+            var strenght = 10;
             var angle = 5;
             
             /*
@@ -233,24 +234,26 @@ namespace TGC.Examples.Bullet.Physics
             {
                 //Activa el comportamiento de la simulacion fisica
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
-                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(strenght, 0, 0).ToBsVector);
-                capsuleRigidBody.LinearVelocity = (new TGCVector3(strenght, 0, 0).ToBsVector);
+                capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBsVector;
+                capsuleRigidBody.ApplyImpulse(new TGCVector3(strenght, 0, 0).ToBsVector, new TGCVector3( capsuleRigidBody.CenterOfMassPosition.X, capsuleRigidBody.CenterOfMassPosition.Y - 25, capsuleRigidBody.CenterOfMassPosition.Z).ToBsVector);
+                //capsuleRigidBody.LinearVelocity = (new TGCVector3(strenght, 0, 0).ToBsVector);
             }
 
             if (input.keyDown(Key.S))
             {
                 //Activa el comportamiento de la simulacion fisica
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
-                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(-strenght, 0, 0).ToBsVector);
-                capsuleRigidBody.LinearVelocity = (new TGCVector3(-strenght, 0, 0).ToBsVector);
+                capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBsVector;
+                capsuleRigidBody.ApplyImpulse(new TGCVector3(-strenght, 0, 0).ToBsVector, new TGCVector3(capsuleRigidBody.CenterOfMassPosition.X, capsuleRigidBody.CenterOfMassPosition.Y - 25, capsuleRigidBody.CenterOfMassPosition.Z).ToBsVector);
+                //capsuleRigidBody.LinearVelocity = (new TGCVector3(-strenght, 0, 0).ToBsVector);
             }
 
             if (input.keyDown(Key.A))
             {
                 //Activa el comportamiento de la simulacion fisica
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
-                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, 0, strenght).ToBsVector);
-                capsuleRigidBody.LinearVelocity = (new TGCVector3(0, 0, strenght).ToBsVector);
+                capsuleRigidBody.ApplyImpulse(new TGCVector3(0, 0, strenght).ToBsVector, new TGCVector3(capsuleRigidBody.CenterOfMassPosition.X + 10, capsuleRigidBody.CenterOfMassPosition.Y, capsuleRigidBody.CenterOfMassPosition.Z).ToBsVector);
+                //capsuleRigidBody.LinearVelocity = (new TGCVector3(0, 0, strenght).ToBsVector);
             }
 
             if (input.keyDown(Key.D))
@@ -258,7 +261,7 @@ namespace TGC.Examples.Bullet.Physics
                 //Activa el comportamiento de la simulacion fisica
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
                 capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, 0, -strenght).ToBsVector);
-                capsuleRigidBody.LinearVelocity = (new TGCVector3(0, 0, -strenght).ToBsVector);
+                //capsuleRigidBody.LinearVelocity = (new TGCVector3(0, 0, -strenght).ToBsVector);
             }
 
             if (input.keyDown(Key.Space))
@@ -266,7 +269,7 @@ namespace TGC.Examples.Bullet.Physics
                 //Activa el comportamiento de la simulacion fisica
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
                 capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, strenght, 0).ToBsVector);
-                capsuleRigidBody.LinearVelocity = (new TGCVector3(0, strenght, 0).ToBsVector);
+                //capsuleRigidBody.LinearVelocity = (new TGCVector3(0, strenght, 0).ToBsVector);
             }
         }
 

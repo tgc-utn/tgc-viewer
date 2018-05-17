@@ -66,13 +66,13 @@ namespace TGC.Examples.Bullet
             var dataIdx = 0;
             var data = new CustomVertex.PositionTextured[totalVertices];
 
-            TGCVector3 center = new TGCVector3();
+            TGCVector3 center = TGCVector3.Empty;
 
             center.X = center.X - width / 2 ;
             center.Z = center.Z - length / 2;
 
-            int a = 80;
-            int size = 50;
+            int a = 64;
+            int size = 80;
             int n = 0;
             int triangles = 0;
             int vertexes = 0;
@@ -168,6 +168,7 @@ namespace TGC.Examples.Bullet
         public override void Dispose()
         {
             physicsExample.Dispose();
+            vertexBuffer.Dispose();
         }
     }
 }
