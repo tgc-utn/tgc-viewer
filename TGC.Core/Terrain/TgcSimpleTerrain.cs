@@ -19,6 +19,7 @@ namespace TGC.Core.Terrain
         private Texture terrainTexture;
         private int totalVertices;
         private VertexBuffer vbTerrain;
+        private CustomVertex.PositionTextured[] data;
 
         public TgcSimpleTerrain()
         {
@@ -30,6 +31,10 @@ namespace TGC.Core.Terrain
             technique = TgcShaders.T_POSITION_TEXTURED;
         }
 
+        public CustomVertex.PositionTextured[] getData()
+        {
+            return data;
+        }
         /// <summary>
         ///     Valor de Y para cada par (X,Z) del Heightmap
         /// </summary>
@@ -147,7 +152,7 @@ namespace TGC.Core.Terrain
 
             //Cargar vertices
             var dataIdx = 0;
-            var data = new CustomVertex.PositionTextured[totalVertices];
+            data = new CustomVertex.PositionTextured[totalVertices];
 
             center.X = center.X * scaleXZ - width / 2 * scaleXZ;
             center.Y = center.Y * scaleY;
