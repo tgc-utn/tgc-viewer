@@ -56,8 +56,8 @@ namespace TGC.Examples.Bullet
             //(x / a) ^ 2 + ( z / a) ^ 2 - y = 0.
             
             //Crear vertexBuffer
-            int width = 1000;
-            int length = 1000;
+            int width = 1500;
+            int length = 1500;
             totalVertices = 2 * 3 * (width - 1) * (length - 1);
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
             //Almacenar informacion en VertexBuffer
@@ -109,7 +109,7 @@ namespace TGC.Examples.Bullet
                     n++;
                 }
             }
-
+            
             vertexBuffer.SetData(data, 0, LockFlags.None);
             
             //Rotar e invertir textura
