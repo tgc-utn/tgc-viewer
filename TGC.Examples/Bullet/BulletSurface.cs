@@ -56,8 +56,8 @@ namespace TGC.Examples.Bullet
             //(x / a) ^ 2 + ( z / a) ^ 2 - y = 0.
             
             //Crear vertexBuffer
-            int width = 1500;
-            int length = 1500;
+            int width = 1200;
+            int length = 1200;
             totalVertices = 2 * 3 * (width - 1) * (length - 1);
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
             //Almacenar informacion en VertexBuffer
@@ -143,7 +143,7 @@ namespace TGC.Examples.Bullet
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
 
-            physicsExample.Render();
+            physicsExample.Render(ElapsedTime);
             
             //Textura
             effect.SetValue("texDiffuseMap", terrainTexture);
