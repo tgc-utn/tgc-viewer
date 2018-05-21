@@ -33,8 +33,8 @@ namespace TGC.Examples.Bullet
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Bullet";
-            Name = "Triangle Surface";
-            Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\".";
+            Name = "Triangles + Regular Shapes vs Capsule";
+            Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\". Donde se emplea una capsula para el personaje, un terreno generado matematicamente con muchos triangulos y elementos varios para colisionar.";
         }
 
         public override void Init()
@@ -134,7 +134,7 @@ namespace TGC.Examples.Bullet
         {
             PreUpdate();
             physicsExample.Update(Input);
-            UserVars.setValue("Tgccito_Position", physicsExample.getBallPosition());
+            UserVars.setValue("Tgccito_Position", physicsExample.getCharacterPosition());
             PostUpdate();
         }
 
