@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using BulletSharp;
+﻿using BulletSharp;
 using Microsoft.DirectX.DirectInput;
+using System.Collections.Generic;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
@@ -38,11 +38,11 @@ namespace TGC.Examples.Bullet.Physics
             floorBody = new RigidBody(floorInfo);
             dynamicsWorld.AddRigidBody(floorBody);
 
-            var boxBody = this.CreateBox(10f, 1f, 10f, 100f, 10f, MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI);
+            var boxBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(10,10,10), 1f, new TGCVector3(10f, 100f, 10f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI,0);
             boxBodys.Add(boxBody);
             dynamicsWorld.AddRigidBody(boxBody);
 
-            var ballBody = this.CreateBall(10f, 1f, 0f, 50f, 0f);
+            var ballBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(10f, 1f, new TGCVector3(0f, 50f, 0f));
             ballBodys.Add(ballBody);
             dynamicsWorld.AddRigidBody(ballBody);
 
@@ -67,21 +67,21 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx2.Input.keyUp(Key.A))
             {
-                var ballBody = this.CreateBall(10f, 1f, 0f, 100f, 0f);
+                var ballBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(10f, 1f, new TGCVector3(0f, 100f, 0f));
                 ballBodys.Add(ballBody);
                 dynamicsWorld.AddRigidBody(ballBody);
             }
 
             if (Ctx2.Input.keyUp(Key.S))
             {
-                var boxBody = this.CreateBox(10f, 1f, 5f, 150f, 5f, MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI);
+                var boxBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(10,10,10), 1f, new TGCVector3(5f, 150f, 5f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI,0.3f);
                 boxBodys.Add(boxBody);
                 dynamicsWorld.AddRigidBody(boxBody);
             }
 
             if (Ctx2.Input.keyUp(Key.Space))
             {
-                var ballBody = this.CreateBall(10f, 1f, Ctx2.Camara.Position.X, Ctx2.Camara.Position.Y, Ctx2.Camara.Position.Z);
+                var ballBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(10, 1f, new TGCVector3(Ctx2.Camara.Position.X, Ctx2.Camara.Position.Y, Ctx2.Camara.Position.Z));
                 ballBody.LinearVelocity = new TGCVector3(-Ctx2.Camara.Position.X, -Ctx2.Camara.Position.Y, -Ctx2.Camara.Position.Z).ToBsVector * 0.2f;
                 ballBody.Restitution = 0.9f;
                 ballBodys.Add(ballBody);
