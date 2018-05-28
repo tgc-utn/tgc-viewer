@@ -34,7 +34,7 @@ namespace TGC.Examples.Collision
     ///     Aun esta en estado BETA.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploMoveElipsoidTriangleThirdPerson : TGCExampleViewer
+    class EjemploMoveElipsoidTriangleThirdPerson : TGCExampleViewer
     {
         private TGCBooleanModifier collisionsModifier;
         private TGCBooleanModifier showBoundingBoxModifier;

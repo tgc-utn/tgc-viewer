@@ -22,8 +22,7 @@ namespace TGC.Examples.Bullet.Physics
 {
     public class TrianglePhysics
     {
-        private TgcPlane floorMesh;
-
+        //Configuracion de la Simulacion Fisica
         private DiscreteDynamicsWorld dynamicsWorld;
         private CollisionDispatcher dispatcher;
         private DefaultCollisionConfiguration collisionConfiguration;
@@ -70,10 +69,6 @@ namespace TGC.Examples.Bullet.Physics
 
         public void Init(String MediaDir)
         {
-            //Cargamos objetos de render del framework.
-            var floorTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "//Texturas//pasto.jpg");
-            floorMesh = new TgcPlane(new TGCVector3(-2000, 0, -2000), new TGCVector3(4000, 0f, 4000), TgcPlane.Orientations.XZplane, floorTexture);
-
             //Creamos el mundo fisico por defecto.
             collisionConfiguration = new DefaultCollisionConfiguration();
             dispatcher = new CollisionDispatcher(collisionConfiguration);
@@ -252,6 +247,11 @@ namespace TGC.Examples.Bullet.Physics
             personaje.Dispose();
             boxMesh.Dispose();
             boxMeshB.Dispose();
+            plataforma.Dispose();
+            foreach (RigidBody peldanio in escalonesRigidBodies)
+            {
+                escalon.Dispose();
+            }
 
             //Se hace dispose del modelo fisico. 
             dynamicsWorld.Dispose();

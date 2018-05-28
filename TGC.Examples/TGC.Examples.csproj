@@ -97,7 +97,9 @@
     <Compile Include="Bullet\Physics\HelloWorldBullet2.cs" />
     <Compile Include="Bullet\Physics\PhysicsGame.cs" />
     <Compile Include="Bullet\Physics\TrianglePhysics.cs" />
+    <Compile Include="Bullet\Physics\triangleSpherePhysics.cs" />
     <Compile Include="Bullet\Physics\WallBullet.cs" />
+    <Compile Include="Bullet\SurfaceVsSphere.cs" />
     <Compile Include="Camara\TgcFpsCamera.cs" />
     <Compile Include="Camara\TgcRotationalCamera.cs" />
     <Compile Include="Camara\TgcSpringThirdPersonCamera.cs" />

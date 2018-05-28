@@ -33,7 +33,7 @@ namespace TGC.Examples.Collision
     ///     El paper no ha sido implementado en su totalidad y aún existen muchos puntos por mejorar y algunos bugs.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploMoveSphereTriangleThirdPerson : TGCExampleViewer
+    class EjemploMoveSphereTriangleThirdPerson : TGCExampleViewer
     {
         private TGCBooleanModifier collisionsModifier;
         private TGCBooleanModifier showBoundingBoxModifier;
