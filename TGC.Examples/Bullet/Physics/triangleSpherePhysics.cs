@@ -23,9 +23,6 @@ namespace TGC.Examples.Bullet.Physics
         private SequentialImpulseConstraintSolver constraintSolver;
         private BroadphaseInterface overlappingPairCache;
 
-        private TGCVector3 _worldMin = new TGCVector3(-1000, -1000, -1000);
-        private TGCVector3 _worldMax = new TGCVector3(1000, 1000, 1000);
-
         //Datos del los triangulos del VertexBuffer
         private CustomVertex.PositionTextured[] triangleDataVB;
 
@@ -52,11 +49,10 @@ namespace TGC.Examples.Bullet.Physics
 
             //Creamos el terreno
             var meshRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateSurfaceFromHeighMap(triangleDataVB);
-            meshRigidBody.Friction = 1;
             dynamicsWorld.AddRigidBody(meshRigidBody);
 
             //Creamos la esfera del dragon
-            dragonBall = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(60f, 0.5f, new TGCVector3(100f, 500f, 100f));
+            dragonBall = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
             dragonBall.Friction = 1;
             dynamicsWorld.AddRigidBody(dragonBall);
             var textureDragonBall = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\dragonball.jpg");
@@ -68,23 +64,21 @@ namespace TGC.Examples.Bullet.Physics
         public void Update(TgcD3dInput input)
         {
             dynamicsWorld.StepSimulation(1 / 60f, 100);
-            var strenght = 0.10f;
+            var strenght = 1.50f;
             var angle = 5;
 
             if (input.keyDown(Key.W))
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.AngularVelocity = TGCVector3.Empty.ToBsVector;
-                dragonBall.ApplyImpulse(-strenght * director.ToBsVector, new TGCVector3(dragonBall.CenterOfMassPosition.X, dragonBall.CenterOfMassPosition.Y , dragonBall.CenterOfMassPosition.Z).ToBsVector);
+                dragonBall.ApplyCentralImpulse(-strenght * director.ToBsVector);
             }
 
             if (input.keyDown(Key.S))
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.AngularVelocity = TGCVector3.Empty.ToBsVector;
-                dragonBall.ApplyImpulse(strenght * director.ToBsVector, new TGCVector3(dragonBall.CenterOfMassPosition.X, dragonBall.CenterOfMassPosition.Y , dragonBall.CenterOfMassPosition.Z).ToBsVector);
+                dragonBall.ApplyCentralImpulse(strenght * director.ToBsVector);
             }
 
             if (input.keyDown(Key.A))
@@ -100,7 +94,7 @@ namespace TGC.Examples.Bullet.Physics
 
         public void Render()
         {
-            sphereMesh.Transform = TGCMatrix.Scaling(60, 60, 60) * new TGCMatrix(dragonBall.InterpolationWorldTransform);
+            sphereMesh.Transform = TGCMatrix.Scaling(30, 30, 30) * new TGCMatrix(dragonBall.InterpolationWorldTransform);
             sphereMesh.Render();
         }
 

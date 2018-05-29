@@ -29,9 +29,6 @@ namespace TGC.Examples.Bullet.Physics
         private SequentialImpulseConstraintSolver constraintSolver;
         private BroadphaseInterface overlappingPairCache;
 
-        private TGCVector3 _worldMin = new TGCVector3(-1000, -1000, -1000);
-        private TGCVector3 _worldMax = new TGCVector3(1000, 1000, 1000);
-
         //Datos del los triangulos del VertexBuffer
         private CustomVertex.PositionTextured[] triangleDataVB;
 
@@ -47,8 +44,11 @@ namespace TGC.Examples.Bullet.Physics
         //Cajas varias
         private RigidBody box;
         private RigidBody boxB;
+        private RigidBody box45;
+        private RigidBody boxPush;
         private TGCBox boxMesh;
         private TGCBox boxMeshB;
+        private TGCBox boxMeshPush;
         private RigidBody rigidBodyPlataforma;
         private TGCBox plataforma;
 
@@ -122,7 +122,7 @@ namespace TGC.Examples.Bullet.Physics
             //Cajas
             box = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(0, 12, 0), 0, 0, 0, 0.5f);
             dynamicsWorld.AddRigidBody(box);
-            boxMesh = TGCBox.fromSize(new TGCVector3(30f, 30f, 30f), textureBox);
+            boxMesh = TGCBox.fromSize(new TGCVector3(40f, 40f, 40f), textureBox);
             boxMesh.updateValues();
 
             sizeBox = 40f;
@@ -131,11 +131,20 @@ namespace TGC.Examples.Bullet.Physics
             boxMeshB = TGCBox.fromSize(new TGCVector3(80f, 80f, 80f), textureBox);
             boxMeshB.updateValues();
 
+            box45 = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(200, 40, 0), BulletSharp.MathUtil.SIMD_QUARTER_PI, 0, 0, 0.5f);
+            dynamicsWorld.AddRigidBody(box45);
+
+            boxPush = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0.5f, new TGCVector3(-200, 60, 0), BulletSharp.MathUtil.SIMD_QUARTER_PI, 0, 0, 0.25f);
+            dynamicsWorld.AddRigidBody(boxPush);
+
+            boxMeshPush = TGCBox.fromSize(new TGCVector3(80f, 80f, 80f), textureBox);
+            boxMeshPush.updateValues();
+
             //Escalera
             var a = 0;
             var textureStones = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\stones.bmp");
-            //la altura de cualquier cubo que quiera subir una capsula debe ser menor o igual a la mitad del radio
-
+            
+            //la altura de cualquier cubo que quiera subir una capsula debe ser menor a la mitad del radio
             var size = new TGCVector3(50, 4, 20);
             escalon = TGCBox.fromSize(size, textureStones);
             
@@ -228,6 +237,12 @@ namespace TGC.Examples.Bullet.Physics
             boxMesh.Render();
 
             boxMeshB.Transform = new TGCMatrix(boxB.InterpolationWorldTransform);
+            boxMeshB.Render();
+
+            boxMeshB.Transform = new TGCMatrix(box45.InterpolationWorldTransform);
+            boxMeshB.Render();
+
+            boxMeshB.Transform = new TGCMatrix(boxPush.InterpolationWorldTransform);
             boxMeshB.Render();
             
             foreach(RigidBody peldanio in escalonesRigidBodies)

@@ -110,7 +110,7 @@ namespace TGC.Core.BulletPhysics
         }
 
         /// <summary>
-        /// 
+        ///     Crea una coleccion de triangulos para Bullet a partir de los triangulos generados por un heighmap 
         /// </summary>
         /// <param name="triangleDataVB"></param>
         /// <returns></returns>
