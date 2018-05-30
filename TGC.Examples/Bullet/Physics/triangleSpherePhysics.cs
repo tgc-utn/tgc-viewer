@@ -90,6 +90,12 @@ namespace TGC.Examples.Bullet.Physics
             {
                 director.TransformCoordinate(TGCMatrix.RotationY(angle * 0.01f));
             }
+
+            if (input.keyPressed(Key.Space))
+            {
+                dragonBall.ActivationState = ActivationState.ActiveTag;
+                dragonBall.ApplyCentralImpulse(TGCVector3.Up.ToBsVector * 70);
+            }
         }
 
         public void Render()
