@@ -46,42 +46,54 @@ namespace TGC.Core.BulletPhysics
         }
 
         /// <summary>
-        ///  Se crea una capsula a partir de un radio, una altura y una posicion.
-        ///  Los valores de la masa y el calculo de inercia asociado estan fijos para que no haya comportamiento erratico.
+        /// Se crea una capsula a partir de un radio, altura, posicion, masa y si se dedea o no calcular
+        /// la inercia. Esto es importante ya que sin inercia no se generan rotaciones que no se 
+        /// controlen en forma particular.
         /// </summary>
         /// <param name="radius"></param>
         /// <param name="height"></param>
         /// <param name="position"></param>
+        /// <param name="mass"></param>
+        /// <param name="needInertia"></param>
         /// <returns></returns>
-        public static RigidBody CreateCapsule(float radius, float height, TGCVector3 position)
+        public static RigidBody CreateCapsule(float radius, float height, TGCVector3 position, float mass, bool needInertia)
         {
             //Creamos el shape de la Capsula a partir de un radio y una altura.
-            var caspsuleShape = new CapsuleShape(radius, height);
+            var capsuleShape = new CapsuleShape(radius, height);
 
             //Armamos las transformaciones que luego formaran parte del cuerpo rigido de la capsula.
             var capsuleTransform = TGCMatrix.Identity;
             capsuleTransform.Origin = position;
             var capsuleMotionState = new DefaultMotionState(capsuleTransform.ToBsMatrix);
+            RigidBodyConstructionInfo capsuleRigidBodyInfo;
 
-            // Utilizamos una masa muy grande (1000 Kg) para calcular el momento de inercia de forma que la capsula no
-            // genere una rotacion y termine volcando.
-            var capsuleInertia = caspsuleShape.CalculateLocalInertia(1000);
-
-            // Aqui usamos una masa bastante baja (1 Kg) para que cuando se arme el cuerpo rigido y se intente aplicar 
-            // un impulso se facil de mover la capsula.
-            var capsuleRigidBodyInfo = new RigidBodyConstructionInfo(1, capsuleMotionState, caspsuleShape, capsuleInertia);
+            //Calculamos o no el momento de inercia dependiendo de que comportamiento 
+            //queremos que tenga la capsula.
+            if (!needInertia)
+            {
+                capsuleRigidBodyInfo = new RigidBodyConstructionInfo(mass, capsuleMotionState, capsuleShape);
+            }
+            else
+            {
+                var capsuleInertia = capsuleShape.CalculateLocalInertia(mass);
+                capsuleRigidBodyInfo = new RigidBodyConstructionInfo(mass, capsuleMotionState, capsuleShape, capsuleInertia);
+            }
 
             var localCapsuleRigidBody = new RigidBody(capsuleRigidBodyInfo);
             localCapsuleRigidBody.LinearFactor = TGCVector3.One.ToBsVector;
+            //Dado que hay muchos parametros a configurar el RigidBody lo ideal es que 
+            //cada caso se configure segun lo que se necesite.
+            /*
             localCapsuleRigidBody.SetDamping(0.1f, 0f);
             localCapsuleRigidBody.Restitution = 0.1f;
-            localCapsuleRigidBody.Friction = 1;
+            localCapsuleRigidBody.Friction = 1;*/
 
             return localCapsuleRigidBody;
         }
 
         /// <summary>
-        ///     Se crea una esfera a partir de un radio, masa y posicion devolviendo el cuerpo rigido de una esfera.
+        ///     Se crea una esfera a partir de un radio, masa y posicion devolviendo el cuerpo rigido de una
+        ///     esfera.
         /// </summary>
         /// <param name="radius"></param>
         /// <param name="mass"></param>

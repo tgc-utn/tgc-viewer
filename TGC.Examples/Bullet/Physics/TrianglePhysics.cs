@@ -69,6 +69,7 @@ namespace TGC.Examples.Bullet.Physics
 
         public void Init(String MediaDir)
         {
+            #region Configuracion Basica de World
             //Creamos el mundo fisico por defecto.
             collisionConfiguration = new DefaultCollisionConfiguration();
             dispatcher = new CollisionDispatcher(collisionConfiguration);
@@ -77,23 +78,47 @@ namespace TGC.Examples.Bullet.Physics
             overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
+            #endregion
 
-            //Capsula
-            capsuleRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateCapsule(10,50, new TGCVector3(200, 500, 200));
+            #region Capsula
+            //Cuerpo rigido de una capsula basica
+            capsuleRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateCapsule(10,50, new TGCVector3(200, 500, 200),10,false);
+
+            //Valores que podemos modificar a partir del RigidBody base
+            capsuleRigidBody.SetDamping(0.1f, 0f);
+            capsuleRigidBody.Restitution = 0.1f;
+            capsuleRigidBody.Friction = 1;
+
+            //Agregamos el RidigBody al World
             dynamicsWorld.AddRigidBody(capsuleRigidBody);
+            #endregion
 
-            //Creamos el terreno
+            #region Terreno
+            //Creamos el RigidBody basico del Terreno
             var meshRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateSurfaceFromHeighMap(triangleDataVB);
-            dynamicsWorld.AddRigidBody(meshRigidBody);
 
+            //Agregamos algo de friccion al RigidBody ya que este va a interactuar con objetos moviles
+            //del World
+            meshRigidBody.Friction = 0.5f;
+
+            //Agregamos el RigidBody del terreno al World
+            dynamicsWorld.AddRigidBody(meshRigidBody);
+            #endregion
+
+            #region Esfera
             //Creamos una esfera para interactuar
             pokeball = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(10f, 0.5f, new TGCVector3(100f, 500f, 100f));
+
+            //Agregamos la pokebola al World
             dynamicsWorld.AddRigidBody(pokeball);
+            #endregion
 
             var texturePokeball = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\pokeball.jpg");
             var textureBox = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"MeshCreator\Textures\Madera\cajaMadera2.jpg");
+            
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
             sphereMesh = new TGCSphere(1, texturePokeball, TGCVector3.Empty);
+            
             //Tgc no crea el vertex buffer hasta invocar a update values.
             sphereMesh.updateValues();
 
@@ -148,10 +173,14 @@ namespace TGC.Examples.Bullet.Physics
             var size = new TGCVector3(50, 4, 20);
             escalon = TGCBox.fromSize(size, textureStones);
             
+            //Se crean 10 escalonescd d
             while (a<10)
             {
+
                 escalonRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(size, 0, new TGCVector3(200, a * 4 + 10, a * 20 + 100), 0, 0, 0, 0.1f);
+
                 escalonesRigidBodies.Add(escalonRigidBody);
+
                 dynamicsWorld.AddRigidBody(escalonRigidBody);
             
                 a++;
@@ -170,7 +199,7 @@ namespace TGC.Examples.Bullet.Physics
         public void Update(TgcD3dInput input)
         {
             dynamicsWorld.StepSimulation(1 / 60f, 100);
-            var strenght = 1.30f;
+            var strenght = 10.30f;
             var angle = 5;
             var moving = false;
 
@@ -180,7 +209,7 @@ namespace TGC.Examples.Bullet.Physics
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
                 capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBsVector;
-                capsuleRigidBody.ApplyImpulse(-strenght * director.ToBsVector, new TGCVector3( capsuleRigidBody.CenterOfMassPosition.X, capsuleRigidBody.CenterOfMassPosition.Y - 25, capsuleRigidBody.CenterOfMassPosition.Z).ToBsVector);
+                capsuleRigidBody.ApplyCentralImpulse(-strenght * director.ToBsVector);
             }
 
             if (input.keyDown(Key.S))
@@ -189,7 +218,7 @@ namespace TGC.Examples.Bullet.Physics
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
                 capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBsVector;
-                capsuleRigidBody.ApplyImpulse(strenght * director.ToBsVector, new TGCVector3(capsuleRigidBody.CenterOfMassPosition.X, capsuleRigidBody.CenterOfMassPosition.Y - 25, capsuleRigidBody.CenterOfMassPosition.Z).ToBsVector);
+                capsuleRigidBody.ApplyCentralImpulse(strenght * director.ToBsVector);
             }
 
             if (input.keyDown(Key.A))
