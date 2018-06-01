@@ -186,5 +186,32 @@ namespace TGC.Core.BulletPhysics
 
             return meshRigidBody;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dimensions"></param>
+        /// <param name="position"></param>
+        /// <param name="mass"></param>
+        /// <returns></returns>
+        public static RigidBody CreateCilinder(TGCVector3 dimensions, TGCVector3 position, float mass)
+        {
+            //Creamos el Shape de un Cilindro
+            var cylinderShape = new CylinderShape(dimensions.X,dimensions.Y,dimensions.Z);
+
+            //Armamos la matrix asociada al Cilindro
+            var cylinderTransform = TGCMatrix.Identity;
+            cylinderTransform.Origin = position;
+
+            var cylinderMotionState = new DefaultMotionState(cylinderTransform.ToBsMatrix);
+
+            var cylinderLocalInertia = cylinderShape.CalculateLocalInertia(mass);
+            
+            var cylinderInfo = new RigidBodyConstructionInfo(mass, cylinderMotionState, cylinderShape, cylinderLocalInertia);
+
+            RigidBody cylinderBody = new RigidBody(cylinderInfo);
+
+            return cylinderBody;
+        }
     }
 }
