@@ -13,9 +13,8 @@ using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 using TGC.Examples.UserControls.Modifier;
-using TgcViewer.Utils.Gui;
 
-namespace Examples.WorkshopShaders
+namespace TGC.Examples.WorkshopShaders
 {
     public class ComboRata : TGCExampleViewer
     {

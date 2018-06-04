@@ -9,7 +9,7 @@ using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 
-namespace Examples.WorkshopShaders
+namespace TGC.Examples.WorkshopShaders
 {
     /// <summary>
     /// Ejemplo EnvMap:

@@ -735,6 +735,5 @@ namespace TGC.Core.SceneLoader
         }
 
         #endregion Mesh FVF
-
     }
 }

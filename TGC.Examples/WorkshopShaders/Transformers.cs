@@ -7,9 +7,8 @@ using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
-using TgcViewer.Utils.Gui;
 
-namespace Examples.WorkshopShaders
+namespace TGC.Examples.WorkshopShaders
 {
     // menu item
     public class menu_item : GUIItem

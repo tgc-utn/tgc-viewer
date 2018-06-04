@@ -12,7 +12,7 @@ using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 using TGC.Examples.UserControls.Modifier;
 
-namespace TGC.Examples.PostProcess
+namespace TGC.Examples.ShadersExamples
 {
     /// <summary>
     ///     Ejemplo EfectoNiebla
