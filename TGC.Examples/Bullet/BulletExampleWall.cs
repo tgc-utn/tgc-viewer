@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using Microsoft.DirectX.DirectInput;
+using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Examples.Bullet.Physics;
 using TGC.Examples.Camara;
@@ -7,23 +8,23 @@ using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Bullet
 {
-    public class BulletExample : TGCExampleViewer
+    public class BulletExampleWall : TGCExampleViewer
     {
         private PhysicsGame physicsExample;
 
-        public BulletExample(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+        public BulletExampleWall(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Bullet";
-            Name = "BulletSharp";
+            Name = "Wall vs Balls";
             Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\".";
         }
 
         public override void Init()
         {
-            //physicsExample = new HelloWorldBullet();
-            //physicsExample = new HelloWorldBullet2();
             physicsExample = new WallBullet();
+            //physicsExample = new HelloWorldBullet2();
+            //physicsExample = new WallBullet();
 
             physicsExample.Init(this);
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
@@ -31,7 +32,7 @@ namespace TGC.Examples.Bullet
 
         public override void Update()
         {
-            PreUpdate();
+            PreUpdate();           
             physicsExample.Update();
             PostUpdate();
         }

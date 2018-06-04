@@ -89,11 +89,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bullet\BulletExample.cs" />
+    <Compile Include="Bullet\BulletExampleWall.cs" />
+    <Compile Include="Bullet\BulletExample2.cs" />
+    <Compile Include="Bullet\BulletExample3.cs" />
+    <Compile Include="Bullet\BulletSurface.cs" />
     <Compile Include="Bullet\Physics\HelloWorldBullet.cs" />
     <Compile Include="Bullet\Physics\HelloWorldBullet2.cs" />
     <Compile Include="Bullet\Physics\PhysicsGame.cs" />
+    <Compile Include="Bullet\Physics\TrianglePhysics.cs" />
+    <Compile Include="Bullet\Physics\triangleSpherePhysics.cs" />
     <Compile Include="Bullet\Physics\WallBullet.cs" />
+    <Compile Include="Bullet\SurfaceVsSphere.cs" />
     <Compile Include="Camara\TgcFpsCamera.cs" />
     <Compile Include="Camara\TgcRotationalCamera.cs" />
     <Compile Include="Camara\TgcSpringThirdPersonCamera.cs" />

@@ -20,7 +20,12 @@ namespace TGC.Examples.Bullet.Physics
         private List<RigidBody> ballBodys = new List<RigidBody>();
         private List<RigidBody> boxBodys = new List<RigidBody>();
 
-        public override void Init(BulletExample ctx)
+        public override int getElements()
+        {
+            return boxBodys.Count + ballBodys.Count;
+        }
+
+        public override void Init(BulletExample3 ctx)
         {
             base.Init(ctx);
 
@@ -33,23 +38,23 @@ namespace TGC.Examples.Bullet.Physics
             floorBody = new RigidBody(floorInfo);
             dynamicsWorld.AddRigidBody(floorBody);
 
-            var boxBody = this.CreateBox(10f, 1f, 10f, 100f, 10f, MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI);
+            var boxBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(10,10,10), 1f, new TGCVector3(10f, 100f, 10f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI,0);
             boxBodys.Add(boxBody);
             dynamicsWorld.AddRigidBody(boxBody);
 
-            var ballBody = this.CreateBall(10f, 1f, 0f, 50f, 0f);
+            var ballBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(10f, 1f, new TGCVector3(0f, 50f, 0f));
             ballBodys.Add(ballBody);
             dynamicsWorld.AddRigidBody(ballBody);
 
             //Cargamos objetos de render del framework.
-            var floorTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, Ctx.MediaDir + @"Texturas\granito.jpg");
+            var floorTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, Ctx2.MediaDir + @"Texturas\granito.jpg");
             floorMesh = new TgcPlane(new TGCVector3(-2000, 0, -2000), new TGCVector3(4000, 0f, 4000), TgcPlane.Orientations.XZplane, floorTexture);
 
-            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, Ctx.MediaDir + @"MeshCreator\Scenes\Deposito\Textures\boxMetal.jpg");
+            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, Ctx2.MediaDir + @"MeshCreator\Scenes\Deposito\Textures\boxMetal.jpg");
             //Es importante crear todos los mesh con centro en el 0,0,0 y que este coincida con el centro de masa definido caso contrario rotaria de otra forma diferente a la dada por el motor de fisica.
             boxMesh = TGCBox.fromSize(new TGCVector3(20, 20, 20), texture);
 
-            texture = TgcTexture.createTexture(D3DDevice.Instance.Device, Ctx.MediaDir + @"Texturas\pokeball.jpg");
+            texture = TgcTexture.createTexture(D3DDevice.Instance.Device, Ctx2.MediaDir + @"Texturas\pokeball.jpg");
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
             sphereMesh = new TGCSphere(1, texture, TGCVector3.Empty);
             //Tgc no crea el vertex buffer hasta invocar a update values.
@@ -60,24 +65,24 @@ namespace TGC.Examples.Bullet.Physics
         {
             dynamicsWorld.StepSimulation(1 / 60f, 10);
 
-            if (Ctx.Input.keyUp(Key.A))
+            if (Ctx2.Input.keyUp(Key.A))
             {
-                var ballBody = this.CreateBall(10f, 1f, 0f, 100f, 0f);
+                var ballBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(10f, 1f, new TGCVector3(0f, 100f, 0f));
                 ballBodys.Add(ballBody);
                 dynamicsWorld.AddRigidBody(ballBody);
             }
 
-            if (Ctx.Input.keyUp(Key.S))
+            if (Ctx2.Input.keyUp(Key.S))
             {
-                var boxBody = this.CreateBox(10f, 1f, 5f, 150f, 5f, MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI);
+                var boxBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(10,10,10), 1f, new TGCVector3(5f, 150f, 5f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI,0.3f);
                 boxBodys.Add(boxBody);
                 dynamicsWorld.AddRigidBody(boxBody);
             }
 
-            if (Ctx.Input.keyUp(Key.Space))
+            if (Ctx2.Input.keyUp(Key.Space))
             {
-                var ballBody = this.CreateBall(10f, 1f, Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z);
-                ballBody.LinearVelocity = new TGCVector3(-Ctx.Camara.Position.X, -Ctx.Camara.Position.Y, -Ctx.Camara.Position.Z).ToBsVector * 0.2f;
+                var ballBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(10, 1f, new TGCVector3(Ctx2.Camara.Position.X, Ctx2.Camara.Position.Y, Ctx2.Camara.Position.Z));
+                ballBody.LinearVelocity = new TGCVector3(-Ctx2.Camara.Position.X, -Ctx2.Camara.Position.Y, -Ctx2.Camara.Position.Z).ToBsVector * 0.2f;
                 ballBody.Restitution = 0.9f;
                 ballBodys.Add(ballBody);
                 dynamicsWorld.AddRigidBody(ballBody);
