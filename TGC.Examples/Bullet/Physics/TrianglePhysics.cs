@@ -17,6 +17,7 @@ using TGC.Core.Input;
 using Microsoft.DirectX.DirectInput;
 using TGC.Core.Terrain;
 using TGC.Core.SkeletalAnimation;
+using TGC.Core.SceneLoader;
 
 namespace TGC.Examples.Bullet.Physics
 {
@@ -40,6 +41,10 @@ namespace TGC.Examples.Bullet.Physics
         //Pokebola
         private RigidBody pokeball;
         private TGCSphere sphereMesh;
+
+        //Columna
+        private RigidBody columnaRigidBody;
+        private TgcMesh columnaMesh;
         
         //Cajas varias
         private RigidBody box;
@@ -108,20 +113,22 @@ namespace TGC.Examples.Bullet.Physics
             #region Esfera
             //Creamos una esfera para interactuar
             pokeball = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(10f, 0.5f, new TGCVector3(100f, 500f, 100f));
-
+            pokeball.SetDamping(0.1f, 0.5f);
+            pokeball.Restitution = 1f;
             //Agregamos la pokebola al World
             dynamicsWorld.AddRigidBody(pokeball);
-            #endregion
 
+            //Textura de pokebola
             var texturePokeball = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\pokeball.jpg");
-            var textureBox = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"MeshCreator\Textures\Madera\cajaMadera2.jpg");
-            
+
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
             sphereMesh = new TGCSphere(1, texturePokeball, TGCVector3.Empty);
-            
+
             //Tgc no crea el vertex buffer hasta invocar a update values.
             sphereMesh.updateValues();
+            #endregion
 
+            #region Personaje
             //Cargamos personaje
             var skeletalLoader = new TgcSkeletalLoader();
             personaje = skeletalLoader.loadMeshAndAnimationsFromFile(
@@ -142,9 +149,14 @@ namespace TGC.Examples.Bullet.Physics
 
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
+            #endregion
+
+            #region Cajas
             var sizeBox = 20f;
-            
-            //Cajas
+
+            //Textura de caja
+            var textureBox = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"MeshCreator\Textures\Madera\cajaMadera2.jpg");
+
             box = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(0, 12, 0), 0, 0, 0, 0.5f);
             dynamicsWorld.AddRigidBody(box);
             boxMesh = TGCBox.fromSize(new TGCVector3(40f, 40f, 40f), textureBox);
@@ -164,8 +176,9 @@ namespace TGC.Examples.Bullet.Physics
 
             boxMeshPush = TGCBox.fromSize(new TGCVector3(80f, 80f, 80f), textureBox);
             boxMeshPush.updateValues();
+            #endregion
 
-            //Escalera
+            #region Escalera
             var a = 0;
             var textureStones = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\stones.bmp");
             
@@ -185,13 +198,24 @@ namespace TGC.Examples.Bullet.Physics
             
                 a++;
             }
+            #endregion
 
-            //Plataforma
+            #region Plataforma
             textureStones = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\cobblestone_quad.jpg");
             rigidBodyPlataforma = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(50f, 15f, 50f), 0, new TGCVector3(200, 42.5f, 315), 0, 0, 0, 0.5f);
             dynamicsWorld.AddRigidBody(rigidBodyPlataforma);
             plataforma = TGCBox.fromSize(new TGCVector3(50f, 15f, 50f), textureStones);
             plataforma.updateValues();
+            #endregion
+
+            #region Columna
+            columnaRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateCylinder(new TGCVector3(10,50,10),new TGCVector3(100,50,100), 0);
+            dynamicsWorld.AddRigidBody(columnaRigidBody);
+            var columnaLoader = new TgcSceneLoader();
+            columnaMesh = columnaLoader.loadSceneFromFile(MediaDir + @"MeshCreator\Meshes\Cimientos\PilarEgipcio\PilarEgipcio-TgcScene.xml", MediaDir + @"MeshCreator\Meshes\Cimientos\PilarEgipcio\").Meshes[0];
+            columnaMesh.Position = new TGCVector3(100, 7.5f, 100);
+            columnaMesh.UpdateMeshTransform();
+            #endregion
 
             director = new TGCVector3(0, 0, 1);
         }
@@ -199,17 +223,18 @@ namespace TGC.Examples.Bullet.Physics
         public void Update(TgcD3dInput input)
         {
             dynamicsWorld.StepSimulation(1 / 60f, 100);
-            var strenght = 10.30f;
+            var strength = 10.30f;
             var angle = 5;
             var moving = false;
 
+            #region Comoportamiento
             if (input.keyDown(Key.W))
             {
                 moving = true;
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
                 capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBsVector;
-                capsuleRigidBody.ApplyCentralImpulse(-strenght * director.ToBsVector);
+                capsuleRigidBody.ApplyCentralImpulse(-strength * director.ToBsVector);
             }
 
             if (input.keyDown(Key.S))
@@ -218,7 +243,7 @@ namespace TGC.Examples.Bullet.Physics
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
                 capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBsVector;
-                capsuleRigidBody.ApplyCentralImpulse(strenght * director.ToBsVector);
+                capsuleRigidBody.ApplyCentralImpulse(strength * director.ToBsVector);
             }
 
             if (input.keyDown(Key.A))
@@ -239,9 +264,11 @@ namespace TGC.Examples.Bullet.Physics
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
-                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, 80 * strenght, 0).ToBsVector);
+                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, 80 * strength, 0).ToBsVector);
             }
+            #endregion
 
+            #region Animacion
             if (moving)
             {
                 personaje.playAnimation("Caminando", true);
@@ -250,6 +277,7 @@ namespace TGC.Examples.Bullet.Physics
             {
                 personaje.playAnimation("Parado", true);
             }
+            #endregion
         }
 
         public void Render(float elapsedTime)
@@ -279,6 +307,11 @@ namespace TGC.Examples.Bullet.Physics
                 escalon.Transform = new TGCMatrix(peldanio.InterpolationWorldTransform);
                 escalon.Render();
             }
+
+            columnaMesh.Transform = new TGCMatrix(columnaRigidBody.InterpolationWorldTransform);
+            columnaMesh.Scale = new TGCVector3(1, 1.2f, 1);
+            columnaMesh.UpdateMeshTransform();
+            columnaMesh.Render();
 
             plataforma.Transform = new TGCMatrix(rigidBodyPlataforma.InterpolationWorldTransform);
             plataforma.Render();

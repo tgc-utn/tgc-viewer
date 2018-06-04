@@ -39,8 +39,6 @@ namespace TGC.Core.BulletPhysics
             var boxInfo = new RigidBodyConstructionInfo(mass, boxMotionState, boxShape, boxLocalInertia);
             var boxBody = new RigidBody(boxInfo);
             boxBody.LinearFactor = TGCVector3.One.ToBsVector;
-            //boxBody.SetDamping(0.7f, 0.9f);
-            //boxBody.Restitution = 1f;
             boxBody.Friction = friction;
             return boxBody;
         }
@@ -83,10 +81,6 @@ namespace TGC.Core.BulletPhysics
             localCapsuleRigidBody.LinearFactor = TGCVector3.One.ToBsVector;
             //Dado que hay muchos parametros a configurar el RigidBody lo ideal es que 
             //cada caso se configure segun lo que se necesite.
-            /*
-            localCapsuleRigidBody.SetDamping(0.1f, 0f);
-            localCapsuleRigidBody.Restitution = 0.1f;
-            localCapsuleRigidBody.Friction = 1;*/
 
             return localCapsuleRigidBody;
         }
@@ -105,6 +99,7 @@ namespace TGC.Core.BulletPhysics
             var ballShape = new SphereShape(radius);
 
             //Armamos las matrices de transformacion de la esfera a partir de la posicion con la que queremos ubicarla
+            //y el estado de movimiento de la misma.
             var ballTransform = TGCMatrix.Identity;
             ballTransform.Origin = position;
             var ballMotionState = new DefaultMotionState(ballTransform.ToBsMatrix);
@@ -116,13 +111,12 @@ namespace TGC.Core.BulletPhysics
             //Creamos el cuerpo rigido de la esfera a partir de la info.
             var ballBody = new RigidBody(ballInfo);
             ballBody.LinearFactor = TGCVector3.One.ToBsVector;
-            ballBody.SetDamping(0.1f, 0.5f);
-            ballBody.Restitution = 1f;
             return ballBody;
         }
 
         /// <summary>
-        ///     Crea una coleccion de triangulos para Bullet a partir de los triangulos generados por un heighmap 
+        ///     Crea una coleccion de triangulos para Bullet a partir de los triangulos generados por un heighmap
+        ///     o una coleccion de triangulos a partir de un Custom Vertex Buffer con vertices del tipo Position Texured.
         /// </summary>
         /// <param name="triangleDataVB"></param>
         /// <returns></returns>
@@ -188,29 +182,28 @@ namespace TGC.Core.BulletPhysics
         }
 
         /// <summary>
-        /// 
+        ///     Se arma un cilindro a partir de las dimensiones, una posicion y su masa 
         /// </summary>
         /// <param name="dimensions"></param>
         /// <param name="position"></param>
         /// <param name="mass"></param>
         /// <returns></returns>
-        public static RigidBody CreateCilinder(TGCVector3 dimensions, TGCVector3 position, float mass)
+        public static RigidBody CreateCylinder(TGCVector3 dimensions, TGCVector3 position, float mass)
         {
             //Creamos el Shape de un Cilindro
             var cylinderShape = new CylinderShape(dimensions.X,dimensions.Y,dimensions.Z);
 
-            //Armamos la matrix asociada al Cilindro
+            //Armamos la matrix asociada al Cilindro y el estado de movimiento de la misma.
             var cylinderTransform = TGCMatrix.Identity;
             cylinderTransform.Origin = position;
-
             var cylinderMotionState = new DefaultMotionState(cylinderTransform.ToBsMatrix);
 
+            //Calculamos el momento de inercia
             var cylinderLocalInertia = cylinderShape.CalculateLocalInertia(mass);
-            
             var cylinderInfo = new RigidBodyConstructionInfo(mass, cylinderMotionState, cylinderShape, cylinderLocalInertia);
 
+            //Creamos el cuerpo rigido a partir del de la informacion de cuerpo rigido.
             RigidBody cylinderBody = new RigidBody(cylinderInfo);
-
             return cylinderBody;
         }
     }

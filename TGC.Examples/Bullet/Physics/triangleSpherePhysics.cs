@@ -53,6 +53,8 @@ namespace TGC.Examples.Bullet.Physics
 
             //Creamos la esfera del dragon
             dragonBall = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
+            dragonBall.SetDamping(0.1f, 0.5f);
+            dragonBall.Restitution = 1f;
             dragonBall.Friction = 1;
             dynamicsWorld.AddRigidBody(dragonBall);
             var textureDragonBall = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\dragonball.jpg");
@@ -64,37 +66,37 @@ namespace TGC.Examples.Bullet.Physics
         public void Update(TgcD3dInput input)
         {
             dynamicsWorld.StepSimulation(1 / 60f, 100);
-            var strenght = 1.50f;
+            var strength = 1.50f;
             var angle = 5;
 
             if (input.keyDown(Key.W))
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.ApplyCentralImpulse(-strenght * director.ToBsVector);
+                dragonBall.ApplyCentralImpulse(-strength * director.ToBsVector);
             }
 
             if (input.keyDown(Key.S))
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.ApplyCentralImpulse(strenght * director.ToBsVector);
+                dragonBall.ApplyCentralImpulse(strength * director.ToBsVector);
             }
 
             if (input.keyDown(Key.A))
             {
-                director.TransformCoordinate(TGCMatrix.RotationY(-angle * 0.01f));
+                director.TransformCoordinate(TGCMatrix.RotationY(-angle * 0.001f));
             }
 
             if (input.keyDown(Key.D))
             {
-                director.TransformCoordinate(TGCMatrix.RotationY(angle * 0.01f));
+                director.TransformCoordinate(TGCMatrix.RotationY(angle * 0.001f));
             }
 
             if (input.keyPressed(Key.Space))
             {
                 dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.ApplyCentralImpulse(TGCVector3.Up.ToBsVector * 70);
+                dragonBall.ApplyCentralImpulse(TGCVector3.Up.ToBsVector * 150);
             }
         }
 
