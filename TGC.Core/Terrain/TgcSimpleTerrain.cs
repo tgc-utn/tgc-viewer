@@ -31,6 +31,10 @@ namespace TGC.Core.Terrain
             technique = TgcShaders.T_POSITION_TEXTURED;
         }
 
+        /// <summary>
+        ///     Devuelve la informacion de Custom Vertex Buffer del HeightMap cargado
+        /// </summary>
+        /// <returns>Custom Vertex Buffer de tipo PositionTextured</returns>
         public CustomVertex.PositionTextured[] getData()
         {
             return data;

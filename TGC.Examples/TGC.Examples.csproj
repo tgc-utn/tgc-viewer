@@ -90,7 +90,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bullet\BulletExampleWall.cs" />
-    <Compile Include="Bullet\BulletExample2.cs" />
     <Compile Include="Bullet\BulletExample3.cs" />
     <Compile Include="Bullet\BulletSurface.cs" />
     <Compile Include="Bullet\Physics\HelloWorldBullet.cs" />
