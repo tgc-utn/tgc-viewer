@@ -19,6 +19,7 @@ namespace TGC.Core.Terrain
         private Texture terrainTexture;
         private int totalVertices;
         private VertexBuffer vbTerrain;
+        private CustomVertex.PositionTextured[] data;
 
         public TgcSimpleTerrain()
         {
@@ -28,6 +29,15 @@ namespace TGC.Core.Terrain
             //Shader
             effect = TgcShaders.Instance.VariosShader;
             technique = TgcShaders.T_POSITION_TEXTURED;
+        }
+
+        /// <summary>
+        ///     Devuelve la informacion de Custom Vertex Buffer del HeightMap cargado
+        /// </summary>
+        /// <returns>Custom Vertex Buffer de tipo PositionTextured</returns>
+        public CustomVertex.PositionTextured[] getData()
+        {
+            return data;
         }
 
         /// <summary>
@@ -147,7 +157,7 @@ namespace TGC.Core.Terrain
 
             //Cargar vertices
             var dataIdx = 0;
-            var data = new CustomVertex.PositionTextured[totalVertices];
+            data = new CustomVertex.PositionTextured[totalVertices];
 
             center.X = center.X * scaleXZ - width / 2 * scaleXZ;
             center.Y = center.Y * scaleY;

@@ -1,6 +1,7 @@
 ﻿using BulletSharp;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
+using TGC.Core.BulletPhysics;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
@@ -23,7 +24,12 @@ namespace TGC.Examples.Bullet.Physics
         private List<RigidBody> ballBodys = new List<RigidBody>();
         private List<RigidBody> boxBodys = new List<RigidBody>();
 
-        public override void Init(BulletExample ctx)
+        public override int GetElements()
+        {
+            return ballBodys.Count + boxBodys.Count;
+        }
+
+        public override void Init(BulletExampleWall ctx)
         {
             base.Init(ctx);
 
@@ -45,7 +51,7 @@ namespace TGC.Examples.Bullet.Physics
             {
                 for (var j = 0; j < 10; j++)
                 {
-                    var boxBody = this.CreateBox(10f, 1, i * 20f + 5f, j * 20f + 5f, 0f, 0, 0, 0);
+                    var boxBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1, new TGCVector3(i * 20f + 5f, j * 20f + 5f, 0f), 0, 0, 0, 0.5f);
                     boxBodys.Add(boxBody);
                     dynamicsWorld.AddRigidBody(boxBody);
                 }
@@ -78,39 +84,39 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx.Input.keyUp(Key.Space))
             {
-                var ballBody = this.CreateBall(10f, 1f, Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z);
+                var ballBody = BulletRigidBodyConstructor.CreateBall(10f, 1f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
                 var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBsVector;
                 dir.Normalize();
-                ballBody.LinearVelocity = dir * 250;
+                ballBody.LinearVelocity = dir * 900;
                 ballBody.LinearFactor = TGCVector3.One.ToBsVector;
-                ballBody.SetDamping(0.1f, 0.5f);
-                ballBody.Restitution = 0.5f;
+                //ballBody.SetDamping(0.1f, 0.5f);
+                //ballBody.Restitution = 0.5f;
                 ballBodys.Add(ballBody);
                 dynamicsWorld.AddRigidBody(ballBody);
             }
 
             if (Ctx.Input.keyUp(Key.Q))
             {
-                var ballBody = this.CreateBall(10f, 10f, Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z);
+                var ballBody = BulletRigidBodyConstructor.CreateBall(10f, 10f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
                 var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBsVector;
                 dir.Normalize();
-                ballBody.LinearVelocity = dir * 250;
+                ballBody.LinearVelocity = dir * 900;
                 ballBody.LinearFactor = TGCVector3.One.ToBsVector;
-                ballBody.SetDamping(0.1f, 0.5f);
-                ballBody.Restitution = 0.5f;
+                //ballBody.SetDamping(0.1f, 0.5f);
+                //ballBody.Restitution = 0.5f;
                 ballBodys.Add(ballBody);
                 dynamicsWorld.AddRigidBody(ballBody);
             }
 
             if (Ctx.Input.keyUp(Key.W))
             {
-                var ballBody = this.CreateBall(10f, 0.1f, Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z);
+                var ballBody = BulletRigidBodyConstructor.CreateBall(10f, 0.1f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
                 var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBsVector;
                 dir.Normalize();
-                ballBody.LinearVelocity = dir * 250;
+                ballBody.LinearVelocity = dir * 900;
                 ballBody.LinearFactor = TGCVector3.One.ToBsVector;
-                ballBody.SetDamping(0.1f, 0.1f);
-                ballBody.Restitution = 0.9f;
+                //ballBody.SetDamping(0.1f, 0.1f);
+                //ballBody.Restitution = 0.9f;
                 ballBodys.Add(ballBody);
                 dynamicsWorld.AddRigidBody(ballBody);
             }

@@ -89,11 +89,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bullet\BulletExample.cs" />
+    <Compile Include="Bullet\BulletExampleWall.cs" />
+    <Compile Include="Bullet\BulletExample3.cs" />
+    <Compile Include="Bullet\BulletSurface.cs" />
     <Compile Include="Bullet\Physics\HelloWorldBullet.cs" />
     <Compile Include="Bullet\Physics\HelloWorldBullet2.cs" />
     <Compile Include="Bullet\Physics\PhysicsGame.cs" />
+    <Compile Include="Bullet\Physics\TrianglePhysics.cs" />
+    <Compile Include="Bullet\Physics\TriangleSpherePhysics.cs" />
     <Compile Include="Bullet\Physics\WallBullet.cs" />
+    <Compile Include="Bullet\SurfaceVsSphere.cs" />
     <Compile Include="Camara\TgcFpsCamera.cs" />
     <Compile Include="Camara\TgcRotationalCamera.cs" />
     <Compile Include="Camara\TgcSpringThirdPersonCamera.cs" />
@@ -103,20 +108,12 @@
     <Compile Include="Collision\EjemploBoundingCylinder.cs" />
     <Compile Include="Collision\EjemploMoveThirdPerson.cs" />
     <Compile Include="Collision\EjemploPicking.cs" />
-    <Compile Include="Collision\EjemploMoveElipsoidTriangleThirdPerson.cs" />
     <Compile Include="Collision\EjemploMovePicking.cs" />
     <Compile Include="Collision\EjemploMultipleSelectPicking.cs" />
     <Compile Include="Collision\EjemploMoveSphereThirdPerson.cs" />
-    <Compile Include="Collision\EjemploMoveSphereTriangleThirdPerson.cs" />
-    <Compile Include="Collision\ElipsoidCollision\BoundingBoxCollider.cs" />
-    <Compile Include="Collision\ElipsoidCollision\Collider.cs" />
-    <Compile Include="Collision\ElipsoidCollision\ElipsoidCollisionManager.cs" />
-    <Compile Include="Collision\ElipsoidCollision\TriangleMeshCollider.cs" />
     <Compile Include="Collision\SphereCollision\BoundingBoxCollider.cs" />
     <Compile Include="Collision\SphereCollision\Collider.cs" />
     <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
-    <Compile Include="Collision\SphereCollision\SphereTriangleCollisionManager.cs" />
-    <Compile Include="Collision\SphereCollision\TriangleMeshCollider.cs" />
     <Compile Include="DirectX\DirectXBox.cs" />
     <Compile Include="DirectX\DirectXLight.cs" />
     <Compile Include="Engine2D\Transforms2D.cs" />
