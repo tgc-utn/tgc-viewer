@@ -20,7 +20,7 @@ namespace TGC.Examples.Bullet.Physics
         private List<RigidBody> ballBodys = new List<RigidBody>();
         private List<RigidBody> boxBodys = new List<RigidBody>();
 
-        public override int getElements()
+        public override int GetElements()
         {
             return boxBodys.Count + ballBodys.Count;
         }
@@ -38,7 +38,7 @@ namespace TGC.Examples.Bullet.Physics
             floorBody = new RigidBody(floorInfo);
             dynamicsWorld.AddRigidBody(floorBody);
 
-            var boxBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(10,10,10), 1f, new TGCVector3(10f, 100f, 10f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI,0);
+            var boxBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1f, new TGCVector3(10f, 100f, 10f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI, 0);
             boxBodys.Add(boxBody);
             dynamicsWorld.AddRigidBody(boxBody);
 
@@ -74,7 +74,7 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx2.Input.keyUp(Key.S))
             {
-                var boxBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(10,10,10), 1f, new TGCVector3(5f, 150f, 5f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI,0.3f);
+                var boxBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1f, new TGCVector3(5f, 150f, 5f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI, 0.3f);
                 boxBodys.Add(boxBody);
                 dynamicsWorld.AddRigidBody(boxBody);
             }

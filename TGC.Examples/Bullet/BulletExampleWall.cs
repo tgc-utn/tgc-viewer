@@ -1,5 +1,4 @@
-﻿using Microsoft.DirectX.DirectInput;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Examples.Bullet.Physics;
 using TGC.Examples.Camara;
@@ -23,16 +22,13 @@ namespace TGC.Examples.Bullet
         public override void Init()
         {
             physicsExample = new WallBullet();
-            //physicsExample = new HelloWorldBullet2();
-            //physicsExample = new WallBullet();
-
             physicsExample.Init(this);
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();           
+            PreUpdate();
             physicsExample.Update();
             PostUpdate();
         }

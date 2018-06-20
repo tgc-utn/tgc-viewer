@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Examples.Bullet.Physics;
 using TGC.Examples.Camara;
@@ -12,7 +7,7 @@ using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Bullet
 {
-    public class BulletExample3: TGCExampleViewer
+    public class BulletExample3 : TGCExampleViewer
     {
         private PhysicsGame physicsExample;
 
@@ -27,8 +22,6 @@ namespace TGC.Examples.Bullet
         public override void Init()
         {
             physicsExample = new HelloWorldBullet2();
-
-            //var bulletExampleBase = new BulletExampleWall(MediaDir, ShadersDir, UserVars, new Panel());
             physicsExample.Init(this);
 
             UserVars.addVar("MeshCount");
@@ -41,7 +34,7 @@ namespace TGC.Examples.Bullet
             PreUpdate();
             physicsExample.Update();
 
-            UserVars.setValue("MeshCount", physicsExample.getElements());
+            UserVars.setValue("MeshCount", physicsExample.GetElements());
 
             PostUpdate();
         }

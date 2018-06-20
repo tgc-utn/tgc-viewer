@@ -45,7 +45,6 @@ namespace TGC.Examples.Bullet.Physics
 
         public abstract void Dispose();
 
-        public abstract int getElements();
-
+        public abstract int GetElements();
     }
 }

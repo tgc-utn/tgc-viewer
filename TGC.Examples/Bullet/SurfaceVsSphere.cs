@@ -1,15 +1,6 @@
-﻿using Microsoft.DirectX.Direct3D;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using TGC.Core.Direct3D;
+﻿using System.Windows.Forms;
 using TGC.Core.Mathematica;
-using TGC.Core.Shaders;
 using TGC.Core.Terrain;
-using TGC.Core.Textures;
 using TGC.Examples.Bullet.Physics;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
@@ -28,8 +19,9 @@ namespace TGC.Examples.Bullet
         }
 
         //Terreno
-        TgcSimpleTerrain terrain;
-        //Fisica 
+        private TgcSimpleTerrain terrain;
+
+        //Fisica
         private TriangleSpherePhysics physicsExample;
 
         public override void Init()
@@ -40,7 +32,7 @@ namespace TGC.Examples.Bullet
             terrain.loadTexture(MediaDir + "Heighmaps\\" + "grass.jpg");
 
             physicsExample = new TriangleSpherePhysics();
-            physicsExample.setTriangleDataVB(terrain.getData());
+            physicsExample.SetTriangleDataVB(terrain.getData());
             physicsExample.Init(MediaDir);
 
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 1000, Input);
@@ -50,7 +42,7 @@ namespace TGC.Examples.Bullet
         {
             PreUpdate();
             physicsExample.Update(Input);
-            //UserVars.setValue("Tgccito_Position", physicsExample.getCharacterPosition());
+            //UserVars.setValue("Tgccito_Position", physicsExample.GetCharacterPosition());
             PostUpdate();
         }
 

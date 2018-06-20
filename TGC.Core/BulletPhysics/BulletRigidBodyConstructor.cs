@@ -1,23 +1,18 @@
 ﻿using BulletSharp;
 using Microsoft.DirectX.Direct3D;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TGC.Core.Mathematica;
 
 namespace TGC.Core.BulletPhysics
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public abstract class BulletRigidBodyConstructor
 
     {
         /// <summary>
         ///  Se crea una caja con una masa (si se quiere que sea estatica la masa debe ser 0),
-        ///  con dimensiones x(ancho) ,y(alto) ,z(profundidad), Rotacion de ejes Yaw, Pitch, Roll y un coeficiente de rozamiento. 
+        ///  con dimensiones x(ancho) ,y(alto) ,z(profundidad), Rotacion de ejes Yaw, Pitch, Roll y un coeficiente de rozamiento.
         /// </summary>
         /// <param name="size">Tamaño de la Cajas</param>
         /// <param name="mass">Masa de la Caja</param>
@@ -44,7 +39,7 @@ namespace TGC.Core.BulletPhysics
 
         /// <summary>
         /// Se crea una capsula a partir de un radio, altura, posicion, masa y si se dedea o no calcular
-        /// la inercia. Esto es importante ya que sin inercia no se generan rotaciones que no se 
+        /// la inercia. Esto es importante ya que sin inercia no se generan rotaciones que no se
         /// controlen en forma particular.
         /// </summary>
         /// <param name="radius">Radio de la Capsula</param>
@@ -64,7 +59,7 @@ namespace TGC.Core.BulletPhysics
             var capsuleMotionState = new DefaultMotionState(capsuleTransform.ToBsMatrix);
             RigidBodyConstructionInfo capsuleRigidBodyInfo;
 
-            //Calculamos o no el momento de inercia dependiendo de que comportamiento 
+            //Calculamos o no el momento de inercia dependiendo de que comportamiento
             //queremos que tenga la capsula.
             if (!needInertia)
             {
@@ -78,7 +73,7 @@ namespace TGC.Core.BulletPhysics
 
             var localCapsuleRigidBody = new RigidBody(capsuleRigidBodyInfo);
             localCapsuleRigidBody.LinearFactor = TGCVector3.One.ToBsVector;
-            //Dado que hay muchos parametros a configurar el RigidBody lo ideal es que 
+            //Dado que hay muchos parametros a configurar el RigidBody lo ideal es que
             //cada caso se configure segun lo que se necesite.
 
             return localCapsuleRigidBody;
@@ -150,7 +145,7 @@ namespace TGC.Core.BulletPhysics
         }
 
         /// <summary>
-        ///     Se arma un cilindro a partir de las dimensiones, una posicion y su masa 
+        ///     Se arma un cilindro a partir de las dimensiones, una posicion y su masa
         /// </summary>
         /// <param name="dimensions">Dimensiones en x,y,z del Cilindro</param>
         /// <param name="position">Posicion del Cilindro</param>
@@ -159,7 +154,7 @@ namespace TGC.Core.BulletPhysics
         public static RigidBody CreateCylinder(TGCVector3 dimensions, TGCVector3 position, float mass)
         {
             //Creamos el Shape de un Cilindro
-            var cylinderShape = new CylinderShape(dimensions.X,dimensions.Y,dimensions.Z);
+            var cylinderShape = new CylinderShape(dimensions.X, dimensions.Y, dimensions.Z);
 
             //Armamos la matrix asociada al Cilindro y el estado de movimiento de la misma.
             var cylinderTransform = TGCMatrix.Identity;

@@ -39,6 +39,7 @@ namespace TGC.Core.Terrain
         {
             return data;
         }
+
         /// <summary>
         ///     Valor de Y para cada par (X,Z) del Heightmap
         /// </summary>

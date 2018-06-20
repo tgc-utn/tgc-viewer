@@ -2,10 +2,6 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
@@ -14,10 +10,11 @@ using TGC.Core.Textures;
 
 namespace TGC.Examples.Bullet.Physics
 {
-    class TriangleSpherePhysics
+    internal class TriangleSpherePhysics
     {
         //Configuracion de la Simulacion Fisica
         private DiscreteDynamicsWorld dynamicsWorld;
+
         private CollisionDispatcher dispatcher;
         private DefaultCollisionConfiguration collisionConfiguration;
         private SequentialImpulseConstraintSolver constraintSolver;
@@ -28,10 +25,11 @@ namespace TGC.Examples.Bullet.Physics
 
         //Dragon Ball
         private RigidBody dragonBall;
+
         private TGCSphere sphereMesh;
         private TGCVector3 director;
 
-        public void setTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
+        public void SetTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
         {
             triangleDataVB = newTriangleData;
         }
@@ -60,7 +58,7 @@ namespace TGC.Examples.Bullet.Physics
             var textureDragonBall = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\dragonball.jpg");
             sphereMesh = new TGCSphere(1, textureDragonBall, TGCVector3.Empty);
             sphereMesh.updateValues();
-            director = new TGCVector3(1,0,0);
+            director = new TGCVector3(1, 0, 0);
         }
 
         public void Update(TgcD3dInput input)
@@ -110,7 +108,7 @@ namespace TGC.Examples.Bullet.Physics
         {
             sphereMesh.Dispose();
 
-            //Se hace dispose del modelo fisico. 
+            //Se hace dispose del modelo fisico.
             dynamicsWorld.Dispose();
             dispatcher.Dispose();
             collisionConfiguration.Dispose();

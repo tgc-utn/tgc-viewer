@@ -1,23 +1,15 @@
 ﻿using BulletSharp;
-using TGC.Core.Mathematica;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BulletSharp.Math;
-using System.IO;
-using System.Globalization;
-using System.Windows.Forms;
-using Microsoft.DirectX.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Direct3D;
-using TGC.Core.Textures;
+using TGC.Core.Geometry;
 using TGC.Core.Input;
-using Microsoft.DirectX.DirectInput;
-using TGC.Core.Terrain;
-using TGC.Core.SkeletalAnimation;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
+using TGC.Core.SkeletalAnimation;
+using TGC.Core.Textures;
 
 namespace TGC.Examples.Bullet.Physics
 {
@@ -25,6 +17,7 @@ namespace TGC.Examples.Bullet.Physics
     {
         //Configuracion de la Simulacion Fisica
         private DiscreteDynamicsWorld dynamicsWorld;
+
         private CollisionDispatcher dispatcher;
         private DefaultCollisionConfiguration collisionConfiguration;
         private SequentialImpulseConstraintSolver constraintSolver;
@@ -35,19 +28,23 @@ namespace TGC.Examples.Bullet.Physics
 
         //Capsula y Personaje
         private RigidBody capsuleRigidBody;
+
         private TgcSkeletalMesh personaje;
         private TGCVector3 director;
 
         //Pokebola
         private RigidBody pokeball;
+
         private TGCSphere sphereMesh;
 
         //Columna
         private RigidBody columnaRigidBody;
+
         private TgcMesh columnaMesh;
-        
+
         //Cajas varias
         private RigidBody box;
+
         private RigidBody boxB;
         private RigidBody box45;
         private RigidBody boxPush;
@@ -59,15 +56,16 @@ namespace TGC.Examples.Bullet.Physics
 
         //Escaleras
         private TGCBox escalon;
+
         private List<RigidBody> escalonesRigidBodies = new List<RigidBody>();
         private RigidBody escalonRigidBody;
 
-        public TGCVector3 getCharacterPosition()
+        public TGCVector3 GetCharacterPosition()
         {
             return new TGCVector3(capsuleRigidBody.CenterOfMassPosition.X, capsuleRigidBody.CenterOfMassPosition.Y, capsuleRigidBody.CenterOfMassPosition.Z);
         }
 
-        public void setTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
+        public void SetTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
         {
             triangleDataVB = newTriangleData;
         }
@@ -75,6 +73,7 @@ namespace TGC.Examples.Bullet.Physics
         public void Init(String MediaDir)
         {
             #region Configuracion Basica de World
+
             //Creamos el mundo fisico por defecto.
             collisionConfiguration = new DefaultCollisionConfiguration();
             dispatcher = new CollisionDispatcher(collisionConfiguration);
@@ -83,11 +82,13 @@ namespace TGC.Examples.Bullet.Physics
             overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
-            #endregion
+
+            #endregion Configuracion Basica de World
 
             #region Capsula
+
             //Cuerpo rigido de una capsula basica
-            capsuleRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateCapsule(10,50, new TGCVector3(200, 500, 200),10,false);
+            capsuleRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateCapsule(10, 50, new TGCVector3(200, 500, 200), 10, false);
 
             //Valores que podemos modificar a partir del RigidBody base
             capsuleRigidBody.SetDamping(0.1f, 0f);
@@ -96,9 +97,11 @@ namespace TGC.Examples.Bullet.Physics
 
             //Agregamos el RidigBody al World
             dynamicsWorld.AddRigidBody(capsuleRigidBody);
-            #endregion
+
+            #endregion Capsula
 
             #region Terreno
+
             //Creamos el RigidBody basico del Terreno
             var meshRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateSurfaceFromHeighMap(triangleDataVB);
 
@@ -108,9 +111,11 @@ namespace TGC.Examples.Bullet.Physics
 
             //Agregamos el RigidBody del terreno al World
             dynamicsWorld.AddRigidBody(meshRigidBody);
-            #endregion
+
+            #endregion Terreno
 
             #region Esfera
+
             //Creamos una esfera para interactuar
             pokeball = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(10f, 0.5f, new TGCVector3(100f, 500f, 100f));
             pokeball.SetDamping(0.1f, 0.5f);
@@ -126,9 +131,11 @@ namespace TGC.Examples.Bullet.Physics
 
             //Tgc no crea el vertex buffer hasta invocar a update values.
             sphereMesh.updateValues();
-            #endregion
+
+            #endregion Esfera
 
             #region Personaje
+
             //Cargamos personaje
             var skeletalLoader = new TgcSkeletalLoader();
             personaje = skeletalLoader.loadMeshAndAnimationsFromFile(
@@ -149,9 +156,11 @@ namespace TGC.Examples.Bullet.Physics
 
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
-            #endregion
+
+            #endregion Personaje
 
             #region Cajas
+
             var sizeBox = 20f;
 
             //Textura de caja
@@ -163,7 +172,7 @@ namespace TGC.Examples.Bullet.Physics
             boxMesh.updateValues();
 
             sizeBox = 40f;
-            boxB = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox,sizeBox,sizeBox), 0, new TGCVector3(100, 40, 0), 0, 0, 0, 0.5f);
+            boxB = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(100, 40, 0), 0, 0, 0, 0.5f);
             dynamicsWorld.AddRigidBody(boxB);
             boxMeshB = TGCBox.fromSize(new TGCVector3(80f, 80f, 80f), textureBox);
             boxMeshB.updateValues();
@@ -176,46 +185,52 @@ namespace TGC.Examples.Bullet.Physics
 
             boxMeshPush = TGCBox.fromSize(new TGCVector3(80f, 80f, 80f), textureBox);
             boxMeshPush.updateValues();
-            #endregion
+
+            #endregion Cajas
 
             #region Escalera
+
             var a = 0;
             var textureStones = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\stones.bmp");
-            
+
             //la altura de cualquier cubo que quiera subir una capsula debe ser menor a la mitad del radio
             var size = new TGCVector3(50, 4, 20);
             escalon = TGCBox.fromSize(size, textureStones);
-            
-            //Se crean 10 escalonescd d
-            while (a<10)
-            {
 
+            //Se crean 10 escalonescd d
+            while (a < 10)
+            {
                 escalonRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(size, 0, new TGCVector3(200, a * 4 + 10, a * 20 + 100), 0, 0, 0, 0.1f);
 
                 escalonesRigidBodies.Add(escalonRigidBody);
 
                 dynamicsWorld.AddRigidBody(escalonRigidBody);
-            
+
                 a++;
             }
-            #endregion
+
+            #endregion Escalera
 
             #region Plataforma
+
             textureStones = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\cobblestone_quad.jpg");
             rigidBodyPlataforma = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBox(new TGCVector3(50f, 15f, 50f), 0, new TGCVector3(200, 42.5f, 315), 0, 0, 0, 0.5f);
             dynamicsWorld.AddRigidBody(rigidBodyPlataforma);
             plataforma = TGCBox.fromSize(new TGCVector3(50f, 15f, 50f), textureStones);
             plataforma.updateValues();
-            #endregion
+
+            #endregion Plataforma
 
             #region Columna
-            columnaRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateCylinder(new TGCVector3(10,50,10),new TGCVector3(100,50,100), 0);
+
+            columnaRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateCylinder(new TGCVector3(10, 50, 10), new TGCVector3(100, 50, 100), 0);
             dynamicsWorld.AddRigidBody(columnaRigidBody);
             var columnaLoader = new TgcSceneLoader();
             columnaMesh = columnaLoader.loadSceneFromFile(MediaDir + @"MeshCreator\Meshes\Cimientos\PilarEgipcio\PilarEgipcio-TgcScene.xml", MediaDir + @"MeshCreator\Meshes\Cimientos\PilarEgipcio\").Meshes[0];
             columnaMesh.Position = new TGCVector3(100, 7.5f, 100);
             columnaMesh.UpdateMeshTransform();
-            #endregion
+
+            #endregion Columna
 
             director = new TGCVector3(0, 0, 1);
         }
@@ -228,6 +243,7 @@ namespace TGC.Examples.Bullet.Physics
             var moving = false;
 
             #region Comoportamiento
+
             if (input.keyDown(Key.W))
             {
                 moving = true;
@@ -266,9 +282,11 @@ namespace TGC.Examples.Bullet.Physics
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
                 capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, 80 * strength, 0).ToBsVector);
             }
-            #endregion
+
+            #endregion Comoportamiento
 
             #region Animacion
+
             if (moving)
             {
                 personaje.playAnimation("Caminando", true);
@@ -277,7 +295,8 @@ namespace TGC.Examples.Bullet.Physics
             {
                 personaje.playAnimation("Parado", true);
             }
-            #endregion
+
+            #endregion Animacion
         }
 
         public void Render(float elapsedTime)
@@ -287,7 +306,7 @@ namespace TGC.Examples.Bullet.Physics
             sphereMesh.Transform = TGCMatrix.Scaling(10, 10, 10) * new TGCMatrix(pokeball.InterpolationWorldTransform);
             sphereMesh.Render();
 
-            personaje.Transform = TGCMatrix.Scaling(0.5f, 0.5f, 0.5f) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform) * TGCMatrix.Translation(new TGCVector3(0,-35,0));
+            personaje.Transform = TGCMatrix.Scaling(0.5f, 0.5f, 0.5f) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform) * TGCMatrix.Translation(new TGCVector3(0, -35, 0));
             personaje.animateAndRender(elapsedTime);
 
             boxMesh.Transform = new TGCMatrix(box.InterpolationWorldTransform);
@@ -301,8 +320,8 @@ namespace TGC.Examples.Bullet.Physics
 
             boxMeshB.Transform = new TGCMatrix(boxPush.InterpolationWorldTransform);
             boxMeshB.Render();
-            
-            foreach(RigidBody peldanio in escalonesRigidBodies)
+
+            foreach (RigidBody peldanio in escalonesRigidBodies)
             {
                 escalon.Transform = new TGCMatrix(peldanio.InterpolationWorldTransform);
                 escalon.Render();
@@ -330,13 +349,12 @@ namespace TGC.Examples.Bullet.Physics
                 escalon.Dispose();
             }
 
-            //Se hace dispose del modelo fisico. 
+            //Se hace dispose del modelo fisico.
             dynamicsWorld.Dispose();
             dispatcher.Dispose();
             collisionConfiguration.Dispose();
             constraintSolver.Dispose();
             overlappingPairCache.Dispose();
         }
-
     }
 }

@@ -1,14 +1,8 @@
 ﻿using Microsoft.DirectX.Direct3D;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
-using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Examples.Bullet.Physics;
@@ -20,10 +14,12 @@ namespace TGC.Examples.Bullet
 {
     public class BulletSurface : TGCExampleViewer
     {
-        //Fisica 
+        //Fisica
         private TrianglePhysics physicsExample;
+
         //Vertex buffer que se va a utilizar
         private VertexBuffer vertexBuffer;
+
         private int totalVertices;
         private Effect effect;
         private string technique;
@@ -41,7 +37,7 @@ namespace TGC.Examples.Bullet
         {
             //Ideas para generar el terreno para Bullet
             //We are getting a llitle bit crazy xD https://es.wikipedia.org/wiki/Paraboloide
-            //Paraboloide Hiperbolico 
+            //Paraboloide Hiperbolico
             // definicion matematica
             //(x / a) ^ 2 - ( y / b) ^ 2 - z = 0.
             //
@@ -54,7 +50,7 @@ namespace TGC.Examples.Bullet
             //
             //DirectX
             //(x / a) ^ 2 + ( z / a) ^ 2 - y = 0.
-            
+
             //Crear vertexBuffer
             int width = 1200;
             int length = 1200;
@@ -68,7 +64,7 @@ namespace TGC.Examples.Bullet
 
             TGCVector3 center = TGCVector3.Empty;
 
-            center.X = center.X - width / 2 ;
+            center.X = center.X - width / 2;
             center.Z = center.Z - length / 2;
 
             int a = 64;
@@ -81,10 +77,10 @@ namespace TGC.Examples.Bullet
                 for (var j = 0; j < length - 1; j = j + size)
                 {
                     //Vertices
-                    var v1 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / a ) + FastMath.Pow2( (center.Z + j) / a ) ) , center.Z + j);
-                    var v2 = new TGCVector3(center.X + i , center.Y + ( FastMath.Pow2( (center.X + i) / a ) + FastMath.Pow2( (center.Z + j + size ) / a ) ), center.Z + (j + size));
-                    var v3 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / a ) + FastMath.Pow2((center.Z + j) / a )), center.Z + j);
-                    var v4 = new TGCVector3(center.X + (i + size) , center.Y + (FastMath.Pow2((center.X + i + size) / a ) + FastMath.Pow2((center.Z + j + size) / a )), center.Z + (j + size) );
+                    var v1 = new TGCVector3(center.X + i, center.Y + (FastMath.Pow2((center.X + i) / a) + FastMath.Pow2((center.Z + j) / a)), center.Z + j);
+                    var v2 = new TGCVector3(center.X + i, center.Y + (FastMath.Pow2((center.X + i) / a) + FastMath.Pow2((center.Z + j + size) / a)), center.Z + (j + size));
+                    var v3 = new TGCVector3(center.X + (i + size), center.Y + (FastMath.Pow2((center.X + i + size) / a) + FastMath.Pow2((center.Z + j) / a)), center.Z + j);
+                    var v4 = new TGCVector3(center.X + (i + size), center.Y + (FastMath.Pow2((center.X + i + size) / a) + FastMath.Pow2((center.Z + j + size) / a)), center.Z + (j + size));
                     vertexes = +vertexes + 4;
 
                     //Coordendas de textura
@@ -109,9 +105,9 @@ namespace TGC.Examples.Bullet
                     n++;
                 }
             }
-            
+
             vertexBuffer.SetData(data, 0, LockFlags.None);
-            
+
             //Rotar e invertir textura
             var b = (Bitmap)Image.FromFile(MediaDir + "//Texturas//pasto.jpg");
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
@@ -120,9 +116,9 @@ namespace TGC.Examples.Bullet
             //Shader
             effect = TgcShaders.Instance.VariosShader;
             technique = TgcShaders.T_POSITION_TEXTURED;
-            
+
             physicsExample = new TrianglePhysics();
-            physicsExample.setTriangleDataVB(data);
+            physicsExample.SetTriangleDataVB(data);
             physicsExample.Init(MediaDir);
 
             UserVars.addVar("Tgccito_Position");
@@ -134,7 +130,7 @@ namespace TGC.Examples.Bullet
         {
             PreUpdate();
             physicsExample.Update(Input);
-            UserVars.setValue("Tgccito_Position", physicsExample.getCharacterPosition());
+            UserVars.setValue("Tgccito_Position", physicsExample.GetCharacterPosition());
             PostUpdate();
         }
 
@@ -144,7 +140,7 @@ namespace TGC.Examples.Bullet
             PreRender();
 
             physicsExample.Render(ElapsedTime);
-            
+
             //Textura
             effect.SetValue("texDiffuseMap", terrainTexture);
             TexturesManager.Instance.clear(1);
