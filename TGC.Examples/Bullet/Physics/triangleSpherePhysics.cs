@@ -2,6 +2,7 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
+using TGC.Core.BulletPhysics;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
@@ -46,11 +47,11 @@ namespace TGC.Examples.Bullet.Physics
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
 
             //Creamos el terreno
-            var meshRigidBody = Core.BulletPhysics.BulletRigidBodyConstructor.CreateSurfaceFromHeighMap(triangleDataVB);
+            var meshRigidBody = BulletRigidBodyConstructor.CreateSurfaceFromHeighMap(triangleDataVB);
             dynamicsWorld.AddRigidBody(meshRigidBody);
 
             //Creamos la esfera del dragon
-            dragonBall = Core.BulletPhysics.BulletRigidBodyConstructor.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
+            dragonBall = BulletRigidBodyConstructor.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
             dragonBall.SetDamping(0.1f, 0.5f);
             dragonBall.Restitution = 1f;
             dragonBall.Friction = 1;
