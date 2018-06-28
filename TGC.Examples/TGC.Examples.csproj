@@ -123,6 +123,7 @@
     <Compile Include="Multiplayer\EjemploServer.cs" />
     <Compile Include="Multiplayer\VehiculosMultiplayer.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />
+    <Compile Include="ShadersExamples\BasicVariousShaders.cs" />
     <Compile Include="ShadersExamples\DemoShaders.cs" />
     <Compile Include="ShadersExamples\PhongShadingTgc.cs" />
     <Compile Include="ShadersExamples\EjemploShaderTgcMesh.cs" />
@@ -473,6 +474,7 @@
     <Content Include="Shaders\BumpMapping.fx" />
     <Content Include="Shaders\BumpMappingNoTangent.fx" />
     <Content Include="Shaders\Cel.fx" />
+    <Content Include="Shaders\Combinados.fx" />
     <Content Include="Shaders\DynamicLights.fx" />
     <Content Include="Shaders\Ejemplo1.fx" />
     <Content Include="Shaders\EjemploBoxDirectX.fx" />
