@@ -1,12 +1,5 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using Microsoft.DirectX.DirectInput;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -31,7 +24,7 @@ namespace TGC.Examples.ShadersExamples
     {
         private float time;
         private TgcMesh mesh;
-        private Microsoft.DirectX.Direct3D.Effect effect;
+        private Effect effect;
 
         private TgcArrow effectVectorArrow;
 
@@ -77,9 +70,9 @@ namespace TGC.Examples.ShadersExamples
             this.wireframe = AddBoolean("Wireframe", "Prende el efecto wireframe", false);
             this.showArrow = AddBoolean("Vector del Efecto", "Muestra el vector del efecto", false);
 
-            this.createEffect();
-            this.createMesh();
-            this.createArrow();
+            this.CreateEffect();
+            this.CreateMesh();
+            this.CreateArrow();
 
             this.scale = TGCMatrix.Scaling(20, 20, 20);
 
@@ -88,12 +81,12 @@ namespace TGC.Examples.ShadersExamples
             Camara.SetCamera(cameraPosition, lookAt);
         }
 
-        private void createEffect()
+        private void CreateEffect()
         {
-            this.effect = TgcShaders.loadEffect(ShadersDir + "Combinados.fx");
+            this.effect = TgcShaders.loadEffect(ShadersDir + "Varios.fx");
         }
 
-        private void createMesh()
+        private void CreateMesh()
         {
             var lava = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "\\Texturas\\lava.jpg");
             var sphere = new TGCSphere(1, lava, TGCVector3.Empty);
@@ -105,7 +98,7 @@ namespace TGC.Examples.ShadersExamples
             this.mesh.Effect = this.effect;
         }
 
-        private void createArrow()
+        private void CreateArrow()
         {
             this.effectVectorArrow = new TgcArrow();
             effectVectorArrow.HeadColor = Color.Blue;
@@ -121,7 +114,7 @@ namespace TGC.Examples.ShadersExamples
             this.PreUpdate();
 
             // Manejamos la entrada
-            this.handleInput();
+            this.HandleInput();
 
             // Actualizamos nuestro tiempo y se lo enviamos al shader
             this.time += ElapsedTime;
@@ -132,7 +125,6 @@ namespace TGC.Examples.ShadersExamples
 
             // Le enviamos al shader la posicion de la camara
             this.effect.SetValue("eyePosition", new[] { this.Camara.Position.X, this.Camara.Position.Y, this.Camara.Position.Z });
-
 
             // Actualizamos los modificadores
             this.rotation.Update();
@@ -160,7 +152,7 @@ namespace TGC.Examples.ShadersExamples
             this.PostUpdate();
         }
 
-        private void handleInput()
+        private void HandleInput()
         {
             if (Input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
