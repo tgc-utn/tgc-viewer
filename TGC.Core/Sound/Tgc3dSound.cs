@@ -1,5 +1,6 @@
-using Microsoft.DirectX.DirectSound;
 using System;
+using SharpDX.DirectSound;
+using SharpDX.Mathematics.Interop;
 using TGC.Core.Mathematica;
 
 namespace TGC.Core.Sound
@@ -19,7 +20,7 @@ namespace TGC.Core.Sound
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="position">Posicion del sonido en el espacio</param>
-        public Tgc3dSound(string soundPath, TGCVector3 position, Device device)
+        public Tgc3dSound(string soundPath, TGCVector3 position, DirectSound device)
         {
             loadSound(soundPath, device);
             Position = position;
@@ -28,12 +29,12 @@ namespace TGC.Core.Sound
         /// <summary>
         ///     Buffer con la información del sonido cargado
         /// </summary>
-        public SecondaryBuffer SoundBuffer { get; private set; }
+        public SecondarySoundBuffer SoundBuffer { get; private set; }
 
         /// <summary>
         ///     Buffer que manipula la parte 3D del sonido cargado
         /// </summary>
-        public Buffer3D Buffer3d { get; private set; }
+        public SoundBuffer3D Buffer3d { get; private set; }
 
         /// <summary>
         ///     Posición del sonido dentro del espacio.
@@ -42,8 +43,10 @@ namespace TGC.Core.Sound
         /// </summary>
         public TGCVector3 Position
         {
-            get { return TGCVector3.FromVector3(Buffer3d.Position); }
-            set { Buffer3d.Position = value; }
+            //get { return TGCVector3.FromVector3(Buffer3d.Position); }
+            get { return new TGCVector3(Buffer3d.Position.X, Buffer3d.Position.Y, Buffer3d.Position.Z); }
+            //set { Buffer3d.Position = value; }
+            set { Buffer3d.Position = new RawVector3(value.X, value.Y, value.Z); }
         }
 
         /// <summary>
@@ -63,21 +66,24 @@ namespace TGC.Core.Sound
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="volume">Volumen del mismo</param>
-        public void loadSound(string soundPath, int volume, Device device)
+        public void loadSound(string soundPath, int volume, DirectSound device)
         {
             try
             {
                 dispose();
 
-                var bufferDescription = new BufferDescription();
-                bufferDescription.Control3D = true;
+                var bufferDescription = new SoundBufferDescription();
+                //bufferDescription.Control3D = true;
+                bufferDescription.AlgorithmFor3D = Guid.Empty;
                 if (volume != -1)
                 {
-                    bufferDescription.ControlVolume = true;
+                    bufferDescription.Flags = BufferFlags.ControlVolume;
+                    //bufferDescription.ControlVolume = true;
                 }
 
-                SoundBuffer = new SecondaryBuffer(soundPath, bufferDescription, device);
-                Buffer3d = new Buffer3D(SoundBuffer);
+                //SoundBuffer = new SecondarySoundBuffer(soundPath, bufferDescription, device);
+                SoundBuffer = new SecondarySoundBuffer(device, bufferDescription);
+                Buffer3d = new SoundBuffer3D(SoundBuffer);
                 Buffer3d.MinDistance = 50;
 
                 if (volume != -1)
@@ -97,7 +103,7 @@ namespace TGC.Core.Sound
         ///     Sonidos stereos (2 channels) no pueden ser utilizados.
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
-        public void loadSound(string soundPath, Device device)
+        public void loadSound(string soundPath, DirectSound device)
         {
             loadSound(soundPath, -1, device);
         }
@@ -109,7 +115,7 @@ namespace TGC.Core.Sound
         /// <param name="playLoop">TRUE para reproducir en loop</param>
         public void play(bool playLoop)
         {
-            SoundBuffer.Play(0, playLoop ? BufferPlayFlags.Looping : BufferPlayFlags.Default);
+            SoundBuffer.Play(0, playLoop ? PlayFlags.Looping : PlayFlags.None);
         }
 
         /// <summary>
@@ -136,7 +142,7 @@ namespace TGC.Core.Sound
         /// </summary>
         public void dispose()
         {
-            if (SoundBuffer != null && !SoundBuffer.Disposed)
+            if (SoundBuffer != null && !SoundBuffer.IsDisposed)
             {
                 SoundBuffer.Dispose();
                 SoundBuffer = null;
