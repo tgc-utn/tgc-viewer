@@ -1,4 +1,4 @@
-using Microsoft.DirectX.Direct3D;
+Ôªøusing Microsoft.DirectX.Direct3D;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,7 +12,7 @@ using TGC.Core.Textures;
 namespace TGC.Core.Geometry
 {
     /// <summary>
-    ///     Herramienta para crear una Caja 3D de tamaÒo variable, con color y Textura
+    ///     Herramienta para crear una Caja 3D de tama√±o variable, con color y Textura
     /// </summary>
     public class TGCBox : IRenderObject, ITransformObject
     {
@@ -55,16 +55,16 @@ namespace TGC.Core.Geometry
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vÈrtice de canal Alpha.
-        ///     Por default est· deshabilitado.
+        ///     con textura o colores por v√©rtice de canal Alpha.
+        ///     Por default est√° deshabilitado.
         /// </summary>
         public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
-        ///     cada cuadro en forma autom·tica, seg˙n los valores de: Position, Rotation, Scale.
+        ///     cada cuadro en forma autom√°tica, seg√∫n los valores de: Position, Rotation, Scale.
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
-        ///     Por default est· en False.
+        ///     Por default est√° en False.
         /// </summary>
         public bool AutoTransform { get; set; }
 
@@ -74,7 +74,7 @@ namespace TGC.Core.Geometry
         public TgcBoundingAxisAlignBox BoundingBox { get; }
 
         /// <summary>
-        ///     Color de los vÈrtices de la caja
+        ///     Color de los v√©rtices de la caja
         /// </summary>
         public Color Color { get; set; }
 
@@ -102,7 +102,7 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     RotaciÛn absoluta de la caja
+        ///     Rotaci√≥n absoluta de la caja
         /// </summary>
         public TGCVector3 Rotation
         {
@@ -143,7 +143,7 @@ namespace TGC.Core.Geometry
         ///     Matriz final que se utiliza para aplicar transformaciones a la malla.
         ///     Si la propiedad AutoTransformEnable esta en True, la matriz se reconstruye en cada cuadro
         ///     en base a los valores de: Position, Rotation, Scale.
-        ///     Si AutoTransformEnable est· en False, se respeta el valor que el usuario haya cargado en la matriz.
+        ///     Si AutoTransformEnable est√° en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
         public TGCMatrix Transform
         {
@@ -283,7 +283,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Rota la malla respecto del eje X
         /// </summary>
-        /// <param name="angle">¡ngulo de rotaciÛn en radianes</param>
+        /// <param name="angle">√Ångulo de rotaci√≥n en radianes</param>
         public void RotateX(float angle)
         {
             rotation.X += angle;
@@ -292,7 +292,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Rota la malla respecto del eje Y
         /// </summary>
-        /// <param name="angle">¡ngulo de rotaciÛn en radianes</param>
+        /// <param name="angle">√Ångulo de rotaci√≥n en radianes</param>
         public void RotateY(float angle)
         {
             rotation.Y += angle;
@@ -301,7 +301,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Rota la malla respecto del eje Z
         /// </summary>
-        /// <param name="angle">¡ngulo de rotaciÛn en radianes</param>
+        /// <param name="angle">√Ångulo de rotaci√≥n en radianes</param>
         public void RotateZ(float angle)
         {
             rotation.Z += angle;
@@ -407,10 +407,10 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Configurar valores de posicion y tamaÒo en forma conjunta
+        ///     Configurar valores de posicion y tama√±o en forma conjunta
         /// </summary>
         /// <param name="position">Centro de la caja</param>
-        /// <param name="size">TamaÒo de la caja</param>
+        /// <param name="size">Tama√±o de la caja</param>
         public void setPositionSize(TGCVector3 position, TGCVector3 size)
         {
             translation = position;
@@ -419,7 +419,7 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Configurar punto mÌnimo y m·ximo del box
+        ///     Configurar punto m√≠nimo y m√°ximo del box
         /// </summary>
         /// <param name="min">Min</param>
         /// <param name="max">Max</param>
@@ -483,10 +483,10 @@ namespace TGC.Core.Geometry
         #region Creacion
 
         /// <summary>
-        ///     Crea una caja con el centro y tamaÒo especificado
+        ///     Crea una caja con el centro y tama√±o especificado
         /// </summary>
         /// <param name="center">Centro de la caja</param>
-        /// <param name="size">TamaÒo de la caja</param>
+        /// <param name="size">Tama√±o de la caja</param>
         /// <returns>Caja creada</returns>
         public static TGCBox fromSize(TGCVector3 center, TGCVector3 size)
         {
@@ -497,10 +497,10 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crea una caja con el centro y tamaÒo especificado, con el color especificado
+        ///     Crea una caja con el centro y tama√±o especificado, con el color especificado
         /// </summary>
         /// <param name="center">Centro de la caja</param>
-        /// <param name="size">TamaÒo de la caja</param>
+        /// <param name="size">Tama√±o de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
         public static TGCBox fromSize(TGCVector3 center, TGCVector3 size, Color color)
@@ -513,10 +513,10 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crea una caja con el centro y tamaÒo especificado, con la textura especificada
+        ///     Crea una caja con el centro y tama√±o especificado, con la textura especificada
         /// </summary>
         /// <param name="center">Centro de la caja</param>
-        /// <param name="size">TamaÒo de la caja</param>
+        /// <param name="size">Tama√±o de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
         public static TGCBox fromSize(TGCVector3 center, TGCVector3 size, TgcTexture texture)
@@ -527,9 +527,9 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crea una caja con centro (0,0,0) y el tamaÒo especificado
+        ///     Crea una caja con centro (0,0,0) y el tama√±o especificado
         /// </summary>
-        /// <param name="size">TamaÒo de la caja</param>
+        /// <param name="size">Tama√±o de la caja</param>
         /// <returns>Caja creada</returns>
         public static TGCBox fromSize(TGCVector3 size)
         {
@@ -537,9 +537,9 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crea una caja con centro (0,0,0) y el tamaÒo especificado, con el color especificado
+        ///     Crea una caja con centro (0,0,0) y el tama√±o especificado, con el color especificado
         /// </summary>
-        /// <param name="size">TamaÒo de la caja</param>
+        /// <param name="size">Tama√±o de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
         public static TGCBox fromSize(TGCVector3 size, Color color)
@@ -548,9 +548,9 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crea una caja con centro (0,0,0) y el tamaÒo especificado, con la textura especificada
+        ///     Crea una caja con centro (0,0,0) y el tama√±o especificado, con la textura especificada
         /// </summary>
-        /// <param name="size">TamaÒo de la caja</param>
+        /// <param name="size">Tama√±o de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
         public static TGCBox fromSize(TGCVector3 size, TgcTexture texture)
@@ -561,8 +561,8 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crea una caja en base al punto minimo y maximo
         /// </summary>
-        /// <param name="pMin">Punto mÌnimo</param>
-        /// <param name="pMax">Punto m·ximo</param>
+        /// <param name="pMin">Punto m√≠nimo</param>
+        /// <param name="pMax">Punto m√°ximo</param>
         /// <returns>Caja creada</returns>
         public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax)
         {
@@ -575,8 +575,8 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crea una caja en base al punto minimo y maximo, con el color especificado
         /// </summary>
-        /// <param name="pMin">Punto mÌnimo</param>
-        /// <param name="pMax">Punto m·ximo</param>
+        /// <param name="pMin">Punto m√≠nimo</param>
+        /// <param name="pMax">Punto m√°ximo</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
         public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color)
@@ -590,8 +590,8 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crea una caja en base al punto minimo y maximo, con el color especificado
         /// </summary>
-        /// <param name="pMin">Punto mÌnimo</param>
-        /// <param name="pMax">Punto m·ximo</param>
+        /// <param name="pMin">Punto m√≠nimo</param>
+        /// <param name="pMax">Punto m√°ximo</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
         public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, TgcTexture texture)

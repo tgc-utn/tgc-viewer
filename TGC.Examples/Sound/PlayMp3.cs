@@ -1,4 +1,5 @@
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -19,12 +20,14 @@ namespace TGC.Examples.Sound
     /// </summary>
     public class PlayMp3 : TGCExampleViewer
     {
-        private TgcMp3Player mp3Player;
+        //private TgcMp3Player mp3Player;
 
         private string currentFile;
         private TGCFileModifier mp3FileModifier;
         private TgcText2D currentMusicText;
         private TgcText2D instruccionesText;
+
+        private TgcSound music;
 
         public PlayMp3(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -45,21 +48,36 @@ namespace TGC.Examples.Sound
 
             //Texto para las instrucciones de uso
             instruccionesText = new TgcText2D();
-            instruccionesText.Text = "Y = Play, U = Pause, I = Resume, O = Stop.";
+            instruccionesText.Text = "Y = Play/Resume, U = Pause, O = Stop.";
             instruccionesText.Position = new Point(50, 60);
             instruccionesText.Color = Color.Green;
             instruccionesText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Bold));
 
             //Modifier para archivo MP3
             currentFile = null;
-            mp3FileModifier = AddFile("MP3-File", MediaDir + "Music\\I am The Money.mp3", "MP3s|*.mp3");
+            mp3FileModifier = AddFile("MP3-File", MediaDir + "Music\\I am The Money.mp3", "");
 
-            mp3Player = new TgcMp3Player();
+            // mp3Player = new TgcMp3Player();
+            TgcSoundManager.Initialize();
         }
 
         public override void Update()
         {
             PreUpdate();
+            loadMp3(mp3FileModifier.Value);
+
+            if (Input.keyPressed(Key.Y))
+            {
+                music.Play();
+            }
+            if(Input.keyPressed(Key.U))
+            {
+                music.Pause();
+            }
+            if (Input.keyPressed(Key.O))
+            {
+                music.Stop();
+            }
             PostUpdate();
         }
 
@@ -73,8 +91,21 @@ namespace TGC.Examples.Sound
                 currentFile = filePath;
 
                 //Cargar archivo
-                mp3Player.closeFile();
-                mp3Player.FileName = currentFile;
+                if (music != null)
+                {
+                    music.Dispose();
+                }
+                try
+                {
+                    music = new TgcSound(currentFile);
+                }
+                catch(Exception e)
+                {
+                    currentMusicText.Text = "Exception: " + e.Message;
+                    return;
+                }
+                music = new TgcSound(currentFile);
+                music.Play();
 
                 currentMusicText.Text = "Playing: " + new FileInfo(currentFile).Name;
             }
@@ -83,62 +114,14 @@ namespace TGC.Examples.Sound
         public override void Render()
         {
             PreRender();
-
-            //Ver si cambio el MP3
-            var filePath = mp3FileModifier.Value;
-            loadMp3(filePath);
-
-            //Contro del reproductor por teclado
-            var currentState = mp3Player.getStatus();
-            if (Input.keyPressed(Key.Y))
-            {
-                if (currentState == TgcMp3Player.States.Open)
-                {
-                    //Reproducir MP3
-                    mp3Player.play(true);
-                }
-                if (currentState == TgcMp3Player.States.Stopped)
-                {
-                    //Parar y reproducir MP3
-                    mp3Player.closeFile();
-                    mp3Player.play(true);
-                }
-            }
-            else if (Input.keyPressed(Key.U))
-            {
-                if (currentState == TgcMp3Player.States.Playing)
-                {
-                    //Pausar el MP3
-                    mp3Player.pause();
-                }
-            }
-            else if (Input.keyPressed(Key.I))
-            {
-                if (currentState == TgcMp3Player.States.Paused)
-                {
-                    //Resumir la ejecución del MP3
-                    mp3Player.resume();
-                }
-            }
-            else if (Input.keyPressed(Key.O))
-            {
-                if (currentState == TgcMp3Player.States.Playing)
-                {
-                    //Parar el MP3
-                    mp3Player.stop();
-                }
-            }
-
-            //Render texto
             currentMusicText.render();
             instruccionesText.render();
-
             PostRender();
         }
 
         public override void Dispose()
         {
-            mp3Player.closeFile();
+            music.Dispose();
         }
     }
 }

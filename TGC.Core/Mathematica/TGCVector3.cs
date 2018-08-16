@@ -779,6 +779,14 @@ namespace TGC.Core.Mathematica
             get { return new BulletSharp.Math.Vector3(X, Y, Z); }
         }
 
+        /// <summary>
+        /// Retorna un vector 3 de SharpDX.
+        /// </summary>
+        public SharpDX.Mathematics.Interop.RawVector3 ToRawVector
+        {
+            get { return new SharpDX.Mathematics.Interop.RawVector3(X, Y, Z); }
+        }
+
         #endregion Old TGCVectorUtils
     }
 }

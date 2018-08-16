@@ -25,7 +25,7 @@ namespace TGC.Examples.Sound
         private string currentFile;
         private TgcText2D currentSoundText;
         private TgcText2D instruccionesText;
-        private TgcStaticSound sound;
+        //private TgcStaticSound sound;
 
         public PlayStaticSound(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -73,6 +73,7 @@ namespace TGC.Examples.Sound
         /// </summary>
         private void loadSound(string filePath)
         {
+            /*
             if (currentFile == null || currentFile != filePath)
             {
                 currentFile = filePath;
@@ -89,7 +90,7 @@ namespace TGC.Examples.Sound
                 sound.loadSound(currentFile, DirectSound.DsDevice);
 
                 currentSoundText.Text = "Playing: " + new FileInfo(currentFile).Name;
-            }
+            }*/
         }
 
         public override void Render()
@@ -104,11 +105,11 @@ namespace TGC.Examples.Sound
             if (Input.keyPressed(Key.Y))
             {
                 var playLoop = playLoopModifier.Value;
-                sound.play(playLoop);
+               // sound.play(playLoop);
             }
             else if (Input.keyPressed(Key.O))
             {
-                sound.stop();
+                //sound.stop();
             }
 
             //Render texto
@@ -120,7 +121,7 @@ namespace TGC.Examples.Sound
 
         public override void Dispose()
         {
-            sound.dispose();
+           // sound.dispose();
         }
     }
 }

@@ -464,6 +464,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\32x32\go-home.png" />
     <None Include="Resources\32x32\go-up.png" />

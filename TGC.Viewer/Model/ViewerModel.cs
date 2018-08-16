@@ -22,7 +22,7 @@ namespace TGC.Viewer.Model
         /// </summary>
         public bool ApplicationRunning { get; set; }
 
-        private TgcDirectSound DirectSound { get; set; }
+        //private TgcDirectSound DirectSound { get; set; }
 
         private TgcD3dInput Input { get; set; }
 
@@ -45,8 +45,8 @@ namespace TGC.Viewer.Model
             Input.Initialize(Form, panel3D);
 
             //Inicio sonido
-            DirectSound = new TgcDirectSound();
-            DirectSound.InitializeD3DDevice(panel3D);
+           // DirectSound = new TgcDirectSound();
+           // DirectSound.InitializeD3DDevice(panel3D);
 
             //Cargar shaders del framework
             TgcShaders.Instance.loadCommonShaders(pathCommonShaders);
@@ -122,7 +122,7 @@ namespace TGC.Viewer.Model
             //TODO esto no me cierra mucho OnResetDevice
             OnResetDevice(D3DDevice.Instance.Device, null);
             example.ResetDefaultConfig();
-            example.DirectSound = DirectSound;
+            //example.DirectSound = DirectSound;
             example.Input = Input;
             example.Init();
         }

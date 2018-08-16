@@ -38,7 +38,8 @@ namespace TGC.Examples.Sound
         private TgcMesh personaje;
 
         private TGCBox piso;
-        private List<Tgc3dSound> sonidos;
+        private TgcSoundListener receptor;
+        private List<TgcSoundEmitter> emisores;
 
         public PlaySound3D(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -58,9 +59,9 @@ namespace TGC.Examples.Sound
 
             //Cargar obstaculos y posicionarlos. Los obstaculos se crean con TgcBox en lugar de cargar un modelo.
             obstaculos = new List<TGCBox>();
-            sonidos = new List<Tgc3dSound>();
+            emisores = new List<TgcSoundEmitter>();
+
             TGCBox obstaculo;
-            Tgc3dSound sound;
 
             //Obstaculo 1
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 150, 80),
@@ -69,13 +70,6 @@ namespace TGC.Examples.Sound
             obstaculo.Position = new TGCVector3(-250, 0, 0);
             obstaculos.Add(obstaculo);
 
-            //Sondio obstaculo 1
-            //OJO, solo funcionan sonidos WAV Mono (No stereo). Hacer boton der => Propiedades sobre el archivo
-            //y tiene que decir "1 Channel".
-            sound = new Tgc3dSound(MediaDir + "Sound\\armonía, continuo.wav", obstaculo.Position, DirectSound.DsDevice);
-            //Hay que configurar la mínima distancia a partir de la cual se empieza a atenuar el sonido 3D
-            sound.MinDistance = 50f;
-            sonidos.Add(sound);
 
             //Obstaculo 2
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 300, 80),
@@ -86,9 +80,6 @@ namespace TGC.Examples.Sound
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 2
-            sound = new Tgc3dSound(MediaDir + "Sound\\viento helado.wav", obstaculo.Position, DirectSound.DsDevice);
-            sound.MinDistance = 50f;
-            sonidos.Add(sound);
 
             //Obstaculo 3
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 100, 150),
@@ -99,9 +90,6 @@ namespace TGC.Examples.Sound
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 3
-            sound = new Tgc3dSound(MediaDir + "Sound\\risa de maníaco.wav", obstaculo.Position, DirectSound.DsDevice);
-            sound.MinDistance = 50f;
-            sonidos.Add(sound);
 
             //Cargar personaje principal
             var loader = new TgcSceneLoader();
@@ -111,31 +99,36 @@ namespace TGC.Examples.Sound
             personaje.AutoTransform = true;
             personaje.Position = new TGCVector3(0, -50, 0);
 
-            //Hacer que el Listener del sonido 3D siga al personaje
-            DirectSound.ListenerTracking = personaje;
-
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 250, 500);
             Camara = camaraInterna;
 
-            //Ejecutar en loop los sonidos
-            foreach (var s in sonidos)
-            {
-                s.play(true);
-            }
+            TgcSoundManager.Initialize();
+
+            //Sondio obstaculo 1
+            //OJO, solo funcionan sonidos WAV Mono (No stereo). Hacer boton der => Propiedades sobre el archivo
+            //y tiene que decir "1 Channel".
+            emisores.Add(new TgcSoundEmitter(MediaDir + "Sound\\armonía, continuo.wav", obstaculos[0]));
+            //Hay que configurar la mínima distancia a partir de la cual se empieza a atenuar el sonido 3D
+            //sound.MinDistance = 50f;
+            //emisores.Add(new TgcSoundEmitter(MediaDir + "Sound\\risa de maníaco.wav", obstaculos[1]));
+            //emisores.Add(new TgcSoundEmitter(MediaDir + "Sound\\viento helado.wav", obstaculos[2]));
+
+            this.receptor = new TgcSoundListener(personaje);
+            /*sound = new Tgc3dSound(MediaDir + "Sound\\risa de maníaco.wav", obstaculo.Position, DirectSound.DsDevice);
+            sound.MinDistance = 50f;
+            sonidos.Add(sound);
+
+            sound = new Tgc3dSound(MediaDir + "Sound\\viento helado.wav", obstaculo.Position, DirectSound.DsDevice);
+            sound.MinDistance = 50f;
+            sonidos.Add(sound);*/
+
         }
 
         public override void Update()
         {
             PreUpdate();
-            PostUpdate();
-        }
 
-        public override void Render()
-        {
-            PreRender();
-
-            //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
             var moving = false;
@@ -177,6 +170,7 @@ namespace TGC.Examples.Sound
                 personaje.RotateY(rotAngle);
                 camaraInterna.rotateY(rotAngle);
             }
+            personaje.Move(0, 0, 10);
 
             //Si hubo desplazamiento
             if (moving)
@@ -208,6 +202,22 @@ namespace TGC.Examples.Sound
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = personaje.Position;
 
+            this.receptor.SetOrientation((camaraInterna.Position - camaraInterna.LookAt), new TGCVector3(0, 1, 0));
+
+            foreach(TgcSoundEmitter emisor in emisores)
+            {
+                emisor.Update(ElapsedTime, receptor);
+            }
+
+            PostUpdate();
+        }
+
+        public override void Render()
+        {
+            PreRender();
+            
+            //Calcular proxima posicion de personaje segun Input
+           
             //Render piso
             piso.Render();
 
@@ -219,7 +229,7 @@ namespace TGC.Examples.Sound
 
             //Render personaje
             personaje.Render();
-
+            
             PostRender();
         }
 
@@ -232,9 +242,9 @@ namespace TGC.Examples.Sound
             }
             personaje.Dispose();
 
-            foreach (var sound in sonidos)
+            foreach (var emisor in emisores)
             {
-                sound.dispose();
+                emisor.Dispose();
             }
         }
     }

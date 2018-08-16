@@ -91,7 +91,7 @@ namespace TGC.Core.Example
 
         public TgcFrustum Frustum { get; set; }
 
-        public TgcDirectSound DirectSound { get; set; }
+        //public TgcDirectSound DirectSound { get; set; }
 
         public TgcText2D DrawText { get; set; }
 
@@ -192,7 +192,7 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateSounds3D()
         {
-            DirectSound.UpdateListener3d();
+            //DirectSound.UpdateListener3d();
         }
 
         /// <summary>

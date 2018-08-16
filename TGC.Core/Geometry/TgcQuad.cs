@@ -1,4 +1,4 @@
-using Microsoft.DirectX.Direct3D;
+Ôªøusing Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
@@ -46,7 +46,7 @@ namespace TGC.Core.Geometry
         public TGCVector3 Normal { get; set; }
 
         /// <summary>
-        ///     TamaÒo del plano, en ancho y longitud
+        ///     Tama√±o del plano, en ancho y longitud
         /// </summary>
         public TGCVector2 Size { get; set; }
 
@@ -78,19 +78,19 @@ namespace TGC.Core.Geometry
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vÈrtice de canal Alpha.
-        ///     Por default est· deshabilitado.
+        ///     con textura o colores por v√©rtice de canal Alpha.
+        ///     Por default est√° deshabilitado.
         /// </summary>
         public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
-        ///     Actualizar par·metros del plano en base a los valores configurados
+        ///     Actualizar par√°metros del plano en base a los valores configurados
         /// </summary>
         public void updateValues()
         {
             var vertices = new CustomVertex.PositionColored[6];
 
-            //Crear un Quad con dos tri·ngulos sobre XZ con normal default (0, 1, 0)
+            //Crear un Quad con dos tri√°ngulos sobre XZ con normal default (0, 1, 0)
             var min = new TGCVector3(-Size.X / 2, 0, -Size.Y / 2);
             var max = new TGCVector3(Size.X / 2, 0, Size.Y / 2);
             var c = Color.ToArgb();
