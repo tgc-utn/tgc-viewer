@@ -1,9 +1,10 @@
 using SharpDX;
 using SharpDX.Direct3D9;
+using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.BoundingVolumes
 {
@@ -28,11 +29,11 @@ namespace TGC.Core.BoundingVolumes
             Far = 5
         }
 
-        private static readonly Vector3 UP_VECTOR = new Vector3(0, 1, 0);
+        private static readonly TGCVector3 UP_VECTOR = TGCVector3.Up;
 
         public TgcFrustum()
         {
-            FrustumPlanes = new Plane[6];
+            FrustumPlanes = new TGCPlane[6];
 
             Color = Color.Green;
             AlphaBlendingValue = 0.7f;
@@ -50,7 +51,7 @@ namespace TGC.Core.BoundingVolumes
         ///     Estan normalizados.
         ///     Sus normales hacia adentro.
         /// </summary>
-        public Plane[] FrustumPlanes { get; } = new Plane[6];
+        public TGCPlane[] FrustumPlanes { get; } = new TGCPlane[6];
 
         /// <summary>
         ///     Shader del mesh
@@ -66,7 +67,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Left plane
         /// </summary>
-        public Plane LeftPlane
+        public TGCPlane LeftPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Left]; }
         }
@@ -74,7 +75,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Right plane
         /// </summary>
-        public Plane RightPlane
+        public TGCPlane RightPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Right]; }
         }
@@ -82,7 +83,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Top plane
         /// </summary>
-        public Plane TopPlane
+        public TGCPlane TopPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Top]; }
         }
@@ -90,7 +91,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Bottom plane
         /// </summary>
-        public Plane BottomPlane
+        public TGCPlane BottomPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Bottom]; }
         }
@@ -98,7 +99,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Near plane
         /// </summary>
-        public Plane NearPlane
+        public TGCPlane NearPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Near]; }
         }
@@ -106,7 +107,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Far plane
         /// </summary>
-        public Plane FarPlane
+        public TGCPlane FarPlane
         {
             get { return FrustumPlanes[(int)PlaneTypes.Far]; }
         }
@@ -127,7 +128,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="viewMatrix">View matrix</param>
         /// <param name="projectionMatrix">Projection matrix</param>
-        public void updateVolume(Matrix viewMatrix, Matrix projectionMatrix)
+        public void updateVolume(TGCMatrix viewMatrix, TGCMatrix projectionMatrix)
         {
             var viewProjection = viewMatrix * projectionMatrix;
 
@@ -170,7 +171,7 @@ namespace TGC.Core.BoundingVolumes
             //Normalize planes
             for (var i = 0; i < 6; i++)
             {
-                FrustumPlanes[i] = Plane.Normalize(FrustumPlanes[i]);
+                FrustumPlanes[i] = TGCPlane.Normalize(FrustumPlanes[i]);
             }
         }
 
@@ -185,10 +186,10 @@ namespace TGC.Core.BoundingVolumes
         /// <param name="farDistance"></param>
         /// <param name="fieldOfViewY"></param>
         /// <returns>Los 8 vertices del Frustum</returns>
-        private Vector3[] computeFrustumCorners(Vector3 position, Vector3 lookAt, float aspectRatio, float nearDistance,
+        private TGCVector3[] computeFrustumCorners(TGCVector3 position, TGCVector3 lookAt, float aspectRatio, float nearDistance,
             float farDistance, float fieldOfViewY)
         {
-            var corners = new Vector3[8];
+            var corners = new TGCVector3[8];
             /*
              (ntl)0 ---- 1(ntr)
                   |      |   Near-face
@@ -208,15 +209,15 @@ namespace TGC.Core.BoundingVolumes
             // compute the Z axis of camera
             // this axis points in the opposite direction from
             // the looking direction
-            var Z = Vector3.Subtract(position, lookAt);
+            var Z = TGCVector3.Subtract(position, lookAt);
             Z.Normalize();
 
             // X axis of camera with given "up" vector and Z axis
-            var X = Vector3.Cross(UP_VECTOR, Z);
+            var X = TGCVector3.Cross(UP_VECTOR, Z);
             X.Normalize();
 
             // the real "up" vector is the cross product of Z and X
-            var Y = Vector3.Cross(Z, X);
+            var Y = TGCVector3.Cross(Z, X);
 
             // compute the centers of the near and far planes
             var nc = position - Z * nearDistance;
@@ -242,7 +243,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="position"></param>
         /// <param name="lookAt"></param>
-        public void updateMesh(Vector3 position, Vector3 lookAt)
+        public void updateMesh(TGCVector3 position, TGCVector3 lookAt)
         {
             updateMesh(position, lookAt, D3DDevice.Instance.AspectRatio, D3DDevice.Instance.ZNearPlaneDistance,
                 D3DDevice.Instance.ZFarPlaneDistance, D3DDevice.Instance.FieldOfView);
@@ -258,7 +259,7 @@ namespace TGC.Core.BoundingVolumes
         /// <param name="nearDistance"></param>
         /// <param name="farDistance"></param>
         /// <param name="fieldOfViewY"></param>
-        public void updateMesh(Vector3 position, Vector3 lookAt, float aspectRatio, float nearDistance,
+        public void updateMesh(TGCVector3 position, TGCVector3 lookAt, float aspectRatio, float nearDistance,
             float farDistance, float fieldOfViewY)
         {
             //Calcular los 8 vertices extremos

@@ -1,14 +1,13 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -27,8 +26,8 @@ namespace TGC.Examples.MeshExamples
         private TgcMesh palmeraOriginal;
         private TgcPlane suelo;
 
-        public EjemploMeshInstancias(string mediaDir, string shadersDir, TgcUserVars userVars,
-            TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploMeshInstancias(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Crear Instancias Mesh";
@@ -39,8 +38,8 @@ namespace TGC.Examples.MeshExamples
         {
             //Crear suelo
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
-            suelo = new TgcPlane(new Vector3(-500, 0, -500), new Vector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 10f, 10f);
-            
+            suelo = new TgcPlane(new TGCVector3(-500, 0, -500), new TGCVector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 10f, 10f);
+
             //Cargar modelo de palmera original
             var loader = new TgcSceneLoader();
             var scene =
@@ -59,38 +58,38 @@ namespace TGC.Examples.MeshExamples
                     //Crear instancia de modelo
                     var instance = palmeraOriginal.createMeshInstance(palmeraOriginal.Name + i + "_" + j);
                     //No recomendamos utilizar AutoTransform, en juegos complejos se pierde el control. mejor utilizar Transformaciones con matrices.
-                    instance.AutoTransformEnable = true;
+                    instance.AutoTransform = true;
                     //Desplazarlo
-                    instance.move(i * offset, 0, j * offset);
-                    //instance.Scale = new Vector3(0.25f, 0.25f, 0.25f);
+                    instance.Move(i * offset, 0, j * offset);
+                    //instance.Scale = new TGCVector3(0.25f, 0.25f, 0.25f);
 
                     meshes.Add(instance);
                 }
             }
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(900f, 400f, 900f), Input);            
-
+            Camara = new TgcFpsCamera(new TGCVector3(900f, 400f, 900f), Input);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
         {
             PreRender();
 
-            DrawText.drawText("Camera pos: " + Core.Utils.TgcParserUtils.printVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
-            DrawText.drawText("Camera LookAt: " + Core.Utils.TgcParserUtils.printVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
+            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
             //Renderizar suelo
-            suelo.render();
+            suelo.Render();
 
             //Renderizar instancias
             foreach (var mesh in meshes)
             {
-                mesh.render();
+                mesh.Render();
             }
 
             PostRender();
@@ -98,10 +97,10 @@ namespace TGC.Examples.MeshExamples
 
         public override void Dispose()
         {
-            suelo.dispose();
+            suelo.Dispose();
 
             //Al hacer dispose del original, se hace dispose automaticamente de todas las instancias
-            palmeraOriginal.dispose();
+            palmeraOriginal.Dispose();
         }
     }
 }

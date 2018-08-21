@@ -1,5 +1,8 @@
 using SharpDX;
 using SharpDX.Direct3D9;
+using Microsoft.DirectX.Direct3D;
+using System.Drawing;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.Particle
 {
@@ -35,7 +38,7 @@ namespace TGC.Core.Particle
         public Particle()
         {
             pointSprite = new ParticleVertex();
-            pointSprite.Position = new Vector3(0, 0, 0);
+            pointSprite.Position = TGCVector3.Empty;
             pointSprite.PointSize = 1.0f;
             pointSprite.Color = DEFAULT_COLOR.ToArgb();
         }
@@ -53,7 +56,7 @@ namespace TGC.Core.Particle
         /// <summary>
         ///     Velocidad de la particula
         /// </summary>
-        public Vector3 Speed { get; set; }
+        public TGCVector3 Speed { get; set; }
 
         /// <summary>
         ///     Vertice de la particula
@@ -66,7 +69,7 @@ namespace TGC.Core.Particle
         /// <summary>
         ///     Posicion de la particula
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return pointSprite.Position; }
             set { pointSprite.Position = value; }
@@ -82,7 +85,7 @@ namespace TGC.Core.Particle
         }
 
         /// <summary>
-        ///     Tamaño de la particula
+        ///     Tamaï¿½o de la particula
         /// </summary>
         public float PointSize
         {
@@ -95,7 +98,7 @@ namespace TGC.Core.Particle
         /// </summary>
         public struct ParticleVertex
         {
-            public Vector3 Position;
+            public TGCVector3 Position;
             public float PointSize;
             public int Color;
         }

@@ -1,15 +1,15 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -26,6 +26,10 @@ namespace TGC.Examples.ShadersExamples
     /// </summary>
     public class GaussianBlur : TGCExampleViewer
     {
+        private TGCBooleanModifier activarEfectoModifier;
+        private TGCBooleanModifier separableModifier;
+        private TGCIntModifier cantPasadasModifier;
+
         private Effect effect;
         private Surface g_pDepthStencil; // Depth-stencil buffer
         private Texture g_pRenderTarget, g_pRenderTarget4, g_pRenderTarget4Aux;
@@ -33,8 +37,8 @@ namespace TGC.Examples.ShadersExamples
         private List<TgcMesh> meshes;
         private string MyShaderDir;
 
-        public GaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public GaussianBlur(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "Gaussian Blur";
@@ -63,7 +67,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(250, 160, -570), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
@@ -102,14 +106,15 @@ namespace TGC.Examples.ShadersExamples
                 CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
-            Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
-            Modifiers.addBoolean("separable", "Separable Blur", true);
-            Modifiers.addInt("cant_pasadas", 1, 10, 1);
+            activarEfectoModifier = AddBoolean("activar_efecto", "Activar efecto", true);
+            separableModifier = AddBoolean("separable", "Separable Blur", true);
+            cantPasadasModifier = AddInt("cant_pasadas", 1, 10, 1);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -117,7 +122,7 @@ namespace TGC.Examples.ShadersExamples
             ClearTextures();
             var device = D3DDevice.Instance.Device;
 
-            var activar_efecto = (bool)Modifiers["activar_efecto"];
+            var activar_efecto = activarEfectoModifier.Value;
 
             //Cargar variables de shader
 
@@ -142,7 +147,7 @@ namespace TGC.Examples.ShadersExamples
             //Dibujamos todos los meshes del escenario
             foreach (var m in meshes)
             {
-                m.render();
+                m.Render();
             }
             device.EndScene();
             //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
@@ -151,8 +156,8 @@ namespace TGC.Examples.ShadersExamples
 
             if (activar_efecto)
             {
-                var separable = (bool)Modifiers["separable"];
-                var cant_pasadas = (int)Modifiers["cant_pasadas"];
+                var separable = separableModifier.Value;
+                var cant_pasadas = cantPasadasModifier.Value;
 
                 if (separable)
                 {
@@ -277,7 +282,7 @@ namespace TGC.Examples.ShadersExamples
         {
             foreach (var m in meshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             effect.Dispose();
             g_pRenderTarget.Dispose();

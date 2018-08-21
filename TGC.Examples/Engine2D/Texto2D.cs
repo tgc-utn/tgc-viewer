@@ -1,8 +1,8 @@
 using System.Drawing;
+using System.Windows.Forms;
 using TGC.Core.Text;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Engine2D
 {
@@ -19,8 +19,8 @@ namespace TGC.Examples.Engine2D
         private TgcText2D text2;
         private TgcText2D text3;
 
-        public Texto2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public Texto2D(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "2D";
             Name = "Texto 2D";
@@ -54,6 +54,7 @@ namespace TGC.Examples.Engine2D
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()

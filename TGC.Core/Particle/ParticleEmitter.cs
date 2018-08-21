@@ -4,6 +4,7 @@ using System.Drawing;
 using SharpDX;
 using SharpDX.Direct3D9;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 
 namespace TGC.Core.Particle
@@ -32,10 +33,10 @@ namespace TGC.Core.Particle
 
         protected bool playing;
 
-        protected Vector3 position;
+        protected TGCVector3 position;
         protected Random random;
 
-        protected Vector3 speed;
+        protected TGCVector3 speed;
 
         protected TgcTexture texture;
         protected float tiempoAcumulado;
@@ -57,10 +58,10 @@ namespace TGC.Core.Particle
             minSizeParticle = 0.25f;
             maxSizeParticle = 0.5f;
             dispersion = 100;
-            speed = new Vector3(1, 1, 1);
+            speed = TGCVector3.One;
             particleVertexArray = new Particle.ParticleVertex[1];
             vertexDeclaration = new VertexDeclaration(D3DDevice.Instance.Device, Particle.ParticleVertexElements);
-            position = new Vector3(0, 0, 0);
+            position = TGCVector3.Empty;
 
             this.particlesCount = particlesCount;
             particles = new Particle[particlesCount];
@@ -101,7 +102,7 @@ namespace TGC.Core.Particle
         ///     Posicion del emisor de particulas en la escena.
         ///     Todas las particulas se generan en esta posicion.
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return position; }
             set { position = value; }
@@ -157,7 +158,7 @@ namespace TGC.Core.Particle
         ///     Vector que se le multiplica a la velocidad base (Por defecto es (1,1,1)).
         ///     Si Y es negativo las particulas descienden.
         /// </summary>
-        public Vector3 Speed
+        public TGCVector3 Speed
         {
             get { return speed; }
             set { speed = value; }
@@ -226,7 +227,7 @@ namespace TGC.Core.Particle
                 D3DDevice.Instance.Device.Material = D3DDevice.DEFAULT_MATERIAL;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
                 D3DDevice.Instance.Device.RenderState.ZBufferWriteEnable = false;
-                D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+                D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
 
                 // Va recorriendo la lista de particulas vivas,
                 // actualizando el tiempo de vida restante, y dibujando.
@@ -245,7 +246,7 @@ namespace TGC.Core.Particle
                     }
                     else
                     {
-                        //Actualizo y Dibujo la partícula
+                        //Actualizo y Dibujo la partï¿½cula
                         updateExistingParticle(elapsedTime, p);
                         renderParticle(p);
                     }
@@ -278,7 +279,8 @@ namespace TGC.Core.Particle
                 p.Color = Particle.DEFAULT_COLOR.ToArgb();
 
                 float faux;
-				var pSpeed = Vector3.Zero;
+
+                var pSpeed = TGCVector3.Empty;
 
                 // Segun la dispersion asigno una velocidad inicial.
                 //(Si la dispersion es 0 la velocidad inicial sera (0,1,0)).
@@ -308,7 +310,7 @@ namespace TGC.Core.Particle
         private void updateExistingParticle(float elapsedTime, Particle p)
         {
             //Actulizo posicion de la particula.
-            var scaleVec = Vector3.Scale(speed, elapsedTime);
+            var scaleVec = TGCVector3.Scale(speed, elapsedTime);
             scaleVec.X *= p.Speed.X;
             scaleVec.Y *= p.Speed.Y;
             scaleVec.Z *= p.Speed.Z;

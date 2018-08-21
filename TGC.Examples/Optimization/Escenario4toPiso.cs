@@ -1,10 +1,11 @@
-using Microsoft.DirectX;
+using System.Windows.Forms;
 using TGC.Core.Collision;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Optimization
 {
@@ -24,58 +25,57 @@ namespace TGC.Examples.Optimization
     /// </summary>
     public class Escenario4toPiso : TGCExampleViewer
     {
+        private TGCBooleanModifier cullingModifier;
+
         private TgcScene tgcScene;
 
-        public Escenario4toPiso(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public Escenario4toPiso(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Optimization";
             Name = "4to Piso Medrano";
-            Description =
-                "Utiliza la herramienta TgcSceneLoader para cargar el 4to Piso de la facultado modelado en formato TGC. " +
+            Description = "Utiliza la herramienta TgcSceneLoader para cargar el 4to Piso de la facultado modelado en formato TGC. " +
                 "Muestra como utilizar FrustumCulling con fuerza bruta para acelerar la performance de renderizado.";
         }
 
         public override void Init()
         {
             //FPS Camara
-            Camara = new TgcFpsCamera(new Vector3(-140f, 40f, -50f), 200f, 200f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(-140f, 40f, -50f), 200f, 200f, Input);
 
             //Modifier para habilitar o deshabilitar FrustumCulling
-            Modifiers.addBoolean("culling", "Frustum culling", true);
+            cullingModifier = AddBoolean("culling", "Frustum culling", true);
 
             //UserVar para contar la cantidad de meshes que se renderizan
             UserVars.addVar("Meshes renderizadas");
 
             //Cargar escena desde archivo ZIP
             var loader = new TgcSceneLoader();
-            tgcScene = loader.loadSceneFromZipFile("4toPiso-TgcScene.xml", MediaDir + "4toPiso\\4toPiso.zip",
-                MediaDir + "4toPiso\\Extract\\");
+            tgcScene = loader.loadSceneFromZipFile("4toPiso-TgcScene.xml", MediaDir + "4toPiso\\4toPiso.zip", MediaDir + "4toPiso\\Extract\\");
 
             /*
             //Version para cargar escena desde carpeta descomprimida
             TgcSceneLoader loader = new TgcSceneLoader();
-            tgcScene = loader.loadSceneFromFile(
-                this.MediaDir + "4toPiso\\Extract\\4toPiso-TgcScene.xml",
-                this.MediaDir + "4toPiso\\Extract\\");
+            tgcScene = loader.loadSceneFromFile(this.MediaDir + "4toPiso\\Extract\\4toPiso-TgcScene.xml", this.MediaDir + "4toPiso\\Extract\\");
             */
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
         {
             PreRender();
 
-            var frustumCullingEnabled = (bool)Modifiers["culling"];
+            var frustumCullingEnabled = cullingModifier.Value;
 
             //Renderizar sin ninguna optimizacion
             if (!frustumCullingEnabled)
             {
-                tgcScene.renderAll();
+                tgcScene.RenderAll();
                 UserVars.setValue("Meshes renderizadas", tgcScene.Meshes.Count);
             }
 
@@ -93,7 +93,7 @@ namespace TGC.Examples.Optimization
                         var r = TgcCollisionUtils.classifyFrustumAABB(Frustum, mesh.BoundingBox);
                         if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
                         {
-                            mesh.render();
+                            mesh.Render();
                             totalMeshes++;
                         }
                     }
@@ -107,7 +107,7 @@ namespace TGC.Examples.Optimization
 
         public override void Dispose()
         {
-            tgcScene.disposeAll();
+            tgcScene.DisposeAll();
         }
     }
 }

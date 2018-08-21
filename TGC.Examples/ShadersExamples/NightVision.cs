@@ -1,33 +1,34 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
 {
     public class NightVision : TGCExampleViewer
     {
-        private readonly int[] bot_status = new int[100];
+        private TGCBooleanModifier activarEfectoModifier;
 
+        private readonly int[] bot_status = new int[100];
         private readonly int cant_balas = 100;
         private readonly int cant_pasadas = 3;
         private readonly List<TgcSkeletalMesh> enemigos = new List<TgcSkeletalMesh>();
         private readonly float total_timer_firing = 2f;
         private readonly float vel_bala = 300;
         private readonly float vel_bot = 100;
-        private Vector3[] dir_bala;
+        private TGCVector3[] dir_bala;
         private Effect effect;
         private Surface g_pDepthStencil; // Depth-stencil buffer
         private Texture g_pRenderTarget, g_pGlowMap, g_pRenderTarget4, g_pRenderTarget4Aux;
@@ -35,11 +36,11 @@ namespace TGC.Examples.ShadersExamples
         private List<TgcMesh> meshes;
         private string MyShaderDir;
         private TgcMesh pasto, arbol, arbusto;
-        private Vector3[] pos_bala;
+        private TGCVector3[] pos_bala;
         private float[] timer_firing;
 
-        public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public NightVision(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "NightVision";
@@ -57,19 +58,15 @@ namespace TGC.Examples.ShadersExamples
             //TgcScene scene = loader.loadSceneFromFile(this.MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
             var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Selva\\Selva-TgcScene.xml");
             meshes = scene.Meshes;
-            var scene2 =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pasto\\Pasto-TgcScene.xml");
+            var scene2 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pasto\\Pasto-TgcScene.xml");
             pasto = scene2.Meshes[0];
-            pasto.AutoTransformEnable = true;
-            var scene3 =
-                loader.loadSceneFromFile(MediaDir +
-                                         "MeshCreator\\Meshes\\Vegetacion\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml");
+            pasto.AutoTransform = true;
+            var scene3 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml");
             arbol = scene3.Meshes[0];
-            arbol.AutoTransformEnable = true;
-            var scene4 =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Arbusto2\\Arbusto2-TgcScene.xml");
+            arbol.AutoTransform = true;
+            var scene4 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Arbusto2\\Arbusto2-TgcScene.xml");
             arbusto = scene4.Meshes[0];
-            arbusto.AutoTransformEnable = true;
+            arbusto.AutoTransform = true;
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -87,16 +84,15 @@ namespace TGC.Examples.ShadersExamples
 
                 //Configurar animacion inicial
                 enemigos[t].playAnimation("StandBy", true);
-                enemigos[t].Position = new Vector3(-rnd.Next(0, 1500) - 250, 0, -rnd.Next(0, 1500) - 250);
-                enemigos[t].Scale = new Vector3(2f, 2f, 2f);
+                enemigos[t].Position = new TGCVector3(-rnd.Next(0, 1500) - 250, 0, -rnd.Next(0, 1500) - 250);
+                enemigos[t].Scale = new TGCVector3(2f, 2f, 2f);
                 enemigos[t].UpdateMeshTransform();
                 bot_status[t] = 0;
             }
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(D3DDevice.Instance.Device, MyShaderDir + "GaussianBlur.fx",
-                null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
+            effect = Effect.FromFile(D3DDevice.Instance.Device, MyShaderDir + "GaussianBlur.fx", null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
             {
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
@@ -105,27 +101,22 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new Vector3(-1000, 250, -1000), 1000f, 600f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(-1000, 250, -1000), 1000f, 600f, Input);
 
-            g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
-                d3dDevice.PresentationParameters.BackBufferHeight,
+            g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight,
                 DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             // inicializo el render target
-            g_pRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            g_pRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
-            g_pGlowMap = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            g_pGlowMap = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
-            g_pRenderTarget4 = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
-                , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
+            g_pRenderTarget4 = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4, d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
-            g_pRenderTarget4Aux = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
-                , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
+            g_pRenderTarget4Aux = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4, d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
             effect.SetValue("g_RenderTarget", g_pRenderTarget);
@@ -142,16 +133,14 @@ namespace TGC.Examples.ShadersExamples
                 new CustomVertex.PositionTextured(1, -1, 1, 1, 1)
             };
             //vertex buffer de los triangulos
-            g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured),
-                4, d3dDevice, Usage.Dynamic | Usage.WriteOnly,
-                CustomVertex.PositionTextured.Format, Pool.Default);
+            g_pVBV3D = new VertexBuffer(typeof(CustomVertex.PositionTextured), 4, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
-            Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
+            activarEfectoModifier = AddBoolean("activar_efecto", "Activar efecto", true);
 
             timer_firing = new float[100];
-            pos_bala = new Vector3[100];
-            dir_bala = new Vector3[100];
+            pos_bala = new TGCVector3[100];
+            dir_bala = new TGCVector3[100];
 
             for (var i = 0; i < cant_balas; ++i)
             {
@@ -162,11 +151,12 @@ namespace TGC.Examples.ShadersExamples
         public override void Update()
         {
             PreUpdate();
+
             var pos = Camara.Position;
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
                 // reset pos camara
-                Camara.SetCamera(new Vector3(-1000, 250, -1000), new Vector3(0, 0, -1));
+                Camara.SetCamera(new TGCVector3(-1000, 250, -1000), new TGCVector3(0, 0, -1));
             }
 
             //Activar animacion de caminando
@@ -214,8 +204,8 @@ namespace TGC.Examples.ShadersExamples
                     // escapando
                     case 1:
                         dir_escape.Normalize();
-                        m.rotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y + 3.1415f);
-                        m.move(dir_escape * (vel_bot * ElapsedTime));
+                        m.RotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y + 3.1415f);
+                        m.Move(dir_escape * (vel_bot * ElapsedTime));
                         var X = m.Position.X;
                         var Z = m.Position.Z;
                         if (X < -2000)
@@ -226,7 +216,7 @@ namespace TGC.Examples.ShadersExamples
                             Z = -1000;
                         if (Z > 0)
                             Z = -1000;
-                        m.Position = new Vector3(X, m.Position.Y, Z);
+                        m.Position = new TGCVector3(X, m.Position.Y, Z);
                         m.playAnimation("Run", true, 20);
                         break;
 
@@ -235,14 +225,14 @@ namespace TGC.Examples.ShadersExamples
                         dir_escape.Normalize();
                         if (Math.Abs(dir_escape.Z) > 0.01f)
                         {
-                            m.rotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y);
-                            m.move(dir_escape * (-60 * ElapsedTime));
+                            m.RotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y);
+                            m.Move(dir_escape * (-60 * ElapsedTime));
                         }
                         m.playAnimation("Run", true, 20);
                         break;
 
                     case 99:
-                        m.rotateZ(3.1415f * 0.5f - m.Rotation.Z);
+                        m.RotateZ(3.1415f * 0.5f - m.Rotation.Z);
                         m.playAnimation("StandBy", true);
                         break;
                 }
@@ -257,7 +247,7 @@ namespace TGC.Examples.ShadersExamples
                 if (timer_firing[i] < 0)
                 {
                     timer_firing[i] += total_timer_firing;
-                    pos_bala[i] = pos + new Vector3(rnd.Next(-10, 10), rnd.Next(-10, 10), rnd.Next(-10, 10));
+                    pos_bala[i] = pos + new TGCVector3(rnd.Next(-10, 10), rnd.Next(-10, 10), rnd.Next(-10, 10));
                     dir_bala[i] = Camara.LookAt - pos;
                     dir_bala[i].Normalize();
                 }
@@ -266,13 +256,15 @@ namespace TGC.Examples.ShadersExamples
                     pos_bala[i] = pos_bala[i] + dir_bala[i] * (vel_bala * ElapsedTime);
                 }
             }
+
+            PostUpdate();
         }
 
         public override void Render()
         {
             ClearTextures();
 
-            if ((bool)Modifiers["activar_efecto"])
+            if (activarEfectoModifier.Value)
                 renderConEfectos(ElapsedTime);
             else
                 renderSinEfectos(ElapsedTime);
@@ -299,7 +291,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
             {
                 m.UpdateMeshTransform();//Transformacion default
-                m.render();
+                m.Render();
             }
 
             DrawText.drawText("Pos: " + Camara.Position, 5, 20, Color.Yellow);
@@ -329,7 +321,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
             {
                 m.UpdateMeshTransform();
-                m.render();
+                m.Render();
             }
 
             device.EndScene();
@@ -350,7 +342,7 @@ namespace TGC.Examples.ShadersExamples
             foreach (var m in enemigos)
             {
                 m.UpdateMeshTransform();
-                m.render();
+                m.Render();
             }
 
             if (Input.keyDown(Key.F))
@@ -361,11 +353,11 @@ namespace TGC.Examples.ShadersExamples
                         bala.PStart = pos_bala[i];
                         bala.PEnd = pos_bala[i] + dir_bala[i] * 3;
                         bala.Thickness = 0.05f;
-                        bala.HeadSize = new Vector2(0.01f, 0.01f);
+                        bala.HeadSize = new TGCVector2(0.01f, 0.01f);
                         bala.Effect = effect;
                         bala.Technique = "DefaultTechnique";
                         bala.updateValues();
-                        bala.render();
+                        bala.Render();
                     }
 
             // El resto opacos
@@ -474,7 +466,7 @@ namespace TGC.Examples.ShadersExamples
         public void renderScene(float elapsedTime, string Technique)
         {
             //Dibujamos todos los meshes del escenario
-            
+
             /*foreach (TgcMesh m in meshes)
             {
                 m.Effect = effect;
@@ -489,11 +481,11 @@ namespace TGC.Examples.ShadersExamples
             for (var i = 0; i < 10; ++i)
                 for (var j = 0; j < 10; ++j)
                 {
-                    pasto.Position = new Vector3(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
-                    pasto.Scale = new Vector3(3, 4 + rnd.Next(0, 4), 5);
+                    pasto.Position = new TGCVector3(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
+                    pasto.Scale = new TGCVector3(3, 4 + rnd.Next(0, 4), 5);
                     pasto.UpdateMeshTransform();
-                    //pasto.Transform = Matrix.Identity*Matrix.Scaling(3, 4 + rnd.Next(0, 4), 5) * Matrix.Translation(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
-                    pasto.render();
+                    //pasto.Transform = TGCMatrix.Identity*TGCMatrix.Scaling(3, 4 + rnd.Next(0, 4), 5) * TGCMatrix.Translation(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
+                    pasto.Render();
                 }
 
             arbusto.Effect = effect;
@@ -501,10 +493,10 @@ namespace TGC.Examples.ShadersExamples
             for (var i = 0; i < 5; ++i)
                 for (var j = 0; j < 5; ++j)
                 {
-                    arbusto.Position = new Vector3(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
-                    //arbusto.Transform = Matrix.Identity*Matrix.Translation(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
+                    arbusto.Position = new TGCVector3(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
+                    //arbusto.Transform = TGCMatrix.Identity*TGCMatrix.Translation(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
                     arbusto.UpdateMeshTransform();
-                    arbusto.render();
+                    arbusto.Render();
                 }
 
             arbol.Effect = effect;
@@ -512,10 +504,10 @@ namespace TGC.Examples.ShadersExamples
             for (var i = 0; i < 3; ++i)
                 for (var j = 0; j < 3; ++j)
                 {
-                    arbol.Position = new Vector3(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
-                    //arbol.Transform = Matrix.Identity*Matrix.Translation(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
+                    arbol.Position = new TGCVector3(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
+                    //arbol.Transform = TGCMatrix.Identity*TGCMatrix.Translation(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
                     arbol.UpdateMeshTransform();
-                    arbol.render();
+                    arbol.Render();
                 }
         }
 
@@ -523,12 +515,12 @@ namespace TGC.Examples.ShadersExamples
         {
             foreach (var m in meshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             effect.Dispose();
-            pasto.dispose();
-            arbol.dispose();
-            arbusto.dispose();
+            pasto.Dispose();
+            arbol.Dispose();
+            arbusto.Dispose();
             g_pRenderTarget.Dispose();
             g_pGlowMap.Dispose();
             g_pRenderTarget4Aux.Dispose();
@@ -536,7 +528,7 @@ namespace TGC.Examples.ShadersExamples
             g_pVBV3D.Dispose();
             g_pDepthStencil.Dispose();
             foreach (var m in enemigos)
-                m.dispose();
+                m.Dispose();
         }
     }
 }

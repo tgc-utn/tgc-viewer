@@ -1,18 +1,16 @@
-using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core.BoundingVolumes;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -27,19 +25,21 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploMovePicking : TGCExampleViewer
     {
+        private TGCFloatModifier speedModifier;
+
         private bool applyMovement;
         private TgcThirdPersonCamera camaraInterna;
-        private TgcBox collisionPointMesh;
+        private TGCBox collisionPointMesh;
         private TgcArrow directionArrow;
         private TgcMesh mesh;
-        private Matrix meshRotationMatrix;
-        private Vector3 newPosition;
-        private Vector3 originalMeshRot;
+        private TGCMatrix meshRotationMatrix;
+        private TGCVector3 newPosition;
+        private TGCVector3 originalMeshRot;
         private TgcPickingRay pickingRay;
         private TgcPlane suelo;
 
-        public EjemploMovePicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploMovePicking(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Collision";
             Name = "Colisiones con movimiento mouse";
@@ -51,8 +51,8 @@ namespace TGC.Examples.Collision
         {
             //Cargar suelo
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg");
-            suelo = new TgcPlane(new Vector3(-5000, 0, -5000), new Vector3(10000, 0f, 10000),TgcPlane.Orientations.XZplane, texture);
-            
+            suelo = new TgcPlane(new TGCVector3(-5000, 0, -5000), new TGCVector3(10000, 0f, 10000), TgcPlane.Orientations.XZplane, texture);
+
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
 
@@ -64,32 +64,33 @@ namespace TGC.Examples.Collision
             mesh = scene.Meshes[0];
 
             //Rotación original de la malla, hacia -Z
-            originalMeshRot = new Vector3(0, 0, -1);
+            originalMeshRot = new TGCVector3(0, 0, -1);
 
             //Manipulamos los movimientos del mesh a mano
-            mesh.AutoTransformEnable = false;
-            meshRotationMatrix = Matrix.Identity;
+            mesh.AutoTransform = false;
+            meshRotationMatrix = TGCMatrix.Identity;
 
             newPosition = mesh.Position;
             applyMovement = false;
 
             //Crear caja para marcar en que lugar hubo colision
-            collisionPointMesh = TgcBox.fromSize(new Vector3(3, 100, 3), Color.Red);
+            collisionPointMesh = TGCBox.fromSize(new TGCVector3(3, 100, 3), Color.Red);
 
             //Flecha para marcar la dirección
             directionArrow = new TgcArrow();
             directionArrow.Thickness = 5;
-            directionArrow.HeadSize = new Vector2(10, 10);
+            directionArrow.HeadSize = new TGCVector2(10, 10);
 
             //Camara en tercera persona
             camaraInterna = new TgcThirdPersonCamera(mesh.Position, 800, 1500);
             Camara = camaraInterna;
-            Modifiers.addFloat("speed", 1000, 5000, 2500);
+            speedModifier = AddFloat("speed", 1000, 5000, 2500);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -109,17 +110,17 @@ namespace TGC.Examples.Collision
                     applyMovement = true;
 
                     collisionPointMesh.Position = newPosition;
-                    directionArrow.PEnd = new Vector3(newPosition.X, 30f, newPosition.Z);
+                    directionArrow.PEnd = new TGCVector3(newPosition.X, 30f, newPosition.Z);
 
                     //Rotar modelo en base a la nueva dirección a la que apunta
-                    var direction = Vector3.Normalize(newPosition - mesh.Position);
-                    var angle = FastMath.Acos(Vector3.Dot(originalMeshRot, direction));
-                    var axisRotation = Vector3.Cross(originalMeshRot, direction);
-                    meshRotationMatrix = Matrix.RotationAxis(axisRotation, angle);
+                    var direction = TGCVector3.Normalize(newPosition - mesh.Position);
+                    var angle = FastMath.Acos(TGCVector3.Dot(originalMeshRot, direction));
+                    var axisRotation = TGCVector3.Cross(originalMeshRot, direction);
+                    meshRotationMatrix = TGCMatrix.RotationAxis(axisRotation, angle);
                 }
             }
 
-            var speed = (float)Modifiers["speed"];
+            var speed = speedModifier.Value;
 
             //Interporlar movimiento, si hay que mover
             if (applyMovement)
@@ -142,14 +143,14 @@ namespace TGC.Examples.Collision
                     }
 
                     //Actualizar flecha de movimiento
-                    directionArrow.PStart = new Vector3(mesh.Position.X, 30f, mesh.Position.Z);
+                    directionArrow.PStart = new TGCVector3(mesh.Position.X, 30f, mesh.Position.Z);
                     directionArrow.updateValues();
 
                     //Actualizar posicion del mesh
                     mesh.Position = newPos;
 
                     //Como desactivamos la transformacion automatica, tenemos que armar nosotros la matriz de transformacion
-                    mesh.Transform = meshRotationMatrix * Matrix.Translation(mesh.Position);
+                    mesh.Transform = meshRotationMatrix * TGCMatrix.Translation(mesh.Position);
 
                     //Actualizar camara
                     camaraInterna.Target = mesh.Position;
@@ -164,21 +165,21 @@ namespace TGC.Examples.Collision
             //Mostrar caja con lugar en el que se hizo click, solo si hay movimiento
             if (applyMovement)
             {
-                collisionPointMesh.render();
-                directionArrow.render();
+                collisionPointMesh.Render();
+                directionArrow.Render();
             }
 
-            suelo.render();
-            mesh.render();
+            suelo.Render();
+            mesh.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            suelo.dispose();
-            mesh.dispose();
-            collisionPointMesh.dispose();
+            suelo.Dispose();
+            mesh.Dispose();
+            collisionPointMesh.Dispose();
         }
     }
 }

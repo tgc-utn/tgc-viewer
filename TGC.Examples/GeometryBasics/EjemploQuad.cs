@@ -1,11 +1,11 @@
-using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Geometry;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
+using TGC.Core.Mathematica;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -19,11 +19,17 @@ namespace TGC.Examples.GeometryBasics
     /// </summary>
     public class EjemploQuad : TGCExampleViewer
     {
-        private TgcArrow normalArrow;
-        private TgcQuad quad;
+        private TGCBooleanModifier showNormalModifier;
+        private TGCVertex2fModifier sizeModifier;
+        private TGCVertex3fModifier normalModifier;
+        private TGCVertex3fModifier centerModifier;
+        private TGCColorModifier colorModifier;
 
-        public EjemploQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        private TgcArrow normalArrow;
+        private TGCQuad quad;
+
+        public EjemploQuad(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Geometry Basics";
             Name = "Quad";
@@ -34,19 +40,19 @@ namespace TGC.Examples.GeometryBasics
         public override void Init()
         {
             //Crear Quad vacio
-            quad = new TgcQuad();
+            quad = new TGCQuad();
 
             //Modifiers para vararia sus parametros
-            Modifiers.addVertex2f("size", new Vector2(0, 0), new Vector2(100, 100), new Vector2(20, 20));
-            Modifiers.addVertex3f("normal", new Vector3(-10, -10, -10), new Vector3(10, 10, 10), new Vector3(0, 1, 1));
-            Modifiers.addVertex3f("center", new Vector3(-10, -10, -10), new Vector3(10, 10, 10), new Vector3(0, 0, 0));
-            Modifiers.addColor("color", Color.Coral);
+            sizeModifier = AddVertex2f("size", TGCVector2.Zero, new TGCVector2(100, 100), new TGCVector2(20, 20));
+            normalModifier = AddVertex3f("normal", new TGCVector3(-10, -10, -10), new TGCVector3(10, 10, 10), new TGCVector3(0, 1, 1));
+            centerModifier = AddVertex3f("center", new TGCVector3(-10, -10, -10), new TGCVector3(10, 10, 10), TGCVector3.Empty);
+            colorModifier = AddColor("color", Color.Coral);
 
             //Flecha para mostrar el sentido del vector normal
             normalArrow = new TgcArrow();
-            Modifiers.addBoolean("showNormal", "Show normal", true);
+            showNormalModifier = AddBoolean("showNormal", "Show normal", true);
 
-            Camara = new TgcRotationalCamera(new Vector3(), 50f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(0, 5, 0), 50f, Input);
         }
 
         public override void Update()
@@ -54,6 +60,8 @@ namespace TGC.Examples.GeometryBasics
             PreUpdate();
             //Actualizar parametros del quad
             updateQuad();
+
+            PostUpdate();
         }
 
         /// <summary>
@@ -61,10 +69,10 @@ namespace TGC.Examples.GeometryBasics
         /// </summary>
         private void updateQuad()
         {
-            var size = (Vector2)Modifiers["size"];
-            var normal = (Vector3)Modifiers["normal"];
-            var center = (Vector3)Modifiers["center"];
-            var color = (Color)Modifiers["color"];
+            var size = sizeModifier.Value;
+            var normal = normalModifier.Value;
+            var center = centerModifier.Value;
+            var color = colorModifier.Value;
 
             //Cargar valores del quad.
             quad.Center = center;
@@ -78,7 +86,7 @@ namespace TGC.Examples.GeometryBasics
             quad.updateValues();
 
             //Actualizar valores de la flecha
-            if ((bool)Modifiers["showNormal"])
+            if (showNormalModifier.Value)
             {
                 normalArrow.PStart = quad.Center;
                 normalArrow.PEnd = quad.Center + quad.Normal * 10;
@@ -90,11 +98,11 @@ namespace TGC.Examples.GeometryBasics
         {
             PreRender();
 
-            quad.render();
+            quad.Render();
 
-            if ((bool)Modifiers["showNormal"])
+            if (showNormalModifier.Value)
             {
-                normalArrow.render();
+                normalArrow.Render();
             }
 
             PostRender();
@@ -102,8 +110,8 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            quad.dispose();
-            normalArrow.dispose();
+            quad.Dispose();
+            normalArrow.Dispose();
         }
     }
 }

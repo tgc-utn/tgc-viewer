@@ -1,14 +1,13 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -26,8 +25,8 @@ namespace TGC.Examples.ShadersExamples
         private TgcScene scene;
         private float time;
 
-        public BasicShader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public BasicShader(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel y Vertex Shaders";
             Name = "Shader Basico";
@@ -44,8 +43,8 @@ namespace TGC.Examples.ShadersExamples
                 loader.loadSceneFromFile(MediaDir +
                                          "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml");
             mesh = scene.Meshes[0];
-            mesh.Scale = new Vector3(0.5f, 0.5f, 0.5f);
-            mesh.Position = new Vector3(0f, 0f, 0f);
+            mesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
+            mesh.Position = new TGCVector3(0f, 0f, 0f);
 
             //Cargar Shader personalizado
             effect = TgcShaders.loadEffect(ShadersDir + "WorkshopShaders\\BasicShader.fx");
@@ -55,7 +54,7 @@ namespace TGC.Examples.ShadersExamples
 
             // indico que tecnica voy a usar
             // Hay effectos que estan organizados con mas de una tecnica.
-            mesh.Technique = "RenderScene";
+            mesh.Technique = "RenderScene2";
 
             //Centrar camara rotacional respecto a este mesh
 
@@ -68,6 +67,7 @@ namespace TGC.Examples.ShadersExamples
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -83,7 +83,7 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("time", time);
 
             // dibujo la malla pp dicha
-            mesh.render();
+            mesh.Render();
 
             RenderAxis();
             RenderFPS();
@@ -94,7 +94,7 @@ namespace TGC.Examples.ShadersExamples
         public override void Dispose()
         {
             effect.Dispose();
-            scene.disposeAll();
+            scene.DisposeAll();
         }
     }
 }

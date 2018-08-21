@@ -3,11 +3,13 @@ using System.IO;
 using SharpDX;
 using SharpDX.DirectSound;
 using SharpDX.Multimedia;
+using System;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.Sound
 {
     /// <summary>
-    ///     Herramienta para reproducir un sonido WAV en 3D, variando como suena respecto de su posición
+    ///     Herramienta para reproducir un sonido WAV en 3D, variando como suena respecto de su posiciï¿½n
     ///     en el espacio.
     ///     Solo se pueden cargar sonidos WAV que sean MONO (1 channel).
     ///     Sonidos stereos (2 channels) no pueden ser utilizados.
@@ -21,14 +23,15 @@ namespace TGC.Core.Sound
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="position">Posicion del sonido en el espacio</param>
-        public Tgc3dSound(string soundPath, Vector3 position, DirectSound device)
+
+        public Tgc3dSound(string soundPath, TGCVector3 position, Device device)
         {
             loadSound(soundPath, device);
             Position = position;
         }
 
         /// <summary>
-        ///     Buffer con la información del sonido cargado
+        ///     Buffer con la informaciï¿½n del sonido cargado
         /// </summary>
         public SecondarySoundBuffer SoundBuffer { get; private set; }
 
@@ -38,18 +41,18 @@ namespace TGC.Core.Sound
         public SoundBuffer3D Buffer3d { get; private set; }
 
         /// <summary>
-        ///     Posición del sonido dentro del espacio.
-        ///     La forma de escuchar el sonido varia según esta ubicación y la posición
+        ///     Posiciï¿½n del sonido dentro del espacio.
+        ///     La forma de escuchar el sonido varia segï¿½n esta ubicaciï¿½n y la posiciï¿½n
         ///     del Listener3D de sonidos.
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
-            get { return Buffer3d.Position; }
+            get { return TGCVector3.FromVector3(Buffer3d.Position); }
             set { Buffer3d.Position = value; }
         }
 
         /// <summary>
-        ///     Mínima distancia a partir de la cual el sonido 3D comienza a atenuarse respecto de la posicion
+        ///     Mï¿½nima distancia a partir de la cual el sonido 3D comienza a atenuarse respecto de la posicion
         ///     del Listener3D
         /// </summary>
         public float MinDistance
@@ -117,7 +120,7 @@ namespace TGC.Core.Sound
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al cargar sonido estático WAV: " + soundPath, ex);
+                throw new Exception("Error al cargar sonido estï¿½tico WAV: " + soundPath, ex);
             }
         }
 
@@ -134,7 +137,7 @@ namespace TGC.Core.Sound
 
         /// <summary>
         ///     Reproduce el sonido, indicando si se hace con Loop.
-        ///     Si ya se está reproduciedo, no vuelve a empezar.
+        ///     Si ya se estï¿½ reproduciedo, no vuelve a empezar.
         /// </summary>
         /// <param name="playLoop">TRUE para reproducir en loop</param>
         public void play(bool playLoop)
@@ -144,7 +147,7 @@ namespace TGC.Core.Sound
 
         /// <summary>
         ///     Reproduce el sonido, sin Loop.
-        ///     Si ya se está reproduciedo, no vuelve a empezar.
+        ///     Si ya se estï¿½ reproduciedo, no vuelve a empezar.
         /// </summary>
         public void play()
         {
@@ -152,9 +155,9 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        ///     Pausa la ejecución del sonido.
+        ///     Pausa la ejecuciï¿½n del sonido.
         ///     Si el sonido no se estaba ejecutando, no hace nada.
-        ///     Si se hace stop() y luego play(), el sonido continua desde donde había dejado la última vez.
+        ///     Si se hace stop() y luego play(), el sonido continua desde donde habï¿½a dejado la ï¿½ltima vez.
         /// </summary>
         public void stop()
         {

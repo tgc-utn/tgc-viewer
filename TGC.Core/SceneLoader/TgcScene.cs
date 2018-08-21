@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using TGC.Core.BoundingVolumes;
-using TGC.Core.Geometry;
 using TGC.Core.PortalRendering;
 
 namespace TGC.Core.SceneLoader
@@ -64,9 +63,9 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Renderiza todas las mallas que se encuentran habilitadas
         /// </summary>
-        public void renderAll()
+        public void RenderAll()
         {
-            renderAll(false);
+            RenderAll(false);
         }
 
         /// <summary>
@@ -74,18 +73,18 @@ namespace TGC.Core.SceneLoader
         ///     si se debe mostrar el BoundingBox de las mismas.
         /// </summary>
         /// <param name="showBoundingBox">True para renderizar el BoundingBox de cada malla</param>
-        public void renderAll(bool showBoundingBox)
+        public void RenderAll(bool showBoundingBox)
         {
             foreach (var mesh in Meshes)
             {
-                mesh.render();
+                mesh.Render();
             }
 
             if (showBoundingBox)
             {
                 foreach (var mesh in Meshes)
                 {
-                    mesh.BoundingBox.render();
+                    mesh.BoundingBox.Render();
                 }
             }
         }
@@ -93,11 +92,11 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Libera los recursos de todas las mallas
         /// </summary>
-        public void disposeAll()
+        public void DisposeAll()
         {
             foreach (var mesh in Meshes)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
         }
 

@@ -5,10 +5,10 @@ using SharpDX.Direct3D9;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.SkeletalAnimation
 {
@@ -35,12 +35,10 @@ namespace TGC.Core.SkeletalAnimation
 
         /// <summary>
         ///     Maxima cantidad de huesos soportados por TgcSkeletalMesh
-        ///     Coincide con el tamaño del array de matrices que se envia
+        ///     Coincide con el tamaï¿½o del array de matrices que se envia
         ///     al VertexShader para hacer skinning.
         /// </summary>
         public const int MAX_BONE_COUNT = 26;
-
-        protected bool alphaBlendEnable;
 
         protected Dictionary<string, TgcSkeletalAnimation> animations;
 
@@ -56,7 +54,7 @@ namespace TGC.Core.SkeletalAnimation
         protected TgcSkeletalBone[] bones;
 
         //Matrices final de transformacion de cada ueso
-        private Matrix[] boneSpaceFinalTransforms;
+        private TGCMatrix[] boneSpaceFinalTransforms;
 
         protected TgcBoundingAxisAlignBox boundingBox;
 
@@ -95,25 +93,25 @@ namespace TGC.Core.SkeletalAnimation
 
         protected MeshRenderType renderType;
 
-        protected Vector3 rotation;
+        protected TGCVector3 rotation;
 
-        protected Vector3 scale;
+        protected TGCVector3 scale;
 
         protected TgcLine[] skeletonRenderBones;
 
         //Elementos para renderizar el esqueleto
-        protected TgcBox[] skeletonRenderJoints;
+        protected TGCBox[] skeletonRenderJoints;
 
         /// <summary>
-        ///     BoundingBox de la malla sin ninguna animación.
+        ///     BoundingBox de la malla sin ninguna animaciï¿½n.
         /// </summary>
         protected TgcBoundingAxisAlignBox staticMeshBoundingBox;
 
         protected string technique;
 
-        protected Matrix transform;
+        protected TGCMatrix transform;
 
-        protected Vector3 translation;
+        protected TGCVector3 translation;
 
         protected VertexDeclaration vertexDeclaration;
 
@@ -137,23 +135,23 @@ namespace TGC.Core.SkeletalAnimation
 
         /// <summary>
         ///     Crea una nueva malla que es una instancia de otra malla original.
-        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Reutiliza toda la geometrï¿½a de la malla original sin duplicarla.
         ///     Debe crearse luego de haber cargado todas las animaciones en la malla original
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
         /// <param name="parentInstance">Malla original desde la cual basarse</param>
-        /// <param name="translation">Traslación respecto de la malla original</param>
-        /// <param name="rotation">Rotación respecto de la malla original</param>
+        /// <param name="translation">Traslaciï¿½n respecto de la malla original</param>
+        /// <param name="rotation">Rotaciï¿½n respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcSkeletalMesh(string name, TgcSkeletalMesh parentInstance, Vector3 translation, Vector3 rotation,
-            Vector3 scale)
+        public TgcSkeletalMesh(string name, TgcSkeletalMesh parentInstance, TGCVector3 translation, TGCVector3 rotation,
+            TGCVector3 scale)
         {
             //Cargar iniciales datos en base al original
             initData(parentInstance.d3dMesh, name, parentInstance.renderType, parentInstance.bones);
             diffuseMaps = parentInstance.diffuseMaps;
             materials = parentInstance.materials;
 
-            //Almacenar transformación inicial
+            //Almacenar transformaciï¿½n inicial
             this.translation = translation;
             this.rotation = rotation;
             this.scale = scale;
@@ -245,7 +243,7 @@ namespace TGC.Core.SkeletalAnimation
 
         /// <summary>
         ///     BoundingBox del Mesh.
-        ///     Puede variar según la animación que tiene configurada en el momento.
+        ///     Puede variar segï¿½n la animaciï¿½n que tiene configurada en el momento.
         /// </summary>
         public TgcBoundingAxisAlignBox BoundingBox
         {
@@ -284,7 +282,7 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Huesos del esqueleto de la malla. Ordenados en forma jerárquica
+        ///     Huesos del esqueleto de la malla. Ordenados en forma jerï¿½rquica
         /// </summary>
         public TgcSkeletalBone[] Bones
         {
@@ -300,7 +298,7 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Animación actual de la malla
+        ///     Animaciï¿½n actual de la malla
         /// </summary>
         public TgcSkeletalAnimation CurrentAnimation
         {
@@ -324,7 +322,7 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Indica si actualmente hay una animación en curso.
+        ///     Indica si actualmente hay una animaciï¿½n en curso.
         /// </summary>
         public bool IsAnimating
         {
@@ -332,7 +330,7 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Indica si la animación actual se ejecuta con un Loop
+        ///     Indica si la animaciï¿½n actual se ejecuta con un Loop
         /// </summary>
         public bool PlayLoop
         {
@@ -340,7 +338,7 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Modelos adjuntados para seguir la trayectoria de algún hueso
+        ///     Modelos adjuntados para seguir la trayectoria de algï¿½n hueso
         /// </summary>
         public List<TgcSkeletalBoneAttach> Attachments
         {
@@ -364,7 +362,7 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Cantidad de triángulos de la malla
+        ///     Cantidad de triï¿½ngulos de la malla
         /// </summary>
         public int NumberTriangles
         {
@@ -372,7 +370,7 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Cantidad de vértices de la malla
+        ///     Cantidad de vï¿½rtices de la malla
         /// </summary>
         public int NumberVertices
         {
@@ -390,14 +388,10 @@ namespace TGC.Core.SkeletalAnimation
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vértice de canal Alpha.
-        ///     Por default está deshabilitado.
+        ///     con textura o colores por vï¿½rtice de canal Alpha.
+        ///     Por default estï¿½ deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Renderiza la malla, si esta habilitada.
@@ -405,7 +399,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     llamado previamente al metodo updateAnimation()
         ///     Sino se renderiza la pose fija de la malla
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!enabled)
                 return;
@@ -426,7 +420,7 @@ namespace TGC.Core.SkeletalAnimation
             setShaderMatrix();
 
             //Enviar al shader el array de matrices de huesos para poder hacer skinning en el Vertex Shader
-            effect.SetValue("bonesMatWorldArray", boneSpaceFinalTransforms);
+            effect.SetValue("bonesMatWorldArray", TGCMatrix.ToMatrixArray(boneSpaceFinalTransforms));
 
             //Renderizar malla
             if (!renderSkeleton)
@@ -491,19 +485,19 @@ namespace TGC.Core.SkeletalAnimation
             foreach (var attach in attachments)
             {
                 attach.updateMeshTransform(transform);
-                attach.Mesh.render();
+                attach.Mesh.Render();
             }
         }
 
         /// <summary>
         ///     Libera los recursos de la malla
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             enabled = false;
             if (boundingBox != null)
             {
-                boundingBox.dispose();
+                boundingBox.Dispose();
             }
 
             //Si es una instancia no liberar nada, lo hace el original.
@@ -516,7 +510,7 @@ namespace TGC.Core.SkeletalAnimation
             //hacer dispose de instancias
             foreach (var meshInstance in meshInstances)
             {
-                meshInstance.dispose();
+                meshInstance.Dispose();
             }
             meshInstances = null;
 
@@ -539,7 +533,7 @@ namespace TGC.Core.SkeletalAnimation
             {
                 foreach (var jointBox in skeletonRenderJoints)
                 {
-                    jointBox.dispose();
+                    jointBox.Dispose();
                 }
                 skeletonRenderJoints = null;
             }
@@ -551,7 +545,7 @@ namespace TGC.Core.SkeletalAnimation
                 {
                     if (boneLine != null)
                     {
-                        boneLine.dispose();
+                        boneLine.Dispose();
                     }
                 }
                 skeletonRenderBones = null;
@@ -560,7 +554,7 @@ namespace TGC.Core.SkeletalAnimation
             //Liberar attachments
             foreach (var attach in attachments)
             {
-                attach.Mesh.dispose();
+                attach.Mesh.Dispose();
             }
             attachments = null;
 
@@ -573,9 +567,9 @@ namespace TGC.Core.SkeletalAnimation
         ///     Matriz final que se utiliza para aplicar transformaciones a la malla.
         ///     Si la propiedad AutoTransformEnable esta en True, la matriz se reconstruye en cada cuadro
         ///     en base a los valores de: Position, Rotation, Scale.
-        ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
+        ///     Si AutoTransformEnable estï¿½ en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
-        public Matrix Transform
+        public TGCMatrix Transform
         {
             get { return transform; }
             set { transform = value; }
@@ -583,11 +577,11 @@ namespace TGC.Core.SkeletalAnimation
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
-        ///     cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
+        ///     cada cuadro en forma automï¿½tica, segï¿½n los valores de: Position, Rotation, Scale.
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
-        ///     Por default está en True.
+        ///     Por default estï¿½ en True.
         /// </summary>
-        public bool AutoTransformEnable
+        public bool AutoTransform
         {
             get { return autoTransformEnable; }
             set { autoTransformEnable = value; }
@@ -596,7 +590,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Posicion absoluta de la Malla
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return translation; }
             set
@@ -607,9 +601,9 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Rotación absoluta de la malla
+        ///     Rotaciï¿½n absoluta de la malla
         /// </summary>
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
@@ -618,7 +612,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Escalado absoluto de la malla;
         /// </summary>
-        public Vector3 Scale
+        public TGCVector3 Scale
         {
             get { return scale; }
             set
@@ -631,15 +625,15 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(Vector3 v)
+        public void Move(TGCVector3 v)
         {
-            move(v.X, v.Y, v.Z);
+            Move(v.X, v.Y, v.Z);
         }
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(float x, float y, float z)
+        public void Move(float x, float y, float z)
         {
             translation.X += x;
             translation.Y += y;
@@ -653,12 +647,12 @@ namespace TGC.Core.SkeletalAnimation
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
-        public void moveOrientedY(float movement)
+        public void MoveOrientedY(float movement)
         {
             var z = (float)Math.Cos(rotation.Y) * movement;
             var x = (float)Math.Sin(rotation.Y) * movement;
 
-            move(x, 0, z);
+            Move(x, 0, z);
         }
 
         /// <summary>
@@ -666,7 +660,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
+        public void GetPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -676,8 +670,8 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Rota la malla respecto del eje X
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateX(float angle)
+        /// <param name="angle">ï¿½ngulo de rotaciï¿½n en radianes</param>
+        public void RotateX(float angle)
         {
             rotation.X += angle;
         }
@@ -685,8 +679,8 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Rota la malla respecto del eje Y
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateY(float angle)
+        /// <param name="angle">ï¿½ngulo de rotaciï¿½n en radianes</param>
+        public void RotateY(float angle)
         {
             rotation.Y += angle;
         }
@@ -694,8 +688,8 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Rota la malla respecto del eje Z
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateZ(float angle)
+        /// <param name="angle">ï¿½ngulo de rotaciï¿½n en radianes</param>
+        public void RotateZ(float angle)
         {
             rotation.Z += angle;
         }
@@ -714,14 +708,14 @@ namespace TGC.Core.SkeletalAnimation
             attachments = new List<TgcSkeletalBoneAttach>();
             meshInstances = new List<TgcSkeletalMesh>();
             renderSkeleton = false;
-            alphaBlendEnable = false;
+            AlphaBlendEnable = false;
 
             //variables de movimiento
-            AutoTransformEnable = false;
-            translation = new Vector3(0f, 0f, 0f);
-            rotation = new Vector3(0f, 0f, 0f);
-            scale = new Vector3(1f, 1f, 1f);
-            transform = Matrix.Identity;
+            AutoTransform = false;
+            translation = new TGCVector3(0f, 0f, 0f);
+            rotation = new TGCVector3(0f, 0f, 0f);
+            scale = new TGCVector3(1f, 1f, 1f);
+            transform = TGCMatrix.Identity;
 
             //variables de animacion
             isAnimating = false;
@@ -734,7 +728,7 @@ namespace TGC.Core.SkeletalAnimation
             animations = new Dictionary<string, TgcSkeletalAnimation>();
 
             //Matrices de huesos
-            boneSpaceFinalTransforms = new Matrix[MAX_BONE_COUNT];
+            boneSpaceFinalTransforms = new TGCMatrix[MAX_BONE_COUNT];
 
             //Shader
             vertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
@@ -767,21 +761,21 @@ namespace TGC.Core.SkeletalAnimation
                 }
 
                 //Almacenar la inversa de la posicion original del hueso, para la referencia inicial de los vertices
-                bone.MatInversePose = Matrix.Invert(bone.MatFinal);
+                bone.MatInversePose = TGCMatrix.Invert(bone.MatFinal);
             }
         }
 
         /// <summary>
-        ///     Crea mallas a modo Debug para visualizar la configuración del esqueleto
+        ///     Crea mallas a modo Debug para visualizar la configuraciï¿½n del esqueleto
         /// </summary>
         public void buildSkletonMesh()
         {
             //Crear array para dibujar los huesos y joints
             var jointsColor = Color.Violet;
             var bonesColor = Color.Yellow;
-            var jointsSize = new Vector3(2, 2, 2);
-            var ceroVec = new Vector3(0, 0, 0);
-            skeletonRenderJoints = new TgcBox[bones.Length];
+            var jointsSize = new TGCVector3(2, 2, 2);
+            var ceroVec = TGCVector3.Empty;
+            skeletonRenderJoints = new TGCBox[bones.Length];
             skeletonRenderBones = new TgcLine[bones.Length];
             var boneColor = Color.Yellow.ToArgb();
 
@@ -799,14 +793,14 @@ namespace TGC.Core.SkeletalAnimation
                 {
                     //Crear linea de hueso para renderziar esqueleto
                     var boneLine = new TgcLine();
-                    boneLine.PStart = TgcVectorUtils.transform(ceroVec, bone.MatFinal);
-                    boneLine.PEnd = TgcVectorUtils.transform(ceroVec, bone.ParentBone.MatFinal);
+                    boneLine.PStart = TGCVector3.transform(ceroVec, bone.MatFinal);
+                    boneLine.PEnd = TGCVector3.transform(ceroVec, bone.ParentBone.MatFinal);
                     boneLine.Color = bonesColor;
                     skeletonRenderBones[i] = boneLine;
                 }
                 //Crear malla de Joint para renderizar el esqueleto
-                var jointBox = TgcBox.fromSize(jointsSize, jointsColor);
-                jointBox.AutoTransformEnable = false;
+                var jointBox = TGCBox.fromSize(jointsSize, jointsColor);
+                jointBox.AutoTransform = false;
                 skeletonRenderJoints[i] = jointBox;
             }
         }
@@ -818,7 +812,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         /// <param name="animationName">Nombre de la animacion a activar</param>
         /// <param name="playLoop">Indica si la animacion vuelve a comenzar al terminar</param>
-        /// <param name="userFrameRate">FrameRate personalizado. Con -1 se utiliza el default de la animación</param>
+        /// <param name="userFrameRate">FrameRate personalizado. Con -1 se utiliza el default de la animaciï¿½n</param>
         public void playAnimation(string animationName, bool playLoop, float userFrameRate)
         {
             //ya se esta animando algo
@@ -852,7 +846,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     Establece cual es la animacion activa de la malla.
         ///     Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
         ///     Para forzar que se reinicie es necesario hacer stopAnimation().
-        ///     Utiliza el FrameRate default de cada animación
+        ///     Utiliza el FrameRate default de cada animaciï¿½n
         /// </summary>
         /// <param name="animationName">Nombre de la animacion a activar</param>
         /// <param name="playLoop">Indica si la animacion vuelve a comenzar al terminar</param>
@@ -866,7 +860,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     Si la animacion activa es la misma que ya esta siendo animada actualmente, no se para ni se reinicia.
         ///     Para forzar que se reinicie es necesario hacer stopAnimation().
         ///     Se reproduce con loop.
-        ///     Utiliza el FrameRate default de cada animación
+        ///     Utiliza el FrameRate default de cada animaciï¿½n
         /// </summary>
         /// <param name="animationName">Nombre de la animacion a activar</param>
         public void playAnimation(string animationName)
@@ -914,7 +908,7 @@ namespace TGC.Core.SkeletalAnimation
 
                 //Determinar matriz local inicial
                 var firstFrame = currentAnimation.BoneFrames[i][0];
-                bone.MatLocal = Matrix.RotationQuaternion(firstFrame.Rotation) * Matrix.Translation(firstFrame.Position);
+                bone.MatLocal = TGCMatrix.RotationTGCQuaternion(firstFrame.Rotation) * TGCMatrix.Translation(firstFrame.Position);
 
                 //Multiplicar por matriz del padre, si tiene
                 if (bone.ParentBone != null)
@@ -939,7 +933,7 @@ namespace TGC.Core.SkeletalAnimation
             isAnimating = false;
             boundingBox = staticMeshBoundingBox;
 
-            //Invocar evento de finalización
+            //Invocar evento de finalizaciï¿½n
             if (AnimationEnds != null)
             {
                 AnimationEnds.Invoke(this);
@@ -1025,10 +1019,10 @@ namespace TGC.Core.SkeletalAnimation
                 var frameTranslation = (frame2.Position - frame1.Position) * interpolationValue + frame1.Position;
 
                 //Interpolar rotacion con SLERP
-                var quatFrameRotation = Quaternion.Slerp(frame1.Rotation, frame2.Rotation, interpolationValue);
+                var quatFrameRotation = TGCQuaternion.Slerp(frame1.Rotation, frame2.Rotation, interpolationValue);
 
                 //Unir ambas transformaciones de este frame
-                var frameMatrix = Matrix.RotationQuaternion(quatFrameRotation) * Matrix.Translation(frameTranslation);
+                var frameMatrix = TGCMatrix.RotationTGCQuaternion(quatFrameRotation) * TGCMatrix.Translation(frameTranslation);
 
                 //Multiplicar por la matriz del padre, si tiene
                 if (bone.ParentBone != null)
@@ -1063,7 +1057,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         protected void updateMeshVertices()
         {
-            //Precalcular la multiplicación para llevar a un vertice a Bone-Space y luego transformarlo segun el hueso
+            //Precalcular la multiplicaciï¿½n para llevar a un vertice a Bone-Space y luego transformarlo segun el hueso
             //Estas matrices se envian luego al Vertex Shader para hacer skinning en GPU
             for (var i = 0; i < bones.Length; i++)
             {
@@ -1085,9 +1079,9 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         public void UpdateMeshTransform()
         {
-            transform = Matrix.Scaling(scale)
-                            * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            * Matrix.Translation(translation);            
+            transform = TGCMatrix.Scaling(scale)
+                            * TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
+                            * TGCMatrix.Translation(translation);
         }
 
         /// <summary>
@@ -1095,7 +1089,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (alphaBlendEnable)
+            if (AlphaBlendEnable)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -1116,7 +1110,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         protected void renderSkeletonMesh()
         {
-            var ceroVec = new Vector3(0, 0, 0);
+            var ceroVec = TGCVector3.Empty;
 
             //Dibujar huesos y joints
             for (var i = 0; i < bones.Length; i++)
@@ -1126,15 +1120,15 @@ namespace TGC.Core.SkeletalAnimation
                 //Renderizar Joint
                 var jointBox = skeletonRenderJoints[i];
                 jointBox.Transform = bone.MatFinal * transform;
-                jointBox.render();
+                jointBox.Render();
 
-                //Modificar línea del bone
+                //Modificar lï¿½nea del bone
                 if (bone.ParentBone != null)
                 {
                     var boneLine = skeletonRenderBones[i];
 
-                    boneLine.PStart = TgcVectorUtils.transform(ceroVec, bone.MatFinal * transform);
-                    boneLine.PEnd = TgcVectorUtils.transform(ceroVec, bone.ParentBone.MatFinal * transform);
+                    boneLine.PStart = TGCVector3.transform(ceroVec, bone.MatFinal * transform);
+                    boneLine.PEnd = TGCVector3.transform(ceroVec, bone.ParentBone.MatFinal * transform);
                     boneLine.updateValues();
                 }
             }
@@ -1144,7 +1138,7 @@ namespace TGC.Core.SkeletalAnimation
             {
                 if (boneLine != null)
                 {
-                    boneLine.render();
+                    boneLine.Render();
                 }
             }
         }
@@ -1159,22 +1153,22 @@ namespace TGC.Core.SkeletalAnimation
                 return;
 
             updateAnimation(elapsedTime);
-            render();
+            Render();
         }
 
         /// <summary>
-        ///     Devuelve un array con todas las posiciones de los vértices de la malla, en el estado actual
+        ///     Devuelve un array con todas las posiciones de los vï¿½rtices de la malla, en el estado actual
         /// </summary>
         /// <returns>Array creado</returns>
-        public Vector3[] getVertexPositions()
+        public TGCVector3[] getVertexPositions()
         {
-            Vector3[] points = null;
+            TGCVector3[] points = null;
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
                     var verts1 = (TgcSkeletalLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSkeletalLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts1.Length];
+                    points = new TGCVector3[verts1.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts1[i].Position;
@@ -1185,7 +1179,7 @@ namespace TGC.Core.SkeletalAnimation
                 case MeshRenderType.DIFFUSE_MAP:
                     var verts2 = (TgcSkeletalLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSkeletalLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts2.Length];
+                    points = new TGCVector3[verts2.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts2[i].Position;
@@ -1219,10 +1213,10 @@ namespace TGC.Core.SkeletalAnimation
 
                     //Calcular normales recorriendo los triangulos
                     var triCount = origVertexBuffer.Length / 3;
-                    var normals = new Vector3[origVertexBuffer.Length];
+                    var normals = new TGCVector3[origVertexBuffer.Length];
                     for (var i = 0; i < normals.Length; i++)
                     {
-                        normals[i] = new Vector3(0, 0, 0);
+                        normals[i] = TGCVector3.Empty;
                     }
                     for (var i = 0; i < triCount; i++)
                     {
@@ -1233,9 +1227,9 @@ namespace TGC.Core.SkeletalAnimation
                         TgcSkeletalLoader.DiffuseMapVertex v3 = origVertexBuffer[i * 3 + 2];
 
                         //Face-normal (left-handend)
-                        Vector3 a = v2.Position - v1.Position;
-                        Vector3 b = v3.Position - v1.Position;
-                        Vector3 n = Vector3.Cross(b,a);
+                        TGCVector3 a = v2.Position - v1.Position;
+                        TGCVector3 b = v3.Position - v1.Position;
+                        TGCVector3 n = TGCVector3.Cross(b,a);
 
                         //Normalizar
                         n.Normalize();
@@ -1285,10 +1279,10 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Cambia el color de todos los vértices de la malla, actualizando el VertexBuffer
-        ///     En modelos complejos puede resultar una operación poco performante.
-        ///     La actualización será visible la próxima vez que se haga updateAnimation().
-        ///     Si hay instnacias de este modelo, sea el original o una copia, todos los demás se verán
+        ///     Cambia el color de todos los vï¿½rtices de la malla, actualizando el VertexBuffer
+        ///     En modelos complejos puede resultar una operaciï¿½n poco performante.
+        ///     La actualizaciï¿½n serï¿½ visible la prï¿½xima vez que se haga updateAnimation().
+        ///     Si hay instnacias de este modelo, sea el original o una copia, todos los demï¿½s se verï¿½n
         ///     afectados
         /// </summary>
         /// <param name="color">Color nuevo</param>
@@ -1350,7 +1344,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     Busca el hueso con el nombre especificado.
         /// </summary>
         /// <param name="boneName">Nombre del hueso buscado</param>
-        /// <returns>Hueso encontrado o null si no lo encontró</returns>
+        /// <returns>Hueso encontrado o null si no lo encontrï¿½</returns>
         public TgcSkeletalBone getBoneByName(string boneName)
         {
             foreach (var bone in bones)
@@ -1365,16 +1359,16 @@ namespace TGC.Core.SkeletalAnimation
 
         /// <summary>
         ///     Crea una nueva malla que es una instancia de esta malla original
-        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Reutiliza toda la geometrï¿½a de la malla original sin duplicarla.
         ///     Solo se puede crear instancias a partir de originales.
-        ///     Se debe crear después de haber agregado todas las animaciones al original.
+        ///     Se debe crear despuï¿½s de haber agregado todas las animaciones al original.
         ///     Los attachments de la malla original se duplican.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
-        /// <param name="translation">Traslación respecto de la malla original</param>
-        /// <param name="rotation">Rotación respecto de la malla original</param>
+        /// <param name="translation">Traslaciï¿½n respecto de la malla original</param>
+        /// <param name="rotation">Rotaciï¿½n respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcSkeletalMesh createMeshInstance(string name, Vector3 translation, Vector3 rotation, Vector3 scale)
+        public TgcSkeletalMesh createMeshInstance(string name, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
         {
             if (parentInstance != null)
             {
@@ -1395,15 +1389,15 @@ namespace TGC.Core.SkeletalAnimation
 
         /// <summary>
         ///     Crea una nueva malla que es una instancia de esta malla original
-        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Reutiliza toda la geometrï¿½a de la malla original sin duplicarla.
         ///     Solo se puede crear instancias a partir de originales.
-        ///     Se debe crear después de haber agregado todas las animaciones al original.
+        ///     Se debe crear despuï¿½s de haber agregado todas las animaciones al original.
         ///     Los attachments de la malla original se duplican.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
         public TgcSkeletalMesh createMeshInstance(string name)
         {
-            return createMeshInstance(name, Vector3.Zero, Vector3.Zero, new Vector3(1, 1, 1));
+            return createMeshInstance(name, TGCVector3.Empty, TGCVector3.Empty, TGCVector3.One);
         }
 
         public override string ToString()
@@ -1414,16 +1408,16 @@ namespace TGC.Core.SkeletalAnimation
         #region Eventos
 
         /// <summary>
-        ///     Indica que la animación actual ha finalizado.
-        ///     Se llama cuando se acabaron los frames de la animación.
+        ///     Indica que la animaciï¿½n actual ha finalizado.
+        ///     Se llama cuando se acabaron los frames de la animaciï¿½n.
         ///     Si se anima en Loop, se llama cada vez que termina.
         /// </summary>
         /// <param name="mesh">Malla animada</param>
         public delegate void AnimationEndsHandler(TgcSkeletalMesh mesh);
 
         /// <summary>
-        ///     Evento que se llama cada vez que la animación actual finaliza.
-        ///     Se llama cuando se acabaron los frames de la animación.
+        ///     Evento que se llama cada vez que la animaciï¿½n actual finaliza.
+        ///     Se llama cuando se acabaron los frames de la animaciï¿½n.
         ///     Si se anima en Loop, se llama cada vez que termina.
         /// </summary>
         public event AnimationEndsHandler AnimationEnds;

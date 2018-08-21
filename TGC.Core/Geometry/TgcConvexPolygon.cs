@@ -1,6 +1,8 @@
 using SharpDX;
 using SharpDX.Direct3D9;
+using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -8,55 +10,59 @@ using TGC.Core.Textures;
 namespace TGC.Core.Geometry
 {
     /// <summary>
-    ///     Representa un polígono convexo plano en 3D de una sola cara, compuesto
-    ///     por varios vértices que lo delimitan.
+    ///     Representa un polï¿½gono convexo plano en 3D de una sola cara, compuesto
+    ///     por varios vï¿½rtices que lo delimitan.
     /// </summary>
     public class TgcConvexPolygon : IRenderObject
     {
+        private VertexBuffer vertexBuffer;
+
         public TgcConvexPolygon()
         {
             Enabled = true;
             AlphaBlendEnable = false;
-            color = Color.Purple;
+            Color = Color.Purple;
+        }
+
+        public TGCVector3 Position
+        {
+            //Lo correcto serï¿½a calcular el centro, pero con un extremo es suficiente.
+            get { return BoundingVertices[0]; }
         }
 
         /// <summary>
-        ///     Vertices que definen el contorno polígono.
-        ///     Están dados en clockwise-order.
+        ///     Color del polï¿½gono
         /// </summary>
-        public Vector3[] BoundingVertices { get; set; }
+        public Color Color { get; set; }
+
+        /// <summary>
+        ///     Habilita el renderizado con AlphaBlending para los modelos
+        ///     con textura o colores por vï¿½rtice de canal Alpha.
+        ///     Por default estï¿½ deshabilitado.
+        /// </summary>
+        public bool AlphaBlendEnable { get; set; }
+
+        /// <summary>
+        ///     Vertices que definen el contorno polï¿½gono.
+        ///     Estï¿½n dados en clockwise-order.
+        /// </summary>
+        public TGCVector3[] BoundingVertices { get; set; }
 
         /// <summary>
         ///     Indica si la flecha esta habilitada para ser renderizada
         /// </summary>
         public bool Enabled { get; set; }
 
-        # region Renderizado del poligono
-
-        protected Effect effect;
-
         /// <summary>
         ///     Shader del mesh
         /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
-
-        protected string technique;
+        public Effect Effect { get; set; }
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
         ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
-
-        private VertexBuffer vertexBuffer;
+        public string Technique { get; set; }
 
         /// <summary>
         ///     Actualizar valores de renderizado.
@@ -71,12 +77,12 @@ namespace TGC.Core.Geometry
                     D3DDevice.Instance.Device,
                     Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColored.Format, Pool.Default);
                 //Shader
-                effect = TgcShaders.Instance.VariosShader;
-                technique = TgcShaders.T_POSITION_COLORED;
+                Effect = TgcShaders.Instance.VariosShader;
+                Technique = TgcShaders.T_POSITION_COLORED;
             }
 
             //Crear como TriangleFan
-            var c = color.ToArgb();
+            var c = Color.ToArgb();
             var vertices = new CustomVertex.PositionColored[BoundingVertices.Length];
             for (var i = 0; i < BoundingVertices.Length; i++)
             {
@@ -88,9 +94,9 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Renderizar el polígono
+        ///     Renderizar el polï¿½gono
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!Enabled)
                 return;
@@ -98,54 +104,28 @@ namespace TGC.Core.Geometry
             TexturesManager.Instance.clear(0);
             TexturesManager.Instance.clear(1);
 
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
             D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
-            effect.Technique = technique;
+            Effect.Technique = Technique;
             D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
             //Renderizar RenderFarm
-            effect.Begin(0);
-            effect.BeginPass(0);
+            Effect.Begin(0);
+            Effect.BeginPass(0);
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleFan, 0, BoundingVertices.Length - 2);
-            effect.EndPass();
-            effect.End();
+            Effect.EndPass();
+            Effect.End();
         }
 
         /// <summary>
-        ///     Liberar recursos del polígono
+        ///     Liberar recursos del polï¿½gono
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (vertexBuffer != null && !vertexBuffer.Disposed)
             {
                 vertexBuffer.Dispose();
             }
         }
-
-        public Vector3 Position
-        {
-            //Lo correcto sería calcular el centro, pero con un extremo es suficiente.
-            get { return BoundingVertices[0]; }
-        }
-
-        private Color color;
-
-        /// <summary>
-        ///     Color del polígono
-        /// </summary>
-        public Color Color
-        {
-            get { return color; }
-            set { color = value; }
-        }
-
-        /// <summary>
-        ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vértice de canal Alpha.
-        ///     Por default está deshabilitado.
-        /// </summary>
-        public bool AlphaBlendEnable { get; set; }
-
-        # endregion
     }
 }

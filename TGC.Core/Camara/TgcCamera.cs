@@ -1,4 +1,5 @@
 using SharpDX;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.Camara
 {
@@ -7,22 +8,22 @@ namespace TGC.Core.Camara
     /// </summary>
     public class TgcCamera
     {
-        protected readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
+        protected readonly TGCVector3 DEFAULT_UP_VECTOR = new TGCVector3(0.0f, 1.0f, 0.0f);
 
         /// <summary>
         ///     Posicion de la camara
         /// </summary>
-        public Vector3 Position { get; private set; }
+        public TGCVector3 Position { get; protected set; }
 
         /// <summary>
-        ///     Posición del punto al que mira la cámara
+        ///     Posiciï¿½n del punto al que mira la cï¿½mara
         /// </summary>
-        public Vector3 LookAt { get; private set; }
+        public TGCVector3 LookAt { get; protected set; }
 
         /// <summary>
         ///     Vector direccional hacia arriba (puede diferir si la camara se invierte).
         /// </summary>
-        public Vector3 UpVector { get; protected set; }
+        public TGCVector3 UpVector { get; protected set; }
 
         /// <summary>
         ///     Configura la posicion de la camara, punto de entrada para todas las camaras, con los mismos se calcula la matriz de view.
@@ -30,11 +31,20 @@ namespace TGC.Core.Camara
         /// </summary>
         /// <param name="pos">Posicion de la camara</param>
         /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
-        public virtual void SetCamera(Vector3 pos, Vector3 lookAt)
+        public virtual void SetCamera(TGCVector3 pos, TGCVector3 lookAt)
         {
+            //Direccion efectiva de la vista.
+            TGCVector3 direction = lookAt - pos;
+
+            //Se busca el vector que es producto del (0,1,0)Up y la direccion de vista.
+            TGCVector3 crossDirection = TGCVector3.Cross(TGCVector3.Up, direction);
+
+            //El vector de Up correcto dependiendo del LookAt
+            TGCVector3 finalUp = TGCVector3.Cross(direction, crossDirection);
+
             Position = pos;
             LookAt = lookAt;
-            UpVector = DEFAULT_UP_VECTOR;
+            UpVector = finalUp;
         }
 
         /// <summary>
@@ -44,7 +54,7 @@ namespace TGC.Core.Camara
         /// <param name="pos">Posicion de la camara</param>
         /// <param name="lookAt">Punto hacia el cual se quiere ver</param>
         /// <param name="upVector">Vector direccion hacia arriba</param>
-        public virtual void SetCamera(Vector3 pos, Vector3 lookAt, Vector3 upVector)
+        public virtual void SetCamera(TGCVector3 pos, TGCVector3 lookAt, TGCVector3 upVector)
         {
             Position = pos;
             LookAt = lookAt;
@@ -64,9 +74,9 @@ namespace TGC.Core.Camara
         /// <summary>
         ///     Devuelve la matriz View en base a los valores de la camara. Es invocado en cada update de render.
         /// </summary>
-        public virtual Matrix GetViewMatrix()
+        public virtual TGCMatrix GetViewMatrix()
         {
-            return Matrix.LookAtLH(Position, LookAt, UpVector);
+            return TGCMatrix.LookAtLH(Position, LookAt, UpVector);
         }
     }
 }

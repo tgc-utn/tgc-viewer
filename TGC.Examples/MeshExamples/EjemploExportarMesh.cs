@@ -1,11 +1,10 @@
-using Microsoft.DirectX;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -16,8 +15,8 @@ namespace TGC.Examples.MeshExamples
     {
         private TgcScene sceneRecover;
 
-        public EjemploExportarMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploExportarMesh(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Guardar mesh en archivo";
@@ -54,27 +53,28 @@ namespace TGC.Examples.MeshExamples
 
             sceneRecover = loader.loadSceneFromFile(r.filePath);
 
-            Camara.SetCamera(new Vector3(-30f, 80f, -100f), new Vector3(0f, 75f, 180f));
+            Camara.SetCamera(new TGCVector3(-30f, 80f, -100f), new TGCVector3(0f, 75f, 180f));
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
         {
             PreRender();
 
-            sceneRecover.renderAll();
-            DrawText.drawText("Camera pos: " + TgcParserUtils.printVector3(Camara.Position), 5, 20, Color.Red);
-            DrawText.drawText("Camera LookAt: " + TgcParserUtils.printVector3(Camara.LookAt), 5, 40, Color.Red);
+            sceneRecover.RenderAll();
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, Color.Red);
+            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintVector3(Camara.LookAt), 5, 40, Color.Red);
             PostRender();
         }
 
         public override void Dispose()
         {
-            sceneRecover.disposeAll();
+            sceneRecover.DisposeAll();
         }
     }
 }

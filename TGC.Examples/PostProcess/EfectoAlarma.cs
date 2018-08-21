@@ -1,17 +1,17 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Interpolation;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.PostProcess
 {
@@ -31,6 +31,9 @@ namespace TGC.Examples.PostProcess
     /// </summary>
     public class EfectoAlarma : TGCExampleViewer
     {
+        private TGCBooleanModifier activarEfectoModifier;
+        private TGCBooleanModifier activarStencilModifier;
+
         private TgcTexture alarmTexture;
         private Surface depthStencil; // Depth-stencil buffer
         private Surface depthStencilOld;
@@ -41,8 +44,8 @@ namespace TGC.Examples.PostProcess
         private Texture renderTarget2D;
         private VertexBuffer screenQuadVB;
 
-        public EfectoAlarma(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EfectoAlarma(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "Texture Merge Alarma";
@@ -63,23 +66,17 @@ namespace TGC.Examples.PostProcess
                 new CustomVertex.PositionTextured(1, -1, 1, 1, 1)
             };
             //vertex buffer de los triangulos
-            screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured),
-                4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
+            screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured), 4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
                 CustomVertex.PositionTextured.Format, Pool.Default);
             screenQuadVB.SetData(screenQuadVertices, 0, LockFlags.None);
 
             //Creamos un Render Targer sobre el cual se va a dibujar la pantalla
-            renderTarget2D = new Texture(D3DDevice.Instance.Device,
-                D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth
-                , D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                Format.X8R8G8B8, Pool.Default);
+            renderTarget2D = new Texture(D3DDevice.Instance.Device, D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
 
             //Creamos un DepthStencil que debe ser compatible con nuestra definicion de renderTarget2D.
-            depthStencil =
-                D3DDevice.Instance.Device.CreateDepthStencilSurface(
-                    D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
-                    D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight,
-                    DepthFormat.D24S8, MultiSampleType.None, 0, true);
+            depthStencil = D3DDevice.Instance.Device.CreateDepthStencilSurface(D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
+                    D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
             depthStencilOld = D3DDevice.Instance.Device.DepthStencilSurface;
             //Cargar shader con efectos de Post-Procesado
             effect = TgcShaders.loadEffect(ShadersDir + "PostProcess.fx");
@@ -103,18 +100,19 @@ namespace TGC.Examples.PostProcess
             meshes = scene.Meshes;
 
             //Camara en primera personas
-            Camara = new TgcFpsCamera(new Vector3(250, 160, -570), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
 
             //Modifier para activar/desactivar efecto de alarma
-            Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
+            activarEfectoModifier = AddBoolean("activar_efecto", "Activar efecto", true);
 
             //Modifier para activar/desactivar stensil para ver como el ejemplo se rompe.
-            Modifiers.addBoolean("activar_stencil", "Activar stensil", true);
+            activarStencilModifier = AddBoolean("activar_stencil", "Activar stensil", true);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -128,7 +126,7 @@ namespace TGC.Examples.PostProcess
             D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);
             // Probar de comentar esta linea, para ver como se produce el fallo en el ztest
             // por no soportar usualmente el multisampling en el render to texture (en nuevas placas de video)
-            var activar_stencil = (bool)Modifiers["activar_stencil"];
+            var activar_stencil = activarStencilModifier.Value;
             if (activar_stencil)
             {
                 D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
@@ -150,7 +148,7 @@ namespace TGC.Examples.PostProcess
 
             //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
-            D3DDevice.Instance.Device.DepthStencilSurface = depthStencilOld;            
+            D3DDevice.Instance.Device.DepthStencilSurface = depthStencilOld;
 
             //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de alarma
             drawPostProcess(D3DDevice.Instance.Device, ElapsedTime);
@@ -168,7 +166,7 @@ namespace TGC.Examples.PostProcess
             //Dibujamos todos los meshes del escenario
             foreach (var m in meshes)
             {
-                m.render();
+                m.Render();
             }
 
             //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
@@ -190,7 +188,7 @@ namespace TGC.Examples.PostProcess
             d3dDevice.SetStreamSource(0, screenQuadVB, 0);
 
             //Ver si el efecto de alarma esta activado, configurar Technique del shader segun corresponda
-            var activar_efecto = (bool)Modifiers["activar_efecto"];
+            var activar_efecto = activarEfectoModifier.Value;
             if (activar_efecto)
             {
                 effect.Technique = "AlarmaTechnique";
@@ -224,7 +222,7 @@ namespace TGC.Examples.PostProcess
         {
             foreach (var m in meshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             effect.Dispose();
             alarmTexture.dispose();

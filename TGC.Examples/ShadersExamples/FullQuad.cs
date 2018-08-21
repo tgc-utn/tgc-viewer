@@ -1,20 +1,22 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.ShadersExamples
 {
     public class FullScreenQuad : TGCExampleViewer
     {
+        private TGCBooleanModifier activarEfectoModifier;
+
         private Effect effect;
         private Surface g_pDepthStencil; // Depth-stencil buffer
         private Texture g_pRenderTarget;
@@ -23,8 +25,8 @@ namespace TGC.Examples.ShadersExamples
         private string MyShaderDir;
         public float time;
 
-        public FullScreenQuad(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public FullScreenQuad(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "Full Screen Quad";
@@ -55,7 +57,7 @@ namespace TGC.Examples.ShadersExamples
             effect.Technique = "DefaultTechnique";
 
             //Camara en primera persona
-            Camara = new TgcFpsCamera(new Vector3(250, 160, -570), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                 d3dDevice.PresentationParameters.BackBufferHeight,
@@ -85,12 +87,13 @@ namespace TGC.Examples.ShadersExamples
                 CustomVertex.PositionTextured.Format, Pool.Default);
             g_pVBV3D.SetData(vertices, 0, LockFlags.None);
 
-            Modifiers.addBoolean("activar_efecto", "Activar efecto", true);
+            activarEfectoModifier = AddBoolean("activar_efecto", "Activar efecto", true);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -100,7 +103,7 @@ namespace TGC.Examples.ShadersExamples
             var device = D3DDevice.Instance.Device;
 
             time += ElapsedTime;
-            var activar_efecto = (bool)Modifiers["activar_efecto"];
+            var activar_efecto = activarEfectoModifier.Value;
 
             //Cargar variables de shader
 
@@ -125,7 +128,7 @@ namespace TGC.Examples.ShadersExamples
             //Dibujamos todos los meshes del escenario
             foreach (var m in meshes)
             {
-                m.render();
+                m.Render();
             }
 
             device.EndScene();
@@ -168,7 +171,7 @@ namespace TGC.Examples.ShadersExamples
         {
             foreach (var m in meshes)
             {
-                m.dispose();
+                m.Dispose();
             }
             effect.Dispose();
             g_pRenderTarget.Dispose();

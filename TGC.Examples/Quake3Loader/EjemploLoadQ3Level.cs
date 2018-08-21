@@ -1,11 +1,10 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using TGC.Core;
-using TGC.Core.Example;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -75,13 +74,21 @@ namespace TGC.Examples.Quake3Loader
     ///     bspMap.Data.entdata;
     ///     Autor: Martin Giachetti, Matías Leone
     /// </summary>
-    public class EjemploLoadQ3Level : TgcExample
+    public class EjemploLoadQ3Level : TGCExampleViewer
     {
+        private TGCFileModifier openFileModifier;
+        private TGCFloatModifier speedModifier;
+        private TGCFloatModifier gravityModifier;
+        private TGCFloatModifier jumpSpeedModifier;
+        private TGCBooleanModifier noClipModifier;
+        private TGCButtonModifier exportButtonModifier;
+
         private BspMap bspMap;
         private string currentLevelFile;
         private string exampleDir;
 
-        public EjemploLoadQ3Level(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines) : base(mediaDir, shadersDir, userVars, modifiers, axisLines)
+        public EjemploLoadQ3Level(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             this.Category = "Quake3";
             this.Name = "Load BSP Level";
@@ -98,17 +105,18 @@ namespace TGC.Examples.Quake3Loader
             loadLevel(currentLevelFile);
 
             //Modifiers
-            this.Modifiers.addFile("Level", currentLevelFile, ".Niveles Quake 3|*.bsp");
-            this.Modifiers.addFloat("Speed", 0, 500f, 350f);
-            this.Modifiers.addFloat("Gravity", 0, 600, 180);
-            this.Modifiers.addFloat("JumpSpeed", 60, 600, 100);
-            this.Modifiers.addBoolean("NoClip", "NoClip", false);
-            this.Modifiers.addButton("exportButton", "Exportar XML", Export_ButtonClick);
+            openFileModifier = AddFile("Level", currentLevelFile, ".Niveles Quake 3|*.bsp");
+            speedModifier = AddFloat("Speed", 0, 500f, 350f);
+            gravityModifier = AddFloat("Gravity", 0, 600, 180);
+            jumpSpeedModifier = AddFloat("JumpSpeed", 60, 600, 100);
+            noClipModifier = AddBoolean("NoClip", "NoClip", false);
+            exportButtonModifier = AddButton("exportButton", "Exportar XML", Export_ButtonClick);
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
-            throw new NotImplementedException();
+            PreUpdate();
+            PostUpdate();
         }
 
         /// <summary>
@@ -170,12 +178,12 @@ namespace TGC.Examples.Quake3Loader
             var entdata = bspMap.Data.entdata;
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            PreRender();
 
             //Ver si cambio el nivel elegido
-            var selectedFileName = (string)this.Modifiers["Level"];
+            var selectedFileName = openFileModifier.Value;
             if (selectedFileName != currentLevelFile)
             {
                 currentLevelFile = selectedFileName;
@@ -183,25 +191,27 @@ namespace TGC.Examples.Quake3Loader
             }
 
             //Actualizar valores de Modifiers
-            bspMap.CollisionManager.Camera.MovementSpeed = (float)this.Modifiers.getValue("Speed");
-            bspMap.CollisionManager.Gravity = (float)this.Modifiers.getValue("Gravity");
-            bspMap.CollisionManager.JumpSpeed = (float)this.Modifiers.getValue("JumpSpeed");
-            bspMap.CollisionManager.NoClip = (bool)this.Modifiers.getValue("NoClip");
+            bspMap.CollisionManager.Camera.MovementSpeed = speedModifier.Value;
+            bspMap.CollisionManager.Gravity = gravityModifier.Value;
+            bspMap.CollisionManager.JumpSpeed = jumpSpeedModifier.Value;
+            bspMap.CollisionManager.NoClip = noClipModifier.Value;
 
             //Actualizar estado de colsiones y renderizar con Frustum Culling utilizando matriz PVS
-            var currentPosition = bspMap.CollisionManager.update(elapsedTime);
-            bspMap.render(currentPosition, elapsedTime);
+            var currentPosition = bspMap.CollisionManager.update(ElapsedTime, Input);
+            bspMap.render(currentPosition, Frustum, ElapsedTime);
+
+            PostRender();
         }
 
-        public override void Close()
+        public override void Dispose()
         {
-            base.Close();
-
             //Liberar lock de camara
             bspMap.CollisionManager.Camera.LockCam = false;
 
             //Liberar recursos del escenario
             bspMap.dispose();
+
+            bspMap = null;
         }
     }
 }

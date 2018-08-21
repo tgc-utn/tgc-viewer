@@ -1,16 +1,15 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Collision
 {
@@ -27,15 +26,15 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploPicking : TGCExampleViewer
     {
-        private List<TgcBox> boxes;
-        private Vector3 collisionPoint;
-        private TgcBox collisionPointMesh;
+        private List<TGCBox> boxes;
+        private TGCVector3 collisionPoint;
+        private TGCBox collisionPointMesh;
         private TgcPickingRay pickingRay;
         private bool selected;
-        private TgcBox selectedMesh;
+        private TGCBox selectedMesh;
 
-        public EjemploPicking(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploPicking(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Collision";
             Name = "Colisiones con mouse (Picking)";
@@ -47,29 +46,29 @@ namespace TGC.Examples.Collision
         {
             //Cargar 25 cajas formando una matriz
             var loader = new TgcSceneLoader();
-            boxes = new List<TgcBox>();
+            boxes = new List<TGCBox>();
             var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\granito.jpg");
-            var boxSize = new Vector3(30, 30, 30);
+            var boxSize = new TGCVector3(30, 30, 30);
             for (var i = 0; i < 5; i++)
             {
                 for (var j = 0; j < 5; j++)
                 {
-                    var center = new Vector3((boxSize.X + boxSize.X / 2) * i, (boxSize.Y + boxSize.Y / 2) * j, 0);
-                    var box = TgcBox.fromSize(center, boxSize, texture);
-                    box.AutoTransformEnable = true;
+                    var center = new TGCVector3((boxSize.X + boxSize.X / 2) * i, (boxSize.Y + boxSize.Y / 2) * j, 0);
+                    var box = TGCBox.fromSize(center, boxSize, texture);
+                    box.AutoTransform = true;
                     boxes.Add(box);
                 }
             }
 
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
-            
-            Camara.SetCamera(new Vector3(100f, 100f, -500f), new Vector3(100f, 100f, -250f));
+
+            Camara.SetCamera(new TGCVector3(100f, 100f, -500f), new TGCVector3(100f, 100f, -250f));
 
             //Crear caja para marcar en que lugar hubo colision
-            collisionPointMesh = TgcBox.fromSize(new Vector3(3, 3, 3), Color.Red);
-            collisionPointMesh.AutoTransformEnable = true;
+            collisionPointMesh = TGCBox.fromSize(new TGCVector3(3, 3, 3), Color.Red);
+            collisionPointMesh.AutoTransform = true;
             selected = false;
 
             //UserVars para mostrar en que punto hubo colision
@@ -81,6 +80,7 @@ namespace TGC.Examples.Collision
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -111,14 +111,14 @@ namespace TGC.Examples.Collision
             //Renderizar modelos
             foreach (var box in boxes)
             {
-                box.render();
+                box.Render();
             }
 
             //Renderizar BoundingBox del mesh seleccionado
             if (selected)
             {
                 //Render de AABB
-                selectedMesh.BoundingBox.render();
+                selectedMesh.BoundingBox.Render();
 
                 //Cargar punto de colision
                 UserVars.setValue("CollP-X:", collisionPoint.X);
@@ -127,7 +127,7 @@ namespace TGC.Examples.Collision
 
                 //Dibujar caja que representa el punto de colision
                 collisionPointMesh.Position = collisionPoint;
-                collisionPointMesh.render();
+                collisionPointMesh.Render();
             }
             else
             {
@@ -144,9 +144,9 @@ namespace TGC.Examples.Collision
         {
             foreach (var box in boxes)
             {
-                box.dispose();
+                box.Dispose();
             }
-            collisionPointMesh.dispose();
+            collisionPointMesh.Dispose();
         }
     }
 }

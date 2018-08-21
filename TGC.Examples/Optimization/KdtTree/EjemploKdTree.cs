@@ -1,12 +1,12 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
-using TGC.Core.Camara;
+using System.Windows.Forms;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Optimization.KdtTree
 {
@@ -20,26 +20,28 @@ namespace TGC.Examples.Optimization.KdtTree
     /// </summary>
     public class EjemploKdTree : TGCExampleViewer
     {
+        private TGCBooleanModifier showKdTreeModifier;
+        private TGCBooleanModifier showTerrainModifier;
+
         private KdTree kdtree;
         private List<TgcMesh> objetosIsla;
         private TgcSkyBox skyBox;
         private TgcMesh terreno;
 
-        public EjemploKdTree(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploKdTree(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Optimization";
             Name = "KdTree";
-            Description =
-                "Muestra como crear y utilizar una KD-Tree para optimizar el renderizado de un escenario por Frustum Culling.";
+            Description = "Muestra como crear y utilizar una KD-Tree para optimizar el renderizado de un escenario por Frustum Culling.";
         }
 
         public override void Init()
         {
             //Crear SkyBox
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 500, 0);
-            skyBox.Size = new Vector3(10000, 10000, 10000);
+            skyBox.Center = new TGCVector3(0, 500, 0);
+            skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
@@ -51,8 +53,7 @@ namespace TGC.Examples.Optimization.KdtTree
 
             //Cargar escenario de Isla
             var loader = new TgcSceneLoader();
-            var scene =
-                loader.loadSceneFromFile(MediaDir + "Isla\\Isla-TgcScene.xml");
+            var scene = loader.loadSceneFromFile(MediaDir + "Isla\\Isla-TgcScene.xml");
 
             //Separar el Terreno del resto de los objetos
             var list1 = new List<TgcMesh>();
@@ -65,28 +66,29 @@ namespace TGC.Examples.Optimization.KdtTree
             kdtree.createDebugKdTreeMeshes();
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(1500, 800, 0), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
-            Modifiers.addBoolean("showKdTree", "Show KdTree", false);
-            Modifiers.addBoolean("showTerrain", "Show Terrain", true);
+            showKdTreeModifier = AddBoolean("showKdTree", "Show KdTree", false);
+            showTerrainModifier = AddBoolean("showTerrain", "Show Terrain", true);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
         {
             PreRender();
 
-            var showKdTree = (bool)Modifiers["showKdTree"];
-            var showTerrain = (bool)Modifiers["showTerrain"];
+            var showKdTree = showKdTreeModifier.Value;
+            var showTerrain = showTerrainModifier.Value;
 
-            skyBox.render();
+            skyBox.Render();
             if (showTerrain)
             {
-                terreno.render();
+                terreno.Render();
             }
             kdtree.render(Frustum, showKdTree);
 
@@ -95,11 +97,11 @@ namespace TGC.Examples.Optimization.KdtTree
 
         public override void Dispose()
         {
-            skyBox.dispose();
-            terreno.dispose();
+            skyBox.Dispose();
+            terreno.Dispose();
             foreach (var mesh in objetosIsla)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
         }
     }

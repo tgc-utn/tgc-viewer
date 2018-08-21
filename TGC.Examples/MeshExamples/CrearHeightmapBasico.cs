@@ -1,13 +1,12 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
+using TGC.Core.Mathematica;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -25,6 +24,11 @@ namespace TGC.Examples.MeshExamples
     /// </summary>
     public class CrearHeightmapBasico : TGCExampleViewer
     {
+        private TGCTextureModifier heightmapModifier;
+        private TGCFloatModifier scaleXZModifier;
+        private TGCFloatModifier scaleYModifier;
+        private TGCTextureModifier textureModifier;
+
         private string currentHeightmap;
         private float currentScaleXZ;
         private float currentScaleY;
@@ -33,8 +37,8 @@ namespace TGC.Examples.MeshExamples
         private int totalVertices;
         private VertexBuffer vbTerrain;
 
-        public CrearHeightmapBasico(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public CrearHeightmapBasico(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Simple Heightmap Manual";
@@ -45,22 +49,22 @@ namespace TGC.Examples.MeshExamples
         {
             //Path de Heightmap default del terreno y Modifier para cambiarla
             currentHeightmap = MediaDir + "Heighmaps\\" + "Heightmap3.jpg";
-            Modifiers.addTexture("heightmap", currentHeightmap);
+            heightmapModifier = AddTexture("heightmap", currentHeightmap);
 
             //Modifiers para variar escala del mapa
             currentScaleXZ = 50f;
-            Modifiers.addFloat("scaleXZ", 0.1f, 100f, currentScaleXZ);
+            scaleXZModifier = AddFloat("scaleXZ", 0.1f, 100f, currentScaleXZ);
             currentScaleY = 1.5f;
-            Modifiers.addFloat("scaleY", 0.1f, 10f, currentScaleY);
+            scaleYModifier = AddFloat("scaleY", 0.1f, 10f, currentScaleY);
             createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, currentScaleXZ, currentScaleY);
 
             //Path de Textura default del terreno y Modifier para cambiarla
             currentTexture = MediaDir + "Heighmaps\\" + "TerrainTexture3.jpg";
-            Modifiers.addTexture("texture", currentTexture);
+            textureModifier = AddTexture("texture", currentTexture);
             loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
 
             //Configurar FPS Camara
-            Camara = new TgcFpsCamera(new Vector3(3200f, 450f, 1500f), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(3200f, 450f, 1500f), Input);
 
             //UserVars para cantidad de vertices
             UserVars.addVar("Vertices", totalVertices);
@@ -70,6 +74,7 @@ namespace TGC.Examples.MeshExamples
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         /// <summary>
@@ -82,8 +87,7 @@ namespace TGC.Examples.MeshExamples
 
             //Crear vertexBuffer
             totalVertices = 2 * 3 * (heightmap.GetLength(0) - 1) * (heightmap.GetLength(1) - 1);
-            vbTerrain = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices, d3dDevice,
-                Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
+            vbTerrain = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
 
             //Crear array temporal de vertices
             var dataIdx = 0;
@@ -95,16 +99,16 @@ namespace TGC.Examples.MeshExamples
                 for (var j = 0; j < heightmap.GetLength(1) - 1; j++)
                 {
                     //Crear los cuatro vertices que conforman este cuadrante, aplicando la escala correspondiente
-                    var v1 = new Vector3(i * scaleXZ, heightmap[i, j] * scaleY, j * scaleXZ);
-                    var v2 = new Vector3(i * scaleXZ, heightmap[i, j + 1] * scaleY, (j + 1) * scaleXZ);
-                    var v3 = new Vector3((i + 1) * scaleXZ, heightmap[i + 1, j] * scaleY, j * scaleXZ);
-                    var v4 = new Vector3((i + 1) * scaleXZ, heightmap[i + 1, j + 1] * scaleY, (j + 1) * scaleXZ);
+                    var v1 = new TGCVector3(i * scaleXZ, heightmap[i, j] * scaleY, j * scaleXZ);
+                    var v2 = new TGCVector3(i * scaleXZ, heightmap[i, j + 1] * scaleY, (j + 1) * scaleXZ);
+                    var v3 = new TGCVector3((i + 1) * scaleXZ, heightmap[i + 1, j] * scaleY, j * scaleXZ);
+                    var v4 = new TGCVector3((i + 1) * scaleXZ, heightmap[i + 1, j + 1] * scaleY, (j + 1) * scaleXZ);
 
                     //Crear las coordenadas de textura para los cuatro vertices del cuadrante
-                    var t1 = new Vector2(i / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
-                    var t2 = new Vector2(i / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
-                    var t3 = new Vector2((i + 1) / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
-                    var t4 = new Vector2((i + 1) / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
+                    var t1 = new TGCVector2(i / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
+                    var t2 = new TGCVector2(i / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
+                    var t3 = new TGCVector2((i + 1) / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
+                    var t4 = new TGCVector2((i + 1) / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
 
                     //Cargar triangulo 1
                     data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
@@ -167,11 +171,11 @@ namespace TGC.Examples.MeshExamples
         public override void Render()
         {
             PreRender();
-            DrawText.drawText("Camera pos: " + TgcParserUtils.printVector3(Camara.Position), 5, 20, Color.Red);
-            DrawText.drawText("Camera LookAt: " + TgcParserUtils.printVector3(Camara.LookAt), 5, 40, Color.Red);
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, Color.Red);
+            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintVector3(Camara.LookAt), 5, 40, Color.Red);
 
             //Ver si cambio el heightmap
-            var selectedHeightmap = (string)Modifiers["heightmap"];
+            var selectedHeightmap = heightmapModifier.Value;
             if (currentHeightmap != selectedHeightmap)
             {
                 currentHeightmap = selectedHeightmap;
@@ -179,8 +183,8 @@ namespace TGC.Examples.MeshExamples
             }
 
             //Ver si cambio alguno de los valores de escala
-            var selectedScaleXZ = (float)Modifiers["scaleXZ"];
-            var selectedScaleY = (float)Modifiers["scaleY"];
+            var selectedScaleXZ = scaleXZModifier.Value;
+            var selectedScaleY = scaleYModifier.Value;
             if (currentScaleXZ != selectedScaleXZ || currentScaleY != selectedScaleY)
             {
                 currentScaleXZ = selectedScaleXZ;
@@ -189,7 +193,7 @@ namespace TGC.Examples.MeshExamples
             }
 
             //Ver si cambio la textura del terreno
-            var selectedTexture = (string)Modifiers["texture"];
+            var selectedTexture = textureModifier.Value;
             if (currentTexture != selectedTexture)
             {
                 currentTexture = selectedTexture;

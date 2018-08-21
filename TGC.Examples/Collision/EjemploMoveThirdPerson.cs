@@ -1,17 +1,17 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Collision
 {
@@ -33,49 +33,51 @@ namespace TGC.Examples.Collision
     /// </summary>
     public class EjemploMoveThirdPerson : TGCExampleViewer
     {
+        private TGCBooleanModifier showBoundingBoxModifier;
+        private TGCBooleanModifier activateSlidingModifier;
+        private TGCFloatModifier velocidadCaminarModifier;
+        private TGCFloatModifier velocidadRotacionModifier;
+
         private TgcThirdPersonCamera camaraInterna;
-        private List<TgcBox> obstaculos;
+        private List<TGCBox> obstaculos;
         private TgcSkeletalMesh personaje;
         private TgcPlane piso;
+        private string text = "No colision";
 
-        public EjemploMoveThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars,
-            TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploMoveThirdPerson(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Collision";
             Name = "Movimientos AABB 3ra Persona";
-            Description =
-                "Ejemplo de Detección de Colisiones de un personaje, utilizando la cámara en Tercera Persona. Movimiento con W, A, S, D.";
+            Description = "Ejemplo de Detección de Colisiones de un personaje, utilizando la cámara en Tercera Persona. Movimiento con W, A, S, D.";
         }
 
         public override void Init()
         {
             //Crear piso
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
-            piso = new TgcPlane(new Vector3(-500, -60, -500), new Vector3(1000, 0, 1000), TgcPlane.Orientations.XZplane, pisoTexture);
+            piso = new TgcPlane(new TGCVector3(-500, -60, -500), new TGCVector3(1000, 0, 1000), TgcPlane.Orientations.XZplane, pisoTexture);
 
             //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
-            obstaculos = new List<TgcBox>();
-            TgcBox obstaculo;
+            obstaculos = new List<TGCBox>();
+            TGCBox obstaculo;
 
             //Obstaculo 1
-            obstaculo = TgcBox.fromSize(new Vector3(-100, 0, 0), new Vector3(80, 150, 80),
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
+            obstaculo = TGCBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
-            obstaculo = TgcBox.fromSize(new Vector3(50, 0, 200), new Vector3(80, 300, 80),
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
+            obstaculo = TGCBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
-            obstaculo = TgcBox.fromSize(new Vector3(300, 0, 100), new Vector3(80, 100, 150),
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
+            obstaculo = TGCBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.AutoTransform = true;
             obstaculos.Add(obstaculo);
 
             //Cargar personaje con animaciones
@@ -93,40 +95,39 @@ namespace TGC.Examples.Collision
             //Le cambiamos la textura para diferenciarlo un poco
             personaje.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
-                    MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
+                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
             });
 
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            personaje.AutoTransformEnable = true;
+            personaje.AutoTransform = true;
 
-            //Escalarlo porque es muy grande            
-            personaje.Position = new Vector3(0, -45, 0);
-            personaje.Scale = new Vector3(0.75f, 0.75f, 0.75f);
+            //Escalarlo porque es muy grande
+            personaje.Position = new TGCVector3(0, -45, 0);
+            personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.rotateY(Geometry.DegreeToRadian(180f));
+            personaje.RotateY(Geometry.DegreeToRadian(180f));
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 200, -300);
             Camara = camaraInterna;
 
             //Modifier para ver BoundingBox
-            Modifiers.addBoolean("showBoundingBox", "Bouding Box", false);
-            Modifiers.addBoolean("activateSliding", "Activate Sliding", false);
+            showBoundingBoxModifier = AddBoolean("showBoundingBox", "Bouding Box", false);
+            activateSlidingModifier = AddBoolean("activateSliding", "Activate Sliding", false);
 
             //Modifiers para desplazamiento del personaje
-            Modifiers.addFloat("VelocidadCaminar", 1f, 400f, 250f);
-            Modifiers.addFloat("VelocidadRotacion", 1f, 360f, 120f);
+            velocidadCaminarModifier = AddFloat("VelocidadCaminar", 1f, 400f, 250f);
+            velocidadRotacionModifier = AddFloat("VelocidadRotacion", 1f, 360f, 120f);
         }
 
         public override void Update()
         {
             PreUpdate();
             //obtener velocidades de Modifiers
-            var velocidadCaminar = (float)Modifiers.getValue("VelocidadCaminar");
-            var velocidadRotacion = (float)Modifiers.getValue("VelocidadRotacion");
+            var velocidadCaminar = velocidadCaminarModifier.Value;
+            var velocidadRotacion = velocidadRotacionModifier.Value;
 
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
@@ -167,7 +168,7 @@ namespace TGC.Examples.Collision
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.rotateY(rotAngle);
+                personaje.RotateY(rotAngle);
                 camaraInterna.rotateY(rotAngle);
             }
 
@@ -184,12 +185,12 @@ namespace TGC.Examples.Collision
                 //Ver Unidad 2: Ciclo acoplado vs ciclo desacoplado
 
                 //NO SE RECOMIENDA UTILIZAR! moveOrientedY mueve el personaje segun la direccion actual, realiza operaciones de seno y coseno.
-                personaje.moveOrientedY(moveForward * ElapsedTime);
+                personaje.MoveOrientedY(moveForward * ElapsedTime);
 
                 //Detectar colisiones
                 var collide = false;
                 //Guardamos los objetos colicionados para luego resolver la respuesta. (para este ejemplo simple es solo 1 caja)
-                TgcBox collider = null;
+                TGCBox collider = null;
                 foreach (var obstaculo in obstaculos)
                 {
                     if (TgcCollisionUtils.testAABBAABB(personaje.BoundingBox, obstaculo.BoundingBox))
@@ -208,7 +209,7 @@ namespace TGC.Examples.Collision
                 if (collide)
                 {
                     //si no esta activo el sliding es la solucion anterior de este ejemplo.
-                    if (!(bool)Modifiers["activateSliding"])
+                    if (!activateSlidingModifier.Value)
                     {
                         personaje.Position = lastPos; //Por como esta el framework actualmente esto actualiza el BoundingBox.
                         text = "";
@@ -223,7 +224,7 @@ namespace TGC.Examples.Collision
                         //Para todos los casos podemos deducir que la normal del plano cancela el movimiento en dicho plano.
                         //Esto quiere decir que podemos cancelar el movimiento en el plano y movernos en el otros.
                         var t = "";
-                        var rs = Vector3.Empty;
+                        var rs = TGCVector3.Empty;
                         if (((personaje.BoundingBox.PMax.X > collider.BoundingBox.PMax.X && movementRay.X > 0) ||
                             (personaje.BoundingBox.PMin.X < collider.BoundingBox.PMin.X && movementRay.X < 0)) &&
                             ((personaje.BoundingBox.PMax.Z > collider.BoundingBox.PMax.Z && movementRay.Z > 0) ||
@@ -239,23 +240,20 @@ namespace TGC.Examples.Collision
                                 "Last X: " + (lastPos.X - rs.X) + " - Z: " + (lastPos.Z - rs.Z) + "\n" +
                                 "Actual X: " + (personaje.Position.X) + " - Z: " + (personaje.Position.Z) + "\n" +
                                 "move X: " + (movementRay.X) + " - Z: " + (movementRay.Z);
-                            if (personaje.Position.X > collider.BoundingBox.PMin.X &&
-                                personaje.Position.X < collider.BoundingBox.PMax.X)
+                            if (personaje.Position.X > collider.BoundingBox.PMin.X && personaje.Position.X < collider.BoundingBox.PMax.X)
                             {
                                 //El personaje esta contenido en el bounding X
                                 t += "\n Sliding Z Dentro de X";
-                                rs = new Vector3(movementRay.X, movementRay.Y, 0);
+                                rs = new TGCVector3(movementRay.X, movementRay.Y, 0);
                             }
-                            if (personaje.Position.Z > collider.BoundingBox.PMin.Z &&
-                                personaje.Position.Z < collider.BoundingBox.PMax.Z)
+                            if (personaje.Position.Z > collider.BoundingBox.PMin.Z && personaje.Position.Z < collider.BoundingBox.PMax.Z)
                             {
                                 //El personaje esta contenido en el bounding Z
                                 t += "\n Sliding X Dentro de Z";
-                                rs = new Vector3(0, movementRay.Y, movementRay.Z);
+                                rs = new TGCVector3(0, movementRay.Y, movementRay.Z);
                             }
 
                             //Seria ideal sacar el punto mas proximo al bounding que colisiona y chequear con eso, en ves que con la posicion.
-
                         }
                         else
                         {
@@ -263,24 +261,20 @@ namespace TGC.Examples.Collision
                                 (personaje.BoundingBox.PMin.X < collider.BoundingBox.PMin.X && movementRay.X < 0))
                             {
                                 t += "Sliding X";
-                                rs = new Vector3(0, movementRay.Y, movementRay.Z);
+                                rs = new TGCVector3(0, movementRay.Y, movementRay.Z);
                             }
                             if ((personaje.BoundingBox.PMax.Z > collider.BoundingBox.PMax.Z && movementRay.Z > 0) ||
                                 (personaje.BoundingBox.PMin.Z < collider.BoundingBox.PMin.Z && movementRay.Z < 0))
                             {
                                 t += "Sliding Z";
-                                rs = new Vector3(movementRay.X, movementRay.Y, 0);
+                                rs = new TGCVector3(movementRay.X, movementRay.Y, 0);
                             }
                         }
                         text = t;
                         personaje.Position = lastPos - rs;
                         //Este ejemplo solo se mueve en X y Z con lo cual realizar el test en el plano Y no tiene sentido.
-
                     }
                 }
-
-
-
             }
 
             //Si no se esta moviendo, activar animacion de Parado
@@ -292,28 +286,28 @@ namespace TGC.Examples.Collision
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = personaje.Position;
 
+            PostUpdate();
         }
-        string text = "No colision";
+
         public override void Render()
         {
             PreRender();
 
             //Obtener boolean para saber si hay que mostrar Bounding Box
-            var showBB = (bool)Modifiers.getValue("showBoundingBox");
+            var showBB = showBoundingBoxModifier.Value;
 
             DrawText.drawText(text, 5, 20, System.Drawing.Color.Red);
 
-
             //Render piso
-            piso.render();
+            piso.Render();
 
             //Render obstaculos
             foreach (var obstaculo in obstaculos)
             {
-                obstaculo.render();
+                obstaculo.Render();
                 if (showBB)
                 {
-                    obstaculo.BoundingBox.render();
+                    obstaculo.BoundingBox.Render();
                 }
             }
 
@@ -321,7 +315,7 @@ namespace TGC.Examples.Collision
             personaje.animateAndRender(ElapsedTime);
             if (showBB)
             {
-                personaje.BoundingBox.render();
+                personaje.BoundingBox.Render();
             }
 
             PostRender();
@@ -329,12 +323,12 @@ namespace TGC.Examples.Collision
 
         public override void Dispose()
         {
-            piso.dispose();
+            piso.Dispose();
             foreach (var obstaculo in obstaculos)
             {
-                obstaculo.dispose();
+                obstaculo.Dispose();
             }
-            personaje.dispose();
+            personaje.Dispose();
         }
     }
 }

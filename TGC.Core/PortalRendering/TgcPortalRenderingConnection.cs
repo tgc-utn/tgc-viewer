@@ -1,15 +1,16 @@
 using SharpDX;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.PortalRendering
 {
     /// <summary>
-    ///     Conexión unidireccional entre una celda y otra, a travez de un Portal
+    ///     Conexiï¿½n unidireccional entre una celda y otra, a travez de un Portal
     /// </summary>
     public class TgcPortalRenderingConnection
     {
         public TgcPortalRenderingConnection(TgcPortalRenderingPortal portal, TgcPortalRenderingCell nextCell,
-            TgcConvexPolygon polygon, Plane plane)
+            TgcConvexPolygon polygon, TGCPlane plane)
         {
             Portal = portal;
             NextCell = nextCell;
@@ -28,15 +29,15 @@ namespace TGC.Core.PortalRendering
         public TgcPortalRenderingCell NextCell { get; set; }
 
         /// <summary>
-        ///     Polígono plano que representa el portal.
-        ///     Los vértices están en clockwise-order según la celda de origen
+        ///     Polï¿½gono plano que representa el portal.
+        ///     Los vï¿½rtices estï¿½n en clockwise-order segï¿½n la celda de origen
         /// </summary>
         public TgcConvexPolygon Polygon { get; }
 
         /// <summary>
         ///     Plano del portal, apuntando hacia la celda origen
         /// </summary>
-        public Plane Plane { get; }
+        public TGCPlane Plane { get; }
 
         public override string ToString()
         {

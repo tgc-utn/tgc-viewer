@@ -4,6 +4,7 @@ using SharpDX;
 using SharpDX.Direct3D9;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -11,103 +12,61 @@ using TGC.Core.Textures;
 namespace TGC.Core.Geometry
 {
     /// <summary>
-    ///     Herramienta para crear una Caja 3D de tamaño variable, con color y Textura
+    ///     Herramienta para crear una Caja 3D de tamaï¿½o variable, con color y Textura
     /// </summary>
-    public class TgcBox : IRenderObject, ITransformObject
+    public class TGCBox : IRenderObject, ITransformObject
     {
         private readonly VertexBuffer vertexBuffer;
-
         private readonly CustomVertex.PositionColoredTextured[] vertices;
-        private Color color;
-
-        protected Effect effect;
-
-        private Vector3 rotation;
-
-        private Vector3 size;
-
-        protected string technique;
-
-        private Vector3 translation;
+        private TGCVector3 rotation;
+        private TGCVector3 size;
+        private TGCVector3 translation;
+        private TGCMatrix transform;
+        private TGCVector2 uvOffset;
+        private TGCVector2 uvTiling;
 
         /// <summary>
         ///     Crea una caja vacia
         /// </summary>
-        public TgcBox()
+        public TGCBox()
         {
             vertices = new CustomVertex.PositionColoredTextured[36];
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColoredTextured), vertices.Length,
                 D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColoredTextured.Format, Pool.Default);
 
-            AutoTransformEnable = false;
-            Transform = Matrix.Identity;
-            translation = new Vector3(0, 0, 0);
-            rotation = new Vector3(0, 0, 0);
+            AutoTransform = false;
+            Transform = TGCMatrix.Identity;
+            translation = TGCVector3.Empty;
+            rotation = TGCVector3.Empty;
             Enabled = true;
-            color = Color.White;
+            Color = Color.White;
             AlphaBlendEnable = false;
-            UVOffset = new Vector2(0, 0);
-            UVTiling = new Vector2(1, 1);
+            UVOffset = TGCVector2.Zero;
+            UVTiling = TGCVector2.One;
 
             //BoundingBox
             BoundingBox = new TgcBoundingAxisAlignBox();
 
             //Shader
-            effect = TgcShaders.Instance.VariosShader;
-            technique = TgcShaders.T_POSITION_COLORED;
+            Effect = TgcShaders.Instance.VariosShader;
+            Technique = TgcShaders.T_POSITION_COLORED;
         }
 
         /// <summary>
-        ///     Dimensiones de la caja
+        ///     Habilita el renderizado con AlphaBlending para los modelos
+        ///     con textura o colores por vï¿½rtice de canal Alpha.
+        ///     Por default estï¿½ deshabilitado.
         /// </summary>
-        public Vector3 Size
-        {
-            get { return size; }
-            set
-            {
-                size = value;
-                updateBoundingBox();
-            }
-        }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
-        ///     Color de los vértices de la caja
+        ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
+        ///     cada cuadro en forma automï¿½tica, segï¿½n los valores de: Position, Rotation, Scale.
+        ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
+        ///     Por default estï¿½ en False.
         /// </summary>
-        public Color Color
-        {
-            get { return color; }
-            set { color = value; }
-        }
-
-        /// <summary>
-        ///     Textura de la caja
-        /// </summary>
-        public TgcTexture Texture { get; private set; }
-
-        /// <summary>
-        ///     Shader del mesh
-        /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
-
-        /// <summary>
-        ///     Technique que se va a utilizar en el effect.
-        ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
-        /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
-
-        /// <summary>
-        ///     Indica si la caja esta habilitada para ser renderizada
-        /// </summary>
-        public bool Enabled { get; set; }
+        public bool AutoTransform { get; set; }
 
         /// <summary>
         ///     BoundingBox de la caja
@@ -115,113 +74,24 @@ namespace TGC.Core.Geometry
         public TgcBoundingAxisAlignBox BoundingBox { get; }
 
         /// <summary>
-        ///     Offset UV de textura
+        ///     Color de los vï¿½rtices de la caja
         /// </summary>
-        public Vector2 UVOffset { get; set; }
+        public Color Color { get; set; }
 
         /// <summary>
-        ///     Tiling UV de textura
+        ///     Shader del mesh
         /// </summary>
-        public Vector2 UVTiling { get; set; }
+        public Effect Effect { get; set; }
 
         /// <summary>
-        ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vértice de canal Alpha.
-        ///     Por default está deshabilitado.
+        ///     Indica si la caja esta habilitada para ser renderizada
         /// </summary>
-        public bool AlphaBlendEnable { get; set; }
-
-        /// <summary>
-        ///     Renderizar la caja
-        /// </summary>
-        public void render()
-        {
-            if (!Enabled)
-                return;
-
-            //transformacion
-            if (AutoTransformEnable)
-            {
-                Transform = Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
-                            Matrix.Translation(translation);
-            }
-
-            //Activar AlphaBlending
-            activateAlphaBlend();
-
-            //renderizar
-            if (Texture != null)
-            {
-                TexturesManager.Instance.shaderSet(effect, "texDiffuseMap", Texture);
-            }
-            else
-            {
-                TexturesManager.Instance.clear(0);
-            }
-            TexturesManager.Instance.clear(1);
-
-            TgcShaders.Instance.setShaderMatrix(effect, Transform);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColoredTextured;
-            effect.Technique = technique;
-            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
-
-            //Render con shader
-            effect.Begin(0);
-            effect.BeginPass(0);
-            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
-            effect.EndPass();
-            effect.End();
-
-            //Desactivar AlphaBlend
-            resetAlphaBlend();
-        }
-
-        /// <summary>
-        ///     Liberar los recursos de la cja
-        /// </summary>
-        public void dispose()
-        {
-            if (Texture != null)
-            {
-                Texture.dispose();
-            }
-            if (vertexBuffer != null && !vertexBuffer.Disposed)
-            {
-                vertexBuffer.Dispose();
-            }
-            BoundingBox.dispose();
-        }
-
-        /// <summary>
-        ///     Escala de la caja. Siempre es (1, 1, 1).
-        ///     Utilizar Size
-        /// </summary>
-        public Vector3 Scale
-        {
-            get { return new Vector3(1, 1, 1); }
-            set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
-        }
-
-        /// <summary>
-        ///     Matriz final que se utiliza para aplicar transformaciones a la malla.
-        ///     Si la propiedad AutoTransformEnable esta en True, la matriz se reconstruye en cada cuadro
-        ///     en base a los valores de: Position, Rotation, Scale.
-        ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
-        /// </summary>
-        public Matrix Transform { get; set; }
-
-        /// <summary>
-        ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
-        ///     cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
-        ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
-        ///     Por default está en False.
-        /// </summary>
-        public bool AutoTransformEnable { get; set; }
+        public bool Enabled { get; set; }
 
         /// <summary>
         ///     Posicion absoluta del centro de la caja
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return translation; }
             set
@@ -232,26 +102,151 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Rotación absoluta de la caja
+        ///     Rotaciï¿½n absoluta de la caja
         /// </summary>
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
         }
 
         /// <summary>
-        ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
+        ///     Escala de la caja. Siempre es (1, 1, 1).
+        ///     Utilizar Size
         /// </summary>
-        public void move(Vector3 v)
+        public TGCVector3 Scale
         {
-            move(v.X, v.Y, v.Z);
+            get { return TGCVector3.One; }
+            set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
+        }
+
+        /// <summary>
+        ///     Dimensiones de la caja
+        /// </summary>
+        public TGCVector3 Size
+        {
+            get { return size; }
+            set
+            {
+                size = value;
+                updateBoundingBox();
+            }
+        }
+
+        /// <summary>
+        ///     Technique que se va a utilizar en el effect.
+        ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        /// </summary>
+        public string Technique { get; set; }
+
+        /// <summary>
+        ///     Matriz final que se utiliza para aplicar transformaciones a la malla.
+        ///     Si la propiedad AutoTransformEnable esta en True, la matriz se reconstruye en cada cuadro
+        ///     en base a los valores de: Position, Rotation, Scale.
+        ///     Si AutoTransformEnable estï¿½ en False, se respeta el valor que el usuario haya cargado en la matriz.
+        /// </summary>
+        public TGCMatrix Transform
+        {
+            get { return transform; }
+            set { transform = value; }
+        }
+
+        /// <summary>
+        ///     Textura de la caja
+        /// </summary>
+        public TgcTexture Texture { get; private set; }
+
+        /// <summary>
+        ///     Offset UV de textura
+        /// </summary>
+        public TGCVector2 UVOffset
+        {
+            get { return uvOffset; }
+            set { uvOffset = value; }
+        }
+
+        /// <summary>
+        ///     Tiling UV de textura
+        /// </summary>
+        public TGCVector2 UVTiling
+        {
+            get { return uvTiling; }
+            set { uvTiling = value; }
+        }
+
+        /// <summary>
+        ///     Renderizar la caja
+        /// </summary>
+        public void Render()
+        {
+            if (!Enabled)
+                return;
+
+            //transformacion
+            if (AutoTransform)
+            {
+                Transform = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
+                            TGCMatrix.Translation(translation);
+            }
+
+            //Activar AlphaBlending
+            activateAlphaBlend();
+
+            //renderizar
+            if (Texture != null)
+            {
+                TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", Texture);
+            }
+            else
+            {
+                TexturesManager.Instance.clear(0);
+            }
+            TexturesManager.Instance.clear(1);
+
+            TgcShaders.Instance.setShaderMatrix(Effect, Transform);
+            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColoredTextured;
+            Effect.Technique = Technique;
+            D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
+
+            //Render con shader
+            Effect.Begin(0);
+            Effect.BeginPass(0);
+            D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, 12);
+            Effect.EndPass();
+            Effect.End();
+
+            //Desactivar AlphaBlendEnable
+            resetAlphaBlend();
+        }
+
+        /// <summary>
+        ///     Liberar los recursos de la caja
+        /// </summary>
+        public void Dispose()
+        {
+            if (Texture != null)
+            {
+                Texture.dispose();
+            }
+            if (vertexBuffer != null && !vertexBuffer.Disposed)
+            {
+                vertexBuffer.Dispose();
+            }
+            BoundingBox.Dispose();
         }
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(float x, float y, float z)
+        public void Move(TGCVector3 v)
+        {
+            Move(v.X, v.Y, v.Z);
+        }
+
+        /// <summary>
+        ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
+        /// </summary>
+        public void Move(float x, float y, float z)
         {
             translation.X += x;
             translation.Y += y;
@@ -265,12 +260,12 @@ namespace TGC.Core.Geometry
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
-        public void moveOrientedY(float movement)
+        public void MoveOrientedY(float movement)
         {
             var z = (float)Math.Cos(rotation.Y) * movement;
             var x = (float)Math.Sin(rotation.Y) * movement;
 
-            move(x, 0, z);
+            Move(x, 0, z);
         }
 
         /// <summary>
@@ -278,7 +273,7 @@ namespace TGC.Core.Geometry
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
+        public void GetPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -288,8 +283,8 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Rota la malla respecto del eje X
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateX(float angle)
+        /// <param name="angle">ï¿½ngulo de rotaciï¿½n en radianes</param>
+        public void RotateX(float angle)
         {
             rotation.X += angle;
         }
@@ -297,8 +292,8 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Rota la malla respecto del eje Y
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateY(float angle)
+        /// <param name="angle">ï¿½ngulo de rotaciï¿½n en radianes</param>
+        public void RotateY(float angle)
         {
             rotation.Y += angle;
         }
@@ -306,8 +301,8 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Rota la malla respecto del eje Z
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateZ(float angle)
+        /// <param name="angle">ï¿½ngulo de rotaciï¿½n en radianes</param>
+        public void RotateZ(float angle)
         {
             rotation.Z += angle;
         }
@@ -317,7 +312,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public void updateValues()
         {
-            var c = color.ToArgb();
+            var c = Color.ToArgb();
             var x = size.X / 2;
             var y = size.Y / 2;
             var z = size.Z / 2;
@@ -387,7 +382,7 @@ namespace TGC.Core.Geometry
                 Texture.dispose();
             }
             Texture = texture;
-            technique = TgcShaders.T_POSITION_COLORED_TEXTURED;
+            Technique = TgcShaders.T_POSITION_COLORED_TEXTURED;
         }
 
         /// <summary>
@@ -412,11 +407,11 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Configurar valores de posicion y tamaño en forma conjunta
+        ///     Configurar valores de posicion y tamaï¿½o en forma conjunta
         /// </summary>
         /// <param name="position">Centro de la caja</param>
-        /// <param name="size">Tamaño de la caja</param>
-        public void setPositionSize(Vector3 position, Vector3 size)
+        /// <param name="size">Tamaï¿½o de la caja</param>
+        public void setPositionSize(TGCVector3 position, TGCVector3 size)
         {
             translation = position;
             this.size = size;
@@ -424,14 +419,14 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Configurar punto mínimo y máximo del box
+        ///     Configurar punto mï¿½nimo y mï¿½ximo del box
         /// </summary>
         /// <param name="min">Min</param>
         /// <param name="max">Max</param>
-        public void setExtremes(Vector3 min, Vector3 max)
+        public void setExtremes(TGCVector3 min, TGCVector3 max)
         {
-            var size = Vector3.Subtract(max, min);
-            var midSize = Vector3.Scale(size, 0.5f);
+            var size = TGCVector3.Subtract(max, min);
+            var midSize = TGCVector3.Scale(size, 0.5f);
             var center = min + midSize;
             setPositionSize(center, size);
         }
@@ -442,145 +437,39 @@ namespace TGC.Core.Geometry
         /// </summary>
         private void updateBoundingBox()
         {
-            var midSize = Vector3.Scale(size, 0.5f);
-            BoundingBox.setExtremes(Vector3.Subtract(translation, midSize), Vector3.Add(translation, midSize));
+            var midSize = TGCVector3.Scale(size, 0.5f);
+            BoundingBox.setExtremes(TGCVector3.Subtract(translation, midSize), TGCVector3.Add(translation, midSize));
         }
 
         /// <summary>
         ///     Convierte el box en un TgcMesh
         /// </summary>
         /// <param name="meshName">Nombre de la malla que se va a crear</param>
-        public TgcMesh toMesh(string meshName)
+        public TgcMesh ToMesh(string meshName)
         {
             //Obtener matriz para transformar vertices
-            if (AutoTransformEnable)
+            if (AutoTransform)
             {
-                Transform = Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
-                            Matrix.Translation(translation);
+                Transform = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * TGCMatrix.Translation(translation);
             }
 
-            //Crear mesh con DiffuseMap
-            if (Texture != null)
-            {
-                //Crear Mesh
-                var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
-                    TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
-
-                //Cargar VertexBuffer
-                using (var vb = d3dMesh.VertexBuffer)
-                {
-                    var data = vb.Lock(0, 0, LockFlags.None);
-                    for (var j = 0; j < vertices.Length; j++)
-                    {
-                        var v = new TgcSceneLoader.DiffuseMapVertex();
-                        var vBox = vertices[j];
-
-                        //vertices
-                        v.Position = Vector3.TransformCoordinate(vBox.Position, Transform);
-
-                        //normals
-                        v.Normal = Vector3.Zero;
-
-                        //texture coordinates diffuseMap
-                        v.Tu = vBox.Tu;
-                        v.Tv = vBox.Tv;
-
-                        //color
-                        v.Color = vBox.Color;
-
-                        data.Write(v);
-                    }
-                    vb.Unlock();
-                }
-
-                //Cargar IndexBuffer en forma plana
-                using (var ib = d3dMesh.IndexBuffer)
-                {
-                    var indices = new short[vertices.Length];
-                    for (var j = 0; j < indices.Length; j++)
-                    {
-                        indices[j] = (short)j;
-                    }
-                    ib.SetData(indices, 0, LockFlags.None);
-                }
-
-                //Calcular normales
-                d3dMesh.ComputeNormals();
-
-                //Malla de TGC
-                var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
-                tgcMesh.DiffuseMaps = new[] { Texture.Clone() };
-                tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
-                tgcMesh.createBoundingBox();
-                tgcMesh.Enabled = true;
-                tgcMesh.AlphaBlendEnable = AlphaBlendEnable;
-                return tgcMesh;
-            }
-
-            //Crear mesh con solo color
-            else
-            {
-                //Crear Mesh
-                var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
-                    TgcSceneLoader.VertexColorVertexElements, D3DDevice.Instance.Device);
-
-                //Cargar VertexBuffer
-                using (var vb = d3dMesh.VertexBuffer)
-                {
-                    var data = vb.Lock(0, 0, LockFlags.None);
-                    for (var j = 0; j < vertices.Length; j++)
-                    {
-                        var v = new TgcSceneLoader.VertexColorVertex();
-                        var vBox = vertices[j];
-
-                        //vertices
-                        v.Position = Vector3.TransformCoordinate(vBox.Position, Transform);
-
-                        //normals
-                        v.Normal = Vector3.Zero;
-
-                        //color
-                        v.Color = vBox.Color;
-
-                        data.Write(v);
-                    }
-                    vb.Unlock();
-                }
-
-                //Cargar IndexBuffer en forma plana
-                using (var ib = d3dMesh.IndexBuffer)
-                {
-                    var indices = new short[vertices.Length];
-                    for (var j = 0; j < indices.Length; j++)
-                    {
-                        indices[j] = (short)j;
-                    }
-                    ib.SetData(indices, 0, LockFlags.None);
-                }
-
-                //Malla de TGC
-                var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.VERTEX_COLOR);
-                tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
-                tgcMesh.createBoundingBox();
-                tgcMesh.Enabled = true;
-                return tgcMesh;
-            }
+            return TgcMesh.FromTGCBox(meshName, this.Texture, this.vertices, this.Transform, this.AlphaBlendEnable);
         }
 
         /// <summary>
         ///     Crear un nuevo TgcBox igual a este
         /// </summary>
         /// <returns>Box clonado</returns>
-        public TgcBox clone()
+        public TGCBox clone()
         {
-            var cloneBox = new TgcBox();
+            var cloneBox = new TGCBox();
             cloneBox.setPositionSize(translation, size);
-            cloneBox.color = color;
+            cloneBox.Color = Color;
             if (Texture != null)
             {
                 cloneBox.setTexture(Texture.Clone());
             }
-            cloneBox.AutoTransformEnable = AutoTransformEnable;
+            cloneBox.AutoTransform = AutoTransform;
             cloneBox.Transform = Transform;
             cloneBox.rotation = rotation;
             cloneBox.AlphaBlendEnable = AlphaBlendEnable;
@@ -594,43 +483,43 @@ namespace TGC.Core.Geometry
         #region Creacion
 
         /// <summary>
-        ///     Crea una caja con el centro y tamaño especificado
+        ///     Crea una caja con el centro y tamaï¿½o especificado
         /// </summary>
         /// <param name="center">Centro de la caja</param>
-        /// <param name="size">Tamaño de la caja</param>
+        /// <param name="size">Tamaï¿½o de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 center, Vector3 size)
+        public static TGCBox fromSize(TGCVector3 center, TGCVector3 size)
         {
-            var box = new TgcBox();
+            var box = new TGCBox();
             box.setPositionSize(center, size);
             box.updateValues();
             return box;
         }
 
         /// <summary>
-        ///     Crea una caja con el centro y tamaño especificado, con el color especificado
+        ///     Crea una caja con el centro y tamaï¿½o especificado, con el color especificado
         /// </summary>
         /// <param name="center">Centro de la caja</param>
-        /// <param name="size">Tamaño de la caja</param>
+        /// <param name="size">Tamaï¿½o de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 center, Vector3 size, Color color)
+        public static TGCBox fromSize(TGCVector3 center, TGCVector3 size, Color color)
         {
-            var box = new TgcBox();
+            var box = new TGCBox();
             box.setPositionSize(center, size);
-            box.color = color;
+            box.Color = color;
             box.updateValues();
             return box;
         }
 
         /// <summary>
-        ///     Crea una caja con el centro y tamaño especificado, con la textura especificada
+        ///     Crea una caja con el centro y tamaï¿½o especificado, con la textura especificada
         /// </summary>
         /// <param name="center">Centro de la caja</param>
-        /// <param name="size">Tamaño de la caja</param>
+        /// <param name="size">Tamaï¿½o de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 center, Vector3 size, TgcTexture texture)
+        public static TGCBox fromSize(TGCVector3 center, TGCVector3 size, TgcTexture texture)
         {
             var box = fromSize(center, size);
             box.setTexture(texture);
@@ -638,47 +527,47 @@ namespace TGC.Core.Geometry
         }
 
         /// <summary>
-        ///     Crea una caja con centro (0,0,0) y el tamaño especificado
+        ///     Crea una caja con centro (0,0,0) y el tamaï¿½o especificado
         /// </summary>
-        /// <param name="size">Tamaño de la caja</param>
+        /// <param name="size">Tamaï¿½o de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 size)
+        public static TGCBox fromSize(TGCVector3 size)
         {
-            return fromSize(new Vector3(0, 0, 0), size);
+            return fromSize(TGCVector3.Empty, size);
         }
 
         /// <summary>
-        ///     Crea una caja con centro (0,0,0) y el tamaño especificado, con el color especificado
+        ///     Crea una caja con centro (0,0,0) y el tamaï¿½o especificado, con el color especificado
         /// </summary>
-        /// <param name="size">Tamaño de la caja</param>
+        /// <param name="size">Tamaï¿½o de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 size, Color color)
+        public static TGCBox fromSize(TGCVector3 size, Color color)
         {
-            return fromSize(new Vector3(0, 0, 0), size, color);
+            return fromSize(TGCVector3.Empty, size, color);
         }
 
         /// <summary>
-        ///     Crea una caja con centro (0,0,0) y el tamaño especificado, con la textura especificada
+        ///     Crea una caja con centro (0,0,0) y el tamaï¿½o especificado, con la textura especificada
         /// </summary>
-        /// <param name="size">Tamaño de la caja</param>
+        /// <param name="size">Tamaï¿½o de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromSize(Vector3 size, TgcTexture texture)
+        public static TGCBox fromSize(TGCVector3 size, TgcTexture texture)
         {
-            return fromSize(new Vector3(0, 0, 0), size, texture);
+            return fromSize(TGCVector3.Empty, size, texture);
         }
 
         /// <summary>
         ///     Crea una caja en base al punto minimo y maximo
         /// </summary>
-        /// <param name="pMin">Punto mínimo</param>
-        /// <param name="pMax">Punto máximo</param>
+        /// <param name="pMin">Punto mï¿½nimo</param>
+        /// <param name="pMax">Punto mï¿½ximo</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromExtremes(Vector3 pMin, Vector3 pMax)
+        public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax)
         {
-            var size = Vector3.Subtract(pMax, pMin);
-            var midSize = Vector3.Scale(size, 0.5f);
+            var size = TGCVector3.Subtract(pMax, pMin);
+            var midSize = TGCVector3.Scale(size, 0.5f);
             var center = pMin + midSize;
             return fromSize(center, size);
         }
@@ -686,14 +575,14 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crea una caja en base al punto minimo y maximo, con el color especificado
         /// </summary>
-        /// <param name="pMin">Punto mínimo</param>
-        /// <param name="pMax">Punto máximo</param>
+        /// <param name="pMin">Punto mï¿½nimo</param>
+        /// <param name="pMax">Punto mï¿½ximo</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromExtremes(Vector3 pMin, Vector3 pMax, Color color)
+        public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color)
         {
             var box = fromExtremes(pMin, pMax);
-            box.color = color;
+            box.Color = color;
             box.updateValues();
             return box;
         }
@@ -701,11 +590,11 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Crea una caja en base al punto minimo y maximo, con el color especificado
         /// </summary>
-        /// <param name="pMin">Punto mínimo</param>
-        /// <param name="pMax">Punto máximo</param>
+        /// <param name="pMin">Punto mï¿½nimo</param>
+        /// <param name="pMax">Punto mï¿½ximo</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBox fromExtremes(Vector3 pMin, Vector3 pMax, TgcTexture texture)
+        public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, TgcTexture texture)
         {
             var box = fromExtremes(pMin, pMax);
             box.setTexture(texture);

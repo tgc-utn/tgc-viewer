@@ -1,18 +1,17 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Collision;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Sound;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Sound
 {
@@ -35,14 +34,14 @@ namespace TGC.Examples.Sound
         private const float VELODICAD_CAMINAR = 250f;
         private const float VELOCIDAD_ROTACION = 120f;
         private TgcThirdPersonCamera camaraInterna;
-        private List<TgcBox> obstaculos;
+        private List<TGCBox> obstaculos;
         private TgcMesh personaje;
 
-        private TgcBox piso;
+        private TGCBox piso;
         private List<Tgc3dSound> sonidos;
 
-        public PlaySound3D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public PlaySound3D(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Sound";
             Name = "Play Sound3D";
@@ -53,21 +52,21 @@ namespace TGC.Examples.Sound
         {
             //Crear piso
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
-            piso = TgcBox.fromSize(new Vector3(5000, 5, 5000), pisoTexture);
-            piso.AutoTransformEnable = true;
-            piso.Position = new Vector3(0, -60, 0);
+            piso = TGCBox.fromSize(new TGCVector3(5000, 5, 5000), pisoTexture);
+            piso.AutoTransform = true;
+            piso.Position = new TGCVector3(0, -60, 0);
 
             //Cargar obstaculos y posicionarlos. Los obstaculos se crean con TgcBox en lugar de cargar un modelo.
-            obstaculos = new List<TgcBox>();
+            obstaculos = new List<TGCBox>();
             sonidos = new List<Tgc3dSound>();
-            TgcBox obstaculo;
+            TGCBox obstaculo;
             Tgc3dSound sound;
 
             //Obstaculo 1
-            obstaculo = TgcBox.fromSize(new Vector3(80, 150, 80),
+            obstaculo = TGCBox.fromSize(new TGCVector3(80, 150, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack3\\goo2.jpg"));
-            obstaculo.AutoTransformEnable = true;
-            obstaculo.Position = new Vector3(-250, 0, 0);
+            obstaculo.AutoTransform = true;
+            obstaculo.Position = new TGCVector3(-250, 0, 0);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 1
@@ -79,11 +78,11 @@ namespace TGC.Examples.Sound
             sonidos.Add(sound);
 
             //Obstaculo 2
-            obstaculo = TgcBox.fromSize(new Vector3(80, 300, 80),
+            obstaculo = TGCBox.fromSize(new TGCVector3(80, 300, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\lun_dirt.jpg"));
-            obstaculo.AutoTransformEnable = true;
-            obstaculo.Position = new Vector3(250, 0, 800);
+            obstaculo.AutoTransform = true;
+            obstaculo.Position = new TGCVector3(250, 0, 800);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 2
@@ -92,11 +91,11 @@ namespace TGC.Examples.Sound
             sonidos.Add(sound);
 
             //Obstaculo 3
-            obstaculo = TgcBox.fromSize(new Vector3(80, 100, 150),
+            obstaculo = TGCBox.fromSize(new TGCVector3(80, 100, 150),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\Metal2_1.jpg"));
-            obstaculo.AutoTransformEnable = true;
-            obstaculo.Position = new Vector3(500, 0, -400);
+            obstaculo.AutoTransform = true;
+            obstaculo.Position = new TGCVector3(500, 0, -400);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 3
@@ -109,8 +108,8 @@ namespace TGC.Examples.Sound
             var scene =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
             personaje = scene.Meshes[0];
-            personaje.AutoTransformEnable = true;
-            personaje.Position = new Vector3(0, -50, 0);
+            personaje.AutoTransform = true;
+            personaje.Position = new TGCVector3(0, -50, 0);
 
             //Hacer que el Listener del sonido 3D siga al personaje
             DirectSound.ListenerTracking = personaje;
@@ -129,6 +128,7 @@ namespace TGC.Examples.Sound
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -174,7 +174,7 @@ namespace TGC.Examples.Sound
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.rotateY(rotAngle);
+                personaje.RotateY(rotAngle);
                 camaraInterna.rotateY(rotAngle);
             }
 
@@ -183,7 +183,7 @@ namespace TGC.Examples.Sound
             {
                 //Aplicar movimiento hacia adelante o atras segun la orientacion actual del Mesh
                 var lastPos = personaje.Position;
-                personaje.moveOrientedY(moveForward * ElapsedTime);
+                personaje.MoveOrientedY(moveForward * ElapsedTime);
 
                 //Detectar colisiones
                 var collide = false;
@@ -209,28 +209,28 @@ namespace TGC.Examples.Sound
             camaraInterna.Target = personaje.Position;
 
             //Render piso
-            piso.render();
+            piso.Render();
 
             //Render obstaculos
             foreach (var obstaculo in obstaculos)
             {
-                obstaculo.render();
+                obstaculo.Render();
             }
 
             //Render personaje
-            personaje.render();
+            personaje.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            piso.dispose();
+            piso.Dispose();
             foreach (var obstaculo in obstaculos)
             {
-                obstaculo.dispose();
+                obstaculo.Dispose();
             }
-            personaje.dispose();
+            personaje.Dispose();
 
             foreach (var sound in sonidos)
             {

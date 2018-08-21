@@ -2,6 +2,8 @@ using System;
 using System.Windows.Forms;
 using SharpDX;
 using SharpDX.DirectInput;
+using TGC.Core.Mathematica;
+
 
 namespace TGC.Core.Input
 {
@@ -25,7 +27,7 @@ namespace TGC.Core.Input
         private readonly Point ceroPoint = new Point(0, 0);
         private bool[] currentkeyboardState;
         private bool[] currentMouseButtonsState;
-        private Vector2[] historyBuffer;
+        private TGCVector2[] historyBuffer;
 
         //Keyboard
         private Device keyboardDevice;
@@ -36,7 +38,7 @@ namespace TGC.Core.Input
         private int mouseIndex;
         private bool mouseInside;
 
-        private Vector2[] mouseMovement;
+        private TGCVector2[] mouseMovement;
         private int mouseX;
         private int mouseY;
         private Control panel3d;
@@ -67,17 +69,17 @@ namespace TGC.Core.Input
             mouseY = 0;
 
             //Inicializar mouseMovement
-            mouseMovement = new Vector2[2];
+            mouseMovement = new TGCVector2[2];
             for (var i = 0; i < mouseMovement.Length; i++)
             {
-                mouseMovement[i] = new Vector2(0.0f, 0.0f);
+                mouseMovement[i] = new TGCVector2(0.0f, 0.0f);
             }
 
             //Inicializar historyBuffer
-            historyBuffer = new Vector2[HISTORY_BUFFER_SIZE];
+            historyBuffer = new TGCVector2[HISTORY_BUFFER_SIZE];
             for (var i = 0; i < historyBuffer.Length; i++)
             {
-                historyBuffer[i] = new Vector2(0.0f, 0.0f);
+                historyBuffer[i] = new TGCVector2(0.0f, 0.0f);
             }
 
             //Inicializar ubicacion del cursor

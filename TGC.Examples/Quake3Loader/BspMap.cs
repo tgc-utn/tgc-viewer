@@ -1,8 +1,9 @@
-﻿using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
+﻿using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
+using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 
@@ -19,7 +20,7 @@ namespace TGC.Examples.Quake3Loader
         //Variables para visibilidad de clusters
         private int antCluster;
 
-        private Matrix mViewProj;
+        private TGCMatrix mViewProj;
         private float time;
 
         public BspMap()
@@ -66,7 +67,7 @@ namespace TGC.Examples.Quake3Loader
         ///     Renderizar escenario BSP utilizando matriz PVS para descartar clusters no visibles
         /// </summary>
         /// <param name="camPos">Posición actual de la camara</param>
-        public void render(Vector3 camPos, float elapsedTime)
+        public void render(TGCVector3 camPos, TgcFrustum frustum, float elapsedTime)
         {
             time += elapsedTime;
 
@@ -87,13 +88,13 @@ namespace TGC.Examples.Quake3Loader
             }
 
             //Actualizar volumen del Frustum con nuevos valores de camara;
-            TgcFrustum.Instance.updateVolume(D3DDevice.Instance.Device.Transform.View,
-                D3DDevice.Instance.Device.Transform.Projection);
+            //TODO: esto creo que ya lo hace solo el example en el preupdate.
+            frustum.updateVolume(TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.View), TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.Projection));
 
             foreach (var nleaf in clusterVis)
             {
                 //Frustum Culling con el AABB del cluster
-                var result = TgcCollisionUtils.classifyFrustumAABB(TgcFrustum.Instance, Data.leafs[nleaf].boundingBox);
+                var result = TgcCollisionUtils.classifyFrustumAABB(frustum, Data.leafs[nleaf].boundingBox);
                 if (result == TgcCollisionUtils.FrustumResult.OUTSIDE)
                     continue;
 
@@ -112,8 +113,9 @@ namespace TGC.Examples.Quake3Loader
                 }
             }
 
+            //TODO: No deberia manipular Matrix de DX.
             //Renderizar meshes visibles
-            mViewProj = D3DDevice.Instance.Device.Transform.View * D3DDevice.Instance.Device.Transform.Projection;
+            mViewProj = TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.View * D3DDevice.Instance.Device.Transform.Projection);
             for (var i = 0; i < Meshes.Count; i++)
             {
                 //Ignonar si no está habilitada
@@ -135,7 +137,7 @@ namespace TGC.Examples.Quake3Loader
                 else
                 {
                     //render
-                    mesh.render();
+                    mesh.Render();
 
                     //deshabilitar para la proxima vuelta
                     mesh.Enabled = false;
@@ -160,7 +162,7 @@ namespace TGC.Examples.Quake3Loader
 
             var fx = shader.Fx;
             fx.Technique = "tec0";
-            fx.SetValue("g_mWorld", Matrix.Identity);
+            fx.SetValue("g_mWorld", TGCMatrix.Identity);
             fx.SetValue("g_mViewProj", mViewProj);
             fx.SetValue("g_time", time);
 
@@ -200,7 +202,7 @@ namespace TGC.Examples.Quake3Loader
         /// <summary>
         ///     Encontrar la hoja actual del arbol BP
         /// </summary>
-        private int FindLeaf(Vector3 pos)
+        private int FindLeaf(TGCVector3 pos)
         {
             var index = 0;
 
@@ -210,7 +212,7 @@ namespace TGC.Examples.Quake3Loader
                 var plane = Data.planes[node.planeNum];
 
                 // Distance from point to a plane
-                var distance = Vector3.Dot(plane.normal, pos) - plane.dist;
+                var distance = TGCVector3.Dot(plane.normal, pos) - plane.dist;
 
                 if (distance >= 0)
                 {
@@ -253,7 +255,7 @@ namespace TGC.Examples.Quake3Loader
             {
                 if (mesh != null)
                 {
-                    mesh.dispose();
+                    mesh.Dispose();
                 }
             }
             Meshes = null;

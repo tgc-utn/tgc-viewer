@@ -4,17 +4,16 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Terrain;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 using Effect = Microsoft.DirectX.Direct3D.Effect;
 
 namespace TGC.Examples.ShadersExamples
@@ -44,18 +43,18 @@ namespace TGC.Examples.ShadersExamples
         private TgcRotationalCamera CamaraRot;
         private int cant_palmeras; // sin contar la isla
         private TgcRotationalCamera DefaultCamera;
-        private Vector3 dir_canoa;
+        private TGCVector3 dir_canoa;
         private Effect effect;
-        private Vector3 g_LightDir; // direccion de la luz actual
-        private Vector3 g_LightPos; // posicion de la luz actual (la que estoy analizando)
-        private Matrix g_LightView; // matriz de view del light
-        private Matrix g_mShadowProj; // Projection matrix for shadow map
+        private TGCVector3 g_LightDir; // direccion de la luz actual
+        private TGCVector3 g_LightPos; // posicion de la luz actual (la que estoy analizando)
+        private TGCMatrix g_LightView; // matriz de view del light
+        private TGCMatrix g_mShadowProj; // Projection matrix for shadow map
         private CubeTexture g_pCubeMapAgua;
         private Surface g_pDSShadow; // Depth-stencil buffer for rendering to shadow map
 
         private Texture g_pShadowMap; // Texture to which the shadow map is rendered
         private float largo_tanque, alto_tanque;
-        private Vector3 LookFrom, LookAt;
+        private TGCVector3 LookFrom, LookAt;
         private TgcMesh mesh, piso;
         private float nivel_mar;
         private TgcMesh palmera, canoa;
@@ -76,8 +75,8 @@ namespace TGC.Examples.ShadersExamples
         private float vel_tanque;
         private Viewport View1, View2, ViewF;
 
-        public DemoShaders(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public DemoShaders(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel y Vertex Shaders";
             Name = "Demo Shaders";
@@ -94,14 +93,14 @@ namespace TGC.Examples.ShadersExamples
             // Creo el Heightmap para el terreno:
             terrain = new MySimpleTerrain();
             terrain.loadHeightmap(MediaDir + "Heighmaps\\Heightmap3.jpg", 100f, 1f,
-                new Vector3(0, 0, 0));
+                TGCVector3.Empty);
             terrain.loadTexture(MediaDir + "Heighmaps\\TerrainTexture3.jpg");
 
             // ------------------------------------------------------------
             // Crear SkyBox:
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 0, 0);
-            skyBox.Size = new Vector3(8000, 8000, 8000);
+            skyBox.Center = TGCVector3.Empty;
+            skyBox.Size = new TGCVector3(8000, 8000, 8000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox1\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
@@ -129,21 +128,21 @@ namespace TGC.Examples.ShadersExamples
             scene4 = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Piso\\Agua-TgcScene.xml");
             piso = scene4.Meshes[0];
 
-            mesh.Scale = new Vector3(0.5f, 0.5f, 0.5f);
-            mesh.Position = new Vector3(0f, 0f, 0f);
-            mesh.AutoTransformEnable = false;
+            mesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
+            mesh.Position = new TGCVector3(0f, 0f, 0f);
+            mesh.AutoTransform = false;
             var size = mesh.BoundingBox.calculateSize();
             largo_tanque = Math.Abs(size.Z);
             alto_tanque = Math.Abs(size.Y) * mesh.Scale.Y;
             vel_tanque = 10;
             an_tanque = 0;
-            canoa.Scale = new Vector3(1f, 1f, 1f);
-            canoa.Position = new Vector3(3000f, 550f, 0f);
-            canoa.AutoTransformEnable = false;
-            dir_canoa = new Vector3(0, 0, 1);
+            canoa.Scale = new TGCVector3(1f, 1f, 1f);
+            canoa.Position = new TGCVector3(3000f, 550f, 0f);
+            canoa.AutoTransform = false;
+            dir_canoa = new TGCVector3(0, 0, 1);
             nivel_mar = 135f;
-            piso.Scale = new Vector3(25f, 1f, 25f);
-            piso.Position = new Vector3(0f, nivel_mar, 0f);
+            piso.Scale = new TGCVector3(25f, 1f, 25f);
+            piso.Position = new TGCVector3(0f, nivel_mar, 0f);
 
             size = palmera.BoundingBox.calculateSize();
             var alto_palmera = Math.Abs(size.Y);
@@ -155,10 +154,10 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = 0; j < 15; j++)
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
-                    instance.Scale = new Vector3(0.5f, 1.5f, 0.5f);
+                    instance.Scale = new TGCVector3(0.5f, 1.5f, 0.5f);
                     var x = r[i] * (float)Math.Cos(Geometry.DegreeToRadian(100 + 10.0f * j));
                     var z = r[i] * (float)Math.Sin(Geometry.DegreeToRadian(100 + 10.0f * j));
-                    instance.Position = new Vector3(x, terrain.CalcularAltura(x, z)
+                    instance.Position = new TGCVector3(x, terrain.CalcularAltura(x, z)
                         /*+ alto_palmera / 2 * instance.Scale.Y*/, z);
                     bosque.Add(instance);
                     ++cant_palmeras;
@@ -172,10 +171,10 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = 0; j < 5; j++)
                 {
                     var instance = palmera.createMeshInstance(palmera.Name + i);
-                    instance.Scale = new Vector3(0.5f, 1f + j / 5f * 0.33f, 0.5f);
+                    instance.Scale = new TGCVector3(0.5f, 1f + j / 5f * 0.33f, 0.5f);
                     var x = r2[i] * (float)Math.Cos(Geometry.DegreeToRadian(25.0f * j));
                     var z = r2[i] * (float)Math.Sin(Geometry.DegreeToRadian(25.0f * j));
-                    instance.Position = new Vector3(x, terrain.CalcularAltura(x, z)
+                    instance.Position = new TGCVector3(x, terrain.CalcularAltura(x, z)
                         /*+ alto_palmera / 2 * instance.Scale.Y*/, z);
                     bosque.Add(instance);
                 }
@@ -225,11 +224,8 @@ namespace TGC.Examples.ShadersExamples
             // de hecho, un valor mayor a 90 todavia es mejor, porque hasta con 90 grados es muy dificil
             // lograr que los objetos del borde generen sombras
             var aspectRatio = D3DDevice.Instance.AspectRatio;
-            g_mShadowProj = Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(130.0f),
-                aspectRatio, near_plane, far_plane);
-            D3DDevice.Instance.Device.Transform.Projection =
-                Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
-                    aspectRatio, near_plane, far_plane);
+            g_mShadowProj = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(130.0f), aspectRatio, near_plane, far_plane);
+            D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, near_plane, far_plane).ToMatrix();
 
             alfa_sol = 1.7f;
             //alfa_sol = 0;
@@ -241,18 +237,18 @@ namespace TGC.Examples.ShadersExamples
                 mesh.BoundingBox.calculateBoxRadius() * 2, Input);
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
-            DefaultCamera = new TgcRotationalCamera(new Vector3(0, 200, 0), 5000, 0.1f, 1f, Input);
+            DefaultCamera = new TgcRotationalCamera(new TGCVector3(0, 200, 0), 5000, 0.1f, 1f, Input);
             Camara = DefaultCamera;
 
-            LookFrom = new Vector3(0, 400, 2000);
-            LookAt = new Vector3(0, 200, 0);
+            LookFrom = new TGCVector3(0, 400, 2000);
+            LookAt = new TGCVector3(0, 200, 0);
 
             // inicio unos segundos de preview
             timer_preview = 50;
 
             arrow = new TgcArrow();
             arrow.Thickness = 1f;
-            arrow.HeadSize = new Vector2(2f, 2f);
+            arrow.HeadSize = new TGCVector2(2f, 2f);
             arrow.BodyColor = Color.Blue;
 
             ant_vista = tipo_vista = 0;
@@ -277,6 +273,7 @@ namespace TGC.Examples.ShadersExamples
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -336,17 +333,17 @@ namespace TGC.Examples.ShadersExamples
             var H = terrain.CalcularAltura(x0, z0) + alto_tanque / 2 - offset_rueda;
             if (H < nivel_mar)
                 H = nivel_mar;
-            mesh.Position = new Vector3(x0, H, z0);
+            mesh.Position = new TGCVector3(x0, H, z0);
             // direccion tangente sobre el piso:
-            var dir_tanque = new Vector2(-(float)Math.Sin(alfa), (float)Math.Cos(alfa));
+            var dir_tanque = new TGCVector2(-(float)Math.Sin(alfa), (float)Math.Cos(alfa));
             dir_tanque.Normalize();
             // Posicion de la parte de adelante del tanque
-            var pos2d = new Vector2(x0, z0);
+            var pos2d = new TGCVector2(x0, z0);
             pos2d = pos2d + dir_tanque * (largo_tanque / 2);
             var H_frente = terrain.CalcularAltura(pos2d.X, pos2d.Y) + alto_tanque / 2 - offset_rueda;
             if (H_frente < nivel_mar - 15)
                 H_frente = nivel_mar - 15;
-            var pos_frente = new Vector3(pos2d.X, H_frente, pos2d.Y);
+            var pos_frente = new TGCVector3(pos2d.X, H_frente, pos2d.Y);
             var Vel = pos_frente - mesh.Position;
             Vel.Normalize();
             mesh.Transform = CalcularMatriz(mesh.Position, mesh.Scale, Vel);
@@ -355,16 +352,16 @@ namespace TGC.Examples.ShadersExamples
             alfa = -time * Geometry.DegreeToRadian(10.0f);
             x0 = 400f * (float)Math.Cos(alfa);
             z0 = 400f * (float)Math.Sin(alfa);
-            canoa.Position = new Vector3(x0, 150, z0);
-            dir_canoa = new Vector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
+            canoa.Position = new TGCVector3(x0, 150, z0);
+            dir_canoa = new TGCVector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
             canoa.Transform = CalcularMatriz(canoa.Position, canoa.Scale, dir_canoa);
 
             alfa_sol += ElapsedTime * Geometry.DegreeToRadian(1.0f);
             if (alfa_sol > 2.5)
                 alfa_sol = 1.5f;
             // animo la posicion del sol
-            //g_LightPos = new Vector3(1500f * (float)Math.Cos(alfa_sol), 1500f * (float)Math.Sin(alfa_sol), 0f);
-            g_LightPos = new Vector3(2000f * (float)Math.Cos(alfa_sol), 2000f * (float)Math.Sin(alfa_sol),
+            //g_LightPos = new TGCVector3(1500f * (float)Math.Cos(alfa_sol), 1500f * (float)Math.Sin(alfa_sol), 0f);
+            g_LightPos = new TGCVector3(2000f * (float)Math.Cos(alfa_sol), 2000f * (float)Math.Sin(alfa_sol),
                 0f);
             g_LightDir = -g_LightPos;
             g_LightDir.Normalize();
@@ -405,65 +402,64 @@ namespace TGC.Examples.ShadersExamples
             var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             // ojo: es fundamental que el fov sea de 90 grados.
             // asi que re-genero la matriz de proyeccion
-            D3DDevice.Instance.Device.Transform.Projection =
-                Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f), 1f, near_plane, far_plane);
+            D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f), 1f, near_plane, far_plane).ToMatrix();
 
             // Genero las caras del enviroment map
             for (var nFace = CubeMapFace.PositiveX; nFace <= CubeMapFace.NegativeZ; ++nFace)
             {
                 var pFace = g_pCubeMap.GetCubeMapSurface(nFace, 0);
                 D3DDevice.Instance.Device.SetRenderTarget(0, pFace);
-                Vector3 Dir, VUP;
+                TGCVector3 Dir, VUP;
                 Color color;
                 switch (nFace)
                 {
                     default:
                     case CubeMapFace.PositiveX:
                         // Left
-                        Dir = new Vector3(1, 0, 0);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(1, 0, 0);
+                        VUP = TGCVector3.Up;
                         color = Color.Black;
                         break;
 
                     case CubeMapFace.NegativeX:
                         // Right
-                        Dir = new Vector3(-1, 0, 0);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(-1, 0, 0);
+                        VUP = TGCVector3.Up;
                         color = Color.Red;
                         break;
 
                     case CubeMapFace.PositiveY:
                         // Up
-                        Dir = new Vector3(0, 1, 0);
-                        VUP = new Vector3(0, 0, -1);
+                        Dir = TGCVector3.Up;
+                        VUP = new TGCVector3(0, 0, -1);
                         color = Color.Gray;
                         break;
 
                     case CubeMapFace.NegativeY:
                         // Down
-                        Dir = new Vector3(0, -1, 0);
-                        VUP = new Vector3(0, 0, 1);
+                        Dir = TGCVector3.Down;
+                        VUP = new TGCVector3(0, 0, 1);
                         color = Color.Yellow;
                         break;
 
                     case CubeMapFace.PositiveZ:
                         // Front
-                        Dir = new Vector3(0, 0, 1);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(0, 0, 1);
+                        VUP = TGCVector3.Up;
                         color = Color.Green;
                         break;
 
                     case CubeMapFace.NegativeZ:
                         // Back
-                        Dir = new Vector3(0, 0, -1);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(0, 0, -1);
+                        VUP = TGCVector3.Up;
                         color = Color.Blue;
                         break;
                 }
 
                 //Obtener ViewMatrix haciendo un LookAt desde la posicion final anterior al centro de la camara
                 var Pos = mesh.Position;
-                D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
+                D3DDevice.Instance.Device.Transform.View = TGCMatrix.LookAtLH(Pos, Pos + Dir, VUP).ToMatrix();
 
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
                 D3DDevice.Instance.Device.BeginScene();
@@ -484,22 +480,17 @@ namespace TGC.Examples.ShadersExamples
 
             // Restauro el estado de las transformaciones
             if (timer_preview > 0)
-                D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(LookFrom, LookAt, new Vector3(0, 1, 0));
+                D3DDevice.Instance.Device.Transform.View = TGCMatrix.LookAtLH(LookFrom, LookAt, TGCVector3.Up).ToMatrix();
             else
-                D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix();
+                D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix().ToMatrix();
             // FIXME! esto no se bien para que lo hace aca.
 
-            D3DDevice.Instance.Device.Transform.Projection =
-                Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f),
-                    aspectRatio, near_plane, far_plane);
+            D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, near_plane, far_plane).ToMatrix();
 
             // Cargo las var. del shader:
             effect.SetValue("g_txCubeMap", g_pCubeMap);
             effect.SetValue("fvLightPosition", new Vector4(0, 400, 0, 0));
-            effect.SetValue("fvEyePosition",
-                TgcParserUtils.vector3ToFloat3Array(timer_preview > 0
-                    ? LookFrom
-                    : Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(timer_preview > 0 ? LookFrom : Camara.Position));
             effect.SetValue("time", time);
 
             // -----------------------------------------------------
@@ -527,7 +518,7 @@ namespace TGC.Examples.ShadersExamples
                 effect.SetValue("canoa_x", x0 / 10.0f);
                 effect.SetValue("canoa_y", z0 / 10.0f);
                 piso.Technique = "RenderAgua";
-                piso.render();
+                piso.Render();
             }
 
             if (tipo_vista != 0)
@@ -544,17 +535,17 @@ namespace TGC.Examples.ShadersExamples
                 //Renderizar terreno
                 terrain.render();
                 //Renderizar SkyBox
-                skyBox.render();
+                skyBox.Render();
                 // dibujo el bosque
                 foreach (var instance in bosque)
                 {
                     instance.UpdateMeshTransform();
-                    instance.render();
+                    instance.Render();
                 }
                 // canoa
-                canoa.render();
+                canoa.Render();
                 // tanque
-                mesh.render();
+                mesh.Render();
                 // agua
                 var ant_src = D3DDevice.Instance.Device.RenderState.SourceBlend;
                 var ant_dest = D3DDevice.Instance.Device.RenderState.DestinationBlend;
@@ -562,7 +553,7 @@ namespace TGC.Examples.ShadersExamples
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
                 D3DDevice.Instance.Device.RenderState.SourceBlend = Blend.SourceColor;
                 D3DDevice.Instance.Device.RenderState.DestinationBlend = Blend.InvSourceColor;
-                piso.render();
+                piso.Render();
                 D3DDevice.Instance.Device.RenderState.SourceBlend = ant_src;
                 D3DDevice.Instance.Device.RenderState.DestinationBlend = ant_dest;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = ant_alpha;
@@ -588,24 +579,24 @@ namespace TGC.Examples.ShadersExamples
                 terrain.render();
 
             //Renderizar SkyBox
-            skyBox.render();
+            skyBox.Render();
 
             // dibujo el bosque
             var total = cubemap ? cant_palmeras : bosque.Count;
             for (var i = 0; i < total; ++i)
             {
                 bosque[i].UpdateMeshTransform();
-                bosque[i].render();
+                bosque[i].Render();
             }
 
             // canoa
-            canoa.render();
+            canoa.Render();
 
             if (!cubemap)
             {
                 // dibujo el mesh
                 mesh.Technique = "RenderScene";
-                mesh.render();
+                mesh.Render();
             }
         }
 
@@ -617,58 +608,56 @@ namespace TGC.Examples.ShadersExamples
             var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             // ojo: es fundamental que el fov sea de 90 grados.
             // asi que re-genero la matriz de proyeccion
-            D3DDevice.Instance.Device.Transform.Projection =
-                Matrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f),
-                    1f, near_plane, far_plane);
+            D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(90.0f), 1f, near_plane, far_plane).ToMatrix();
             // Genero las caras del enviroment map
             for (var nFace = CubeMapFace.PositiveX; nFace <= CubeMapFace.NegativeZ; ++nFace)
             {
                 var pFace = g_pCubeMapAgua.GetCubeMapSurface(nFace, 0);
                 D3DDevice.Instance.Device.SetRenderTarget(0, pFace);
-                Vector3 Dir, VUP;
+                TGCVector3 Dir, VUP;
                 Color color;
                 switch (nFace)
                 {
                     default:
                     case CubeMapFace.PositiveX:
                         // Left
-                        Dir = new Vector3(1, 0, 0);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(1, 0, 0);
+                        VUP = TGCVector3.Up;
                         color = Color.Black;
                         break;
 
                     case CubeMapFace.NegativeX:
                         // Right
-                        Dir = new Vector3(-1, 0, 0);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(-1, 0, 0);
+                        VUP = TGCVector3.Up;
                         color = Color.Red;
                         break;
 
                     case CubeMapFace.PositiveY:
                         // Up
-                        Dir = new Vector3(0, 1, 0);
-                        VUP = new Vector3(0, 0, -1);
+                        Dir = TGCVector3.Up;
+                        VUP = new TGCVector3(0, 0, -1);
                         color = Color.Gray;
                         break;
 
                     case CubeMapFace.NegativeY:
                         // Down
-                        Dir = new Vector3(0, -1, 0);
-                        VUP = new Vector3(0, 0, 1);
+                        Dir = TGCVector3.Down;
+                        VUP = new TGCVector3(0, 0, 1);
                         color = Color.Yellow;
                         break;
 
                     case CubeMapFace.PositiveZ:
                         // Front
-                        Dir = new Vector3(0, 0, 1);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(0, 0, 1);
+                        VUP = TGCVector3.Up;
                         color = Color.Green;
                         break;
 
                     case CubeMapFace.NegativeZ:
                         // Back
-                        Dir = new Vector3(0, 0, -1);
-                        VUP = new Vector3(0, 1, 0);
+                        Dir = new TGCVector3(0, 0, -1);
+                        VUP = TGCVector3.Up;
                         color = Color.Blue;
                         break;
                 }
@@ -677,7 +666,7 @@ namespace TGC.Examples.ShadersExamples
                 if (nFace == CubeMapFace.NegativeY)
                     Pos.Y += 2000;
 
-                D3DDevice.Instance.Device.Transform.View = Matrix.LookAtLH(Pos, Pos + Dir, VUP);
+                D3DDevice.Instance.Device.Transform.View = TGCMatrix.LookAtLH(Pos, Pos + Dir, VUP).ToMatrix();
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, color, 1.0f, 0);
                 D3DDevice.Instance.Device.BeginScene();
                 //Renderizar: solo algunas cosas:
@@ -689,12 +678,12 @@ namespace TGC.Examples.ShadersExamples
                 else
                 {
                     //Renderizar SkyBox
-                    skyBox.render();
+                    skyBox.Render();
                     // dibujo el bosque
                     foreach (var instance in bosque)
                     {
                         instance.UpdateMeshTransform();
-                        instance.render();
+                        instance.Render();
                     }
                 }
                 var fname = string.Format("face{0:D}.bmp", nFace);
@@ -712,11 +701,11 @@ namespace TGC.Examples.ShadersExamples
             // Calculo la matriz de view de la luz
             effect.SetValue("g_vLightPos", new Vector4(g_LightPos.X, g_LightPos.Y, g_LightPos.Z, 1));
             effect.SetValue("g_vLightDir", new Vector4(g_LightDir.X, g_LightDir.Y, g_LightDir.Z, 1));
-            g_LightView = Matrix.LookAtLH(g_LightPos, g_LightPos + g_LightDir, new Vector3(0, 0, 1));
+            g_LightView = TGCMatrix.LookAtLH(g_LightPos, g_LightPos + g_LightDir, new TGCVector3(0, 0, 1));
 
             // inicializacion standard:
-            effect.SetValue("g_mProjLight", g_mShadowProj);
-            effect.SetValue("g_mViewLightProj", g_LightView * g_mShadowProj);
+            effect.SetValue("g_mProjLight", g_mShadowProj.ToMatrix());
+            effect.SetValue("g_mViewLightProj", (g_LightView * g_mShadowProj).ToMatrix());
 
             // Primero genero el shadow map, para ello dibujo desde el pto de vista de luz
             // a una textura, con el VS y PS que generan un mapa de profundidades.
@@ -736,13 +725,13 @@ namespace TGC.Examples.ShadersExamples
             foreach (var instance in bosque)
             {
                 instance.UpdateMeshTransform();
-                instance.render();
+                instance.Render();
             }
 
             // el tanque
             // Seteo la tecnica: estoy generando la sombra o estoy dibujando la escena
             mesh.Technique = "RenderShadow";
-            mesh.render();
+            mesh.Render();
             // Termino
             D3DDevice.Instance.Device.EndScene();
             //TextureLoader.Save("shadowmap.bmp", ImageFileFormat.Bmp, g_pShadowMap);
@@ -755,16 +744,16 @@ namespace TGC.Examples.ShadersExamples
         }
 
         // helper
-        public Matrix CalcularMatriz(Vector3 Pos, Vector3 Scale, Vector3 Dir)
+        public TGCMatrix CalcularMatriz(TGCVector3 Pos, TGCVector3 Scale, TGCVector3 Dir)
         {
-            var VUP = new Vector3(0, 1, 0);
+            var VUP = TGCVector3.Up;
 
-            var matWorld = Matrix.Scaling(Scale);
+            var matWorld = TGCMatrix.Scaling(Scale);
             // determino la orientacion
-            var U = Vector3.Cross(VUP, Dir);
+            var U = TGCVector3.Cross(VUP, Dir);
             U.Normalize();
-            var V = Vector3.Cross(Dir, U);
-            Matrix Orientacion;
+            var V = TGCVector3.Cross(Dir, U);
+            TGCMatrix Orientacion = new TGCMatrix();
             Orientacion.M11 = U.X;
             Orientacion.M12 = U.Y;
             Orientacion.M13 = U.Z;
@@ -787,18 +776,18 @@ namespace TGC.Examples.ShadersExamples
             matWorld = matWorld * Orientacion;
 
             // traslado
-            matWorld = matWorld * Matrix.Translation(Pos);
+            matWorld = matWorld * TGCMatrix.Translation(Pos);
             return matWorld;
         }
 
-        public Matrix CalcularMatrizUp(Vector3 Pos, Vector3 Scale, Vector3 Dir, Vector3 VUP)
+        public TGCMatrix CalcularMatrizUp(TGCVector3 Pos, TGCVector3 Scale, TGCVector3 Dir, TGCVector3 VUP)
         {
-            var matWorld = Matrix.Scaling(Scale);
+            var matWorld = TGCMatrix.Scaling(Scale);
             // determino la orientacion
-            var U = Vector3.Cross(VUP, Dir);
+            var U = TGCVector3.Cross(VUP, Dir);
             U.Normalize();
-            var V = Vector3.Cross(Dir, U);
-            Matrix Orientacion;
+            var V = TGCVector3.Cross(Dir, U);
+            TGCMatrix Orientacion = new TGCMatrix();
             Orientacion.M11 = U.X;
             Orientacion.M12 = U.Y;
             Orientacion.M13 = U.Z;
@@ -821,17 +810,17 @@ namespace TGC.Examples.ShadersExamples
             matWorld = matWorld * Orientacion;
 
             // traslado
-            matWorld = matWorld * Matrix.Translation(Pos);
+            matWorld = matWorld * TGCMatrix.Translation(Pos);
             return matWorld;
         }
 
         public override void Dispose()
         {
             effect.Dispose();
-            scene.disposeAll();
-            scene2.disposeAll();
-            scene3.disposeAll();
-            scene4.disposeAll();
+            scene.DisposeAll();
+            scene2.DisposeAll();
+            scene3.DisposeAll();
+            scene4.DisposeAll();
             terrain.dispose();
             g_pCubeMapAgua.Dispose();
             g_pShadowMap.Dispose();

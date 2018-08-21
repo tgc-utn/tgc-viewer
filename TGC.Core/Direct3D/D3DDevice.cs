@@ -1,9 +1,9 @@
-﻿using System.Diagnostics;
-using System.Windows.Forms;
 using SharpDX;
 using SharpDX.Direct3D9;
+using System.Diagnostics;
+using System.Windows.Forms;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.Direct3D
 {
@@ -42,8 +42,8 @@ namespace TGC.Core.Direct3D
         public void DefaultValues()
         {
             //Frustum values
-            Device.SetTransform(TransformState.Projection, Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
-                ZFarPlaneDistance) );
+            Device.SetTransform(TransformState.Projection, TGCMatrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance, ZFarPlaneDistance).ToMatrix());
+            //Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance, ZFarPlaneDistance).ToMatrix();
 
             //Render state
             Device.SetRenderState(RenderState.SpecularEnable, false);
@@ -166,15 +166,16 @@ namespace TGC.Core.Direct3D
             Width = width;
             Height = height;
             //TODO: hay que actualizar tambien la matriz de proyeccion, sino sigue viendo mal. cc: revisar puede estar fallando
-            Device.SetTransform(TransformState.Projection, Matrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
-                ZFarPlaneDistance) );
+            Device.SetTransform(TransformState.Projection, TGCMatrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
+                ZFarPlaneDistance).ToMatrix());
             //TODO: FALTA TODO ESTO DE ABAJO.... cc: No se si habia que sacarlo o dejarlo
-            DefaultValues();
-            Device.Reset(d3dpp);
+            //DefaultValues();
+            //Device.Reset(d3dpp);
 
             Viewport v = new Viewport();
-            v.MaxDepth = Device.Viewport.MaxDepth;
-            v.MinDepth = Device.Viewport.MinDepth;
+            //v.MaxDepth = Device.Viewport.MaxDepth;
+            //v.MinDepth = Device.Viewport.MinDepth;
+
             v.X = Device.Viewport.X;
             v.Y = Device.Viewport.Y;
             v.Width = Width;

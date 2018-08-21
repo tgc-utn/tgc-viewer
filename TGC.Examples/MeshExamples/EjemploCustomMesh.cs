@@ -1,12 +1,12 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
+using TGC.Core.MeshFactory;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -23,8 +23,8 @@ namespace TGC.Examples.MeshExamples
     {
         private MyCustomMesh mesh;
 
-        public EjemploCustomMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploCustomMesh(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Custom Mesh";
@@ -53,6 +53,7 @@ namespace TGC.Examples.MeshExamples
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -66,7 +67,7 @@ namespace TGC.Examples.MeshExamples
 
         public override void Dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
         }
     }
 
@@ -91,7 +92,7 @@ namespace TGC.Examples.MeshExamples
         ///     Segundo constructor de TgcMesh.
         ///     No se hace nada, solo se llama al constructor del padre.
         /// </summary>
-        public MyCustomMesh(string name, TgcMesh parentInstance, Vector3 translation, Vector3 rotation, Vector3 scale)
+        public MyCustomMesh(string name, TgcMesh parentInstance, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
             : base(name, parentInstance, translation, rotation, scale)
         {
         }
@@ -106,10 +107,10 @@ namespace TGC.Examples.MeshExamples
             D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
 
             //Llamamos al metodo original del padre
-            base.render();
+            base.Render();
 
             //Restrablecemos modo solido
-            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;            
+            D3DDevice.Instance.Device.RenderState.FillMode = FillMode.Solid;
         }
     }
 
@@ -118,15 +119,15 @@ namespace TGC.Examples.MeshExamples
     ///     Debe implementar la interfaz TgcSceneLoader.IMeshFactory
     ///     En ambos métodos crea una instancia de MyCustomMesh.
     /// </summary>
-    public class MyCustomMeshFactory : TgcSceneLoader.IMeshFactory
+    public class MyCustomMeshFactory : IMeshFactory
     {
         public TgcMesh createNewMesh(Mesh d3dMesh, string meshName, TgcMesh.MeshRenderType renderType)
         {
             return new MyCustomMesh(d3dMesh, meshName, renderType);
         }
 
-        public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, Vector3 translation,
-            Vector3 rotation, Vector3 scale)
+        public TgcMesh createNewMeshInstance(string meshName, TgcMesh originalMesh, TGCVector3 translation,
+            TGCVector3 rotation, TGCVector3 scale)
         {
             return new MyCustomMesh(meshName, originalMesh, translation, rotation, scale);
         }

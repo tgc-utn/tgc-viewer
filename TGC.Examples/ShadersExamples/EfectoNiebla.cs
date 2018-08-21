@@ -1,19 +1,18 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Fog;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Terrain;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
-namespace TGC.Examples.PostProcess
+namespace TGC.Examples.ShadersExamples
 {
     /// <summary>
     ///     Ejemplo EfectoNiebla
@@ -28,9 +27,14 @@ namespace TGC.Examples.PostProcess
         private TgcFog fog;
         private TgcScene scene;
         private TgcSkyBox skyBox;
+        private TGCBooleanModifier fogShaderModifier;
+        private TGCFloatModifier startDistanceModifier;
+        private TGCFloatModifier endDistanceModifier;
+        private TGCFloatModifier densityModifier;
+        private TGCColorModifier colorModifier;
 
-        public EfectoNiebla(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EfectoNiebla(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel Shaders";
             Name = "Efecto Niebla";
@@ -41,8 +45,8 @@ namespace TGC.Examples.PostProcess
         {
             //Crear SkyBox
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 500, 0);
-            skyBox.Size = new Vector3(10000, 10000, 10000);
+            skyBox.Center = new TGCVector3(0, 500, 0);
+            skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
@@ -60,14 +64,14 @@ namespace TGC.Examples.PostProcess
             effect = TgcShaders.loadEffect(ShadersDir + "TgcViewer\\TgcFogShader.fx");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(1500, 800, 0), Input);
+            Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
             //Modifiers para configurar valores de niebla
-            Modifiers.addBoolean("FogShader", "FogShader", true);
-            Modifiers.addFloat("startDistance", 1, 10000, 2000);
-            Modifiers.addFloat("endDistance", 1, 10000, 5000);
-            Modifiers.addFloat("density", 0, 1, 0.0025f);
-            Modifiers.addColor("color", Color.LightGray);
+            fogShaderModifier = AddBoolean("FogShader", "FogShader", true);
+            startDistanceModifier = AddFloat("startDistance", 1, 10000, 2000);
+            endDistanceModifier = AddFloat("endDistance", 1, 10000, 5000);
+            densityModifier = AddFloat("density", 0, 1, 0.0025f);
+            colorModifier = AddColor("color", Color.LightGray);
 
             fog = new TgcFog();
         }
@@ -75,6 +79,7 @@ namespace TGC.Examples.PostProcess
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -84,12 +89,12 @@ namespace TGC.Examples.PostProcess
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Cargar valores de niebla
-            var fogShader = (bool)Modifiers["FogShader"];
-            fog.Enabled = !(bool)Modifiers["FogShader"];
-            fog.StartDistance = (float)Modifiers["startDistance"];
-            fog.EndDistance = (float)Modifiers["endDistance"];
-            fog.Density = (float)Modifiers["density"];
-            fog.Color = (Color)Modifiers["color"];
+            var fogShader = fogShaderModifier.Value;
+            fog.Enabled = !fogShaderModifier.Value;
+            fog.StartDistance = startDistanceModifier.Value;
+            fog.EndDistance = endDistanceModifier.Value;
+            fog.Density = densityModifier.Value;
+            fog.Color = colorModifier.Value;
 
             if (fog.Enabled)
             {
@@ -100,7 +105,7 @@ namespace TGC.Examples.PostProcess
             {
                 // Cargamos las variables de shader, color del fog.
                 effect.SetValue("ColorFog", fog.Color.ToArgb());
-                effect.SetValue("CameraPos", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
+                effect.SetValue("CameraPos", TGCVector3.Vector3ToFloat4Array(Camara.Position));
                 effect.SetValue("StartFogDistance", fog.StartDistance);
                 effect.SetValue("EndFogDistance", fog.EndDistance);
                 effect.SetValue("Density", fog.Density);
@@ -120,7 +125,7 @@ namespace TGC.Examples.PostProcess
                     mesh.Technique = "DIFFUSE_MAP";
                 }
 
-                mesh.render();
+                mesh.Render();
             }
 
             //skyBox.render();
@@ -138,7 +143,7 @@ namespace TGC.Examples.PostProcess
                     mesh.Technique = "DIFFUSE_MAP";
                 }
                 mesh.UpdateMeshTransform();
-                mesh.render();
+                mesh.Render();
             }
 
             RenderAxis();
@@ -149,8 +154,8 @@ namespace TGC.Examples.PostProcess
 
         public override void Dispose()
         {
-            skyBox.dispose();
-            scene.disposeAll();
+            skyBox.Dispose();
+            scene.DisposeAll();
         }
     }
 }

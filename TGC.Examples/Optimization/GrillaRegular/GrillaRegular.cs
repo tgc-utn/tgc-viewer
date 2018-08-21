@@ -1,11 +1,10 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.Utils;
 
 namespace TGC.Examples.Optimization.GrillaRegular
 {
@@ -37,7 +36,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
             this.sceneBounds = sceneBounds;
 
             //build
-            grid = buildGrid(modelos, sceneBounds, new Vector3(CELL_WIDTH, CELL_HEIGHT, CELL_LENGTH));
+            grid = buildGrid(modelos, sceneBounds, new TGCVector3(CELL_WIDTH, CELL_HEIGHT, CELL_LENGTH));
 
             foreach (var mesh in modelos)
             {
@@ -48,7 +47,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
         /// <summary>
         ///     Construye la grilla
         /// </summary>
-        private GrillaRegularNode[,,] buildGrid(List<TgcMesh> modelos, TgcBoundingAxisAlignBox sceneBounds, Vector3 cellDim)
+        private GrillaRegularNode[,,] buildGrid(List<TgcMesh> modelos, TgcBoundingAxisAlignBox sceneBounds, TGCVector3 cellDim)
         {
             var sceneSize = sceneBounds.calculateSize();
 
@@ -69,9 +68,9 @@ namespace TGC.Examples.Optimization.GrillaRegular
                         var node = new GrillaRegularNode();
 
                         //Crear BoundingBox de celda
-                        var pMin = new Vector3(sceneBounds.PMin.X + x * cellDim.X, sceneBounds.PMin.Y + y * cellDim.Y,
+                        var pMin = new TGCVector3(sceneBounds.PMin.X + x * cellDim.X, sceneBounds.PMin.Y + y * cellDim.Y,
                             sceneBounds.PMin.Z + z * cellDim.Z);
-                        var pMax = Vector3.Add(pMin, cellDim);
+                        var pMax = TGCVector3.Add(pMin, cellDim);
                         node.BoundingBox = new TgcBoundingAxisAlignBox(pMin, pMax);
 
                         //Cargar modelos en celda
@@ -136,7 +135,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
             {
                 if (mesh.Enabled)
                 {
-                    mesh.render();
+                    mesh.Render();
                     mesh.Enabled = false;
                 }
             }
@@ -145,7 +144,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
             {
                 foreach (var debugBox in debugBoxes)
                 {
-                    debugBox.render();
+                    debugBox.Render();
                 }
             }
         }

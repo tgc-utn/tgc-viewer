@@ -4,17 +4,18 @@ using SharpDX;
 using SharpDX.Direct3D9;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
+using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.SceneLoader
 {
     /// <summary>
-    ///     Representa una malla estática.
-    ///     Puede moverse y rotarse pero no tiene animación.
-    ///     La malla puede tener colores por vértice, texturas y lightmaps.
-    ///     Puede crearse como una malla nueva o como una instancia de otra existente y reutilizar así su geometría.
+    ///     Representa una malla estï¿½tica.
+    ///     Puede moverse y rotarse pero no tiene animaciï¿½n.
+    ///     La malla puede tener colores por vï¿½rtice, texturas y lightmaps.
+    ///     Puede crearse como una malla nueva o como una instancia de otra existente y reutilizar asï¿½ su geometrï¿½a.
     /// </summary>
     public class TgcMesh : IRenderObject, ITransformObject
     {
@@ -40,16 +41,12 @@ namespace TGC.Core.SceneLoader
             DIFFUSE_MAP_AND_LIGHTMAP
         }
 
-        protected bool alphaBlendEnable;
-
         protected bool autoTransformEnable;
 
         protected TgcBoundingAxisAlignBox boundingBox;
         protected Mesh d3dMesh;
 
         protected TgcTexture[] diffuseMaps;
-
-        protected Effect effect;
 
         protected bool enabled;
 
@@ -67,15 +64,13 @@ namespace TGC.Core.SceneLoader
 
         protected MeshRenderType renderType;
 
-        protected Vector3 rotation;
+        protected TGCVector3 rotation;
 
-        protected Vector3 scale;
+        protected TGCVector3 scale;
 
-        protected string technique;
+        protected TGCMatrix transform;
 
-        protected Matrix transform;
-
-        protected Vector3 translation;
+        protected TGCVector3 translation;
 
         protected VertexDeclaration vertexDeclaration;
 
@@ -99,15 +94,15 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     Crea una nueva malla que es una instancia de otra malla original.
-        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Reutiliza toda la geometrï¿½a de la malla original sin duplicarla.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
         /// <param name="parentInstance">Malla original desde la cual basarse</param>
-        /// <param name="translation">Traslación respecto de la malla original</param>
-        /// <param name="rotation">Rotación respecto de la malla original</param>
+        /// <param name="translation">Traslaciï¿½n respecto de la malla original</param>
+        /// <param name="rotation">Rotaciï¿½n respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
         [Obsolete]
-        public TgcMesh(string name, TgcMesh parentInstance, Vector3 translation, Vector3 rotation, Vector3 scale)
+        public TgcMesh(string name, TgcMesh parentInstance, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
         {
             //Cargar datos en base al original
             initData(parentInstance.d3dMesh, name, parentInstance.renderType);
@@ -119,9 +114,9 @@ namespace TGC.Core.SceneLoader
             }
             materials = parentInstance.materials; //es un clone necesario?
             lightMap = parentInstance.lightMap; //es un clone necesario?
-            effect = parentInstance.effect; //.Clone() pide device ????...... FIXIT.
+            Effect = parentInstance.Effect; //.Clone() pide device ????...... FIXIT.
 
-            //Almacenar transformación inicial
+            //Almacenar transformaciï¿½n inicial
             this.translation = translation;
             this.rotation = rotation;
             this.scale = scale;
@@ -174,21 +169,13 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Shader del mesh
         /// </summary>
-        public Effect Effect
-        {
-            get { return effect; }
-            set { effect = value; }
-        }
+        public Effect Effect { get; set; }
 
         /// <summary>
         ///     Technique que se va a utilizar en el effect.
         ///     Cada vez que se llama a Render() se carga este Technique (pisando lo que el shader ya tenia seteado)
         /// </summary>
-        public string Technique
-        {
-            get { return technique; }
-            set { technique = value; }
-        }
+        public string Technique { get; set; }
 
         /// <summary>
         ///     Array de texturas para DiffuseMap
@@ -265,7 +252,7 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Cantidad de triángulos de la malla
+        ///     Cantidad de triï¿½ngulos de la malla
         /// </summary>
         public int NumberTriangles
         {
@@ -273,7 +260,7 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Cantidad de vértices de la malla
+        ///     Cantidad de vï¿½rtices de la malla
         /// </summary>
         public int NumberVertices
         {
@@ -282,23 +269,19 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vértice de canal Alpha.
-        ///     Por default está deshabilitado.
+        ///     con textura o colores por vï¿½rtice de canal Alpha.
+        ///     Por default estï¿½ deshabilitado.
         /// </summary>
-        public bool AlphaBlendEnable
-        {
-            get { return alphaBlendEnable; }
-            set { alphaBlendEnable = value; }
-        }
+        public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Renderiza la malla, si esta habilitada
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!enabled)
                 return;
-            
+
             //Aplicar transformacion de malla
             if (autoTransformEnable)
             {
@@ -315,8 +298,8 @@ namespace TGC.Core.SceneLoader
             setShaderMatrix();
 
             //Renderizar segun el tipo de Render de la malla
-            effect.Technique = technique;
-            var numPasses = effect.Begin(0);
+            Effect.Technique = Technique;
+            var numPasses = Effect.Begin(0);
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
@@ -329,9 +312,9 @@ namespace TGC.Core.SceneLoader
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Iniciar pasada de shader
-                        effect.BeginPass(n);
+                        Effect.BeginPass(n);
                         d3dMesh.DrawSubset(0);
-                        effect.EndPass();
+                        Effect.EndPass();
                     }
 
                     break;
@@ -348,12 +331,12 @@ namespace TGC.Core.SceneLoader
                         for (var i = 0; i < diffuseMaps.Length; i++)
                         {
                             //Setear textura en shader
-                            TexturesManager.Instance.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
+                            TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", diffuseMaps[i]);
 
                             //Iniciar pasada de shader
-                            effect.BeginPass(n);
+                            Effect.BeginPass(n);
                             d3dMesh.DrawSubset(i);
-                            effect.EndPass();
+                            Effect.EndPass();
                         }
                     }
 
@@ -365,18 +348,18 @@ namespace TGC.Core.SceneLoader
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Cargar lightmap
-                        TexturesManager.Instance.shaderSet(effect, "texLightMap", lightMap);
+                        TexturesManager.Instance.shaderSet(Effect, "texLightMap", lightMap);
 
                         //Dibujar cada subset con su Material y su DiffuseMap correspondiente
                         for (var i = 0; i < diffuseMaps.Length; i++)
                         {
                             //Setear textura en shader
-                            TexturesManager.Instance.shaderSet(effect, "texDiffuseMap", diffuseMaps[i]);
+                            TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", diffuseMaps[i]);
 
                             //Iniciar pasada de shader
-                            effect.BeginPass(n);
+                            Effect.BeginPass(n);
                             d3dMesh.DrawSubset(i);
-                            effect.EndPass();
+                            Effect.EndPass();
                         }
                     }
 
@@ -384,7 +367,7 @@ namespace TGC.Core.SceneLoader
             }
 
             //Finalizar shader
-            effect.End();
+            Effect.End();
 
             //Desactivar alphaBlend
             resetAlphaBlend();
@@ -393,14 +376,14 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Libera los recursos de la malla.
         ///     Si la malla es una instancia se deshabilita pero no se liberan recursos.
-        ///     Si la malla es el original y tiene varias instancias adjuntadas, se hace dispose() también de las instancias.
+        ///     Si la malla es el original y tiene varias instancias adjuntadas, se hace dispose() tambiï¿½n de las instancias.
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             enabled = false;
             if (boundingBox != null)
             {
-                boundingBox.dispose();
+                boundingBox.Dispose();
             }
 
             //Si es una instancia no liberar nada, lo hace el original.
@@ -415,7 +398,7 @@ namespace TGC.Core.SceneLoader
             {
                 foreach (var meshInstance in meshInstances)
                 {
-                    meshInstance.dispose();
+                    meshInstance.Dispose();
                 }
                 meshInstances = null;
             }
@@ -451,9 +434,9 @@ namespace TGC.Core.SceneLoader
         ///     Matriz final que se utiliza para aplicar transformaciones a la malla.
         ///     Si la propiedad AutoTransformEnable esta en True, la matriz se reconstruye en cada cuadro
         ///     en base a los valores de: Position, Rotation, Scale.
-        ///     Si AutoTransformEnable está en False, se respeta el valor que el usuario haya cargado en la matriz.
+        ///     Si AutoTransformEnable estï¿½ en False, se respeta el valor que el usuario haya cargado en la matriz.
         /// </summary>
-        public Matrix Transform
+        public TGCMatrix Transform
         {
             get { return transform; }
             set { transform = value; }
@@ -461,11 +444,11 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
-        ///     cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
+        ///     cada cuadro en forma automï¿½tica, segï¿½n los valores de: Position, Rotation, Scale.
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
-        ///     Por default está en True.
+        ///     Por default estï¿½ en True.
         /// </summary>
-        public bool AutoTransformEnable
+        public bool AutoTransform
         {
             get { return autoTransformEnable; }
             set { autoTransformEnable = value; }
@@ -474,7 +457,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Posicion absoluta de la Malla
         /// </summary>
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return translation; }
             set
@@ -485,9 +468,9 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Rotación absoluta de la malla
+        ///     Rotaciï¿½n absoluta de la malla
         /// </summary>
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
@@ -496,7 +479,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Escalado absoluto de la malla;
         /// </summary>
-        public Vector3 Scale
+        public TGCVector3 Scale
         {
             get { return scale; }
             set
@@ -509,15 +492,15 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(Vector3 v)
+        public void Move(TGCVector3 v)
         {
-            move(v.X, v.Y, v.Z);
+            Move(v.X, v.Y, v.Z);
         }
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
-        public void move(float x, float y, float z)
+        public void Move(float x, float y, float z)
         {
             translation.X += x;
             translation.Y += y;
@@ -531,12 +514,12 @@ namespace TGC.Core.SceneLoader
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
-        public void moveOrientedY(float movement)
+        public void MoveOrientedY(float movement)
         {
             var z = FastMath.Cos(rotation.Y) * movement;
             var x = FastMath.Sin(rotation.Y) * movement;
 
-            move(x, 0, z);
+            Move(x, 0, z);
         }
 
         /// <summary>
@@ -544,7 +527,7 @@ namespace TGC.Core.SceneLoader
         ///     almacenar el resultado
         /// </summary>
         /// <param name="pos">Vector ya creado en el que se carga el resultado</param>
-        public void getPosition(Vector3 pos)
+        public void GetPosition(TGCVector3 pos)
         {
             pos.X = translation.X;
             pos.Y = translation.Y;
@@ -554,8 +537,8 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Rota la malla respecto del eje X
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateX(float angle)
+        /// <param name="angle">ï¿½ngulo de rotaciï¿½n en radianes</param>
+        public void RotateX(float angle)
         {
             rotation.X += angle;
         }
@@ -563,8 +546,8 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Rota la malla respecto del eje Y
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateY(float angle)
+        /// <param name="angle">ï¿½ngulo de rotaciï¿½n en radianes</param>
+        public void RotateY(float angle)
         {
             rotation.Y += angle;
         }
@@ -572,8 +555,8 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Rota la malla respecto del eje Z
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
-        public void rotateZ(float angle)
+        /// <param name="angle">ï¿½ngulo de rotaciï¿½n en radianes</param>
+        public void RotateZ(float angle)
         {
             rotation.Z += angle;
         }
@@ -589,19 +572,19 @@ namespace TGC.Core.SceneLoader
             enabled = false;
             parentInstance = null;
             meshInstances = new List<TgcMesh>();
-            alphaBlendEnable = false;
+            AlphaBlendEnable = false;
 
-            AutoTransformEnable = false;
+            AutoTransform = false;
             AutoUpdateBoundingBox = true;
-            translation = new Vector3(0f, 0f, 0f);
-            rotation = new Vector3(0f, 0f, 0f);
-            scale = new Vector3(1f, 1f, 1f);
-            transform = Matrix.Identity;
+            translation = new TGCVector3(0f, 0f, 0f);
+            rotation = new TGCVector3(0f, 0f, 0f);
+            scale = new TGCVector3(1f, 1f, 1f);
+            transform = TGCMatrix.Identity;
 
             //Shader
             vertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
-            effect = TgcShaders.Instance.TgcMeshShader;
-            technique = TgcShaders.Instance.getTgcMeshTechnique(this.renderType);
+            Effect = TgcShaders.Instance.TgcMeshShader;
+            Technique = TgcShaders.Instance.getTgcMeshTechnique(this.renderType);
         }
 
         /// <summary>
@@ -609,7 +592,7 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         protected void setShaderMatrix()
         {
-            TgcShaders.Instance.setShaderMatrix(effect, transform);
+            TgcShaders.Instance.setShaderMatrix(Effect, transform);
         }
 
         /// <summary>
@@ -617,9 +600,9 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         public void UpdateMeshTransform()
         {
-            transform = Matrix.Scaling(scale)
-                            * Matrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
-                            * Matrix.Translation(translation);            
+            transform = TGCMatrix.Scaling(scale)
+                            * TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z)
+                            * TGCMatrix.Translation(translation);
         }
 
         /// <summary>
@@ -627,7 +610,7 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         protected void activateAlphaBlend()
         {
-            if (alphaBlendEnable)
+            if (AlphaBlendEnable)
             {
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
                 D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = true;
@@ -644,18 +627,18 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Devuelve un array con todas las posiciones de los vértices de la malla
+        ///     Devuelve un array con todas las posiciones de los vï¿½rtices de la malla
         /// </summary>
         /// <returns>Array creado</returns>
-        public Vector3[] getVertexPositions()
+        public TGCVector3[] getVertexPositions()
         {
-            Vector3[] points = null;
+            TGCVector3[] points = null;
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
                     var verts1 = (TgcSceneLoader.VertexColorVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts1.Length];
+                    points = new TGCVector3[verts1.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts1[i].Position;
@@ -666,7 +649,7 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP:
                     var verts2 = (TgcSceneLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts2.Length];
+                    points = new TGCVector3[verts2.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts2[i].Position;
@@ -677,7 +660,7 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                     var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    points = new Vector3[verts3.Length];
+                    points = new TGCVector3[verts3.Length];
                     for (var i = 0; i < points.Length; i++)
                     {
                         points[i] = verts3[i].Position;
@@ -693,9 +676,9 @@ namespace TGC.Core.SceneLoader
         ///     Solo puede hacerse para meshes del tipo DIFFUSE_MAP y DIFFUSE_MAP_AND_LIGHTMAP.
         /// </summary>
         /// <returns>Array creado</returns>
-        public Vector2[] getTextureCoordinates()
+        public TGCVector2[] getTextureCoordinates()
         {
-            Vector2[] uvCoords = null;
+            TGCVector2[] uvCoords = null;
             switch (renderType)
             {
                 case MeshRenderType.VERTEX_COLOR:
@@ -704,10 +687,10 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP:
                     var verts2 = (TgcSceneLoader.DiffuseMapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    uvCoords = new Vector2[verts2.Length];
+                    uvCoords = new TGCVector2[verts2.Length];
                     for (var i = 0; i < uvCoords.Length; i++)
                     {
-                        uvCoords[i] = new Vector2(verts2[i].Tu, verts2[i].Tv);
+                        uvCoords[i] = new TGCVector2(verts2[i].Tu, verts2[i].Tv);
                     }
                     d3dMesh.UnlockVertexBuffer();
                     break;
@@ -715,10 +698,10 @@ namespace TGC.Core.SceneLoader
                 case MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
                     var verts3 = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])d3dMesh.LockVertexBuffer(
                         typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, d3dMesh.NumberVertices);
-                    uvCoords = new Vector2[verts3.Length];
+                    uvCoords = new TGCVector2[verts3.Length];
                     for (var i = 0; i < uvCoords.Length; i++)
                     {
-                        uvCoords[i] = new Vector2(verts3[i].Tu0, verts3[i].Tv0);
+                        uvCoords[i] = new TGCVector2(verts3[i].Tu0, verts3[i].Tv0);
                     }
                     d3dMesh.UnlockVertexBuffer();
                     break;
@@ -734,7 +717,7 @@ namespace TGC.Core.SceneLoader
         {
             if (boundingBox != null)
             {
-                boundingBox.dispose();
+                boundingBox.Dispose();
                 boundingBox = null;
             }
             //Obtener vertices en base al tipo de malla
@@ -756,7 +739,7 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Cambia el color de todos los vértices de la malla.
+        ///     Cambia el color de todos los vï¿½rtices de la malla.
         ///     Esta operacion tiene que hacer un lock del VertexBuffer y es poco performante.
         /// </summary>
         /// <param name="color">Color nuevo</param>
@@ -827,7 +810,7 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     Agregar una nueva textura a la lista de texturas que tiene el mesh.
-        ///     Esta nueva textura no va a ser utilizada por ningún triángulo si no se
+        ///     Esta nueva textura no va a ser utilizada por ningï¿½n triï¿½ngulo si no se
         ///     adapta correctamente el attributeBuffer.
         ///     No se controla si esa textura ya esta repetida en el mesh.
         /// </summary>
@@ -897,14 +880,14 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     Crea una nueva malla que es una instancia de esta malla original
-        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Reutiliza toda la geometrï¿½a de la malla original sin duplicarla.
         ///     Solo se puede crear instancias a partir de originales.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
-        /// <param name="translation">Traslación respecto de la malla original</param>
-        /// <param name="rotation">Rotación respecto de la malla original</param>
+        /// <param name="translation">Traslaciï¿½n respecto de la malla original</param>
+        /// <param name="rotation">Rotaciï¿½n respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
-        public TgcMesh createMeshInstance(string name, Vector3 translation, Vector3 rotation, Vector3 scale)
+        public TgcMesh createMeshInstance(string name, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
         {
             if (parentInstance != null)
             {
@@ -925,15 +908,19 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     Crea una nueva malla que es una instancia de esta malla original
-        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Reutiliza toda la geometrï¿½a de la malla original sin duplicarla.
         ///     Solo se puede crear instancias a partir de originales.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
         public TgcMesh createMeshInstance(string name)
         {
-            return createMeshInstance(name, Vector3.Zero, Vector3.Zero, new Vector3(1, 1, 1));
+            return createMeshInstance(name, TGCVector3.Empty, TGCVector3.Empty, TGCVector3.One);
         }
 
+        /// <summary>
+        /// Obtains a string representation of the current instance.
+        /// </summary>
+        /// <returns>String that represents the object.</returns>
         public override string ToString()
         {
             return "Mesh: " + name;
@@ -954,7 +941,7 @@ namespace TGC.Core.SceneLoader
             cloneMesh.Materials = Materials;
             cloneMesh.layer = layer;
             cloneMesh.boundingBox = boundingBox.clone();
-            cloneMesh.alphaBlendEnable = alphaBlendEnable;
+            cloneMesh.AlphaBlendEnable = AlphaBlendEnable;
             cloneMesh.enabled = true;
             cloneMesh.AutoUpdateBoundingBox = AutoUpdateBoundingBox;
 
@@ -1029,6 +1016,315 @@ namespace TGC.Core.SceneLoader
                         typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), lockFlags, d3dMesh.NumberVertices);
             }
             return null;
+        }
+
+        public static TgcMesh FromTGCBox(string meshName, TgcTexture texture, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform, bool alphaBlendEnable)
+        {
+            TgcMesh tgcMesh;
+
+            if (texture != null)
+            {
+                //Crear mesh con DiffuseMap
+                tgcMesh = TgcMesh.ToDiffuseMapMesh(meshName, vertices, transform, texture, alphaBlendEnable);
+            }
+            else
+            {
+                //Crear mesh con solo color
+                tgcMesh = TgcMesh.ToColorMesh(meshName, vertices, transform);
+            }
+
+            return tgcMesh;
+        }
+
+        /// <summary>
+        /// Crea un TGCMesh con solo color.
+        /// </summary>
+        /// <param name="meshName">Nombre de la malla que se va a crear.</param>
+        /// <param name="vertices">Vertices a utilizar para crear la malla.</param>
+        /// <param name="transform">Matriz a utilizar para aplicar transformaciones a la malla.</param>
+        /// <returns>Un nuevo TGCMesh basado en los parametros dados.</returns>
+        public static TgcMesh ToColorMesh(string meshName, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform)
+        {
+            //Crear Mesh
+            var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
+                TgcSceneLoader.VertexColorVertexElements, D3DDevice.Instance.Device);
+
+            //Cargar VertexBuffer
+            using (var vb = d3dMesh.VertexBuffer)
+            {
+                var data = vb.Lock(0, 0, LockFlags.None);
+                for (var j = 0; j < vertices.Length; j++)
+                {
+                    var v = new TgcSceneLoader.VertexColorVertex();
+                    var vBox = vertices[j];
+
+                    //vertices
+                    v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), transform);
+
+                    //normals
+                    v.Normal = TGCVector3.Empty;
+
+                    //color
+                    v.Color = vBox.Color;
+
+                    data.Write(v);
+                }
+                vb.Unlock();
+            }
+
+            //Cargar IndexBuffer en forma plana
+            using (var ib = d3dMesh.IndexBuffer)
+            {
+                var indices = new short[vertices.Length];
+                for (var j = 0; j < indices.Length; j++)
+                {
+                    indices[j] = (short)j;
+                }
+                ib.SetData(indices, 0, LockFlags.None);
+            }
+
+            //Malla de TGC
+            var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.VERTEX_COLOR);
+            tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
+            tgcMesh.createBoundingBox();
+            tgcMesh.Enabled = true;
+            return tgcMesh;
+        }
+
+        /// <summary>
+        /// Crea un TGCMesh con DiffuseMap.
+        /// </summary>
+        /// <param name="meshName">Nombre de la malla que se va a crear.</param>
+        /// <param name="vertices">Vertices a utilizar para crear la malla.</param>
+        /// <param name="transform">Matriz que se utiliza para aplicar transformaciones a la malla.</param>
+        /// <param name="texture">Textura a utilizar.</param>
+        /// <param name="alphaBlendEnable">Habilita el AlphaBlending para los modelos.</param>
+        /// <returns>Un nuevo TGCMesh basado en los parametros dados.</returns>
+        public static TgcMesh ToDiffuseMapMesh(string meshName, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform, TgcTexture texture, bool alphaBlendEnable)
+        {
+            //Crear Mesh
+            var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
+                TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
+
+            //Cargar VertexBuffer
+            using (var vb = d3dMesh.VertexBuffer)
+            {
+                var data = vb.Lock(0, 0, LockFlags.None);
+                for (var j = 0; j < vertices.Length; j++)
+                {
+                    var v = new TgcSceneLoader.DiffuseMapVertex();
+                    var vBox = vertices[j];
+
+                    //vertices
+                    v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), transform);
+
+                    //normals
+                    v.Normal = TGCVector3.Empty;
+
+                    //texture coordinates diffuseMap
+                    v.Tu = vBox.Tu;
+                    v.Tv = vBox.Tv;
+
+                    //color
+                    v.Color = vBox.Color;
+
+                    data.Write(v);
+                }
+                vb.Unlock();
+            }
+
+            //Cargar IndexBuffer en forma plana
+            using (var ib = d3dMesh.IndexBuffer)
+            {
+                var indices = new short[vertices.Length];
+                for (var j = 0; j < indices.Length; j++)
+                {
+                    indices[j] = (short)j;
+                }
+                ib.SetData(indices, 0, LockFlags.None);
+            }
+
+            //Calcular normales
+            d3dMesh.ComputeNormals();
+
+            //Malla de TGC
+            var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
+            tgcMesh.DiffuseMaps = new[] { texture.Clone() };
+            tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
+            tgcMesh.createBoundingBox();
+            tgcMesh.Enabled = true;
+            tgcMesh.AlphaBlendEnable = alphaBlendEnable;
+            return tgcMesh;
+        }
+
+        public static TgcMesh FromTGCSphere(string meshName, TgcTexture texture, List<int> indices, List<TGCSphere.Vertex.PositionColoredTexturedNormal> vertices, TGCMatrix transform, bool alphaBlendEnable)
+        {
+            //Crear mesh con DiffuseMap
+            if (texture != null)
+            {
+                //Crear Mesh
+                var d3dMesh = new Mesh(indices.Count / 3, indices.Count, MeshFlags.Managed,
+                    TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
+
+                //Cargar VertexBuffer
+                using (var vb = d3dMesh.VertexBuffer)
+                {
+                    var data = vb.Lock(0, 0, LockFlags.None);
+                    for (var j = 0; j < indices.Count; j++)
+                    {
+                        var v = new TgcSceneLoader.DiffuseMapVertex();
+                        var vSphere = vertices[indices[j]];
+
+                        //vertices
+                        v.Position = TGCVector3.TransformCoordinate(vSphere.getPosition(), transform);
+
+                        //normals
+                        v.Normal = vSphere.getNormal();
+
+                        //texture coordinates diffuseMap
+                        v.Tu = vSphere.Tu;
+                        v.Tv = vSphere.Tv;
+
+                        //color
+                        v.Color = vSphere.Color;
+
+                        data.Write(v);
+                    }
+                    vb.Unlock();
+                }
+
+                //Cargar IndexBuffer en forma plana
+                using (var ib = d3dMesh.IndexBuffer)
+                {
+                    var vIndices = new short[indices.Count];
+                    for (var j = 0; j < vIndices.Length; j++)
+                    {
+                        vIndices[j] = (short)j;
+                    }
+                    ib.SetData(vIndices, 0, LockFlags.None);
+                }
+
+                //Calcular normales
+                //d3dMesh.ComputeNormals();
+
+                //Malla de TGC
+                var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
+                tgcMesh.DiffuseMaps = new[] { texture.Clone() };
+                tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
+                tgcMesh.createBoundingBox();
+                tgcMesh.Enabled = true;
+                return tgcMesh;
+            }
+
+            //Crear mesh con solo color
+            else
+            {
+                //Crear Mesh
+                var d3dMesh = new Mesh(indices.Count / 3, indices.Count, MeshFlags.Managed,
+                    TgcSceneLoader.VertexColorVertexElements, D3DDevice.Instance.Device);
+
+                //Cargar VertexBuffer
+                using (var vb = d3dMesh.VertexBuffer)
+                {
+                    var data = vb.Lock(0, 0, LockFlags.None);
+                    for (var j = 0; j < indices.Count; j++)
+                    {
+                        var v = new TgcSceneLoader.VertexColorVertex();
+                        var vSphere = vertices[indices[j]];
+
+                        //vertices
+                        v.Position = TGCVector3.TransformCoordinate(vSphere.getPosition(), transform);
+
+                        //normals
+                        v.Normal = vSphere.getNormal();
+
+                        //color
+                        v.Color = vSphere.Color;
+
+                        data.Write(v);
+                    }
+                    vb.Unlock();
+                }
+
+                //Cargar IndexBuffer en forma plana
+                using (var ib = d3dMesh.IndexBuffer)
+                {
+                    var vIndices = new short[indices.Count];
+                    for (var j = 0; j < vIndices.Length; j++)
+                    {
+                        vIndices[j] = (short)j;
+                    }
+                    ib.SetData(vIndices, 0, LockFlags.None);
+                }
+
+                //Malla de TGC
+                var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.VERTEX_COLOR);
+                tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
+                tgcMesh.createBoundingBox();
+                tgcMesh.Enabled = true;
+                tgcMesh.AlphaBlendEnable = alphaBlendEnable;
+                return tgcMesh;
+            }
+        }
+
+        public static TgcMesh FromTGCPlane(string meshName, CustomVertex.PositionTextured[] vertices, TgcTexture texture, TGCVector3? Normal)
+        {
+            //Crear Mesh
+            var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed, TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);
+
+            //Cargar VertexBuffer
+            using (var vb = d3dMesh.VertexBuffer)
+            {
+                var data = vb.Lock(0, 0, LockFlags.None);
+                var ceroNormal = TGCVector3.Empty;
+                var whiteColor = Color.White.ToArgb();
+                for (var j = 0; j < vertices.Length; j++)
+                {
+                    var v = new TgcSceneLoader.DiffuseMapVertex();
+                    var vPlane = vertices[j];
+
+                    //vertices
+                    v.Position = TGCVector3.FromVector3(vPlane.Position);
+
+                    //normals
+                    v.Normal = (Normal ?? TGCVector3.Empty);
+
+                    //texture coordinates diffuseMap
+                    v.Tu = vPlane.Tu;
+                    v.Tv = vPlane.Tv;
+
+                    //color
+                    v.Color = whiteColor;
+
+                    data.Write(v);
+                }
+                vb.Unlock();
+            }
+
+            //Cargar IndexBuffer en forma plana
+            using (var ib = d3dMesh.IndexBuffer)
+            {
+                var indices = new short[vertices.Length];
+                for (var j = 0; j < indices.Length; j++)
+                {
+                    indices[j] = (short)j;
+                }
+                ib.SetData(indices, 0, LockFlags.None);
+            }
+
+            //Calcular normales
+            if (Normal == null)
+            {
+                d3dMesh.ComputeNormals();
+            }
+
+            //Malla de TGC
+            var tgcMesh = new TgcMesh(d3dMesh, meshName, TgcMesh.MeshRenderType.DIFFUSE_MAP);
+            tgcMesh.DiffuseMaps = new[] { texture.Clone() };
+            tgcMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
+            tgcMesh.createBoundingBox();
+            tgcMesh.Enabled = true;
+            return tgcMesh;
         }
     }
 }

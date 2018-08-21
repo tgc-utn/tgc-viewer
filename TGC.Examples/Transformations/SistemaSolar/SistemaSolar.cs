@@ -1,14 +1,13 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Transformations.SistemaSolar
 {
@@ -21,19 +20,19 @@ namespace TGC.Examples.Transformations.SistemaSolar
     /// </summary>
     public class SistemaSolar : TGCExampleViewer
     {
-        private const float AXIS_ROTATION_SPEED = 0.5f;
-        private const float EARTH_AXIS_ROTATION_SPEED = 10f;
-        private const float EARTH_ORBIT_SPEED = 2f;
-        private const float MOON_ORBIT_SPEED = 10f;
+        private const float AXIS_ROTATION_SPEED = 0.125f;
+        private const float EARTH_AXIS_ROTATION_SPEED = 2.5f;
+        private const float EARTH_ORBIT_SPEED = 0.5f;
+        private const float MOON_ORBIT_SPEED = 2.5f;
 
         private const float EARTH_ORBIT_OFFSET = 700;
         private const float MOON_ORBIT_OFFSET = 80;
 
-        private readonly Vector3 EARTH_SCALE = new Vector3(3, 3, 3);
-        private readonly Vector3 MOON_SCALE = new Vector3(0.5f, 0.5f, 0.5f);
+        private readonly TGCVector3 EARTH_SCALE = new TGCVector3(3, 3, 3);
+        private readonly TGCVector3 MOON_SCALE = new TGCVector3(0.5f, 0.5f, 0.5f);
 
         //Escalas de cada uno de los astros
-        private readonly Vector3 SUN_SCALE = new Vector3(12, 12, 12);
+        private readonly TGCVector3 SUN_SCALE = new TGCVector3(12, 12, 12);
 
         private float axisRotation;
         private TgcMesh earth;
@@ -44,8 +43,8 @@ namespace TGC.Examples.Transformations.SistemaSolar
 
         private TgcMesh sun;
 
-        public SistemaSolar(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public SistemaSolar(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Transformations";
             Name = "Sistema Solar";
@@ -79,81 +78,83 @@ namespace TGC.Examples.Transformations.SistemaSolar
             });
 
             //Deshabilitamos el manejo automatico de Transformaciones de TgcMesh, para poder manipularlas en forma personalizada
-            sun.AutoTransformEnable = false;
-            earth.AutoTransformEnable = false;
-            moon.AutoTransformEnable = false;
+            sun.AutoTransform = false;
+            earth.AutoTransform = false;
+            moon.AutoTransform = false;
 
             //Camara en primera persona
-            Camara = new TgcRotationalCamera(new Vector3(0f, 200f, 1000f), 500f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(0f, 200f, 1000f), 500f, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
         {
+            //BackgroundColor
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            D3DDevice.Instance.Device.BeginScene();
+            BeginScene();
             ClearTextures();
 
             //Actualizar transformacion y renderizar el sol
             sun.Transform = getSunTransform(ElapsedTime);
-            sun.render();
+            sun.Render();
 
             //Actualizar transformacion y renderizar la tierra
             earth.Transform = getEarthTransform(ElapsedTime);
-            earth.render();
+            earth.Render();
 
             //Actualizar transformacion y renderizar la luna
             moon.Transform = getMoonTransform(ElapsedTime, earth.Transform);
-            moon.render();
+            moon.Render();
 
             axisRotation += AXIS_ROTATION_SPEED * ElapsedTime;
             earthAxisRotation += EARTH_AXIS_ROTATION_SPEED * ElapsedTime;
             earthOrbitRotation += EARTH_ORBIT_SPEED * ElapsedTime;
             moonOrbitRotation += MOON_ORBIT_SPEED * ElapsedTime;
 
-            //Limpiamos todas las transformaciones con la Matrix identidad
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            //Limpiamos todas las transformaciones con la TGCMatrix identidad
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
 
             PostRender();
         }
 
-        private Matrix getSunTransform(float elapsedTime)
+        private TGCMatrix getSunTransform(float elapsedTime)
         {
-            var scale = Matrix.Scaling(SUN_SCALE);
-            var yRot = Matrix.RotationY(axisRotation);
+            var scale = TGCMatrix.Scaling(SUN_SCALE);
+            var yRot = TGCMatrix.RotationY(axisRotation);
 
             return scale * yRot;
         }
 
-        private Matrix getEarthTransform(float elapsedTime)
+        private TGCMatrix getEarthTransform(float elapsedTime)
         {
-            var scale = Matrix.Scaling(EARTH_SCALE);
-            var yRot = Matrix.RotationY(earthAxisRotation);
-            var sunOffset = Matrix.Translation(EARTH_ORBIT_OFFSET, 0, 0);
-            var earthOrbit = Matrix.RotationY(earthOrbitRotation);
+            var scale = TGCMatrix.Scaling(EARTH_SCALE);
+            var yRot = TGCMatrix.RotationY(earthAxisRotation);
+            var sunOffset = TGCMatrix.Translation(EARTH_ORBIT_OFFSET, 0, 0);
+            var earthOrbit = TGCMatrix.RotationY(earthOrbitRotation);
 
             return scale * yRot * sunOffset * earthOrbit;
         }
 
-        private Matrix getMoonTransform(float elapsedTime, Matrix earthTransform)
+        private TGCMatrix getMoonTransform(float elapsedTime, TGCMatrix earthTransform)
         {
-            var scale = Matrix.Scaling(MOON_SCALE);
-            var yRot = Matrix.RotationY(axisRotation);
-            var earthOffset = Matrix.Translation(MOON_ORBIT_OFFSET, 0, 0);
-            var moonOrbit = Matrix.RotationY(moonOrbitRotation);
+            var scale = TGCMatrix.Scaling(MOON_SCALE);
+            var yRot = TGCMatrix.RotationY(axisRotation);
+            var earthOffset = TGCMatrix.Translation(MOON_ORBIT_OFFSET, 0, 0);
+            var moonOrbit = TGCMatrix.RotationY(moonOrbitRotation);
 
             return scale * yRot * earthOffset * moonOrbit * earthTransform;
         }
 
         public override void Dispose()
         {
-            sun.dispose();
-            moon.dispose();
-            earth.dispose();
+            sun.Dispose();
+            moon.Dispose();
+            earth.Dispose();
         }
     }
 }

@@ -1,13 +1,12 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
+using TGC.Core.Mathematica;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.DirectX
 {
@@ -31,8 +30,8 @@ namespace TGC.Examples.DirectX
         /// <summary>
         ///     Vertex declaration para el vertice customizado. Hay que tener cuidado con la suma de bytes
         ///     1 float = 4 bytes
-        ///     Vector2 = 8 bytes
-        ///     Vector3 = 12 bytes
+        ///     TGCVector2 = 8 bytes
+        ///     TGCVector3 = 12 bytes
         ///     Color = 4 bytes (es un int)
         /// </summary>
         public static readonly VertexElement[] MyCustomVertexElements =
@@ -101,8 +100,8 @@ namespace TGC.Examples.DirectX
         private MyCustomVertex[] vertexData;
         private VertexDeclaration vertexDeclaration;
 
-        public DirectXBox(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public DirectXBox(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "DirectX";
             Name = "DirectX Box";
@@ -112,8 +111,8 @@ namespace TGC.Examples.DirectX
         public override void Init()
         {
             //Dimensiones de la caja
-            var center = new Vector3(0, 0, 0);
-            var size = new Vector3(10, 10, 10);
+            var center = TGCVector3.Empty;
+            var size = new TGCVector3(10, 10, 10);
             var color1 = Color.Red.ToArgb();
             var color2 = Color.Green.ToArgb();
             var extents = size * 0.5f;
@@ -132,23 +131,23 @@ namespace TGC.Examples.DirectX
             //Llenar array con los 8 vertices de la caja
             //La normal se carga combinando la direccion de las 3 caras que toca
             //inferiores (son las 4 combinaciones de min-max entre XZ)
-            vertexData[0] = new MyCustomVertex(new Vector3(min.X, min.Y, min.Z),
-                Vector3.Normalize(new Vector3(-1, -1, -1)), color1);
-            vertexData[1] = new MyCustomVertex(new Vector3(max.X, min.Y, min.Z),
-                Vector3.Normalize(new Vector3(1, -1, -1)), color1);
-            vertexData[2] = new MyCustomVertex(new Vector3(min.X, min.Y, max.Z),
-                Vector3.Normalize(new Vector3(-1, -1, 1)), color1);
-            vertexData[3] = new MyCustomVertex(new Vector3(max.X, min.Y, max.Z),
-                Vector3.Normalize(new Vector3(1, -1, 1)), color1);
+            vertexData[0] = new MyCustomVertex(new TGCVector3(min.X, min.Y, min.Z),
+                TGCVector3.Normalize(new TGCVector3(-1, -1, -1)), color1);
+            vertexData[1] = new MyCustomVertex(new TGCVector3(max.X, min.Y, min.Z),
+                TGCVector3.Normalize(new TGCVector3(1, -1, -1)), color1);
+            vertexData[2] = new MyCustomVertex(new TGCVector3(min.X, min.Y, max.Z),
+                TGCVector3.Normalize(new TGCVector3(-1, -1, 1)), color1);
+            vertexData[3] = new MyCustomVertex(new TGCVector3(max.X, min.Y, max.Z),
+                TGCVector3.Normalize(new TGCVector3(1, -1, 1)), color1);
 
             //superiores (idem inferiores pero con max.Y)
-            vertexData[4] = new MyCustomVertex(new Vector3(min.X, max.Y, min.Z),
-                Vector3.Normalize(new Vector3(-1, 1, -1)), color2);
-            vertexData[5] = new MyCustomVertex(new Vector3(max.X, max.Y, min.Z),
-                Vector3.Normalize(new Vector3(1, 1, -1)), color2);
-            vertexData[6] = new MyCustomVertex(new Vector3(min.X, max.Y, max.Z),
-                Vector3.Normalize(new Vector3(-1, 1, 1)), color2);
-            vertexData[7] = new MyCustomVertex(new Vector3(max.X, max.Y, max.Z), Vector3.Normalize(new Vector3(1, 1, 1)),
+            vertexData[4] = new MyCustomVertex(new TGCVector3(min.X, max.Y, min.Z),
+                TGCVector3.Normalize(new TGCVector3(-1, 1, -1)), color2);
+            vertexData[5] = new MyCustomVertex(new TGCVector3(max.X, max.Y, min.Z),
+                TGCVector3.Normalize(new TGCVector3(1, 1, -1)), color2);
+            vertexData[6] = new MyCustomVertex(new TGCVector3(min.X, max.Y, max.Z),
+                TGCVector3.Normalize(new TGCVector3(-1, 1, 1)), color2);
+            vertexData[7] = new MyCustomVertex(new TGCVector3(max.X, max.Y, max.Z), TGCVector3.Normalize(TGCVector3.One),
                 color2);
 
             //Setear informacion en VertexBuffer
@@ -248,12 +247,13 @@ namespace TGC.Examples.DirectX
 
             dir = 1;
 
-            Camara = new TgcRotationalCamera(new Vector3(), 20f, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 20f, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -276,7 +276,7 @@ namespace TGC.Examples.DirectX
             for (var i = 0; i < vertexCount; i++)
             {
                 var v = vertexData[i];
-                vertexData[i].Position += new Vector3(0, dir * speed, 0);
+                vertexData[i].Position += new TGCVector3(0, dir * speed, 0);
             }
             vertexBuffer.SetData(vertexData, 0, LockFlags.None); //Manda la informacion actualizada a la GPU
 
@@ -294,10 +294,10 @@ namespace TGC.Examples.DirectX
             //Cargar matrices en shader
             var matWorldView = D3DDevice.Instance.Device.Transform.View;
             var matWorldViewProj = matWorldView * D3DDevice.Instance.Device.Transform.Projection;
-            effect.SetValue("matWorld", Matrix.Identity);
+            effect.SetValue("matWorld", TGCMatrix.Identity.ToMatrix());
             effect.SetValue("matWorldView", matWorldView);
             effect.SetValue("matWorldViewProj", matWorldViewProj);
-            effect.SetValue("matInverseTransposeWorld", Matrix.Identity);
+            effect.SetValue("matInverseTransposeWorld", TGCMatrix.Identity.ToMatrix());
 
             //Cargar las 3 texturas en el shader
             effect.SetValue("tex0", texture0);
@@ -331,33 +331,33 @@ namespace TGC.Examples.DirectX
         /// </summary>
         private struct MyCustomVertex
         {
-            public Vector3 Position;
-            public Vector3 Normal;
+            public TGCVector3 Position;
+            public TGCVector3 Normal;
             public int Color;
 
             //Varias coordenadas de textura (se puede guardar cualquier cosa ahi adentro)
-            public Vector2 texcoord0;
+            public TGCVector2 texcoord0;
 
-            public Vector2 texcoord1;
-            public Vector2 texcoord2;
+            public TGCVector2 texcoord1;
+            public TGCVector2 texcoord2;
 
-            //Varios Vector3 auxiliares para guardar cualquier cosa
-            public Vector3 auxValue1;
+            //Varios TGCVector3 auxiliares para guardar cualquier cosa
+            public TGCVector3 auxValue1;
 
-            public Vector3 auxValue2;
+            public TGCVector3 auxValue2;
 
-            public MyCustomVertex(Vector3 pos, Vector3 normal, int color)
+            public MyCustomVertex(TGCVector3 pos, TGCVector3 normal, int color)
             {
                 Position = pos;
                 Normal = normal;
                 Color = color;
 
                 //Los demas valores los llenamos con cualquier cosa porque para este ejemplo no se usan para nada
-                texcoord0 = new Vector2(0, 1);
-                texcoord1 = new Vector2(1, 1);
-                texcoord2 = new Vector2(0.5f, 0.75f);
-                auxValue1 = new Vector3(10, 10, 10);
-                auxValue2 = new Vector3(0, 0, 5);
+                texcoord0 = new TGCVector2(0, 1);
+                texcoord1 = TGCVector2.One;
+                texcoord2 = new TGCVector2(0.5f, 0.75f);
+                auxValue1 = new TGCVector3(10, 10, 10);
+                auxValue2 = new TGCVector3(0, 0, 5);
             }
         }
     }

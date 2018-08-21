@@ -16,7 +16,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -32,6 +32,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,7 +51,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>.\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -57,6 +59,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BulletSharp, Version=0.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BulletSharp.0.10\lib\net40-client\BulletSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.dll</HintPath>
@@ -75,13 +80,25 @@
     </Reference>
     <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Microsoft.DirectX.DirectSound">
       <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectSound.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bullet\BulletExampleWall.cs" />
+    <Compile Include="Bullet\BulletExample3.cs" />
+    <Compile Include="Bullet\BulletSurface.cs" />
+    <Compile Include="Bullet\Physics\HelloWorldBullet.cs" />
+    <Compile Include="Bullet\Physics\HelloWorldBullet2.cs" />
+    <Compile Include="Bullet\Physics\PhysicsGame.cs" />
+    <Compile Include="Bullet\Physics\TrianglePhysics.cs" />
+    <Compile Include="Bullet\Physics\TriangleSpherePhysics.cs" />
+    <Compile Include="Bullet\Physics\WallBullet.cs" />
+    <Compile Include="Bullet\SurfaceVsSphere.cs" />
     <Compile Include="Camara\TgcFpsCamera.cs" />
     <Compile Include="Camara\TgcRotationalCamera.cs" />
     <Compile Include="Camara\TgcSpringThirdPersonCamera.cs" />
@@ -91,24 +108,20 @@
     <Compile Include="Collision\EjemploBoundingCylinder.cs" />
     <Compile Include="Collision\EjemploMoveThirdPerson.cs" />
     <Compile Include="Collision\EjemploPicking.cs" />
-    <Compile Include="Collision\EjemploMoveElipsoidTriangleThirdPerson.cs" />
     <Compile Include="Collision\EjemploMovePicking.cs" />
     <Compile Include="Collision\EjemploMultipleSelectPicking.cs" />
     <Compile Include="Collision\EjemploMoveSphereThirdPerson.cs" />
-    <Compile Include="Collision\EjemploMoveSphereTriangleThirdPerson.cs" />
-    <Compile Include="Collision\ElipsoidCollision\BoundingBoxCollider.cs" />
-    <Compile Include="Collision\ElipsoidCollision\Collider.cs" />
-    <Compile Include="Collision\ElipsoidCollision\ElipsoidCollisionManager.cs" />
-    <Compile Include="Collision\ElipsoidCollision\TriangleMeshCollider.cs" />
     <Compile Include="Collision\SphereCollision\BoundingBoxCollider.cs" />
     <Compile Include="Collision\SphereCollision\Collider.cs" />
     <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
-    <Compile Include="Collision\SphereCollision\SphereTriangleCollisionManager.cs" />
-    <Compile Include="Collision\SphereCollision\TriangleMeshCollider.cs" />
     <Compile Include="DirectX\DirectXBox.cs" />
     <Compile Include="DirectX\DirectXLight.cs" />
     <Compile Include="Engine2D\Transforms2D.cs" />
     <Compile Include="Lights\TgcMeshBumpMapping.cs" />
+    <Compile Include="Multiplayer\EjemploClient.cs" />
+    <Compile Include="Multiplayer\EjemploNetworkingModifier.cs" />
+    <Compile Include="Multiplayer\EjemploServer.cs" />
+    <Compile Include="Multiplayer\VehiculosMultiplayer.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />
     <Compile Include="ShadersExamples\DemoShaders.cs" />
     <Compile Include="ShadersExamples\PhongShadingTgc.cs" />
@@ -213,6 +226,142 @@
     <Compile Include="MeshExamples\ModeloConAlpha.cs" />
     <Compile Include="Optimization\PortalRenderingFramework.cs" />
     <Compile Include="Engine2D\Sprite2D.cs" />
+    <Compile Include="Transformations\EjemploAvion.cs" />
+    <Compile Include="Quake3Loader\BspCollisionManager.cs" />
+    <Compile Include="Quake3Loader\BspLoader.cs" />
+    <Compile Include="Quake3Loader\BspMap.cs" />
+    <Compile Include="Quake3Loader\BspMapData.cs" />
+    <Compile Include="Quake3Loader\BspStructs.cs" />
+    <Compile Include="Quake3Loader\EjemploEmpaquetarQ3Level.cs" />
+    <Compile Include="Quake3Loader\EjemploLoadQ3Level.cs" />
+    <Compile Include="Quake3Loader\Q3FpsCamera.cs" />
+    <Compile Include="Quake3Loader\Q3ShaderParser.cs" />
+    <Compile Include="UserControls\Modifier\TGCBooleanModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCBooleanModifier.Designer.cs">
+      <DependentUpon>TGCBooleanModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCButtonModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCButtonModifier.Designer.cs">
+      <DependentUpon>TGCButtonModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCColorModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCColorModifier.Designer.cs">
+      <DependentUpon>TGCColorModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCEnumModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCEnumModifier.Designer.cs">
+      <DependentUpon>TGCEnumModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCFileModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCFileModifier.Designer.cs">
+      <DependentUpon>TGCFileModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCFloatModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCFloatModifier.Designer.cs">
+      <DependentUpon>TGCFloatModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCIntervalModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCIntervalModifier.Designer.cs">
+      <DependentUpon>TGCIntervalModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCIntModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCIntModifier.Designer.cs">
+      <DependentUpon>TGCIntModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TgcMeshBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TgcMeshBrowser.Designer.cs">
+      <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCModifierTitleBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCModifierTitleBar.Designer.cs">
+      <DependentUpon>TGCModifierTitleBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TgcTextureBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TgcTextureBrowser.Designer.cs">
+      <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCTextureModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCTextureModifier.Designer.cs">
+      <DependentUpon>TGCTextureModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCVertex2fModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCVertex2fModifier.Designer.cs">
+      <DependentUpon>TGCVertex2fModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCVertex3fModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Modifier\TGCVertex3fModifier.Designer.cs">
+      <DependentUpon>TGCVertex3fModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Networking\TgcLanBrowser.cs" />
+    <Compile Include="UserControls\Networking\TGCNetworkingModifier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Networking\TGCNetworkingModifier.Designer.cs">
+      <DependentUpon>TGCNetworkingModifier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Networking\TgcNetworkingModifierClientsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserControls\Networking\TgcNetworkingModifierClientsDialog.Designer.cs">
+      <DependentUpon>TgcNetworkingModifierClientsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Networking\TgcNetworkingModifierControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\Networking\TgcNetworkingModifierControl.Designer.cs">
+      <DependentUpon>TgcNetworkingModifierControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Networking\TgcNetworkingModifierServersDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserControls\Networking\TgcNetworkingModifierServersDialog.Designer.cs">
+      <DependentUpon>TgcNetworkingModifierServersDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\Networking\TgcSocketClient.cs" />
+    <Compile Include="UserControls\Networking\TgcSocketClientInfo.cs" />
+    <Compile Include="UserControls\Networking\TgcSocketMessages.cs" />
+    <Compile Include="UserControls\Networking\TgcSocketServer.cs" />
+    <Compile Include="UserControls\Networking\TgcSocketServerInfo.cs" />
+    <Compile Include="UserControls\TgcUserVars.cs" />
+    <Compile Include="WorkshopShaders\BasicShader.cs" />
+    <Compile Include="WorkshopShaders\ComboRata.cs" />
+    <Compile Include="WorkshopShaders\DepthOfField.cs" />
+    <Compile Include="WorkshopShaders\Distorsiones.cs" />
+    <Compile Include="WorkshopShaders\GUI.cs" />
+    <Compile Include="WorkshopShaders\GUIItem.cs" />
+    <Compile Include="WorkshopShaders\GUITest.cs" />
+    <Compile Include="WorkshopShaders\HDRLighting.cs" />
+    <Compile Include="WorkshopShaders\PlanarShadows.cs" />
+    <Compile Include="WorkshopShaders\POMTerrain.cs" />
+    <Compile Include="WorkshopShaders\Transformers.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TGC.Core\TGC.Core.csproj">
@@ -227,6 +376,62 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCBooleanModifier.resx">
+      <DependentUpon>TGCBooleanModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCButtonModifier.resx">
+      <DependentUpon>TGCButtonModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCColorModifier.resx">
+      <DependentUpon>TGCColorModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCEnumModifier.resx">
+      <DependentUpon>TGCEnumModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCFileModifier.resx">
+      <DependentUpon>TGCFileModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCFloatModifier.resx">
+      <DependentUpon>TGCFloatModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCIntervalModifier.resx">
+      <DependentUpon>TGCIntervalModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCIntModifier.resx">
+      <DependentUpon>TGCIntModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TgcMeshBrowser.resx">
+      <DependentUpon>TgcMeshBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCModifierTitleBar.resx">
+      <DependentUpon>TGCModifierTitleBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TgcTextureBrowser.resx">
+      <DependentUpon>TgcTextureBrowser.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCTextureModifier.resx">
+      <DependentUpon>TGCTextureModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCVertex2fModifier.resx">
+      <DependentUpon>TGCVertex2fModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Modifier\TGCVertex3fModifier.resx">
+      <DependentUpon>TGCVertex3fModifier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Networking\TgcNetworkingModifierClientsDialog.resx">
+      <DependentUpon>TgcNetworkingModifierClientsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Networking\TgcNetworkingModifierControl.resx">
+      <DependentUpon>TgcNetworkingModifierControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\Networking\TgcNetworkingModifierServersDialog.resx">
+      <DependentUpon>TgcNetworkingModifierServersDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -258,6 +463,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Resources\32x32\go-home.png" />
+    <None Include="Resources\32x32\go-up.png" />
+    <None Include="Resources\512x512\folder.png" />
+    <None Include="Resources\512x512\image-x-generic.png" />
+    <None Include="Resources\32x32\folder.png" />
+    <None Include="Resources\32x32\system-file-manager.png" />
     <Content Include="Shaders\BumpMapping.fx" />
     <Content Include="Shaders\BumpMappingNoTangent.fx" />
     <Content Include="Shaders\Cel.fx" />
@@ -304,6 +516,13 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\BulletSharp.0.10\build\net40-client\BulletSharp.targets" Condition="Exists('..\packages\BulletSharp.0.10\build\net40-client\BulletSharp.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\BulletSharp.0.10\build\net40-client\BulletSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BulletSharp.0.10\build\net40-client\BulletSharp.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

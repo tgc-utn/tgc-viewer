@@ -1,9 +1,11 @@
 using SharpDX;
 using SharpDX.Direct3D9;
+using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
+using TGC.Core.Mathematica;
 using TGC.Core.Sound;
 using TGC.Core.Text;
 using TGC.Core.Textures;
@@ -24,7 +26,7 @@ namespace TGC.Core.Example
             FPS = true;
             Camara = new TgcCamera();
             ElapsedTime = -1;
-            HighResolutionTimer = new HighResolutionTimer();
+            Timer = new HighResolutionTimer();
             Frustum = new TgcFrustum();
             //DirectSound = new TgcDirectSound(); Por ahora se carga por afuera
             DrawText = new TgcText2D();
@@ -86,7 +88,7 @@ namespace TGC.Core.Example
         /// </summary>
         public TgcCamera Camara { get; set; }
 
-        private HighResolutionTimer HighResolutionTimer { get; }
+        private HighResolutionTimer Timer { get; }
 
         public TgcFrustum Frustum { get; set; }
 
@@ -114,14 +116,22 @@ namespace TGC.Core.Example
 
         /// <summary>
         ///     Metodos a ejecutar antes del update.
+        ///     Se actualiza el Clock y el Input.
         /// </summary>
         protected virtual void PreUpdate()
         {
             UpdateClock();
             UpdateInput();
+            UpdateSounds3D();
+        }
+
+        /// <summary>
+        ///     Metodos a ejecutar despues del update, se acutalizan la Matriz de View y el Frustum de la Camara
+        /// </summary>
+        protected virtual void PostUpdate()
+        {
             UpdateView();
             UpdateFrustum();
-            UpdateSounds3D();
         }
 
         /// <summary>
@@ -148,8 +158,8 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateClock()
         {
-            ElapsedTime = HighResolutionTimer.FrameTime;
-            HighResolutionTimer.Set();
+            ElapsedTime = Timer.FrameTime;
+            Timer.Set();
         }
 
         /// <summary>
@@ -166,7 +176,7 @@ namespace TGC.Core.Example
         protected void UpdateView()
         {
             Camara.UpdateCamera(ElapsedTime);
-            D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix();
+            D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix().ToMatrix();
         }
 
         /// <summary>
@@ -174,8 +184,8 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateFrustum()
         {
-            Frustum.updateVolume(D3DDevice.Instance.Device.Transform.View,
-                D3DDevice.Instance.Device.Transform.Projection);
+            Frustum.updateVolume(TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.View),
+                TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.Projection));
         }
 
         /// <summary>
@@ -229,7 +239,7 @@ namespace TGC.Core.Example
         {
             if (FPS)
             {
-                DrawText.drawText(HighResolutionTimer.FramesPerSecondText(), 0, 0, Color.Yellow);
+                DrawText.drawText(Timer.FramesPerSecondText(), 0, 0, Color.Yellow);
             }
         }
 
@@ -257,7 +267,7 @@ namespace TGC.Core.Example
 
         public void ResetTimer()
         {
-            HighResolutionTimer.Reset();
+            Timer.Reset();
         }
 
         /// <summary>
@@ -272,7 +282,7 @@ namespace TGC.Core.Example
         public virtual void ResetDefaultConfig()
         {
             D3DDevice.Instance.DefaultValues();
-            D3DDevice.Instance.Device.Transform.World = Matrix.Identity;
+            D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
             ElapsedTime = -1;
         }
     }

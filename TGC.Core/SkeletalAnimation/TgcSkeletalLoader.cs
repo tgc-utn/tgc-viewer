@@ -5,9 +5,10 @@ using SharpDX;
 using SharpDX.Direct3D9;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
+using TGC.Core.MeshFactory;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.SkeletalAnimation
 {
@@ -24,14 +25,14 @@ namespace TGC.Core.SkeletalAnimation
         public TgcSkeletalLoader()
         {
             texturesDict = new Dictionary<string, TgcTexture>();
-            MeshFactory = new DefaultMeshFactory();
+            MeshFactory = new DefaultSkeletalMeshFactory();
         }
 
         /// <summary>
         ///     Factory utilizado para crear una instancia de TgcSkeletalMesh.
         ///     Por default se utiliza la clase DefaultMeshFactory.
         /// </summary>
-        public IMeshFactory MeshFactory { get; set; }
+        public ISkeletalMeshFactory MeshFactory { get; set; }
 
         /// <summary>
         ///     Carga un modelo a partir de un archivo
@@ -69,7 +70,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         /// <param name="meshFilePath">Ubicacion del archivo XML del modelo</param>
         /// <param name="mediaPath">Path a partir del cual hay que buscar las Texturas</param>
-        /// <param name="animationsFilePath">Array con ubicaciones de los archivos XML de cada animación</param>
+        /// <param name="animationsFilePath">Array con ubicaciones de los archivos XML de cada animaciï¿½n</param>
         /// <returns>Modelo cargado con sus animaciones</returns>
         public TgcSkeletalMesh loadMeshAndAnimationsFromFile(string meshFilePath, string mediaPath,
             string[] animationsFilePath)
@@ -87,7 +88,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     Se elige el directorio de texturas y recursos en base al directorio en el cual se encuntra el archivo del modelo.
         /// </summary>
         /// <param name="meshFilePath">Ubicacion del archivo XML del modelo</param>
-        /// <param name="animationsFilePath">Array con ubicaciones de los archivos XML de cada animación</param>
+        /// <param name="animationsFilePath">Array con ubicaciones de los archivos XML de cada animaciï¿½n</param>
         /// <returns>Modelo cargado con sus animaciones</returns>
         public TgcSkeletalMesh loadMeshAndAnimationsFromFile(string meshFilePath, string[] animationsFilePath)
         {
@@ -109,11 +110,11 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Carga una animación a un modelo ya cargado, en base a un archivo
-        ///     La animación se agrega al modelo.
+        ///     Carga una animaciï¿½n a un modelo ya cargado, en base a un archivo
+        ///     La animaciï¿½n se agrega al modelo.
         /// </summary>
         /// <param name="mesh">Modelo ya cargado</param>
-        /// <param name="filePath">Ubicacion del archivo XML de la animación</param>
+        /// <param name="filePath">Ubicacion del archivo XML de la animaciï¿½n</param>
         public void loadAnimationFromFile(TgcSkeletalMesh mesh, string filePath)
         {
             try
@@ -128,8 +129,8 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Carga una animación a un modelo ya cargado, a partir del string del XML.
-        ///     La animación se agrega al modelo.
+        ///     Carga una animaciï¿½n a un modelo ya cargado, a partir del string del XML.
+        ///     La animaciï¿½n se agrega al modelo.
         /// </summary>
         /// <param name="mesh">Modelo ya cargado</param>
         /// <param name="xmlString">contenido del XML</param>
@@ -194,8 +195,8 @@ namespace TGC.Core.SkeletalAnimation
             if (meshData.pMin != null && meshData.pMax != null)
             {
                 tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(
-                    TgcParserUtils.float3ArrayToVector3(meshData.pMin),
-                    TgcParserUtils.float3ArrayToVector3(meshData.pMax)
+                    TGCVector3.Float3ArrayToVector3(meshData.pMin),
+                    TGCVector3.Float3ArrayToVector3(meshData.pMax)
                     );
             }
             else
@@ -227,8 +228,8 @@ namespace TGC.Core.SkeletalAnimation
 
                     var frame = new TgcSkeletalAnimationFrame(
                         frameData.frame,
-                        new Vector3(frameData.position[0], frameData.position[1], frameData.position[2]),
-                        new Quaternion(frameData.rotation[0], frameData.rotation[1], frameData.rotation[2],
+                        new TGCVector3(frameData.position[0], frameData.position[1], frameData.position[2]),
+                        new TGCQuaternion(frameData.rotation[0], frameData.rotation[1], frameData.rotation[2],
                             frameData.rotation[3])
                         );
 
@@ -241,13 +242,13 @@ namespace TGC.Core.SkeletalAnimation
                 }
             }
 
-            //BoundingBox de la animación, aprovechar lo que viene en el XML o utilizar el de la malla estática
+            //BoundingBox de la animaciï¿½n, aprovechar lo que viene en el XML o utilizar el de la malla estï¿½tica
             TgcBoundingAxisAlignBox boundingBox = null;
             if (animationData.pMin != null && animationData.pMax != null)
             {
                 boundingBox = new TgcBoundingAxisAlignBox(
-                    TgcParserUtils.float3ArrayToVector3(animationData.pMin),
-                    TgcParserUtils.float3ArrayToVector3(animationData.pMax));
+                    TGCVector3.Float3ArrayToVector3(animationData.pMin),
+                    TGCVector3.Float3ArrayToVector3(animationData.pMax));
             }
             else
             {
@@ -272,8 +273,8 @@ namespace TGC.Core.SkeletalAnimation
                 var boneData = meshData.bones[i];
 
                 var bone = new TgcSkeletalBone(i, boneData.name,
-                    new Vector3(boneData.startPosition[0], boneData.startPosition[1], boneData.startPosition[2]),
-                    new Quaternion(boneData.startRotation[0], boneData.startRotation[1], boneData.startRotation[2],
+                    new TGCVector3(boneData.startPosition[0], boneData.startPosition[1], boneData.startPosition[2]),
+                    new TGCQuaternion(boneData.startRotation[0], boneData.startRotation[1], boneData.startRotation[2],
                         boneData.startRotation[3])
                     );
                 bones[i] = bone;
@@ -388,7 +389,7 @@ namespace TGC.Core.SkeletalAnimation
 
                     //vertices
                     var coordIdx = meshData.coordinatesIndices[j] * 3;
-                    v.Position = new Vector3(
+                    v.Position = new TGCVector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
                         meshData.verticesCoordinates[coordIdx + 2]
@@ -406,7 +407,7 @@ namespace TGC.Core.SkeletalAnimation
                     //normal
                     if (meshData.verticesNormals != null)
                     {
-                        v.Normal = new Vector3(
+                        v.Normal = new TGCVector3(
                             meshData.verticesNormals[coordIdx],
                             meshData.verticesNormals[coordIdx + 1],
                             meshData.verticesNormals[coordIdx + 2]
@@ -414,13 +415,13 @@ namespace TGC.Core.SkeletalAnimation
                     }
                     else
                     {
-                        v.Normal = new Vector3(0, 0, 0);
+                        v.Normal = TGCVector3.Empty;
                     }
 
                     //tangent
                     if (meshData.verticesTangents != null)
                     {
-                        v.Tangent = new Vector3(
+                        v.Tangent = new TGCVector3(
                             meshData.verticesTangents[coordIdx],
                             meshData.verticesTangents[coordIdx + 1],
                             meshData.verticesTangents[coordIdx + 2]
@@ -428,13 +429,13 @@ namespace TGC.Core.SkeletalAnimation
                     }
                     else
                     {
-                        v.Tangent = new Vector3(0, 0, 0);
+                        v.Tangent = TGCVector3.Empty;
                     }
 
                     //binormal
                     if (meshData.verticesBinormals != null)
                     {
-                        v.Binormal = new Vector3(
+                        v.Binormal = new TGCVector3(
                             meshData.verticesBinormals[coordIdx],
                             meshData.verticesBinormals[coordIdx + 1],
                             meshData.verticesBinormals[coordIdx + 2]
@@ -442,7 +443,7 @@ namespace TGC.Core.SkeletalAnimation
                     }
                     else
                     {
-                        v.Binormal = new Vector3(0, 0, 0);
+                        v.Binormal = TGCVector3.Empty;
                     }
 
                     //BlendWeights y BlendIndices
@@ -478,7 +479,7 @@ namespace TGC.Core.SkeletalAnimation
             //Configurar Material y Textura para varios SubSet
             else
             {
-                //Cargar attributeBuffer con los id de las texturas de cada triángulo
+                //Cargar attributeBuffer con los id de las texturas de cada triï¿½ngulo
                 var attributeBuffer = mesh.LockAttributeBufferArray(LockFlags.None);
                 Array.Copy(meshData.materialsIds, attributeBuffer, attributeBuffer.Length);
                 mesh.UnlockAttributeBuffer(attributeBuffer);
@@ -494,7 +495,7 @@ namespace TGC.Core.SkeletalAnimation
             }
 
             //Crear mesh de TGC
-            var tgcMesh = MeshFactory.createNewMesh(mesh, meshData.name, TgcSkeletalMesh.MeshRenderType.DIFFUSE_MAP,
+            var tgcMesh = MeshFactory.createNewSkeletalMesh(mesh, meshData.name, TgcSkeletalMesh.MeshRenderType.DIFFUSE_MAP,
                 bones);
             tgcMesh.Materials = meshMaterials;
             tgcMesh.DiffuseMaps = meshTextures;
@@ -525,7 +526,7 @@ namespace TGC.Core.SkeletalAnimation
 
                     //vertices
                     var coordIdx = meshData.coordinatesIndices[j] * 3;
-                    v.Position = new Vector3(
+                    v.Position = new TGCVector3(
                         meshData.verticesCoordinates[coordIdx],
                         meshData.verticesCoordinates[coordIdx + 1],
                         meshData.verticesCoordinates[coordIdx + 2]
@@ -538,7 +539,7 @@ namespace TGC.Core.SkeletalAnimation
                     //normal
                     if (meshData.verticesNormals != null)
                     {
-                        v.Normal = new Vector3(
+                        v.Normal = new TGCVector3(
                             meshData.verticesNormals[coordIdx],
                             meshData.verticesNormals[coordIdx + 1],
                             meshData.verticesNormals[coordIdx + 2]
@@ -546,13 +547,13 @@ namespace TGC.Core.SkeletalAnimation
                     }
                     else
                     {
-                        v.Normal = new Vector3(0, 0, 0);
+                        v.Normal = TGCVector3.Empty;
                     }
 
                     //tangent
                     if (meshData.verticesTangents != null)
                     {
-                        v.Tangent = new Vector3(
+                        v.Tangent = new TGCVector3(
                             meshData.verticesTangents[coordIdx],
                             meshData.verticesTangents[coordIdx + 1],
                             meshData.verticesTangents[coordIdx + 2]
@@ -560,13 +561,13 @@ namespace TGC.Core.SkeletalAnimation
                     }
                     else
                     {
-                        v.Tangent = new Vector3(0, 0, 0);
+                        v.Tangent = TGCVector3.Empty;
                     }
 
                     //binormal
                     if (meshData.verticesBinormals != null)
                     {
-                        v.Binormal = new Vector3(
+                        v.Binormal = new TGCVector3(
                             meshData.verticesBinormals[coordIdx],
                             meshData.verticesBinormals[coordIdx + 1],
                             meshData.verticesBinormals[coordIdx + 2]
@@ -574,7 +575,7 @@ namespace TGC.Core.SkeletalAnimation
                     }
                     else
                     {
-                        v.Binormal = new Vector3(0, 0, 0);
+                        v.Binormal = TGCVector3.Empty;
                     }
 
                     //BlendWeights y BlendIndices
@@ -598,7 +599,7 @@ namespace TGC.Core.SkeletalAnimation
             }
 
             //Crear mesh de TGC
-            var tgcMesh = MeshFactory.createNewMesh(mesh, meshData.name, TgcSkeletalMesh.MeshRenderType.VERTEX_COLOR,
+            var tgcMesh = MeshFactory.createNewSkeletalMesh(mesh, meshData.name, TgcSkeletalMesh.MeshRenderType.VERTEX_COLOR,
                 bones);
             return tgcMesh;
         }
@@ -704,11 +705,11 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         public struct VertexColorVertex
         {
-            public Vector3 Position;
+            public TGCVector3 Position;
             public int Color;
-            public Vector3 Normal;
-            public Vector3 Tangent;
-            public Vector3 Binormal;
+            public TGCVector3 Normal;
+            public TGCVector3 Tangent;
+            public TGCVector3 Binormal;
             public Vector4 BlendWeights;
             public Vector4 BlendIndices;
         }
@@ -750,50 +751,17 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         public struct DiffuseMapVertex
         {
-            public Vector3 Position;
+            public TGCVector3 Position;
             public int Color;
             public float Tu;
             public float Tv;
-            public Vector3 Normal;
-            public Vector3 Tangent;
-            public Vector3 Binormal;
+            public TGCVector3 Normal;
+            public TGCVector3 Tangent;
+            public TGCVector3 Binormal;
             public Vector4 BlendWeights;
             public Vector4 BlendIndices;
         }
 
         #endregion Mesh FVF
-
-        #region MeshFactory
-
-        /// <summary>
-        ///     Factory para permitir crear una instancia especifica de la clase TgcMesh
-        /// </summary>
-        public interface IMeshFactory
-        {
-            /// <summary>
-            ///     Crear una nueva instancia de la clase TgcSkeletalMesh o derivados
-            /// </summary>
-            /// <param name="d3dMesh">Mesh de Direct3D</param>
-            /// <param name="meshName">Nombre de la malla</param>
-            /// <param name="renderType">Tipo de renderizado de la malla</param>
-            /// <param name="bones">Huesos de la malla</param>
-            /// <returns>Instancia de TgcMesh creada</returns>
-            TgcSkeletalMesh createNewMesh(Mesh d3dMesh, string meshName, TgcSkeletalMesh.MeshRenderType renderType,
-                TgcSkeletalBone[] bones);
-        }
-
-        /// <summary>
-        ///     Factory default que crea una instancia de la clase TgcMesh
-        /// </summary>
-        public class DefaultMeshFactory : IMeshFactory
-        {
-            public TgcSkeletalMesh createNewMesh(Mesh d3dMesh, string meshName,
-                TgcSkeletalMesh.MeshRenderType renderType, TgcSkeletalBone[] bones)
-            {
-                return new TgcSkeletalMesh(d3dMesh, meshName, renderType, bones);
-            }
-        }
-
-        #endregion MeshFactory
     }
 }

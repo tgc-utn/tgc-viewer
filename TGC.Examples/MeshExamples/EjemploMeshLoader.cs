@@ -1,12 +1,12 @@
 using System;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -23,13 +23,19 @@ namespace TGC.Examples.MeshExamples
     /// </summary>
     public class EjemploMeshLoader : TGCExampleViewer
     {
+        private TGCBooleanModifier alphaBlendingModifier;
+        private TGCColorModifier colorModifier;
+        private TGCBooleanModifier boundingBoxModifier;
+        private TGCFileModifier meshModifier;
+        private TGCButtonModifier reloadModifier;
+
         private bool currentAlphaBlending;
         private Color currentColor;
         private string currentPath;
         private TgcScene currentScene;
 
-        public EjemploMeshLoader(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploMeshLoader(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Mesh Loader";
@@ -44,17 +50,17 @@ namespace TGC.Examples.MeshExamples
             //Modifiers
             currentScene = null;
             currentPath = null;
-            Modifiers.addFile("Mesh", initialMeshFile, "-TgcScene.xml |*-TgcScene.xml");
+            meshModifier = AddFile("Mesh", initialMeshFile, "-TgcScene.xml |*-TgcScene.xml");
 
-            Modifiers.addButton("Reload", "Reload", Reload_ButtonClick);
+            reloadModifier = AddButton("Reload", "Reload", Reload_ButtonClick);
 
             currentColor = Color.White;
-            Modifiers.addColor("Color", currentColor);
+            colorModifier = AddColor("Color", currentColor);
 
-            Modifiers.addBoolean("BoundingBox", "BoundingBox", false);
+            boundingBoxModifier = AddBoolean("BoundingBox", "BoundingBox", false);
 
             currentAlphaBlending = false;
-            Modifiers.addBoolean("AlphaBlending", "AlphaBlending", currentAlphaBlending);
+            alphaBlendingModifier = AddBoolean("AlphaBlending", "AlphaBlending", currentAlphaBlending);
 
             //UserVars
             UserVars.addVar("Name");
@@ -70,6 +76,7 @@ namespace TGC.Examples.MeshExamples
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         /// <summary>
@@ -93,7 +100,7 @@ namespace TGC.Examples.MeshExamples
             //Dispose de escena anterior
             if (currentScene != null)
             {
-                currentScene.disposeAll();
+                currentScene.DisposeAll();
             }
 
             //Cargar escena con herramienta TgcSceneLoader
@@ -101,8 +108,7 @@ namespace TGC.Examples.MeshExamples
             currentScene = loader.loadSceneFromFile(path);
 
             //Ajustar camara en base al tamano del objeto
-            Camara = new TgcRotationalCamera(currentScene.BoundingBox.calculateBoxCenter(),
-                currentScene.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camara = new TgcRotationalCamera(currentScene.BoundingBox.calculateBoxCenter(), currentScene.BoundingBox.calculateBoxRadius() * 2, Input);
 
             //Calcular cantidad de triangulos y texturas
             var triangleCount = 0;
@@ -158,18 +164,18 @@ namespace TGC.Examples.MeshExamples
             PreRender();
 
             //Ver si cambio la malla
-            var selectedPath = (string)Modifiers["Mesh"];
+            var selectedPath = meshModifier.Value;
             checkLoadMesh(selectedPath);
 
             //Ver si cambio el color
-            var color = (Color)Modifiers["Color"];
+            var color = colorModifier.Value;
             changeColor(color);
 
             //Mostrar BoundingBox
-            var showBoundingBox = (bool)Modifiers["BoundingBox"];
+            var showBoundingBox = boundingBoxModifier.Value;
 
             //AlphaBlending
-            var alphaBlending = (bool)Modifiers["AlphaBlending"];
+            var alphaBlending = alphaBlendingModifier.Value;
             if (alphaBlending != currentAlphaBlending)
             {
                 currentAlphaBlending = alphaBlending;
@@ -180,14 +186,14 @@ namespace TGC.Examples.MeshExamples
             }
 
             //Renderizar escena entera
-            currentScene.renderAll(showBoundingBox);
+            currentScene.RenderAll(showBoundingBox);
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            currentScene.disposeAll();
+            currentScene.DisposeAll();
         }
     }
 }

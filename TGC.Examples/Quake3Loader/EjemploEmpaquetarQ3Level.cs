@@ -1,9 +1,9 @@
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using TGC.Core;
-using TGC.Core.Example;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
+using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Quake3Loader
 {
@@ -17,12 +17,15 @@ namespace TGC.Examples.Quake3Loader
     ///     Este ejemplo no posee salida gráfica.
     ///     Autor: Martin Giachetti, Matías Leone
     /// </summary>
-    public class EjemploEmpaquetarQ3Level : TgcExample
+    public class EjemploEmpaquetarQ3Level : TGCExampleViewer
     {
+        private TGCFileModifier openFileModifier;
+
         private string currentFile;
         private string quake3MediaPath;
 
-        public EjemploEmpaquetarQ3Level(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers, TgcAxisLines axisLines) : base(mediaDir, shadersDir, userVars, modifiers, axisLines)
+        public EjemploEmpaquetarQ3Level(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             this.Category = "Quake3";
             this.Name = "Pack level";
@@ -36,20 +39,21 @@ namespace TGC.Examples.Quake3Loader
 
             //Modifier para abrir archivo
             currentFile = "C:\\Program Files\\Quake III Arena\\baseq3\\maps\\prueba.bsp";
-            this.Modifiers.addFile("BspFile", currentFile, ".Niveles Quake 3|*.bsp");
+            openFileModifier = AddFile("BspFile", currentFile, ".Niveles Quake 3|*.bsp");
         }
 
-        public override void Update(float elapsedTime)
+        public override void Update()
         {
-            throw new System.NotImplementedException();
+            PreUpdate();
+            PostUpdate();
         }
 
-        public override void Render(float elapsedTime)
+        public override void Render()
         {
-            base.Render(elapsedTime);
+            PreRender();
 
             //Ver si se seleccionó alguno nivel a empaquetar
-            var selectedFile = (string)this.Modifiers["BspFile"];
+            var selectedFile = openFileModifier.Value;
 
             if (selectedFile != currentFile)
             {
@@ -71,8 +75,15 @@ namespace TGC.Examples.Quake3Loader
 
                 MessageBox.Show("Empaquetado almacenado en: " + outputDir, "Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                TgcDrawText.Instance.drawText("Este ejemplo no posee salida gráfica. verificar código y sus comentarios.", 5, 50, Color.Yellow);
+                DrawText.drawText("Este ejemplo no posee salida gráfica. verificar código y sus comentarios.", 5, 50, Color.OrangeRed);
             }
+
+            PostRender();
+        }
+
+        public override void Dispose()
+        {
+            //No hay recursos que liberar.
         }
     }
 }

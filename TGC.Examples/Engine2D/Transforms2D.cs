@@ -1,15 +1,9 @@
-using Microsoft.DirectX;
-using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
-using TGC.Core.Geometry;
-using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
-using TGC.Examples.Camara;
+using TGC.Core.Mathematica;
 using TGC.Examples.Engine2D.Spaceship.Core;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Engine2D
 {
@@ -24,21 +18,21 @@ namespace TGC.Examples.Engine2D
     /// </summary>
     public class Transforms2D : TGCExampleViewer
     {
-       private Drawer2D drawer2D;
-       private CustomSprite sprite;
-        private Vector2 centerScreen;
-        private Matrix matrixIdentity;
-        private Matrix scaling;
-        private Matrix rotation;
-        private Matrix traslation;
-        private Vector2 centroSprite;
-        private Matrix rotationAnimate;
+        private Drawer2D drawer2D;
+        private CustomSprite sprite;
+        private TGCVector2 centerScreen;
+        private TGCMatrix matrixIdentity;
+        private TGCMatrix scaling;
+        private TGCMatrix rotation;
+        private TGCMatrix traslation;
+        private TGCVector2 centroSprite;
+        private TGCMatrix rotationAnimate;
         private float acumlatedTime;
-        private Matrix rotationAnimateFrameDepend;
-        private Matrix rotationAnimateOneSec;
+        private TGCMatrix rotationAnimateFrameDepend;
+        private TGCMatrix rotationAnimateOneSec;
 
-        public Transforms2D(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public Transforms2D(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "2D";
             Name = "Transforms 2D";
@@ -55,23 +49,22 @@ namespace TGC.Examples.Engine2D
 
             //Ubicar centrado en la pantalla
             var textureSize = sprite.Bitmap.Size;
-            centerScreen = new Vector2(FastMath.Max(D3DDevice.Instance.Width / 2 - textureSize.Width / 2, 0),
+            centerScreen = new TGCVector2(FastMath.Max(D3DDevice.Instance.Width / 2 - textureSize.Width / 2, 0),
                 FastMath.Max(D3DDevice.Instance.Height / 2 - textureSize.Height / 2, 0));
 
             //Calculo el centro de la imagen.
-            centroSprite = new Vector2(textureSize.Width / 2, textureSize.Height / 2);
+            centroSprite = new TGCVector2(textureSize.Width / 2, textureSize.Height / 2);
 
             //Rotaciones animadas iniciales.
-            rotationAnimateFrameDepend = Matrix.Identity;
-            rotationAnimateOneSec = Matrix.Identity;
-            rotationAnimate = Matrix.Identity;
-
+            rotationAnimateFrameDepend = TGCMatrix.Identity;
+            rotationAnimateOneSec = TGCMatrix.Identity;
+            rotationAnimate = TGCMatrix.Identity;
 
             //tiempo acumulado
             acumlatedTime = 0f;
 
             //Camara estatica (es igual que definir un view matrix en cada render)
-            Camara.SetCamera(new Vector3(0,0,-10), Vector3.Empty);
+            Camara.SetCamera(new TGCVector3(0, 0, -10), TGCVector3.Empty);
         }
 
         public override void Update()
@@ -79,10 +72,10 @@ namespace TGC.Examples.Engine2D
             PreUpdate();
 
             //Actualizar valores al sprite interno.
-            sprite.Position = new Vector2(0f, 0f);
-            sprite.Scaling = new Vector2(0.5f, 0.5f);
+            sprite.Position = new TGCVector2(0f, 0f);
+            sprite.Scaling = new TGCVector2(0.5f, 0.5f);
             sprite.Rotation = 0f;
-            //Internamente realiza Matrix.Transformation2D(scalingCenter, 0, scaling, rotationCenter, rotation, position); 
+            //Internamente realiza TGCMatrix.Transformation2D(scalingCenter, 0, scaling, rotationCenter, rotation, position);
             /*El método Transformation2D calcula la matriz de transformación afín por medio de la fórmula siguiente, evaluando la concatenación de la matriz de izquierda a derecha.
             M salida = (M ce )-1 * (M re )-1 * M s* M re* M ce * (M cr )-1 * M r* M cr* M t
             donde:
@@ -94,41 +87,42 @@ namespace TGC.Examples.Engine2D
             M r = matriz de rotación(rotation)
             M t = matriz de traslación(translation)
             */
-           
+
             //Sacar toda transformación.
-            matrixIdentity = Matrix.Identity;
-            
+            matrixIdentity = TGCMatrix.Identity;
+
             //Traslación al centro de la pantalla.
-            traslation = Matrix.Translation(centerScreen.X, centerScreen.Y, 0f);
+            traslation = TGCMatrix.Translation(centerScreen.X, centerScreen.Y, 0f);
 
             //Un escalado, siempre olvidar la coordenada Z.
-            scaling = Matrix.Scaling(sprite.Scaling.X, sprite.Scaling.Y, 1f);
+            scaling = TGCMatrix.Scaling(sprite.Scaling.X, sprite.Scaling.Y, 1f);
 
             //Las rotaciones en 2D serán siempre rotaciones con eje Z.
-            rotation = Matrix.RotationZ(FastMath.ToRad(45));
+            rotation = TGCMatrix.RotationZ(FastMath.ToRad(45));
 
             //Rotación animada (dependiente de frames)
-            rotationAnimateFrameDepend = rotationAnimateFrameDepend * Matrix.RotationZ(FastMath.ToRad(25));
+            rotationAnimateFrameDepend = rotationAnimateFrameDepend * TGCMatrix.RotationZ(FastMath.ToRad(25));
 
             //Una rotación animada cada 1 segundo.
             if (acumlatedTime > 1f)
             {
                 acumlatedTime = 0;
-                rotationAnimateOneSec = rotationAnimateOneSec * Matrix.RotationZ(FastMath.ToRad(25)); //roto 25 grados por segundo
+                rotationAnimateOneSec = rotationAnimateOneSec * TGCMatrix.RotationZ(FastMath.ToRad(25)); //roto 25 grados por segundo
             }
             acumlatedTime += ElapsedTime;
 
-            //rotación animada por render (Sin acoplar), 
+            //rotación animada por render (Sin acoplar),
             //Si ElapsedTime es muy chico (como suele pasar con buenas computadoras y poco procesamiento)
             //Al multiplicarlo por nuestra velocidad angular, se transformaran en "pequeñas rotaciones".
-            rotationAnimate = rotationAnimate * Matrix.RotationZ(FastMath.ToRad(25)*ElapsedTime);
-            
+            rotationAnimate = rotationAnimate * TGCMatrix.RotationZ(FastMath.ToRad(25) * ElapsedTime);
+
+            PostUpdate();
         }
 
         public override void Render()
         {
             PreRender();
-            
+
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
             drawer2D.BeginDrawSprite();
 
@@ -141,14 +135,14 @@ namespace TGC.Examples.Engine2D
             //Rotamos y trasladamos.
             sprite.TransformationMatrix = rotation * traslation;
             //drawer2D.DrawSprite(sprite);
-            
+
             //Aplicar en orden inverso a la rotación.
             sprite.TransformationMatrix = traslation * rotation;
             //drawer2D.DrawSprite(sprite);
 
             //Rotar en centro de pantalla.
-            var pivotCentro = Matrix.Translation(-centroSprite.X, -centroSprite.Y, 0);
-            var invPivotCentro = Matrix.Translation(centroSprite.X, centroSprite.Y, 0);
+            var pivotCentro = TGCMatrix.Translation(-centroSprite.X, -centroSprite.Y, 0);
+            var invPivotCentro = TGCMatrix.Translation(centroSprite.X, centroSprite.Y, 0);
             sprite.TransformationMatrix = pivotCentro * rotation * invPivotCentro * traslation;
             //drawer2D.DrawSprite(sprite);
 
@@ -168,14 +162,14 @@ namespace TGC.Examples.Engine2D
             //voy al centro de la imagen, escalo y luego roto, luego vuelvo al centro de la imagen y al centro de pantalla.
             sprite.TransformationMatrix = pivotCentro * scaling * rotation * invPivotCentro * traslation;
             //drawer2D.DrawSprite(sprite);
-            
+
             //Como se puede apreciar las ultimas dos transformaciones dan igual resultado.
-            
+
             //¿que pasaría si el escalado no es uniforme?
-            sprite.TransformationMatrix = pivotCentro * Matrix.Scaling(1f,0.5f,1) * rotation * invPivotCentro * traslation;
+            sprite.TransformationMatrix = pivotCentro * TGCMatrix.Scaling(1f, 0.5f, 1) * rotation * invPivotCentro * traslation;
             //drawer2D.DrawSprite(sprite);
 
-            sprite.TransformationMatrix = pivotCentro * rotation * Matrix.Scaling(1f, 0.5f, 1) * invPivotCentro * traslation;
+            sprite.TransformationMatrix = pivotCentro * rotation * TGCMatrix.Scaling(1f, 0.5f, 1) * invPivotCentro * traslation;
             //drawer2D.DrawSprite(sprite);
 
             //Nos adelantamos un poco ..... ¿¿¿Animaciones????
@@ -189,20 +183,16 @@ namespace TGC.Examples.Engine2D
 
             sprite.TransformationMatrix = pivotCentro * scaling * rotationAnimate * invPivotCentro * traslation;
             //drawer2D.DrawSprite(sprite);
-            
-                
 
             //Finalizar el dibujado de Sprites
             drawer2D.EndDrawSprite();
-
-            
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            sprite.Dispose();           
+            sprite.Dispose();
         }
     }
 }

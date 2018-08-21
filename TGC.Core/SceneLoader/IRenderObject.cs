@@ -13,13 +13,18 @@ namespace TGC.Core.SceneLoader
         bool AlphaBlendEnable { get; set; }
 
         /// <summary>
-        ///     Renderiza el objeto
+        ///     Inicializacion del objeto.
         /// </summary>
-        void render();
+        //void Init();
 
         /// <summary>
-        ///     Libera los recursos del objeto
+        ///     Renderiza el objeto.
         /// </summary>
-        void dispose();
+        void Render();
+
+        /// <summary>
+        ///     Libera los recursos del objeto.
+        /// </summary>
+        void Dispose();
     }
 }

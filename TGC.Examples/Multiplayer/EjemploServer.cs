@@ -3,35 +3,30 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using TGC.Core.Example;
+using System.Windows.Forms;
+using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Multiplayer
 {
     /// <summary>
     ///     EjemploServer
     /// </summary>
-    public class EjemploServer : TgcExample
+    public class EjemploServer : TGCExampleViewer
     {
         private List<Socket> clients;
         private int recibido;
         private Socket serverSocket;
 
-        public override string getCategory()
+        public EjemploServer(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
-            return "Multiplayer";
+            Category = "Multiplayer";
+            Name = "EjemploServer";
+            Description = "EjemploServer.";
         }
 
-        public override string getName()
-        {
-            return "EjemploServer";
-        }
-
-        public override string getDescription()
-        {
-            return "EjemploServer.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             var ipAddress = Dns.GetHostAddresses("localhost");
             var Ipep = new IPEndPoint(ipAddress[0], 4444);
@@ -51,7 +46,13 @@ namespace TGC.Examples.Multiplayer
             */
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
+        {
+            PreUpdate();
+            PostUpdate();
+        }
+
+        public override void Render()
         {
             if (serverSocket.Poll(0, SelectMode.SelectRead))
             {
@@ -94,7 +95,7 @@ namespace TGC.Examples.Multiplayer
             }
         }
 
-        public override void close()
+        public override void Dispose()
         {
             foreach (var clientSocket in clients)
             {

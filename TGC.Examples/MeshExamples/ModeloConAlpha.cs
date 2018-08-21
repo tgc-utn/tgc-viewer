@@ -1,9 +1,9 @@
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -19,10 +19,12 @@ namespace TGC.Examples.MeshExamples
     /// </summary>
     public class ModeloConAlpha : TGCExampleViewer
     {
+        private TGCBooleanModifier alphaModifier;
+
         private TgcScene scene;
 
-        public ModeloConAlpha(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public ModeloConAlpha(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Modelo con Alpha";
@@ -39,36 +41,37 @@ namespace TGC.Examples.MeshExamples
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pino\\Pino-TgcScene.xml");
 
             //Modifier para activar o desactivar el alpha
-            Modifiers.addBoolean("alpha", "Alpha blend", true);
+            alphaModifier = AddBoolean("alpha", "Alpha blend", true);
 
-            Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(),
-                scene.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(), scene.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
 
-            var alpha = (bool)Modifiers["alpha"];
+            var alpha = alphaModifier.Value;
 
             foreach (var mesh in scene.Meshes)
             {
                 mesh.AlphaBlendEnable = alpha;
             }
+
+            PostUpdate();
         }
 
         public override void Render()
         {
             PreRender();
 
-            scene.renderAll();
+            scene.RenderAll();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            scene.disposeAll();
+            scene.DisposeAll();
         }
     }
 }

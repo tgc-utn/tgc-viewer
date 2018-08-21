@@ -2,6 +2,8 @@ using System.Windows.Forms;
 using SharpDX;
 using SharpDX.DirectSound;
 using SharpDX.Multimedia;
+using System.Windows.Forms;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.Sound
@@ -19,21 +21,21 @@ namespace TGC.Core.Sound
         public DirectSound DsDevice { get; set; }
 
         /// <summary>
-        ///     Representa el objeto central del universo 3D que escucha todos los demás sonidos.
-        ///     En base a su posición varía la captación de todos los demas sonidos 3D.
+        ///     Representa el objeto central del universo 3D que escucha todos los demï¿½s sonidos.
+        ///     En base a su posiciï¿½n varï¿½a la captaciï¿½n de todos los demas sonidos 3D.
         /// </summary>
         public SoundListener3D Listener3d { get; set; }
 
         /// <summary>
-        ///     Objeto al cual el Listener3D va a seguir para variar su posición en cada cuadro.
-        ///     Solo puede haber un objeto que está siendo seguido por el Listener3D a la vez.
-        ///     En caso de haber configurado un objeto a seguir, el Listener3D actualiza su posición en forma
-        ///     automática en cada cuadro.
+        ///     Objeto al cual el Listener3D va a seguir para variar su posiciï¿½n en cada cuadro.
+        ///     Solo puede haber un objeto que estï¿½ siendo seguido por el Listener3D a la vez.
+        ///     En caso de haber configurado un objeto a seguir, el Listener3D actualiza su posiciï¿½n en forma
+        ///     automï¿½tica en cada cuadro.
         /// </summary>
         public ITransformObject ListenerTracking { get; set; }
 
         /// <summary>
-        ///     Actualiza la posición del Listener3D en base al ListenerTracking
+        ///     Actualiza la posiciï¿½n del Listener3D en base al ListenerTracking
         /// </summary>
         public void UpdateListener3d()
         {
@@ -50,12 +52,14 @@ namespace TGC.Core.Sound
             DsDevice.SetCooperativeLevel(control.Handle, CooperativeLevel.Normal);
 
             //Crear Listener3D
+
             var primaryBufferDesc = new SoundBufferDescription();
             primaryBufferDesc.Flags = BufferFlags.Control3D | BufferFlags.PrimaryBuffer;
             primaryBuffer = new PrimarySoundBuffer(DsDevice, primaryBufferDesc);
             Listener3d = new SoundListener3D(primaryBuffer);
-            Listener3d.Position = new Vector3(0f, 0f, 0f);
-            Listener3d.FrontOrientation = Vector3.Cross(new Vector3(1, 0, 0), new Vector3(0, 1, 0));
+            Listener3d.Position = TGCVector3.Empty;
+            Listener3d.Orientation = new Listener3DOrientation(new TGCVector3(1, 0, 0), TGCVector3.Up);
+
         }
     } 
 }

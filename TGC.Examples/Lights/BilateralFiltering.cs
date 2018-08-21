@@ -1,4 +1,4 @@
-﻿using TGC.Core.Utils;
+﻿using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Lights
 {

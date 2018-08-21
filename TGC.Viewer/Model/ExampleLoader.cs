@@ -4,9 +4,8 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using TGC.Core.Example;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Viewer.Model
 {
@@ -15,20 +14,16 @@ namespace TGC.Viewer.Model
     /// </summary>
     public class ExampleLoader
     {
-        private readonly string mediaDirectory;
-        private readonly TgcModifiers modifiers;
-        private readonly string shadersDirectory;
         private readonly Dictionary<TreeNode, TgcExample> treeExamplesDict;
         private readonly TgcUserVars userVars;
 
-        public ExampleLoader(string mediaDirectory, string shadersDirectory, DataGridView dataGridUserVars,
-            FlowLayoutPanel flowLayoutPanelModifiers)
+        public ExampleLoader(string mediaDirectory, string shadersDirectory, DataGridView dataGridUserVars, Panel modifiersPanel)
         {
             treeExamplesDict = new Dictionary<TreeNode, TgcExample>();
-            this.mediaDirectory = mediaDirectory;
-            this.shadersDirectory = shadersDirectory;
+            MediaDirectory = mediaDirectory;
+            ShadersDirectory = shadersDirectory;
             userVars = new TgcUserVars(dataGridUserVars);
-            modifiers = new TgcModifiers(flowLayoutPanelModifiers);
+            ModifiersPanel = modifiersPanel;
         }
 
         /// <summary>
@@ -40,6 +35,18 @@ namespace TGC.Viewer.Model
         ///     Ejemplo actualmente cargado
         /// </summary>
         public TgcExample CurrentExample { get; set; }
+
+        /// <summary>
+        ///     Path de la carpeta Media que contiene todo el contenido visual de los ejemplos, como texturas, modelos 3D, etc.
+        /// </summary>
+        public string MediaDirectory { get; set; }
+
+        /// <summary>
+        ///     Path de la carpeta Shaders que contiene todo los shaders genericos
+        /// </summary>
+        public string ShadersDirectory { get; set; }
+
+        public Panel ModifiersPanel { get; set; }
 
         /// <summary>
         ///     Carga los ejemplos dinamicamente en el TreeView de Ejemplo
@@ -123,6 +130,11 @@ namespace TGC.Viewer.Model
             {
                 try
                 {
+                    if (!Path.GetFileName(file).StartsWith("TGC", StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
+
                     var assembly = Assembly.LoadFile(file);
                     foreach (var type in assembly.GetTypes())
                     {
@@ -133,8 +145,7 @@ namespace TGC.Viewer.Model
 
                         if (type.BaseType.Equals(typeof(TGCExampleViewer)))
                         {
-                            var obj = Activator.CreateInstance(type, mediaDirectory, shadersDirectory, userVars,
-                                modifiers);
+                            var obj = Activator.CreateInstance(type, MediaDirectory, ShadersDirectory, userVars, ModifiersPanel);
                             var example = (TGCExampleViewer)obj;
                             examples.Add(example);
                         }
@@ -142,12 +153,28 @@ namespace TGC.Viewer.Model
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.Message, "No se pudo cargar la dll: " + file, MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    MessageBox.Show(e.Message, "No se pudo cargar la dll: " + file, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
             return examples;
+        }
+
+        /// <summary>
+        /// Actualiza los directorios donde estan los media y los shaders.
+        /// </summary>
+        /// <param name="mediaDirectory">Directorio de la media.</param>
+        /// <param name="shadersDirectory">Directorio de los shaders.</param>
+        public void UpdateMediaAndShaderDirectories(string mediaDirectory, string shadersDirectory)
+        {
+            MediaDirectory = mediaDirectory;
+            ShadersDirectory = shadersDirectory;
+
+            foreach (TgcExample example in CurrentExamples)
+            {
+                example.MediaDir = mediaDirectory;
+                example.ShadersDir = shadersDirectory;
+            }
         }
 
         /// <summary>

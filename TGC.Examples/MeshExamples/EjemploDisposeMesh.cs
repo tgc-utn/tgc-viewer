@@ -1,16 +1,15 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -25,8 +24,8 @@ namespace TGC.Examples.MeshExamples
         private TgcScene scene1;
         private float time;
 
-        public EjemploDisposeMesh(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploDisposeMesh(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Dispose Mesh";
@@ -46,21 +45,21 @@ namespace TGC.Examples.MeshExamples
                 for (var j = 0; j < 50; j++)
                 {
                     var mesh = baseMesh.clone(i + " - " + j);
-                    mesh.AutoTransformEnable = true;
-                    mesh.move(i * 100, 0, j * 100);
+                    mesh.AutoTransform = true;
+                    mesh.Move(i * 100, 0, j * 100);
                     meshes.Add(mesh);
                     //Se agrega un callback function para informar cuando se realiza el dispose.
                     mesh.D3dMesh.Disposing += D3dMesh_Disposing;
                 }
             }
             //Una vez clonamos todas las mesh que queriamos eliminamos la esena.
-            scene.disposeAll();
+            scene.DisposeAll();
 
             //Se crea una box y se convierte en mesh.
-            var box = TgcBox.fromSize(new Vector3(10, 10, 10), Color.Red);
-            boxMesh = box.toMesh("box");
+            var box = TGCBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
+            boxMesh = box.ToMesh("box");
             //Liberamos la caja pero nos quedamos con el mesh.
-            box.dispose();
+            box.Dispose();
 
             //Creamos una esena
             var loader1 = new TgcSceneLoader();
@@ -69,7 +68,7 @@ namespace TGC.Examples.MeshExamples
 
             time = 0;
 
-            Camara = new TgcRotationalCamera(new Vector3(100f, 300f, 100f), 1500f, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(100f, 300f, 100f), 1500f, Input);
         }
 
         private void D3dMesh_Disposing(object sender, EventArgs e)
@@ -80,6 +79,7 @@ namespace TGC.Examples.MeshExamples
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -114,14 +114,14 @@ namespace TGC.Examples.MeshExamples
                 //Render de todas las palmeras.
                 foreach (var m in meshes)
                 {
-                    m.render();
+                    m.Render();
                 }
 
                 //Render de una esena.
-                scene1.renderAll();
+                scene1.RenderAll();
 
                 //Render de la caja.
-                boxMesh.render();
+                boxMesh.Render();
 
                 time += ElapsedTime;
             }
@@ -147,13 +147,13 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var m in meshes)
                 {
-                    m.dispose();
+                    m.Dispose();
                 }
                 meshes.Clear();
 
-                scene1.disposeAll();
+                scene1.DisposeAll();
 
-                boxMesh.dispose();
+                boxMesh.Dispose();
             }
         }
     }

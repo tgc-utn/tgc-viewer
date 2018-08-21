@@ -1,10 +1,11 @@
 using SharpDX;
 using SharpDX.Direct3D9;
+using System.Drawing;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.BoundingVolumes
 {
@@ -14,7 +15,7 @@ namespace TGC.Core.BoundingVolumes
     public class TgcBoundingElipsoid : IRenderObject
     {
         /// <summary>
-        ///     Cantidad de tramos que tendrá el mesh del Elipsoid a dibujar
+        ///     Cantidad de tramos que tendrï¿½ el mesh del Elipsoid a dibujar
         /// </summary>
         public const int ELIPSOID_MESH_RESOLUTION = 10;
 
@@ -40,7 +41,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="center">Centro</param>
         /// <param name="radius">Radios para los 3 ejes</param>
-        public TgcBoundingElipsoid(Vector3 center, Vector3 radius)
+        public TgcBoundingElipsoid(TGCVector3 center, TGCVector3 radius)
             : this()
         {
             setValues(center, radius);
@@ -68,34 +69,34 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Centro del Elipsoid
         /// </summary>
-        public Vector3 Center { get; private set; }
+        public TGCVector3 Center { get; private set; }
 
         /// <summary>
         ///     Radios del Elipsoid para cada uno de los 3 ejes
         /// </summary>
-        public Vector3 Radius { get; private set; }
+        public TGCVector3 Radius { get; private set; }
 
         /// <summary>
         ///     Color de renderizado del Elipsoid.
         /// </summary>
         public int RenderColor { get; private set; }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return Center; }
         }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vértice de canal Alpha.
-        ///     Por default está deshabilitado.
+        ///     con textura o colores por vï¿½rtice de canal Alpha.
+        ///     Por default estï¿½ deshabilitado.
         /// </summary>
         public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Renderizar el Elipsoid
         /// </summary>
-        public void render()
+        public void Render()
         {
             TexturesManager.Instance.clear(0);
             TexturesManager.Instance.clear(1);
@@ -107,7 +108,7 @@ namespace TGC.Core.BoundingVolumes
                 technique = TgcShaders.T_POSITION_COLORED;
             }
 
-            //Actualizar vertices del Elipsoid solo si hubo una modificación
+            //Actualizar vertices del Elipsoid solo si hubo una modificaciï¿½n
             if (dirtyValues)
             {
                 updateValues();
@@ -129,7 +130,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Libera los recursos del objeto
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             vertices = null;
         }
@@ -139,7 +140,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="center">Centro</param>
         /// <param name="radius">Radios para los 3 ejes</param>
-        public void setValues(Vector3 center, Vector3 radius)
+        public void setValues(TGCVector3 center, TGCVector3 radius)
         {
             Center = center;
             Radius = radius;
@@ -151,16 +152,16 @@ namespace TGC.Core.BoundingVolumes
         ///     Configurar un nuevo centro del Elipsoid
         /// </summary>
         /// <param name="center">Nuevo centro</param>
-        public void setCenter(Vector3 center)
+        public void setCenter(TGCVector3 center)
         {
             setValues(center, Radius);
         }
 
         /// <summary>
-        ///     Desplazar el centro respecto de su posición actual
+        ///     Desplazar el centro respecto de su posiciï¿½n actual
         /// </summary>
         /// <param name="movement">Movimiento relativo a realizar</param>
-        public void moveCenter(Vector3 movement)
+        public void moveCenter(TGCVector3 movement)
         {
             setValues(Center + movement, Radius);
         }
@@ -194,10 +195,10 @@ namespace TGC.Core.BoundingVolumes
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a) * Radius.X, FastMath.Sin(a) * Radius.Y, 0f) + Center, RenderColor);
+                        (new TGCVector3(FastMath.Cos(a) * Radius.X, FastMath.Sin(a) * Radius.Y, 0f)) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a + step) * Radius.X, FastMath.Sin(a + step) * Radius.Y, 0f) + Center,
+                        (new TGCVector3(FastMath.Cos(a + step) * Radius.X, FastMath.Sin(a + step) * Radius.Y, 0f)) + Center,
                         RenderColor);
             }
 
@@ -206,10 +207,10 @@ namespace TGC.Core.BoundingVolumes
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a) * Radius.X, 0f, FastMath.Sin(a) * Radius.Z) + Center, RenderColor);
+                        (new TGCVector3(FastMath.Cos(a) * Radius.X, 0f, FastMath.Sin(a) * Radius.Z)) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(FastMath.Cos(a + step) * Radius.X, 0f, FastMath.Sin(a + step) * Radius.Z) + Center,
+                        (new TGCVector3(FastMath.Cos(a + step) * Radius.X, 0f, FastMath.Sin(a + step) * Radius.Z)) + Center,
                         RenderColor);
             }
 
@@ -218,17 +219,17 @@ namespace TGC.Core.BoundingVolumes
             {
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(0f, FastMath.Cos(a) * Radius.Y, FastMath.Sin(a) * Radius.Z) + Center, RenderColor);
+                        (new TGCVector3(0f, FastMath.Cos(a) * Radius.Y, FastMath.Sin(a) * Radius.Z)) + Center, RenderColor);
                 vertices[index++] =
                     new CustomVertex.PositionColored(
-                        new Vector3(0f, FastMath.Cos(a + step) * Radius.Y, FastMath.Sin(a + step) * Radius.Z) + Center,
+                        (new TGCVector3(0f, FastMath.Cos(a + step) * Radius.Y, FastMath.Sin(a + step) * Radius.Z)) + Center,
                         RenderColor);
             }
         }
 
         public override string ToString()
         {
-            return "Center " + TgcParserUtils.printVector3(Center) + ", Radius " + TgcParserUtils.printVector3(Radius);
+            return "Center " + TGCVector3.PrintVector3(Center) + ", Radius " + TGCVector3.PrintVector3(Radius);
         }
 
         /// <summary>
@@ -256,8 +257,8 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         public struct ElipsoidStruct
         {
-            public Vector3 center;
-            public Vector3 radius;
+            public TGCVector3 center;
+            public TGCVector3 radius;
 
             /// <summary>
             ///     Convertir a clase

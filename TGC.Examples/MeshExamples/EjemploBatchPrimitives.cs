@@ -1,10 +1,11 @@
-using Microsoft.DirectX;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.MeshExamples
 {
@@ -13,17 +14,19 @@ namespace TGC.Examples.MeshExamples
     /// </summary>
     public class EjemploBatchPrimitives : TGCExampleViewer
     {
+        private TGCEnumModifier renderMethodModifier;
+
         private TgcTexture box1Texture;
         private TgcTexture box2Texture;
         private TgcTexture box3Texture;
-        private TgcBox[] cajasNivel1;
-        private TgcBox[] cajasNivel2;
-        private TgcBox[] cajasNivel3;
+        private TGCBox[] cajasNivel1;
+        private TGCBox[] cajasNivel2;
+        private TGCBox[] cajasNivel3;
 
         private RenderMethod currentRenderMethod;
 
-        public EjemploBatchPrimitives(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploBatchPrimitives(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Mesh Examples";
             Name = "Texture Mesh render order";
@@ -41,10 +44,10 @@ namespace TGC.Examples.MeshExamples
             box2Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             box3Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg");
 
-            Modifiers.addEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
+            renderMethodModifier = AddEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(25);
 
-            Camara.SetCamera(new Vector3(40f, 20f, -70f), new Vector3(40f, 20f, -60f));
+            Camara.SetCamera(new TGCVector3(40f, 20f, -70f), new TGCVector3(40f, 20f, -60f));
         }
 
         private void createMeshes(int cajasPorCuadrante)
@@ -53,26 +56,26 @@ namespace TGC.Examples.MeshExamples
 
             //Crear nuevas cajas
             var boxSize = 3f;
-            cajasNivel1 = new TgcBox[cantCajasPorNivel];
-            cajasNivel2 = new TgcBox[cantCajasPorNivel];
-            cajasNivel3 = new TgcBox[cantCajasPorNivel];
+            cajasNivel1 = new TGCBox[cantCajasPorNivel];
+            cajasNivel2 = new TGCBox[cantCajasPorNivel];
+            cajasNivel3 = new TGCBox[cantCajasPorNivel];
             var cajas = 0;
             for (var i = 0; i < cajasPorCuadrante; i++)
             {
                 for (var j = 0; j < cajasPorCuadrante; j++)
                 {
                     //Crear tres niveles de caja, una abajo y otra arriba, con texturas diferentes
-                    cajasNivel1[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, 0, j * boxSize * 1.5f),
-                        new Vector3(boxSize, boxSize, boxSize), box1Texture);
-                    cajasNivel1[cajas].AutoTransformEnable = true;
+                    cajasNivel1[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, 0, j * boxSize * 1.5f),
+                        new TGCVector3(boxSize, boxSize, boxSize), box1Texture);
+                    cajasNivel1[cajas].AutoTransform = true;
 
-                    cajasNivel2[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, boxSize, j * boxSize * 1.5f),
-                        new Vector3(boxSize, boxSize, boxSize), box2Texture);
-                    cajasNivel2[cajas].AutoTransformEnable = true;
+                    cajasNivel2[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, boxSize, j * boxSize * 1.5f),
+                        new TGCVector3(boxSize, boxSize, boxSize), box2Texture);
+                    cajasNivel2[cajas].AutoTransform = true;
 
-                    cajasNivel3[cajas] = TgcBox.fromSize(new Vector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
-                        new Vector3(boxSize, boxSize, boxSize), box3Texture);
-                    cajasNivel3[cajas].AutoTransformEnable = true;
+                    cajasNivel3[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
+                        new TGCVector3(boxSize, boxSize, boxSize), box3Texture);
+                    cajasNivel3[cajas].AutoTransform = true;
                     cajas++;
                 }
             }
@@ -104,9 +107,9 @@ namespace TGC.Examples.MeshExamples
         {
             for (var i = 0; i < cajasNivel1.Length; i++)
             {
-                cajasNivel1[i].render();
-                cajasNivel2[i].render();
-                cajasNivel3[i].render();
+                cajasNivel1[i].Render();
+                cajasNivel2[i].Render();
+                cajasNivel3[i].Render();
             }
         }
 
@@ -117,28 +120,29 @@ namespace TGC.Examples.MeshExamples
         {
             for (var i = 0; i < cajasNivel1.Length; i++)
             {
-                cajasNivel1[i].render();
+                cajasNivel1[i].Render();
             }
             for (var i = 0; i < cajasNivel2.Length; i++)
             {
-                cajasNivel2[i].render();
+                cajasNivel2[i].Render();
             }
             for (var i = 0; i < cajasNivel3.Length; i++)
             {
-                cajasNivel3[i].render();
+                cajasNivel3[i].Render();
             }
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
         {
             PreRender();
 
-            var renderMethod = (RenderMethod)Modifiers["Render Method"];
+            var renderMethod = (RenderMethod)renderMethodModifier.Value;
             doRender(renderMethod);
 
             PostRender();
@@ -159,7 +163,7 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var box in cajasNivel1)
                 {
-                    box.dispose();
+                    box.Dispose();
                 }
                 cajasNivel1 = null;
             }
@@ -167,7 +171,7 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var box in cajasNivel2)
                 {
-                    box.dispose();
+                    box.Dispose();
                 }
                 cajasNivel2 = null;
             }
@@ -175,7 +179,7 @@ namespace TGC.Examples.MeshExamples
             {
                 foreach (var box in cajasNivel3)
                 {
-                    box.dispose();
+                    box.Dispose();
                 }
                 cajasNivel3 = null;
             }

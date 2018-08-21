@@ -1,5 +1,5 @@
-using Microsoft.DirectX;
 using System;
+using TGC.Core.Mathematica;
 using TGC.Examples.Engine2D.Spaceship.Core;
 
 namespace TGC.Examples.Engine2D.Spaceship
@@ -10,7 +10,7 @@ namespace TGC.Examples.Engine2D.Spaceship
 
         public float Angle;
 
-        public Vector2 Position;
+        public TGCVector2 Position;
 
         private CustomSprite sprite;
 

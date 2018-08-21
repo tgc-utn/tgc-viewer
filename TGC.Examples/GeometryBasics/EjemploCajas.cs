@@ -1,14 +1,14 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Textures;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.GeometryBasics
 {
@@ -26,44 +26,53 @@ namespace TGC.Examples.GeometryBasics
     /// </summary>
     public class EjemploCajas : TGCExampleViewer
     {
-        private TgcBox box;
+        private TGCBooleanModifier boxModifier;
+        private TGCBooleanModifier boundingBoxModifier;
+        private TGCBooleanModifier debugBoxModifier;
+        private TGCFloatModifier thicknessModifier;
+        private TGCTextureModifier textureModifier;
+        private TGCVertex2fModifier offsetModifier;
+        private TGCVertex2fModifier tilingModifier;
+        private TGCColorModifier colorModifier;
+        private TGCVertex3fModifier sizeModifier;
+        private TGCVertex3fModifier positionModifier;
+        private TGCVertex3fModifier rotationModifier;
+
+        private TGCBox box;
         private string currentTexture;
         private TgcBoxDebug debugBox;
 
-        public EjemploCajas(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploCajas(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Geometry Basics";
             Name = "Cajas";
-            Description =
-                "Muestra como crear una caja 3D con la herramienta TgcBox y TgcDebugBox, cuyos parametros pueden ser modificados. Movimiento con mouse.";
+            Description = "Muestra como crear una caja 3D con la herramienta TgcBox y TgcDebugBox, cuyos parametros pueden ser modificados. Movimiento con mouse.";
         }
 
         public override void Init()
         {
             //Crear caja vacia
-            box = new TgcBox();
-            box.AutoTransformEnable = true;
+            box = new TGCBox();
+            box.AutoTransform = true;
             //Crear caja debug vacia
             debugBox = new TgcBoxDebug();
             currentTexture = null;
 
             //Modifiers para vararis sus parametros
-            Modifiers.addBoolean("box", "box", true);
-            Modifiers.addBoolean("boundingBox", "BoundingBox", false);
-            Modifiers.addBoolean("debugBox", "debugBox", true);
-            Modifiers.addFloat("thickness", 0.1f, 5, 0.2f);
-            Modifiers.addTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
-            Modifiers.addVertex2f("offset", new Vector2(-0.5f, -0.5f), new Vector2(0.9f, 0.9f), new Vector2(0, 0));
-            Modifiers.addVertex2f("tiling", new Vector2(0.1f, 0.1f), new Vector2(4, 4), new Vector2(1, 1));
-            Modifiers.addColor("color", Color.BurlyWood);
-            Modifiers.addVertex3f("size", new Vector3(0, 0, 0), new Vector3(100, 100, 100), new Vector3(20, 20, 20));
-            Modifiers.addVertex3f("position", new Vector3(-100, -100, -100), new Vector3(100, 100, 100),
-                new Vector3(0, 0, 0));
-            Modifiers.addVertex3f("rotation", new Vector3(-180, -180, -180), new Vector3(180, 180, 180),
-                new Vector3(0, 0, 0));
+            boxModifier = AddBoolean("box", "box", true);
+            boundingBoxModifier = AddBoolean("boundingBox", "BoundingBox", false);
+            debugBoxModifier = AddBoolean("debugBox", "debugBox", true);
+            thicknessModifier = AddFloat("thickness", 0.1f, 5, 0.2f);
+            textureModifier = AddTexture("texture", MediaDir + "\\Texturas\\madera.jpg");
+            offsetModifier = AddVertex2f("offset", new TGCVector2(-0.5f, -0.5f), new TGCVector2(0.9f, 0.9f), TGCVector2.Zero);
+            tilingModifier = AddVertex2f("tiling", new TGCVector2(0.1f, 0.1f), new TGCVector2(4, 4), TGCVector2.One);
+            colorModifier = AddColor("color", Color.BurlyWood);
+            sizeModifier = AddVertex3f("size", TGCVector3.Empty, new TGCVector3(100, 100, 100), new TGCVector3(20, 20, 20));
+            positionModifier = AddVertex3f("position", new TGCVector3(-100, -100, -100), new TGCVector3(100, 100, 100), TGCVector3.Empty);
+            rotationModifier = AddVertex3f("rotation", new TGCVector3(-180, -180, -180), new TGCVector3(180, 180, 180), TGCVector3.Empty);
 
-            Camara = new TgcRotationalCamera(new Vector3(), 200f, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 200f, Input);
         }
 
         public override void Update()
@@ -71,6 +80,8 @@ namespace TGC.Examples.GeometryBasics
             PreUpdate();
             //Actualizar parametros de la caja
             updateBox();
+
+            PostUpdate();
         }
 
         /// <summary>
@@ -79,36 +90,35 @@ namespace TGC.Examples.GeometryBasics
         private void updateBox()
         {
             //Cambiar textura
-            var texturePath = (string)Modifiers["texture"];
+            var texturePath = textureModifier.Value;
             if (texturePath != currentTexture)
             {
                 currentTexture = texturePath;
                 box.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
-            var size = (Vector3)Modifiers["size"];
-            var position = (Vector3)Modifiers["position"];
-            var thickness = (float)Modifiers["thickness"];
-            var color = (Color)Modifiers["color"];
+            var size = sizeModifier.Value;
+            var position = positionModifier.Value;
+            var thickness = thicknessModifier.Value;
+            var color = colorModifier.Value;
 
             //Tamano, posicion y color
             box.Size = size;
-            box.Position = position + new Vector3(15f, 0, 0);
+            box.Position = position + new TGCVector3(15f, 0, 0);
             box.Color = color;
 
             //Actualizar valores en la caja.
-            debugBox.setPositionSize(position - new Vector3(15f, 0, 0), size);
+            debugBox.setPositionSize(position - new TGCVector3(15f, 0, 0), size);
             debugBox.Thickness = thickness;
             debugBox.Color = color;
 
             //Rotacion, converitr a radianes
-            var rotaion = (Vector3)Modifiers["rotation"];
-            box.Rotation = new Vector3(Geometry.DegreeToRadian(rotaion.X), Geometry.DegreeToRadian(rotaion.Y),
-                Geometry.DegreeToRadian(rotaion.Z));
+            var rotaion = rotationModifier.Value;
+            box.Rotation = new TGCVector3(Geometry.DegreeToRadian(rotaion.X), Geometry.DegreeToRadian(rotaion.Y), Geometry.DegreeToRadian(rotaion.Z));
 
             //Offset y Tiling de textura
-            box.UVOffset = (Vector2)Modifiers["offset"];
-            box.UVTiling = (Vector2)Modifiers["tiling"];
+            box.UVOffset = offsetModifier.Value;
+            box.UVTiling = tilingModifier.Value;
 
             //Actualizar valores en la caja. IMPORTANTE, es mejor realizar transformaciones con matrices.
             debugBox.updateValues();
@@ -122,20 +132,20 @@ namespace TGC.Examples.GeometryBasics
             PreRender();
 
             //Renderizar caja
-            if ((bool)Modifiers["box"])
+            if (boxModifier.Value)
             {
-                box.render();
+                box.Render();
             }
 
             //Mostrar BoundingBox de la caja
-            if ((bool)Modifiers["boundingBox"])
+            if (boundingBoxModifier.Value)
             {
-                box.BoundingBox.render();
+                box.BoundingBox.Render();
             }
 
-            if ((bool)Modifiers["debugBox"])
+            if (debugBoxModifier.Value)
             {
-                debugBox.render();
+                debugBox.Render();
             }
 
             PostRender();
@@ -143,7 +153,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Dispose()
         {
-            box.dispose();
+            box.Dispose();
         }
     }
 }

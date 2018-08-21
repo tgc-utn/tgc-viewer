@@ -1,13 +1,12 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
+using TGC.Core.Mathematica;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.ShadersExamples
 {
@@ -38,8 +37,8 @@ namespace TGC.Examples.ShadersExamples
 
         private float time;
 
-        public EjemploVideoPostProcess(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploVideoPostProcess(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "Video Edge detection";
@@ -57,7 +56,7 @@ namespace TGC.Examples.ShadersExamples
             time = 0;
             g_pVideoBuffer = new Texture[500];
 
-            Camara = new TgcRotationalCamera(new Vector3(0, 0, 0), 100, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 100, Input);
 
             // Quad
             CustomVertex.PositionTextured[] vertices =
@@ -132,6 +131,7 @@ namespace TGC.Examples.ShadersExamples
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -161,9 +161,9 @@ namespace TGC.Examples.ShadersExamples
             }
 
             // seteos varios
-            d3dDevice.Transform.View = Matrix.Identity;
-            d3dDevice.Transform.World = Matrix.Identity;
-            d3dDevice.Transform.Projection = Matrix.Identity;
+            d3dDevice.Transform.View = TGCMatrix.Identity.ToMatrix();
+            d3dDevice.Transform.World = TGCMatrix.Identity.ToMatrix();
+            d3dDevice.Transform.Projection = TGCMatrix.Identity.ToMatrix();
             d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
             d3dDevice.SetStreamSource(0, g_pVB, 0);
 

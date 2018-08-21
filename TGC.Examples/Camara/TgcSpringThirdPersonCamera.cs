@@ -1,6 +1,5 @@
-using Microsoft.DirectX;
 using TGC.Core.Camara;
-using TGC.Core.Utils;
+using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Camara
 {
@@ -14,17 +13,17 @@ namespace TGC.Examples.Camara
         private static readonly float DEFAULT_SPRING_CONSTANT = 16.0f;
         private static readonly float DEFAULT_DAMPING_CONSTANT = 8.0f;
 
-        private static readonly Vector3 WORLD_XAXIS = new Vector3(1.0f, 0.0f, 0.0f);
-        private static readonly Vector3 WORLD_YAXIS = new Vector3(0.0f, 1.0f, 0.0f);
-        private static readonly Vector3 WORLD_ZAXIS = new Vector3(0.0f, 0.0f, 1.0f);
+        private static readonly TGCVector3 WORLD_XAXIS = new TGCVector3(1.0f, 0.0f, 0.0f);
+        private static readonly TGCVector3 WORLD_YAXIS = new TGCVector3(0.0f, 1.0f, 0.0f);
+        private static readonly TGCVector3 WORLD_ZAXIS = new TGCVector3(0.0f, 0.0f, 1.0f);
 
         private float m_headingDegrees;
         private float m_offsetDistance;
-        private Quaternion m_orientation;
+        private TGCQuaternion m_orientation;
         private float m_pitchDegrees;
-        private Vector3 m_targetYAxis;
-        private Vector3 m_velocity;
-        private Matrix m_viewMatrix;
+        private TGCVector3 m_targetYAxis;
+        private TGCVector3 m_velocity;
+        private TGCMatrix m_viewMatrix;
 
         public TgcSpringThirdPersonCamera()
         {
@@ -63,28 +62,28 @@ namespace TGC.Examples.Camara
             m_headingDegrees = 0.0f;
             m_pitchDegrees = 0.0f;
 
-            Eye = new Vector3(0.0f, 0.0f, 0.0f);
-            Target = new Vector3(0.0f, 0.0f, 0.0f);
-            m_targetYAxis = new Vector3(0, 1, 0);
+            Eye = new TGCVector3(0.0f, 0.0f, 0.0f);
+            Target = new TGCVector3(0.0f, 0.0f, 0.0f);
+            m_targetYAxis = TGCVector3.Up;
 
-            m_velocity = new Vector3(0.0f, 0.0f, 0.0f);
+            m_velocity = new TGCVector3(0.0f, 0.0f, 0.0f);
 
-            m_viewMatrix = Matrix.Identity;
-            m_orientation = Quaternion.Identity;
+            m_viewMatrix = TGCMatrix.Identity;
+            m_orientation = TGCQuaternion.Identity;
             SetCamera(Eye, Target);
         }
 
         /// <summary>
         ///     Asigna target con offsets.
         /// </summary>
-        public void setTargetOffset(Vector3 target, float offsetY, float offsetZ)
+        public void setTargetOffset(TGCVector3 target, float offsetY, float offsetZ)
         {
-            Eye = new Vector3(target.X, target.Y + offsetY, target.Z + offsetZ);
+            Eye = new TGCVector3(target.X, target.Y + offsetY, target.Z + offsetZ);
 
             Target = target;
 
-            m_viewMatrix = Matrix.LookAtLH(Eye, Target, m_targetYAxis);
-            m_orientation = Quaternion.RotationMatrix(m_viewMatrix);
+            m_viewMatrix = TGCMatrix.LookAtLH(Eye, Target, m_targetYAxis);
+            m_orientation = TGCQuaternion.RotationMatrix(m_viewMatrix);
 
             var offset = Target - Eye;
             m_offsetDistance = offset.Length();
@@ -93,7 +92,7 @@ namespace TGC.Examples.Camara
             m_pitchDegrees = 0.0f;
         }
 
-        public override Matrix GetViewMatrix()
+        public override TGCMatrix GetViewMatrix()
         {
             return m_viewMatrix;
         }
@@ -118,45 +117,45 @@ namespace TGC.Examples.Camara
             var heading = FastMath.ToRad(m_headingDegrees);
             var pitch = FastMath.ToRad(m_pitchDegrees);
 
-            Quaternion rot;
+            TGCQuaternion rot;
 
             if (heading != 0.0f)
             {
-                rot = Quaternion.RotationAxis(m_targetYAxis, heading);
-                m_orientation = Quaternion.Multiply(rot, m_orientation);
+                rot = TGCQuaternion.RotationAxis(m_targetYAxis, heading);
+                m_orientation = TGCQuaternion.Multiply(rot, m_orientation);
             }
 
             if (pitch != 0.0f)
             {
-                rot = Quaternion.RotationAxis(WORLD_XAXIS, pitch);
-                m_orientation = Quaternion.Multiply(m_orientation, rot);
+                rot = TGCQuaternion.RotationAxis(WORLD_XAXIS, pitch);
+                m_orientation = TGCQuaternion.Multiply(m_orientation, rot);
             }
         }
 
         private void updateViewMatrix()
         {
             m_orientation.Normalize();
-            m_viewMatrix = Matrix.RotationQuaternion(m_orientation);
+            m_viewMatrix = TGCMatrix.RotationTGCQuaternion(m_orientation);
 
-            var m_xAxis = new Vector3(m_viewMatrix.M11, m_viewMatrix.M21, m_viewMatrix.M31);
-            var m_yAxis = new Vector3(m_viewMatrix.M12, m_viewMatrix.M22, m_viewMatrix.M32);
-            var m_zAxis = new Vector3(m_viewMatrix.M13, m_viewMatrix.M23, m_viewMatrix.M33);
+            var m_xAxis = new TGCVector3(m_viewMatrix.M11, m_viewMatrix.M21, m_viewMatrix.M31);
+            var m_yAxis = new TGCVector3(m_viewMatrix.M12, m_viewMatrix.M22, m_viewMatrix.M32);
+            var m_zAxis = new TGCVector3(m_viewMatrix.M13, m_viewMatrix.M23, m_viewMatrix.M33);
 
             Eye = Target + m_zAxis * -m_offsetDistance;
 
-            m_viewMatrix.M41 = -Vector3.Dot(m_xAxis, Eye);
-            m_viewMatrix.M42 = -Vector3.Dot(m_yAxis, Eye);
-            m_viewMatrix.M43 = -Vector3.Dot(m_zAxis, Eye);
+            m_viewMatrix.M41 = -TGCVector3.Dot(m_xAxis, Eye);
+            m_viewMatrix.M42 = -TGCVector3.Dot(m_yAxis, Eye);
+            m_viewMatrix.M43 = -TGCVector3.Dot(m_zAxis, Eye);
         }
 
         private void updateViewMatrix(float elapsedTimeSec)
         {
             m_orientation.Normalize();
-            m_viewMatrix = Matrix.RotationQuaternion(m_orientation);
+            m_viewMatrix = TGCMatrix.RotationTGCQuaternion(m_orientation);
 
-            var m_xAxis = new Vector3(m_viewMatrix.M11, m_viewMatrix.M21, m_viewMatrix.M31);
-            var m_yAxis = new Vector3(m_viewMatrix.M12, m_viewMatrix.M22, m_viewMatrix.M32);
-            var m_zAxis = new Vector3(m_viewMatrix.M13, m_viewMatrix.M23, m_viewMatrix.M33);
+            var m_xAxis = new TGCVector3(m_viewMatrix.M11, m_viewMatrix.M21, m_viewMatrix.M31);
+            var m_yAxis = new TGCVector3(m_viewMatrix.M12, m_viewMatrix.M22, m_viewMatrix.M32);
+            var m_zAxis = new TGCVector3(m_viewMatrix.M13, m_viewMatrix.M23, m_viewMatrix.M33);
 
             // Calculate the new camera position. The 'idealPosition' is where the
             // camera should be position. The camera should be positioned directly
@@ -188,45 +187,45 @@ namespace TGC.Examples.Camara
             m_zAxis = Target - Eye;
             m_zAxis.Normalize();
 
-            m_xAxis = Vector3.Cross(m_targetYAxis, m_zAxis);
+            m_xAxis = TGCVector3.Cross(m_targetYAxis, m_zAxis);
             m_xAxis.Normalize();
 
-            m_yAxis = Vector3.Cross(m_zAxis, m_xAxis);
+            m_yAxis = TGCVector3.Cross(m_zAxis, m_xAxis);
             m_yAxis.Normalize();
 
-            m_viewMatrix = Matrix.Identity;
+            m_viewMatrix = TGCMatrix.Identity;
 
             m_viewMatrix.M11 = m_xAxis.X;
             m_viewMatrix.M21 = m_xAxis.Y;
             m_viewMatrix.M31 = m_xAxis.Z;
-            m_viewMatrix.M41 = -Vector3.Dot(m_xAxis, Eye);
+            m_viewMatrix.M41 = -TGCVector3.Dot(m_xAxis, Eye);
 
             m_viewMatrix.M12 = m_yAxis.X;
             m_viewMatrix.M22 = m_yAxis.Y;
             m_viewMatrix.M32 = m_yAxis.Z;
-            m_viewMatrix.M42 = -Vector3.Dot(m_yAxis, Eye);
+            m_viewMatrix.M42 = -TGCVector3.Dot(m_yAxis, Eye);
 
             m_viewMatrix.M13 = m_zAxis.X;
             m_viewMatrix.M23 = m_zAxis.Y;
             m_viewMatrix.M33 = m_zAxis.Z;
-            m_viewMatrix.M43 = -Vector3.Dot(m_zAxis, Eye);
+            m_viewMatrix.M43 = -TGCVector3.Dot(m_zAxis, Eye);
         }
 
-        public Vector3 calulateNextPosition(float headingDegrees, float elapsedTimeSec)
+        public TGCVector3 calulateNextPosition(float headingDegrees, float elapsedTimeSec)
         {
             var heading = FastMath.ToRad(-headingDegrees * elapsedTimeSec);
 
             var quatOrientation = m_orientation;
             if (heading != 0.0f)
             {
-                var rot = Quaternion.RotationAxis(m_targetYAxis, heading);
-                quatOrientation = Quaternion.Multiply(rot, quatOrientation);
+                var rot = TGCQuaternion.RotationAxis(m_targetYAxis, heading);
+                quatOrientation = TGCQuaternion.Multiply(rot, quatOrientation);
             }
 
             quatOrientation.Normalize();
-            var viewMatrix = Matrix.RotationQuaternion(quatOrientation);
+            var viewMatrix = TGCMatrix.RotationTGCQuaternion(quatOrientation);
 
-            var m_zAxis = new Vector3(viewMatrix.M13, viewMatrix.M23, viewMatrix.M33);
+            var m_zAxis = new TGCVector3(viewMatrix.M13, viewMatrix.M23, viewMatrix.M33);
             var idealPosition = Target + m_zAxis * -m_offsetDistance;
 
             return idealPosition;
@@ -236,9 +235,9 @@ namespace TGC.Examples.Camara
         ///     Permite configurar la orientacion de la cámara respecto del Target
         /// </summary>
         /// <param name="cameraRotation">Rotación absoluta a aplicar</param>
-        public void setOrientation(Vector3 cameraRotation)
+        public void setOrientation(TGCVector3 cameraRotation)
         {
-            m_orientation = Quaternion.RotationYawPitchRoll(cameraRotation.Y, cameraRotation.X, cameraRotation.Z);
+            m_orientation = TGCQuaternion.RotationYawPitchRoll(cameraRotation.Y, cameraRotation.X, cameraRotation.Z);
             m_headingDegrees = 0;
             m_pitchDegrees = 0;
         }
@@ -258,7 +257,7 @@ namespace TGC.Examples.Camara
         /// <summary>
         ///     Objetivo al cual la camara tiene que apuntar
         /// </summary>
-        public Vector3 Target { get; set; }
+        public TGCVector3 Target { get; set; }
 
         /// <summary>
         ///     Valor de Spring para el delay de la camara
@@ -273,7 +272,7 @@ namespace TGC.Examples.Camara
         /// <summary>
         ///     Posicion del ojo de la camara que apunta hacia el Target
         /// </summary>
-        public Vector3 Eye { get; set; }
+        public TGCVector3 Eye { get; set; }
 
         #endregion Getters y Setters
     }

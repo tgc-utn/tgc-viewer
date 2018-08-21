@@ -1,16 +1,16 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Geometry;
 using TGC.Core.Interpolation;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Lights
 {
@@ -28,14 +28,21 @@ namespace TGC.Examples.Lights
     /// </summary>
     public class EjemploMultiDiffuseLights : TGCExampleViewer
     {
+        private TGCBooleanModifier lightEnableModifier;
+        private TGCBooleanModifier lightMoveModifier;
+        private TGCFloatModifier lightIntensityModifier;
+        private TGCFloatModifier lightAttenuationModifier;
+        private TGCColorModifier mEmissiveModifier;
+        private TGCColorModifier mDiffuseModifier;
+
         private Effect effect;
         private InterpoladorVaiven interp;
-        private TgcBox[] lightMeshes;
-        private Vector3[] origLightPos;
+        private TGCBox[] lightMeshes;
+        private TGCVector3[] origLightPos;
         private TgcScene scene;
 
-        public EjemploMultiDiffuseLights(string mediaDir, string shadersDir, TgcUserVars userVars,
-            TgcModifiers modifiers) : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploMultiDiffuseLights(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Pixel Shaders";
             Name = "Multiple Diffuse Lights";
@@ -50,7 +57,7 @@ namespace TGC.Examples.Lights
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(260f, 170f, 390f), 400f, 300f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(260f, 170f, 390f), 400f, 300f, Input);
 
             //Cargar Shader personalizado de MultiDiffuseLights
             /*
@@ -62,25 +69,25 @@ namespace TGC.Examples.Lights
             effect = TgcShaders.loadEffect(ShadersDir + "MultiDiffuseLights.fx");
 
             //Crear 4 mesh para representar las 4 para la luces. Las ubicamos en distintas posiciones del escenario, cada una con un color distinto.
-            lightMeshes = new TgcBox[4];
-            origLightPos = new Vector3[lightMeshes.Length];
+            lightMeshes = new TGCBox[4];
+            origLightPos = new TGCVector3[lightMeshes.Length];
             var c = new Color[4] { Color.Red, Color.Blue, Color.Green, Color.Yellow };
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var co = c[i % c.Length];
-                lightMeshes[i] = TgcBox.fromSize(new Vector3(10, 10, 10), co);
-                lightMeshes[i].AutoTransformEnable = true;
-                origLightPos[i] = new Vector3(-40, 20 + i * 20, 400);
+                lightMeshes[i] = TGCBox.fromSize(new TGCVector3(10, 10, 10), co);
+                lightMeshes[i].AutoTransform = true;
+                origLightPos[i] = new TGCVector3(-40, 20 + i * 20, 400);
             }
 
             //Modifiers
-            Modifiers.addBoolean("lightEnable", "lightEnable", true);
-            Modifiers.addBoolean("lightMove", "lightMove", true);
-            Modifiers.addFloat("lightIntensity", 0, 150, 38);
-            Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.15f);
+            lightEnableModifier = AddBoolean("lightEnable", "lightEnable", true);
+            lightMoveModifier = AddBoolean("lightMove", "lightMove", true);
+            lightIntensityModifier = AddFloat("lightIntensity", 0, 150, 38);
+            lightAttenuationModifier = AddFloat("lightAttenuation", 0.1f, 2, 0.15f);
 
-            Modifiers.addColor("mEmissive", Color.Black);
-            Modifiers.addColor("mDiffuse", Color.White);
+            mEmissiveModifier = AddColor("mEmissive", Color.Black);
+            mDiffuseModifier = AddColor("mDiffuse", Color.White);
 
             //Interpolador para mover las luces de un lado para el otro
             interp = new InterpoladorVaiven();
@@ -93,6 +100,7 @@ namespace TGC.Examples.Lights
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -100,7 +108,7 @@ namespace TGC.Examples.Lights
             PreRender();
 
             //Habilitar luz
-            var lightEnable = (bool)Modifiers["lightEnable"];
+            var lightEnable = lightEnableModifier.Value;
             Effect currentShader;
             string currentTechnique;
             if (lightEnable)
@@ -124,8 +132,7 @@ namespace TGC.Examples.Lights
             }
 
             //Configurar los valores de cada luz
-            var move = new Vector3(0, 0,
-                (bool)Modifiers["lightMove"] ? interp.update(ElapsedTime) : 0);
+            var move = new TGCVector3(0, 0, lightMoveModifier.Value ? interp.update(ElapsedTime) : 0);
             var lightColors = new ColorValue[lightMeshes.Length];
             var pointLightPositions = new Vector4[lightMeshes.Length];
             var pointLightIntensity = new float[lightMeshes.Length];
@@ -133,12 +140,12 @@ namespace TGC.Examples.Lights
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var lightMesh = lightMeshes[i];
-                lightMesh.Position = origLightPos[i] + Vector3.Scale(move, i + 1);
+                lightMesh.Position = origLightPos[i] + TGCVector3.Scale(move, i + 1);
 
                 lightColors[i] = ColorValue.FromColor(lightMesh.Color);
-                pointLightPositions[i] = TgcParserUtils.vector3ToVector4(lightMesh.Position);
-                pointLightIntensity[i] = (float)Modifiers["lightIntensity"];
-                pointLightAttenuation[i] = (float)Modifiers["lightAttenuation"];
+                pointLightPositions[i] = TGCVector3.Vector3ToVector4(lightMesh.Position);
+                pointLightIntensity[i] = lightIntensityModifier.Value;
+                pointLightAttenuation[i] = lightAttenuationModifier.Value;
             }
 
             //Renderizar meshes
@@ -152,21 +159,19 @@ namespace TGC.Examples.Lights
                     mesh.Effect.SetValue("lightPosition", pointLightPositions);
                     mesh.Effect.SetValue("lightIntensity", pointLightIntensity);
                     mesh.Effect.SetValue("lightAttenuation", pointLightAttenuation);
-                    mesh.Effect.SetValue("materialEmissiveColor",
-                        ColorValue.FromColor((Color)Modifiers["mEmissive"]));
-                    mesh.Effect.SetValue("materialDiffuseColor",
-                        ColorValue.FromColor((Color)Modifiers["mDiffuse"]));
+                    mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(mEmissiveModifier.Value));
+                    mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(mDiffuseModifier.Value));
                 }
 
                 //Renderizar modelo
-                mesh.render();
+                mesh.Render();
             }
 
             //Renderizar meshes de luz
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var lightMesh = lightMeshes[i];
-                lightMesh.render();
+                lightMesh.Render();
             }
 
             PostRender();
@@ -174,12 +179,12 @@ namespace TGC.Examples.Lights
 
         public override void Dispose()
         {
-            scene.disposeAll();
+            scene.DisposeAll();
             effect.Dispose();
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var lightMesh = lightMeshes[i];
-                lightMesh.dispose();
+                lightMesh.Dispose();
             }
         }
     }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using SharpDX;
 using SharpDX.Direct3D9;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -18,12 +19,12 @@ namespace TGC.Core.BoundingVolumes
 
         protected Effect effect;
 
-        private Vector3 pMax;
-        private Vector3 pMaxOriginal;
+        private TGCVector3 pMax;
+        private TGCVector3 pMaxOriginal;
 
-        private Vector3 pMin;
+        private TGCVector3 pMin;
 
-        private Vector3 pMinOriginal;
+        private TGCVector3 pMinOriginal;
 
         protected string technique;
 
@@ -42,9 +43,9 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Construir AABB
         /// </summary>
-        /// <param name="pMin">Punto mínimo</param>
-        /// <param name="pMax">Punto máximo</param>
-        public TgcBoundingAxisAlignBox(Vector3 pMin, Vector3 pMax)
+        /// <param name="pMin">Punto mï¿½nimo</param>
+        /// <param name="pMax">Punto mï¿½ximo</param>
+        public TgcBoundingAxisAlignBox(TGCVector3 pMin, TGCVector3 pMax)
             : this()
         {
             setExtremes(pMin, pMax);
@@ -57,7 +58,7 @@ namespace TGC.Core.BoundingVolumes
         /// <param name="pMax">Punto maximo escalado y/o trasladado</param>
         /// <param name="position">Traslacion</param>
         /// <param name="scale">Escala</param>
-        public TgcBoundingAxisAlignBox(Vector3 pMin, Vector3 pMax, Vector3 position, Vector3 scale)
+        public TgcBoundingAxisAlignBox(TGCVector3 pMin, TGCVector3 pMax, TGCVector3 position, TGCVector3 scale)
             : this()
         {
             //Seteo los extremos
@@ -75,17 +76,17 @@ namespace TGC.Core.BoundingVolumes
         }
 
         /// <summary>
-        ///     Punto mínimo del BoundingBox
+        ///     Punto mï¿½nimo del BoundingBox
         /// </summary>
-        public Vector3 PMin
+        public TGCVector3 PMin
         {
             get { return pMin; }
         }
 
         /// <summary>
-        ///     Punto máximo del BoundinBox
+        ///     Punto mï¿½ximo del BoundinBox
         /// </summary>
-        public Vector3 PMax
+        public TGCVector3 PMax
         {
             get { return pMax; }
         }
@@ -114,24 +115,24 @@ namespace TGC.Core.BoundingVolumes
             set { technique = value; }
         }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
-            //Lo correcto sería calcular el centro, pero con un extremo es suficiente.
+            //Lo correcto serï¿½a calcular el centro, pero con un extremo es suficiente.
             //get { return calculateBoxCenter(); }
             get { return pMin; }
         }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vértice de canal Alpha.
-        ///     Por default está deshabilitado.
+        ///     con textura o colores por vï¿½rtice de canal Alpha.
+        ///     Por default estï¿½ deshabilitado.
         /// </summary>
         public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Renderizar BoundingBox
         /// </summary>
-        public void render()
+        public void Render()
         {
             TexturesManager.Instance.clear(0);
             TexturesManager.Instance.clear(1);
@@ -143,7 +144,7 @@ namespace TGC.Core.BoundingVolumes
                 technique = TgcShaders.T_POSITION_COLORED;
             }
 
-            //Actualizar vertices de BoundingBox solo si hubo una modificación
+            //Actualizar vertices de BoundingBox solo si hubo una modificaciï¿½n
             if (dirtyValues)
             {
                 updateValues();
@@ -165,7 +166,7 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Libera los recursos del objeto
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             vertices = null;
         }
@@ -173,9 +174,9 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Configurar los valores extremos del BoundingBox
         /// </summary>
-        /// <param name="pMin">Punto mínimo</param>
-        /// <param name="pMax">Punto máximo</param>
-        public void setExtremes(Vector3 pMin, Vector3 pMax)
+        /// <param name="pMin">Punto mï¿½nimo</param>
+        /// <param name="pMax">Punto mï¿½ximo</param>
+        public void setExtremes(TGCVector3 pMin, TGCVector3 pMax)
         {
             this.pMin = pMin;
             this.pMax = pMax;
@@ -208,7 +209,7 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         public float calculateBoxRadiusSquare()
         {
-            var diff = Vector3.Subtract(pMax, pMin);
+            var diff = TGCVector3.Subtract(pMax, pMin);
             diff.Scale(0.5f);
             return diff.LengthSq();
         }
@@ -225,37 +226,37 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Centro del Bounding Box
         /// </summary>
-        public Vector3 calculateBoxCenter()
+        public TGCVector3 calculateBoxCenter()
         {
             var axisRadius = calculateAxisRadius();
-            return Vector3.Add(pMin, axisRadius);
+            return TGCVector3.Add(pMin, axisRadius);
         }
 
         /// <summary>
-        ///     Tamaño de cada dimensión del BoundingBox
+        ///     Tamaï¿½o de cada dimensiï¿½n del BoundingBox
         /// </summary>
-        public Vector3 calculateSize()
+        public TGCVector3 calculateSize()
         {
-            return Vector3.Subtract(pMax, pMin);
+            return TGCVector3.Subtract(pMax, pMin);
         }
 
         /// <summary>
         ///     Devuelve el radio de cada eje (o Extents)
         /// </summary>
-        public Vector3 calculateAxisRadius()
+        public TGCVector3 calculateAxisRadius()
         {
             var size = calculateSize();
             size.Multiply(0.5f);
             return size;
         }
 
-		/// <summary>
-		/// Traslada y escala el BoundingBox.
-		/// Si el BoundingBox tenia alguna rotación, se pierde.
-		/// </summary>
-		/// <param name="position">Nueva posición absoluta de referencia</param>
-		/// <param name="scale">Nueva escala absoluta de referencia</param>
-		public void scaleTranslate(Vector3 position, Vector3 scale)
+        /// <summary>
+        /// Traslada y escala el BoundingBox.
+        /// Si el BoundingBox tenia alguna rotaciï¿½n, se pierde.
+        /// </summary>
+        /// <param name="position">Nueva posiciï¿½n absoluta de referencia</param>
+        /// <param name="scale">Nueva escala absoluta de referencia</param>
+        public void scaleTranslate(TGCVector3 position, TGCVector3 scale)
         {
             //actualizar puntos extremos
             pMin.X = pMinOriginal.X * scale.X + position.X;
@@ -273,7 +274,7 @@ namespace TGC.Core.BoundingVolumes
         ///     Mueve el BoundingBox
         /// </summary>
         /// <param name="movement">Movimiento relativo que se quiere aplicar</param>
-        public void move(Vector3 movement)
+        public void move(TGCVector3 movement)
         {
             pMin += movement;
             pMax += movement;
@@ -282,23 +283,23 @@ namespace TGC.Core.BoundingVolumes
         }
 
         /// <summary>
-        ///     Transforma el BondingBox en base a una matriz de transformación.
+        ///     Transforma el BondingBox en base a una matriz de transformaciï¿½n.
         ///     Esto implica escalar, rotar y trasladar.
         ///     El procedimiento es mas costoso que solo hacer scaleTranslate().
         ///     Se construye un nuevo BoundingBox en base a los puntos extremos del original
-        ///     más la transformación pedida.
-        ///     Si el BoundingBox se transformó y luego se llama a scaleTranslate(), se respeta
-        ///     la traslación y la escala, pero la rotación se va a perder.
+        ///     mï¿½s la transformaciï¿½n pedida.
+        ///     Si el BoundingBox se transformï¿½ y luego se llama a scaleTranslate(), se respeta
+        ///     la traslaciï¿½n y la escala, pero la rotaciï¿½n se va a perder.
         /// </summary>
         /// <param name="transform"></param>
-        public void transform(Matrix transform)
+        public void transform(TGCMatrix transform)
         {
             //Transformar vertices extremos originales
             var corners = computeCorners(pMinOriginal, pMaxOriginal);
-            var newCorners = new Vector3[corners.Length];
+            var newCorners = new TGCVector3[corners.Length];
             for (var i = 0; i < corners.Length; i++)
             {
-                newCorners[i] = TgcVectorUtils.transform(corners[i], transform);
+                newCorners[i] = TGCVector3.transform(corners[i], transform);
             }
 
             //Calcular nuevo BoundingBox en base a extremos transformados
@@ -364,21 +365,21 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Crea un array con los 8 vertices del BoundingBox, en base a los extremos especificados
         /// </summary>
-        private Vector3[] computeCorners(Vector3 min, Vector3 max)
+        private TGCVector3[] computeCorners(TGCVector3 min, TGCVector3 max)
         {
-            var corners = new Vector3[8];
+            var corners = new TGCVector3[8];
 
-            corners[0] = new Vector3(min.X, min.Y, min.Z);
-            corners[1] = new Vector3(min.X, min.Y, max.Z);
+            corners[0] = new TGCVector3(min.X, min.Y, min.Z);
+            corners[1] = new TGCVector3(min.X, min.Y, max.Z);
 
-            corners[2] = new Vector3(min.X, max.Y, min.Z);
-            corners[3] = new Vector3(min.X, max.Y, max.Z);
+            corners[2] = new TGCVector3(min.X, max.Y, min.Z);
+            corners[3] = new TGCVector3(min.X, max.Y, max.Z);
 
-            corners[4] = new Vector3(max.X, min.Y, min.Z);
-            corners[5] = new Vector3(max.X, min.Y, max.Z);
+            corners[4] = new TGCVector3(max.X, min.Y, min.Z);
+            corners[5] = new TGCVector3(max.X, min.Y, max.Z);
 
-            corners[6] = new Vector3(max.X, max.Y, min.Z);
-            corners[7] = new Vector3(max.X, max.Y, max.Z);
+            corners[6] = new TGCVector3(max.X, max.Y, min.Z);
+            corners[7] = new TGCVector3(max.X, max.Y, max.Z);
 
             return corners;
         }
@@ -386,15 +387,15 @@ namespace TGC.Core.BoundingVolumes
         /// <summary>
         ///     Crea un array con los 8 vertices del BoundingBox
         /// </summary>
-        public Vector3[] computeCorners()
+        public TGCVector3[] computeCorners()
         {
             return computeCorners(pMin, pMax);
         }
 
         /// <summary>
-        ///     Calcula los polígonos que conforman las 6 caras del BoundingBox
+        ///     Calcula los polï¿½gonos que conforman las 6 caras del BoundingBox
         /// </summary>
-        /// <returns>Array con las 6 caras del polígono en el siguiente orden: Up, Down, Front, Back, Right, Left</returns>
+        /// <returns>Array con las 6 caras del polï¿½gono en el siguiente orden: Up, Down, Front, Back, Right, Left</returns>
         public Face[] computeFaces()
         {
             var faces = new Face[6];
@@ -402,73 +403,73 @@ namespace TGC.Core.BoundingVolumes
 
             //Up
             face = new Face();
-            face.Plane = new Plane(0, 1, 0, -pMax.Y);
+            face.Plane = new TGCPlane(0, 1, 0, -pMax.Y);
             face.Extremes = new[]
             {
-                new Vector3(pMin.X, pMax.Y, pMin.Z),
-                new Vector3(pMin.X, pMax.Y, pMax.Z),
-                new Vector3(pMax.X, pMax.Y, pMin.Z),
-                new Vector3(pMax.X, pMax.Y, pMax.Z)
+                new TGCVector3(pMin.X, pMax.Y, pMin.Z),
+                new TGCVector3(pMin.X, pMax.Y, pMax.Z),
+                new TGCVector3(pMax.X, pMax.Y, pMin.Z),
+                new TGCVector3(pMax.X, pMax.Y, pMax.Z)
             };
             faces[0] = face;
 
             //Down
             face = new Face();
-            face.Plane = new Plane(0, -1, 0, pMin.Y);
+            face.Plane = new TGCPlane(0, -1, 0, pMin.Y);
             face.Extremes = new[]
             {
-                new Vector3(pMin.X, pMin.Y, pMin.Z),
-                new Vector3(pMin.X, pMin.Y, pMax.Z),
-                new Vector3(pMax.X, pMin.Y, pMin.Z),
-                new Vector3(pMax.X, pMin.Y, pMax.Z)
+                new TGCVector3(pMin.X, pMin.Y, pMin.Z),
+                new TGCVector3(pMin.X, pMin.Y, pMax.Z),
+                new TGCVector3(pMax.X, pMin.Y, pMin.Z),
+                new TGCVector3(pMax.X, pMin.Y, pMax.Z)
             };
             faces[1] = face;
 
             //Front
             face = new Face();
-            face.Plane = new Plane(0, 0, 1, -pMax.Z);
+            face.Plane = new TGCPlane(0, 0, 1, -pMax.Z);
             face.Extremes = new[]
             {
-                new Vector3(pMin.X, pMin.Y, pMax.Z),
-                new Vector3(pMin.X, pMax.Y, pMax.Z),
-                new Vector3(pMax.X, pMin.Y, pMax.Z),
-                new Vector3(pMax.X, pMax.Y, pMax.Z)
+                new TGCVector3(pMin.X, pMin.Y, pMax.Z),
+                new TGCVector3(pMin.X, pMax.Y, pMax.Z),
+                new TGCVector3(pMax.X, pMin.Y, pMax.Z),
+                new TGCVector3(pMax.X, pMax.Y, pMax.Z)
             };
             faces[2] = face;
 
             //Back
             face = new Face();
-            face.Plane = new Plane(0, 0, -1, pMin.Z);
+            face.Plane = new TGCPlane(0, 0, -1, pMin.Z);
             face.Extremes = new[]
             {
-                new Vector3(pMin.X, pMin.Y, pMin.Z),
-                new Vector3(pMin.X, pMax.Y, pMin.Z),
-                new Vector3(pMax.X, pMin.Y, pMin.Z),
-                new Vector3(pMax.X, pMax.Y, pMin.Z)
+                new TGCVector3(pMin.X, pMin.Y, pMin.Z),
+                new TGCVector3(pMin.X, pMax.Y, pMin.Z),
+                new TGCVector3(pMax.X, pMin.Y, pMin.Z),
+                new TGCVector3(pMax.X, pMax.Y, pMin.Z)
             };
             faces[3] = face;
 
             //Right
             face = new Face();
-            face.Plane = new Plane(1, 0, 0, -pMax.X);
+            face.Plane = new TGCPlane(1, 0, 0, -pMax.X);
             face.Extremes = new[]
             {
-                new Vector3(pMax.X, pMin.Y, pMin.Z),
-                new Vector3(pMax.X, pMin.Y, pMax.Z),
-                new Vector3(pMax.X, pMax.Y, pMin.Z),
-                new Vector3(pMax.X, pMax.Y, pMax.Z)
+                new TGCVector3(pMax.X, pMin.Y, pMin.Z),
+                new TGCVector3(pMax.X, pMin.Y, pMax.Z),
+                new TGCVector3(pMax.X, pMax.Y, pMin.Z),
+                new TGCVector3(pMax.X, pMax.Y, pMax.Z)
             };
             faces[4] = face;
 
             //Left
             face = new Face();
-            face.Plane = new Plane(-1, 0, 0, pMin.X);
+            face.Plane = new TGCPlane(-1, 0, 0, pMin.X);
             face.Extremes = new[]
             {
-                new Vector3(pMin.X, pMin.Y, pMin.Z),
-                new Vector3(pMin.X, pMin.Y, pMax.Z),
-                new Vector3(pMin.X, pMax.Y, pMin.Z),
-                new Vector3(pMin.X, pMax.Y, pMax.Z)
+                new TGCVector3(pMin.X, pMin.Y, pMin.Z),
+                new TGCVector3(pMin.X, pMin.Y, pMax.Z),
+                new TGCVector3(pMin.X, pMax.Y, pMin.Z),
+                new TGCVector3(pMin.X, pMax.Y, pMax.Z)
             };
             faces[5] = face;
 
@@ -505,12 +506,12 @@ namespace TGC.Core.BoundingVolumes
             var projVertices = computeCorners();
             for (var i = 0; i < projVertices.Length; i++)
             {
-                projVertices[i] = Vector3.Project(projVertices[i], viewport, proj, view, world);
+                projVertices[i] = TGCVector3.Project(projVertices[i], viewport, TGCMatrix.FromMatrix(proj), TGCMatrix.FromMatrix(view), TGCMatrix.FromMatrix(world));
             }
 
             //Buscar los puntos extremos
-            var min = new Vector2(float.MaxValue, float.MaxValue);
-            var max = new Vector2(float.MinValue, float.MinValue);
+            var min = new TGCVector2(float.MaxValue, float.MaxValue);
+            var max = new TGCVector2(float.MinValue, float.MinValue);
             foreach (var v in projVertices)
             {
                 if (v.X < min.X)
@@ -545,24 +546,24 @@ namespace TGC.Core.BoundingVolumes
         }
 
         /// <summary>
-        ///     Cara de un BoundingBox representada por un polígono rectangular de 4 vértices.
+        ///     Cara de un BoundingBox representada por un polï¿½gono rectangular de 4 vï¿½rtices.
         /// </summary>
         public class Face
         {
             public Face()
             {
-                Extremes = new Vector3[4];
+                Extremes = new TGCVector3[4];
             }
 
             /// <summary>
-            ///     Los 4 vértices extremos de la cara
+            ///     Los 4 vï¿½rtices extremos de la cara
             /// </summary>
-            public Vector3[] Extremes { get; set; }
+            public TGCVector3[] Extremes { get; set; }
 
             /// <summary>
-            ///     Ecuación del plano que engloba la cara, con su normal apuntado hacia afuera normalizada.
+            ///     Ecuaciï¿½n del plano que engloba la cara, con su normal apuntado hacia afuera normalizada.
             /// </summary>
-            public Plane Plane { get; set; }
+            public TGCPlane Plane { get; set; }
         }
 
         /// <summary>
@@ -570,8 +571,8 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         public struct AABBStruct
         {
-            public Vector3 min;
-            public Vector3 max;
+            public TGCVector3 min;
+            public TGCVector3 max;
 
             /// <summary>
             ///     Convertir a clase
@@ -591,7 +592,7 @@ namespace TGC.Core.BoundingVolumes
         /// <returns>BoundingBox creado</returns>
         public static TgcBoundingAxisAlignBox computeFromBoundingBoxes(List<TgcBoundingAxisAlignBox> boundingBoxes)
         {
-            var points = new Vector3[boundingBoxes.Count * 2];
+            var points = new TGCVector3[boundingBoxes.Count * 2];
             for (var i = 0; i < boundingBoxes.Count; i++)
             {
                 points[i * 2] = boundingBoxes[i].pMin;
@@ -605,10 +606,10 @@ namespace TGC.Core.BoundingVolumes
         /// </summary>
         /// <param name="points">Puntos a conentener</param>
         /// <returns>BoundingBox creado</returns>
-        public static TgcBoundingAxisAlignBox computeFromPoints(Vector3[] points)
+        public static TgcBoundingAxisAlignBox computeFromPoints(TGCVector3[] points)
         {
-            var min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            var max = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            var min = new TGCVector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            var max = new TGCVector3(float.MinValue, float.MinValue, float.MinValue);
 
             foreach (var p in points)
             {

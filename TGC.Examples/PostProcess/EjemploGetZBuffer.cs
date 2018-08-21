@@ -1,15 +1,14 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Collections.Generic;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 
 namespace TGC.Examples.PostProcess
 {
@@ -33,8 +32,8 @@ namespace TGC.Examples.PostProcess
         private Texture zBufferTexture;
         private Surface depthStencil;
 
-        public EjemploGetZBuffer(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploGetZBuffer(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
             Name = "Get Z Buffer";
@@ -67,12 +66,13 @@ namespace TGC.Examples.PostProcess
                 DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(-20, 80, 450), 400f, 300f, Input);
+            Camara = new TgcFpsCamera(new TGCVector3(-20, 80, 450), 400f, 300f, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -95,7 +95,7 @@ namespace TGC.Examples.PostProcess
             foreach (var mesh in meshes)
             {
                 mesh.Technique = "GenerateZBuffer";
-                mesh.render();
+                mesh.Render();
             }
 
             zBufferSurface.Dispose();
@@ -119,7 +119,7 @@ namespace TGC.Examples.PostProcess
             foreach (var mesh in meshes)
             {
                 mesh.Technique = "AlterColorByDepth";
-                mesh.render();
+                mesh.Render();
             }
 
             RenderFPS();
@@ -135,7 +135,7 @@ namespace TGC.Examples.PostProcess
             depthStencil.Dispose();
             foreach (var mesh in meshes)
             {
-                mesh.dispose();
+                mesh.Dispose();
             }
         }
     }

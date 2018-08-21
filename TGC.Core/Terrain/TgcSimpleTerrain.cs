@@ -2,6 +2,7 @@ using System.Drawing;
 using SharpDX;
 using SharpDX.Direct3D9;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
@@ -19,6 +20,7 @@ namespace TGC.Core.Terrain
         private Texture terrainTexture;
         private int totalVertices;
         private VertexBuffer vbTerrain;
+        private CustomVertex.PositionTextured[] data;
 
         public TgcSimpleTerrain()
         {
@@ -28,6 +30,15 @@ namespace TGC.Core.Terrain
             //Shader
             effect = TgcShaders.Instance.VariosShader;
             technique = TgcShaders.T_POSITION_TEXTURED;
+        }
+
+        /// <summary>
+        ///     Devuelve la informacion de Custom Vertex Buffer del HeightMap cargado
+        /// </summary>
+        /// <returns>Custom Vertex Buffer de tipo PositionTextured</returns>
+        public CustomVertex.PositionTextured[] getData()
+        {
+            return data;
         }
 
         /// <summary>
@@ -43,7 +54,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Centro del terreno
         /// </summary>
-        public Vector3 Center { get; private set; }
+        public TGCVector3 Center { get; private set; }
 
         /// <summary>
         ///     Shader del mesh
@@ -64,22 +75,22 @@ namespace TGC.Core.Terrain
             set { technique = value; }
         }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return Center; }
         }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
-        ///     con textura o colores por vértice de canal Alpha.
-        ///     Por default está deshabilitado.
+        ///     con textura o colores por vï¿½rtice de canal Alpha.
+        ///     Por default estï¿½ deshabilitado.
         /// </summary>
         public bool AlphaBlendEnable { get; set; }
 
         /// <summary>
         ///     Renderiza el terreno
         /// </summary>
-        public void render()
+        public void Render()
         {
             if (!Enabled)
                 return;
@@ -88,7 +99,7 @@ namespace TGC.Core.Terrain
             effect.SetValue("texDiffuseMap", terrainTexture);
             TexturesManager.Instance.clear(1);
 
-            TgcShaders.Instance.setShaderMatrix(effect, Matrix.Identity);
+            TgcShaders.Instance.setShaderMatrix(effect, TGCMatrix.Identity);
             D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionTextured;
             effect.Technique = technique;
             D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
@@ -104,7 +115,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Libera los recursos del Terreno
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             if (vbTerrain != null)
             {
@@ -124,7 +135,7 @@ namespace TGC.Core.Terrain
         /// <param name="scaleXZ">Escala para los ejes X y Z</param>
         /// <param name="scaleY">Escala para el eje Y</param>
         /// <param name="center">Centro de la malla del terreno</param>
-        public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, Vector3 center)
+        public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, TGCVector3 center)
         {
             Center = center;
 
@@ -147,7 +158,7 @@ namespace TGC.Core.Terrain
 
             //Cargar vertices
             var dataIdx = 0;
-            var data = new CustomVertex.PositionTextured[totalVertices];
+            data = new CustomVertex.PositionTextured[totalVertices];
 
             center.X = center.X * scaleXZ - width / 2 * scaleXZ;
             center.Y = center.Y * scaleY;
@@ -158,20 +169,20 @@ namespace TGC.Core.Terrain
                 for (var j = 0; j < length - 1; j++)
                 {
                     //Vertices
-                    var v1 = new Vector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j] * scaleY,
+                    var v1 = new TGCVector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j] * scaleY,
                         center.Z + j * scaleXZ);
-                    var v2 = new Vector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j + 1] * scaleY,
+                    var v2 = new TGCVector3(center.X + i * scaleXZ, center.Y + HeightmapData[i, j + 1] * scaleY,
                         center.Z + (j + 1) * scaleXZ);
-                    var v3 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j] * scaleY,
+                    var v3 = new TGCVector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j] * scaleY,
                         center.Z + j * scaleXZ);
-                    var v4 = new Vector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j + 1] * scaleY,
+                    var v4 = new TGCVector3(center.X + (i + 1) * scaleXZ, center.Y + HeightmapData[i + 1, j + 1] * scaleY,
                         center.Z + (j + 1) * scaleXZ);
 
                     //Coordendas de textura
-                    var t1 = new Vector2(i / width, j / length);
-                    var t2 = new Vector2(i / width, (j + 1) / length);
-                    var t3 = new Vector2((i + 1) / width, j / length);
-                    var t4 = new Vector2((i + 1) / width, (j + 1) / length);
+                    var t1 = new TGCVector2(i / width, j / length);
+                    var t2 = new TGCVector2(i / width, (j + 1) / length);
+                    var t3 = new TGCVector2((i + 1) / width, j / length);
+                    var t4 = new TGCVector2((i + 1) / width, (j + 1) / length);
 
                     //Cargar triangulo 1
                     data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
@@ -204,7 +215,7 @@ namespace TGC.Core.Terrain
             //Rotar e invertir textura
             var b = (Bitmap)Image.FromFile(path);
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
-            terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.None, Pool.Managed);
+            terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.AutoGenerateMipMap, Pool.Managed);
         }
 
         /// <summary>

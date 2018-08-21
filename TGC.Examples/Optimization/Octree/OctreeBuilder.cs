@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,8 +5,8 @@ using System.Text;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.Utils;
 
 namespace TGC.Examples.Optimization.Octree
 {
@@ -53,7 +52,7 @@ namespace TGC.Examples.Optimization.Octree
         /// <summary>
         ///     Corte con plano X
         /// </summary>
-        private void doSectorOctreeX(OctreeNode parent, Vector3 center, Vector3 size,
+        private void doSectorOctreeX(OctreeNode parent, TGCVector3 center, TGCVector3 size,
             int step, List<TgcMesh> meshes)
         {
             var x = center.X;
@@ -63,24 +62,24 @@ namespace TGC.Examples.Optimization.Octree
             var negativeList = new List<TgcMesh>();
 
             //X-cut
-            var xCutPlane = new Plane(1, 0, 0, -x);
+            var xCutPlane = new TGCPlane(1, 0, 0, -x);
             splitByPlane(xCutPlane, meshes, possitiveList, negativeList);
 
             //recursividad de positivos con plano Y, usando resultados positivos y childIndex 0
-            doSectorOctreeY(parent, new Vector3(x + size.X / 2, center.Y, center.Z),
-                new Vector3(size.X / 2, size.Y, size.Z),
+            doSectorOctreeY(parent, new TGCVector3(x + size.X / 2, center.Y, center.Z),
+                new TGCVector3(size.X / 2, size.Y, size.Z),
                 step, possitiveList, 0);
 
             //recursividad de negativos con plano Y, usando resultados negativos y childIndex 4
-            doSectorOctreeY(parent, new Vector3(x - size.X / 2, center.Y, center.Z),
-                new Vector3(size.X / 2, size.Y, size.Z),
+            doSectorOctreeY(parent, new TGCVector3(x - size.X / 2, center.Y, center.Z),
+                new TGCVector3(size.X / 2, size.Y, size.Z),
                 step, negativeList, 4);
         }
 
         /// <summary>
         ///     Corte con plano Y
         /// </summary>
-        private void doSectorOctreeY(OctreeNode parent, Vector3 center, Vector3 size, int step,
+        private void doSectorOctreeY(OctreeNode parent, TGCVector3 center, TGCVector3 size, int step,
             List<TgcMesh> meshes, int childIndex)
         {
             var y = center.Y;
@@ -90,24 +89,24 @@ namespace TGC.Examples.Optimization.Octree
             var negativeList = new List<TgcMesh>();
 
             //Y-cut
-            var yCutPlane = new Plane(0, 1, 0, -y);
+            var yCutPlane = new TGCPlane(0, 1, 0, -y);
             splitByPlane(yCutPlane, meshes, possitiveList, negativeList);
 
             //recursividad de positivos con plano Z, usando resultados positivos y childIndex 0
-            doSectorOctreeZ(parent, new Vector3(center.X, y + size.Y / 2, center.Z),
-                new Vector3(size.X, size.Y / 2, size.Z),
+            doSectorOctreeZ(parent, new TGCVector3(center.X, y + size.Y / 2, center.Z),
+                new TGCVector3(size.X, size.Y / 2, size.Z),
                 step, possitiveList, childIndex + 0);
 
             //recursividad de negativos con plano Z, usando plano X negativo y childIndex 2
-            doSectorOctreeZ(parent, new Vector3(center.X, y - size.Y / 2, center.Z),
-                new Vector3(size.X, size.Y / 2, size.Z),
+            doSectorOctreeZ(parent, new TGCVector3(center.X, y - size.Y / 2, center.Z),
+                new TGCVector3(size.X, size.Y / 2, size.Z),
                 step, negativeList, childIndex + 2);
         }
 
         /// <summary>
         ///     Corte de plano Z
         /// </summary>
-        private void doSectorOctreeZ(OctreeNode parent, Vector3 center, Vector3 size, int step,
+        private void doSectorOctreeZ(OctreeNode parent, TGCVector3 center, TGCVector3 size, int step,
             List<TgcMesh> meshes, int childIndex)
         {
             var z = center.Z;
@@ -117,7 +116,7 @@ namespace TGC.Examples.Optimization.Octree
             var negativeList = new List<TgcMesh>();
 
             //Z-cut
-            var zCutPlane = new Plane(0, 0, 1, -z);
+            var zCutPlane = new TGCPlane(0, 0, 1, -z);
             splitByPlane(zCutPlane, meshes, possitiveList, negativeList);
 
             //obtener lista de children del parent, con iniciacion lazy
@@ -150,13 +149,13 @@ namespace TGC.Examples.Optimization.Octree
                 step++;
 
                 //recursividad de positivos con plano X, usando resultados positivos
-                doSectorOctreeX(posNode, new Vector3(center.X, center.Y, z + size.Z / 2),
-                    new Vector3(size.X, size.Y, size.Z / 2),
+                doSectorOctreeX(posNode, new TGCVector3(center.X, center.Y, z + size.Z / 2),
+                    new TGCVector3(size.X, size.Y, size.Z / 2),
                     step, possitiveList);
 
                 //recursividad de negativos con plano Y, usando resultados negativos
-                doSectorOctreeX(negNode, new Vector3(center.X, center.Y, z - size.Z / 2),
-                    new Vector3(size.X, size.Y, size.Z / 2),
+                doSectorOctreeX(negNode, new TGCVector3(center.X, center.Y, z - size.Z / 2),
+                    new TGCVector3(size.X, size.Y, size.Z / 2),
                     step, negativeList);
             }
         }
@@ -164,7 +163,7 @@ namespace TGC.Examples.Optimization.Octree
         /// <summary>
         ///     Separa los modelos en dos listas, segun el testo contra el plano de corte
         /// </summary>
-        private void splitByPlane(Plane cutPlane, List<TgcMesh> modelos,
+        private void splitByPlane(TGCPlane cutPlane, List<TgcMesh> modelos,
             List<TgcMesh> possitiveList, List<TgcMesh> negativeList)
         {
             TgcCollisionUtils.PlaneBoxResult c;
@@ -445,8 +444,8 @@ namespace TGC.Examples.Optimization.Octree
 
             //Crear caja Debug
             var box = TgcBoxDebug.fromExtremes(
-                new Vector3(boxLowerX, boxLowerY, boxLowerZ),
-                new Vector3(boxUpperX, boxUpperY, boxUpperZ),
+                new TGCVector3(boxLowerX, boxLowerY, boxLowerZ),
+                new TGCVector3(boxUpperX, boxUpperY, boxUpperZ),
                 c, thickness);
 
             return box;

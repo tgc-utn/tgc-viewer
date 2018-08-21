@@ -103,9 +103,7 @@ namespace TGC.Examples.Quake3Loader
 
             string errores;
 
-            Fx = Effect.FromString(D3DDevice.Instance.Device, ShaderSrc, null, null, ShaderFlags.NotCloneable,
-                null,
-                out errores);
+            Fx = Effect.FromString(D3DDevice.Instance.Device, ShaderSrc, null, null, ShaderFlags.NotCloneable, null, out errores);
             //if (!errores.Equals(""))
             //errores = "";
 

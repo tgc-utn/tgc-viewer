@@ -21,19 +21,19 @@ float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
 texture texDiffuseMap;
 sampler2D diffuseMap = sampler_state
 {
-	Texture = (texDiffuseMap);
-	ADDRESSU = WRAP;
-	ADDRESSV = WRAP;
-	MINFILTER = LINEAR;
-	MAGFILTER = LINEAR;
-	MIPFILTER = LINEAR;
+    Texture = (texDiffuseMap);
+    ADDRESSU = WRAP;
+    ADDRESSV = WRAP;
+    MINFILTER = LINEAR;
+    MAGFILTER = LINEAR;
+    MIPFILTER = LINEAR;
 };
 
 //Textura para Lightmap
 texture texLightMap;
 sampler2D lightMap = sampler_state
 {
-	Texture = (texLightMap);
+    Texture = (texLightMap);
 };
 
 //Material del mesh
@@ -53,89 +53,89 @@ float lightAttenuation[4]; //Factor de atenuacion de las 4 luces
 //Input del Vertex Shader
 struct VS_INPUT
 {
-	float4 Position : POSITION0;
-	float3 Normal : NORMAL0;
-	float4 Color : COLOR;
-	float2 Texcoord : TEXCOORD0;
+    float4 Position : POSITION0;
+    float3 Normal : NORMAL0;
+    float4 Color : COLOR;
+    float2 Texcoord : TEXCOORD0;
 };
 
 //Output del Vertex Shader
 struct VS_OUTPUT
 {
-	float4 Position : POSITION0;
-	float2 Texcoord : TEXCOORD0;
-	float3 WorldPosition : TEXCOORD1;
-	float3 WorldNormal : TEXCOORD2;
+    float4 Position : POSITION0;
+    float2 Texcoord : TEXCOORD0;
+    float3 WorldPosition : TEXCOORD1;
+    float3 WorldNormal : TEXCOORD2;
 };
 
 //Vertex Shader
 VS_OUTPUT vs_general(VS_INPUT input)
 {
-	VS_OUTPUT output;
+    VS_OUTPUT output;
 
 	//Proyectar posicion
-	output.Position = mul(input.Position, matWorldViewProj);
+    output.Position = mul(input.Position, matWorldViewProj);
 
 	//Enviar Texcoord directamente
-	output.Texcoord = input.Texcoord;
+    output.Texcoord = input.Texcoord;
 
 	//Posicion pasada a World-Space (necesaria para atenuación por distancia)
-	output.WorldPosition = mul(input.Position, matWorld);
+    output.WorldPosition = mul(input.Position, matWorld);
 
 	/* Pasar normal a World-Space
 	Solo queremos rotarla, no trasladarla ni escalarla.
 	Por eso usamos matInverseTransposeWorld en vez de matWorld */
-	output.WorldNormal = mul(input.Normal, matInverseTransposeWorld).xyz;
+    output.WorldNormal = mul(input.Normal, matInverseTransposeWorld).xyz;
 
-	return output;
+    return output;
 }
 
 //Input del Pixel Shader
 struct PS_INPUT
 {
-	float2 Texcoord : TEXCOORD0;
-	float3 WorldPosition : TEXCOORD1;
-	float3 WorldNormal : TEXCOORD2;
+    float2 Texcoord : TEXCOORD0;
+    float3 WorldPosition : TEXCOORD1;
+    float3 WorldNormal : TEXCOORD2;
 };
 
 //Funcion para calcular color RGB de Diffuse
 float3 computeDiffuseComponent(float3 surfacePosition, float3 N, int i)
 {
 	//Calcular intensidad de luz, con atenuacion por distancia
-	float distAtten = length(lightPosition[i].xyz - surfacePosition);
-	float3 Ln = (lightPosition[i].xyz - surfacePosition) / distAtten;
-	distAtten = distAtten * lightAttenuation[i];
-	float intensity = lightIntensity[i] / distAtten; //Dividimos intensidad sobre distancia
+    float distAtten = length(lightPosition[i].xyz - surfacePosition);
+    float3 Ln = (lightPosition[i].xyz - surfacePosition) / distAtten;
+    distAtten = distAtten * lightAttenuation[i];
+    float intensity = lightIntensity[i] / distAtten; //Dividimos intensidad sobre distancia
 
 	//Calcular Diffuse (N dot L)
-	return intensity * lightColor[i].rgb * materialDiffuseColor * max(0.0, dot(N, Ln));
+    return intensity * lightColor[i].rgb * materialDiffuseColor * max(0.0, dot(N, Ln));
 }
 
 //Pixel Shader para Point Light
 float4 point_light_ps(PS_INPUT input) : COLOR0
 {
-	float3 Nn = normalize(input.WorldNormal);
+    float3 Nn = normalize(input.WorldNormal);
 
 	//Emissive + Diffuse de 4 luces PointLight
-	float3 diffuseLighting = materialEmissiveColor;
+    float3 diffuseLighting = materialEmissiveColor;
 
 	//Diffuse 0
-	diffuseLighting += computeDiffuseComponent(input.WorldPosition, Nn, 0);
+    diffuseLighting += computeDiffuseComponent(input.WorldPosition, Nn, 0);
 
 	//Diffuse 1
-	diffuseLighting += computeDiffuseComponent(input.WorldPosition, Nn, 1);
+    diffuseLighting += computeDiffuseComponent(input.WorldPosition, Nn, 1);
 
 	//Diffuse 2
-	diffuseLighting += computeDiffuseComponent(input.WorldPosition, Nn, 2);
+    diffuseLighting += computeDiffuseComponent(input.WorldPosition, Nn, 2);
 
 	//Diffuse 3
-	diffuseLighting += computeDiffuseComponent(input.WorldPosition, Nn, 3);
+    diffuseLighting += computeDiffuseComponent(input.WorldPosition, Nn, 3);
 
 	//Obtener texel de la textura
-	float4 texelColor = tex2D(diffuseMap, input.Texcoord);
-	texelColor.rgb *= diffuseLighting;
+    float4 texelColor = tex2D(diffuseMap, input.Texcoord);
+    texelColor.rgb *= diffuseLighting;
 
-	return texelColor;
+    return texelColor;
 }
 
 /*
@@ -143,9 +143,9 @@ float4 point_light_ps(PS_INPUT input) : COLOR0
 */
 technique MultiDiffuseLightsTechnique
 {
-	pass Pass_0
-	{
-		VertexShader = compile vs_2_0 vs_general();
-		PixelShader = compile ps_2_0 point_light_ps();
-	}
+    pass Pass_0
+    {
+        VertexShader = compile vs_3_0 vs_general();
+        PixelShader = compile ps_3_0 point_light_ps();
+    }
 }

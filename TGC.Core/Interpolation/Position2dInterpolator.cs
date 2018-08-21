@@ -1,4 +1,5 @@
-﻿using SharpDX;
+using SharpDX;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.Interpolation
 {
@@ -7,8 +8,8 @@ namespace TGC.Core.Interpolation
     /// </summary>
     public class Position2dInterpolator
     {
-        private Vector2 current;
-        private Vector2 dir;
+        private TGCVector2 current;
+        private TGCVector2 dir;
         private float distanceToTravel;
 
         /// <summary>
@@ -19,12 +20,12 @@ namespace TGC.Core.Interpolation
         /// <summary>
         ///     Posicion inicial
         /// </summary>
-        public Vector2 Init { get; set; }
+        public TGCVector2 Init { get; set; }
 
         /// <summary>
         ///     Posicion final
         /// </summary>
-        public Vector2 End { get; set; }
+        public TGCVector2 End { get; set; }
 
         /// <summary>
         ///     Cargar valores iniciales del interpolador
@@ -42,7 +43,7 @@ namespace TGC.Core.Interpolation
         ///     Llamar a reset() la primera vez.
         /// </summary>
         /// <returns>Nueva posicion</returns>
-        public Vector2 update(float elapsedTime)
+        public TGCVector2 update(float elapsedTime)
         {
             var movement = Speed * elapsedTime;
             distanceToTravel -= movement;
@@ -53,7 +54,7 @@ namespace TGC.Core.Interpolation
             }
             else
             {
-                current += Vector2.Scale(dir, movement);
+                current += TGCVector2.Scale(dir, movement);
             }
             return current;
         }

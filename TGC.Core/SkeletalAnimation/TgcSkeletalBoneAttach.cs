@@ -1,13 +1,14 @@
 using SharpDX;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Core.SkeletalAnimation
 {
     /// <summary>
     ///     Representa un modelo que se adjunta a un hueso del esqueleto, para que se modifique
-    ///     su ubicicación en el espacio en base a las transformaciones del hueso durante la animación.
+    ///     su ubicicaciï¿½n en el espacio en base a las transformaciones del hueso durante la animaciï¿½n.
     ///     El modelo no debe ser transformado por afuera una vez que es adjuntado a un hueso.
-    ///     El renderizado del modelo debe hacerse por afuera de la animación esquelética.
+    ///     El renderizado del modelo debe hacerse por afuera de la animaciï¿½n esquelï¿½tica.
     /// </summary>
     public class TgcSkeletalBoneAttach
     {
@@ -24,7 +25,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <param name="model">Modelo a adjuntar</param>
         /// <param name="bone">Hueso al cual adjuntarse</param>
         /// <param name="offset">Offset desde el cual el modelo sigue al hueso</param>
-        public TgcSkeletalBoneAttach(TgcMesh mesh, TgcSkeletalBone bone, Matrix offset)
+        public TgcSkeletalBoneAttach(TgcMesh mesh, TgcSkeletalBone bone, TGCMatrix offset)
         {
             Bone = bone;
             Mesh = mesh;
@@ -45,7 +46,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Desplazamiento desde el cual el modelo sigue al hueso
         /// </summary>
-        public Matrix Offset { get; set; }
+        public TGCMatrix Offset { get; set; }
 
         /// <summary>
         ///     Configurar modelo
@@ -53,25 +54,25 @@ namespace TGC.Core.SkeletalAnimation
         private void setMesh(TgcMesh mesh)
         {
             Mesh = mesh;
-            Mesh.AutoTransformEnable = false;
+            Mesh.AutoTransform = false;
             Mesh.Transform = Bone.MatFinal;
         }
 
         /// <summary>
-        ///     Actualiza los valores del Attachment en base a los parámetros configurados.
+        ///     Actualiza los valores del Attachment en base a los parï¿½metros configurados.
         ///     Debe ejecutarse para que las modificaciones realmente se utilicen.
         /// </summary>
         public void updateValues()
         {
-            Mesh.AutoTransformEnable = false;
-            updateMeshTransform(Matrix.Identity);
+            Mesh.AutoTransform = false;
+            updateMeshTransform(TGCMatrix.Identity);
         }
 
         /// <summary>
         ///     Actualiza la transformacion del modelo en base al a transformacion actual
         ///     del hueso y el offset configurado
         /// </summary>
-        internal void updateMeshTransform(Matrix meshTransform)
+        internal void updateMeshTransform(TGCMatrix meshTransform)
         {
             Mesh.Transform = Offset * Bone.MatFinal * meshTransform;
         }

@@ -1,7 +1,7 @@
-using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using TGC.Core.Mathematica;
 using TGC.Examples.Engine2D.Spaceship.Core;
 
 namespace TGC.Examples.Engine2D.Spaceship
@@ -21,14 +21,14 @@ namespace TGC.Examples.Engine2D.Spaceship
         private int currentSprite;
 
         //La posicion
-        public Vector2 Position;
+        public TGCVector2 Position;
 
         private float size;
 
         //La lista de sprites.
         private List<CustomSprite> sprites;
 
-        private Vector2 spriteSize;
+        private TGCVector2 spriteSize;
 
         public void Load(string exampleDir, CustomBitmap spriteSheet)
         {
@@ -36,7 +36,7 @@ namespace TGC.Examples.Engine2D.Spaceship
 
             sprites = new List<CustomSprite>();
 
-            spriteSize = new Vector2(SpriteWidth, SpriteHeight);
+            spriteSize = new TGCVector2(SpriteWidth, SpriteHeight);
             size = 1.0f;
             angle = 0.0f;
 
@@ -50,7 +50,7 @@ namespace TGC.Examples.Engine2D.Spaceship
                     newSprite.Bitmap = asteroidBitmap;
                     newSprite.SrcRect = new Rectangle(j * (int)spriteSize.X, i * (int)spriteSize.Y, (int)spriteSize.X,
                         (int)spriteSize.Y);
-                    newSprite.Scaling = new Vector2(size, size);
+                    newSprite.Scaling = new TGCVector2(size, size);
                     newSprite.Rotation = angle;
                     sprites.Add(newSprite);
                 }
@@ -98,9 +98,9 @@ namespace TGC.Examples.Engine2D.Spaceship
             Position.Y = GameManager.ScreenHeight * (float)rnd.NextDouble();
 
             //Busco el angulo del asteroide para que vaya al centro de la pantalla.
-            var ScreenCenterVector = new Vector2();
-            var ScreenCenter = new Vector2(GameManager.ScreenWidth / 2, GameManager.ScreenHeight / 2);
-            ScreenCenterVector = Vector2.Subtract(ScreenCenter, Position);
+            var ScreenCenterVector = TGCVector2.Zero;
+            var ScreenCenter = new TGCVector2(GameManager.ScreenWidth / 2, GameManager.ScreenHeight / 2);
+            ScreenCenterVector = TGCVector2.Subtract(ScreenCenter, Position);
 
             if (ScreenCenterVector.Length() > 0)
                 angle = (float)Math.Atan2(ScreenCenterVector.Y, ScreenCenterVector.X);

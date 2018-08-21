@@ -1,8 +1,8 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Examples.Optimization.KdtTree
@@ -67,7 +67,7 @@ namespace TGC.Examples.Optimization.KdtTree
             {
                 if (mesh.Enabled)
                 {
-                    mesh.render();
+                    mesh.Render();
                     mesh.Enabled = false;
                 }
             }
@@ -76,7 +76,7 @@ namespace TGC.Examples.Optimization.KdtTree
             {
                 foreach (var debugBox in debugKdTreeBoxes)
                 {
-                    debugBox.render();
+                    debugBox.Render();
                 }
             }
         }
@@ -133,8 +133,8 @@ namespace TGC.Examples.Optimization.KdtTree
         {
             //test frustum-box intersection
             var caja = new TgcBoundingAxisAlignBox(
-                new Vector3(boxLowerX, boxLowerY, boxLowerZ),
-                new Vector3(boxUpperX, boxUpperY, boxUpperZ));
+                new TGCVector3(boxLowerX, boxLowerY, boxLowerZ),
+                new TGCVector3(boxUpperX, boxUpperY, boxUpperZ));
             var c = TgcCollisionUtils.classifyFrustumAABB(frustum, caja);
 
             //complementamente adentro: cargar todos los hijos directamente, sin testeos

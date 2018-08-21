@@ -1,13 +1,13 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Optimization
 {
@@ -24,10 +24,14 @@ namespace TGC.Examples.Optimization
     /// </summary>
     public class PortalRenderingFramework : TGCExampleViewer
     {
+        private TGCBooleanModifier portalRenderingModifier;
+        private TGCBooleanModifier wireFrameModifier;
+        private TGCBooleanModifier showPortalsModifier;
+
         private TgcScene scene;
 
-        public PortalRenderingFramework(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public PortalRenderingFramework(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Optimization";
             Name = "PortalRendering Framework";
@@ -45,12 +49,12 @@ namespace TGC.Examples.Optimization
             scene.setMeshesEnabled(false);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new Vector3(0, 0, 0), 800f, 600f, Input);
+            Camara = new TgcFpsCamera(TGCVector3.Empty, 800f, 600f, Input);
 
             //Modifiers
-            Modifiers.addBoolean("portalRendering", "PortalRendering", true);
-            Modifiers.addBoolean("WireFrame", "WireFrame", false);
-            Modifiers.addBoolean("showPortals", "Show Portals", false);
+            portalRenderingModifier = AddBoolean("portalRendering", "PortalRendering", true);
+            wireFrameModifier = AddBoolean("WireFrame", "WireFrame", false);
+            showPortalsModifier = AddBoolean("showPortals", "Show Portals", false);
 
             //UserVars
             UserVars.addVar("MeshCount");
@@ -62,13 +66,14 @@ namespace TGC.Examples.Optimization
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
         {
             PreRender();
 
-            var enablePortalRendering = (bool)Modifiers["portalRendering"];
+            var enablePortalRendering = portalRenderingModifier.Value;
             if (enablePortalRendering)
             {
                 //Actualizar visibilidad con PortalRendering
@@ -81,7 +86,7 @@ namespace TGC.Examples.Optimization
             }
 
             //WireFrame
-            var wireFrameEnable = (bool)Modifiers["WireFrame"];
+            var wireFrameEnable = wireFrameModifier.Value;
             if (wireFrameEnable)
             {
                 D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;
@@ -102,7 +107,7 @@ namespace TGC.Examples.Optimization
                 }
 
                 //Renderizar modelo y luego desactivarlo para el proximo cuadro
-                mesh.render();
+                mesh.Render();
                 mesh.Enabled = false;
             }
 
@@ -116,7 +121,7 @@ namespace TGC.Examples.Optimization
                 }
 
                 //Renderizar modelo y luego desactivarlo para el proximo cuadro
-                mesh.render();
+                mesh.Render();
                 mesh.Enabled = false;
             }
 
@@ -124,7 +129,7 @@ namespace TGC.Examples.Optimization
             UserVars["MeshCount"] = meshCount.ToString();
 
             //Renderizar portales
-            var showPortals = (bool)Modifiers["showPortals"];
+            var showPortals = showPortalsModifier.Value;
             if (showPortals)
             {
                 scene.PortalRendering.renderPortals();
@@ -135,7 +140,7 @@ namespace TGC.Examples.Optimization
 
         public override void Dispose()
         {
-            scene.disposeAll();
+            scene.DisposeAll();
         }
     }
 }

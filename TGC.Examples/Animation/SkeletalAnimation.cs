@@ -1,12 +1,12 @@
-using Microsoft.DirectX;
 using System.Drawing;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SkeletalAnimation;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.Animation
 {
@@ -29,14 +29,22 @@ namespace TGC.Examples.Animation
     /// </summary>
     public class SkeletalAnimation : TGCExampleViewer
     {
+        private TGCIntervalModifier animationModifier;
+        private TGCBooleanModifier loopModifier;
+        private TGCBooleanModifier renderSkeletonModifier;
+        private TGCFloatModifier frameRateModifier;
+        private TGCColorModifier colorModifier;
+        private TGCBooleanModifier boundingBoxModifier;
+        private TGCBooleanModifier attachmentModifier;
+
         private TgcSkeletalBoneAttach attachment;
         private Color currentColor;
         private TgcSkeletalMesh mesh;
         private string selectedAnim;
         private bool showAttachment;
 
-        public SkeletalAnimation(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public SkeletalAnimation(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Animation";
             Name = "Skeletal Animation";
@@ -80,49 +88,50 @@ namespace TGC.Examples.Animation
             mesh.buildSkletonMesh();
 
             //Agregar combo para elegir animacion
-            Modifiers.addInterval("animation", animationList, 0);
             selectedAnim = animationList[0];
+            animationModifier = AddInterval("animation", animationList, 0);
 
             //Modifier para especificar si la animacion se anima con loop
             var animateWithLoop = true;
-            Modifiers.addBoolean("loop", "Loop anim:", animateWithLoop);
+            loopModifier = AddBoolean("loop", "Loop anim:", animateWithLoop);
 
             //Modifier para renderizar el esqueleto
             var renderSkeleton = false;
-            Modifiers.addBoolean("renderSkeleton", "Show skeleton:", renderSkeleton);
+            renderSkeletonModifier = AddBoolean("renderSkeleton", "Show skeleton:", renderSkeleton);
 
             //Modifier para FrameRate
-            Modifiers.addFloat("frameRate", 0, 100, 30);
+            frameRateModifier = AddFloat("frameRate", 0, 100, 30);
 
             //Modifier para color
             currentColor = Color.White;
-            Modifiers.addColor("Color", currentColor);
+            colorModifier = AddColor("Color", currentColor);
 
             //Modifier para BoundingBox
-            Modifiers.addBoolean("BoundingBox", "BoundingBox:", false);
+            boundingBoxModifier = AddBoolean("BoundingBox", "BoundingBox:", false);
+
+            //Modifier para habilitar attachment
+            showAttachment = false;
+            attachmentModifier = AddBoolean("Attachment", "Attachment:", showAttachment);
 
             //Elegir animacion Caminando
             mesh.playAnimation(selectedAnim, true);
 
-            //Crear caja como modelo de Attachment del hueos "Bip01 L Hand"
+            //Crear caja como modelo de Attachment del hueso "Bip01 L Hand"
             attachment = new TgcSkeletalBoneAttach();
-            var attachmentBox = TgcBox.fromSize(new Vector3(5, 100, 5), Color.Blue);
-            attachment.Mesh = attachmentBox.toMesh("attachment");
+            var attachmentBox = TGCBox.fromSize(new TGCVector3(5, 100, 5), Color.Blue);
+            attachment.Mesh = attachmentBox.ToMesh("attachment");
             attachment.Bone = mesh.getBoneByName("Bip01 L Hand");
-            attachment.Offset = Matrix.Translation(10, -40, 0);
+            attachment.Offset = TGCMatrix.Translation(10, -40, 0);
             attachment.updateValues();
 
-            //Modifier para habilitar attachment
-            showAttachment = false;
-            Modifiers.addBoolean("Attachment", "Attachment:", showAttachment);
-
             //Configurar camara
-            Camara = new TgcRotationalCamera(new Vector3(0, 70, 0), 200, Input);
+            Camara = new TgcRotationalCamera(new TGCVector3(0, 70, 0), 200, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
@@ -130,12 +139,12 @@ namespace TGC.Examples.Animation
             PreRender();
 
             //Ver si cambio la animacion
-            var anim = (string)Modifiers.getValue("animation");
+            var anim = animationModifier.Value.ToString();
             if (!anim.Equals(selectedAnim))
             {
                 //Ver si animamos con o sin loop
-                var animateWithLoop = (bool)Modifiers.getValue("loop");
-                var frameRate = (float)Modifiers.getValue("frameRate");
+                var animateWithLoop = loopModifier.Value;
+                var frameRate = frameRateModifier.Value;
 
                 //Cargar nueva animacion elegida
                 selectedAnim = anim;
@@ -143,10 +152,10 @@ namespace TGC.Examples.Animation
             }
 
             //Ver si rendeizamos el esqueleto
-            var renderSkeleton = (bool)Modifiers.getValue("renderSkeleton");
+            var renderSkeleton = renderSkeletonModifier.Value;
 
             //Ver si cambio el color
-            var selectedColor = (Color)Modifiers.getValue("Color");
+            var selectedColor = colorModifier.Value;
             if (currentColor == null || currentColor != selectedColor)
             {
                 currentColor = selectedColor;
@@ -154,7 +163,7 @@ namespace TGC.Examples.Animation
             }
 
             //Agregar o quitar Attachment
-            var showAttachmentFlag = (bool)Modifiers["Attachment"];
+            var showAttachmentFlag = attachmentModifier.Value;
             if (showAttachment != showAttachmentFlag)
             {
                 showAttachment = showAttachmentFlag;
@@ -176,16 +185,16 @@ namespace TGC.Examples.Animation
 
             //Solo malla o esqueleto, depende lo seleccionado
             mesh.RenderSkeleton = renderSkeleton;
-            mesh.render();
+            mesh.Render();
 
             //Se puede renderizar todo mucho mas simple (sin esqueleto) de la siguiente forma:
             //mesh.animateAndRender();
 
             //BoundingBox
-            var showBB = (bool)Modifiers["BoundingBox"];
+            var showBB = boundingBoxModifier.Value;
             if (showBB)
             {
-                mesh.BoundingBox.render();
+                mesh.BoundingBox.Render();
             }
 
             PostRender();
@@ -194,7 +203,7 @@ namespace TGC.Examples.Animation
         public override void Dispose()
         {
             //La malla tambien hace dispose del attachment
-            mesh.dispose();
+            mesh.Dispose();
         }
     }
 }

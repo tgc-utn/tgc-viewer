@@ -1,16 +1,17 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
-using TGC.Core.Example;
-using TGC.Core.Geometries;
-using TGC.Core.Input;
+using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
-using TGC.Util;
-using TGC.Util.Networking;
+using TGC.Examples.Camara;
+using TGC.Examples.Example;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Networking;
 
 namespace TGC.Examples.Multiplayer
 {
@@ -26,33 +27,23 @@ namespace TGC.Examples.Multiplayer
     ///     El server simplemente recibe y redirige la información.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class VehiculosMultiplayer : TgcExample
+    public class VehiculosMultiplayer : TGCExampleViewer
     {
         private float acumulatedTime;
-        private TgcNetworkingModifier networkingMod;
-        private TgcThirdPersonCamera camara;
+        private TGCNetworkingModifier networkingMod;
 
-        public override string getCategory()
+        public VehiculosMultiplayer(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
-            return "Multiplayer";
+            Category = "Multiplayer";
+            Name = "Vehiculos Multiplayer";
+            Description = "Multiplayer en la cual hasta 4 jugadores pueden conectarse y utilizar vehículos sobre un mismo escenario.";
         }
 
-        public override string getName()
-        {
-            return "Vehiculos Multiplayer";
-        }
-
-        public override string getDescription()
-        {
-            return
-                "Partida multiplayer en la cual hasta 4 jugadores pueden conectarse y utilizar vehículos sobre un mismo escenario.";
-        }
-
-        public override void init()
+        public override void Init()
         {
             //Crear Modifier de Networking
-            networkingMod = GuiController.Instance.Modifiers.addNetworking("Networking", "VehiculosServer",
-                "VehiculosClient");
+            networkingMod = AddNetworking("Networking", "VehiculosServer", "VehiculosClient");
 
             acumulatedTime = 0;
 
@@ -63,7 +54,13 @@ namespace TGC.Examples.Multiplayer
             initClient();
         }
 
-        public override void render(float elapsedTime)
+        public override void Update()
+        {
+            PreUpdate();
+            PostUpdate();
+        }
+
+        public override void Render()
         {
             //Actualizar siempre primero todos los valores de red.
             //Esto hace que el cliente y el servidor reciban todos los mensajes y actualicen su estado interno
@@ -82,23 +79,23 @@ namespace TGC.Examples.Multiplayer
             }
         }
 
-        public override void close()
+        public override void Dispose()
         {
             //Cierra todas las conexiones
             networkingMod.dispose();
 
-            piso.dispose();
+            piso.Dispose();
 
             //Renderizar meshPrincipal
             if (meshPrincipal != null)
             {
-                meshPrincipal.dispose();
+                meshPrincipal.Dispose();
             }
 
             //Renderizar otrosMeshes
             foreach (var entry in otrosMeshes)
             {
-                entry.Value.dispose();
+                entry.Value.Dispose();
             }
         }
 
@@ -123,11 +120,11 @@ namespace TGC.Examples.Multiplayer
         [Serializable]
         private class VehiculoData
         {
-            public readonly Vector3 initialPos;
+            public readonly TGCVector3 initialPos;
             public readonly string meshPath;
             public int playerID;
 
-            public VehiculoData(Vector3 initialPos, string meshPath)
+            public VehiculoData(TGCVector3 initialPos, string meshPath)
             {
                 playerID = -1;
                 this.initialPos = initialPos;
@@ -143,16 +140,13 @@ namespace TGC.Examples.Multiplayer
         private void initServerData()
         {
             //Configurar datos para los 4 clientes posibles del servidor
-            var mediaPath = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\";
+            var mediaPath = MediaDir + "ModelosTgc\\";
             vehiculosData = new[]
             {
-                new VehiculoData(new Vector3(0, 0, 0),
-                    mediaPath + "TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml"),
-                new VehiculoData(new Vector3(100, 0, 0),
-                    mediaPath + "HelicopteroMilitar\\HelicopteroMilitar-TgcScene.xml"),
-                new VehiculoData(new Vector3(200, 0, 0), mediaPath + "Auto\\Auto-TgcScene.xml"),
-                new VehiculoData(new Vector3(0, 0, 200),
-                    mediaPath + "AerodeslizadorFuturista\\AerodeslizadorFuturista-TgcScene.xml")
+                new VehiculoData(new TGCVector3(0, 0, 0), mediaPath + "TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml"),
+                new VehiculoData(new TGCVector3(100, 0, 0), mediaPath + "HelicopteroMilitar\\HelicopteroMilitar-TgcScene.xml"),
+                new VehiculoData(new TGCVector3(200, 0, 0), mediaPath + "Auto\\Auto-TgcScene.xml"),
+                new VehiculoData(new TGCVector3(0, 0, 200), mediaPath + "AerodeslizadorFuturista\\AerodeslizadorFuturista-TgcScene.xml")
             };
         }
 
@@ -252,7 +246,7 @@ namespace TGC.Examples.Multiplayer
         private void serverAtenderPosicionActualizada(TgcSocketClientRecvMesg clientMsg)
         {
             //Nueva posicion del cliente
-            var newPos = (Matrix)clientMsg.Msg.readNext();
+            var newPos = (TGCMatrix)clientMsg.Msg.readNext();
 
             //Enviar a todos menos al cliente que nos acaba de informar
             var sendMsg = new TgcSocketSendMsg();
@@ -277,9 +271,10 @@ namespace TGC.Examples.Multiplayer
             PosicionActualizada
         }
 
-        private TgcBox piso;
+        private TGCBox piso;
         private TgcMesh meshPrincipal;
         private readonly Dictionary<int, TgcMesh> otrosMeshes = new Dictionary<int, TgcMesh>();
+        private TgcThirdPersonCamera camaraInterna;
 
         /// <summary>
         ///     Iniciar cliente
@@ -287,14 +282,13 @@ namespace TGC.Examples.Multiplayer
         private void initClient()
         {
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\TexturePack2\\rock_wall.jpg");
-            piso = TgcBox.fromSize(new Vector3(0, -60, 0), new Vector3(5000, 5, 5000), pisoTexture);
+            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack2\\rock_wall.jpg");
+            piso = TGCBox.fromSize(new TGCVector3(0, -60, 0), new TGCVector3(5000, 5, 5000), pisoTexture);
 
             //Camara en 3ra persona
-            this.camara = new TgcThirdPersonCamera();
-            CamaraManager.Instance.CurrentCamera = this.camara;
-            this.camara.Enable = true;
+            camaraInterna.resetValues();
+            camaraInterna = new TgcThirdPersonCamera(meshPrincipal.Position, 100, 400);
+            Camara = camaraInterna;
         }
 
         /// <summary>
@@ -336,7 +330,7 @@ namespace TGC.Examples.Multiplayer
                 renderClient();
 
                 //Enviar al server mensaje con posicion actualizada, 10 paquetes por segundo
-                acumulatedTime += GuiController.Instance.ElapsedTime;
+                acumulatedTime += ElapsedTime;
                 if (acumulatedTime > 0.1)
                 {
                     acumulatedTime = 0;
@@ -366,10 +360,6 @@ namespace TGC.Examples.Multiplayer
             //Ubicarlo en escenario
             meshPrincipal.Position = vehiculoData.initialPos;
 
-            //Camara
-            this.camara.resetValues();
-            this.camara.setCamera(meshPrincipal.Position, 100, 400);
-
             //Ver si ya habia mas clientes para cuando nosotros nos conectamos
             var otrosVehiculosCant = (int)msg.readNext();
             for (var i = 0; i < otrosVehiculosCant; i++)
@@ -385,36 +375,34 @@ namespace TGC.Examples.Multiplayer
         private void renderClient()
         {
             //Calcular proxima posicion de personaje segun Input
-            var elapsedTime = GuiController.Instance.ElapsedTime;
             var moveForward = 0f;
             float rotate = 0;
-            var d3dInput = TgcD3dInput.Instance;
             var moving = false;
             var rotating = false;
 
             //Adelante
-            if (d3dInput.keyDown(Key.W))
+            if (Input.keyDown(Key.W))
             {
                 moveForward = -VELODICAD_CAMINAR;
                 moving = true;
             }
 
             //Atras
-            if (d3dInput.keyDown(Key.S))
+            if (Input.keyDown(Key.S))
             {
                 moveForward = VELODICAD_CAMINAR;
                 moving = true;
             }
 
             //Derecha
-            if (d3dInput.keyDown(Key.D))
+            if (Input.keyDown(Key.D))
             {
                 rotate = VELOCIDAD_ROTACION;
                 rotating = true;
             }
 
             //Izquierda
-            if (d3dInput.keyDown(Key.A))
+            if (Input.keyDown(Key.A))
             {
                 rotate = -VELOCIDAD_ROTACION;
                 rotating = true;
@@ -423,32 +411,32 @@ namespace TGC.Examples.Multiplayer
             //Si hubo rotacion
             if (rotating)
             {
-                meshPrincipal.rotateY(Geometry.DegreeToRadian(rotate * elapsedTime));
-                this.camara.rotateY(rotate);
+                meshPrincipal.RotateY(Geometry.DegreeToRadian(rotate * ElapsedTime));
+                this.camaraInterna.rotateY(rotate);
             }
 
             //Si hubo desplazamiento
             if (moving)
             {
-                meshPrincipal.moveOrientedY(moveForward * elapsedTime);
+                meshPrincipal.MoveOrientedY(moveForward * ElapsedTime);
             }
 
             //Hacer que la camara siga al personaje en su nueva posicion
-            this.camara.Target = meshPrincipal.Position;
+            this.camaraInterna.Target = meshPrincipal.Position;
 
             //Render piso
-            piso.render();
+            piso.Render();
 
             //Renderizar meshPrincipal
             if (meshPrincipal != null)
             {
-                meshPrincipal.render();
+                meshPrincipal.Render();
             }
 
             //Renderizar otrosMeshes
             foreach (var entry in otrosMeshes)
             {
-                entry.Value.render();
+                entry.Value.Render();
             }
         }
 
@@ -474,8 +462,8 @@ namespace TGC.Examples.Multiplayer
             otrosMeshes.Add(vehiculoData.playerID, mesh);
 
             //Ubicarlo en escenario
-            mesh.AutoTransformEnable = false;
-            mesh.Transform = Matrix.Translation(vehiculoData.initialPos);
+            mesh.AutoTransform = false;
+            mesh.Transform = TGCMatrix.Translation(vehiculoData.initialPos);
         }
 
         /// <summary>
@@ -484,7 +472,7 @@ namespace TGC.Examples.Multiplayer
         private void clienteAtenderActualizarUbicaciones(TgcSocketRecvMsg msg)
         {
             var playerId = (int)msg.readNext();
-            var nextPos = (Matrix)msg.readNext();
+            var nextPos = (TGCMatrix)msg.readNext();
 
             if (otrosMeshes.ContainsKey(playerId))
             {
@@ -498,7 +486,7 @@ namespace TGC.Examples.Multiplayer
         private void clienteAtenderOtroClienteDesconectado(TgcSocketRecvMsg msg)
         {
             var playerId = (int)msg.readNext();
-            otrosMeshes[playerId].dispose();
+            otrosMeshes[playerId].Dispose();
             otrosMeshes.Remove(playerId);
         }
 

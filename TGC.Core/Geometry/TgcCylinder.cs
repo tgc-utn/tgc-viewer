@@ -1,12 +1,13 @@
-﻿using System.Diagnostics;
 using SharpDX;
 using SharpDX.Direct3D9;
+using System.Diagnostics;
+using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Core.Utils;
 
 namespace TGC.Core.Geometry
 {
@@ -15,13 +16,13 @@ namespace TGC.Core.Geometry
         private const int END_CAPS_RESOLUTION = 40;
         private int color;
 
-        private Matrix manualTransformation;
+        private TGCMatrix manualTransformation;
         private CustomVertex.PositionColoredTextured[] sideTrianglesVertices; //triangle strip
         private TgcTexture texture;
 
         private bool useTexture;
 
-        public TgcCylinder(Vector3 _center, float _topRadius, float _bottomRadius, float _halfLength)
+        public TgcCylinder(TGCVector3 _center, float _topRadius, float _bottomRadius, float _halfLength)
         {
             TopRadius = _topRadius;
             BottomRadius = _bottomRadius;
@@ -29,13 +30,13 @@ namespace TGC.Core.Geometry
 
             color = Color.Red.ToArgb();
 
-            manualTransformation = Matrix.Identity;
-            AutoTransformEnable = false;
+            manualTransformation = TGCMatrix.Identity;
+            AutoTransform = false;
 
             initialize();
         }
 
-        public TgcCylinder(Vector3 _center, float _radius, float _halfLength)
+        public TgcCylinder(TGCVector3 _center, float _radius, float _halfLength)
             : this(_center, _radius, _radius, _halfLength)
         {
             //nothing to do
@@ -112,13 +113,25 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Centro del cilindro
         /// </summary>
-        public Vector3 Center
+        public TGCVector3 Center
         {
             get { return BoundingCylinder.Center; }
             set { BoundingCylinder.Center = value; }
         }
 
-        public void render()
+        public bool AlphaBlendEnable { get; set; }
+
+        /// <summary>
+        ///     Actualiza la posicion e inclinacion del cilindro
+        /// </summary>
+        public void updateValues()
+        {
+            BoundingCylinder.Radius = FastMath.Max(FastMath.Abs(TopRadius), FastMath.Abs(BottomRadius));
+            BoundingCylinder.updateValues();
+            updateDraw();
+        }
+
+        public void Render()
         {
             if (AlphaBlendEnable)
             {
@@ -149,14 +162,12 @@ namespace TGC.Core.Geometry
             D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
         }
 
-        public void dispose()
+        public void Dispose()
         {
             if (texture != null) texture.dispose();
             sideTrianglesVertices = null;
-            BoundingCylinder.dispose();
+            BoundingCylinder.Dispose();
         }
-
-        public bool AlphaBlendEnable { get; set; }
 
         private void initialize()
         {
@@ -185,14 +196,14 @@ namespace TGC.Core.Geometry
         private void updateDraw()
         {
             //vectores utilizados para el dibujado
-            var upVector = new Vector3(0, 1, 0);
-            var n = new Vector3(1, 0, 0);
+            var upVector = TGCVector3.Up;
+            var n = new TGCVector3(1, 0, 0);
 
             var capsResolution = END_CAPS_RESOLUTION;
 
             //matriz de rotacion del vector de dibujado
             var angleStep = FastMath.TWO_PI / capsResolution;
-            var rotationMatrix = Matrix.RotationAxis(-upVector, angleStep);
+            var rotationMatrix = TGCMatrix.RotationAxis(-upVector, angleStep);
             float angle = 0;
 
             //transformacion que se le aplicara a cada vertice
@@ -200,8 +211,8 @@ namespace TGC.Core.Geometry
             var bcInverseRadius = 1 / BoundingCylinder.Radius;
 
             //arrays donde guardamos los puntos dibujados
-            var topCapDraw = new Vector3[capsResolution];
-            var bottomCapDraw = new Vector3[capsResolution];
+            var topCapDraw = new TGCVector3[capsResolution];
+            var bottomCapDraw = new TGCVector3[capsResolution];
 
             //variables temporales utilizadas para el texture mapping
             float u;
@@ -240,84 +251,73 @@ namespace TGC.Core.Geometry
             texture = _texture;
         }
 
-        /// <summary>
-        ///     Actualiza la posicion e inclinacion del cilindro
-        /// </summary>
-        public void updateValues()
-        {
-            BoundingCylinder.Radius = FastMath.Max(
-                FastMath.Abs(TopRadius), FastMath.Abs(BottomRadius));
-            BoundingCylinder.updateValues();
-            updateDraw();
-        }
-
         #region Transformation
 
-        public bool AutoTransformEnable { get; set; }
+        public bool AutoTransform { get; set; }
 
-        public Matrix Transform
+        public TGCMatrix Transform
         {
             get
             {
-                if (AutoTransformEnable) return BoundingCylinder.Transform;
+                if (AutoTransform) return BoundingCylinder.Transform;
                 return manualTransformation;
             }
             set { manualTransformation = value; }
         }
 
-        public Vector3 Position
+        public TGCVector3 Position
         {
             get { return BoundingCylinder.Center; }
             set { BoundingCylinder.Center = value; }
         }
 
-        public Vector3 Rotation
+        public TGCVector3 Rotation
         {
             get { return BoundingCylinder.Rotation; }
             set { BoundingCylinder.Rotation = value; }
         }
 
-        public Vector3 Scale
+        public TGCVector3 Scale
         {
-            get { return new Vector3(1, 1, 1); }
+            get { return TGCVector3.One; }
             set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
         }
 
-        public void move(Vector3 v)
+        public void Move(TGCVector3 v)
         {
             BoundingCylinder.move(v);
         }
 
-        public void move(float x, float y, float z)
+        public void Move(float x, float y, float z)
         {
             BoundingCylinder.move(x, y, z);
         }
 
-        public void moveOrientedY(float movement)
+        public void MoveOrientedY(float movement)
         {
             var z = FastMath.Cos(Rotation.Y) * movement;
             var x = FastMath.Sin(Rotation.Y) * movement;
-            move(x, 0, z);
+            Move(x, 0, z);
         }
 
-        public void getPosition(Vector3 pos)
+        public void GetPosition(TGCVector3 pos)
         {
             pos.X = Position.X;
             pos.Y = Position.Y;
             pos.Z = Position.Z;
         }
 
-        public void rotateX(float angle)
+        public void RotateX(float angle)
         {
             BoundingCylinder.rotateX(angle);
         }
 
-        public void rotateY(float angle)
+        public void RotateY(float angle)
         {
             BoundingCylinder.rotateY(angle);
         }
 
-        public void rotateZ(float angle)
+        public void RotateZ(float angle)
         {
             BoundingCylinder.rotateZ(angle);
         }

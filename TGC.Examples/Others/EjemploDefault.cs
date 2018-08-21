@@ -1,18 +1,16 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Drawing;
 using System.IO;
-using TGC.Core.Camara;
+using System.Windows.Forms;
 using TGC.Core.Direct3D;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Text;
-using TGC.Core.UserControls;
-using TGC.Core.UserControls.Modifier;
-using TGC.Core.Utils;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.UserControls;
 using Font = System.Drawing.Font;
 
 namespace TGC.Examples.Others
@@ -27,8 +25,8 @@ namespace TGC.Examples.Others
         private TgcMesh mesh;
         private TgcText2D textHelp;
 
-        public EjemploDefault(string mediaDir, string shadersDir, TgcUserVars userVars, TgcModifiers modifiers)
-            : base(mediaDir, shadersDir, userVars, modifiers)
+        public EjemploDefault(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+            : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Others";
             Name = "Logo de TGC";
@@ -40,7 +38,7 @@ namespace TGC.Examples.Others
             //Cargar mesh
             var loader = new TgcSceneLoader();
             mesh = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
-            mesh.AutoTransformEnable = true;
+            mesh.AutoTransform = true;
 
             //Cargar Shader de PhongShading
             mesh.Effect = TgcShaders.Instance.TgcMeshPhongShader;
@@ -60,19 +58,20 @@ namespace TGC.Examples.Others
             helpForm = new EjemploDefaultHelpForm(helpRtf);
 
             //Camara
-            Camara = new TgcRotationalCamera(new Vector3(), 150f, Input);
+            Camara = new TgcRotationalCamera(TGCVector3.Empty, 150f, Input);
         }
 
         public override void Update()
         {
             PreUpdate();
+            PostUpdate();
         }
 
         public override void Render()
         {
             //BackgroundColor
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            D3DDevice.Instance.Device.BeginScene();
+            BeginScene();
             ClearTextures();
 
             //Cargar variables shader
@@ -81,11 +80,10 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("specularColor", ColorValue.FromColor(Color.White));
             mesh.Effect.SetValue("specularExp", 10f);
             mesh.Effect.SetValue("lightPosition", lightPos);
-            mesh.Effect.SetValue("eyePosition",
-                TgcParserUtils.vector3ToFloat4Array(Camara.Position));
+            mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
 
-            mesh.rotateY(-ElapsedTime / 2);
-            mesh.render();
+            mesh.RotateY(-ElapsedTime / 2);
+            mesh.Render();
 
             textHelp.render();
 
@@ -100,7 +98,7 @@ namespace TGC.Examples.Others
 
         public override void Dispose()
         {
-            mesh.dispose();
+            mesh.Dispose();
             textHelp.Dispose();
             helpForm.Dispose();
         }
