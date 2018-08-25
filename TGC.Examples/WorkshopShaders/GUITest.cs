@@ -231,7 +231,7 @@ namespace TGC.Examples.WorkshopShaders
                                 // Cambio el color
                                 int color = msg.id;
 
-                                effect.SetValue("color_global", new TGCVector4((float)lst_colores[color].R / 255.0f, (float)lst_colores[color].G / 255.0f, (float)lst_colores[color].B / 255.0f, 1));
+                                effect.SetValue("color_global", new TGCVector4(lst_colores[color].R / 255.0f, lst_colores[color].G / 255.0f, lst_colores[color].B / 255.0f, 1));
                             }
                             break;
                     }

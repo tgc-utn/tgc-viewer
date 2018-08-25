@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using TGC.Core.Example;
@@ -10,53 +9,59 @@ using TGC.Viewer.Properties;
 namespace TGC.Viewer.UI
 {
     /// <summary>
-    ///     Formulario principal de la aplicación
+    /// Formulario principal de la aplicación.
     /// </summary>
     public partial class ViewerForm : Form
     {
         /// <summary>
-        ///     Constructor principal de la aplicacion
+        /// Constructor principal de la aplicacion.
         /// </summary>
         public ViewerForm()
         {
             InitializeComponent();
         }
 
-        private ViewerModel Modelo { get; set; }
+        /// <summary>
+        /// Modelo del Viewer.
+        /// </summary>
+        private ViewerModel Model { get; set; }
 
+        /// <summary>
+        /// Inicializacion de los componentes principales y carga de ejemplos.
+        /// </summary>
         private void InitAplication()
         {
-            //Configuracion
+            //Archivo de configuracion
             var settings = Settings.Default;
 
             //Titulo de la ventana principal
             Text = settings.Title;
 
+            //Herramientas basicas.
             fpsToolStripMenuItem.Checked = true;
             axisToolStripMenuItem.Checked = true;
 
-            Modelo = new ViewerModel();
+            //Modelo de la aplicacion
+            Model = new ViewerModel();
 
-            CheckMediaFolder();
-
-            //Generic TGC shaders
-            var commonShaders = Settings.Default.ShadersDirectory + Settings.Default.CommonShaders;
-
-            if (!Directory.Exists(commonShaders))
+            //Verificamos la carpeta Media y la de TGC shaders basicos
+            if (Model.CheckFolder(settings.MediaDirectory) || Model.CheckFolder(settings.ShadersDirectory + settings.CommonShaders))
             {
-                //TODO mejorar esta valicacion ya que si esta la carpeta pero no los shaders necesarios pasaria lo mismo.
-                MessageBox.Show("Debe configurar correctamente el directorio con los shaders comunes y reiniciar la aplicación.", "No se encontro la carpeta de shaders", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                if (OpenOption() == DialogResult.Cancel)
+                {
+                    //Fuerzo el cierre de la aplicacion.
+                    Environment.Exit(0);
+                }
             }
 
             //Iniciar graficos
-            Modelo.InitGraphics(this, panel3D, commonShaders);
+            Model.InitGraphics(this, panel3D, settings.ShadersDirectory + settings.CommonShaders);
 
             try
             {
                 //Cargo los ejemplos en el arbol
-                Modelo.LoadExamples(treeViewExamples, panelModifiers, dataGridUserVars, settings.MediaDirectory, settings.ShadersDirectory);
-                var defaultExample = Modelo.ExampleLoader.GetExampleByName(settings.DefaultExampleName, settings.DefaultExampleCategory);
+                Model.LoadExamples(treeViewExamples, panelModifiers, dataGridUserVars, settings.MediaDirectory, settings.ShadersDirectory);
+                var defaultExample = Model.GetExampleByName(settings.DefaultExampleName, settings.DefaultExampleCategory);
                 ExecuteExample(defaultExample);
             }
             catch (Exception ex)
@@ -67,19 +72,19 @@ namespace TGC.Viewer.UI
 
             try
             {
-                Modelo.InitRenderLoop();
+                Model.InitRenderLoop();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error en RenderLoop del ejemplo: " + Modelo.ExampleLoader.CurrentExample.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error en RenderLoop del ejemplo: " + Model.CurrentExample().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             panel3D.Focus();
         }
 
         /// <summary>
-        ///     Indica si la aplicacion esta activa.
-        ///     Busca si la ventana principal tiene foco o si alguna de sus hijas tiene.
+        /// Indica si la aplicacion esta activa.
+        /// Busca si la ventana principal tiene foco o si alguna de sus hijas tiene.
         /// </summary>
         public bool ApplicationActive()
         {
@@ -99,32 +104,19 @@ namespace TGC.Viewer.UI
             return false;
         }
 
-        private void CheckMediaFolder()
-        {
-            //Verificamos la carpeta Media
-            var pathMedia = Settings.Default.MediaDirectory;
-
-            if (!Directory.Exists(pathMedia))
-            {
-                //modelo.DownloadMediaFolder();
-                Process.Start(Settings.Default.MediaLink);
-                Process.Start(Environment.CurrentDirectory);
-                MessageBox.Show("No se encuentra disponible la carpeta Media en: " + pathMedia + Environment.NewLine + Environment.NewLine + "A continuación se abrira la dirección donde se encuentra la carpeta comprimida.");
-
-                //Fuerzo el cierre de la aplicacion.
-                Environment.Exit(0);
-            }
-        }
-
+        /// <summary>
+        /// Dialogo de confirmacion para cerrar la aplicacion.
+        /// </summary>
+        /// <returns> Si hay o no la aplicacion.</returns>
         public bool CloseAplication()
         {
             var result = MessageBox.Show("¿Esta seguro que desea cerrar la aplicación?", Text, MessageBoxButtons.YesNo);
 
             if (result == DialogResult.Yes)
             {
-                if (Modelo.ApplicationRunning)
+                if (Model.ApplicationRunning)
                 {
-                    Modelo.Dispose();
+                    Model.Dispose();
                 }
 
                 return false;
@@ -133,6 +125,9 @@ namespace TGC.Viewer.UI
             return true;
         }
 
+        /// <summary>
+        /// Vuelve al estado inicial los valores del menu.
+        /// </summary>
         private void ResetMenuValues()
         {
             wireframeToolStripMenuItem.Checked = false;
@@ -143,12 +138,15 @@ namespace TGC.Viewer.UI
             splitContainerDerecha.Visible = true;
             statusStrip.Visible = true;
 
-            Modelo.UpdateAspectRatio(panel3D);
-            Modelo.Wireframe(wireframeToolStripMenuItem.Checked);
-            Modelo.ContadorFPS(fpsToolStripMenuItem.Checked);
-            Modelo.AxisLines(axisToolStripMenuItem.Checked);
+            Model.UpdateAspectRatio(panel3D);
+            Model.Wireframe(wireframeToolStripMenuItem.Checked);
+            Model.ContadorFPS(fpsToolStripMenuItem.Checked);
+            Model.AxisLines(axisToolStripMenuItem.Checked);
         }
 
+        /// <summary>
+        /// Abre un dialogo con ayuda.
+        /// </summary>
         private void OpenHelp()
         {
             //Help form
@@ -156,42 +154,63 @@ namespace TGC.Viewer.UI
             new EjemploDefaultHelpForm(helpRtf).ShowDialog();
         }
 
+        /// <summary>
+        /// Abre un dialogo con informacion de la aplicacion.
+        /// </summary>
         private void OpenAbout()
         {
             new AboutForm().ShowDialog(this);
         }
 
-        private void OpenOption()
+        /// <summary>
+        /// Abre las opciones de la aplicacion.
+        /// </summary>
+        private DialogResult OpenOption()
         {
-            new OptionForm().ShowDialog(this);
-            Modelo.UpdateMediaAndShaderDirectories(Settings.Default.MediaDirectory, Settings.Default.ShadersDirectory);
+            OptionForm option = new OptionForm();
+            DialogResult result = option.ShowDialog(this);
+
+            if (result == DialogResult.OK)
+            {
+                Model.UpdateMediaAndShaderDirectories(Settings.Default.MediaDirectory, Settings.Default.ShadersDirectory);
+            }
+
+            return result;
         }
 
+        /// <summary>
+        /// Activa o desactiva la opcion de wireframe en el ejemplo.
+        /// </summary>
         private void Wireframe()
         {
-            Modelo.Wireframe(wireframeToolStripMenuItem.Checked);
+            Model.Wireframe(wireframeToolStripMenuItem.Checked);
         }
 
+        /// <summary>
+        /// Activa o desactiva la opcion del contador de fps.
+        /// </summary>
         private void ContadorFPS()
         {
-            Modelo.ContadorFPS(fpsToolStripMenuItem.Checked);
+            Model.ContadorFPS(fpsToolStripMenuItem.Checked);
         }
 
+        /// <summary>
+        /// Activa o desactiva la opcion de los ejes cartesianos.
+        /// </summary>
         private void AxisLines()
         {
-            Modelo.AxisLines(axisToolStripMenuItem.Checked);
+            Model.AxisLines(axisToolStripMenuItem.Checked);
         }
 
-        private TgcExample GetExample(TreeNode selectedNode)
-        {
-            return Modelo.ExampleLoader.GetExampleByTreeNode(selectedNode);
-        }
-
+        /// <summary>
+        /// Ejecuta un ejemplo particular.
+        /// </summary>
+        /// <param name="example">Ejemplo a ejecutar.</param>
         private void ExecuteExample(TgcExample example)
         {
             try
             {
-                Modelo.ExecuteExample(example);
+                Model.ExecuteExample(example);
                 ContadorFPS();
                 AxisLines();
                 Wireframe();
@@ -203,18 +222,20 @@ namespace TGC.Viewer.UI
             {
                 MessageBox.Show(ex.Message, "No se pudo cargar el ejemplo " + example.Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                //TODO mejorar esta llamada con un metodo de model
-                Modelo.ExampleLoader.CurrentExample = null;
+                Model.ClearCurrentExample();
             }
         }
 
+        /// <summary>
+        /// Ejecuta el ejemplo en pantalla completa.
+        /// </summary>
         private void FullExample()
         {
             splitContainerIzquierda.Visible = !splitContainerIzquierda.Visible;
             splitContainerDerecha.Visible = !splitContainerDerecha.Visible;
             statusStrip.Visible = !statusStrip.Visible;
 
-            Modelo.UpdateAspectRatio(panel3D);
+            Model.UpdateAspectRatio(panel3D);
         }
 
         #region Eventos del form
@@ -244,7 +265,7 @@ namespace TGC.Viewer.UI
 
             if (selectedNode != null && selectedNode.Nodes.Count == 0)
             {
-                ExecuteExample(GetExample(selectedNode));
+                ExecuteExample(Model.GetExampleByTreeNode(selectedNode));
             }
         }
 

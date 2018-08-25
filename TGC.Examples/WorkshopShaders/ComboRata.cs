@@ -176,7 +176,7 @@ namespace TGC.Examples.WorkshopShaders
                 if (collide)
                 {
                     enemigos[t].Position = lastPos;
-                    enemigo_an[t] += (float)rnd.Next(0, 100) / 100.0f;
+                    enemigo_an[t] += rnd.Next(0, 100) / 100.0f;
                 }
 
                 enemigos[t].updateAnimation(ElapsedTime);
@@ -352,8 +352,8 @@ namespace TGC.Examples.WorkshopShaders
             int dy = 1000;
             int dW = 200;
             int dH = 200;
-            float ex = (float)dW / (float)dx;
-            float ey = (float)dH / (float)dy;
+            float ex = dW / (float)dx;
+            float ey = dH / (float)dy;
             int ox = 10 + dW / 2;
             int oy = 10 + dH / 2;
 

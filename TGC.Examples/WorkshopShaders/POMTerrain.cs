@@ -47,8 +47,8 @@ namespace TGC.Examples.WorkshopShaders
 
             //cargar heightmap
             heightmapData = loadHeightMap(d3dDevice, heightmapPath);
-            float width = (float)heightmapData.GetLength(0);
-            float length = (float)heightmapData.GetLength(1);
+            float width = heightmapData.GetLength(0);
+            float length = heightmapData.GetLength(1);
 
             //Crear vertexBuffer
             totalVertices = 2 * 3 * (heightmapData.GetLength(0) + 1) * (heightmapData.GetLength(1) + 1);
