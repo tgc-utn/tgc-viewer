@@ -10,10 +10,11 @@ using TGC.Examples.UserControls;
 namespace TGC.Viewer.Model
 {
     /// <summary>
-    ///     Utilidad para cargar dinamicamente las DLL de los ejemplos
+    /// Utilidad para cargar dinamicamente las DLL de los ejemplos.
     /// </summary>
     public class ExampleLoader
     {
+        private const string TGC = "TGC";
         private readonly Dictionary<TreeNode, TgcExample> treeExamplesDict;
         private readonly TgcUserVars userVars;
 
@@ -27,30 +28,35 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        ///     Ejemplos actualmente cargados
+        /// Ejemplos actualmente cargados.
         /// </summary>
         public List<TgcExample> CurrentExamples { get; set; }
 
         /// <summary>
-        ///     Ejemplo actualmente cargado
+        /// Ejemplo actualmente cargado.
         /// </summary>
         public TgcExample CurrentExample { get; set; }
 
         /// <summary>
-        ///     Path de la carpeta Media que contiene todo el contenido visual de los ejemplos, como texturas, modelos 3D, etc.
+        /// Path de la carpeta Media que contiene todo el contenido visual de los ejemplos, como texturas, modelos 3D, etc.
         /// </summary>
         public string MediaDirectory { get; set; }
 
         /// <summary>
-        ///     Path de la carpeta Shaders que contiene todo los shaders genericos
+        /// Path de la carpeta Shaders que contiene todo los shaders genericos.
         /// </summary>
         public string ShadersDirectory { get; set; }
 
+        /// <summary>
+        /// Panel donde van los modificadores.
+        /// </summary>
         public Panel ModifiersPanel { get; set; }
 
         /// <summary>
-        ///     Carga los ejemplos dinamicamente en el TreeView de Ejemplo
+        /// Carga los ejemplos dinamicamente en el TreeView de Ejemplo.
         /// </summary>
+        /// <param name="treeView"> Arbol donde cargar los ejemplos.</param>
+        /// <param name="exampleDir"> Carpeta donde estan las DLLs con los ejemplos.</param>
         public void LoadExamplesInGui(TreeView treeView, string exampleDir)
         {
             //Cargar ejemplos dinamicamente
@@ -90,17 +96,22 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        ///     Devuelve el Ejemplo correspondiente a un TreeNode
+        /// Devuelve el Ejemplo correspondiente a un TreeNode.
         /// </summary>
+        /// <param name="treeNode"> Nodo donde buscar el ejemplo.</param>
+        /// <returns> Ejemplo buscado.</returns>
         public TgcExample GetExampleByTreeNode(TreeNode treeNode)
         {
             return treeExamplesDict[treeNode];
         }
 
         /// <summary>
-        ///     Indica si ya existe un nodo en el arbol de ejemplos bajo esa categoria.
-        ///     Devuelve el nodo encontrado o Null.
+        /// Indica si ya existe un nodo en el arbol de ejemplos bajo esa categoria.
+        /// Devuelve el nodo encontrado o Null.
         /// </summary>
+        /// <param name="treeView"> Nodo donde buscar.</param>
+        /// <param name="category"> Categoria a buscar.</param>
+        /// <returns></returns>
         private TreeNode TreeNodeExists(TreeView treeView, string category)
         {
             foreach (TreeNode n in treeView.Nodes)
@@ -115,10 +126,10 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        ///     Carga dinamicamente todas las dll de ejemplos de la carpeta de ejemplos
+        /// Carga dinamicamente todas las dll de ejemplos de la carpeta de ejemplos.
         /// </summary>
-        /// <param name="exampleDir"></param>
-        /// <returns></returns>
+        /// <param name="exampleDir"> Ruta del directorio que contiene los ejemplos.</param>
+        /// <returns> Lista con todos los ejemplos instanciados a partir de las DLLs encontrdas.</returns>
         public List<TgcExample> LoadExamples(string exampleDir)
         {
             var examples = new List<TgcExample>();
@@ -130,11 +141,6 @@ namespace TGC.Viewer.Model
             {
                 try
                 {
-                    if (!Path.GetFileName(file).StartsWith("TGC", StringComparison.Ordinal))
-                    {
-                        continue;
-                    }
-
                     var assembly = Assembly.LoadFile(file);
                     foreach (var type in assembly.GetTypes())
                     {
@@ -178,8 +184,10 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        ///     Busca recursivamente en un directorio todos los archivos .DLL
+        /// Busca recursivamente en un directorio todos los archivos .DLL.
         /// </summary>
+        /// <param name="rootDir"> Donde se empieza a buscar ejemplos.</param>
+        /// <returns> Lista con todas las DLLs encontradas</returns>
         public List<string> GetExampleFiles(string rootDir)
         {
             var exampleFiles = new List<string>();
@@ -187,15 +195,22 @@ namespace TGC.Viewer.Model
 
             foreach (var dll in dllArray)
             {
-                exampleFiles.Add(dll);
+                // De esta forma no cargo DLLs que no sean de TGC
+                if (Path.GetFileName(dll).StartsWith(TGC, StringComparison.Ordinal))
+                {
+                    exampleFiles.Add(dll);
+                }
             }
 
             return exampleFiles;
         }
 
         /// <summary>
-        ///     Devuelve el primer TgcExample con el name y category especificados (de los metodos GetName y GetCategory)
+        /// Devuelve el primer TgcExample con el name y category especificados (de los metodos GetName y GetCategory).
         /// </summary>
+        /// <param name="name"> Nombre del ejemplo.</param>
+        /// <param name="category"> Categoria del ejemplo.</param>
+        /// <returns> Ejemplo encontrado con los datos dados.</returns>
         public TgcExample GetExampleByName(string name, string category)
         {
             foreach (var example in CurrentExamples)

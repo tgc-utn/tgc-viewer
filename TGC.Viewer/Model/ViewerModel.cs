@@ -1,6 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Net;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
@@ -18,19 +17,31 @@ namespace TGC.Viewer.Model
         private ViewerForm Form { get; set; }
 
         /// <summary>
-        ///     Obtener o parar el estado del RenderLoop.
+        /// Obtener o parar el estado del RenderLoop.
         /// </summary>
         public bool ApplicationRunning { get; set; }
 
+        /// <summary>
+        /// Controlador de sonido.
+        /// </summary>
         private TgcDirectSound DirectSound { get; set; }
 
+        /// <summary>
+        /// Controlador de inputs.
+        /// </summary>
         private TgcD3dInput Input { get; set; }
 
         /// <summary>
-        ///     Cargador de ejemplos
+        /// Cargador de ejemplos.
         /// </summary>
-        public ExampleLoader ExampleLoader { get; private set; }
+        private ExampleLoader ExampleLoader { get; set; }
 
+        /// <summary>
+        /// Inicia el device basado en el panel, el sonido, los inputs y carga los shaders basicos.
+        /// </summary>
+        /// <param name="form"> Ventana que contiene la aplicacion.</param>
+        /// <param name="panel3D"> Panel donde van a correr los ejemplos.</param>
+        /// <param name="pathCommonShaders"> Ruta con los shaders basicos.</param>
         public void InitGraphics(ViewerForm form, Panel panel3D, string pathCommonShaders)
         {
             ApplicationRunning = true;
@@ -52,6 +63,24 @@ namespace TGC.Viewer.Model
             TgcShaders.Instance.loadCommonShaders(pathCommonShaders);
         }
 
+        /// <summary>
+        /// Verifica si existe la carpeta.
+        /// </summary>
+        /// <param name="path"> Ruta a verificar.</param>
+        /// <returns> True si la carpeta no existe.</returns>
+        public bool CheckFolder(string path)
+        {
+            return !Directory.Exists(path);
+        }
+
+        /// <summary>
+        /// Carga los ejemplos de TGC.Examples al arbol de la aplicacion.
+        /// </summary>
+        /// <param name="treeViewExamples"> Arbol donde se cargaran los ejemplos.</param>
+        /// <param name="panelModifiers"> Panel donde van los modificadores del ejemplo.</param>
+        /// <param name="dataGridUserVars"> Panel donde van los datos del ejemplo.</param>
+        /// <param name="mediaDirectory"> Ruta donde estan los media.</param>
+        /// <param name="shadersDirectory"> Ruta donde estan los shaders.</param>
         public void LoadExamples(TreeView treeViewExamples, Panel panelModifiers, DataGridView dataGridUserVars, string mediaDirectory, string shadersDirectory)
         {
             //Directorio actual de ejecucion
@@ -62,6 +91,29 @@ namespace TGC.Viewer.Model
             ExampleLoader.LoadExamplesInGui(treeViewExamples, currentDirectory);
         }
 
+        /// <summary>
+        /// Ejemplo actual de la aplicacion.
+        /// </summary>
+        /// <returns></returns>
+        public TgcExample CurrentExample()
+        {
+            return ExampleLoader.CurrentExample;
+        }
+
+        /// <summary>
+        /// Obtiene un ejemplo por su nombre y categoria.
+        /// </summary>
+        /// <param name="defaultExampleName"> Nombre del ejemplo.</param>
+        /// <param name="defaultExampleCategory"> Categoria del ejemplo.</param>
+        /// <returns></returns>
+        public TgcExample GetExampleByName(string defaultExampleName, string defaultExampleCategory)
+        {
+            return ExampleLoader.GetExampleByName(defaultExampleName, defaultExampleCategory);
+        }
+
+        /// <summary>
+        /// Se inicia el render loop del ejemplo.
+        /// </summary>
         public void InitRenderLoop()
         {
             while (ApplicationRunning)
@@ -86,6 +138,10 @@ namespace TGC.Viewer.Model
             }
         }
 
+        /// <summary>
+        /// Le activa o desactiva la herramienta de wireframe al ejemplo.
+        /// </summary>
+        /// <param name="state"> Estado que se quiere de la herramienta.</param>
         public void Wireframe(bool state)
         {
             if (state)
@@ -98,19 +154,27 @@ namespace TGC.Viewer.Model
             }
         }
 
+        /// <summary>
+        /// Le activa o desactiva el contador de FPS al ejemplo.
+        /// </summary>
+        /// <param name="state"> Estado que se quiere de la herramienta.</param>
         public void ContadorFPS(bool state)
         {
             ExampleLoader.CurrentExample.FPS = state;
         }
 
+        /// <summary>
+        /// Le activa o desactiva los ejes cartesianos al ejemplo.
+        /// </summary>
+        /// <param name="state"> Estado que se quiere de la herramienta.</param>
         public void AxisLines(bool state)
         {
             ExampleLoader.CurrentExample.AxisLinesEnable = state;
         }
 
         /// <summary>
-        ///     Arranca a ejecutar un ejemplo.
-        ///     Para el ejemplo anterior, si hay alguno.
+        ///  Arranca a ejecutar un ejemplo.
+        ///  Para el ejemplo anterior, si hay alguno.
         /// </summary>
         /// <param name="example"></param>
         public void ExecuteExample(TgcExample example)
@@ -128,7 +192,7 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        ///     Deja de ejecutar el ejemplo actual
+        ///  Deja de ejecutar el ejemplo actual
         /// </summary>
         public void StopCurrentExample()
         {
@@ -139,9 +203,6 @@ namespace TGC.Viewer.Model
             }
         }
 
-        /// <summary>
-        ///     Finaliza el render loop y hace dispose del ejemplo y recursos
-        /// </summary>
         public void Dispose()
         {
             ApplicationRunning = false;
@@ -164,14 +225,28 @@ namespace TGC.Viewer.Model
             }
         }
 
-        internal void UpdateAspectRatio(Panel panel)
+        /// <summary>
+        /// Actualiza el aspect ratio segun el estado del panel.
+        /// </summary>
+        /// <param name="panel"></param>
+        public void UpdateAspectRatio(Panel panel)
         {
             D3DDevice.Instance.UpdateAspectRatioAndProjection(panel.Width, panel.Height);
         }
 
         /// <summary>
-        ///     Cuando el Direct3D Device se resetea.
-        ///     Se reinica el ejemplo actual, si hay alguno.
+        /// Obtiene el ejemplo del nodo seleccionado.
+        /// </summary>
+        /// <param name="selectedNode"></param>
+        /// <returns></returns>
+        public TgcExample GetExampleByTreeNode(TreeNode selectedNode)
+        {
+            return ExampleLoader.GetExampleByTreeNode(selectedNode);
+        }
+
+        /// <summary>
+        /// Cuando el Direct3D Device se resetea.
+        /// Se reinica el ejemplo actual, si hay alguno.
         /// </summary>
         public void OnResetDevice()
         {
@@ -191,9 +266,15 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        ///     This event-handler is a good place to create and initialize any
-        ///     Direct3D related objects, which may become invalid during a
-        ///     device reset.
+        /// Limpia el atributo de ExamplerLoader.
+        /// </summary>
+        public void ClearCurrentExample()
+        {
+            ExampleLoader.CurrentExample = null;
+        }
+
+        /// <summary>
+        /// This event-handler is a good place to create and initialize any Direct3D related objects, which may become invalid during a device reset.
         /// </summary>
         public void OnResetDevice(object sender, EventArgs e)
         {
@@ -203,7 +284,7 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        ///     Hace las operaciones de Reset del device
+        /// Hace las operaciones de Reset del device.
         /// </summary>
         public void DoResetDevice()
         {
@@ -212,37 +293,6 @@ namespace TGC.Viewer.Model
 
             //Reset Timer
             ExampleLoader.CurrentExample.ResetTimer();
-        }
-
-        public void DownloadMediaFolder()
-        {
-            var client = new WebClient();
-
-            client.DownloadProgressChanged += client_DownloadProgressChanged;
-            client.DownloadFileCompleted += client_DownloadFileCompleted;
-
-            // Starts the download
-            //client.DownloadFileAsync(new Uri("http://tgcutn.com.ar/images/logotp.png"), @"C:\Users\Mito\Downloads\logotp.png");
-
-            //btnStartDownload.Text = "Download In Process";
-            //btnStartDownload.Enabled = false;
-        }
-
-        private void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            var bytesIn = double.Parse(e.BytesReceived.ToString());
-            var totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-            var percentage = bytesIn / totalBytes * 100;
-
-            Console.Write(int.Parse(Math.Truncate(percentage).ToString()));
-        }
-
-        private void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            MessageBox.Show("Download Completed");
-
-            //btnStartDownload.Text = "Start Download";
-            //btnStartDownload.Enabled = true;
         }
     }
 }

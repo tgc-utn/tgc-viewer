@@ -42,6 +42,10 @@
             this.buttonCommonShaders = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.buttonOpenCommonShaders = new System.Windows.Forms.Button();
+            this.buttonOpenShaders = new System.Windows.Forms.Button();
+            this.buttonOpenMedia = new System.Windows.Forms.Button();
+            this.buttonOpenMediaLink = new System.Windows.Forms.Button();
             this.buttonMediaLink = new System.Windows.Forms.Button();
             this.textBoxMediaLink = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
@@ -113,7 +117,7 @@
             this.buttonAccept.AccessibleRole = System.Windows.Forms.AccessibleRole.Window;
             this.buttonAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonAccept.Location = new System.Drawing.Point(316, 5);
+            this.buttonAccept.Location = new System.Drawing.Point(397, 5);
             this.buttonAccept.Name = "buttonAccept";
             this.buttonAccept.Size = new System.Drawing.Size(75, 23);
             this.buttonAccept.TabIndex = 12;
@@ -125,7 +129,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(397, 5);
+            this.buttonCancel.Location = new System.Drawing.Point(478, 5);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 13;
@@ -169,11 +173,15 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 171);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(484, 40);
+            this.panel1.Size = new System.Drawing.Size(565, 40);
             this.panel1.TabIndex = 14;
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.buttonOpenCommonShaders);
+            this.panel2.Controls.Add(this.buttonOpenShaders);
+            this.panel2.Controls.Add(this.buttonOpenMedia);
+            this.panel2.Controls.Add(this.buttonOpenMediaLink);
             this.panel2.Controls.Add(this.buttonMediaLink);
             this.panel2.Controls.Add(this.textBoxMediaLink);
             this.panel2.Controls.Add(this.labelMediaDirectory);
@@ -189,8 +197,48 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(484, 171);
+            this.panel2.Size = new System.Drawing.Size(565, 171);
             this.panel2.TabIndex = 15;
+            // 
+            // buttonOpenCommonShaders
+            // 
+            this.buttonOpenCommonShaders.Location = new System.Drawing.Point(478, 101);
+            this.buttonOpenCommonShaders.Name = "buttonOpenCommonShaders";
+            this.buttonOpenCommonShaders.Size = new System.Drawing.Size(75, 23);
+            this.buttonOpenCommonShaders.TabIndex = 15;
+            this.buttonOpenCommonShaders.Text = "Abrir";
+            this.buttonOpenCommonShaders.UseVisualStyleBackColor = true;
+            this.buttonOpenCommonShaders.Click += new System.EventHandler(this.buttonOpenCommonShaders_Click);
+            // 
+            // buttonOpenShaders
+            // 
+            this.buttonOpenShaders.Location = new System.Drawing.Point(478, 62);
+            this.buttonOpenShaders.Name = "buttonOpenShaders";
+            this.buttonOpenShaders.Size = new System.Drawing.Size(75, 23);
+            this.buttonOpenShaders.TabIndex = 14;
+            this.buttonOpenShaders.Text = "Abrir";
+            this.buttonOpenShaders.UseVisualStyleBackColor = true;
+            this.buttonOpenShaders.Click += new System.EventHandler(this.buttonOpenShaders_Click);
+            // 
+            // buttonOpenMedia
+            // 
+            this.buttonOpenMedia.Location = new System.Drawing.Point(478, 23);
+            this.buttonOpenMedia.Name = "buttonOpenMedia";
+            this.buttonOpenMedia.Size = new System.Drawing.Size(75, 23);
+            this.buttonOpenMedia.TabIndex = 13;
+            this.buttonOpenMedia.Text = "Abrir";
+            this.buttonOpenMedia.UseVisualStyleBackColor = true;
+            this.buttonOpenMedia.Click += new System.EventHandler(this.buttonOpenMedia_Click);
+            // 
+            // buttonOpenMediaLink
+            // 
+            this.buttonOpenMediaLink.Location = new System.Drawing.Point(478, 140);
+            this.buttonOpenMediaLink.Name = "buttonOpenMediaLink";
+            this.buttonOpenMediaLink.Size = new System.Drawing.Size(75, 23);
+            this.buttonOpenMediaLink.TabIndex = 12;
+            this.buttonOpenMediaLink.Text = "Navegar";
+            this.buttonOpenMediaLink.UseVisualStyleBackColor = true;
+            this.buttonOpenMediaLink.Click += new System.EventHandler(this.buttonOpenMediaLink_Click);
             // 
             // buttonMediaLink
             // 
@@ -216,7 +264,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(484, 211);
+            this.ClientSize = new System.Drawing.Size(565, 211);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -249,5 +297,9 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button buttonMediaLink;
         private System.Windows.Forms.TextBox textBoxMediaLink;
+        private System.Windows.Forms.Button buttonOpenMediaLink;
+        private System.Windows.Forms.Button buttonOpenCommonShaders;
+        private System.Windows.Forms.Button buttonOpenShaders;
+        private System.Windows.Forms.Button buttonOpenMedia;
     }
 }

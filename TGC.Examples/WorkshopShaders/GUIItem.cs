@@ -168,7 +168,7 @@ namespace TGC.Examples.WorkshopShaders
                     pt[1].X = rc.X + rc.Width + 3;
                     pt[1].Y = pt[0].Y = rc.Y + rc.Height / 2 - i;
                     gui.Transform(pt, 2);
-                    float t = (float)i / (float)dy;
+                    float t = i / (float)dy;
                     byte r = (byte)(r0 * t + r1 * (1 - t));
                     byte g = (byte)(g0 * t + g1 * (1 - t));
                     byte b = (byte)(b0 * t + b1 * (1 - t));
@@ -190,7 +190,7 @@ namespace TGC.Examples.WorkshopShaders
                     pt[1].X = rc.X + rc.Width + 3;
                     pt[1].Y = pt[0].Y = rc.Y + rc.Height / 2 + i;
                     gui.Transform(pt, 2);
-                    float t = (float)i / (float)dy;
+                    float t = i / (float)dy;
                     byte r = (byte)(r0 * t + r1 * (1 - t));
                     byte g = (byte)(g0 * t + g1 * (1 - t));
                     byte b = (byte)(b0 * t + b1 * (1 - t));
@@ -551,7 +551,7 @@ namespace TGC.Examples.WorkshopShaders
 
         public override void Render(DXGui gui)
         {
-            float k = (float)(pos - desde) / (float)(hasta - desde);
+            float k = (pos - desde) / (float)(hasta - desde);
             gui.DrawRect(rc.Left, rc.Top, rc.Right, rc.Bottom, 1, Color.FromArgb(240, 240, 240), true);
             gui.DrawRect(rc.Left, rc.Top, rc.Right, rc.Bottom, 1, Color.FromArgb(0, 0, 0));
             gui.DrawRect(rc.Left, rc.Top, rc.Left + (int)(rc.Width * k), rc.Bottom, 1, Color.FromArgb(0, 100, 255), true);
@@ -662,7 +662,7 @@ namespace TGC.Examples.WorkshopShaders
                 TGCVector3 pos = new TGCVector3(center.X * ex, center.Y * ey, 0);
                 TGCVector3 c0 = new TGCVector3(image_width / 2, image_height / 2, 0);
                 // Determino la escala para que entre justo
-                TGCVector2 scale = new TGCVector2(k * ex * (float)rc.Width / (float)image_width, k * ey * (float)rc.Height / (float)image_height);
+                TGCVector2 scale = new TGCVector2(k * ex * rc.Width / image_width, k * ey * rc.Height / image_height);
                 TGCVector2 offset = new TGCVector2(ox * ex, oy * ey);
                 gui.sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(center.X * ex, center.Y * ey), 0, scale, new TGCVector2(0, 0), 0, offset) * gui.RTQ;
                 gui.sprite.Draw(textura, c0, pos, Color.FromArgb(gui.alpha, 255, 255, 255).ToArgb());
@@ -717,7 +717,7 @@ namespace TGC.Examples.WorkshopShaders
 
         public override void RenderFrame()
         {
-            float tr = (float)(4 * (gui.delay_sel0 - gui.delay_sel));
+            float tr = 4 * (gui.delay_sel0 - gui.delay_sel);
             // circulo
             int R = (int)(rc.Width / 2 * k);
 
