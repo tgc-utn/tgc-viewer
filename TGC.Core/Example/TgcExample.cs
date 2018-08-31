@@ -31,6 +31,8 @@ namespace TGC.Core.Example
             DrawText = new TgcText2D();
             Input = new TgcD3dInput();
 
+            TgcSoundManager.Initialize();
+
             Category = "Others";
             Name = "Ejemplo en Blanco";
             Description = "Ejemplo en Blanco. Es hora de empezar a hacer tu propio ejemplo :)";
@@ -121,7 +123,7 @@ namespace TGC.Core.Example
         {
             UpdateClock();
             UpdateInput();
-            UpdateSounds3D();
+            UpdateSound();
         }
 
         /// <summary>
@@ -190,9 +192,9 @@ namespace TGC.Core.Example
         /// <summary>
         ///     Actualiza el Listener3D
         /// </summary>
-        protected void UpdateSounds3D()
+        protected void UpdateSound()
         {
-            //DirectSound.UpdateListener3d();
+            TgcSoundManager.Update();
         }
 
         /// <summary>

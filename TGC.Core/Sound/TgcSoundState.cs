@@ -11,7 +11,7 @@ namespace TGC.Core.Sound
     /// <summary>
     /// Estado del sonido
     /// </summary>
-    public abstract class TgcSoundState
+    internal abstract class TgcSoundState
     {
         protected TgcSound sound;
 

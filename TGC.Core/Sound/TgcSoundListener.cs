@@ -9,36 +9,85 @@ using TGC.Core.SceneLoader;
 
 namespace TGC.Core.Sound
 {
-    public class TgcSoundListener
+    /// <summary>
+    ///     Receptor de sonido
+    /// </summary>
+    public class TgcSoundListener : TgcSoundActor
     {
         private Listener listener;
-        private ITransformObject receptor;
 
+        /// <summary>
+        ///     Crea un receptor de sonido
+        /// </summary>
+        /// <param name="receptor">Objeto receptor de sonido. Desde el mismo se escucharan los sonidos emitidos</param>
         public TgcSoundListener(ITransformObject receptor)
         {
-            this.receptor = receptor;
+            origin = receptor;
             listener = new Listener();
-            Update();
+            Active = true;
         }
 
-        internal Listener Listener { get { return listener; } }
-        
-        public TGCVector3 Position { get { return receptor.Position; } }
+        /// <summary>
+        ///     Posicion del receptor
+        /// </summary>
+        public TGCVector3 Position { get { return origin.Position; } }
 
-        internal void Update()
+        /// <summary>
+        ///     Indica si el receptor esta activo.
+        ///     Que este activo significa que este receptor actualmente esta escuchando sonidos y, segun como los reciba, seran emitidos por el dispositivo de audio.
+        ///     Puede haber mas de un receptor, pero solo un receptor activo a la vez.
+        /// </summary>
+        public bool Active
         {
-            TGCVector3 scaled = receptor.Position;
-            listener.Position = scaled.ToRawVector;
+            get
+            {
+                return Tgc3DSoundManager.Active.Equals(this);
+            }
+            set
+            {
+                if (value)
+                    Register();
+                else
+                    Unregister();
+            }
         }
 
-        public void SetOrientation(TGCVector3 front, TGCVector3 top)
+        /// <summary>
+        ///     Asigna la orientacion del receptor.
+        ///     Ambos vectores deben estar normalizados y deben ser ortonormales.
+        ///     Debe ser llamada cada vez que cambia la orientacion del actor.
+        /// </summary>
+        /// <param name="front">Direccion del frente del objeto</param>
+        /// <param name="top">Direccion hacia arriba del objeto</param>
+        public override void SetOrientation(TGCVector3 front, TGCVector3 top)
         {
             listener.OrientFront = front.ToRawVector;
             listener.OrientTop = top.ToRawVector;
-            TGCVector3 p = front;
-            p.Normalize();
-            p.Scale(250f);
-            listener.Velocity = p.ToRawVector; 
+        }
+
+        /// <summary>
+        ///     Libera los recursos consumidos por el receptor
+        /// </summary>
+        public override void Dispose()
+        {
+            Active = false;
+        }
+
+        internal override void Register()
+        {
+            Tgc3DSoundManager.Register(this);
+        }
+
+        internal override void Unregister()
+        {
+            Tgc3DSoundManager.Unregister(this);
+        }
+
+        internal Listener Native { get { return listener; } }
+        
+        internal override void UpdatePosition()
+        {
+            listener.Position = origin.Position.ToRawVector;
         }
 
     }

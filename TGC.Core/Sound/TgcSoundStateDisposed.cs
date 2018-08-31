@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TGC.Core.Sound
 {
-    public class TgcSoundStateDisposed : TgcSoundState
+    internal class TgcSoundStateDisposed : TgcSoundState
     {
         public TgcSoundStateDisposed(TgcSound sound) : base(sound)
         {

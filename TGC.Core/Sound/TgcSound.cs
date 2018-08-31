@@ -12,72 +12,105 @@ using static TGC.Core.Sound.TgcSoundManager;
 
 namespace TGC.Core.Sound
 {
+    /// <summary>
+    ///     Sonido de TGC en formato WAV o de onda
+    /// </summary>
     public class TgcSound
     {
+        /// <summary>
+        ///     Usar esta constante en LoopCount para que el sonido se reproduzca infinitamente
+        /// </summary>
         public const int LOOP_INFINITE = 255;
 
         private SourceVoice voice;
         private CustomAudioBuffer buffer;
         private TgcSoundState state;
 
+        /// <summary>
+        ///     Crea un sonido
+        /// </summary>
         public TgcSound(string path)
         {
             buffer = TgcSoundManager.CreateSoundBuffer(path);
-            this.voice = TgcSoundManager.CreateVoice(buffer);
-            this.voice.SetVolume(1);
-            this.LoopCount = LOOP_INFINITE;
-            this.state = new TgcSoundStateStopped(this);
+            voice = TgcSoundManager.CreateVoice(buffer);
+            voice.SetVolume(1);
+            LoopCount = LOOP_INFINITE;
+            state = new TgcSoundStateStopped(this);
         }
 
-        public void Process3D(DspSettings settings)
+        internal void Process3D(DspSettings settings, float rangeMin, float rangeMax)
         {
-            this.voice.SetOutputMatrix(1, 2, settings.MatrixCoefficients);
-            this.voice.Stop();
-            this.voice.Start();
-            //FilterParameters filters = new FilterParameters();
-            //filters.Type = FilterType.LowPassFilter;
-            //filters.Frequency = 2.0f * FastMath.Sin(FastMath.PI / 6.0f * settings.LpfDirectCoefficient);
-            //filters.OneOverQ = 1;
-            //this.voice.SetFilterParameters(filters);
+            voice.SetOutputMatrix(1, 2, settings.MatrixCoefficients);
+            voice.SetFrequencyRatio(settings.DopplerFactor);
+            voice.SetVolume(CalculateVolume(rangeMin, rangeMax, settings.EmitterToListenerDistance));
         }
 
-        public void SwitchState(TgcSoundState newState)
+        private float CalculateVolume(float rangeMin, float rangeMax, float distance)
+        {
+            return FastMath.Clamp(1 - ((distance - rangeMin) / (rangeMax - rangeMin)), 0, 1);
+        }
+
+        internal void SwitchState(TgcSoundState newState)
         {
             this.state = newState;
         }
 
-        public SourceVoice Voice { get { return this.voice; } }
+        internal SourceVoice Voice { get { return voice; } }
 
-        public CustomAudioBuffer Buffer { get { return this.buffer; } }
+        internal CustomAudioBuffer Buffer { get { return buffer; } }
 
+        /// <summary>
+        ///     Indica cuantas veces se va a reproducir el sonido.
+        ///     Detiene la reproduccion del mismo si su valor se cambia.
+        /// </summary>
         public int LoopCount
         {
             get
             {
-                return this.buffer.LoopCount;
+                return buffer.LoopCount;
             }
             set
             {
-                this.buffer.LoopCount = value;
-                this.state = new TgcSoundStateStopped(this);
+                if (buffer.LoopCount != value)
+                {
+                    buffer.LoopCount = value;
+                    SwitchState(new TgcSoundStateStopped(this));
+                }                
             }
         }
 
+        /// <summary>
+        ///     Reproduce el sonido, o lo reanuda si fue pausado 
+        /// </summary>
         public void Play()
         {
             this.state.Play();
         }
 
+        /// <summary>
+        ///     Asigna u obtiene el volumen del sonido
+        /// </summary>
+        public float Volume { get { return voice.Volume; } set { voice.SetVolume(value); } }
+
+        /// <summary>
+        ///     Pausa el sonido. Cuando se vuelva a reproducir se escuchara desde donde se pauso.
+        /// </summary>
         public void Pause()
         {
             this.state.Pause();
         }
 
+        /// <summary>
+        ///     Para el sonido. Cuando se vuelva a reproducir se escuchara desde el principio.
+        /// </summary>
         public void Stop()
         {
             this.state.Stop();
         }
 
+        /// <summary>
+        ///     Libera todos los recursos asociados con el sonido
+        /// </summary>
         public void Dispose()
         {
             this.state.Dispose();

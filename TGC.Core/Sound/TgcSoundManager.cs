@@ -2,42 +2,42 @@
 using SharpDX.XAudio2;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using SharpDX.X3DAudio;
+using System.Runtime.InteropServices;
+using System.IO;
 
 namespace TGC.Core.Sound
 {
-    public static class TgcSoundManager
+    static class TgcSoundManager
     {
         private static MasteringVoice masteringVoice;
         private static XAudio2 engine;
-        private static X3DAudio audio3D;
 
-        public static void Initialize()
+        internal static void Initialize()
         {
-            engine = new XAudio2(XAudio2Version.Version27);
-            masteringVoice = new MasteringVoice(engine);
-            //masteringVoice.SetVolume(1);
-
-            audio3D = new X3DAudio(Speakers.All);
-            engine.StartEngine();
+            if(engine == null)
+            {
+                engine = new XAudio2(XAudio2Version.Version27);
+                masteringVoice = new MasteringVoice(engine);
+                engine.StartEngine();
+            }
+            Tgc3DSoundManager.Initialize();
         }
-
-        public static X3DAudio Audio3D()
-        {
-            return audio3D;
-        }
-
-        public static SourceVoice CreateVoice(CustomAudioBuffer buffer)
+    
+        internal static SourceVoice CreateVoice(CustomAudioBuffer buffer)
         {
             return new SourceVoice(engine, buffer.WaveFormat, true);
         }
 
-        public static CustomAudioBuffer CreateSoundBuffer(string soundfile)
+        internal static void Update()
+        {
+            Tgc3DSoundManager.Update();
+        }
+
+        internal static CustomAudioBuffer CreateSoundBuffer(string soundfile)
         {
             SoundStream stream = new SoundStream(File.OpenRead(soundfile));
 
@@ -67,7 +67,7 @@ namespace TGC.Core.Sound
             return buffer;
         }
 
-        public sealed class CustomAudioBuffer : AudioBuffer
+        internal sealed class CustomAudioBuffer : AudioBuffer
         {
             public WaveFormat WaveFormat { get; set; }
             public uint[] DecodedPacketsInfo { get; set; }

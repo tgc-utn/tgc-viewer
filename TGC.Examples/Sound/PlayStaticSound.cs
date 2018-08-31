@@ -25,7 +25,7 @@ namespace TGC.Examples.Sound
         private string currentFile;
         private TgcText2D currentSoundText;
         private TgcText2D instruccionesText;
-        //private TgcStaticSound sound;
+        private TgcSound sound;
 
         public PlayStaticSound(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -46,7 +46,7 @@ namespace TGC.Examples.Sound
 
             //Texto de instrucciones
             instruccionesText = new TgcText2D();
-            instruccionesText.Text = "Y = Play, O = Stop.";
+            instruccionesText.Text = "Y = Play, U = Pause, O = Stop.";
             instruccionesText.Position = new Point(50, 60);
             instruccionesText.Color = Color.Green;
             instruccionesText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Bold));
@@ -60,12 +60,7 @@ namespace TGC.Examples.Sound
 
             var filePath = wavFileModifier.Value;
             loadSound(filePath);
-        }
-
-        public override void Update()
-        {
-            PreUpdate();
-            PostUpdate();
+           
         }
 
         /// <summary>
@@ -73,7 +68,6 @@ namespace TGC.Examples.Sound
         /// </summary>
         private void loadSound(string filePath)
         {
-            /*
             if (currentFile == null || currentFile != filePath)
             {
                 currentFile = filePath;
@@ -81,36 +75,47 @@ namespace TGC.Examples.Sound
                 //Borrar sonido anterior
                 if (sound != null)
                 {
-                    sound.dispose();
-                    sound = null;
+                    sound.Dispose();
                 }
 
                 //Cargar sonido
-                sound = new TgcStaticSound();
-                sound.loadSound(currentFile, DirectSound.DsDevice);
+                sound = new TgcSound(currentFile);
 
                 currentSoundText.Text = "Playing: " + new FileInfo(currentFile).Name;
-            }*/
+            }
+            
         }
 
-        public override void Render()
+        public override void Update()
         {
-            PreRender();
+            PreUpdate();
 
             //Ver si cambio el WAV
             var filePath = wavFileModifier.Value;
             loadSound(filePath);
 
+            sound.LoopCount = ((playLoopModifier.Value) ? TgcSound.LOOP_INFINITE : 0);
+
             //Contro el input de teclado
             if (Input.keyPressed(Key.Y))
             {
-                var playLoop = playLoopModifier.Value;
-               // sound.play(playLoop);
+                sound.Play();
+                
+            }
+            else if(Input.keyPressed(Key.U))
+            {
+                sound.Pause();
             }
             else if (Input.keyPressed(Key.O))
             {
-                //sound.stop();
+                sound.Stop();
             }
+            PostUpdate();
+        }
+
+        public override void Render()
+        {
+            PreRender();
 
             //Render texto
             currentSoundText.render();
@@ -121,7 +126,7 @@ namespace TGC.Examples.Sound
 
         public override void Dispose()
         {
-           // sound.dispose();
+            sound.Dispose();
         }
     }
 }

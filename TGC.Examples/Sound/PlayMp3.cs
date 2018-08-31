@@ -57,8 +57,6 @@ namespace TGC.Examples.Sound
             currentFile = null;
             mp3FileModifier = AddFile("MP3-File", MediaDir + "Music\\I am The Money.mp3", "");
 
-            // mp3Player = new TgcMp3Player();
-            TgcSoundManager.Initialize();
         }
 
         public override void Update()

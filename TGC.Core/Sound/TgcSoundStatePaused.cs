@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TGC.Core.Sound
 {
-    public class TgcSoundStatePaused : TgcSoundState
+    internal class TgcSoundStatePaused : TgcSoundState
     {
         public TgcSoundStatePaused(TgcSound sound) : base(sound)
         {

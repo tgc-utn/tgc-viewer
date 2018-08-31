@@ -13,83 +13,107 @@ using TGC.Core.SceneLoader;
 
 namespace TGC.Core.Sound
 {
-    public class TgcSoundEmitter
+    /// <summary>
+    ///     Emisor de sonido
+    /// </summary>
+    public class TgcSoundEmitter : TgcSoundActor
     {
-        private ITransformObject origin;
         private Emitter emitter;
         private TgcSound sound;
 
-        public TgcSoundEmitter(string path, ITransformObject origin)
+        /// <summary>
+        ///     Crea un emisor de sonido
+        /// </summary>
+        /// <param name="path">Ruta al archivo con el sonido en formato WAV. Debe ser de un unico canal</param>
+        /// <param name="emisor">Objeto emisor del sonido. Desde el mismo se emitira el sonido especificado</param>
+        public TgcSoundEmitter(string path, ITransformObject emisor)
         {
             sound = new TgcSound(path);
             sound.LoopCount = TgcSound.LOOP_INFINITE;
-            this.origin = origin;
+            this.origin = emisor;
+
             emitter = new Emitter();
             emitter.ChannelCount = 1;
             emitter.CurveDistanceScaler = float.MinValue;
-            this.UpdatePosition();
-            this.sound.Play();
+
+            RangeMin = float.MaxValue;
+            RangeMax = float.MaxValue;
+
+            Register();
+
+            // Como XAudio2 funciona en otro thread,
+            // el sonido se va a reproducir en volumen maximo hasta que se realice un Update de este objeto.
+            // En ese intervalo queremos que el sonido se reproduzca, pero sea inaudible.
+            sound.Volume = 0f;
+            sound.Play();
         }
 
-        private void UpdatePosition()
+        /// <summary>
+        ///     Asigna la orientacion del emisor.
+        ///     Ambos vectores deben estar normalizados y deben ser ortonormales.
+        ///     Debe ser llamada cada vez que cambia la orientacion del actor.
+        /// </summary>
+        /// <param name="front">Direccion del frente del objeto</param>
+        /// <param name="top">Direccion hacia arriba del objeto</param>
+        public override void SetOrientation(TGCVector3 front, TGCVector3 top)
         {
-            TGCVector3 scaled = this.origin.Position;
-            emitter.Position = scaled.ToRawVector;
-            
+            emitter.OrientFront = front.ToRawVector;
+            emitter.OrientTop = top.ToRawVector;
         }
 
-        float el = 0;
-        public void Update(float elapsedTime, TgcSoundListener listener)
+        /// <summary>
+        ///     Retorna la posicion del emisor
+        /// </summary>
+        public TGCVector3 Position { get { return origin.Position; } }
+
+        /// <summary>
+        ///     El Rango Minimo del emisor.
+        ///     Debe ser menor o igual que RangeMax
+        ///     Cualquier Listener cuya distancia al Emitter sea menor que RangeMin escuchara el sonido a todo volumen.
+        ///     Si la distancia es mayor que RangeMin pero menor que RangeMax, escuchara el sonido proporcionalmente a como este situado el Listener entre estos dos.
+        ///     Si la distancia es mayor que RangeMax, el sonido no se escuchara.
+        /// </summary>
+        public float RangeMin { get; set; }
+
+        /// <summary>
+        ///     El Rango Minimo del emisor.
+        ///     Debe ser mayor o igual que RangeMin.
+        ///     Cualquier Listener cuya distancia al Emitter sea menor que RangeMin escuchara el sonido a todo volumen.
+        ///     Si la distancia es mayor que RangeMin pero menor que RangeMax, escuchara el sonido proporcionalmente a como este situado el Listener entre estos dos.
+        ///     Si la distancia es mayor que RangeMax, el sonido no se escuchara.
+        /// </summary>
+        public float RangeMax { get; set; }
+
+
+        /// <summary>
+        ///     Libera los recursos del Emitter
+        /// </summary>
+        public override void Dispose()
         {
-            //listener.Update();
-            //UpdatePosition();
-
-            var emi = new Emitter
-            {
-                ChannelCount = 1,
-                CurveDistanceScaler = float.MinValue,
-                OrientFront = new SharpDX.Mathematics.Interop.RawVector3(1, 0, 0),
-                OrientTop = new SharpDX.Mathematics.Interop.RawVector3(0, 1, 0),
-                Position = new SharpDX.Mathematics.Interop.RawVector3(-10, 0, 0),
-                Velocity = new SharpDX.Mathematics.Interop.RawVector3(0, 0, 0)
-            };
-
-            var list = new Listener
-            {
-                OrientFront = new SharpDX.Mathematics.Interop.RawVector3(0, 0, 1),
-                OrientTop = new SharpDX.Mathematics.Interop.RawVector3(0, 1, 0),
-                Position = new SharpDX.Mathematics.Interop.RawVector3(0, 0, 0),
-                Velocity = new SharpDX.Mathematics.Interop.RawVector3(0, 0, 0)
-            };
-
-
-            Console.WriteLine("Play a sound rotating around the listener");
-            // Rotates the emitter
-            /*el += elapsedTime * 100;
-            var rotateEmitter = TGCMatrix.RotationY(el / 5.0f);
-            var newPosition = TGCVector3.Transform(new TGCVector3(0, 0, 1000), rotateEmitter);
-            var newPositionVector3 = new TGCVector3(newPosition.X, newPosition.Y, newPosition.Z);
-            emi.Velocity = ((newPositionVector3 - new TGCVector3(emi.Position.X, emi.Position.Y, emi.Position.Z)) * 20).ToRawVector;
-            emi.Position = newPositionVector3.ToRawVector;*/
-
-            // Calculate X3DAudio settings
-            var dspSettings = TgcSoundManager.Audio3D().Calculate(list, emi, CalculateFlags.Matrix | CalculateFlags.Doppler, 1, 2);
-            // Modify XAudio2 source voice settings
-            this.sound.Voice.SetOutputMatrix(1, 2, dspSettings.MatrixCoefficients);
-            this.sound.Voice.SetFrequencyRatio(dspSettings.DopplerFactor);
-
-            /*
-            //DspSettings settings = new DspSettings(1, 2);
-            var settings = TgcSoundManager.Audio3D().Calculate(listener.Listener, emitter, CalculateFlags.Matrix | CalculateFlags.Doppler, 1, 2);
-            //var settings = TgcSoundManager.Audio3D().Calculate(listener.Listener, emitter, CalculateFlags.Matrix | CalculateFlags.Doppler | CalculateFlags.LpfDirect | CalculateFlags.Reverb, 1, 2);
-
-            sound.Process3D(settings);
-            */
-        }
-
-        public void Dispose()
-        {
+            Unregister();
             sound.Dispose();
+        }
+
+        internal Emitter Native { get { return this.emitter; } }
+
+        internal override void Register()
+        {
+            Tgc3DSoundManager.Register(this);
+        }
+
+        internal override void Unregister()
+        {
+            Tgc3DSoundManager.Unregister(this);
+        }
+
+        internal override void UpdatePosition()
+        {
+            emitter.Position = origin.Position.ToRawVector;
+        }
+
+        internal void Process3D(DspSettings settings)
+        {
+            sound.Process3D(settings, RangeMin, RangeMax);
         }
 
     }

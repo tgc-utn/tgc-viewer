@@ -784,7 +784,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public SharpDX.Mathematics.Interop.RawVector3 ToRawVector
         {
-            get { return new SharpDX.Mathematics.Interop.RawVector3(X, Y, Z); }
+            // X3DAudio usa la regla de la mano izquierda
+            get { return new SharpDX.Mathematics.Interop.RawVector3(X, Y, -Z); }
         }
 
         #endregion Old TGCVectorUtils
