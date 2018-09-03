@@ -5,6 +5,7 @@ using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
+using TGC.Examples.Tutorial.Physics;
 using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Tutorial
@@ -23,6 +24,9 @@ namespace TGC.Examples.Tutorial
         private TgcThirdPersonCamera camaraInterna;
         private TgcMesh mainMesh;
         private TgcScene scene;
+
+        //Fisica
+        private CubePhysic physicsExample;
 
         public Tutorial3(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -44,9 +48,13 @@ namespace TGC.Examples.Tutorial
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
             mainMesh = scene2.Meshes[0];
-            mainMesh.AutoTransform = true;
             //Movemos el mesh un poco para arriba. Porque sino choca con el piso todo el tiempo y no se puede mover.
             mainMesh.Move(0, 5, 0);
+
+            physicsExample = new CubePhysic();
+            physicsExample.setHummer(mainMesh);
+            physicsExample.setBuildings(scene.Meshes);
+            physicsExample.Init();
 
             //Vamos a utilizar la camara en 3ra persona para que siga al objeto principal a medida que se mueve
             camaraInterna = new TgcThirdPersonCamera(mainMesh.Position, 200, 300);
@@ -57,6 +65,9 @@ namespace TGC.Examples.Tutorial
         {
             PreUpdate();
 
+            physicsExample.Update(Input);
+
+            /*
             //Obtenemos acceso al objeto que maneja input de mouse y teclado del framework
             var input = Input;
 
@@ -126,7 +137,7 @@ namespace TGC.Examples.Tutorial
 
             //Hacer que la camara en 3ra persona se ajuste a la nueva posicion del objeto
             camaraInterna.Target = mainMesh.Position;
-
+            */
             PostUpdate();
         }
 
@@ -134,6 +145,9 @@ namespace TGC.Examples.Tutorial
         {
             PreRender();
 
+            physicsExample.Render();
+
+            /*
             //Dibujar objeto principal
             //Siempre primero hacer todos los calculos de logica e input y luego al final dibujar todo (ciclo update-render)
             mainMesh.Render();
@@ -147,7 +161,7 @@ namespace TGC.Examples.Tutorial
             foreach (var mesh in scene.Meshes)
             {
                 mesh.BoundingBox.Render();
-            }
+            }*/
 
             PostRender();
         }
@@ -156,6 +170,7 @@ namespace TGC.Examples.Tutorial
         {
             scene.DisposeAll();
             mainMesh.Dispose();
+            physicsExample.Dispose();
         }
     }
 }

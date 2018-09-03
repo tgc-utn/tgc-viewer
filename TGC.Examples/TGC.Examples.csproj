@@ -205,6 +205,7 @@
     <Compile Include="Transformations\EjemploBrazoRobot.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
+    <Compile Include="Tutorial\Physics\CubePhysic.cs" />
     <Compile Include="Tutorial\Tutorial3.cs" />
     <Compile Include="Tutorial\Tutorial2.cs" />
     <Compile Include="Tutorial\Tutorial1.cs" />
