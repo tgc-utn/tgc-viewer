@@ -30,8 +30,6 @@ namespace TGC.Examples.Tutorial.Physics
         private TGCVector3 fowardback;
         private TGCVector3 leftright;
 
-        RigidBody floorBody;
-
         public void setHummer(TgcMesh hummer)
         {
             this.hummer = hummer;
@@ -69,7 +67,7 @@ namespace TGC.Examples.Tutorial.Physics
             
             foreach (TgcMesh mesh in meshes)
             {
-                var buildingBody = BulletRigidBodyConstructor.CreateBox(mesh.BoundingBox.calculateSize(), 0, mesh.BoundingBox.Position, 0, 0, 0, 0.5f);
+                var buildingBody = BulletRigidBodyConstructor.CreateBox(mesh.BoundingBox.calculateSize(), 0, new TGCVector3(( mesh.BoundingBox.Position.X + mesh.BoundingBox.calculateSize().X )/ 2, ( mesh.BoundingBox.Position.Y + mesh.BoundingBox.calculateSize().Y )/ 2, ( mesh.BoundingBox.Position.Z + mesh.BoundingBox.calculateSize().Z ) / 2) , 0, 0, 0, 0.5f);
                 dynamicsWorld.AddRigidBody(buildingBody);
                 buildings.Add(buildingBody);
             }
