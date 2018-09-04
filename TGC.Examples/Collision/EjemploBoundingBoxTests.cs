@@ -154,7 +154,9 @@ namespace TGC.Examples.Collision
             if (moving)
             {
                 //Aplicar movimiento, internamente suma valores a la posicion actual del mesh.
-                mesh.Move(movement);
+                mesh.Position = mesh.Position + movement;
+                mesh.Transform = TGCMatrix.Translation(mesh.Position);
+                mesh.updateBoundingBox();
             }
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = mesh.Position;
