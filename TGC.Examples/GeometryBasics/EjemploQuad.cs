@@ -44,7 +44,7 @@ namespace TGC.Examples.GeometryBasics
 
             //Modifiers para vararia sus parametros
             sizeModifier = AddVertex2f("size", TGCVector2.Zero, new TGCVector2(100, 100), new TGCVector2(20, 20));
-            normalModifier = AddVertex3f("normal", new TGCVector3(-10, -10, -10), new TGCVector3(10, 10, 10), new TGCVector3(0, 1, 1));
+            normalModifier = AddVertex3f("normal", new TGCVector3(-10, -10, -10), new TGCVector3(10, 10, 10), new TGCVector3(0, 1, 0));
             centerModifier = AddVertex3f("center", new TGCVector3(-10, -10, -10), new TGCVector3(10, 10, 10), TGCVector3.Empty);
             colorModifier = AddColor("color", Color.Coral);
 
