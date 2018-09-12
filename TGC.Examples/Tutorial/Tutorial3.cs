@@ -41,7 +41,7 @@ namespace TGC.Examples.Tutorial
             //En este ejemplo primero cargamos una escena 3D entera.
             var loader = new TgcSceneLoader();
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Ciudad\\Ciudad-TgcScene.xml");
-
+            /*
             //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
             var scene2 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
@@ -50,15 +50,16 @@ namespace TGC.Examples.Tutorial
             mainMesh = scene2.Meshes[0];
             //Movemos el mesh un poco para arriba. Porque sino choca con el piso todo el tiempo y no se puede mover.
             mainMesh.Position = new TGCVector3(0, 50, 0);
-            mainMesh.UpdateMeshTransform();
+            mainMesh.UpdateMeshTransform();*/
 
             physicsExample = new CubePhysic();
             //physicsExample.setHummer(mainMesh);
+            scene.Meshes[0].Position = TGCVector3.Empty;
             physicsExample.setBuildings(scene.Meshes);
             physicsExample.Init(MediaDir);
 
             //Vamos a utilizar la camara en 3ra persona para que siga al objeto principal a medida que se mueve
-            camaraInterna = new TgcThirdPersonCamera(mainMesh.Position, 200, 300);
+            camaraInterna = new TgcThirdPersonCamera(physicsExample.getPositionHummer(), 500, 750);
             Camara = camaraInterna;
 
             UserVars.addVar("HummerPosition");
@@ -90,7 +91,7 @@ namespace TGC.Examples.Tutorial
         public override void Dispose()
         {
             scene.DisposeAll();
-            mainMesh.Dispose();
+            //mainMesh.Dispose();
             physicsExample.Dispose();
         }
     }
