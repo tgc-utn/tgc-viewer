@@ -25,7 +25,7 @@ namespace TGC.Examples.Collision
     ///     Se recomienda leer primero EjemploColisiones que posee el mismo espiritu de ejemplo pero mas sencillo.
     ///     Muestra como utilizar la cámara en Tercera Persona junto con detección de colisiones
     ///     de BoundingBox y manejo de Input de Teclado.
-    ///     Se utiliza una forma diferente de movimiento con el método moveOrientedY()
+    ///     Se utiliza una forma diferente de movimiento con el personaje segun la direccion actual, realiza operaciones de seno y coseno.
     ///     El modelo animado utiliza la herramienta TgcSkeletalLoader.
     ///     Se muestra como cambiarle la textura al modelo animado.
     ///     Los obstáculos son cargados utilizando TgcBox para crear cajas de tamaño dinámico, en lugar de utilizar
@@ -66,19 +66,19 @@ namespace TGC.Examples.Collision
             //Obstaculo 1
             obstaculo = TGCBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            obstaculo.AutoTransform = true;
+            obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
             obstaculo = TGCBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            obstaculo.AutoTransform = true;
+            obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
             obstaculo = TGCBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            obstaculo.AutoTransform = true;
+            obstaculo.AutoTransformEnable = true;
             obstaculos.Add(obstaculo);
 
             //Cargar personaje con animaciones
@@ -182,10 +182,6 @@ namespace TGC.Examples.Collision
 
                 //La velocidad de movimiento tiene que multiplicarse por el elapsedTime para hacerse independiente de la velocida de CPU
                 //Ver Unidad 2: Ciclo acoplado vs ciclo desacoplado
-
-                //NO SE RECOMIENDA UTILIZAR! moveOrientedY mueve el personaje segun la direccion actual, realiza operaciones de seno y coseno.
-                //personaje.MoveOrientedY(moveForward * ElapsedTime);
-
                 var moveF = moveForward * ElapsedTime;
                 var z = (float)Math.Cos(personaje.Rotation.Y) * moveF;
                 var x = (float)Math.Sin(personaje.Rotation.Y) * moveF;

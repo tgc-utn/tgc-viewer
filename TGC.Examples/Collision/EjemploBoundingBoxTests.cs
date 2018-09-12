@@ -236,7 +236,7 @@ namespace TGC.Examples.Collision
             boundingSphere.Render();
 
             //Las mesh por defecto tienen el metodo UpdateMeshTransform que realiza el set por defecto.
-            //Esto es igual que utilizar AutoTransform en true, con lo cual no es recomendado para casos complejos.
+            //Esto es igual que utilizar AutoTransformEnable en true, con lo cual no es recomendado para casos complejos.
             meshObb.UpdateMeshTransform();
             meshObb.Render();
             //La implementacion de Obb por el momento reconstruye el obb debug siempre. Practica no recomendada.

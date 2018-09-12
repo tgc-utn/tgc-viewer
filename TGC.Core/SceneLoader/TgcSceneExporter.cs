@@ -1225,7 +1225,7 @@ namespace TGC.Core.SceneLoader
             tgcMesh.Rotation = TGCVector3.Empty;
             tgcMesh.Scale = TGCVector3.One;
             tgcMesh.Transform = TGCMatrix.Identity;
-            tgcMesh.AutoTransform = mesh1.AutoTransform;
+            tgcMesh.AutoTransformEnable = mesh1.AutoTransformEnable;
 
             //Agregar userProperties de ambos
             if (mesh1.UserProperties != null || mesh2.UserProperties != null)

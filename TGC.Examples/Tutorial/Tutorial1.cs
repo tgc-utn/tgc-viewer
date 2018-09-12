@@ -85,8 +85,7 @@ namespace TGC.Examples.Tutorial
             //centrarse sobre un objeto y permitir rotar y hacer zoom con el mouse.
             //Con clic izquierdo del mouse se rota la cámara, con el derecho se traslada y con la rueda se hace zoom.
             //Otras cámaras disponibles (a modo de ejemplo) son: FpsCamera (1ra persona) y ThirdPersonCamera (3ra persona).
-            Camara = new TgcRotationalCamera(box1.BoundingBox.calculateBoxCenter(),
-                box1.BoundingBox.calculateBoxRadius() * 5, Input);
+            Camara = new TgcRotationalCamera(box1.BoundingBox.calculateBoxCenter(), box1.BoundingBox.calculateBoxRadius() * 5, Input);
         }
 
         public override void Update()
@@ -103,7 +102,6 @@ namespace TGC.Examples.Tutorial
             //Cuando llega a uno de los límites del intervalo invertimos la dirección del movimiento.
             //Tambien tenemos que multiplicar la velocidad por el elapsedTime
             box3.Position += new TGCVector3(0, MOVEMENT_SPEED * currentMoveDir * ElapsedTime, 0);
-
 
             if (FastMath.Abs(box3.Position.Y) > 3f)
             {

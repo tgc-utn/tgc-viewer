@@ -67,7 +67,7 @@ namespace TGC.Examples.Collision
             originalMeshRot = new TGCVector3(0, 0, -1);
 
             //Manipulamos los movimientos del mesh a mano
-            mesh.AutoTransform = false;
+            mesh.AutoTransformEnable = false;
             meshRotationMatrix = TGCMatrix.Identity;
 
             newPosition = mesh.Position;

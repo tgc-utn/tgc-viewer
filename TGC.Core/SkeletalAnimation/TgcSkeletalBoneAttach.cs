@@ -53,7 +53,7 @@ namespace TGC.Core.SkeletalAnimation
         private void setMesh(TgcMesh mesh)
         {
             Mesh = mesh;
-            Mesh.AutoTransform = false;
+            Mesh.AutoTransformEnable = false;
             Mesh.Transform = Bone.MatFinal;
         }
 
@@ -63,7 +63,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         public void updateValues()
         {
-            Mesh.AutoTransform = false;
+            Mesh.AutoTransformEnable = false;
             updateMeshTransform(TGCMatrix.Identity);
         }
 

@@ -41,8 +41,6 @@ namespace TGC.Core.SceneLoader
             DIFFUSE_MAP_AND_LIGHTMAP
         }
 
-        protected bool autoTransformEnable;
-
         protected TgcBoundingAxisAlignBox boundingBox;
         protected Mesh d3dMesh;
 
@@ -283,7 +281,7 @@ namespace TGC.Core.SceneLoader
                 return;
 
             //Aplicar transformacion de malla
-            if (autoTransformEnable)
+            if (AutoTransformEnable)
             {
                 UpdateMeshTransform();
             }
@@ -448,11 +446,8 @@ namespace TGC.Core.SceneLoader
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en True.
         /// </summary>
-        public bool AutoTransform
-        {
-            get { return autoTransformEnable; }
-            set { autoTransformEnable = value; }
-        }
+        [Obsolete]
+        public bool AutoTransformEnable { get; set; }
 
         /// <summary>
         ///     Posicion absoluta de la Malla
@@ -514,6 +509,7 @@ namespace TGC.Core.SceneLoader
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
+        [Obsolete]
         public void MoveOrientedY(float movement)
         {
             var z = FastMath.Cos(rotation.Y) * movement;
@@ -574,7 +570,7 @@ namespace TGC.Core.SceneLoader
             meshInstances = new List<TgcMesh>();
             AlphaBlendEnable = false;
 
-            AutoTransform = false;
+            AutoTransformEnable = false;
             AutoUpdateBoundingBox = true;
             translation = new TGCVector3(0f, 0f, 0f);
             rotation = new TGCVector3(0f, 0f, 0f);
@@ -950,7 +946,7 @@ namespace TGC.Core.SceneLoader
             cloneMesh.rotation = rotation;
             cloneMesh.scale = scale;
             cloneMesh.transform = transform;
-            cloneMesh.autoTransformEnable = autoTransformEnable;
+            cloneMesh.AutoTransformEnable = AutoTransformEnable;
 
             //Clonar userProperties
             if (UserProperties != null)

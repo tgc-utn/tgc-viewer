@@ -5,7 +5,7 @@ using TGC.Core.Mathematica;
 namespace TGC.Core.BulletPhysics
 {
     /// <summary>
-    ///
+    /// Clase encargada de generear todos los rigid bodies que necesitemos para añadir a la simulacion de BulletSharp.
     /// </summary>
     public abstract class BulletRigidBodyConstructor
 

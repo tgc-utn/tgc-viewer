@@ -35,7 +35,7 @@ namespace TGC.Core.Geometry
                 D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionColoredTextured.Format, Pool.Default);
 
-            AutoTransform = false;
+            AutoTransformEnable = false;
             Transform = TGCMatrix.Identity;
             translation = TGCVector3.Empty;
             rotation = TGCVector3.Empty;
@@ -66,7 +66,8 @@ namespace TGC.Core.Geometry
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en False.
         /// </summary>
-        public bool AutoTransform { get; set; }
+        [Obsolete]
+        public bool AutoTransformEnable { get; set; }
 
         /// <summary>
         ///     BoundingBox de la caja
@@ -183,7 +184,7 @@ namespace TGC.Core.Geometry
                 return;
 
             //transformacion
-            if (AutoTransform)
+            if (AutoTransformEnable)
             {
                 Transform = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) *
                             TGCMatrix.Translation(translation);
@@ -260,6 +261,7 @@ namespace TGC.Core.Geometry
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
+        [Obsolete]
         public void MoveOrientedY(float movement)
         {
             var z = (float)Math.Cos(rotation.Y) * movement;
@@ -448,7 +450,7 @@ namespace TGC.Core.Geometry
         public TgcMesh ToMesh(string meshName)
         {
             //Obtener matriz para transformar vertices
-            if (AutoTransform)
+            if (AutoTransformEnable)
             {
                 Transform = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z) * TGCMatrix.Translation(translation);
             }
@@ -469,7 +471,7 @@ namespace TGC.Core.Geometry
             {
                 cloneBox.setTexture(Texture.Clone());
             }
-            cloneBox.AutoTransform = AutoTransform;
+            cloneBox.AutoTransformEnable = AutoTransformEnable;
             cloneBox.Transform = Transform;
             cloneBox.rotation = rotation;
             cloneBox.AlphaBlendEnable = AlphaBlendEnable;

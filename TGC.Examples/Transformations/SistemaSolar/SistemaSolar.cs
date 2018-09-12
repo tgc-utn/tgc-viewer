@@ -78,9 +78,9 @@ namespace TGC.Examples.Transformations.SistemaSolar
             });
 
             //Deshabilitamos el manejo automatico de Transformaciones de TgcMesh, para poder manipularlas en forma personalizada
-            sun.AutoTransform = false;
-            earth.AutoTransform = false;
-            moon.AutoTransform = false;
+            sun.AutoTransformEnable = false;
+            earth.AutoTransformEnable = false;
+            moon.AutoTransformEnable = false;
 
             //Camara en primera persona
             Camara = new TgcRotationalCamera(new TGCVector3(0f, 200f, 1000f), 500f, Input);

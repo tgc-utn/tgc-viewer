@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX.Direct3D;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
@@ -30,7 +31,7 @@ namespace TGC.Core.Geometry
             color = Color.Red.ToArgb();
 
             manualTransformation = TGCMatrix.Identity;
-            AutoTransform = false;
+            AutoTransformEnable = false;
 
             initialize();
         }
@@ -252,13 +253,14 @@ namespace TGC.Core.Geometry
 
         #region Transformation
 
-        public bool AutoTransform { get; set; }
+        [Obsolete]
+        public bool AutoTransformEnable { get; set; }
 
         public TGCMatrix Transform
         {
             get
             {
-                if (AutoTransform) return BoundingCylinder.Transform;
+                if (AutoTransformEnable) return BoundingCylinder.Transform;
                 return manualTransformation;
             }
             set { manualTransformation = value; }
@@ -292,6 +294,7 @@ namespace TGC.Core.Geometry
             BoundingCylinder.move(x, y, z);
         }
 
+        [Obsolete]
         public void MoveOrientedY(float movement)
         {
             var z = FastMath.Cos(Rotation.Y) * movement;
