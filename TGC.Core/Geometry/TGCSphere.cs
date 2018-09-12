@@ -140,7 +140,8 @@ namespace TGC.Core.Geometry
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en False.
         /// </summary>
-        public bool AutoTransform { get; set; }
+        [Obsolete]
+        public bool AutoTransformEnable { get; set; }
 
         /// <summary>
         ///     Posicion absoluta del centro de la esfera
@@ -335,7 +336,7 @@ namespace TGC.Core.Geometry
 
         protected void configure(float radius, Color color, TgcTexture texture, TGCVector3 center)
         {
-            AutoTransform = false;
+            AutoTransformEnable = false;
             Transform = TGCMatrix.Identity;
             translation = center;
             Rotation = TGCVector3.Empty;
@@ -629,7 +630,7 @@ namespace TGC.Core.Geometry
                 return;
 
             //transformacion
-            if (AutoTransform)
+            if (AutoTransformEnable)
             {
                 Transform = TGCMatrix.Scaling(radius, radius, radius) *
                             TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *
@@ -751,6 +752,7 @@ namespace TGC.Core.Geometry
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
+        [Obsolete]
         public void MoveOrientedY(float movement)
         {
             var z = (float)Math.Cos(Rotation.Y) * movement;
@@ -818,7 +820,7 @@ namespace TGC.Core.Geometry
 
             if (Texture != null) cloneSphere.setTexture(Texture.Clone());
 
-            cloneSphere.AutoTransform = AutoTransform;
+            cloneSphere.AutoTransformEnable = AutoTransformEnable;
             cloneSphere.Transform = Transform;
             cloneSphere.Rotation = Rotation;
             cloneSphere.AlphaBlendEnable = AlphaBlendEnable;
@@ -836,7 +838,7 @@ namespace TGC.Core.Geometry
         public TgcMesh toMesh(string meshName)
         {
             //Obtener matriz para transformar vertices
-            if (AutoTransform)
+            if (AutoTransformEnable)
             {
                 Transform = TGCMatrix.Scaling(radius, radius, radius) *
                             TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *

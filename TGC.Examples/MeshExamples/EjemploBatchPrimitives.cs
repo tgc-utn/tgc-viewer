@@ -67,15 +67,15 @@ namespace TGC.Examples.MeshExamples
                     //Crear tres niveles de caja, una abajo y otra arriba, con texturas diferentes
                     cajasNivel1[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, 0, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box1Texture);
-                    cajasNivel1[cajas].AutoTransform = true;
+                    cajasNivel1[cajas].AutoTransformEnable = true;
 
                     cajasNivel2[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, boxSize, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box2Texture);
-                    cajasNivel2[cajas].AutoTransform = true;
+                    cajasNivel2[cajas].AutoTransformEnable = true;
 
                     cajasNivel3[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box3Texture);
-                    cajasNivel3[cajas].AutoTransform = true;
+                    cajasNivel3[cajas].AutoTransformEnable = true;
                     cajas++;
                 }
             }

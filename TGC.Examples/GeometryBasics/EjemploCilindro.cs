@@ -41,7 +41,7 @@ namespace TGC.Examples.GeometryBasics
         public override void Init()
         {
             cylinder = new TgcCylinder(TGCVector3.Empty, 2, 4);
-            cylinder.AutoTransform = true;
+            cylinder.AutoTransformEnable = true;
 
             cylinder.AlphaBlendEnable = true;
 

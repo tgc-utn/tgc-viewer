@@ -38,7 +38,7 @@ namespace TGC.Examples.Others
             //Cargar mesh
             var loader = new TgcSceneLoader();
             mesh = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
-            mesh.AutoTransform = true;
+            mesh.AutoTransformEnable = true;
 
             //Cargar Shader de PhongShading
             mesh.Effect = TgcShaders.Instance.TgcMeshPhongShader;

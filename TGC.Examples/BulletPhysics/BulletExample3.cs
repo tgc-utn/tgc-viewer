@@ -7,22 +7,25 @@ using TGC.Examples.UserControls;
 
 namespace TGC.Examples.Bullet
 {
-    public class BulletExampleWall : TGCExampleViewer
+    public class BulletExample3 : TGCExampleViewer
     {
         private PhysicsGame physicsExample;
 
-        public BulletExampleWall(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+        public BulletExample3(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
-            Category = "Bullet";
-            Name = "Wall vs Balls";
+            Category = "BulletPhysics";
+            Name = "Box and Sphere";
             Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\".";
         }
 
         public override void Init()
         {
-            physicsExample = new WallBullet();
+            physicsExample = new HelloWorldBullet2();
             physicsExample.Init(this);
+
+            UserVars.addVar("MeshCount");
+
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
         }
 
@@ -30,6 +33,9 @@ namespace TGC.Examples.Bullet
         {
             PreUpdate();
             physicsExample.Update();
+
+            UserVars.setValue("MeshCount", physicsExample.GetElements());
+
             PostUpdate();
         }
 

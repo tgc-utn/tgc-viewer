@@ -76,7 +76,7 @@ namespace TGC.Examples.ShadersExamples
 
             avion.Scale = new TGCVector3(0.1f, 0.1f, 0.1f);
             avion.Position = new TGCVector3(100f, 100f, 0f);
-            avion.AutoTransform = false;
+            avion.AutoTransformEnable = false;
             dir_avion = new TGCVector3(0, 0, 1);
 
             //Cargar Shader personalizado

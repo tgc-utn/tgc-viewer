@@ -60,13 +60,13 @@ namespace TGC.Examples.ShadersExamples
             meshes = scene.Meshes;
             var scene2 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pasto\\Pasto-TgcScene.xml");
             pasto = scene2.Meshes[0];
-            pasto.AutoTransform = true;
+            pasto.AutoTransformEnable = true;
             var scene3 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml");
             arbol = scene3.Meshes[0];
-            arbol.AutoTransform = true;
+            arbol.AutoTransformEnable = true;
             var scene4 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Arbusto2\\Arbusto2-TgcScene.xml");
             arbusto = scene4.Meshes[0];
-            arbusto.AutoTransform = true;
+            arbusto.AutoTransformEnable = true;
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -205,7 +205,7 @@ namespace TGC.Examples.ShadersExamples
                     case 1:
                         dir_escape.Normalize();
                         m.RotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y + 3.1415f);
-                        m.Move(dir_escape * (vel_bot * ElapsedTime));
+                        m.Position += dir_escape * (vel_bot * ElapsedTime);
                         var X = m.Position.X;
                         var Z = m.Position.Z;
                         if (X < -2000)
@@ -226,7 +226,7 @@ namespace TGC.Examples.ShadersExamples
                         if (Math.Abs(dir_escape.Z) > 0.01f)
                         {
                             m.RotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y);
-                            m.Move(dir_escape * (-60 * ElapsedTime));
+                            m.Position += dir_escape * (-60 * ElapsedTime);
                         }
                         m.playAnimation("Run", true, 20);
                         break;

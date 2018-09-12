@@ -101,7 +101,7 @@ namespace TGC.Examples.WorkshopShaders
             //Cargar personaje con animaciones
             TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
             mesh = skeletalLoader.loadMeshAndAnimationsFromFile(MediaDir + "SkeletalAnimations\\BasicHuman\\" + "CombineSoldier-TgcSkeletalMesh.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\", new string[] { MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "StandBy-TgcSkeletalAnim.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Run-TgcSkeletalAnim.xml", });
-            mesh.AutoTransform = true;
+            mesh.AutoTransformEnable = true;
 
             //Configurar animacion inicial
             mesh.playAnimation("StandBy", true);

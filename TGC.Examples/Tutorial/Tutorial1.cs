@@ -79,15 +79,13 @@ namespace TGC.Examples.Tutorial
             center = new TGCVector3(-15, 0, 0);
             texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\cajaMetal.jpg");
             box3 = TGCBox.fromSize(center, size, texture);
-            box3.AutoTransform = true;
 
             //Ubicar la camara del framework mirando al centro de este objeto.
             //La camara por default del framework es RotCamera, cuyo comportamiento es
             //centrarse sobre un objeto y permitir rotar y hacer zoom con el mouse.
             //Con clic izquierdo del mouse se rota la cámara, con el derecho se traslada y con la rueda se hace zoom.
             //Otras cámaras disponibles (a modo de ejemplo) son: FpsCamera (1ra persona) y ThirdPersonCamera (3ra persona).
-            Camara = new TgcRotationalCamera(box1.BoundingBox.calculateBoxCenter(),
-                box1.BoundingBox.calculateBoxRadius() * 5, Input);
+            Camara = new TgcRotationalCamera(box1.BoundingBox.calculateBoxCenter(), box1.BoundingBox.calculateBoxRadius() * 5, Input);
         }
 
         public override void Update()
@@ -98,16 +96,19 @@ namespace TGC.Examples.Tutorial
             //Siempre tenemos que multiplicar las velocidades por el elapsedTime.
             //De esta forma la velocidad de rotacion es independiente de la potencia del CPU.
             //Sino en computadoras con CPU más rápido la caja giraría mas rápido que en computadoras mas lentas.
-            box3.RotateY(ROTATION_SPEED * ElapsedTime);
+            box3.Rotation += new TGCVector3(0, ROTATION_SPEED * ElapsedTime, 0);
 
             //Aplicamos una traslación en Y. Hacemos que la caja se mueva en forma intermitente en el intervalo [0, 3] de Y.
             //Cuando llega a uno de los límites del intervalo invertimos la dirección del movimiento.
             //Tambien tenemos que multiplicar la velocidad por el elapsedTime
-            box3.Move(0, MOVEMENT_SPEED * currentMoveDir * ElapsedTime, 0);
+            box3.Position += new TGCVector3(0, MOVEMENT_SPEED * currentMoveDir * ElapsedTime, 0);
+
             if (FastMath.Abs(box3.Position.Y) > 3f)
             {
                 currentMoveDir *= -1;
             }
+
+            box3.Transform = TGCMatrix.RotationYawPitchRoll(box3.Rotation.Y, box3.Rotation.X, box3.Rotation.Z) * TGCMatrix.Translation(box3.Position);
 
             PostUpdate();
         }

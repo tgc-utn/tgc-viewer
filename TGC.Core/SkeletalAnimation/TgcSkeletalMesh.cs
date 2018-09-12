@@ -47,8 +47,6 @@ namespace TGC.Core.SkeletalAnimation
 
         protected List<TgcSkeletalBoneAttach> attachments;
 
-        protected bool autoTransformEnable;
-
         protected bool autoUpdateBoundingBox;
 
         protected TgcSkeletalBone[] bones;
@@ -405,7 +403,7 @@ namespace TGC.Core.SkeletalAnimation
                 return;
 
             //Actualizar transformacion de malla con el default.
-            if (autoTransformEnable)
+            if (AutoTransformEnable)
             {
                 UpdateMeshTransform();
             }
@@ -581,11 +579,8 @@ namespace TGC.Core.SkeletalAnimation
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en True.
         /// </summary>
-        public bool AutoTransform
-        {
-            get { return autoTransformEnable; }
-            set { autoTransformEnable = value; }
-        }
+        [Obsolete]
+        public bool AutoTransformEnable { get; set; }
 
         /// <summary>
         ///     Posicion absoluta de la Malla
@@ -647,6 +642,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
+        [Obsolete]
         public void MoveOrientedY(float movement)
         {
             var z = (float)Math.Cos(rotation.Y) * movement;
@@ -711,7 +707,7 @@ namespace TGC.Core.SkeletalAnimation
             AlphaBlendEnable = false;
 
             //variables de movimiento
-            AutoTransform = false;
+            AutoTransformEnable = false;
             translation = new TGCVector3(0f, 0f, 0f);
             rotation = new TGCVector3(0f, 0f, 0f);
             scale = new TGCVector3(1f, 1f, 1f);
@@ -800,7 +796,7 @@ namespace TGC.Core.SkeletalAnimation
                 }
                 //Crear malla de Joint para renderizar el esqueleto
                 var jointBox = TGCBox.fromSize(jointsSize, jointsColor);
-                jointBox.AutoTransform = false;
+                jointBox.AutoTransformEnable = false;
                 skeletonRenderJoints[i] = jointBox;
             }
         }
