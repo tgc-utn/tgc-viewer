@@ -237,7 +237,9 @@ namespace TGC.Examples.Collision
 
             //Las mesh por defecto tienen el metodo UpdateMeshTransform que realiza el set por defecto.
             //Esto es igual que utilizar AutoTransformEnable en true, con lo cual no es recomendado para casos complejos.
-            meshObb.UpdateMeshTransform();
+            meshObb.Transform = TGCMatrix.Scaling(meshObb.Scale)
+                            * TGCMatrix.RotationYawPitchRoll(meshObb.Rotation.Y, meshObb.Rotation.X, meshObb.Rotation.Z)
+                            * TGCMatrix.Translation(meshObb.Position);
             meshObb.Render();
             //La implementacion de Obb por el momento reconstruye el obb debug siempre. Practica no recomendada.
             obb.Render();
