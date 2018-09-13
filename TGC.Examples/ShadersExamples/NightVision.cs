@@ -60,13 +60,10 @@ namespace TGC.Examples.ShadersExamples
             meshes = scene.Meshes;
             var scene2 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Pasto\\Pasto-TgcScene.xml");
             pasto = scene2.Meshes[0];
-            pasto.AutoTransformEnable = true;
             var scene3 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml");
             arbol = scene3.Meshes[0];
-            arbol.AutoTransformEnable = true;
             var scene4 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Arbusto2\\Arbusto2-TgcScene.xml");
             arbusto = scene4.Meshes[0];
-            arbusto.AutoTransformEnable = true;
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -86,7 +83,8 @@ namespace TGC.Examples.ShadersExamples
                 enemigos[t].playAnimation("StandBy", true);
                 enemigos[t].Position = new TGCVector3(-rnd.Next(0, 1500) - 250, 0, -rnd.Next(0, 1500) - 250);
                 enemigos[t].Scale = new TGCVector3(2f, 2f, 2f);
-                enemigos[t].UpdateMeshTransform();
+                enemigos[t].Transform = TGCMatrix.Scaling(enemigos[t].Scale) * TGCMatrix.Translation(enemigos[t].Position);
+                //enemigos[t].UpdateMeshTransform();
                 bot_status[t] = 0;
             }
 
@@ -483,8 +481,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     pasto.Position = new TGCVector3(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
                     pasto.Scale = new TGCVector3(3, 4 + rnd.Next(0, 4), 5);
-                    pasto.UpdateMeshTransform();
-                    //pasto.Transform = TGCMatrix.Identity*TGCMatrix.Scaling(3, 4 + rnd.Next(0, 4), 5) * TGCMatrix.Translation(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
+                    pasto.Transform = TGCMatrix.Scaling(pasto.Scale) * TGCMatrix.Translation(pasto.Position);
                     pasto.Render();
                 }
 
@@ -494,8 +491,7 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = 0; j < 5; ++j)
                 {
                     arbusto.Position = new TGCVector3(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
-                    //arbusto.Transform = TGCMatrix.Identity*TGCMatrix.Translation(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
-                    arbusto.UpdateMeshTransform();
+                    arbusto.Transform = TGCMatrix.Translation(arbusto.Position);
                     arbusto.Render();
                 }
 
@@ -505,8 +501,7 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = 0; j < 3; ++j)
                 {
                     arbol.Position = new TGCVector3(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
-                    //arbol.Transform = TGCMatrix.Identity*TGCMatrix.Translation(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
-                    arbol.UpdateMeshTransform();
+                    arbol.Transform = TGCMatrix.Translation(arbol.Position);
                     arbol.Render();
                 }
         }
