@@ -462,7 +462,6 @@ namespace TGC.Examples.Multiplayer
             otrosMeshes.Add(vehiculoData.playerID, mesh);
 
             //Ubicarlo en escenario
-            mesh.AutoTransformEnable = false;
             mesh.Transform = TGCMatrix.Translation(vehiculoData.initialPos);
         }
 

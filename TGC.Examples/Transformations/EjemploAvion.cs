@@ -39,8 +39,7 @@ namespace TGC.Examples.Transformations
             var center = new TGCVector3(0, 0, 0);
             var size = new TGCVector3(1f, 1f, 1f);
             box = TGCBox.fromSize(center, size, texture);
-            //Por defecto se deshabilito esto, cada uno debe implementar su modelo de transformaciones.
-            //box.AutoTransformEnable = false;
+
             box.Transform = TGCMatrix.Identity;
             Camara = new TgcRotationalCamera(new TGCVector3(0f, 1.5f, 0f), 20f, Input);
         }
