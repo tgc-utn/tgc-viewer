@@ -40,24 +40,24 @@ namespace TGC.Viewer.Model
         /// Inicia el device basado en el panel, el sonido, los inputs y carga los shaders basicos.
         /// </summary>
         /// <param name="form"> Ventana que contiene la aplicacion.</param>
-        /// <param name="panel3D"> Panel donde van a correr los ejemplos.</param>
+        /// <param name="control"> Control donde van a correr los ejemplos.</param>
         /// <param name="pathCommonShaders"> Ruta con los shaders basicos.</param>
-        public void InitGraphics(ViewerForm form, Panel panel3D, string pathCommonShaders)
+        public void InitGraphics(ViewerForm form, Control control, string pathCommonShaders)
         {
             ApplicationRunning = true;
             Form = form;
 
             //Inicio Device
-            D3DDevice.Instance.InitializeD3DDevice(panel3D);
+            D3DDevice.Instance.InitializeD3DDevice(control);
             D3DDevice.Instance.Device.DeviceReset += OnResetDevice;
 
             //Inicio inputs
             Input = new TgcD3dInput();
-            Input.Initialize(Form, panel3D);
+            Input.Initialize(Form, control);
 
             //Inicio sonido
             DirectSound = new TgcDirectSound();
-            DirectSound.InitializeD3DDevice(panel3D);
+            DirectSound.InitializeD3DDevice(control);
 
             //Cargar shaders del framework
             TgcShaders.Instance.loadCommonShaders(pathCommonShaders);

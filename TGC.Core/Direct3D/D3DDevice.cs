@@ -12,16 +12,14 @@ namespace TGC.Core.Direct3D
         private PresentParameters d3dpp;
 
         /// <summary>
-        ///     Constructor privado para poder hacer el singleton
+        /// Constructor privado para poder hacer el singleton
         /// </summary>
-        private D3DDevice()
-        {
-        }
+        private D3DDevice() { }
 
         public static D3DDevice Instance { get; } = new D3DDevice();
 
         /// <summary>
-        ///     Device de DirectX 3D para crear primitivas
+        /// Device de DirectX 3D para crear primitivas
         /// </summary>
         public Device Device { get; set; }
 
@@ -94,9 +92,9 @@ namespace TGC.Core.Direct3D
         }
 
         /// <summary>
-        ///     habilita los points sprites.
-        ///     Estaba este comentario antes, asi que lo dejo con default false.
-        ///     INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
+        /// Habilita los points sprites.
+        /// Estaba este comentario antes, asi que lo dejo con default false.
+        /// INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
         /// </summary>
         public void EnableParticles()
         {
@@ -111,11 +109,15 @@ namespace TGC.Core.Direct3D
             }
         }
 
-        public void InitializeD3DDevice(Panel panel)
+        /// <summary>
+        /// Inicializa el Device de DirectX con lo parametros del Control.
+        /// </summary>
+        /// <param name="control"> Control donde va a ejecutar el Device.</param>
+        public void InitializeD3DDevice(Control control)
         {
-            AspectRatio = (float)panel.Width / panel.Height;
-            Width = panel.Width;
-            Height = panel.Height;
+            AspectRatio = (float)control.Width / control.Height;
+            Width = control.Width;
+            Height = control.Height;
 
             var caps = Manager.GetDeviceCaps(Manager.Adapters.Default.Adapter, DeviceType.Hardware);
             Debug.WriteLine("Max primitive count:" + caps.MaxPrimitiveCount);
@@ -129,7 +131,7 @@ namespace TGC.Core.Direct3D
 
             //Crear Graphics Device
             Device.IsUsingEventHandlers = false;
-            Device = new Device(0, DeviceType.Hardware, panel, flags, d3dpp);
+            Device = new Device(0, DeviceType.Hardware, control, flags, d3dpp);
         }
 
         private PresentParameters CreatePresentationParameters()
@@ -163,8 +165,7 @@ namespace TGC.Core.Direct3D
             Width = width;
             Height = height;
             //hay que actualizar tambien la matriz de proyeccion, sino sigue viendo mal.
-            Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance,
-                ZFarPlaneDistance).ToMatrix();
+            Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance, ZFarPlaneDistance).ToMatrix();
             //FALTA TODO ESTO DE ABAJO....
             //DefaultValues();
             //Device.Reset(d3dpp);
