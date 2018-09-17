@@ -61,16 +61,12 @@ namespace TGC.Examples.Collision
             mesh = scene.Meshes[0];
             mesh.Scale = new TGCVector3(0.25f, 0.25f, 0.25f);
 
-            //Cuerpo principal que se controla con el teclado
-            //mesh = TgcBox.fromSize(new TGCVector3(0, 10, 0), new TGCVector3(10, 10, 10), Color.Blue).toMesh("box");
-
             //triangulo
             triangle = new CustomVertex.PositionColored[3];
             triangle[0] = new CustomVertex.PositionColored(-100, 0, 0, Color.Green.ToArgb());
             triangle[1] = new CustomVertex.PositionColored(0, 0, 50, Color.Green.ToArgb());
             triangle[2] = new CustomVertex.PositionColored(0, 100, 0, Color.Green.ToArgb());
-            triagleAABB =
-                TgcBoundingAxisAlignBox.computeFromPoints(new[]
+            triagleAABB = TgcBoundingAxisAlignBox.computeFromPoints(new[]
                 {TGCVector3.FromVector3(triangle[0].Position), TGCVector3.FromVector3(triangle[1].Position), TGCVector3.FromVector3(triangle[2].Position)});
 
             //box2
@@ -213,32 +209,27 @@ namespace TGC.Examples.Collision
             PreRender();
             //Dibujar todo.
             //Una vez actualizadas las diferentes posiciones internas solo debemos asignar la matriz de world.
-            mesh.Transform =
-                TGCMatrix.Scaling(mesh.Scale)
-                            * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
-                            * TGCMatrix.Translation(mesh.Position);
+            mesh.Transform = TGCMatrix.Scaling(mesh.Scale) *
+                             TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z) *
+                             TGCMatrix.Translation(mesh.Position);
             mesh.Render();
             //Actualmente los bounding box se actualizan solos en momento de hacer render, esto no es recomendado ya que trae overhead
             //Igualmente aqui podemos tener un objeto debug de nuestro mesh.
             mesh.BoundingBox.Render();
 
-            box2.Transform =
-                TGCMatrix.Scaling(box2.Scale)
-                            * TGCMatrix.RotationYawPitchRoll(box2.Rotation.Y, box2.Rotation.X, box2.Rotation.Z)
-                            * TGCMatrix.Translation(box2.Position);
+            box2.Transform = TGCMatrix.Scaling(box2.Scale) *
+                             TGCMatrix.RotationYawPitchRoll(box2.Rotation.Y, box2.Rotation.X, box2.Rotation.Z) *
+                             TGCMatrix.Translation(box2.Position);
             box2.Render();
 
-            //Los bounding volume por la forma actual de framework no realizan transformaciones entonces podemos hacer esto:
-            //D3DDevice.Instance.Device.Transform.World =
-            //    TGCMatrix.Scaling(new TGCVector3(sphere.Radius, sphere.Radius, sphere.Radius))
-            //                * TGCMatrix.Identity //No tienen sentido las rotaciones con la esfera.
-            //                * TGCMatrix.Translation(sphere.Position);
             boundingSphere.Render();
 
             //Las mesh por defecto tienen el metodo UpdateMeshTransform que realiza el set por defecto.
-            //Esto es igual que utilizar AutoTransformEnable en true, con lo cual no es recomendado para casos complejos.
-            meshObb.UpdateMeshTransform();
+            meshObb.Transform = TGCMatrix.Scaling(meshObb.Scale) *
+                                TGCMatrix.RotationYawPitchRoll(meshObb.Rotation.Y, meshObb.Rotation.X, meshObb.Rotation.Z) *
+                                TGCMatrix.Translation(meshObb.Position);
             meshObb.Render();
+
             //La implementacion de Obb por el momento reconstruye el obb debug siempre. Practica no recomendada.
             obb.Render();
 

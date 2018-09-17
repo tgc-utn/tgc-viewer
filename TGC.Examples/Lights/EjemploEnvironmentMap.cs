@@ -62,13 +62,16 @@ namespace TGC.Examples.Lights
             TgcTexture[] normalMapArray = { normalMap };
 
             var paredSur = TGCBox.fromExtremes(new TGCVector3(-200, 0, -210), new TGCVector3(200, 100, -200), diffuseMap);
-            paredSur.AutoTransformEnable = true;
+            paredSur.Transform = TGCMatrix.Translation(paredSur.Position);
+
             var paredOeste = TGCBox.fromExtremes(new TGCVector3(-210, 0, -200), new TGCVector3(-200, 100, 200), diffuseMap);
-            paredOeste.AutoTransformEnable = true;
+            paredOeste.Transform = TGCMatrix.Translation(paredOeste.Position);
+
             var paredEste = TGCBox.fromExtremes(new TGCVector3(200, 0, -200), new TGCVector3(210, 100, 200), diffuseMap);
-            paredEste.AutoTransformEnable = true;
+            paredEste.Transform = TGCMatrix.Translation(paredEste.Position);
+
             var piso = TGCBox.fromExtremes(new TGCVector3(-200, -1, -200), new TGCVector3(200, 0, 200), diffuseMap);
-            piso.AutoTransformEnable = true;
+            piso.Transform = TGCMatrix.Translation(piso.Position);
 
             //Convertir TgcBox a TgcMesh
             var m1 = paredSur.ToMesh("paredSur");

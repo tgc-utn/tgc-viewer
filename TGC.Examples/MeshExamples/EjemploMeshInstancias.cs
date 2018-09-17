@@ -42,8 +42,7 @@ namespace TGC.Examples.MeshExamples
 
             //Cargar modelo de palmera original
             var loader = new TgcSceneLoader();
-            var scene =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
+            var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Palmera\\Palmera-TgcScene.xml");
             palmeraOriginal = scene.Meshes[0];
 
             //Crear varias instancias del modelo original, pero sin volver a cargar el modelo entero cada vez
@@ -51,17 +50,16 @@ namespace TGC.Examples.MeshExamples
             var cols = 6;
             float offset = 250;
             meshes = new List<TgcMesh>();
+
             for (var i = 0; i < rows; i++)
             {
                 for (var j = 0; j < cols; j++)
                 {
                     //Crear instancia de modelo
                     var instance = palmeraOriginal.createMeshInstance(palmeraOriginal.Name + i + "_" + j);
-                    //No recomendamos utilizar AutoTransformEnable, en juegos complejos se pierde el control. mejor utilizar Transformaciones con matrices.
-                    instance.AutoTransformEnable = true;
                     //Desplazarlo
                     instance.Move(i * offset, 0, j * offset);
-                    //instance.Scale = new TGCVector3(0.25f, 0.25f, 0.25f);
+                    instance.Transform = TGCMatrix.Translation(instance.Position);
 
                     meshes.Add(instance);
                 }
@@ -83,6 +81,7 @@ namespace TGC.Examples.MeshExamples
 
             DrawText.drawText("Camera pos: " + TGCVector3.PrintVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
             DrawText.drawText("Camera LookAt: " + TGCVector3.PrintVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
+
             //Renderizar suelo
             suelo.Render();
 

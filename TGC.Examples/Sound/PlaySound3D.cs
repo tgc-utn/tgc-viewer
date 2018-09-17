@@ -1,5 +1,6 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TGC.Core.Collision;
@@ -53,7 +54,9 @@ namespace TGC.Examples.Sound
             //Crear piso
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             piso = TGCBox.fromSize(new TGCVector3(5000, 5, 5000), pisoTexture);
-            piso.AutoTransformEnable = true;
+            piso.Transform = TGCMatrix.Scaling(piso.Scale)
+                        * TGCMatrix.RotationYawPitchRoll(piso.Rotation.Y, piso.Rotation.X, piso.Rotation.Z)
+                        * TGCMatrix.Translation(piso.Position);
             piso.Position = new TGCVector3(0, -60, 0);
 
             //Cargar obstaculos y posicionarlos. Los obstaculos se crean con TgcBox en lugar de cargar un modelo.
@@ -65,8 +68,10 @@ namespace TGC.Examples.Sound
             //Obstaculo 1
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 150, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack3\\goo2.jpg"));
-            obstaculo.AutoTransformEnable = true;
             obstaculo.Position = new TGCVector3(-250, 0, 0);
+            obstaculo.Transform = TGCMatrix.Scaling(obstaculo.Scale)
+                        * TGCMatrix.RotationYawPitchRoll(obstaculo.Rotation.Y, obstaculo.Rotation.X, obstaculo.Rotation.Z)
+                        * TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 1
@@ -81,8 +86,8 @@ namespace TGC.Examples.Sound
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 300, 80),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\lun_dirt.jpg"));
-            obstaculo.AutoTransformEnable = true;
             obstaculo.Position = new TGCVector3(250, 0, 800);
+            obstaculo.Transform = TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 2
@@ -94,8 +99,10 @@ namespace TGC.Examples.Sound
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 100, 150),
                 TgcTexture.createTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\Metal2_1.jpg"));
-            obstaculo.AutoTransformEnable = true;
             obstaculo.Position = new TGCVector3(500, 0, -400);
+            obstaculo.Transform = TGCMatrix.Scaling(obstaculo.Scale)
+                        * TGCMatrix.RotationYawPitchRoll(obstaculo.Rotation.Y, obstaculo.Rotation.X, obstaculo.Rotation.Z)
+                        * TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 3
@@ -108,8 +115,10 @@ namespace TGC.Examples.Sound
             var scene =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
             personaje = scene.Meshes[0];
-            personaje.AutoTransformEnable = true;
-            personaje.Position = new TGCVector3(0, -50, 0);
+            personaje.Position = new TGCVector3(0, 0, 0);
+            personaje.Transform = TGCMatrix.Scaling(personaje.Scale)
+                * TGCMatrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z)
+                * TGCMatrix.Translation(personaje.Position);
 
             //Hacer que el Listener del sonido 3D siga al personaje
             DirectSound.ListenerTracking = personaje;
@@ -183,7 +192,11 @@ namespace TGC.Examples.Sound
             {
                 //Aplicar movimiento hacia adelante o atras segun la orientacion actual del Mesh
                 var lastPos = personaje.Position;
-                personaje.MoveOrientedY(moveForward * ElapsedTime);
+                var moveF = moveForward * ElapsedTime;
+                var z = (float)Math.Cos(personaje.Rotation.Y) * moveF;
+                var x = (float)Math.Sin(personaje.Rotation.Y) * moveF;
+
+                personaje.Position += new TGCVector3(x, 0, z);
 
                 //Detectar colisiones
                 var collide = false;
@@ -218,6 +231,10 @@ namespace TGC.Examples.Sound
             }
 
             //Render personaje
+            personaje.Transform = TGCMatrix.Scaling(personaje.Scale)
+                * TGCMatrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z)
+                * TGCMatrix.Translation(personaje.Position);
+
             personaje.Render();
 
             PostRender();

@@ -65,20 +65,17 @@ namespace TGC.Examples.Collision
 
             //Obstaculo 1
             obstaculo = TGCBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
-            //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.Transform = TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
             obstaculo = TGCBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
-            //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.Transform = TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
             obstaculo = TGCBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
-            //No es recomendado utilizar autotransform en casos mas complicados, se pierde el control.
-            obstaculo.AutoTransformEnable = true;
+            obstaculo.Transform = TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
             //Cargar personaje con animaciones

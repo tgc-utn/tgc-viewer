@@ -52,8 +52,6 @@ namespace TGC.Examples.GeometryBasics
         {
             //Crear esfera
             sphere = new TGCSphere();
-            //No recomendamos utilizar AutoTransformEnable, con juegos complejos se pierde el control.
-            sphere.AutoTransformEnable = true;
             currentTexture = null;
 
             //Modifiers para vararis sus parametros
@@ -139,7 +137,8 @@ namespace TGC.Examples.GeometryBasics
             UserVars.setValue("Vertices", sphere.VertexCount);
             UserVars.setValue("Triangulos", sphere.TriangleCount);
 
-            //Renderizar caja
+            //Renderizar esfera
+            sphere.Transform = TGCMatrix.Scaling(sphere.Radius, sphere.Radius, sphere.Radius) * TGCMatrix.RotationYawPitchRoll(sphere.Rotation.Y, sphere.Rotation.X, sphere.Rotation.Z) * TGCMatrix.Translation(sphere.Position);
             sphere.Render();
 
             //Mostrar Boundingsphere de la caja

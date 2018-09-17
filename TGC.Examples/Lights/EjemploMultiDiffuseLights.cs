@@ -53,8 +53,7 @@ namespace TGC.Examples.Lights
         {
             //Cargar escenario
             var loader = new TgcSceneLoader();
-            scene =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
+            scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new TGCVector3(260f, 170f, 390f), 400f, 300f, Input);
@@ -72,11 +71,11 @@ namespace TGC.Examples.Lights
             lightMeshes = new TGCBox[4];
             origLightPos = new TGCVector3[lightMeshes.Length];
             var c = new Color[4] { Color.Red, Color.Blue, Color.Green, Color.Yellow };
+
             for (var i = 0; i < lightMeshes.Length; i++)
             {
                 var co = c[i % c.Length];
                 lightMeshes[i] = TGCBox.fromSize(new TGCVector3(10, 10, 10), co);
-                lightMeshes[i].AutoTransformEnable = true;
                 origLightPos[i] = new TGCVector3(-40, 20 + i * 20, 400);
             }
 
@@ -141,6 +140,7 @@ namespace TGC.Examples.Lights
             {
                 var lightMesh = lightMeshes[i];
                 lightMesh.Position = origLightPos[i] + TGCVector3.Scale(move, i + 1);
+                lightMesh.Transform = TGCMatrix.Translation(lightMesh.Position);
 
                 lightColors[i] = ColorValue.FromColor(lightMesh.Color);
                 pointLightPositions[i] = TGCVector3.Vector3ToVector4(lightMesh.Position);

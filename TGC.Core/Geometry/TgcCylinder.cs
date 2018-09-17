@@ -253,7 +253,7 @@ namespace TGC.Core.Geometry
 
         #region Transformation
 
-        [Obsolete]
+        [Obsolete("Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
         public bool AutoTransformEnable { get; set; }
 
         public TGCMatrix Transform

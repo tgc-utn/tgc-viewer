@@ -38,8 +38,7 @@ namespace TGC.Examples.Others
             //Cargar mesh
             var loader = new TgcSceneLoader();
             mesh = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
-            mesh.AutoTransformEnable = true;
-
+            
             //Cargar Shader de PhongShading
             mesh.Effect = TgcShaders.Instance.TgcMeshPhongShader;
             mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
@@ -83,6 +82,9 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
 
             mesh.RotateY(-ElapsedTime / 2);
+            mesh.Transform = TGCMatrix.Scaling(mesh.Scale)
+                        * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
+                        * TGCMatrix.Translation(mesh.Position);
             mesh.Render();
 
             textHelp.render();
