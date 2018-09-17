@@ -22,7 +22,7 @@ namespace TGC.Core.SceneLoader
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en True.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
         bool AutoTransformEnable { get; set; }
 
         /// <summary>

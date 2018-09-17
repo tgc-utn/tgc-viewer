@@ -579,7 +579,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en True.
         /// </summary>
-        [Obsolete]
+        [Obsolete("Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
         public bool AutoTransformEnable { get; set; }
 
         /// <summary>
