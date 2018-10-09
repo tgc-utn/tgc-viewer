@@ -62,8 +62,12 @@ namespace TGC.Examples.Tutorial
             camaraInterna = new TgcThirdPersonCamera(physicsExample.getPositionHummer(), 500, 750);
             Camara = camaraInterna;
 
-            UserVars.addVar("HummerPosition");
-            UserVars.addVar("HummerBodyPosition");
+            UserVars.addVar("HummerPositionX");
+            UserVars.addVar("HummerPositionY");
+            UserVars.addVar("HummerPositionZ");
+            UserVars.addVar("HummerBodyPositionX");
+            UserVars.addVar("HummerBodyPositionY");
+            UserVars.addVar("HummerBodyPositionZ");
         }
 
         public override void Update()
@@ -71,8 +75,12 @@ namespace TGC.Examples.Tutorial
             PreUpdate();
 
             physicsExample.Update(Input);
-            UserVars.setValue("HummerPosition", physicsExample.getHummer().Position);
-            UserVars.setValue("HummerBodyPosition", physicsExample.getBodyPos());
+            UserVars.setValue("HummerPositionX", physicsExample.getHummer().Position.X);
+            UserVars.setValue("HummerPositionY", physicsExample.getHummer().Position.Y);
+            UserVars.setValue("HummerPositionZ", physicsExample.getHummer().Position.Z);
+            UserVars.setValue("HummerBodyPositionX", physicsExample.getBodyPos().X);
+            UserVars.setValue("HummerBodyPositionY", physicsExample.getBodyPos().Y);
+            UserVars.setValue("HummerBodyPositionZ", physicsExample.getBodyPos().Z);
 
             camaraInterna.Target = physicsExample.getHummer().Position;
 
