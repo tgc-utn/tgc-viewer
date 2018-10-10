@@ -42,7 +42,6 @@ namespace TGC.Examples.Bullet.Physics
             floorBody = new RigidBody(floorInfo);
             floorBody.Friction = 1;
             floorBody.RollingFriction = 1;
-            // ballBody.SetDamping(0.1f, 0.9f);
             floorBody.Restitution = 1f;
             floorBody.UserObject = "floorBody";
             dynamicsWorld.AddRigidBody(floorBody);

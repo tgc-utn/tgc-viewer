@@ -6,9 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TGC.Core.BulletPhysics;
+using TGC.Core.Direct3D;
+using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
+using TGC.Core.Textures;
 
 namespace TGC.Examples.Tutorial.Physics
 {
@@ -64,43 +67,42 @@ namespace TGC.Examples.Tutorial.Physics
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
 
             #endregion Configuracion Basica de World
-
-            /*
-            List<Microsoft.DirectX.Direct3D.CustomVertex.PositionTextured> triangleDataVB = new List<Microsoft.DirectX.Direct3D.CustomVertex.PositionTextured>();
-
-            foreach (var mesh in meshes)
-            {
-                var positions = mesh.getVertexPositions();
-                foreach (var position in positions)
-                {
-                    triangleDataVB.Add(new Microsoft.DirectX.Direct3D.CustomVertex.PositionTextured(new Microsoft.DirectX.Vector3(position.X, position.Y, position.Z), 1, 1));
-                }
-            }
-
-            var meshRigidBody = BulletRigidBodyConstructor.CreateSurfaceFromHeighMap(triangleDataVB.ToArray<Microsoft.DirectX.Direct3D.CustomVertex.PositionTextured>());
-            dynamicsWorld.AddRigidBody(meshRigidBody);*/
-            /*foreach(var mesh in meshes)
-            {*//*
-                var buildingbody = BulletRigidBodyConstructor.CreateBox(meshes[11].BoundingBox.calculateSize(),0,meshes[11].BoundingBox.calculateBoxCenter(),0,0,0,1);
-                buildings.Add(buildingbody);
-                dynamicsWorld.AddRigidBody(buildingbody);*/
-            //}
-
+         
             foreach(var mesh in meshes)
             {
                 var buildingbody = BulletRigidBodyConstructor.CreateRigidBodyFromTgcMesh(mesh);
                 dynamicsWorld.AddRigidBody(buildingbody);
             }
+            
+            //TODO: Escalar a menor medida el plano
+            RigidBody floorBody;
+            var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 1);
+            floorShape.LocalScaling = new TGCVector3().ToBsVector;
+            var floorMotionState = new DefaultMotionState();
+            var floorInfo = new RigidBodyConstructionInfo(0, floorMotionState, floorShape);
+            floorBody = new RigidBody(floorInfo);
+            floorBody.Friction = 1;
+            floorBody.RollingFriction = 1;
+            floorBody.Restitution = 1f;
+            floorBody.UserObject = "floorBody";
+            dynamicsWorld.AddRigidBody(floorBody);
 
             var loader = new TgcSceneLoader();
-            hummer = loader.loadSceneFromFile(MediaDir + @"MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml").Meshes[0];
-            hummer.Position = new TGCVector3(0,500, 0);
-            hummer.UpdateMeshTransform();
-            hummer.Enabled = true;
-            hummerBody = BulletRigidBodyConstructor.CreateBox(hummer.BoundingBox.calculateSize(), 10, hummer.BoundingBox.calculateBoxCenter(), 0, 0, 0, 0.5f);
+            //hummer = loader.loadSceneFromFile(MediaDir + @"MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml").Meshes[0];
+            TgcTexture texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"\MeshCreator\Scenes\Deposito\Textures\box4.jpg");
+            //TGCBox boxMesh1 = TGCBox.fromSize(new TGCVector3(20, 20, 20), texture);
+            TGCSphere sphere = new TGCSphere(10,texture,new TGCVector3(0,10,0));
+            sphere.updateValues();
+            //hummer = boxMesh1.ToMesh("box");
+            hummer = sphere.toMesh("sphere");
+            //TODO: Cambiar el shape de sphere to box ya que el plano esta mas arriba
+            hummerBody = BulletRigidBodyConstructor.CreateBall(60, 10, hummer.Position);
+            //hummerBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(20, 20, 20), 10, hummer.Position, 0, 0, 0, 0.5f);
             hummerBody.Restitution = 0;
             dynamicsWorld.AddRigidBody(hummerBody);
-           
+
+            hummer = loader.loadSceneFromFile(MediaDir + @"MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml").Meshes[0];
+
             leftright = new TGCVector3(1, 0, 0);
             fowardback = new TGCVector3(0, 0, 1);
         }
@@ -148,28 +150,13 @@ namespace TGC.Examples.Tutorial.Physics
         }
 
         public void Render(float time)
-        {/*
-            foreach(var build in buildings)
-            {*//*
-                meshes[11].Transform = new TGCMatrix(buildings[0].InterpolationWorldTransform);
-            //meshes[0].Position = new TGCVector3(buildings[0].CenterOfMassPosition.X, buildings[0].CenterOfMassPosition.Y, buildings[0].CenterOfMassPosition.Z); ;// new TGCVector3(buildings[0].CenterOfMassPosition.X - meshes[0].BoundingBox.calculateSize().X / 2,
-            //buildings[0].CenterOfMassPosition.Y - meshes[0].BoundingBox.calculateSize().Y / 2,
-            //buildings[0].CenterOfMassPosition.Z + meshes[0].BoundingBox.calculateSize().Z / 2);
-                
-                //Hay que ajustar la escala dependiendo de la escena
-                var scale = 1.8f;
-                meshes[11].Scale = new TGCVector3(scale,scale,scale);
-                meshes[11].UpdateMeshTransform();
-                meshes[11].Render();*/
-            //}
-
+        {
+            //Hacemos render de la escena.
             foreach (var mesh in meshes) mesh.Render();
 
-            hummer.Transform = new TGCMatrix(hummerBody.InterpolationWorldTransform);
-            hummer.Position = new TGCVector3(hummerBody.CenterOfMassPosition);/*new TGCVector3(hummerBody.CenterOfMassPosition.X + hummer.BoundingBox.calculateSize().X / 2, 
-                hummerBody.CenterOfMassPosition.Y + hummer.BoundingBox.calculateSize().Y / 2, 
-                hummerBody.CenterOfMassPosition.Z + hummer.BoundingBox.calculateSize().Z / 2);*/
-            hummer.UpdateMeshTransform();
+            //Se hace el transform a la posicion que devuelve el el Rigid Body del Hummer
+            hummer.Position = new TGCVector3(hummerBody.CenterOfMassPosition.X, hummerBody.CenterOfMassPosition.Y+0, hummerBody.CenterOfMassPosition.Z);
+            hummer.Transform = TGCMatrix.Scaling(10, 10, 10) * TGCMatrix.Translation(hummerBody.CenterOfMassPosition.X, hummerBody.CenterOfMassPosition.Y, hummerBody.CenterOfMassPosition.Z);
             hummer.Render();
         }
 
@@ -180,7 +167,8 @@ namespace TGC.Examples.Tutorial.Physics
             {
                 mesh.Dispose();
             }
-
+            hummer.Dispose();
+            hummerBody.Dispose();
             //Se hace dispose del modelo fisico.
             dynamicsWorld.Dispose();
             dispatcher.Dispose();

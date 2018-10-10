@@ -200,6 +200,35 @@ namespace TGC.Core.BulletPhysics
             rigidBody.Restitution = 1f;
 
             return rigidBody;
+
+            /*
+            //Triangulos
+            var triangleMesh = new TriangleMesh();
+            int i = 0;
+            TGCVector3 vector0;
+            TGCVector3 vector1;
+            TGCVector3 vector2;
+
+            var triangleDataVB = mesh.getVertexPositions();
+
+            while (i < triangleDataVB.Length)
+            {
+                var triangle = new Triangle();
+                vector0 = new TGCVector3(triangleDataVB[i].X, triangleDataVB[i].Y, triangleDataVB[i].Z);
+                vector1 = new TGCVector3(triangleDataVB[i + 1].X, triangleDataVB[i + 1].Y, triangleDataVB[i + 1].Z);
+                vector2 = new TGCVector3(triangleDataVB[i + 2].X, triangleDataVB[i + 2].Y, triangleDataVB[i + 2].Z);
+
+                i = i + 3;
+
+                triangleMesh.AddTriangle(vector0.ToBsVector, vector1.ToBsVector, vector2.ToBsVector, false);
+            }
+
+            CollisionShape meshCollisionShape = new BvhTriangleMeshShape(triangleMesh, true);
+            var meshMotionState = new DefaultMotionState();
+            var meshRigidBodyInfo = new RigidBodyConstructionInfo(0, meshMotionState, meshCollisionShape);
+            RigidBody meshRigidBody = new RigidBody(meshRigidBodyInfo);
+
+            return meshRigidBody;*/
         }
 
         /// <summary>

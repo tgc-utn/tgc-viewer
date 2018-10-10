@@ -41,7 +41,8 @@ namespace TGC.Examples.Tutorial
             //En este ejemplo primero cargamos una escena 3D entera.
             var loader = new TgcSceneLoader();
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Ciudad\\Ciudad-TgcScene.xml");
-            /*
+            //scene = loader.loadSceneFromFile(MediaDir + "4toPiso\\Extract\\4toPiso-TgcScene.xml");
+            /* C:\Users\llain2\Documents\TGC\Viewer\Media\4toPiso\Extract
             //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
             var scene2 =
                 loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
