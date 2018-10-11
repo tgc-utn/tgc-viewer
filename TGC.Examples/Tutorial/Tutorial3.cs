@@ -60,7 +60,7 @@ namespace TGC.Examples.Tutorial
             physicsExample.Init(MediaDir);
 
             //Vamos a utilizar la camara en 3ra persona para que siga al objeto principal a medida que se mueve
-            camaraInterna = new TgcThirdPersonCamera(physicsExample.getPositionHummer(), 500, 750);
+            camaraInterna = new TgcThirdPersonCamera(physicsExample.getPositionHummer(), 250, 375);
             Camara = camaraInterna;
 
             UserVars.addVar("HummerPositionX");

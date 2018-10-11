@@ -73,10 +73,11 @@ namespace TGC.Examples.Tutorial.Physics
                 var buildingbody = BulletRigidBodyConstructor.CreateRigidBodyFromTgcMesh(mesh);
                 dynamicsWorld.AddRigidBody(buildingbody);
             }
-            
-            //TODO: Escalar a menor medida el plano
+
+            //Se crea un plano ya que esta escena tiene problemas 
+            //con la definición de triangulos para el suelo
             RigidBody floorBody;
-            var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 1);
+            var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 10);
             floorShape.LocalScaling = new TGCVector3().ToBsVector;
             var floorMotionState = new DefaultMotionState();
             var floorInfo = new RigidBodyConstructionInfo(0, floorMotionState, floorShape);
@@ -88,19 +89,21 @@ namespace TGC.Examples.Tutorial.Physics
             dynamicsWorld.AddRigidBody(floorBody);
 
             var loader = new TgcSceneLoader();
-            //hummer = loader.loadSceneFromFile(MediaDir + @"MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml").Meshes[0];
+            ///Se crea una caja para que haga las veces del Hummer dentro del modelo físico
             TgcTexture texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"\MeshCreator\Scenes\Deposito\Textures\box4.jpg");
-            //TGCBox boxMesh1 = TGCBox.fromSize(new TGCVector3(20, 20, 20), texture);
-            TGCSphere sphere = new TGCSphere(10,texture,new TGCVector3(0,10,0));
-            sphere.updateValues();
-            //hummer = boxMesh1.ToMesh("box");
-            hummer = sphere.toMesh("sphere");
-            //TODO: Cambiar el shape de sphere to box ya que el plano esta mas arriba
-            hummerBody = BulletRigidBodyConstructor.CreateBall(60, 10, hummer.Position);
-            //hummerBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(20, 20, 20), 10, hummer.Position, 0, 0, 0, 0.5f);
+            TGCBox boxMesh1 = TGCBox.fromSize(new TGCVector3(20, 20, 20), texture);
+            boxMesh1.Position = new TGCVector3(0, 10, 0);
+            hummer = boxMesh1.ToMesh("box");
+
+            //Se crea el cuerpo rígido de la caja, en la definicio de CreateBox el ultimo parametro representa si se quiere o no
+            //calcular el momento de inercia del cuerpo. No calcularlo lo que va a hacer es que la caja que representa el Hummer
+            //no rote cuando colicione contra el mundo.
+            hummerBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(55, 20, 80), 10, hummer.Position, 0, 0, 0, 0.55f, false);
             hummerBody.Restitution = 0;
+            hummerBody.Gravity = new TGCVector3(0, -100, 0).ToBsVector;
             dynamicsWorld.AddRigidBody(hummerBody);
 
+            //Se carga el modelo del Hummer 
             hummer = loader.loadSceneFromFile(MediaDir + @"MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml").Meshes[0];
 
             leftright = new TGCVector3(1, 0, 0);
@@ -109,7 +112,7 @@ namespace TGC.Examples.Tutorial.Physics
 
         public void Update(TgcD3dInput input)
         {
-            var strength = 10.30f;
+            var strength = 30.30f;
             dynamicsWorld.StepSimulation(1 / 60f, 100);
 
             #region Comportamiento
@@ -156,7 +159,7 @@ namespace TGC.Examples.Tutorial.Physics
 
             //Se hace el transform a la posicion que devuelve el el Rigid Body del Hummer
             hummer.Position = new TGCVector3(hummerBody.CenterOfMassPosition.X, hummerBody.CenterOfMassPosition.Y+0, hummerBody.CenterOfMassPosition.Z);
-            hummer.Transform = TGCMatrix.Scaling(10, 10, 10) * TGCMatrix.Translation(hummerBody.CenterOfMassPosition.X, hummerBody.CenterOfMassPosition.Y, hummerBody.CenterOfMassPosition.Z);
+            hummer.Transform = TGCMatrix.Translation(hummerBody.CenterOfMassPosition.X, hummerBody.CenterOfMassPosition.Y, hummerBody.CenterOfMassPosition.Z);
             hummer.Render();
         }
 
@@ -169,6 +172,7 @@ namespace TGC.Examples.Tutorial.Physics
             }
             hummer.Dispose();
             hummerBody.Dispose();
+
             //Se hace dispose del modelo fisico.
             dynamicsWorld.Dispose();
             dispatcher.Dispose();

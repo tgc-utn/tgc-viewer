@@ -50,7 +50,7 @@ namespace TGC.Examples.Bullet.Physics
             {
                 for (var j = 0; j < 10; j++)
                 {
-                    var boxBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1, new TGCVector3(i * 20f + 5f, j * 20f + 5f, 0f), 0, 0, 0, 0.5f);
+                    var boxBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1, new TGCVector3(i * 20f + 5f, j * 20f + 5f, 0f), 0, 0, 0, 0.5f, true);
                     boxBodys.Add(boxBody);
                     dynamicsWorld.AddRigidBody(boxBody);
                 }

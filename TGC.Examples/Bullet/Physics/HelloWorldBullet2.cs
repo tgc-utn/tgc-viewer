@@ -39,7 +39,7 @@ namespace TGC.Examples.Bullet.Physics
             floorBody = new RigidBody(floorInfo);
             dynamicsWorld.AddRigidBody(floorBody);
 
-            var boxBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1f, new TGCVector3(10f, 100f, 10f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI, 0);
+            var boxBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1f, new TGCVector3(10f, 100f, 10f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI, 0, true);
             boxBodys.Add(boxBody);
             dynamicsWorld.AddRigidBody(boxBody);
 
@@ -75,7 +75,7 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx2.Input.keyUp(Key.S))
             {
-                var boxBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1f, new TGCVector3(5f, 150f, 5f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI, 0.3f);
+                var boxBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1f, new TGCVector3(5f, 150f, 5f), MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI, 0.3f, true);
                 boxBodys.Add(boxBody);
                 dynamicsWorld.AddRigidBody(boxBody);
             }

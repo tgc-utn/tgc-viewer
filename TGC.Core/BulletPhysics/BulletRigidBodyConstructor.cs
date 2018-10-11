@@ -22,15 +22,22 @@ namespace TGC.Core.BulletPhysics
         /// <param name="pitch">Rotacion de la Caja respecto del eje z</param>
         /// <param name="roll">Rotacion de la Caja respecto del eje y</param>
         /// <param name="friction">Coeficiente de rozamiento de la Caja</param>
+        /// <param name="inertia">Booleano para calcular inercia o no</param>
         /// <returns>Rigid Body de la caja</returns>
-        public static RigidBody CreateBox(TGCVector3 size, float mass, TGCVector3 position, float yaw, float pitch, float roll, float friction)
+        public static RigidBody CreateBox(TGCVector3 size, float mass, TGCVector3 position, float yaw, float pitch, float roll, float friction, bool inertia)
         {
             var boxShape = new BoxShape(size.X, size.Y, size.Z);
             var boxTransform = TGCMatrix.RotationYawPitchRoll(yaw, pitch, roll).ToBsMatrix;
             boxTransform.Origin = position.ToBsVector;
             DefaultMotionState boxMotionState = new DefaultMotionState(boxTransform);
-            //Es importante calcular la inercia caso contrario el objeto no rotara.
-            var boxLocalInertia = boxShape.CalculateLocalInertia(mass);
+            var boxLocalInertia = TGCVector3.Empty.ToBsVector;
+
+            if (inertia)
+            {
+                //Es importante calcular la inercia caso contrario el objeto no rotara.
+                boxLocalInertia = boxShape.CalculateLocalInertia(mass);
+            }
+            
             var boxInfo = new RigidBodyConstructionInfo(mass, boxMotionState, boxShape, boxLocalInertia);
             var boxBody = new RigidBody(boxInfo);
             boxBody.LinearFactor = TGCVector3.One.ToBsVector;
@@ -172,13 +179,15 @@ namespace TGC.Core.BulletPhysics
         }
 
         /// <summary>
-        ///     Se crea uncuerpo rigido a partir de un TgcMesh, pero no tiene masa por lo que va a ser estatico.
+        ///     Se crea uncuerpo rigido a partir de un TgcMesh, pero no tiene masa 
+        ///     por lo que va a ser estatico.
         /// </summary>
         /// <param name="mesh">TgcMesh</param>
         /// <returns>Cuerpo rigido de un Mesh</returns>
         public static RigidBody CreateRigidBodyFromTgcMesh(TgcMesh mesh)
         {
             var vertexCoords = mesh.getVertexPositions();
+
             TriangleMesh triangleMesh = new TriangleMesh();
             for (int i = 0; i < vertexCoords.Length; i = i + 3)
             {
@@ -186,7 +195,6 @@ namespace TGC.Core.BulletPhysics
             }
 
             var transformationMatrix = TGCMatrix.RotationYawPitchRoll(0, 0, 0).ToBsMatrix;
-            //transformationMatrix.Origin = position.ToBsVector;
             DefaultMotionState motionState = new DefaultMotionState(transformationMatrix);
 
             var bulletShape = new BvhTriangleMeshShape(triangleMesh, false);
@@ -196,68 +204,10 @@ namespace TGC.Core.BulletPhysics
             var rigidBody = new RigidBody(bodyInfo);
             rigidBody.Friction = 0.4f;
             rigidBody.RollingFriction = 1;
-            // ballBody.SetDamping(0.1f, 0.9f);
-            rigidBody.Restitution = 1f;
-
-            return rigidBody;
-
-            /*
-            //Triangulos
-            var triangleMesh = new TriangleMesh();
-            int i = 0;
-            TGCVector3 vector0;
-            TGCVector3 vector1;
-            TGCVector3 vector2;
-
-            var triangleDataVB = mesh.getVertexPositions();
-
-            while (i < triangleDataVB.Length)
-            {
-                var triangle = new Triangle();
-                vector0 = new TGCVector3(triangleDataVB[i].X, triangleDataVB[i].Y, triangleDataVB[i].Z);
-                vector1 = new TGCVector3(triangleDataVB[i + 1].X, triangleDataVB[i + 1].Y, triangleDataVB[i + 1].Z);
-                vector2 = new TGCVector3(triangleDataVB[i + 2].X, triangleDataVB[i + 2].Y, triangleDataVB[i + 2].Z);
-
-                i = i + 3;
-
-                triangleMesh.AddTriangle(vector0.ToBsVector, vector1.ToBsVector, vector2.ToBsVector, false);
-            }
-
-            CollisionShape meshCollisionShape = new BvhTriangleMeshShape(triangleMesh, true);
-            var meshMotionState = new DefaultMotionState();
-            var meshRigidBodyInfo = new RigidBodyConstructionInfo(0, meshMotionState, meshCollisionShape);
-            RigidBody meshRigidBody = new RigidBody(meshRigidBodyInfo);
-
-            return meshRigidBody;*/
-        }
-
-        /// <summary>
-        ///     Crea un cuerpo rigido 
-        /// </summary>
-        /// <param name="mesh">Mesh</param>
-        /// <param name="position">Posicion</param>
-        /// <returns>Cuerpo Rigido del Mesh a partir de una posicion</returns>
-        public static RigidBody CreateRigidBodyFromTgcMesh(TgcMesh mesh, TGCVector3 position)
-        {
-            var meshAxisRadius = mesh.BoundingBox.calculateAxisRadius().ToBsVector;
-            var boxShape = new BoxShape(meshAxisRadius);
-
-            var transformationMatrix = TGCMatrix.RotationYawPitchRoll(0, 0, 0).ToBsMatrix;
-            transformationMatrix.Origin = position.ToBsVector;
-            DefaultMotionState motionState = new DefaultMotionState(transformationMatrix);
-
-            var boxLocalInertia = boxShape.CalculateLocalInertia(0);
-
-            var qwe = new TriangleMesh();
-            var asd = new BvhTriangleMeshShape(qwe, false);
-            var bodyInfo = new RigidBodyConstructionInfo(0, motionState, asd, boxLocalInertia);
-            var rigidBody = new RigidBody(bodyInfo);
-            rigidBody.Friction = 0.4f;
-            rigidBody.RollingFriction = 1;
-            // ballBody.SetDamping(0.1f, 0.9f);
             rigidBody.Restitution = 1f;
 
             return rigidBody;
         }
-    }
+
+     }
 }
