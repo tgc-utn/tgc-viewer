@@ -178,7 +178,7 @@ namespace TGC.Core.Terrain
                 faceMesh.Materials = new[] { D3DDevice.DEFAULT_MATERIAL };
                 faceMesh.createBoundingBox();
                 faceMesh.Enabled = true;
-                faceMesh.AutoTransform = false;
+                faceMesh.AutoTransformEnable = false;
 
                 //textura
                 var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, FaceTextures[i]);

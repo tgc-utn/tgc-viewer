@@ -965,7 +965,7 @@ namespace TGC.Examples.WorkshopShaders
                 n.Normalize();
                 float r = TGCVector2.Dot(N[ia], n);
                 if (r != 0)
-                    Q[i] = P[i] + n * ((float)dw / r);
+                    Q[i] = P[i] + n * (dw / r);
                 else
                     Q[i] = P[i];
             }
@@ -1035,8 +1035,8 @@ namespace TGC.Examples.WorkshopShaders
                     ymin = P[i].Y;
             }
 
-            xc /= (float)(cant_ptos - 1);
-            yc /= (float)(cant_ptos - 1);
+            xc /= cant_ptos - 1;
+            yc /= cant_ptos - 1;
 
             float dy = Math.Max(1, ymax - ymin);
 
@@ -1099,8 +1099,8 @@ namespace TGC.Examples.WorkshopShaders
                     xmin = P[i].X;
             }
 
-            xc /= (float)(cant_ptos - 1);
-            yc /= (float)(cant_ptos - 1);
+            xc /= cant_ptos - 1;
+            yc /= cant_ptos - 1;
 
             float dy = Math.Max(1, ymax - ymin);
             float dx = Math.Max(1, xmax - xmin);
@@ -1241,7 +1241,7 @@ namespace TGC.Examples.WorkshopShaders
                 return;
 
             // quiero que cada linea como maximo tenga 3 pixeles
-            float da = 3.0f / (float)r;
+            float da = 3.0f / r;
             int cant_ptos = (int)(2 * M_PI / da);
 
             VERTEX2D[] pt = new VERTEX2D[cant_ptos + 10];           // + 10 x las dudas
@@ -1253,7 +1253,7 @@ namespace TGC.Examples.WorkshopShaders
             ++t;
             for (int i = 0; i < cant_ptos; ++i)
             {
-                float an = (float)i / (float)cant_ptos * 2 * M_PI;
+                float an = i / (float)cant_ptos * 2 * M_PI;
                 pt[t].x = c.X + (float)Math.Cos(an) * r;
                 pt[t].y = c.Y + (float)Math.Sin(an) * r;
                 ++t;
@@ -1281,7 +1281,7 @@ namespace TGC.Examples.WorkshopShaders
                 return;
 
             // quiero que cada linea como maximo tenga 5 pixeles
-            float da = 5.0f / (float)r;
+            float da = 5.0f / r;
             int cant_ptos = (int)(2 * M_PI / da);
 
             VERTEX2D[] pt = new VERTEX2D[2 * cant_ptos + 10];           // + 10 x las dudas
@@ -1290,7 +1290,7 @@ namespace TGC.Examples.WorkshopShaders
 
             for (int i = 0; i < cant_ptos; ++i)
             {
-                float an = (float)i / (float)cant_ptos * 2 * M_PI;
+                float an = i / (float)cant_ptos * 2 * M_PI;
 
                 // alterno los radios interior y exterior entre los pares e impares
 
@@ -1334,7 +1334,7 @@ namespace TGC.Examples.WorkshopShaders
             }
 
             // quiero que cada linea como maximo tenga 5 pixeles
-            float da = 5.0f / (float)r;
+            float da = 5.0f / r;
             float arc_len = hasta - desde;
             int cant_ptos = (int)(arc_len / da);
 
@@ -1347,7 +1347,7 @@ namespace TGC.Examples.WorkshopShaders
 
             for (int i = 0; i < cant_ptos; ++i)
             {
-                float an = desde + (float)i / (float)cant_ptos * arc_len;
+                float an = desde + i / (float)cant_ptos * arc_len;
 
                 // alterno los radios interior y exterior entre los pares e impares
 
@@ -1403,7 +1403,7 @@ namespace TGC.Examples.WorkshopShaders
             TGCVector3 pos = new TGCVector3((x0 + x1) / 2, (y0 + y1) / 2, 0);
             TGCVector3 c0 = new TGCVector3(bitmaps[i].Width / 2, bitmaps[i].Height / 2, 0);
             // Determino la escala para que entre justo
-            TGCVector2 scale2 = new TGCVector2((float)(x1 - x0) / (float)bitmaps[i].Width, (float)(y1 - y0) / (float)bitmaps[i].Height);
+            TGCVector2 scale2 = new TGCVector2((x1 - x0) / (float)bitmaps[i].Width, (y1 - y0) / (float)bitmaps[i].Height);
             sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(pos.X, pos.Y), 0, scale2, new TGCVector2(0, 0), 0, new TGCVector2(0, 0));
 
             Device d3dDevice = D3DDevice.Instance.Device;
@@ -1443,7 +1443,7 @@ namespace TGC.Examples.WorkshopShaders
                         Format.A8B8G8R8, Pool.Managed, Filter.None, Filter.None, 0);
                 //textura = TextureLoader.FromFile(d3dDevice, fname_aux);
             }
-            catch (Exception error)
+            catch (Exception)
             {
             }
             return textura;
@@ -1568,8 +1568,8 @@ namespace TGC.Examples.WorkshopShaders
                     }
                     else
                     {
-                        pt.X = (int)x;
-                        pt.Y = (int)y;
+                        pt.X = x;
+                        pt.Y = y;
                     }
                     if (items[t].pt_inside(this, pt))
                         rta = true;

@@ -130,7 +130,6 @@ namespace TGC.Examples.ShadersExamples
 
             mesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
             mesh.Position = new TGCVector3(0f, 0f, 0f);
-            mesh.AutoTransform = false;
             var size = mesh.BoundingBox.calculateSize();
             largo_tanque = Math.Abs(size.Z);
             alto_tanque = Math.Abs(size.Y) * mesh.Scale.Y;
@@ -138,7 +137,6 @@ namespace TGC.Examples.ShadersExamples
             an_tanque = 0;
             canoa.Scale = new TGCVector3(1f, 1f, 1f);
             canoa.Position = new TGCVector3(3000f, 550f, 0f);
-            canoa.AutoTransform = false;
             dir_canoa = new TGCVector3(0, 0, 1);
             nivel_mar = 135f;
             piso.Scale = new TGCVector3(25f, 1f, 25f);

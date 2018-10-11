@@ -54,7 +54,6 @@ namespace TGC.Examples.GeometryBasics
         {
             //Crear caja vacia
             box = new TGCBox();
-            box.AutoTransform = true;
             //Crear caja debug vacia
             debugBox = new TgcBoxDebug();
             currentTexture = null;
@@ -134,6 +133,7 @@ namespace TGC.Examples.GeometryBasics
             //Renderizar caja
             if (boxModifier.Value)
             {
+                box.Transform = TGCMatrix.Scaling(box.Scale) * TGCMatrix.RotationYawPitchRoll(box.Rotation.Y, box.Rotation.X, box.Rotation.Z) * TGCMatrix.Translation(box.Position);
                 box.Render();
             }
 

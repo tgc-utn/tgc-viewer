@@ -67,15 +67,21 @@ namespace TGC.Examples.MeshExamples
                     //Crear tres niveles de caja, una abajo y otra arriba, con texturas diferentes
                     cajasNivel1[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, 0, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box1Texture);
-                    cajasNivel1[cajas].AutoTransform = true;
+                    cajasNivel1[cajas].Transform = TGCMatrix.Scaling(cajasNivel1[cajas].Scale) 
+                        * TGCMatrix.RotationYawPitchRoll(cajasNivel1[cajas].Rotation.Y, cajasNivel1[cajas].Rotation.X, cajasNivel1[cajas].Rotation.Z) 
+                        * TGCMatrix.Translation(cajasNivel1[cajas].Position);
 
                     cajasNivel2[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, boxSize, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box2Texture);
-                    cajasNivel2[cajas].AutoTransform = true;
+                    cajasNivel2[cajas].Transform = TGCMatrix.Scaling(cajasNivel2[cajas].Scale)
+                        * TGCMatrix.RotationYawPitchRoll(cajasNivel2[cajas].Rotation.Y, cajasNivel2[cajas].Rotation.X, cajasNivel2[cajas].Rotation.Z)
+                        * TGCMatrix.Translation(cajasNivel2[cajas].Position);
 
                     cajasNivel3[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, boxSize * 2, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box3Texture);
-                    cajasNivel3[cajas].AutoTransform = true;
+                    cajasNivel3[cajas].Transform = TGCMatrix.Scaling(cajasNivel3[cajas].Scale)
+                        * TGCMatrix.RotationYawPitchRoll(cajasNivel3[cajas].Rotation.Y, cajasNivel3[cajas].Rotation.X, cajasNivel3[cajas].Rotation.Z)
+                        * TGCMatrix.Translation(cajasNivel3[cajas].Position);
                     cajas++;
                 }
             }

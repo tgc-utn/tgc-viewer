@@ -41,7 +41,6 @@ namespace TGC.Examples.GeometryBasics
         public override void Init()
         {
             cylinder = new TgcCylinder(TGCVector3.Empty, 2, 4);
-            cylinder.AutoTransform = true;
 
             cylinder.AlphaBlendEnable = true;
 
@@ -93,6 +92,8 @@ namespace TGC.Examples.GeometryBasics
             cylinder.Color = Color.FromArgb(alpha, color);
 
             cylinder.updateValues();
+
+            cylinder.Transform = TGCMatrix.Scaling(cylinder.Scale) * TGCMatrix.RotationYawPitchRoll(cylinder.Rotation.Y, cylinder.Rotation.X, cylinder.Rotation.Z) * TGCMatrix.Translation(cylinder.Position);
 
             if (boundingCylinderModifier.Value)
                 cylinder.BoundingCylinder.Render();

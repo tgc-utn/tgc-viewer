@@ -28,7 +28,7 @@ namespace TGC.Examples.Bullet
         public BulletSurface(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
-            Category = "Bullet";
+            Category = "BulletPhysics";
             Name = "Triangles + Regular Shapes vs Capsule";
             Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\". Donde se emplea una capsula para el personaje, un terreno generado matematicamente con muchos triangulos y elementos varios para colisionar.";
         }

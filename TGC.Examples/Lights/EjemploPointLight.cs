@@ -70,9 +70,10 @@ namespace TGC.Examples.Lights
             //Corregir normales
             skeletalMesh.computeNormals();
 
-            //Pongo al mesh en posicion, activo e AutoTransform
-            skeletalMesh.AutoTransform = true;
+            //Pongo al mesh en posicion
             skeletalMesh.Position = new TGCVector3(0, 0, 100);
+            skeletalMesh.Transform = TGCMatrix.RotationYawPitchRoll(skeletalMesh.Rotation.Y + FastMath.PI, skeletalMesh.Rotation.X, skeletalMesh.Rotation.Z) *
+                                     TGCMatrix.Translation(skeletalMesh.Position);
             skeletalMesh.RotateY(FastMath.PI);
 
             //Camara en 1ra persona
@@ -81,9 +82,9 @@ namespace TGC.Examples.Lights
             //Mesh para la luz
             lightMesh = TGCBox.fromSize(new TGCVector3(10, 10, 10));
 
-            //Pongo al mesh en posicion, activo e AutoTransform
-            lightMesh.AutoTransform = true;
+            //Pongo al mesh en posicion
             lightMesh.Position = new TGCVector3(0, 150, 150);
+            lightMesh.Transform = TGCMatrix.Translation(lightMesh.Position);
 
             //Modifiers de la luz
             lightEnableModifier = AddBoolean("lightEnable", "lightEnable", lightMesh.Enabled);
@@ -107,6 +108,7 @@ namespace TGC.Examples.Lights
             //Actualizo los valores de la luz
             lightMesh.Enabled = lightEnableModifier.Value;
             lightMesh.Position = lightPosModifier.Value;
+            lightMesh.Transform = TGCMatrix.Translation(lightMesh.Position);
             lightMesh.Color = lightColorModifier.Value;
             lightMesh.updateValues();
 

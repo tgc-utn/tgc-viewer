@@ -78,7 +78,10 @@ namespace TGC.Examples.ShadersExamples
                 for (var j = -5; j < 5; j++)
                 {
                     var instance = mesh.createMeshInstance(mesh.Name + i);
-                    instance.Move(i * 50, (i + j) * 5, j * 50);
+                    instance.Position = new TGCVector3(i * 50, (i + j) * 5, j * 50);
+                    instance.Transform = TGCMatrix.Scaling(instance.Scale)
+                        * TGCMatrix.RotationYawPitchRoll(instance.Rotation.X, instance.Rotation.Y, instance.Rotation.Z)
+                        * TGCMatrix.Translation(instance.Position);
                     instances.Add(instance);
                 }
 
@@ -201,7 +204,9 @@ namespace TGC.Examples.ShadersExamples
             foreach (var instance in instances)
             {
                 instance.Technique = "DefaultTechnique";
-                instance.UpdateMeshTransform();
+                instance.Transform = TGCMatrix.Scaling(instance.Scale)
+                    * TGCMatrix.RotationYawPitchRoll(instance.Rotation.X, instance.Rotation.Y, instance.Rotation.Z)
+                    * TGCMatrix.Translation(instance.Position);
                 instance.Render();
             }
             D3DDevice.Instance.Device.EndScene();
@@ -215,7 +220,9 @@ namespace TGC.Examples.ShadersExamples
             foreach (var instance in instances)
             {
                 instance.Technique = "NormalMap";
-                instance.UpdateMeshTransform();
+                instance.Transform = TGCMatrix.Scaling(instance.Scale)
+                    * TGCMatrix.RotationYawPitchRoll(instance.Rotation.X, instance.Rotation.Y, instance.Rotation.Z)
+                    * TGCMatrix.Translation(instance.Position);
                 instance.Render();
             }
 

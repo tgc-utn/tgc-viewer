@@ -101,7 +101,6 @@ namespace TGC.Examples.WorkshopShaders
             //Cargar personaje con animaciones
             TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
             mesh = skeletalLoader.loadMeshAndAnimationsFromFile(MediaDir + "SkeletalAnimations\\BasicHuman\\" + "CombineSoldier-TgcSkeletalMesh.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\", new string[] { MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "StandBy-TgcSkeletalAnim.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Run-TgcSkeletalAnim.xml", });
-            mesh.AutoTransform = true;
 
             //Configurar animacion inicial
             mesh.playAnimation("StandBy", true);
@@ -109,6 +108,9 @@ namespace TGC.Examples.WorkshopShaders
             mesh.Scale = new TGCVector3(2f, 2f, 2f);
             mesh.Effect = effect;
             mesh.Technique = "DIFFUSE_MAP";
+            mesh.Transform = TGCMatrix.Scaling(mesh.Scale)
+                * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
+                * TGCMatrix.Translation(mesh.Position);
 
             // levanto el GUI
             gui.Create(MediaDir);
@@ -171,6 +173,9 @@ namespace TGC.Examples.WorkshopShaders
 
                 device.Viewport = view;
 
+                mesh.Transform = TGCMatrix.Scaling(mesh.Scale)
+                * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
+                * TGCMatrix.Translation(mesh.Position);
                 mesh.Render();
 
                 device.Viewport = ant_view;

@@ -383,7 +383,8 @@ namespace TGC.Core.KeyFrameLoader
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en False.
         /// </summary>
-        public bool AutoTransform { get; set; }
+        [Obsolete("Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
+        public bool AutoTransformEnable { get; set; }
 
         /// <summary>
         ///     Posicion absoluta de la Malla
@@ -445,6 +446,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
+        [Obsolete]
         public void MoveOrientedY(float movement)
         {
             var z = (float)Math.Cos(rotation.Y) * movement;
@@ -509,7 +511,7 @@ namespace TGC.Core.KeyFrameLoader
             VertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
 
             //variables de movimiento
-            AutoTransform = false;
+            AutoTransformEnable = false;
             translation = new TGCVector3(0f, 0f, 0f);
             rotation = new TGCVector3(0f, 0f, 0f);
             scale = new TGCVector3(1f, 1f, 1f);
@@ -796,7 +798,7 @@ namespace TGC.Core.KeyFrameLoader
         protected void updateMeshTransform()
         {
             //Aplicar transformacion de malla
-            if (AutoTransform)
+            if (AutoTransformEnable)
             {
                 Transform = TGCMatrix.Identity
                             * TGCMatrix.Scaling(scale)

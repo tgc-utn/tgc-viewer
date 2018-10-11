@@ -45,18 +45,16 @@ namespace TGC.Examples.Tutorial
 
             //De toda la escena solo nos interesa guardarnos el primer modelo (el único que hay en este caso).
             mesh = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml").Meshes[0];
-            mesh.AutoTransform = true;
-            mesh.RotateY(FastMath.QUARTER_PI);
-            mesh.Move(new TGCVector3(100, 40, -200));
-            //mesh.Transform = TGCMatrix.RotationY(FastMath.QUARTER_PI) * TGCMatrix.Translation(100,40,-200);
+            mesh.Position += new TGCVector3(100, 37, -200);
+            mesh.Rotation += new TGCVector3(0, FastMath.QUARTER_PI, 0);
+            mesh.Transform = TGCMatrix.Scaling(TGCVector3.One) * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z) * TGCMatrix.Translation(mesh.Position);
 
             //En este ejemplo no cargamos un solo modelo 3D sino una escena completa, compuesta por varios modelos.
             //El framework posee varias escenas ya hechas en la carpeta TgcViewer\Examples\Media\MeshCreator\Scenes.
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Iglesia\\Iglesia-TgcScene.xml");
 
             //Hacemos que la cámara esté centrada sobre el mesh.
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(),
-                mesh.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 6, Input);
         }
 
         public override void Update()

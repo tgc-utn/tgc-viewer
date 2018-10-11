@@ -56,7 +56,7 @@ namespace TGC.Examples.Collision
                 {
                     var center = new TGCVector3((boxSize.X + boxSize.X / 2) * i, (boxSize.Y + boxSize.Y / 2) * j, 0);
                     var box = TGCBox.fromSize(center, boxSize, texture);
-                    box.AutoTransform = true;
+                    box.Transform = TGCMatrix.Translation(box.Position);
                     boxes.Add(box);
                 }
             }
@@ -68,7 +68,6 @@ namespace TGC.Examples.Collision
 
             //Crear caja para marcar en que lugar hubo colision
             collisionPointMesh = TGCBox.fromSize(new TGCVector3(3, 3, 3), Color.Red);
-            collisionPointMesh.AutoTransform = true;
             selected = false;
 
             //UserVars para mostrar en que punto hubo colision
@@ -127,6 +126,7 @@ namespace TGC.Examples.Collision
 
                 //Dibujar caja que representa el punto de colision
                 collisionPointMesh.Position = collisionPoint;
+                collisionPointMesh.Transform = TGCMatrix.Translation(collisionPointMesh.Position);
                 collisionPointMesh.Render();
             }
             else

@@ -76,7 +76,7 @@ namespace TGC.Examples.ShadersExamples
 
             avion.Scale = new TGCVector3(0.1f, 0.1f, 0.1f);
             avion.Position = new TGCVector3(100f, 100f, 0f);
-            avion.AutoTransform = false;
+            avion.Transform = TGCMatrix.Scaling(avion.Scale) * TGCMatrix.Translation(avion.Position);
             dir_avion = new TGCVector3(0, 0, 1);
 
             //Cargar Shader personalizado
@@ -142,6 +142,7 @@ namespace TGC.Examples.ShadersExamples
             // animo la pos del avion
             var alfa = -time * Geometry.DegreeToRadian(15.0f);
             avion.Position = new TGCVector3(80f * (float)Math.Cos(alfa), 40 - 20 * (float)Math.Sin(alfa), 80f * (float)Math.Sin(alfa));
+            avion.Rotation = new TGCVector3(0, -alfa, 0);
             dir_avion = new TGCVector3(-(float)Math.Sin(alfa), 0, (float)Math.Cos(alfa));
             avion.Transform = CalcularMatriz(avion.Position, avion.Scale, dir_avion);
 

@@ -90,19 +90,13 @@ namespace TGC.Examples.Collision
             });
             //Configurar animacion inicial
             personaje.playAnimation("Parado", true);
-
-            //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform,
-            //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta
-            //perdiendo el control de las transformaciones del personaje.
-            personaje.AutoTransform = true;
             //Escalarlo porque es muy grande
             personaje.Position = new TGCVector3(0, 500, -100);
             //Rotarlo 180° porque esta mirando para el otro lado
             personaje.RotateY(Geometry.DegreeToRadian(180f));
             //Escalamos el personaje ya que sino la escalera es demaciado grande.
             personaje.Scale = new TGCVector3(1.5f, 1.5f, 1.5f);
-            //BoundingSphere que va a usar el personaje
-            personaje.AutoUpdateBoundingBox = false;
+
             characterSphere = new TgcBoundingSphere(personaje.BoundingBox.calculateBoxCenter(), personaje.BoundingBox.calculateBoxRadius());
 
             //Almacenar volumenes de colision del escenario
@@ -212,7 +206,7 @@ namespace TGC.Examples.Collision
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.RotateY(rotAngle);
+                personaje.Rotation += new TGCVector3(0, rotAngle, 0);
                 camaraInterna.rotateY(rotAngle);
             }
 
@@ -245,7 +239,12 @@ namespace TGC.Examples.Collision
 
             //Mover personaje con detección de colisiones, sliding y gravedad
             var realMovement = collisionManager.moveCharacter(characterSphere, movementVector, objetosColisionables);
-            personaje.Move(realMovement);
+
+            personaje.Position += realMovement;
+
+            personaje.Transform = TGCMatrix.Scaling(personaje.Scale) *
+                                    TGCMatrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z) *
+                                      TGCMatrix.Translation(personaje.Position);
 
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = personaje.Position;

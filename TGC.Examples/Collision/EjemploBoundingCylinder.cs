@@ -139,9 +139,9 @@ namespace TGC.Examples.Collision
             if (moving)
             {
                 //Aplicar movimiento
-                colliderCylinder.move(movement);
-                colliderCylinderFixedY.move(movement);
-                personaje.Move(movement);
+                colliderCylinder.Center += movement;
+                colliderCylinderFixedY.Center += movement;
+                personaje.Position += movement;
 
                 //Activar animacion de caminando
                 personaje.playAnimation("Caminando", true);

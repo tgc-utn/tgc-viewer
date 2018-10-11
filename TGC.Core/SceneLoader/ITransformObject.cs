@@ -1,3 +1,4 @@
+using System;
 using TGC.Core.Mathematica;
 
 namespace TGC.Core.SceneLoader
@@ -21,7 +22,8 @@ namespace TGC.Core.SceneLoader
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en True.
         /// </summary>
-        bool AutoTransform { get; set; }
+        [Obsolete("Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
+        bool AutoTransformEnable { get; set; }
 
         /// <summary>
         ///     Posicion absoluta del objeto
@@ -53,6 +55,7 @@ namespace TGC.Core.SceneLoader
         ///     Es necesario rotar la malla primero
         /// </summary>
         /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
+        [Obsolete]
         void MoveOrientedY(float movement);
 
         /// <summary>

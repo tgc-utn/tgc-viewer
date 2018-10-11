@@ -45,7 +45,9 @@ namespace TGC.Examples.MeshExamples
                 for (var j = 0; j < 50; j++)
                 {
                     var mesh = baseMesh.clone(i + " - " + j);
-                    mesh.AutoTransform = true;
+                    mesh.Transform = TGCMatrix.Scaling(mesh.Scale)
+                        * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
+                        * TGCMatrix.Translation(mesh.Position);
                     mesh.Move(i * 100, 0, j * 100);
                     meshes.Add(mesh);
                     //Se agrega un callback function para informar cuando se realiza el dispose.

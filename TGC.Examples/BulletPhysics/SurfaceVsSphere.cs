@@ -12,7 +12,7 @@ namespace TGC.Examples.Bullet
     {
         public SurfaceVsSphere(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel) : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
-            Category = "Bullet";
+            Category = "BulletPhysics";
             Name = "Triangles vs Sphere";
             Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\". " +
                 "Donde se emplea una esfera para el personaje, un terreno generado por un heighmap con muchos triangulos para que la misma colisione como terreno.";

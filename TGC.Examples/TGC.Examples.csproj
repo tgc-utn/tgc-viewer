@@ -43,7 +43,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
@@ -55,8 +55,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -90,16 +99,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bullet\BulletExampleWall.cs" />
-    <Compile Include="Bullet\BulletExample3.cs" />
-    <Compile Include="Bullet\BulletSurface.cs" />
-    <Compile Include="Bullet\Physics\HelloWorldBullet.cs" />
-    <Compile Include="Bullet\Physics\HelloWorldBullet2.cs" />
-    <Compile Include="Bullet\Physics\PhysicsGame.cs" />
-    <Compile Include="Bullet\Physics\TrianglePhysics.cs" />
-    <Compile Include="Bullet\Physics\TriangleSpherePhysics.cs" />
-    <Compile Include="Bullet\Physics\WallBullet.cs" />
-    <Compile Include="Bullet\SurfaceVsSphere.cs" />
+    <Compile Include="BulletPhysics\BulletExampleWall.cs" />
+    <Compile Include="BulletPhysics\BulletExample3.cs" />
+    <Compile Include="BulletPhysics\BulletSurface.cs" />
+    <Compile Include="BulletPhysics\PhysicsGame\HelloWorldBullet.cs" />
+    <Compile Include="BulletPhysics\PhysicsGame\HelloWorldBullet2.cs" />
+    <Compile Include="BulletPhysics\PhysicsGame\PhysicsGame.cs" />
+    <Compile Include="BulletPhysics\PhysicsGame\TrianglePhysics.cs" />
+    <Compile Include="BulletPhysics\PhysicsGame\TriangleSpherePhysics.cs" />
+    <Compile Include="BulletPhysics\PhysicsGame\WallBullet.cs" />
+    <Compile Include="BulletPhysics\SurfaceVsSphere.cs" />
     <Compile Include="Camara\TgcFpsCamera.cs" />
     <Compile Include="Camara\TgcRotationalCamera.cs" />
     <Compile Include="Camara\TgcSpringThirdPersonCamera.cs" />
@@ -476,7 +485,6 @@
     <Content Include="Shaders\BumpMapping.fx" />
     <Content Include="Shaders\BumpMappingNoTangent.fx" />
     <Content Include="Shaders\Cel.fx" />
-    <Content Include="Shaders\Combinados.fx" />
     <Content Include="Shaders\DynamicLights.fx" />
     <Content Include="Shaders\Ejemplo1.fx" />
     <Content Include="Shaders\EjemploBoxDirectX.fx" />
@@ -497,6 +505,7 @@
     <Content Include="Shaders\TgcViewer\TgcSkeletalMeshPointLightShader.fx" />
     <Content Include="Shaders\TgcViewer\TgcSkeletalMeshShader.fx" />
     <Content Include="Shaders\TgcViewer\Varios.fx" />
+    <Content Include="Shaders\Varios.fx" />
     <Content Include="Shaders\WorkshopShaders\BasicShader.fx" />
     <Content Include="Shaders\WorkshopShaders\Demo.fx" />
     <Content Include="Shaders\WorkshopShaders\EnvMap.fx" />

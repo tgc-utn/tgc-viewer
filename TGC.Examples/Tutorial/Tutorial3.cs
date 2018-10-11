@@ -49,6 +49,10 @@ namespace TGC.Examples.Tutorial
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
             mainMesh = scene2.Meshes[0];
+<<<<<<< HEAD
+=======
+            mainMesh.AutoTransformEnable = true;
+>>>>>>> master
             //Movemos el mesh un poco para arriba. Porque sino choca con el piso todo el tiempo y no se puede mover.
             mainMesh.Position = new TGCVector3(0, 50, 0);
             mainMesh.UpdateMeshTransform();*/
