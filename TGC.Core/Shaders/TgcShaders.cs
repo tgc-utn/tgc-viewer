@@ -257,7 +257,7 @@ namespace TGC.Core.Shaders
         /// <summary>
         ///     Cargar todas la matrices generales que necesita el shader, tomando
         ///     como primicia que la matriz de world es la identidad.
-        ///     Simplica los calculos respecto a setShaderTGCMatrix()
+        ///     Simplica los calculos respecto a setShaderMatrix()
         /// </summary>
         public void setShaderMatrixIdentity(Effect effect)
         {
