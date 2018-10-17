@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX;
+using System;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Mathematica
@@ -630,14 +631,23 @@ namespace TGC.Core.Mathematica
         }
 
         /// <summary>
-        /// (DEPRECATED)New TGCVector3 from DX Vector3
+        /// New TGCVector3 from DX Vector3
         /// </summary>
         /// <param name="vector">Source Vector3.</param>
         /// <returns>Initializes a new instance of the TGCVector3 class.</returns>
+        [Obsolete("No deberia ser necesario obtener un TGCVector3 basado en un Vector3 de DX, ya que se hizo una conversion implicita.")]
         public static TGCVector3 FromVector3(Vector3 vector)
         {
-            //TODO DEPRECAR
             return new TGCVector3(vector);
+        }
+
+        /// <summary>
+        /// Crea una instancia de Bullet Vector3, basado en las coordenadas propias.
+        /// </summary>
+        /// <returns>Retorna un Vector3 de Bullet.</returns>
+        public BulletSharp.Math.Vector3 ToBulletVector3()
+        {
+            return new BulletSharp.Math.Vector3(X, Y, Z);
         }
 
         #region Old TGCVectorUtils
@@ -769,14 +779,6 @@ namespace TGC.Core.Mathematica
             return "[" + TgcParserUtils.printFloat(x) +
                    "," + TgcParserUtils.printFloat(y) +
                    "," + TgcParserUtils.printFloat(z) + "]";
-        }
-
-        /// <summary>
-        /// Retorna un vector 3 de Bullet.
-        /// </summary>
-        public BulletSharp.Math.Vector3 ToBsVector
-        {
-            get { return new BulletSharp.Math.Vector3(X, Y, Z); }
         }
 
         #endregion Old TGCVectorUtils

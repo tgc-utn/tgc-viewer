@@ -158,8 +158,7 @@ namespace TGC.Core.Shaders
             VariosShader = loadEffect(shadersPath + "Varios.fx");
 
             //Crear vertexDeclaration comunes
-            VdecPositionColoredTextured = new VertexDeclaration(D3DDevice.Instance.Device,
-                PositionColoredTextured_VertexElements);
+            VdecPositionColoredTextured = new VertexDeclaration(D3DDevice.Instance.Device, PositionColoredTextured_VertexElements);
             VdecPositionTextured = new VertexDeclaration(D3DDevice.Instance.Device, PositionTextured_VertexElements);
             VdecPositionColored = new VertexDeclaration(D3DDevice.Instance.Device, PositionColored_VertexElements);
         }

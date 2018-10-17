@@ -44,7 +44,7 @@ namespace TGC.Examples.Bullet.Physics
             constraintSolver = new SequentialImpulseConstraintSolver();
             overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
-            dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
+            dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBulletVector3();
 
             //Creamos el terreno
             var meshRigidBody = BulletRigidBodyConstructor.CreateSurfaceFromHeighMap(triangleDataVB);
@@ -72,14 +72,14 @@ namespace TGC.Examples.Bullet.Physics
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.ApplyCentralImpulse(-strength * director.ToBsVector);
+                dragonBall.ApplyCentralImpulse(-strength * director.ToBulletVector3());
             }
 
             if (input.keyDown(Key.S))
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.ApplyCentralImpulse(strength * director.ToBsVector);
+                dragonBall.ApplyCentralImpulse(strength * director.ToBulletVector3());
             }
 
             if (input.keyDown(Key.A))
@@ -95,7 +95,7 @@ namespace TGC.Examples.Bullet.Physics
             if (input.keyPressed(Key.Space))
             {
                 dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.ApplyCentralImpulse(TGCVector3.Up.ToBsVector * 150);
+                dragonBall.ApplyCentralImpulse(TGCVector3.Up.ToBulletVector3() * 150);
             }
         }
 

@@ -33,7 +33,7 @@ namespace TGC.Examples.Bullet.Physics
             //Creamos shapes y bodies.
 
             //El piso es un plano estatico se dice que si tiene masa 0 es estatico.
-            var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 0);
+            var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBulletVector3(), 0);
             var floorMotionState = new DefaultMotionState();
             var floorInfo = new RigidBodyConstructionInfo(0, floorMotionState, floorShape);
             floorBody = new RigidBody(floorInfo);
@@ -83,7 +83,7 @@ namespace TGC.Examples.Bullet.Physics
             if (Ctx2.Input.keyUp(Key.Space))
             {
                 var ballBody = BulletRigidBodyConstructor.CreateBall(10, 1f, new TGCVector3(Ctx2.Camara.Position.X, Ctx2.Camara.Position.Y, Ctx2.Camara.Position.Z));
-                ballBody.LinearVelocity = new TGCVector3(-Ctx2.Camara.Position.X, -Ctx2.Camara.Position.Y, -Ctx2.Camara.Position.Z).ToBsVector * 0.2f;
+                ballBody.LinearVelocity = new TGCVector3(-Ctx2.Camara.Position.X, -Ctx2.Camara.Position.Y, -Ctx2.Camara.Position.Z).ToBulletVector3() * 0.2f;
                 ballBody.Restitution = 0.9f;
                 ballBodys.Add(ballBody);
                 dynamicsWorld.AddRigidBody(ballBody);

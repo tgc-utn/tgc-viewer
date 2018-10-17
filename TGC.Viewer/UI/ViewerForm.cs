@@ -45,7 +45,7 @@ namespace TGC.Viewer.UI
             Model = new ViewerModel();
 
             //Verificamos la carpeta Media y la de TGC shaders basicos
-            if (Model.CheckFolder(settings.MediaDirectory) || Model.CheckFolder(settings.ShadersDirectory + settings.CommonShaders))
+            if (Model.CheckFolder(settings.MediaDirectory) || Model.CheckFolder(settings.CommonShaders))
             {
                 if (OpenOption() == DialogResult.Cancel)
                 {
@@ -55,7 +55,7 @@ namespace TGC.Viewer.UI
             }
 
             //Iniciar graficos
-            Model.InitGraphics(this, panel3D, settings.ShadersDirectory + settings.CommonShaders);
+            Model.InitGraphics(this, panel3D, settings.CommonShaders);
 
             try
             {

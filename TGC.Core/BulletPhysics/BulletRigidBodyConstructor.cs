@@ -8,11 +8,10 @@ namespace TGC.Core.BulletPhysics
     /// Clase encargada de generear todos los rigid bodies que necesitemos para añadir a la simulacion de BulletSharp.
     /// </summary>
     public abstract class BulletRigidBodyConstructor
-
     {
         /// <summary>
         ///  Se crea una caja con una masa (si se quiere que sea estatica la masa debe ser 0),
-        ///  con dimensiones x(ancho) ,y(alto) ,z(profundidad), Rotacion de ejes Yaw, Pitch, Roll y un coeficiente de rozamiento.
+        ///  con dimensiones x(ancho), y(alto), z(profundidad), Rotacion de ejes Yaw, Pitch, Roll y un coeficiente de rozamiento.
         /// </summary>
         /// <param name="size">Tamaño de la Cajas</param>
         /// <param name="mass">Masa de la Caja</param>
@@ -26,13 +25,13 @@ namespace TGC.Core.BulletPhysics
         {
             var boxShape = new BoxShape(size.X, size.Y, size.Z);
             var boxTransform = TGCMatrix.RotationYawPitchRoll(yaw, pitch, roll).ToBsMatrix;
-            boxTransform.Origin = position.ToBsVector;
+            boxTransform.Origin = position.ToBulletVector3();
             DefaultMotionState boxMotionState = new DefaultMotionState(boxTransform);
             //Es importante calcular la inercia caso contrario el objeto no rotara.
             var boxLocalInertia = boxShape.CalculateLocalInertia(mass);
             var boxInfo = new RigidBodyConstructionInfo(mass, boxMotionState, boxShape, boxLocalInertia);
             var boxBody = new RigidBody(boxInfo);
-            boxBody.LinearFactor = TGCVector3.One.ToBsVector;
+            boxBody.LinearFactor = TGCVector3.One.ToBulletVector3();
             boxBody.Friction = friction;
             return boxBody;
         }
@@ -72,7 +71,7 @@ namespace TGC.Core.BulletPhysics
             }
 
             var localCapsuleRigidBody = new RigidBody(capsuleRigidBodyInfo);
-            localCapsuleRigidBody.LinearFactor = TGCVector3.One.ToBsVector;
+            localCapsuleRigidBody.LinearFactor = TGCVector3.One.ToBulletVector3();
             //Dado que hay muchos parametros a configurar el RigidBody lo ideal es que
             //cada caso se configure segun lo que se necesite.
 
@@ -104,7 +103,7 @@ namespace TGC.Core.BulletPhysics
 
             //Creamos el cuerpo rigido de la esfera a partir de la info.
             var ballBody = new RigidBody(ballInfo);
-            ballBody.LinearFactor = TGCVector3.One.ToBsVector;
+            ballBody.LinearFactor = TGCVector3.One.ToBulletVector3();
             return ballBody;
         }
 
@@ -133,7 +132,7 @@ namespace TGC.Core.BulletPhysics
 
                 i = i + 3;
 
-                triangleMesh.AddTriangle(vector0.ToBsVector, vector1.ToBsVector, vector2.ToBsVector, false);
+                triangleMesh.AddTriangle(vector0.ToBulletVector3(), vector1.ToBulletVector3(), vector2.ToBulletVector3(), false);
             }
 
             CollisionShape meshCollisionShape = new BvhTriangleMeshShape(triangleMesh, true);

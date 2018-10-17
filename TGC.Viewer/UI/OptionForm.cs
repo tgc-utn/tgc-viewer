@@ -24,34 +24,18 @@ namespace TGC.Viewer.UI
         /// <param name="path"> Ruta que se quiere abrir.</param>
         private void ProcessStart(string path)
         {
-            if (this.CheckFolder(path))
-            {
-                Process.Start(Environment.CurrentDirectory);
-            }
-            else
-            {
-                Process.Start(path);
-            }
-        }
-
-        /// <summary>
-        /// Verifica si existe la carpeta.
-        /// </summary>
-        /// <param name="pathMedia"></param>
-        private bool CheckFolder(string path)
-        {
-            return !Directory.Exists(path);
+            Process.Start(Directory.Exists(path) ? path : Environment.CurrentDirectory);
         }
 
         /// <summary>
         /// Verifica que existan las carpetas necesarias para la aplicacion.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True si path hace referencia a un directorio existente; true si el directorio no existe
+        /// o se produce un error al intentar determinar si existe el directorio especificado.</returns>
         private bool CheckAllFolders()
         {
             //TODO mejorar esta valicacion ya que si esta la carpeta pero no los shaders/media necesarios pasaria lo mismo.
-            return this.CheckFolder(this.textBoxMediaDirectory.Text) || this.CheckFolder(this.textBoxShadersDirectory.Text)
-                || this.CheckFolder(this.textBoxShadersDirectory.Text + this.textBoxCommonShaders.Text);
+            return Directory.Exists(this.textBoxMediaDirectory.Text) && Directory.Exists(this.textBoxShadersDirectory.Text) && Directory.Exists(this.textBoxCommonShaders.Text);
         }
 
         private void OptionForm_Load(object sender, EventArgs e)
@@ -89,7 +73,7 @@ namespace TGC.Viewer.UI
 
         private void buttonAccept_Click(object sender, EventArgs e)
         {
-            if (this.CheckAllFolders())
+            if (!this.CheckAllFolders())
             {
                 this.DialogResult = DialogResult.None;
                 return;
@@ -114,7 +98,7 @@ namespace TGC.Viewer.UI
 
         private void buttonOpenCommonShaders_Click(object sender, EventArgs e)
         {
-            this.ProcessStart(this.textBoxShadersDirectory.Text + this.textBoxCommonShaders.Text);
+            this.ProcessStart(this.textBoxCommonShaders.Text);
         }
 
         private void buttonOpenShaders_Click(object sender, EventArgs e)

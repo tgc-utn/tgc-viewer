@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ShadersDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">..\..\..\TGC.Examples\Shaders\</Value>
+      <Value Profile="(Default)">..\..\..\..\TGC.Examples\Shaders\</Value>
     </Setting>
     <Setting Name="MediaDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)">Media\</Value>
@@ -18,7 +18,7 @@
       <Value Profile="(Default)">TGC Viewer - Técnicas de Gráficos por Computadora - UTN - FRBA</Value>
     </Setting>
     <Setting Name="CommonShaders" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TgcViewer\</Value>
+      <Value Profile="(Default)">..\..\..\..\TGC.Examples\Shaders\Common\</Value>
     </Setting>
     <Setting Name="MediaLink" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://drive.google.com/open?id=1OII2l6ZZyQcm8woV4HJ2_pnZyh_ym5EU</Value>

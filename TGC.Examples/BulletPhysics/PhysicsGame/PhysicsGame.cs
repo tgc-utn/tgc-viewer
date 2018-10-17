@@ -23,7 +23,7 @@ namespace TGC.Examples.Bullet.Physics
             constraintSolver = new SequentialImpulseConstraintSolver();
             overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
-            dynamicsWorld.Gravity = new TGCVector3(0, -20f, 0).ToBsVector;
+            dynamicsWorld.Gravity = new TGCVector3(0, -20f, 0).ToBulletVector3();
         }
 
         public virtual void Init(BulletExample3 ctx)
@@ -37,7 +37,7 @@ namespace TGC.Examples.Bullet.Physics
             overlappingPairCache = new DbvtBroadphase();
             //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
-            dynamicsWorld.Gravity = new TGCVector3(0, -20f, 0).ToBsVector;
+            dynamicsWorld.Gravity = new TGCVector3(0, -20f, 0).ToBulletVector3();
         }
 
         public abstract void Update();
