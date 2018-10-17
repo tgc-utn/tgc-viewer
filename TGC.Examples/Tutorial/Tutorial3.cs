@@ -22,7 +22,6 @@ namespace TGC.Examples.Tutorial
     {
         private const float MOVEMENT_SPEED = 200f;
         private TgcThirdPersonCamera camaraInterna;
-        private TgcMesh mainMesh;
         private TgcScene scene;
 
         //Fisica
@@ -103,8 +102,6 @@ namespace TGC.Examples.Tutorial
 
         public override void Dispose()
         {
-            scene.DisposeAll();
-            //mainMesh.Dispose();
             physicsExample.Dispose();
         }
     }

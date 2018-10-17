@@ -26,7 +26,7 @@ namespace TGC.Examples.Tutorial.Physics
         private BroadphaseInterface overlappingPairCache;
 
         private List<TgcMesh> meshes = new List<TgcMesh>();
-        private List<RigidBody> buildings = new List<RigidBody>();
+        RigidBody floorBody;
 
         private TgcMesh hummer;
         private RigidBody hummerBody;
@@ -76,7 +76,6 @@ namespace TGC.Examples.Tutorial.Physics
 
             //Se crea un plano ya que esta escena tiene problemas 
             //con la definición de triangulos para el suelo
-            RigidBody floorBody;
             var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBulletVector3(), 10);
             floorShape.LocalScaling = new TGCVector3().ToBulletVector3();
             var floorMotionState = new DefaultMotionState();
@@ -94,6 +93,7 @@ namespace TGC.Examples.Tutorial.Physics
             TGCBox boxMesh1 = TGCBox.fromSize(new TGCVector3(20, 20, 20), texture);
             boxMesh1.Position = new TGCVector3(0, 10, 0);
             hummer = boxMesh1.ToMesh("box");
+            boxMesh1.Dispose();                
 
             //Se crea el cuerpo rígido de la caja, en la definicio de CreateBox el ultimo parametro representa si se quiere o no
             //calcular el momento de inercia del cuerpo. No calcularlo lo que va a hacer es que la caja que representa el Hummer
@@ -165,20 +165,18 @@ namespace TGC.Examples.Tutorial.Physics
 
         public void Dispose()
         {
-            //Dispose de Meshes
-            foreach (TgcMesh mesh in meshes)
-            {
-                mesh.Dispose();
-            }
-            hummer.Dispose();
-            hummerBody.Dispose();
-
             //Se hace dispose del modelo fisico.
             dynamicsWorld.Dispose();
             dispatcher.Dispose();
             collisionConfiguration.Dispose();
             constraintSolver.Dispose();
             overlappingPairCache.Dispose();
+            hummerBody.Dispose();
+            floorBody.Dispose();
+
+            //Dispose de Meshes
+            foreach (TgcMesh mesh in meshes) mesh.Dispose();
+            hummer.Dispose();          
         }
 
         public TGCVector3 getPositionHummer()
