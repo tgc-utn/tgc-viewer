@@ -82,7 +82,7 @@ namespace TGC.Examples.Bullet.Physics
             constraintSolver = new SequentialImpulseConstraintSolver();
             overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
-            dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBsVector;
+            dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBulletVector3();
 
             #endregion Configuracion Basica de World
 
@@ -250,8 +250,8 @@ namespace TGC.Examples.Bullet.Physics
                 moving = true;
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
-                capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBsVector;
-                capsuleRigidBody.ApplyCentralImpulse(-strength * director.ToBsVector);
+                capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBulletVector3();
+                capsuleRigidBody.ApplyCentralImpulse(-strength * director.ToBulletVector3());
             }
 
             if (input.keyDown(Key.S))
@@ -259,8 +259,8 @@ namespace TGC.Examples.Bullet.Physics
                 moving = true;
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
-                capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBsVector;
-                capsuleRigidBody.ApplyCentralImpulse(strength * director.ToBsVector);
+                capsuleRigidBody.AngularVelocity = TGCVector3.Empty.ToBulletVector3();
+                capsuleRigidBody.ApplyCentralImpulse(strength * director.ToBulletVector3());
             }
 
             if (input.keyDown(Key.A))
@@ -281,7 +281,7 @@ namespace TGC.Examples.Bullet.Physics
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
                 capsuleRigidBody.ActivationState = ActivationState.ActiveTag;
-                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, 80 * strength, 0).ToBsVector);
+                capsuleRigidBody.ApplyCentralImpulse(new TGCVector3(0, 80 * strength, 0).ToBulletVector3());
             }
 
             #endregion Comoportamiento

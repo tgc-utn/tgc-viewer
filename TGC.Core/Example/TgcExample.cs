@@ -30,11 +30,14 @@ namespace TGC.Core.Example
             //DirectSound = new TgcDirectSound(); Por ahora se carga por afuera
             DrawText = new TgcText2D();
             Input = new TgcD3dInput();
+            BackgroundColor = DEFAULT_CLEAR_COLOR;
 
             Category = "Others";
             Name = "Ejemplo en Blanco";
             Description = "Ejemplo en Blanco. Es hora de empezar a hacer tu propio ejemplo :)";
         }
+        
+        public Color BackgroundColor { get; set; }
 
         /// <summary>
         ///     Tiempo en segundos transcurridos desde el ultimo frame.
@@ -183,8 +186,7 @@ namespace TGC.Core.Example
         /// </summary>
         protected void UpdateFrustum()
         {
-            Frustum.updateVolume(TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.View),
-                TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.Projection));
+            Frustum.updateVolume(TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.View), TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.Projection));
         }
 
         /// <summary>
@@ -200,7 +202,7 @@ namespace TGC.Core.Example
         /// </summary>
         protected void BeginRenderScene()
         {
-            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, DEFAULT_CLEAR_COLOR, 1.0f, 0);
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, BackgroundColor, 1.0f, 0);
             BeginScene();
         }
 
@@ -283,6 +285,7 @@ namespace TGC.Core.Example
             D3DDevice.Instance.DefaultValues();
             D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
             ElapsedTime = -1;
+            BackgroundColor = DEFAULT_CLEAR_COLOR;
         }
     }
 }

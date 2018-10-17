@@ -12,7 +12,7 @@ namespace TGC.Viewer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,7 +25,7 @@ namespace TGC.Viewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\TGC.Examples\\Shaders\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\..\\TGC.Examples\\Shaders\\")]
         public string ShadersDirectory {
             get {
                 return ((string)(this["ShadersDirectory"]));
@@ -85,7 +85,7 @@ namespace TGC.Viewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TgcViewer\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\..\\TGC.Examples\\Shaders\\Common\\")]
         public string CommonShaders {
             get {
                 return ((string)(this["CommonShaders"]));

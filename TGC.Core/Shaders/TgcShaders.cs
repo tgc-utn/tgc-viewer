@@ -158,8 +158,7 @@ namespace TGC.Core.Shaders
             VariosShader = loadEffect(shadersPath + "Varios.fx");
 
             //Crear vertexDeclaration comunes
-            VdecPositionColoredTextured = new VertexDeclaration(D3DDevice.Instance.Device,
-                PositionColoredTextured_VertexElements);
+            VdecPositionColoredTextured = new VertexDeclaration(D3DDevice.Instance.Device, PositionColoredTextured_VertexElements);
             VdecPositionTextured = new VertexDeclaration(D3DDevice.Instance.Device, PositionTextured_VertexElements);
             VdecPositionColored = new VertexDeclaration(D3DDevice.Instance.Device, PositionColored_VertexElements);
         }
@@ -257,7 +256,7 @@ namespace TGC.Core.Shaders
         /// <summary>
         ///     Cargar todas la matrices generales que necesita el shader, tomando
         ///     como primicia que la matriz de world es la identidad.
-        ///     Simplica los calculos respecto a setShaderTGCMatrix()
+        ///     Simplica los calculos respecto a setShaderMatrix()
         /// </summary>
         public void setShaderMatrixIdentity(Effect effect)
         {

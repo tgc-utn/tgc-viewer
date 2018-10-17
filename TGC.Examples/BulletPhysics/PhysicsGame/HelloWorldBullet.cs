@@ -30,7 +30,7 @@ namespace TGC.Examples.Bullet.Physics
             //Creamos shapes y bodies.
 
             //El piso es un plano estatico se dice que si tiene masa 0 es estatico.
-            var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBsVector, 0);
+            var floorShape = new StaticPlaneShape(TGCVector3.Up.ToBulletVector3(), 0);
             var floorMotionState = new DefaultMotionState();
             var floorInfo = new RigidBodyConstructionInfo(0, floorMotionState, floorShape);
             floorBody = new RigidBody(floorInfo);
@@ -39,7 +39,7 @@ namespace TGC.Examples.Bullet.Physics
             //Se crea una caja de tamaño 20 con rotaciones y origien en 10,100,10 y 1kg de masa.
             var boxShape = new BoxShape(10, 10, 10);
             var boxTransform = TGCMatrix.RotationYawPitchRoll(MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI).ToBsMatrix;
-            boxTransform.Origin = new TGCVector3(10, 100, 10).ToBsVector;
+            boxTransform.Origin = new TGCVector3(10, 100, 10).ToBulletVector3();
             DefaultMotionState boxMotionState = new DefaultMotionState(boxTransform);
             //Es importante calcular la inercia caso contrario el objeto no rotara.
             var boxLocalInertia = boxShape.CalculateLocalInertia(1f);
