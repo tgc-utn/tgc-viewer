@@ -29,7 +29,7 @@ namespace TGC.Core.BulletPhysics
             var boxTransform = TGCMatrix.RotationYawPitchRoll(yaw, pitch, roll).ToBsMatrix;
             boxTransform.Origin = position.ToBulletVector3();
             DefaultMotionState boxMotionState = new DefaultMotionState(boxTransform);
-            var boxLocalInertia = TGCVector3.Empty.ToBsVector;
+            var boxLocalInertia = TGCVector3.Empty.ToBulletVector3();
 
             if (inertia)
             {
@@ -190,7 +190,7 @@ namespace TGC.Core.BulletPhysics
             TriangleMesh triangleMesh = new TriangleMesh();
             for (int i = 0; i < vertexCoords.Length; i = i + 3)
             {
-                triangleMesh.AddTriangle(vertexCoords[i].ToBsVector, vertexCoords[i + 1].ToBsVector, vertexCoords[i + 2].ToBsVector);
+                triangleMesh.AddTriangle(vertexCoords[i].ToBulletVector3(), vertexCoords[i + 1].ToBulletVector3(), vertexCoords[i + 2].ToBulletVector3());
             }
 
             var transformationMatrix = TGCMatrix.RotationYawPitchRoll(0, 0, 0).ToBsMatrix;
