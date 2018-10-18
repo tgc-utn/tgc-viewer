@@ -36,7 +36,7 @@ namespace TGC.Core.Example
             Name = "Ejemplo en Blanco";
             Description = "Ejemplo en Blanco. Es hora de empezar a hacer tu propio ejemplo :)";
         }
-        
+
         public Color BackgroundColor { get; set; }
 
         /// <summary>

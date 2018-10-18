@@ -35,7 +35,7 @@ namespace TGC.Examples.Bullet.Physics
             triangleDataVB = newTriangleData;
         }
 
-        public void Init(String MediaDir)
+        public void Init(string MediaDir)
         {
             //Creamos el mundo fisico por defecto.
             collisionConfiguration = new DefaultCollisionConfiguration();
@@ -47,11 +47,11 @@ namespace TGC.Examples.Bullet.Physics
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBulletVector3();
 
             //Creamos el terreno
-            var meshRigidBody = BulletRigidBodyConstructor.CreateSurfaceFromHeighMap(triangleDataVB);
+            var meshRigidBody = BulletRigidBodyFactory.Instance.CreateSurfaceFromHeighMap(triangleDataVB);
             dynamicsWorld.AddRigidBody(meshRigidBody);
 
             //Creamos la esfera del dragon
-            dragonBall = BulletRigidBodyConstructor.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
+            dragonBall = BulletRigidBodyFactory.Instance.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
             dragonBall.SetDamping(0.1f, 0.5f);
             dragonBall.Restitution = 1f;
             dragonBall.Friction = 1;

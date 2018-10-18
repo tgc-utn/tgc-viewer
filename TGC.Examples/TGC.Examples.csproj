@@ -215,8 +215,8 @@
     <Compile Include="Transformations\EjemploBrazoRobot.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
-    <Compile Include="Tutorial\Physics\CubePhysic.cs" />
-    <Compile Include="Tutorial\Tutorial3.cs" />
+    <Compile Include="BulletPhysics\Physics\CubePhysic.cs" />
+    <Compile Include="BulletPhysics\Tutorial3Bullet.cs" />
     <Compile Include="Tutorial\Tutorial2.cs" />
     <Compile Include="Tutorial\Tutorial1.cs" />
     <Compile Include="Example\TGCExampleViewer.cs" />
@@ -248,6 +248,7 @@
     <Compile Include="Quake3Loader\EjemploLoadQ3Level.cs" />
     <Compile Include="Quake3Loader\Q3FpsCamera.cs" />
     <Compile Include="Quake3Loader\Q3ShaderParser.cs" />
+    <Compile Include="Tutorial\Tutorial3.cs" />
     <Compile Include="UserControls\Modifier\TGCBooleanModifier.cs">
       <SubType>UserControl</SubType>
     </Compile>

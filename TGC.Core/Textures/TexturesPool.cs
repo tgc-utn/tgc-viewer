@@ -10,13 +10,16 @@ namespace TGC.Core.Textures
     {
         private readonly Dictionary<string, PoolItem> texturesPool;
 
+        /// <summary>
+        /// Constructor privado para el Singleton.
+        /// </summary>
         private TexturesPool()
         {
             texturesPool = new Dictionary<string, PoolItem>();
         }
 
         /// <summary>
-        ///     Permite acceder a una instancia de la clase TexturesPool desde cualquier parte del codigo.
+        /// Permite acceder a la instancia del Singleton.
         /// </summary>
         public static TexturesPool Instance { get; } = new TexturesPool();
 

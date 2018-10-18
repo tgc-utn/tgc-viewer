@@ -78,12 +78,13 @@ namespace TGC.Core.Shaders
             VertexElement.VertexDeclarationEnd
         };
 
-        private TgcShaders()
-        {
-        }
+        /// <summary>
+        /// Constructor privado para el Singleton.
+        /// </summary>
+        private TgcShaders() { }
 
         /// <summary>
-        ///     Permite acceder a una instancia de la clase TgcShaders desde cualquier parte del codigo.
+        /// Permite acceder a la instancia del Singleton.
         /// </summary>
         public static TgcShaders Instance { get; } = new TgcShaders();
 
