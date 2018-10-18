@@ -71,7 +71,7 @@ namespace TGC.Examples.Bullet.Physics
             triangleDataVB = newTriangleData;
         }
 
-        public void Init(String MediaDir)
+        public void Init(string MediaDir)
         {
             #region Configuracion Basica de World
 
@@ -89,7 +89,7 @@ namespace TGC.Examples.Bullet.Physics
             #region Capsula
 
             //Cuerpo rigido de una capsula basica
-            capsuleRigidBody = BulletRigidBodyConstructor.CreateCapsule(10, 50, new TGCVector3(200, 500, 200), 10, false);
+            capsuleRigidBody = BulletRigidBodyFactory.Instance.CreateCapsule(10, 50, new TGCVector3(200, 500, 200), 10, false);
 
             //Valores que podemos modificar a partir del RigidBody base
             capsuleRigidBody.SetDamping(0.1f, 0f);
@@ -104,7 +104,7 @@ namespace TGC.Examples.Bullet.Physics
             #region Terreno
 
             //Creamos el RigidBody basico del Terreno
-            var meshRigidBody = BulletRigidBodyConstructor.CreateSurfaceFromHeighMap(triangleDataVB);
+            var meshRigidBody = BulletRigidBodyFactory.Instance.CreateSurfaceFromHeighMap(triangleDataVB);
 
             //Agregamos algo de friccion al RigidBody ya que este va a interactuar con objetos moviles
             //del World
@@ -118,7 +118,7 @@ namespace TGC.Examples.Bullet.Physics
             #region Esfera
 
             //Creamos una esfera para interactuar
-            pokeball = BulletRigidBodyConstructor.CreateBall(10f, 0.5f, new TGCVector3(100f, 500f, 100f));
+            pokeball = BulletRigidBodyFactory.Instance.CreateBall(10f, 0.5f, new TGCVector3(100f, 500f, 100f));
             pokeball.SetDamping(0.1f, 0.5f);
             pokeball.Restitution = 1f;
             //Agregamos la pokebola al World
@@ -167,21 +167,21 @@ namespace TGC.Examples.Bullet.Physics
             //Textura de caja
             var textureBox = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"MeshCreator\Textures\Madera\cajaMadera2.jpg");
 
-            box = BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(0, 12, 0), 0, 0, 0, 0.5f);
+            box = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(0, 12, 0), 0, 0, 0, 0.5f, true);
             dynamicsWorld.AddRigidBody(box);
             boxMesh = TGCBox.fromSize(new TGCVector3(40f, 40f, 40f), textureBox);
             boxMesh.updateValues();
 
             sizeBox = 40f;
-            boxB = BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(100, 40, 0), 0, 0, 0, 0.5f);
+            boxB = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(100, 40, 0), 0, 0, 0, 0.5f, true);
             dynamicsWorld.AddRigidBody(boxB);
             boxMeshB = TGCBox.fromSize(new TGCVector3(80f, 80f, 80f), textureBox);
             boxMeshB.updateValues();
 
-            box45 = BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(200, 40, 0), BulletSharp.MathUtil.SIMD_QUARTER_PI, 0, 0, 0.5f);
+            box45 = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(200, 40, 0), BulletSharp.MathUtil.SIMD_QUARTER_PI, 0, 0, 0.5f, true);
             dynamicsWorld.AddRigidBody(box45);
 
-            boxPush = BulletRigidBodyConstructor.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0.5f, new TGCVector3(-200, 60, 0), BulletSharp.MathUtil.SIMD_QUARTER_PI, 0, 0, 0.25f);
+            boxPush = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0.5f, new TGCVector3(-200, 60, 0), BulletSharp.MathUtil.SIMD_QUARTER_PI, 0, 0, 0.25f, true);
             dynamicsWorld.AddRigidBody(boxPush);
 
             boxMeshPush = TGCBox.fromSize(new TGCVector3(80f, 80f, 80f), textureBox);
@@ -201,7 +201,7 @@ namespace TGC.Examples.Bullet.Physics
             //Se crean 10 escalonescd d
             while (a < 10)
             {
-                escalonRigidBody = BulletRigidBodyConstructor.CreateBox(size, 0, new TGCVector3(200, a * 4 + 10, a * 20 + 100), 0, 0, 0, 0.1f);
+                escalonRigidBody = BulletRigidBodyFactory.Instance.CreateBox(size, 0, new TGCVector3(200, a * 4 + 10, a * 20 + 100), 0, 0, 0, 0.1f, true);
 
                 escalonesRigidBodies.Add(escalonRigidBody);
 
@@ -215,7 +215,7 @@ namespace TGC.Examples.Bullet.Physics
             #region Plataforma
 
             textureStones = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\cobblestone_quad.jpg");
-            rigidBodyPlataforma = BulletRigidBodyConstructor.CreateBox(new TGCVector3(50f, 15f, 50f), 0, new TGCVector3(200, 42.5f, 315), 0, 0, 0, 0.5f);
+            rigidBodyPlataforma = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(50f, 15f, 50f), 0, new TGCVector3(200, 42.5f, 315), 0, 0, 0, 0.5f, true);
             dynamicsWorld.AddRigidBody(rigidBodyPlataforma);
             plataforma = TGCBox.fromSize(new TGCVector3(50f, 15f, 50f), textureStones);
             plataforma.updateValues();
@@ -224,7 +224,7 @@ namespace TGC.Examples.Bullet.Physics
 
             #region Columna
 
-            columnaRigidBody = BulletRigidBodyConstructor.CreateCylinder(new TGCVector3(10, 50, 10), new TGCVector3(100, 50, 100), 0);
+            columnaRigidBody = BulletRigidBodyFactory.Instance.CreateCylinder(new TGCVector3(10, 50, 10), new TGCVector3(100, 50, 100), 0);
             dynamicsWorld.AddRigidBody(columnaRigidBody);
             var columnaLoader = new TgcSceneLoader();
             columnaMesh = columnaLoader.loadSceneFromFile(MediaDir + @"MeshCreator\Meshes\Cimientos\PilarEgipcio\PilarEgipcio-TgcScene.xml", MediaDir + @"MeshCreator\Meshes\Cimientos\PilarEgipcio\").Meshes[0];

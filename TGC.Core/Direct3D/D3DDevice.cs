@@ -12,10 +12,13 @@ namespace TGC.Core.Direct3D
         private PresentParameters d3dpp;
 
         /// <summary>
-        /// Constructor privado para poder hacer el singleton
+        /// Constructor privado para el Singleton
         /// </summary>
         private D3DDevice() { }
 
+        /// <summary>
+        /// Permite acceder a la instancia del Singleton.
+        /// </summary>
         public static D3DDevice Instance { get; } = new D3DDevice();
 
         /// <summary>

@@ -42,7 +42,6 @@ namespace TGC.Examples.Bullet.Physics
             floorBody = new RigidBody(floorInfo);
             floorBody.Friction = 1;
             floorBody.RollingFriction = 1;
-            // ballBody.SetDamping(0.1f, 0.9f);
             floorBody.Restitution = 1f;
             floorBody.UserObject = "floorBody";
             dynamicsWorld.AddRigidBody(floorBody);
@@ -51,7 +50,7 @@ namespace TGC.Examples.Bullet.Physics
             {
                 for (var j = 0; j < 10; j++)
                 {
-                    var boxBody = BulletRigidBodyConstructor.CreateBox(new TGCVector3(10, 10, 10), 1, new TGCVector3(i * 20f + 5f, j * 20f + 5f, 0f), 0, 0, 0, 0.5f);
+                    var boxBody = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(10, 10, 10), 1, new TGCVector3(i * 20f + 5f, j * 20f + 5f, 0f), 0, 0, 0, 0.5f, true);
                     boxBodys.Add(boxBody);
                     dynamicsWorld.AddRigidBody(boxBody);
                 }
@@ -84,7 +83,7 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx.Input.keyUp(Key.Space))
             {
-                var ballBody = BulletRigidBodyConstructor.CreateBall(10f, 1f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
+                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10f, 1f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
                 var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBulletVector3();
                 dir.Normalize();
                 ballBody.LinearVelocity = dir * 900;
@@ -97,7 +96,7 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx.Input.keyUp(Key.Q))
             {
-                var ballBody = BulletRigidBodyConstructor.CreateBall(10f, 10f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
+                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10f, 10f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
                 var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBulletVector3();
                 dir.Normalize();
                 ballBody.LinearVelocity = dir * 900;
@@ -110,7 +109,7 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx.Input.keyUp(Key.W))
             {
-                var ballBody = BulletRigidBodyConstructor.CreateBall(10f, 0.1f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
+                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10f, 0.1f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
                 var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBulletVector3();
                 dir.Normalize();
                 ballBody.LinearVelocity = dir * 900;

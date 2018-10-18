@@ -67,8 +67,8 @@ namespace TGC.Examples.MeshExamples
                     //Crear tres niveles de caja, una abajo y otra arriba, con texturas diferentes
                     cajasNivel1[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, 0, j * boxSize * 1.5f),
                         new TGCVector3(boxSize, boxSize, boxSize), box1Texture);
-                    cajasNivel1[cajas].Transform = TGCMatrix.Scaling(cajasNivel1[cajas].Scale) 
-                        * TGCMatrix.RotationYawPitchRoll(cajasNivel1[cajas].Rotation.Y, cajasNivel1[cajas].Rotation.X, cajasNivel1[cajas].Rotation.Z) 
+                    cajasNivel1[cajas].Transform = TGCMatrix.Scaling(cajasNivel1[cajas].Scale)
+                        * TGCMatrix.RotationYawPitchRoll(cajasNivel1[cajas].Rotation.Y, cajasNivel1[cajas].Rotation.X, cajasNivel1[cajas].Rotation.Z)
                         * TGCMatrix.Translation(cajasNivel1[cajas].Position);
 
                     cajasNivel2[cajas] = TGCBox.fromSize(new TGCVector3(i * boxSize, boxSize, j * boxSize * 1.5f),

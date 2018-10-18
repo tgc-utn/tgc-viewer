@@ -69,6 +69,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\BulletSharp.0.11.1\lib\net40-client\BulletSharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
@@ -214,7 +215,8 @@
     <Compile Include="Transformations\EjemploBrazoRobot.cs" />
     <Compile Include="Transformations\EjemploQuaternions.cs" />
     <Compile Include="Transformations\SistemaSolar\SistemaSolar.cs" />
-    <Compile Include="Tutorial\Tutorial3.cs" />
+    <Compile Include="BulletPhysics\Physics\CubePhysic.cs" />
+    <Compile Include="BulletPhysics\Tutorial3Bullet.cs" />
     <Compile Include="Tutorial\Tutorial2.cs" />
     <Compile Include="Tutorial\Tutorial1.cs" />
     <Compile Include="Example\TGCExampleViewer.cs" />
@@ -246,6 +248,7 @@
     <Compile Include="Quake3Loader\EjemploLoadQ3Level.cs" />
     <Compile Include="Quake3Loader\Q3FpsCamera.cs" />
     <Compile Include="Quake3Loader\Q3ShaderParser.cs" />
+    <Compile Include="Tutorial\Tutorial3.cs" />
     <Compile Include="UserControls\Modifier\TGCBooleanModifier.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -530,7 +533,7 @@
   <Import Project="..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets" Condition="Exists('..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets'))" />
   </Target>

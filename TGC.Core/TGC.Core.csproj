@@ -47,6 +47,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\BulletSharp.0.11.1\lib\net40-client\BulletSharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
@@ -79,7 +80,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BulletPhysics\BulletRigidBodyConstructor.cs" />
+    <Compile Include="BulletPhysics\BulletRigidBodyFactory.cs" />
     <Compile Include="Mathematica\TGCMatrix.cs" />
     <Compile Include="Mathematica\TGCPlane.cs" />
     <Compile Include="Mathematica\TGCQuaternion.cs" />

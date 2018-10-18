@@ -17,12 +17,13 @@ namespace TGC.Core.Textures
         /// </summary>
         public static readonly int DIRECTX_MULTITEXTURE_COUNT = 8;
 
-        private TexturesManager()
-        {
-        }
+        /// <summary>
+        /// Constructor privado para el Singleton.
+        /// </summary>
+        private TexturesManager() { }
 
         /// <summary>
-        ///     Permite acceder a una instancia de la clase TexturesManager desde cualquier parte del codigo.
+        /// Permite acceder a la instancia del Singleton.
         /// </summary>
         public static TexturesManager Instance { get; } = new TexturesManager();
 
