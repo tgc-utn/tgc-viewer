@@ -140,8 +140,8 @@ namespace TGC.Core.BoundingVolumes
             //Cargar shader si es la primera vez
             if (effect == null)
             {
-                effect = TgcShaders.Instance.VariosShader;
-                technique = TgcShaders.T_POSITION_COLORED;
+                effect = TGCShaders.Instance.VariosShader;
+                technique = TGCShaders.T_POSITION_COLORED;
             }
 
             //Actualizar vertices de BoundingBox solo si hubo una modificación
@@ -151,8 +151,8 @@ namespace TGC.Core.BoundingVolumes
                 dirtyValues = false;
             }
 
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
+            TGCShaders.Instance.SetShaderMatrixIdentity(effect);
+            D3DDevice.Instance.Device.VertexDeclaration = TGCShaders.Instance.VdecPositionColored;
             effect.Technique = technique;
 
             //Render con shader

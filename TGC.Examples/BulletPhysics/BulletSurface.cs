@@ -114,8 +114,8 @@ namespace TGC.Examples.Bullet
             terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.AutoGenerateMipMap, Pool.Managed);
 
             //Shader
-            effect = TgcShaders.Instance.VariosShader;
-            technique = TgcShaders.T_POSITION_TEXTURED;
+            effect = TGCShaders.Instance.VariosShader;
+            technique = TGCShaders.T_POSITION_TEXTURED;
 
             physicsExample = new TrianglePhysics();
             physicsExample.SetTriangleDataVB(data);
@@ -145,8 +145,8 @@ namespace TGC.Examples.Bullet
             effect.SetValue("texDiffuseMap", terrainTexture);
             TexturesManager.Instance.clear(1);
 
-            TgcShaders.Instance.setShaderMatrix(effect, TGCMatrix.Identity);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionTextured;
+            TGCShaders.Instance.SetShaderMatrix(effect, TGCMatrix.Identity);
+            D3DDevice.Instance.Device.VertexDeclaration = TGCShaders.Instance.VdecPositionTextured;
             effect.Technique = technique;
             D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 

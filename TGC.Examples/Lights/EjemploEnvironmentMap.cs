@@ -100,7 +100,7 @@ namespace TGC.Examples.Lights
             Camara = new TgcFpsCamera(new TGCVector3(200, 60, 50), Input);
 
             //Cargar Shader personalizado para EnviromentMap
-            effect = TgcShaders.loadEffect(ShadersDir + "EnvironmentMap.fx");
+            effect = TGCShaders.Instance.LoadEffect(ShadersDir + "EnvironmentMap.fx");
 
             //Cargar shader en meshes
             foreach (var m in meshes)

@@ -59,7 +59,7 @@ namespace TGC.Examples.Lights
             cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device, MediaDir + "CubeMap.dds");
 
             //Cargar Shader personalizado de EnvironmentMap
-            effect = TgcShaders.loadEffect(ShadersDir + "EnvironmentMap_Integrador2.fx");
+            effect = TGCShaders.Instance.LoadEffect(ShadersDir + "EnvironmentMap_Integrador2.fx");
 
             //Cargar escenario, pero inicialmente solo hacemos el parser, para separar los objetos que son solo luces y no meshes
             var scenePath = MediaDir + "NormalMapRoom\\NormalMapRoom-TgcScene.xml";
@@ -109,7 +109,7 @@ namespace TGC.Examples.Lights
                     //Por convencion de este ejemplo el NormalMap se llama igual que el DiffuseMap (y cada mesh tiene una sola)
                     var path = mesh.DiffuseMaps[0].FilePath;
                     var split = path.Split('.');
-                    path = split[0] + "." + split[1] + "_NormalMap.png";
+                    path = split[0] + "_NormalMap.png";
 
                     //Convertir TgcMesh a TgcMeshBumpMapping
                     var normalMap = TgcTexture.createTexture(path);
@@ -182,8 +182,8 @@ namespace TGC.Examples.Lights
             else
             {
                 //Sin luz: Restaurar shader default
-                currentShader = TgcShaders.Instance.TgcMeshShader;
-                currentTechnique = TgcShaders.Instance.getTgcMeshTechnique(TgcMesh.MeshRenderType.DIFFUSE_MAP);
+                currentShader = TGCShaders.Instance.TgcMeshShader;
+                currentTechnique = TGCShaders.Instance.GetTGCMeshTechnique(TgcMesh.MeshRenderType.DIFFUSE_MAP);
             }
 
             //Aplicar a cada mesh el shader actual

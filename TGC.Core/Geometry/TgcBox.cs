@@ -49,8 +49,8 @@ namespace TGC.Core.Geometry
             BoundingBox = new TgcBoundingAxisAlignBox();
 
             //Shader
-            Effect = TgcShaders.Instance.VariosShader;
-            Technique = TgcShaders.T_POSITION_COLORED;
+            Effect = TGCShaders.Instance.VariosShader;
+            Technique = TGCShaders.T_POSITION_COLORED;
         }
 
         /// <summary>
@@ -204,8 +204,8 @@ namespace TGC.Core.Geometry
             }
             TexturesManager.Instance.clear(1);
 
-            TgcShaders.Instance.setShaderMatrix(Effect, Transform);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColoredTextured;
+            TGCShaders.Instance.SetShaderMatrix(Effect, Transform);
+            D3DDevice.Instance.Device.VertexDeclaration = TGCShaders.Instance.VdecPositionColoredTextured;
             Effect.Technique = Technique;
             D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 
@@ -384,7 +384,7 @@ namespace TGC.Core.Geometry
                 Texture.dispose();
             }
             Texture = texture;
-            Technique = TgcShaders.T_POSITION_COLORED_TEXTURED;
+            Technique = TGCShaders.T_POSITION_COLORED_TEXTURED;
         }
 
         /// <summary>

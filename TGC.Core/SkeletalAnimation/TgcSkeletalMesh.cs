@@ -728,8 +728,8 @@ namespace TGC.Core.SkeletalAnimation
 
             //Shader
             vertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
-            effect = TgcShaders.Instance.TgcSkeletalMeshShader;
-            technique = TgcShaders.Instance.getTgcSkeletalMeshTechnique(this.renderType);
+            effect = TGCShaders.Instance.TgcSkeletalMeshShader;
+            technique = TGCShaders.Instance.GetTGCSkeletalMeshTechnique(this.renderType);
 
             //acomodar huesos
             setupSkeleton();
@@ -1067,7 +1067,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         protected void setShaderMatrix()
         {
-            TgcShaders.Instance.setShaderMatrix(effect, transform);
+            TGCShaders.Instance.SetShaderMatrix(effect, transform);
         }
 
         /// <summary>

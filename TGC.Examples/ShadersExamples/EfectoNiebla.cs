@@ -61,7 +61,7 @@ namespace TGC.Examples.ShadersExamples
             scene = loader.loadSceneFromFile(MediaDir + "Isla\\Isla-TgcScene.xml");
 
             //Cargar Shader personalizado
-            effect = TgcShaders.loadEffect(ShadersDir + "TgcViewer\\TgcFogShader.fx");
+            effect = TGCShaders.Instance.LoadEffect(TGCShaders.Instance.CommonShadersPath + "TgcFogShader.fx");
 
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
@@ -121,7 +121,7 @@ namespace TGC.Examples.ShadersExamples
                 }
                 else
                 {
-                    mesh.Effect = TgcShaders.Instance.TgcMeshShader;
+                    mesh.Effect = TGCShaders.Instance.TgcMeshShader;
                     mesh.Technique = "DIFFUSE_MAP";
                 }
 
@@ -139,7 +139,7 @@ namespace TGC.Examples.ShadersExamples
                 }
                 else
                 {
-                    mesh.Effect = TgcShaders.Instance.TgcMeshShader;
+                    mesh.Effect = TGCShaders.Instance.TgcMeshShader;
                     mesh.Technique = "DIFFUSE_MAP";
                 }
                 mesh.UpdateMeshTransform();

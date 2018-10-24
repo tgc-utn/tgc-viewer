@@ -145,7 +145,7 @@ namespace TGC.Examples.WorkshopShaders
         public void executeRender(Effect effect)
         {
             Device d3dDevice = D3DDevice.Instance.Device;
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            TGCShaders.Instance.SetShaderMatrixIdentity(effect);
 
             //Render terrain
             effect.SetValue("texDiffuseMap", terrainTexture);

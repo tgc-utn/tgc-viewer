@@ -80,7 +80,7 @@ namespace TGC.Examples.ShadersExamples
             dir_avion = new TGCVector3(0, 0, 1);
 
             //Cargar Shader personalizado
-            effect = TgcShaders.loadEffect(MyShaderDir + "ShadowMap.fx");
+            effect = TGCShaders.Instance.LoadEffect(MyShaderDir + "ShadowMap.fx");
 
             // le asigno el efecto a las mallas
             foreach (var T in scene.Meshes)

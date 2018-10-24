@@ -79,7 +79,7 @@ namespace TGC.Examples.PostProcess
                     D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
             depthStencilOld = D3DDevice.Instance.Device.DepthStencilSurface;
             //Cargar shader con efectos de Post-Procesado
-            effect = TgcShaders.loadEffect(ShadersDir + "PostProcess.fx");
+            effect = TGCShaders.Instance.LoadEffect(ShadersDir + "PostProcess.fx");
 
             //Configurar Technique dentro del shader
             effect.Technique = "AlarmaTechnique";

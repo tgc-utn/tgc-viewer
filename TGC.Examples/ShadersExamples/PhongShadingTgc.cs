@@ -82,18 +82,18 @@ namespace TGC.Examples.ShadersExamples
             if (lightEnable)
             {
                 //Con luz: Cambiar el shader actual por el shader default que trae el framework para iluminacion dinamica con PhongShading
-                currentShader = TgcShaders.Instance.TgcMeshPhongShader;
+                currentShader = TGCShaders.Instance.TgcMeshPhongShader;
             }
             else
             {
                 //Sin luz: Restaurar shader default
-                currentShader = TgcShaders.Instance.TgcMeshShader;
+                currentShader = TGCShaders.Instance.TgcMeshShader;
             }
 
             //Aplicar al mesh el shader actual
             mesh.Effect = currentShader;
             //El Technique depende del tipo RenderType del mesh
-            mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
+            mesh.Technique = TGCShaders.Instance.GetTGCMeshTechnique(mesh.RenderType);
 
             //Actualzar posicion de la luz
             var lightPos = lightPosModifier.Value;

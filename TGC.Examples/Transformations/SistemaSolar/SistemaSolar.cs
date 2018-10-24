@@ -48,8 +48,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
         {
             Category = "Transformations";
             Name = "Sistema Solar";
-            Description =
-                "Muestra como concatenar transformaciones para generar movimientos de planetas del sistema solar.";
+            Description = "Muestra como concatenar transformaciones para generar movimientos de planetas del sistema solar.";
         }
 
         public override void Init()
@@ -77,6 +76,11 @@ namespace TGC.Examples.Transformations.SistemaSolar
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\MoonTexture.jpg")
             });
 
+            //Deshabilitamos el manejo automatico de Transformaciones de TgcMesh, para poder manipularlas en forma personalizada
+            sun.AutoTransformEnable = false;
+            earth.AutoTransformEnable = false;
+            moon.AutoTransformEnable = false;
+
             //Camara en primera persona
             Camara = new TgcRotationalCamera(new TGCVector3(0f, 200f, 1000f), 500f, Input);
         }
@@ -95,15 +99,15 @@ namespace TGC.Examples.Transformations.SistemaSolar
             ClearTextures();
 
             //Actualizar transformacion y renderizar el sol
-            sun.Transform = getSunTransform(ElapsedTime);
+            sun.Transform = getSunTransform();
             sun.Render();
 
             //Actualizar transformacion y renderizar la tierra
-            earth.Transform = getEarthTransform(ElapsedTime);
+            earth.Transform = getEarthTransform();
             earth.Render();
 
             //Actualizar transformacion y renderizar la luna
-            moon.Transform = getMoonTransform(ElapsedTime, earth.Transform);
+            moon.Transform = getMoonTransform(earth.Transform);
             moon.Render();
 
             axisRotation += AXIS_ROTATION_SPEED * ElapsedTime;
@@ -117,7 +121,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
             PostRender();
         }
 
-        private TGCMatrix getSunTransform(float elapsedTime)
+        private TGCMatrix getSunTransform()
         {
             var scale = TGCMatrix.Scaling(SUN_SCALE);
             var yRot = TGCMatrix.RotationY(axisRotation);
@@ -125,7 +129,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
             return scale * yRot;
         }
 
-        private TGCMatrix getEarthTransform(float elapsedTime)
+        private TGCMatrix getEarthTransform()
         {
             var scale = TGCMatrix.Scaling(EARTH_SCALE);
             var yRot = TGCMatrix.RotationY(earthAxisRotation);
@@ -135,7 +139,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
             return scale * yRot * sunOffset * earthOrbit;
         }
 
-        private TGCMatrix getMoonTransform(float elapsedTime, TGCMatrix earthTransform)
+        private TGCMatrix getMoonTransform(TGCMatrix earthTransform)
         {
             var scale = TGCMatrix.Scaling(MOON_SCALE);
             var yRot = TGCMatrix.RotationY(axisRotation);

@@ -125,15 +125,15 @@ namespace TGC.Examples.Lights
             if (lightMesh.Enabled)
             {
                 //Con luz: Cambiar el shader actual por el shader default que trae el framework para iluminacion dinamica con PointLight
-                currentShader = TgcShaders.Instance.TgcMeshPointLightShader;
+                currentShader = TGCShaders.Instance.TgcMeshPointLightShader;
                 //Con luz: Cambiar el shader actual por el shader default que trae el framework para iluminacion dinamica con PointLight para Skeletal Mesh
-                currentShaderSkeletalMesh = TgcShaders.Instance.TgcSkeletalMeshPointLightShader;
+                currentShaderSkeletalMesh = TGCShaders.Instance.TgcSkeletalMeshPointLightShader;
             }
             else
             {
                 //Sin luz: Restaurar shader default
-                currentShader = TgcShaders.Instance.TgcMeshShader;
-                currentShaderSkeletalMesh = TgcShaders.Instance.TgcSkeletalMeshShader;
+                currentShader = TGCShaders.Instance.TgcMeshShader;
+                currentShaderSkeletalMesh = TGCShaders.Instance.TgcSkeletalMeshShader;
             }
 
             //Aplicar a cada mesh el shader actual
@@ -141,13 +141,13 @@ namespace TGC.Examples.Lights
             {
                 mesh.Effect = currentShader;
                 //El Technique depende del tipo RenderType del mesh
-                mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
+                mesh.Technique = TGCShaders.Instance.GetTGCMeshTechnique(mesh.RenderType);
             }
 
             //Aplicar al mesh el shader actual
             skeletalMesh.Effect = currentShaderSkeletalMesh;
             //El Technique depende del tipo RenderType del mesh
-            skeletalMesh.Technique = TgcShaders.Instance.getTgcSkeletalMeshTechnique(skeletalMesh.RenderType);
+            skeletalMesh.Technique = TGCShaders.Instance.GetTGCSkeletalMeshTechnique(skeletalMesh.RenderType);
 
             //Renderizar meshes
             foreach (var mesh in scene.Meshes)

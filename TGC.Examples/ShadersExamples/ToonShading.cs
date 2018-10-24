@@ -66,7 +66,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.D3dMesh.ComputeNormals(adj);
 
             //Cargar Shader personalizado
-            effect = TgcShaders.loadEffect(ShadersDir + "WorkshopShaders\\ToonShading.fx");
+            effect = TGCShaders.Instance.LoadEffect(ShadersDir + "WorkshopShaders\\ToonShading.fx");
 
             // le asigno el efecto a la malla
             mesh.Effect = effect;

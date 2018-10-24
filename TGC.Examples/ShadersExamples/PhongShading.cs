@@ -65,7 +65,7 @@ namespace TGC.Examples.ShadersExamples
             mesh = scene.Meshes[0];
 
             //Cargar Shader personalizado
-            effect = TgcShaders.loadEffect(MyShaderDir + "PhongShading.fx");
+            effect = TGCShaders.Instance.LoadEffect(MyShaderDir + "PhongShading.fx");
 
             // Pasos standard:
             // le asigno el efecto a la malla
@@ -186,9 +186,9 @@ namespace TGC.Examples.ShadersExamples
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 foreach (var m in scene.Meshes)
                 {
-                    m.Effect = TgcShaders.Instance.TgcMeshShader;
+                    m.Effect = TGCShaders.Instance.TgcMeshShader;
                     m.RenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
-                    m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);
+                    m.Technique = TGCShaders.Instance.GetTGCMeshTechnique(m.RenderType);
                     m.UpdateMeshTransform();
                     m.Render();
                 }
@@ -201,9 +201,9 @@ namespace TGC.Examples.ShadersExamples
                 D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
                 foreach (var m in scene.Meshes)
                 {
-                    m.Effect = TgcShaders.Instance.TgcMeshShader;
+                    m.Effect = TGCShaders.Instance.TgcMeshShader;
                     m.RenderType = TgcMesh.MeshRenderType.DIFFUSE_MAP;
-                    m.Technique = TgcShaders.Instance.getTgcMeshTechnique(m.RenderType);
+                    m.Technique = TGCShaders.Instance.GetTGCMeshTechnique(m.RenderType);
                     m.UpdateMeshTransform();
                     m.Render();
                 }

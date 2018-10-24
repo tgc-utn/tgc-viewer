@@ -6,6 +6,9 @@ using TGC.Core.Textures;
 
 namespace TGC.Core.Direct3D
 {
+    /// <summary>
+    /// Un dispositivo representa elementos primitivos, crea recursos, controla las variables de nivel de sistema, y obtiene y establece paletas.
+    /// </summary>
     public class D3DDevice
     {
         public static readonly Material DEFAULT_MATERIAL = new Material();

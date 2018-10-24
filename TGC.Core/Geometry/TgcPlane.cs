@@ -51,8 +51,8 @@ namespace TGC.Core.Geometry
             UVOffset = TGCVector2.Zero;
 
             //Shader
-            Effect = TgcShaders.Instance.VariosShader;
-            Technique = TgcShaders.T_POSITION_TEXTURED;
+            Effect = TGCShaders.Instance.VariosShader;
+            Technique = TGCShaders.T_POSITION_TEXTURED;
         }
 
         /// <summary>
@@ -198,8 +198,8 @@ namespace TGC.Core.Geometry
 
             TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", Texture);
             TexturesManager.Instance.clear(1);
-            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionTextured;
+            TGCShaders.Instance.SetShaderMatrixIdentity(Effect);
+            D3DDevice.Instance.Device.VertexDeclaration = TGCShaders.Instance.VdecPositionTextured;
             Effect.Technique = Technique;
 
             //Render con shader

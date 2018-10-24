@@ -44,7 +44,7 @@ namespace TGC.Examples.PostProcess
         public override void Init()
         {
             //Cargar shader de este ejemplo
-            effect = TgcShaders.loadEffect(ShadersDir + "EjemploGetZBuffer.fx");
+            effect = TGCShaders.Instance.LoadEffect(ShadersDir + "EjemploGetZBuffer.fx");
 
             //Cargamos un escenario
             var loader = new TgcSceneLoader();

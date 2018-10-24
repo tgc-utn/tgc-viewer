@@ -527,8 +527,8 @@ namespace TGC.Core.KeyFrameLoader
             Animations = new Dictionary<string, TgcKeyFrameAnimation>();
 
             //Shader
-            effect = TgcShaders.Instance.TgcKeyFrameMeshShader;
-            technique = TgcShaders.Instance.getTgcKeyFrameMeshTechnique(RenderType);
+            effect = TGCShaders.Instance.TgcKeyFrameMeshShader;
+            technique = TGCShaders.Instance.GetTGCKeyFrameMeshTechnique(RenderType);
         }
 
         /// <summary>
@@ -789,7 +789,7 @@ namespace TGC.Core.KeyFrameLoader
         /// </summary>
         protected void setShaderMatrix()
         {
-            TgcShaders.Instance.setShaderMatrix(effect, Transform);
+            TGCShaders.Instance.SetShaderMatrix(effect, Transform);
         }
 
         /// <summary>

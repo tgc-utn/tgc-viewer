@@ -62,7 +62,7 @@ namespace TGC.Examples.WorkshopShaders
             Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 125), 50, 0.15f, 50f, Input);
 
             //Cargar Shader personalizado
-            effect = TgcShaders.loadEffect(ShadersDir + "WorkshopShaders\\PlanarShadows.fx");
+            effect = TGCShaders.Instance.LoadEffect(ShadersDir + "WorkshopShaders\\PlanarShadows.fx");
 
             // le asigno el efecto a las mallas
             foreach (TgcMesh T in scene.Meshes)

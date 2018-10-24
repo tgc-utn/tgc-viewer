@@ -187,7 +187,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Cargar Shader personalizado
             effect =
-                TgcShaders.loadEffect(ShadersDir + "WorkshopShaders\\Demo.fx");
+                TGCShaders.Instance.LoadEffect(ShadersDir + "WorkshopShaders\\Demo.fx");
 
             // le asigno el efecto a las mallas
             mesh.Effect = effect;

@@ -46,7 +46,7 @@ namespace TGC.Examples.ShadersExamples
             mesh = scene.Meshes[0];
 
             //Cargar Shader personalizado
-            mesh.Effect = TgcShaders.loadEffect(ShadersDir + "Ejemplo1.fx");
+            mesh.Effect = TGCShaders.Instance.LoadEffect(ShadersDir + "Ejemplo1.fx");
 
             //Modifier para Technique de shader
             techniqueModifier = AddInterval("Technique", new[]

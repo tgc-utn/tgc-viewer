@@ -239,7 +239,7 @@ namespace TGC.Examples.ShadersExamples
 
         public void executeRender(Effect effect)
         {
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            TGCShaders.Instance.SetShaderMatrixIdentity(effect);
 
             //Render terrain
             effect.SetValue("texDiffuseMap", terrainTexture);

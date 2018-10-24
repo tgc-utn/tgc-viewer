@@ -60,7 +60,7 @@ namespace TGC.Viewer.Model
             DirectSound.InitializeD3DDevice(control);
 
             //Cargar shaders del framework
-            TgcShaders.Instance.loadCommonShaders(pathCommonShaders);
+            TGCShaders.Instance.LoadCommonShaders(pathCommonShaders, D3DDevice.Instance);
         }
 
         /// <summary>

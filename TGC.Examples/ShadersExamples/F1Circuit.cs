@@ -205,7 +205,7 @@ namespace TGC.Examples.ShadersExamples
         public void render(Effect effect)
         {
             var device = D3DDevice.Instance.Device;
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            TGCShaders.Instance.SetShaderMatrixIdentity(effect);
             device.VertexFormat = CustomVertex.PositionTextured.Format;
             device.SetStreamSource(0, vb, 0);
 
@@ -266,7 +266,7 @@ namespace TGC.Examples.ShadersExamples
             // Ahora los objetos transparentes (el guarda rail, y los carteles)
             // guarda rail
             device.RenderState.AlphaBlendEnable = true;
-            TgcShaders.Instance.setShaderMatrixIdentity(effect);
+            TGCShaders.Instance.SetShaderMatrixIdentity(effect);
             device.VertexFormat = CustomVertex.PositionTextured.Format;
             device.SetStreamSource(0, vb, 0);
             effect.SetValue("texDiffuseMap", textura_guardrail);

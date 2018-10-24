@@ -30,8 +30,8 @@ namespace TGC.Core.Geometry
             AlphaBlendEnable = false;
 
             //Shader
-            Effect = TgcShaders.Instance.VariosShader;
-            Technique = TgcShaders.T_POSITION_COLORED;
+            Effect = TGCShaders.Instance.VariosShader;
+            Technique = TGCShaders.T_POSITION_COLORED;
         }
 
         /// <summary>
@@ -111,8 +111,8 @@ namespace TGC.Core.Geometry
             TexturesManager.Instance.clear(0);
             TexturesManager.Instance.clear(1);
 
-            TgcShaders.Instance.setShaderMatrixIdentity(Effect);
-            D3DDevice.Instance.Device.VertexDeclaration = TgcShaders.Instance.VdecPositionColored;
+            TGCShaders.Instance.SetShaderMatrixIdentity(Effect);
+            D3DDevice.Instance.Device.VertexDeclaration = TGCShaders.Instance.VdecPositionColored;
             Effect.Technique = Technique;
             D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
 

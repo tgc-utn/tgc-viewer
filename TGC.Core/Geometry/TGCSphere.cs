@@ -269,7 +269,7 @@ namespace TGC.Core.Geometry
         {
             Texture = null;
 
-            Technique = TgcShaders.T_POSITION_COLORED;
+            Technique = TGCShaders.T_POSITION_COLORED;
 
             if (this.Color != color) mustUpdate = true;
 
@@ -285,7 +285,7 @@ namespace TGC.Core.Geometry
 
             Texture = texture;
 
-            Technique = TgcShaders.T_POSITION_TEXTURED;
+            Technique = TGCShaders.T_POSITION_TEXTURED;
         }
 
         /// <summary>
@@ -349,7 +349,7 @@ namespace TGC.Core.Geometry
             boundingSphere = new TgcBoundingSphere();
 
             //Shader
-            Effect = TgcShaders.Instance.VariosShader;
+            Effect = TGCShaders.Instance.VariosShader;
 
             //Tipo de vertice y technique
             if (texture != null) setTexture(texture);
@@ -646,7 +646,7 @@ namespace TGC.Core.Geometry
 
             TexturesManager.Instance.clear(1);
 
-            TgcShaders.Instance.setShaderMatrix(Effect, Transform);
+            TGCShaders.Instance.SetShaderMatrix(Effect, Transform);
             Effect.Technique = Technique;
 
             D3DDevice.Instance.Device.VertexDeclaration = Vertex.PositionColoredTexturedNormal_Declaration;
@@ -659,8 +659,8 @@ namespace TGC.Core.Geometry
 
             if (RenderEdges)
             {
-                if (Texture == null) Effect.Technique = TgcShaders.T_POSITION_TEXTURED;
-                else Effect.Technique = TgcShaders.T_POSITION_COLORED;
+                if (Texture == null) Effect.Technique = TGCShaders.T_POSITION_TEXTURED;
+                else Effect.Technique = TGCShaders.T_POSITION_COLORED;
 
                 renderWithFill(FillMode.WireFrame);
             }

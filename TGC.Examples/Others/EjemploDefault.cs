@@ -40,8 +40,8 @@ namespace TGC.Examples.Others
             mesh = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
 
             //Cargar Shader de PhongShading
-            mesh.Effect = TgcShaders.Instance.TgcMeshPhongShader;
-            mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
+            mesh.Effect = TGCShaders.Instance.TgcMeshPhongShader;
+            mesh.Technique = TGCShaders.Instance.GetTGCMeshTechnique(mesh.RenderType);
 
             //Texto help
             textHelp = new TgcText2D();

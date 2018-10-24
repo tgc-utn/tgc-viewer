@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
+using TGC.Core.Shaders;
 using TGC.Core.SkeletalAnimation;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
@@ -87,7 +88,7 @@ namespace TGC.Examples.WorkshopShaders
 
             //Cargar Shader personalizado
             string compilationErrors;
-            effect = Effect.FromFile(d3dDevice, ShadersDir + "TgcViewer\\TgcSkeletalMeshShader.fx", null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
+            effect = Effect.FromFile(d3dDevice, TGCShaders.Instance.CommonShadersPath + "TgcSkeletalMeshShader.fx", null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (effect == null)
             {
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);

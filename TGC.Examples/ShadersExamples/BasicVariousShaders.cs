@@ -83,7 +83,7 @@ namespace TGC.Examples.ShadersExamples
 
         private void CreateEffect()
         {
-            this.effect = TgcShaders.loadEffect(ShadersDir + "Varios.fx");
+            this.effect = TGCShaders.Instance.LoadEffect(ShadersDir + "Varios.fx");
         }
 
         private void CreateMesh()

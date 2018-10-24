@@ -155,7 +155,7 @@
     <Compile Include="SceneLoader\TgcSceneParser.cs" />
     <Compile Include="Shaders\TgcPostProcessingUtils.cs" />
     <Compile Include="Shaders\TgcScreenQuad.cs" />
-    <Compile Include="Shaders\TgcShaders.cs" />
+    <Compile Include="Shaders\TGCShaders.cs" />
     <Compile Include="SkeletalAnimation\TgcSkeletalAnimation.cs" />
     <Compile Include="SkeletalAnimation\TgcSkeletalAnimationBoneData.cs" />
     <Compile Include="SkeletalAnimation\TgcSkeletalAnimationBoneFrameData.cs" />

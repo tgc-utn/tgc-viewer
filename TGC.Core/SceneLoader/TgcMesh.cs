@@ -579,8 +579,8 @@ namespace TGC.Core.SceneLoader
 
             //Shader
             vertexDeclaration = new VertexDeclaration(mesh.Device, mesh.Declaration);
-            Effect = TgcShaders.Instance.TgcMeshShader;
-            Technique = TgcShaders.Instance.getTgcMeshTechnique(this.renderType);
+            Effect = TGCShaders.Instance.TgcMeshShader;
+            Technique = TGCShaders.Instance.GetTGCMeshTechnique(this.renderType);
         }
 
         /// <summary>
@@ -588,7 +588,7 @@ namespace TGC.Core.SceneLoader
         /// </summary>
         protected void setShaderMatrix()
         {
-            TgcShaders.Instance.setShaderMatrix(Effect, transform);
+            TGCShaders.Instance.SetShaderMatrix(Effect, transform);
         }
 
         /// <summary>

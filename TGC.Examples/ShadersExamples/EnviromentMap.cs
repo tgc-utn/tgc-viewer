@@ -155,7 +155,7 @@ namespace TGC.Examples.ShadersExamples
             }
 
             //Cargar Shader personalizado
-            effect = TgcShaders.loadEffect(ShadersDir + "WorkshopShaders\\EnvMap.fx");
+            effect = TGCShaders.Instance.LoadEffect(ShadersDir + "WorkshopShaders\\EnvMap.fx");
 
             // le asigno el efecto a la malla
             mesh.Effect = effect;
