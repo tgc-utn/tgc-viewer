@@ -67,6 +67,8 @@ namespace TGC.Examples.Bullet.Physics
 
             TgcTexture bb8BodyTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"BB8\bb8-3D-model_D.jpg");
             bb8meshbody = new TGCSphere(1, bb8BodyTexture, TGCVector3.Empty);
+            bb8meshbody.BasePoly = TGCSphere.eBasePoly.CUBE;
+            bb8meshbody.LevelOfDetail = 5;
             bb8meshbody.updateValues();
 
             TgcTexture bb8HeadTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"BB8\D.jpg");
@@ -74,17 +76,20 @@ namespace TGC.Examples.Bullet.Physics
             bb8meshhead.updateValues();
             offsetHead = new TGCVector3(0, 25, 0);
 
+            #region Portal Boxes Init
             //Cajas Portal
+            /*
             TgcTexture portalBoxTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"BB8\portalCubeFace.jpg");
             portalBox = TGCBox.fromSize(new TGCVector3(20, 20, 20), portalBoxTexture);
 
             portalBoxes = new List<RigidBody>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 180; i++)
             {
-                portalBoxRigidBody = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(40, 40, 40), 0.2f, new TGCVector3(30, 150 + (50*i) , 30), 0, 0, 0, 1, true);
+                portalBoxRigidBody = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(40, 40, 40), 0.2f, new TGCVector3(900*FastMath.Cos(50*i + FastMath.PI), 450 + (50*i) , 1400*FastMath.Sin(i*30)), 0, 0, 0, 1, true);
                 dynamicsWorld.AddRigidBody(portalBoxRigidBody);
                 portalBoxes.Add(portalBoxRigidBody);
-            }
+            }*/
+            #endregion
 
             director = new TGCVector3(1, 0, 0);
             directorSide = new TGCVector3(0, 0, 1);
@@ -136,12 +141,15 @@ namespace TGC.Examples.Bullet.Physics
             bb8meshhead.Transform = TGCMatrix.Scaling(15, 15, 15) * TGCMatrix.Translation(bb8meshhead.Position);
             bb8meshhead.Render();
 
+            #region Portal Boxes Render
+            /*
             foreach (var portalBoxRigidBody in portalBoxes)
             {
                 portalBox.Transform = TGCMatrix.Scaling(4, 4, 4) * new TGCMatrix(portalBoxRigidBody.InterpolationWorldTransform);
                 portalBox.Render();
-            }
-            
+            }*/
+            #endregion
+
         }
 
         public void Dispose()
