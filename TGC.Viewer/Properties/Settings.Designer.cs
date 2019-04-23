@@ -12,7 +12,7 @@ namespace TGC.Viewer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.8.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -97,7 +97,7 @@ namespace TGC.Viewer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://drive.google.com/open?id=1OII2l6ZZyQcm8woV4HJ2_pnZyh_ym5EU")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://s3.amazonaws.com/tgcutn/tgc-media.zip")]
         public string MediaLink {
             get {
                 return ((string)(this["MediaLink"]));

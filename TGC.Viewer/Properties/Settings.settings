@@ -21,7 +21,7 @@
       <Value Profile="(Default)">..\..\..\..\TGC.Examples\Shaders\Common\</Value>
     </Setting>
     <Setting Name="MediaLink" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://drive.google.com/open?id=1OII2l6ZZyQcm8woV4HJ2_pnZyh_ym5EU</Value>
+      <Value Profile="(Default)">https://s3.amazonaws.com/tgcutn/tgc-media.zip</Value>
     </Setting>
   </Settings>
 </SettingsFile>
