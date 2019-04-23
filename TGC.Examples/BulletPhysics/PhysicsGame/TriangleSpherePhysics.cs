@@ -25,7 +25,7 @@ namespace TGC.Examples.Bullet.Physics
         private CustomVertex.PositionTextured[] triangleDataVB;
 
         //Dragon Ball
-        private RigidBody dragonBall;
+        private RigidBody bb8;
 
         private TGCSphere sphereMesh;
         private TGCVector3 director;
@@ -42,21 +42,21 @@ namespace TGC.Examples.Bullet.Physics
             dispatcher = new CollisionDispatcher(collisionConfiguration);
             GImpactCollisionAlgorithm.RegisterAlgorithm(dispatcher);
             constraintSolver = new SequentialImpulseConstraintSolver();
-            overlappingPairCache = new DbvtBroadphase(); //AxisSweep3(new BsVector3(-5000f, -5000f, -5000f), new BsVector3(5000f, 5000f, 5000f), 8192);
+            overlappingPairCache = new DbvtBroadphase(); 
             dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, overlappingPairCache, constraintSolver, collisionConfiguration);
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBulletVector3();
 
             //Creamos el terreno
-            var meshRigidBody = BulletRigidBodyFactory.Instance.CreateSurfaceFromHeighMap(triangleDataVB);
+            RigidBody meshRigidBody = BulletRigidBodyFactory.Instance.CreateSurfaceFromHeighMap(triangleDataVB);
             dynamicsWorld.AddRigidBody(meshRigidBody);
 
-            //Creamos la esfera del dragon
-            dragonBall = BulletRigidBodyFactory.Instance.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
-            dragonBall.SetDamping(0.1f, 0.5f);
-            dragonBall.Restitution = 1f;
-            dragonBall.Friction = 1;
-            dynamicsWorld.AddRigidBody(dragonBall);
-            var textureDragonBall = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\dragonball.jpg");
+            //Creamos el cuerpo de BB8
+            bb8 = BulletRigidBodyFactory.Instance.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
+            bb8.SetDamping(0.1f, 0.5f);
+            bb8.Restitution = 1f;
+            bb8.Friction = 1;
+            dynamicsWorld.AddRigidBody(bb8);
+            TgcTexture textureDragonBall = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"BB8\bb8-3D-model_D.jpg");
             sphereMesh = new TGCSphere(1, textureDragonBall, TGCVector3.Empty);
             sphereMesh.updateValues();
             director = new TGCVector3(1, 0, 0);
@@ -65,21 +65,21 @@ namespace TGC.Examples.Bullet.Physics
         public void Update(TgcD3dInput input)
         {
             dynamicsWorld.StepSimulation(1 / 60f, 100);
-            var strength = 1.50f;
-            var angle = 5;
+            float strength = 1.50f;
+            int angle = 5;
 
             if (input.keyDown(Key.W))
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
-                dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.ApplyCentralImpulse(-strength * director.ToBulletVector3());
+                bb8.ActivationState = ActivationState.ActiveTag;
+                bb8.ApplyCentralImpulse(-strength * director.ToBulletVector3());
             }
 
             if (input.keyDown(Key.S))
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
-                dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.ApplyCentralImpulse(strength * director.ToBulletVector3());
+                bb8.ActivationState = ActivationState.ActiveTag;
+                bb8.ApplyCentralImpulse(strength * director.ToBulletVector3());
             }
 
             if (input.keyDown(Key.A))
@@ -94,14 +94,14 @@ namespace TGC.Examples.Bullet.Physics
 
             if (input.keyPressed(Key.Space))
             {
-                dragonBall.ActivationState = ActivationState.ActiveTag;
-                dragonBall.ApplyCentralImpulse(TGCVector3.Up.ToBulletVector3() * 150);
+                bb8.ActivationState = ActivationState.ActiveTag;
+                bb8.ApplyCentralImpulse(TGCVector3.Up.ToBulletVector3() * 150);
             }
         }
 
         public void Render()
         {
-            sphereMesh.Transform = TGCMatrix.Scaling(30, 30, 30) * new TGCMatrix(dragonBall.InterpolationWorldTransform);
+            sphereMesh.Transform = TGCMatrix.Scaling(30, 30, 30) * new TGCMatrix(bb8.InterpolationWorldTransform);
             sphereMesh.Render();
         }
 

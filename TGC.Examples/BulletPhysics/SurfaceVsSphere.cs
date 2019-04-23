@@ -28,8 +28,8 @@ namespace TGC.Examples.Bullet
         {
             terrain = new TgcSimpleTerrain();
             var position = TGCVector3.Empty;
-            terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg", 20, 0.5f, position);
-            terrain.loadTexture(MediaDir + "Heighmaps\\" + "grass.jpg");
+            terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "Heightmap1.jpg", 60, 0.5f, position);
+            terrain.loadTexture(MediaDir + "BB8\\" + "sand-texture4.jpg");
 
             physicsExample = new TriangleSpherePhysics();
             physicsExample.SetTriangleDataVB(terrain.getData());
@@ -41,8 +41,9 @@ namespace TGC.Examples.Bullet
         public override void Update()
         {
             PreUpdate();
+
             physicsExample.Update(Input);
-            //UserVars.setValue("Tgccito_Position", physicsExample.GetCharacterPosition());
+
             PostUpdate();
         }
 
