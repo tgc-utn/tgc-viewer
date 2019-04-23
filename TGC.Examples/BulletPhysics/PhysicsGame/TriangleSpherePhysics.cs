@@ -2,6 +2,7 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
+using System.Collections.Generic;
 using TGC.Core.BulletPhysics;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -24,11 +25,18 @@ namespace TGC.Examples.Bullet.Physics
         //Datos del los triangulos del VertexBuffer
         private CustomVertex.PositionTextured[] triangleDataVB;
 
-        //Dragon Ball
-        private RigidBody bb8;
-
-        private TGCSphere sphereMesh;
+        //BB8
+        private RigidBody bb8rigidbody;
+        private TGCSphere bb8meshbody;
+        private TGCSphere bb8meshhead;
         private TGCVector3 director;
+        private TGCVector3 directorSide;
+        private TGCVector3 offsetHead;
+
+        //Portal Box
+        private TGCBox portalBox;
+        private RigidBody portalBoxRigidBody;
+        private List<RigidBody> portalBoxes;
 
         public void SetTriangleDataVB(CustomVertex.PositionTextured[] newTriangleData)
         {
@@ -51,15 +59,36 @@ namespace TGC.Examples.Bullet.Physics
             dynamicsWorld.AddRigidBody(meshRigidBody);
 
             //Creamos el cuerpo de BB8
-            bb8 = BulletRigidBodyFactory.Instance.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
-            bb8.SetDamping(0.1f, 0.5f);
-            bb8.Restitution = 1f;
-            bb8.Friction = 1;
-            dynamicsWorld.AddRigidBody(bb8);
-            TgcTexture textureDragonBall = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"BB8\bb8-3D-model_D.jpg");
-            sphereMesh = new TGCSphere(1, textureDragonBall, TGCVector3.Empty);
-            sphereMesh.updateValues();
+            bb8rigidbody = BulletRigidBodyFactory.Instance.CreateBall(30f, 0.75f, new TGCVector3(100f, 500f, 100f));
+            bb8rigidbody.SetDamping(0.1f, 0.5f);
+            bb8rigidbody.Restitution = 1f;
+            bb8rigidbody.Friction = 1;
+            dynamicsWorld.AddRigidBody(bb8rigidbody);
+
+            TgcTexture bb8BodyTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"BB8\bb8-3D-model_D.jpg");
+            bb8meshbody = new TGCSphere(1, bb8BodyTexture, TGCVector3.Empty);
+            bb8meshbody.updateValues();
+
+            TgcTexture bb8HeadTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"BB8\D.jpg");
+            bb8meshhead = new TGCSphere(1, bb8HeadTexture, TGCVector3.Empty);
+            bb8meshhead.updateValues();
+            offsetHead = new TGCVector3(0, 25, 0);
+
+            //Cajas Portal
+            TgcTexture portalBoxTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"BB8\portalCubeFace.jpg");
+            portalBox = TGCBox.fromSize(new TGCVector3(20, 20, 20), portalBoxTexture);
+
+            portalBoxes = new List<RigidBody>();
+            for (int i = 0; i < 10; i++)
+            {
+                portalBoxRigidBody = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(40, 40, 40), 0.2f, new TGCVector3(30, 150 + (50*i) , 30), 0, 0, 0, 1, true);
+                dynamicsWorld.AddRigidBody(portalBoxRigidBody);
+                portalBoxes.Add(portalBoxRigidBody);
+            }
+
             director = new TGCVector3(1, 0, 0);
+            directorSide = new TGCVector3(0, 0, 1);
+
         }
 
         public void Update(TgcD3dInput input)
@@ -71,43 +100,53 @@ namespace TGC.Examples.Bullet.Physics
             if (input.keyDown(Key.W))
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
-                bb8.ActivationState = ActivationState.ActiveTag;
-                bb8.ApplyCentralImpulse(-strength * director.ToBulletVector3());
+                bb8rigidbody.ActivationState = ActivationState.ActiveTag;
+                bb8rigidbody.ApplyCentralImpulse(-strength * director.ToBulletVector3());
             }
 
             if (input.keyDown(Key.S))
             {
                 //Activa el comportamiento de la simulacion fisica para la capsula
-                bb8.ActivationState = ActivationState.ActiveTag;
-                bb8.ApplyCentralImpulse(strength * director.ToBulletVector3());
+                bb8rigidbody.ActivationState = ActivationState.ActiveTag;
+                bb8rigidbody.ApplyCentralImpulse(strength * director.ToBulletVector3());
             }
 
             if (input.keyDown(Key.A))
             {
-                director.TransformCoordinate(TGCMatrix.RotationY(-angle * 0.001f));
+                bb8rigidbody.ActivationState = ActivationState.ActiveTag;
+                bb8rigidbody.ApplyCentralImpulse(-strength * directorSide.ToBulletVector3());
+                //director.TransformCoordinate(TGCMatrix.RotationY(-angle * 0.001f));
             }
 
             if (input.keyDown(Key.D))
             {
-                director.TransformCoordinate(TGCMatrix.RotationY(angle * 0.001f));
+                bb8rigidbody.ActivationState = ActivationState.ActiveTag;
+                bb8rigidbody.ApplyCentralImpulse(strength * directorSide.ToBulletVector3());
+                //director.TransformCoordinate(TGCMatrix.RotationY(angle * 0.001f));
             }
 
-            if (input.keyPressed(Key.Space))
-            {
-                bb8.ActivationState = ActivationState.ActiveTag;
-                bb8.ApplyCentralImpulse(TGCVector3.Up.ToBulletVector3() * 150);
-            }
+            bb8meshhead.Position = new TGCVector3(bb8rigidbody.CenterOfMassPosition) + offsetHead;
         }
 
         public void Render()
         {
-            sphereMesh.Transform = TGCMatrix.Scaling(30, 30, 30) * new TGCMatrix(bb8.InterpolationWorldTransform);
-            sphereMesh.Render();
+            bb8meshbody.Transform = TGCMatrix.Scaling(30, 30, 30) * new TGCMatrix(bb8rigidbody.InterpolationWorldTransform);
+            bb8meshbody.Render();
+
+            bb8meshhead.Transform = TGCMatrix.Scaling(15, 15, 15) * TGCMatrix.Translation(bb8meshhead.Position);
+            bb8meshhead.Render();
+
+            foreach (var portalBoxRigidBody in portalBoxes)
+            {
+                portalBox.Transform = TGCMatrix.Scaling(4, 4, 4) * new TGCMatrix(portalBoxRigidBody.InterpolationWorldTransform);
+                portalBox.Render();
+            }
+            
         }
 
         public void Dispose()
         {
-            sphereMesh.Dispose();
+            bb8meshbody.Dispose();
 
             //Se hace dispose del modelo fisico.
             dynamicsWorld.Dispose();

@@ -28,7 +28,7 @@ namespace TGC.Examples.Bullet
         {
             terrain = new TgcSimpleTerrain();
             var position = TGCVector3.Empty;
-            terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "Heightmap1.jpg", 60, 0.5f, position);
+            terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "Heightmap1.jpg", 120, 1.5f, position);
             terrain.loadTexture(MediaDir + "BB8\\" + "sand-texture4.jpg");
 
             physicsExample = new TriangleSpherePhysics();
