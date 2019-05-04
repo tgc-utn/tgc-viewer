@@ -223,6 +223,13 @@ namespace TGC.Core.SceneLoader
                 tgcScene.PortalRendering = portalLoader.loadFromData(tgcScene, sceneData.portalData);
             }
 
+            //Fixloader
+            //Deshabilitamos el manejo automatico de Transformaciones de TgcMesh, para poder manipularlas en forma personalizada
+            foreach (TgcMesh mesh in tgcScene.Meshes)
+            {
+                mesh.AutoTransformEnable = false;
+            }
+
             return tgcScene;
         }
 

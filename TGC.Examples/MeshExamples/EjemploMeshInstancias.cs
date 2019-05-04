@@ -58,8 +58,7 @@ namespace TGC.Examples.MeshExamples
                     //Crear instancia de modelo
                     var instance = palmeraOriginal.createMeshInstance(palmeraOriginal.Name + i + "_" + j);
                     //Desplazarlo
-                    instance.Move(i * offset, 0, j * offset);
-                    instance.Transform = TGCMatrix.Translation(instance.Position);
+                    instance.Transform = TGCMatrix.Translation(i * offset, 0, j * offset);
 
                     meshes.Add(instance);
                 }

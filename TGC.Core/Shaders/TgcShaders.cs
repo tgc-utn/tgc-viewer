@@ -80,7 +80,7 @@ namespace TGC.Core.Shaders
         public string CommonShadersPath { get; set; }
 
         /// <summary>
-        /// 
+        /// Un dispositivo representa elementos primitivos, crea recursos, controla las variables de nivel de sistema, y obtiene y establece paletas.
         /// </summary>
         private D3DDevice D3DDevice { get; set; }
 

@@ -620,6 +620,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
+        [Obsolete]
         public void Move(TGCVector3 v)
         {
             Move(v.X, v.Y, v.Z);
@@ -628,6 +629,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
+        [Obsolete]
         public void Move(float x, float y, float z)
         {
             translation.X += x;
@@ -667,6 +669,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     Rota la malla respecto del eje X
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
+        [Obsolete]
         public void RotateX(float angle)
         {
             rotation.X += angle;
@@ -676,6 +679,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     Rota la malla respecto del eje Y
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
+        [Obsolete]
         public void RotateY(float angle)
         {
             rotation.Y += angle;
@@ -685,6 +689,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     Rota la malla respecto del eje Z
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
+        [Obsolete]
         public void RotateZ(float angle)
         {
             rotation.Z += angle;

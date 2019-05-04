@@ -114,7 +114,11 @@ namespace TGC.Examples.WorkshopShaders
                     float pos_x = mesh.BoundingBox.PMin.X * kx + mesh.BoundingBox.PMax.X * (1 - kx);
                     float pos_z = mesh.BoundingBox.PMin.Z * kz + mesh.BoundingBox.PMax.Z * (1 - kz);
 
-                    enemigos.Add(skeletalLoader.loadMeshAndAnimationsFromFile(MediaDir + "SkeletalAnimations\\BasicHuman\\" + "CombineSoldier-TgcSkeletalMesh.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\", new string[] { MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Walk-TgcSkeletalAnim.xml", }));
+                    TgcSkeletalMesh enemigo = skeletalLoader.loadMeshAndAnimationsFromFile(MediaDir + "SkeletalAnimations\\BasicHuman\\" + "CombineSoldier-TgcSkeletalMesh.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\", new string[] { MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Walk-TgcSkeletalAnim.xml", });
+                    //TODO remove AutoTransformEnable dependency
+                    enemigo.AutoTransformEnable = true;
+
+                    enemigos.Add(enemigo);
 
                     //Configurar animacion inicial
                     enemigos[cant_enemigos].playAnimation("Walk", true);

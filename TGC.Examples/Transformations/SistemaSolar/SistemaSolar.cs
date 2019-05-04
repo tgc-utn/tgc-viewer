@@ -76,11 +76,6 @@ namespace TGC.Examples.Transformations.SistemaSolar
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\MoonTexture.jpg")
             });
 
-            //Deshabilitamos el manejo automatico de Transformaciones de TgcMesh, para poder manipularlas en forma personalizada
-            sun.AutoTransformEnable = false;
-            earth.AutoTransformEnable = false;
-            moon.AutoTransformEnable = false;
-
             //Camara en primera persona
             Camara = new TgcRotationalCamera(new TGCVector3(0f, 200f, 1000f), 500f, Input);
         }

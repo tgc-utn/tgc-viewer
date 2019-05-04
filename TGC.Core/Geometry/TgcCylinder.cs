@@ -253,6 +253,12 @@ namespace TGC.Core.Geometry
 
         #region Transformation
 
+        /// <summary>
+        ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
+        ///     cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
+        ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
+        ///     Por default está en True.
+        /// </summary>
         [Obsolete("Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
         public bool AutoTransformEnable { get; set; }
 
@@ -284,16 +290,29 @@ namespace TGC.Core.Geometry
             set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
         }
 
+        /// <summary>
+        ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
+        /// </summary>
+        [Obsolete]
         public void Move(TGCVector3 v)
         {
             BoundingCylinder.move(v);
         }
 
+        /// <summary>
+        ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
+        /// </summary>
+        [Obsolete]
         public void Move(float x, float y, float z)
         {
             BoundingCylinder.move(x, y, z);
         }
 
+        /// <summary>
+        ///     Mueve la malla en base a la orientacion actual de rotacion.
+        ///     Es necesario rotar la malla primero
+        /// </summary>
+        /// <param name="movement">Desplazamiento. Puede ser positivo (hacia adelante) o negativo (hacia atras)</param>
         [Obsolete]
         public void MoveOrientedY(float movement)
         {
@@ -309,16 +328,31 @@ namespace TGC.Core.Geometry
             pos.Z = Position.Z;
         }
 
+        /// <summary>
+        ///     Rota la malla respecto del eje X
+        /// </summary>
+        /// <param name="angle">Ángulo de rotación en radianes</param>
+        [Obsolete]
         public void RotateX(float angle)
         {
             BoundingCylinder.rotateX(angle);
         }
 
+        /// <summary>
+        ///     Rota la malla respecto del eje Y
+        /// </summary>
+        /// <param name="angle">Ángulo de rotación en radianes</param>
+        [Obsolete]
         public void RotateY(float angle)
         {
             BoundingCylinder.rotateY(angle);
         }
 
+        /// <summary>
+        ///     Rota la malla respecto del eje Z
+        /// </summary>
+        /// <param name="angle">Ángulo de rotación en radianes</param>
+        [Obsolete]
         public void RotateZ(float angle)
         {
             BoundingCylinder.rotateZ(angle);

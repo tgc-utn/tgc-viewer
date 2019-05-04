@@ -43,6 +43,7 @@ namespace TGC.Examples.Tutorial
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
             mainMesh = scene2.Meshes[0];
+            //TODO remove AutoTransformEnable dependency
             mainMesh.AutoTransformEnable = true;
             //Movemos el mesh un poco para arriba. Porque sino choca con el piso todo el tiempo y no se puede mover.
             mainMesh.Move(0, 5, 0);

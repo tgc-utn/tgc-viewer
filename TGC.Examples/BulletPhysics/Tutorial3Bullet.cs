@@ -14,7 +14,7 @@ namespace TGC.Examples.Tutorial
     ///     # Unidad 3 - Conceptos Basicos de 3D - Mesh
     /// 	# Unidad 6 - Detección de Colisiones - Bounding Box.
     ///     Muestra como cargar una escena 3D y como mover un modelo dentra de ella con el teclado evitando chocar con el resto de los objetos.
-    ///     Autor: Matias Leone
+    ///     Autor: Leandro Javier Laino
     /// </summary>
     public class Tutorial3Bullet : TGCExampleViewer
     {
@@ -38,21 +38,6 @@ namespace TGC.Examples.Tutorial
             //En este ejemplo primero cargamos una escena 3D entera.
             var loader = new TgcSceneLoader();
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Ciudad\\Ciudad-TgcScene.xml");
-            //scene = loader.loadSceneFromFile(MediaDir + "4toPiso\\Extract\\4toPiso-TgcScene.xml");
-            /* C:\Users\llain2\Documents\TGC\Viewer\Media\4toPiso\Extract
-            //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
-            var scene2 =
-                loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
-
-            //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
-            mainMesh = scene2.Meshes[0];
-<<<<<<< HEAD
-=======
-            mainMesh.AutoTransformEnable = true;
->>>>>>> master
-            //Movemos el mesh un poco para arriba. Porque sino choca con el piso todo el tiempo y no se puede mover.
-            mainMesh.Position = new TGCVector3(0, 50, 0);
-            mainMesh.UpdateMeshTransform();*/
 
             physicsExample = new CubePhysic();
             //physicsExample.setHummer(mainMesh);

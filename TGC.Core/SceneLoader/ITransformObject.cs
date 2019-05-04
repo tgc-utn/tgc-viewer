@@ -43,11 +43,13 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
+        [Obsolete]
         void Move(TGCVector3 v);
 
         /// <summary>
         ///     Desplaza la malla la distancia especificada, respecto de su posicion actual
         /// </summary>
+        [Obsolete]
         void Move(float x, float y, float z);
 
         /// <summary>
@@ -69,18 +71,21 @@ namespace TGC.Core.SceneLoader
         ///     Rota la malla respecto del eje X
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
+        [Obsolete]
         void RotateX(float angle);
 
         /// <summary>
         ///     Rota la malla respecto del eje Y
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
+        [Obsolete]
         void RotateY(float angle);
 
         /// <summary>
         ///     Rota la malla respecto del eje Z
         /// </summary>
         /// <param name="angle">Ángulo de rotación en radianes</param>
+        [Obsolete]
         void RotateZ(float angle);
     }
 }
