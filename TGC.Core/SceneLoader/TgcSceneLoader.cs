@@ -173,8 +173,8 @@ namespace TGC.Core.SceneLoader
                 if (meshData.pMin != null && meshData.pMax != null)
                 {
                     tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(
-                        TGCVector3.Float3ArrayToVector3(meshData.pMin),
-                        TGCVector3.Float3ArrayToVector3(meshData.pMax),
+                        TGCVector3.Float3ArrayToTGCVector3(meshData.pMin),
+                        TGCVector3.Float3ArrayToTGCVector3(meshData.pMax),
                         tgcMesh.Position,
                         tgcMesh.Scale
                         );

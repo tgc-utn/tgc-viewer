@@ -266,14 +266,14 @@ namespace TGC.Examples.Bullet.Physics
             {
                 director.TransformCoordinate(TGCMatrix.RotationY(-angle * 0.01f));
                 personaje.Transform = TGCMatrix.Translation(TGCVector3.Empty) * TGCMatrix.RotationY(-angle * 0.01f) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform);
-                capsuleRigidBody.WorldTransform = personaje.Transform.ToBsMatrix;
+                capsuleRigidBody.WorldTransform = personaje.Transform.ToBulletMatrix();
             }
 
             if (input.keyDown(Key.D))
             {
                 director.TransformCoordinate(TGCMatrix.RotationY(angle * 0.01f));
                 personaje.Transform = TGCMatrix.Translation(TGCVector3.Empty) * TGCMatrix.RotationY(angle * 0.01f) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform);
-                capsuleRigidBody.WorldTransform = personaje.Transform.ToBsMatrix;
+                capsuleRigidBody.WorldTransform = personaje.Transform.ToBulletMatrix();
             }
 
             if (input.keyPressed(Key.Space))

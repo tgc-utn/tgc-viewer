@@ -133,7 +133,7 @@ namespace TGC.Examples.Lights
             //Configurar los valores de cada luz
             var move = new TGCVector3(0, 0, lightMoveModifier.Value ? interp.update(ElapsedTime) : 0);
             var lightColors = new ColorValue[lightMeshes.Length];
-            var pointLightPositions = new Vector4[lightMeshes.Length];
+            var pointLightPositions = new TGCVector4[lightMeshes.Length];
             var pointLightIntensity = new float[lightMeshes.Length];
             var pointLightAttenuation = new float[lightMeshes.Length];
             for (var i = 0; i < lightMeshes.Length; i++)
@@ -143,7 +143,7 @@ namespace TGC.Examples.Lights
                 lightMesh.Transform = TGCMatrix.Translation(lightMesh.Position);
 
                 lightColors[i] = ColorValue.FromColor(lightMesh.Color);
-                pointLightPositions[i] = TGCVector3.Vector3ToVector4(lightMesh.Position);
+                pointLightPositions[i] = TGCVector3.TGCVector3ToTGCVector4(lightMesh.Position);
                 pointLightIntensity[i] = lightIntensityModifier.Value;
                 pointLightAttenuation[i] = lightAttenuationModifier.Value;
             }
@@ -156,7 +156,7 @@ namespace TGC.Examples.Lights
                 {
                     //Cargar variables de shader
                     mesh.Effect.SetValue("lightColor", lightColors);
-                    mesh.Effect.SetValue("lightPosition", pointLightPositions);
+                    mesh.Effect.SetValue("lightPosition", TGCVector4.TGCVector4ArrayToVector4Array(pointLightPositions));
                     mesh.Effect.SetValue("lightIntensity", pointLightIntensity);
                     mesh.Effect.SetValue("lightAttenuation", pointLightAttenuation);
                     mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(mEmissiveModifier.Value));

@@ -452,7 +452,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         /// <param name="vector">Array of source TGCVector2.</param>
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
-        /// <returns>Array of Vector4 structures that are the result of the method.</returns>
+        /// <returns>Array of TGCVector4 structures that are the result of the method.</returns>
         public static TGCVector4[] Transform(TGCVector2[] vector, TGCMatrix sourceMatrix)
         {
             TGCVector4[] ret = new TGCVector4[vector.Length];

@@ -487,8 +487,8 @@ namespace TGC.Examples.ShadersExamples
 
             // Cargo las var. del shader:
             effect.SetValue("g_txCubeMap", g_pCubeMap);
-            effect.SetValue("fvLightPosition", new Vector4(0, 400, 0, 0));
-            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(timer_preview > 0 ? LookFrom : Camara.Position));
+            effect.SetValue("fvLightPosition", new TGCVector4(0, 400, 0, 0));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(timer_preview > 0 ? LookFrom : Camara.Position));
             effect.SetValue("time", time);
 
             // -----------------------------------------------------
@@ -697,8 +697,8 @@ namespace TGC.Examples.ShadersExamples
         {
             //Doy posicion a la luz
             // Calculo la matriz de view de la luz
-            effect.SetValue("g_vLightPos", new Vector4(g_LightPos.X, g_LightPos.Y, g_LightPos.Z, 1));
-            effect.SetValue("g_vLightDir", new Vector4(g_LightDir.X, g_LightDir.Y, g_LightDir.Z, 1));
+            effect.SetValue("g_vLightPos", new TGCVector4(g_LightPos.X, g_LightPos.Y, g_LightPos.Z, 1));
+            effect.SetValue("g_vLightDir", new TGCVector4(g_LightDir.X, g_LightDir.Y, g_LightDir.Z, 1));
             g_LightView = TGCMatrix.LookAtLH(g_LightPos, g_LightPos + g_LightDir, new TGCVector3(0, 0, 1));
 
             // inicializacion standard:

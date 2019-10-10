@@ -102,8 +102,8 @@ namespace TGC.Examples.ShadersExamples
             if (lightEnable)
             {
                 //Cargar variables shader
-                mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightPos));
-                mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
+                mesh.Effect.SetValue("lightPosition", TGCVector3.TGCVector3ToFloat4Array(lightPos));
+                mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
                 mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(ambientModifier.Value));
                 mesh.Effect.SetValue("diffuseColor", ColorValue.FromColor(diffuseModifier.Value));
                 mesh.Effect.SetValue("specularColor", ColorValue.FromColor(specularModifier.Value));

@@ -195,8 +195,8 @@ namespace TGC.Core.SkeletalAnimation
             if (meshData.pMin != null && meshData.pMax != null)
             {
                 tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(
-                    TGCVector3.Float3ArrayToVector3(meshData.pMin),
-                    TGCVector3.Float3ArrayToVector3(meshData.pMax)
+                    TGCVector3.Float3ArrayToTGCVector3(meshData.pMin),
+                    TGCVector3.Float3ArrayToTGCVector3(meshData.pMax)
                     );
             }
             else
@@ -247,8 +247,8 @@ namespace TGC.Core.SkeletalAnimation
             if (animationData.pMin != null && animationData.pMax != null)
             {
                 boundingBox = new TgcBoundingAxisAlignBox(
-                    TGCVector3.Float3ArrayToVector3(animationData.pMin),
-                    TGCVector3.Float3ArrayToVector3(animationData.pMax));
+                    TGCVector3.Float3ArrayToTGCVector3(animationData.pMin),
+                    TGCVector3.Float3ArrayToTGCVector3(animationData.pMax));
             }
             else
             {
@@ -710,8 +710,8 @@ namespace TGC.Core.SkeletalAnimation
             public TGCVector3 Normal;
             public TGCVector3 Tangent;
             public TGCVector3 Binormal;
-            public Vector4 BlendWeights;
-            public Vector4 BlendIndices;
+            public TGCVector4 BlendWeights;
+            public TGCVector4 BlendIndices;
         }
 
         /// <summary>
@@ -758,8 +758,8 @@ namespace TGC.Core.SkeletalAnimation
             public TGCVector3 Normal;
             public TGCVector3 Tangent;
             public TGCVector3 Binormal;
-            public Vector4 BlendWeights;
-            public Vector4 BlendIndices;
+            public TGCVector4 BlendWeights;
+            public TGCVector4 BlendIndices;
         }
 
         #endregion Mesh FVF

@@ -142,8 +142,8 @@ namespace TGC.Core.KeyFrameLoader
             if (animationData.pMin != null && animationData.pMax != null)
             {
                 boundingBox = new TgcBoundingAxisAlignBox(
-                    TGCVector3.Float3ArrayToVector3(animationData.pMin),
-                    TGCVector3.Float3ArrayToVector3(animationData.pMax));
+                    TGCVector3.Float3ArrayToTGCVector3(animationData.pMin),
+                    TGCVector3.Float3ArrayToTGCVector3(animationData.pMax));
             }
             else
             {
@@ -207,7 +207,7 @@ namespace TGC.Core.KeyFrameLoader
             //Crear BoundingBox, aprovechar lo que viene del XML o crear uno por nuestra cuenta
             if (meshData.pMin != null && meshData.pMax != null)
             {
-                tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(meshData.pMin), TGCVector3.Float3ArrayToVector3(meshData.pMax));
+                tgcMesh.BoundingBox = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToTGCVector3(meshData.pMin), TGCVector3.Float3ArrayToTGCVector3(meshData.pMax));
             }
             else
             {

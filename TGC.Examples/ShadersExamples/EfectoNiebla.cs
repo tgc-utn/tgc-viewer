@@ -105,7 +105,7 @@ namespace TGC.Examples.ShadersExamples
             {
                 // Cargamos las variables de shader, color del fog.
                 effect.SetValue("ColorFog", fog.Color.ToArgb());
-                effect.SetValue("CameraPos", TGCVector3.Vector3ToFloat4Array(Camara.Position));
+                effect.SetValue("CameraPos", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
                 effect.SetValue("StartFogDistance", fog.StartDistance);
                 effect.SetValue("EndFogDistance", fog.EndDistance);
                 effect.SetValue("Density", fog.Density);

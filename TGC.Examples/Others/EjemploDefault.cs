@@ -79,7 +79,7 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("specularColor", ColorValue.FromColor(Color.White));
             mesh.Effect.SetValue("specularExp", 10f);
             mesh.Effect.SetValue("lightPosition", lightPos);
-            mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
+            mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
 
             mesh.RotateY(-ElapsedTime / 2);
             mesh.Transform = TGCMatrix.Scaling(mesh.Scale)

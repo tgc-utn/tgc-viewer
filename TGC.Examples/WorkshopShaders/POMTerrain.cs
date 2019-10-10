@@ -308,7 +308,7 @@ namespace TGC.Examples.WorkshopShaders
             TGCVector3 lookFrom = new TGCVector3(pos.X, H + dH, pos.Y);
             TGCVector3 lookAt = new TGCVector3(pos_s.X, H + 1.5f, pos_s.Y);
             d3dDevice.Transform.View = TGCMatrix.LookAtLH(lookFrom, lookAt, TGCVector3.Up);
-            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(lookFrom));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(lookFrom));
         }
 
         public override void Render()
@@ -318,7 +318,7 @@ namespace TGC.Examples.WorkshopShaders
             time += ElapsedTime;
 
             TGCVector3 lightDir = lightDirModifier.Value;
-            effect.SetValue("g_LightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
+            effect.SetValue("g_LightDir", TGCVector3.TGCVector3ToFloat3Array(lightDir));
             effect.SetValue("min_cant_samples", minSampleModifier.Value);
             effect.SetValue("max_cant_samples", maxSampleModifier.Value);
             effect.SetValue("fHeightMapScale", heightMapScaleModifier.Value);

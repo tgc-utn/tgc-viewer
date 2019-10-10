@@ -196,11 +196,11 @@ namespace TGC.Examples.WorkshopShaders
             time += ElapsedTime;
 
             TGCVector3 lightDir = lightDirModifier.Value;
-            effect.SetValue("g_LightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
+            effect.SetValue("g_LightDir", TGCVector3.TGCVector3ToFloat3Array(lightDir));
             effect.SetValue("min_cant_samples", minSampleModifier.Value);
             effect.SetValue("max_cant_samples", maxSampleModifier.Value);
             effect.SetValue("fHeightMapScale", heightMapScaleModifier.Value);
-            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
 
             effect.SetValue("time", time);
             effect.SetValue("aux_Tex", g_pBaseTexture);
@@ -217,17 +217,17 @@ namespace TGC.Examples.WorkshopShaders
                 mesh.Effect = effect;
                 if (mesh.Name.Contains("Floor"))
                 {
-                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Down));
-                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_normal", TGCVector3.TGCVector3ToFloat3Array(TGCVector3.Down));
+                    effect.SetValue("g_tangent", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(0, 0, 1)));
                     nro_textura = 0;
                 }
                 else
                 if (mesh.Name.Contains("Roof"))
                 {
-                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
-                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_normal", TGCVector3.TGCVector3ToFloat3Array(TGCVector3.Up));
+                    effect.SetValue("g_tangent", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(0, 0, 1)));
                     nro_textura = 0;
 
                     va = false;
@@ -235,33 +235,33 @@ namespace TGC.Examples.WorkshopShaders
                 else
                 if (mesh.Name.Contains("East"))
                 {
-                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
+                    effect.SetValue("g_normal", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_tangent", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_binormal", TGCVector3.TGCVector3ToFloat3Array(TGCVector3.Up));
                     nro_textura = 1;
                 }
                 else
                 if (mesh.Name.Contains("West"))
                 {
-                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(-1, 0, 0)));
-                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
+                    effect.SetValue("g_normal", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(-1, 0, 0)));
+                    effect.SetValue("g_tangent", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_binormal", TGCVector3.TGCVector3ToFloat3Array(TGCVector3.Up));
                     nro_textura = 1;
                 }
                 else
                 if (mesh.Name.Contains("North"))
                 {
-                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, -1)));
-                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
+                    effect.SetValue("g_normal", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(0, 0, -1)));
+                    effect.SetValue("g_tangent", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.TGCVector3ToFloat3Array(TGCVector3.Up));
                     nro_textura = 1;
                 }
                 else
                 if (mesh.Name.Contains("South"))
                 {
-                    effect.SetValue("g_normal", TGCVector3.Vector3ToFloat3Array(new TGCVector3(0, 0, 1)));
-                    effect.SetValue("g_tangent", TGCVector3.Vector3ToFloat3Array(new TGCVector3(1, 0, 0)));
-                    effect.SetValue("g_binormal", TGCVector3.Vector3ToFloat3Array(TGCVector3.Up));
+                    effect.SetValue("g_normal", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(0, 0, 1)));
+                    effect.SetValue("g_tangent", TGCVector3.TGCVector3ToFloat3Array(new TGCVector3(1, 0, 0)));
+                    effect.SetValue("g_binormal", TGCVector3.TGCVector3ToFloat3Array(TGCVector3.Up));
                     nro_textura = 1;
                 }
 

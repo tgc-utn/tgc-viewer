@@ -369,7 +369,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Cast TGCMatrix to DX Matrix
         /// </summary>
-        /// <param name="vector">TGCMatrix to become into Matrix</param>
+        /// <param name="matrix">TGCMatrix to become into Matrix</param>
         public static implicit operator Matrix(TGCMatrix matrix)
         {
             return matrix.ToMatrix();
@@ -729,7 +729,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Builds a matrix that flattens geometry into a plane.
         /// </summary>
-        /// <param name="light">A Vector4 structure that describes the light's position.</param>
+        /// <param name="light">A TGCVector4 structure that describes the light's position.</param>
         /// <param name="plane">Source TGCPlane structure.</param>
         public void Shadow(TGCVector4 light, TGCPlane plane)
         {
@@ -901,12 +901,9 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Transform TGCMatrix to Bullet Matrix.
         /// </summary>
-        public BulletSharp.Math.Matrix ToBsMatrix
+        public BulletSharp.Math.Matrix ToBulletMatrix()
         {
-            get
-            {
-                return new BulletSharp.Math.Matrix(this.M11, this.M12, this.M13, this.M14, this.M21, this.M22, this.M23, this.M24, this.M31, this.M32, this.M33, this.M34, this.M41, this.M42, this.M43, this.M44);
-            }
+            return new BulletSharp.Math.Matrix(this.M11, this.M12, this.M13, this.M14, this.M21, this.M22, this.M23, this.M24, this.M31, this.M32, this.M33, this.M34, this.M41, this.M42, this.M43, this.M44);
         }
 
         public TGCVector3 Origin

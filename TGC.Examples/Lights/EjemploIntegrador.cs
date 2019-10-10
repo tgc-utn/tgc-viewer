@@ -88,7 +88,7 @@ namespace TGC.Examples.Lights
                     //Guardar datos de luz
                     var light = new LightData();
                     light.color = Color.FromArgb((int)meshData.color[0], (int)meshData.color[1], (int)meshData.color[2]);
-                    light.aabb = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(meshData.pMin), TGCVector3.Float3ArrayToVector3(meshData.pMax));
+                    light.aabb = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToTGCVector3(meshData.pMin), TGCVector3.Float3ArrayToTGCVector3(meshData.pMax));
                     light.pos = light.aabb.calculateBoxCenter();
                     lights.Add(light);
                 }
@@ -187,7 +187,7 @@ namespace TGC.Examples.Lights
                     //Obtener la luz que corresponde a este mesh (buscamos la mas cercana)
                     var light = getClosestLight(mesh.BoundingBox.calculateBoxCenter());
 
-                    mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(eyePosition));
+                    mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(eyePosition));
                     mesh.Effect.SetValue("bumpiness", bumpinessModifier.Value);
                     mesh.Effect.SetValue("reflection", reflectionModifier.Value);
                     mesh.Effect.SetValue("lightIntensity", lightIntensityModifier.Value);
@@ -195,7 +195,7 @@ namespace TGC.Examples.Lights
 
                     //Cargar variables de shader de la luz
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(light.color));
-                    mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(light.pos));
+                    mesh.Effect.SetValue("lightPosition", TGCVector3.TGCVector3ToFloat4Array(light.pos));
 
                     //Cargar variables de shader del Material
                     mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(mEmissiveModifier.Value));
