@@ -101,8 +101,7 @@ namespace TGC.Examples.ShadersExamples
 
             time += ElapsedTime;
             float r = 40;
-            mesh.Position = new TGCVector3(r * (float)Math.Cos(time * 0.5), 0, 0 * (float)Math.Sin(time * 0.5));
-            //mesh.rotateY(elapsedTime);
+            mesh.Transform = TGCMatrix.Translation(r * (float)Math.Cos(time * 0.5), 0, 0 * (float)Math.Sin(time * 0.5));
 
             PostUpdate();
         }
