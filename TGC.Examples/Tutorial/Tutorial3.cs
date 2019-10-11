@@ -90,8 +90,8 @@ namespace TGC.Examples.Tutorial
 
             //Multiplicar movimiento por velocidad y elapsedTime
             movement *= MOVEMENT_SPEED * ElapsedTime;
-            mainMesh.Transform = TGCMatrix.Translation(mainMesh.Position + movement);
             mainMesh.Position = mainMesh.Position + movement;
+            mainMesh.Transform = TGCMatrix.Translation(mainMesh.Position);            
 
             //Chequear si el objeto principal en su nueva posición choca con alguno de los objetos de la escena.
             //Si es así, entonces volvemos a la posición original.
@@ -122,8 +122,8 @@ namespace TGC.Examples.Tutorial
             //Si hubo alguna colisión, entonces restaurar la posición original del mesh
             if (collisionFound)
             {
-                mainMesh.Transform = TGCMatrix.Translation(originalPos);
                 mainMesh.Position = originalPos;
+                mainMesh.Transform = TGCMatrix.Translation(mainMesh.Position);
             }
 
             //Hacer que la camara en 3ra persona se ajuste a la nueva posicion del objeto

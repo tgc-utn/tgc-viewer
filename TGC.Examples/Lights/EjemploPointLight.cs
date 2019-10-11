@@ -72,9 +72,7 @@ namespace TGC.Examples.Lights
 
             //Pongo al mesh en posicion
             skeletalMesh.Position = new TGCVector3(0, 0, 100);
-            skeletalMesh.Transform = TGCMatrix.RotationYawPitchRoll(skeletalMesh.Rotation.Y + FastMath.PI, skeletalMesh.Rotation.X, skeletalMesh.Rotation.Z) *
-                                     TGCMatrix.Translation(skeletalMesh.Position);
-            skeletalMesh.RotateY(FastMath.PI);
+            skeletalMesh.Transform = TGCMatrix.RotationY(skeletalMesh.Rotation.Y + FastMath.PI) * TGCMatrix.Translation(skeletalMesh.Position);
 
             //Camara en 1ra persona
             Camara = new TgcFpsCamera(new TGCVector3(250, 140, 150), Input);
