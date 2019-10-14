@@ -228,7 +228,7 @@ namespace TGC.Core.BoundingVolumes
 
         public override string ToString()
         {
-            return "Center " + TGCVector3.PrintVector3(Center) + ", Radius " + TGCVector3.PrintVector3(Radius);
+            return "Center " + TGCVector3.PrintTGCVector3(Center) + ", Radius " + TGCVector3.PrintTGCVector3(Radius);
         }
 
         /// <summary>

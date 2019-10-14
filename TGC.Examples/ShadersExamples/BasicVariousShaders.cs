@@ -140,8 +140,8 @@ namespace TGC.Examples.ShadersExamples
             this.mesh.Transform = this.scale * TGCMatrix.RotationYawPitchRoll(this.rotation.Value, 0, 0) * TGCMatrix.Translation(this.center.Value);
             this.effect.SetValue("factor", this.factor.Value);
             TGCVector3 realVector = this.center.Value + this.effectVector.Value;
-            this.effect.SetValue("effectVector", TGCVector3.Vector3ToFloat4Array(this.effectVector.Value));
-            this.effect.SetValue("center", TGCVector3.Vector3ToFloat4Array(this.center.Value));
+            this.effect.SetValue("effectVector", TGCVector3.TGCVector3ToFloat4Array(this.effectVector.Value));
+            this.effect.SetValue("center", TGCVector3.TGCVector3ToFloat4Array(this.center.Value));
 
             this.mesh.Technique = ((Techniques)this.techniques.Value).ToString();
             this.effectVectorArrow.Enabled = this.showArrow.Value;

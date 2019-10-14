@@ -36,7 +36,7 @@ namespace TGC.Core.BulletPhysics
         public RigidBody CreateBox(TGCVector3 size, float mass, TGCVector3 position, float yaw, float pitch, float roll, float friction, bool inertia)
         {
             var boxShape = new BoxShape(size.X, size.Y, size.Z);
-            var boxTransform = TGCMatrix.RotationYawPitchRoll(yaw, pitch, roll).ToBsMatrix;
+            var boxTransform = TGCMatrix.RotationYawPitchRoll(yaw, pitch, roll).ToBulletMatrix();
             boxTransform.Origin = position.ToBulletVector3();
             DefaultMotionState boxMotionState = new DefaultMotionState(boxTransform);
             var boxLocalInertia = TGCVector3.Empty.ToBulletVector3();
@@ -73,7 +73,7 @@ namespace TGC.Core.BulletPhysics
             //Armamos las transformaciones que luego formaran parte del cuerpo rigido de la capsula.
             var capsuleTransform = TGCMatrix.Identity;
             capsuleTransform.Origin = position;
-            var capsuleMotionState = new DefaultMotionState(capsuleTransform.ToBsMatrix);
+            var capsuleMotionState = new DefaultMotionState(capsuleTransform.ToBulletMatrix());
             RigidBodyConstructionInfo capsuleRigidBodyInfo;
 
             //Calculamos o no el momento de inercia dependiendo de que comportamiento
@@ -112,7 +112,7 @@ namespace TGC.Core.BulletPhysics
             //y el estado de movimiento de la misma.
             var ballTransform = TGCMatrix.Identity;
             ballTransform.Origin = position;
-            var ballMotionState = new DefaultMotionState(ballTransform.ToBsMatrix);
+            var ballMotionState = new DefaultMotionState(ballTransform.ToBulletMatrix());
 
             //Se calcula el momento de inercia de la esfera a partir de la masa.
             var ballLocalInertia = ballShape.CalculateLocalInertia(mass);
@@ -174,7 +174,7 @@ namespace TGC.Core.BulletPhysics
             //Armamos la matrix asociada al Cilindro y el estado de movimiento de la misma.
             var cylinderTransform = TGCMatrix.Identity;
             cylinderTransform.Origin = position;
-            var cylinderMotionState = new DefaultMotionState(cylinderTransform.ToBsMatrix);
+            var cylinderMotionState = new DefaultMotionState(cylinderTransform.ToBulletMatrix());
 
             //Calculamos el momento de inercia
             var cylinderLocalInertia = cylinderShape.CalculateLocalInertia(mass);
@@ -200,7 +200,7 @@ namespace TGC.Core.BulletPhysics
                 triangleMesh.AddTriangle(vertexCoords[i].ToBulletVector3(), vertexCoords[i + 1].ToBulletVector3(), vertexCoords[i + 2].ToBulletVector3());
             }
 
-            var transformationMatrix = TGCMatrix.RotationYawPitchRoll(0, 0, 0).ToBsMatrix;
+            var transformationMatrix = TGCMatrix.RotationYawPitchRoll(0, 0, 0).ToBulletMatrix();
             DefaultMotionState motionState = new DefaultMotionState(transformationMatrix);
 
             var bulletShape = new BvhTriangleMeshShape(triangleMesh, false);

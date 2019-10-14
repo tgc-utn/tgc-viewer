@@ -501,7 +501,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         /// <param name="source">Source TGCVector3.</param>
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
-        /// <returns>A Vector4 structure that is the result of the method.</returns>
+        /// <returns>A TGCVector4 structure that is the result of the method.</returns>
         public static TGCVector4 Transform(TGCVector3 source, TGCMatrix sourceMatrix)
         {
             return new TGCVector4(Vector3.Transform(source.ToVector3(), sourceMatrix.ToMatrix()));
@@ -512,7 +512,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         /// <param name="vector">Array of source TGCVector3 structures.</param>
         /// <param name="sourceMatrix">Source TGCMatrix.</param>
-        /// <returns>Array of Vector4 structures that are the result of the method.</returns>
+        /// <returns>Array of TGCVector4 structures that are the result of the method.</returns>
         public static TGCVector4[] Transform(TGCVector3[] vector, TGCMatrix sourceMatrix)
         {
             TGCVector4[] ret = new TGCVector4[vector.Length];
@@ -724,23 +724,23 @@ namespace TGC.Core.Mathematica
         /// <summary>
         ///     Imprime un TGCVector3 de la forma [150.0,150.0,150.0]
         /// </summary>
-        public static string PrintVector3(TGCVector3 vec)
+        public static string PrintTGCVector3(TGCVector3 vec)
         {
-            return PrintVector3(vec.X, vec.Y, vec.Z);
+            return PrintTGCVector3(vec.X, vec.Y, vec.Z);
         }
 
         /// <summary>
         ///     Imprime un TGCVector3 de la forma [150.0,150.0,150.0], tomando valores string
         /// </summary>
-        public static string PrintVector3FromString(string x, string y, string z)
+        public static string PrintTGCVector3FromString(string x, string y, string z)
         {
-            return PrintVector3(TgcParserUtils.parseFloat(x), TgcParserUtils.parseFloat(y), TgcParserUtils.parseFloat(z));
+            return PrintTGCVector3(TgcParserUtils.parseFloat(x), TgcParserUtils.parseFloat(y), TgcParserUtils.parseFloat(z));
         }
 
         /// <summary>
         ///     Convierte un TGCVector3 a un float[3]
         /// </summary>
-        public static float[] Vector3ToFloat3Array(TGCVector3 v)
+        public static float[] TGCVector3ToFloat3Array(TGCVector3 v)
         {
             return new[] { v.X, v.Y, v.Z };
         }
@@ -748,24 +748,23 @@ namespace TGC.Core.Mathematica
         /// <summary>
         ///     Convierte un TGCVector3 a un float[4] con w = 1
         /// </summary>
-        public static float[] Vector3ToFloat4Array(TGCVector3 v)
+        public static float[] TGCVector3ToFloat4Array(TGCVector3 v)
         {
             return new[] { v.X, v.Y, v.Z, 1f };
         }
 
         /// <summary>
-        ///     Convierte un TGCVector3 a un Vector4 con w = 1
+        ///     Convierte un TGCVector3 a un TGCVector4 con w = 1
         /// </summary>
-        public static Vector4 Vector3ToVector4(TGCVector3 v)
+        public static TGCVector4 TGCVector3ToTGCVector4(TGCVector3 v)
         {
-            //TODO esta mal que retorne un Vector4 pero hay un tema de cast implicito en un metodo sobrecargado que no lo puede resolver un ejemplo.
             return new TGCVector4(v.X, v.Y, v.Z, 1f);
         }
 
         /// <summary>
         ///     Convierte un float[3] a un TGCVector3
         /// </summary>
-        public static TGCVector3 Float3ArrayToVector3(float[] f)
+        public static TGCVector3 Float3ArrayToTGCVector3(float[] f)
         {
             return new TGCVector3(f[0], f[1], f[2]);
         }
@@ -774,7 +773,7 @@ namespace TGC.Core.Mathematica
         ///     Imprime un TGCVector3 de la forma [150.0,150.0,150.0]
         /// </summary>
         /// <returns></returns>
-        public static string PrintVector3(float x, float y, float z)
+        public static string PrintTGCVector3(float x, float y, float z)
         {
             return "[" + TgcParserUtils.printFloat(x) +
                    "," + TgcParserUtils.printFloat(y) +

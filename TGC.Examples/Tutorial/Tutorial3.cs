@@ -43,10 +43,10 @@ namespace TGC.Examples.Tutorial
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
             mainMesh = scene2.Meshes[0];
-            //TODO remove AutoTransformEnable dependency
-            mainMesh.AutoTransformEnable = true;
+
             //Movemos el mesh un poco para arriba. Porque sino choca con el piso todo el tiempo y no se puede mover.
-            mainMesh.Move(0, 5, 0);
+            mainMesh.Position = new TGCVector3(0, 5, 0);
+            mainMesh.Transform = TGCMatrix.Translation(0, 5, 0);
 
             //Vamos a utilizar la camara en 3ra persona para que siga al objeto principal a medida que se mueve
             camaraInterna = new TgcThirdPersonCamera(mainMesh.Position, 200, 300);
@@ -90,7 +90,8 @@ namespace TGC.Examples.Tutorial
 
             //Multiplicar movimiento por velocidad y elapsedTime
             movement *= MOVEMENT_SPEED * ElapsedTime;
-            mainMesh.Move(movement);
+            mainMesh.Position = mainMesh.Position + movement;
+            mainMesh.Transform = TGCMatrix.Translation(mainMesh.Position);            
 
             //Chequear si el objeto principal en su nueva posición choca con alguno de los objetos de la escena.
             //Si es así, entonces volvemos a la posición original.
@@ -122,6 +123,7 @@ namespace TGC.Examples.Tutorial
             if (collisionFound)
             {
                 mainMesh.Position = originalPos;
+                mainMesh.Transform = TGCMatrix.Translation(mainMesh.Position);
             }
 
             //Hacer que la camara en 3ra persona se ajuste a la nueva posicion del objeto

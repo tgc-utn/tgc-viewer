@@ -90,7 +90,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Computes the dot product of a plane and a vector.
         /// </summary>
-        /// <param name="v">Source Vector4 structure.</param>
+        /// <param name="v">Source TGCVector4 structure.</param>
         /// <returns>A Single value that is the dot product of the plane and the vector.</returns>
         public float Dot(TGCVector4 v)
         {

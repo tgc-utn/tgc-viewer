@@ -255,7 +255,7 @@ namespace TGC.Examples.Collision
             directionArrow.updateValues();
 
             //Cargar desplazamiento realizar en UserVar
-            UserVars.setValue("Movement", TGCVector3.PrintVector3(realMovement));
+            UserVars.setValue("Movement", TGCVector3.PrintTGCVector3(realMovement));
 
             //Ver cual de las mallas se interponen en la visión de la cámara en 3ra persona.
             objectsBehind.Clear();

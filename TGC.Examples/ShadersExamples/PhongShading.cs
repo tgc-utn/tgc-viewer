@@ -136,8 +136,8 @@ namespace TGC.Examples.ShadersExamples
             var lightPosition = lightPositionModifier.Value;
 
             //Cargar variables de shader
-            effect.SetValue("fvLightPosition", TGCVector3.Vector3ToFloat3Array(lightPosition));
-            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvLightPosition", TGCVector3.TGCVector3ToFloat3Array(lightPosition));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
             effect.SetValue("k_la", ambientModifier.Value);
             effect.SetValue("k_ld", diffuseModifier.Value);
             effect.SetValue("k_ls", specularModifier.Value);

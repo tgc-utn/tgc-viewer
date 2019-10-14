@@ -70,7 +70,8 @@ namespace TGC.Examples.WorkshopShaders
             pasto = scene2.Meshes[0];
             TgcScene scene3 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml");
             arbol = scene3.Meshes[0];
-            arbol.Scale = new TGCVector3(1, 3, 1);
+
+            arbol.Transform = TGCMatrix.Scaling(1, 3, 1);
             TgcScene scene4 = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Meshes\\Vegetacion\\Arbusto2\\Arbusto2-TgcScene.xml");
             arbusto = scene4.Meshes[0];
 
@@ -174,7 +175,7 @@ namespace TGC.Examples.WorkshopShaders
             d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             d3dDevice.BeginScene();
             //Dibujamos todos los meshes del escenario
-            renderScene(elapsedTime, "DefaultTechnique");
+            renderScene("DefaultTechnique");
             //Render skybox
             skyBox.Render();
             d3dDevice.EndScene();
@@ -203,7 +204,7 @@ namespace TGC.Examples.WorkshopShaders
             effect.SetValue("KLum", 0.05f);
             d3dDevice.BeginScene();
             //Dibujamos todos los meshes del escenario
-            renderScene(elapsedTime, "DefaultTechnique");
+            renderScene("DefaultTechnique");
             // y el skybox (el skybox no tiene efectos, va por fixed OJOOO)
             skyBox.Render();
 
@@ -227,7 +228,7 @@ namespace TGC.Examples.WorkshopShaders
                 skyBox.Render();
 
                 // El resto opacos
-                renderScene(elapsedTime, "DibujarObjetosOscuros");
+                renderScene("DibujarObjetosOscuros");
 
                 d3dDevice.EndScene();
                 pSurf.Dispose();
@@ -386,7 +387,7 @@ namespace TGC.Examples.WorkshopShaders
             PostRender();
         }
 
-        public void renderScene(float elapsedTime, string Technique)
+        public void renderScene(string Technique)
         {
             //Dibujamos todos los meshes del escenario
             Random rnd = new Random(1);
@@ -395,8 +396,7 @@ namespace TGC.Examples.WorkshopShaders
             for (int i = 0; i < 10; ++i)
                 for (int j = 0; j < 10; ++j)
                 {
-                    pasto.Position = new TGCVector3(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
-                    pasto.Scale = new TGCVector3(3, 4 + rnd.Next(0, 4), 5);
+                    pasto.Transform = TGCMatrix.Scaling(3, 4 + rnd.Next(0, 4), 5) * TGCMatrix.Translation(-i * 200 + rnd.Next(0, 50), 0, -j * 200 + rnd.Next(0, 50));
                     pasto.Render();
                 }
 
@@ -405,7 +405,7 @@ namespace TGC.Examples.WorkshopShaders
             for (int i = 0; i < 5; ++i)
                 for (int j = 0; j < 5; ++j)
                 {
-                    arbusto.Position = new TGCVector3(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
+                    arbusto.Transform = TGCMatrix.Translation(-i * 400 + rnd.Next(0, 50), 0, -j * 400 + rnd.Next(0, 50));
                     arbusto.Render();
                 }
 
@@ -414,7 +414,7 @@ namespace TGC.Examples.WorkshopShaders
             for (int i = 0; i < 3; ++i)
                 for (int j = 0; j < 3; ++j)
                 {
-                    arbol.Position = new TGCVector3(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
+                    arbol.Transform = TGCMatrix.Translation(-i * 700 + rnd.Next(0, 50), 0, -j * 700 + rnd.Next(0, 50));
                     arbol.Render();
                 }
 

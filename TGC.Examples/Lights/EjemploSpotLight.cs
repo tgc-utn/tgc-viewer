@@ -130,9 +130,9 @@ namespace TGC.Examples.Lights
                 {
                     //Cargar variables shader de la luz
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(lightColorModifier.Value));
-                    mesh.Effect.SetValue("lightPosition", TGCVector3.Vector3ToFloat4Array(lightPos));
-                    mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(Camara.Position));
-                    mesh.Effect.SetValue("spotLightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
+                    mesh.Effect.SetValue("lightPosition", TGCVector3.TGCVector3ToFloat4Array(lightPos));
+                    mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
+                    mesh.Effect.SetValue("spotLightDir", TGCVector3.TGCVector3ToFloat3Array(lightDir));
                     mesh.Effect.SetValue("lightIntensity", lightIntensityModifier.Value);
                     mesh.Effect.SetValue("lightAttenuation", lightAttenuationModifier.Value);
                     mesh.Effect.SetValue("spotLightAngleCos", FastMath.ToRad(spotAngleModifier.Value));

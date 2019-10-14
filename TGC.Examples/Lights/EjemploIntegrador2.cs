@@ -80,7 +80,7 @@ namespace TGC.Examples.Lights
                     //Guardar datos de luz
                     var light = new LightData();
                     light.color = Color.FromArgb((int)meshData.color[0], (int)meshData.color[1], (int)meshData.color[2]);
-                    light.aabb = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(meshData.pMin), TGCVector3.Float3ArrayToVector3(meshData.pMax));
+                    light.aabb = new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToTGCVector3(meshData.pMin), TGCVector3.Float3ArrayToTGCVector3(meshData.pMax));
                     light.pos = light.aabb.calculateBoxCenter();
                     lights.Add(light);
                 }
@@ -202,7 +202,7 @@ namespace TGC.Examples.Lights
 
                 if (true) //FIXME da error cuando se desabilitan las luces.) (lightEnable)
                 {
-                    mesh.Effect.SetValue("eyePosition", TGCVector3.Vector3ToFloat4Array(eyePosition));
+                    mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(eyePosition));
                     mesh.Effect.SetValue("bumpiness", bumpinessModifier.Value);
                     mesh.Effect.SetValue("reflection", reflectionModifier.Value);
 
@@ -230,13 +230,13 @@ namespace TGC.Examples.Lights
                             ColorValue.FromColor(meshData.lights[1].color),
                             ColorValue.FromColor(meshData.lights[2].color)
                         });
-                    mesh.Effect.SetValue("lightPosition",
+                    mesh.Effect.SetValue("lightPosition", TGCVector4.TGCVector4ArrayToVector4Array(
                         new[]
                         {
-                            TGCVector3.Vector3ToVector4(meshData.lights[0].pos),
-                            TGCVector3.Vector3ToVector4(meshData.lights[1].pos),
-                            TGCVector3.Vector3ToVector4(meshData.lights[2].pos)
-                        });
+                            TGCVector3.TGCVector3ToTGCVector4(meshData.lights[0].pos),
+                            TGCVector3.TGCVector3ToTGCVector4(meshData.lights[1].pos),
+                            TGCVector3.TGCVector3ToTGCVector4(meshData.lights[2].pos)
+                        }));
                 }
 
                 //Renderizar modelo

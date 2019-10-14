@@ -134,11 +134,11 @@ namespace TGC.Examples.ShadersExamples
             }
 
             var lightDir = lightDirModifier.Value;
-            effect.SetValue("g_LightDir", TGCVector3.Vector3ToFloat3Array(lightDir));
+            effect.SetValue("g_LightDir", TGCVector3.TGCVector3ToFloat3Array(lightDir));
             effect.SetValue("min_cant_samples", minSampleModifier.Value);
             effect.SetValue("max_cant_samples", maxSampleModifier.Value);
             effect.SetValue("fHeightMapScale", heightMapScaleModifier.Value);
-            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
 
             device.EndScene();
             effect.SetValue("time", time);

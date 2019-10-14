@@ -204,8 +204,8 @@ namespace TGC.Examples.ShadersExamples
             }
 
             //Cargar variables de shader
-            effect.SetValue("fvLightPosition", new Vector4(0, 400, 0, 0));
-            effect.SetValue("fvEyePosition", TGCVector3.Vector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvLightPosition", new TGCVector4(0, 400, 0, 0));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
             effect.SetValue("kx", reflexionModifier.Value);
             effect.SetValue("kc", refraccionModifier.Value);
             effect.SetValue("usar_fresnel", fresnelModifier.Value);

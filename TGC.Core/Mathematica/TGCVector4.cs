@@ -15,7 +15,7 @@ namespace TGC.Core.Mathematica
         private Vector4 dxVector4;
 
         /// <summary>
-        /// Initializes a new instance of the Vector4 class.
+        /// Initializes a new instance of the TGCVector4 class.
         /// </summary>
         /// <param name="x">The x coordinate.</param>
         /// <param name="y">The y coordinate.</param>
@@ -93,7 +93,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         /// <param name="left">Source TGCVector4.</param>
         /// <param name="right">Source TGCVector4.</param>
-        /// <returns>Sum of the two Vector4 structures.</returns>
+        /// <returns>Sum of the two TGCVector4 structures.</returns>
         public static TGCVector4 Add(TGCVector4 left, TGCVector4 right)
         {
             throw new NotImplementedException();
@@ -259,7 +259,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Returns a 4-D vector that is made up of the smallest components of two 4-D vectors.
         /// </summary>
-        /// <param name="source">Source Vector4 structure.</param>
+        /// <param name="source">Source TGCVector4 structure.</param>
         public void Minimize(TGCVector4 source)
         {
             throw new NotImplementedException();
@@ -290,7 +290,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         /// <param name="source">Source TGCVector4 structure.</param>
         /// <param name="f">Source Single value used as a multiplier.</param>
-        /// <returns>A Vector4 structure that is multiplied by the Single value.</returns>
+        /// <returns>A TGCVector4 structure that is multiplied by the Single value.</returns>
         public static TGCVector4 Multiply(TGCVector4 source, float f)
         {
             throw new NotImplementedException();
@@ -491,13 +491,23 @@ namespace TGC.Core.Mathematica
         #region Old TGCVectorUtils
 
         /// <summary>
-        ///     convierte un color base(255,255,255,255) a un Vector4(1f,1f,1f,1f).
+        /// Convierte un color base(255,255,255,255) a un Vector4(1f,1f,1f,1f).
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
         public static Vector4 ColorToVector4(Color color)
         {
             return Vector4.Normalize(new Vector4(color.R, color.G, color.B, color.A));
+        }
+
+        public static Vector4[] TGCVector4ArrayToVector4Array(TGCVector4[] vector)
+        {
+            Vector4[] ret = new Vector4[vector.Length];
+            for (int i = 0; i < vector.Length; i++)
+            {
+                ret[i] = vector[i].ToVector4();
+            }
+            return ret;
         }
 
         #endregion Old TGCVectorUtils

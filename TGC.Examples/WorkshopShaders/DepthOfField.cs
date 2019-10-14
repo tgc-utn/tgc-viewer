@@ -165,7 +165,7 @@ namespace TGC.Examples.WorkshopShaders
             {
                 for (int i = 0; i < 15; ++i)
                 {
-                    mesh.Position = new TGCVector3(j * 20, 0, i * 50);
+                    mesh.Transform = TGCMatrix.Translation(j * 20, 0, i * 50);
                     mesh.Render();
                 }
             }

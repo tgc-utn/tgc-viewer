@@ -1,5 +1,5 @@
-using Microsoft.DirectX;
 using System.Collections.Generic;
+using TGC.Core.Mathematica;
 
 namespace TGC.Core.SkeletalAnimation
 {
@@ -26,16 +26,16 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         /// <param name="vector4">Valores de Weights</param>
         /// <param name="vector4_2">Indices de huesos</param>
-        public void createVector4WeightsAndIndices(out Vector4 blendWeights, out Vector4 blendIndices)
+        public void createVector4WeightsAndIndices(out TGCVector4 blendWeights, out TGCVector4 blendIndices)
         {
-            blendWeights = new Vector4(
+            blendWeights = new TGCVector4(
                 getBlendWeight(0),
                 getBlendWeight(1),
                 getBlendWeight(2),
                 getBlendWeight(3)
                 );
 
-            blendIndices = new Vector4(
+            blendIndices = new TGCVector4(
                 getBlendIndex(0),
                 getBlendIndex(1),
                 getBlendIndex(2),

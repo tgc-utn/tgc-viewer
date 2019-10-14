@@ -59,8 +59,8 @@ namespace TGC.Core.SceneLoader
             foreach (var m in meshesExport)
             {
                 boundingBoxes.Add(new TgcBoundingAxisAlignBox(
-                    TGCVector3.Float3ArrayToVector3(m.MeshData.pMin),
-                    TGCVector3.Float3ArrayToVector3(m.MeshData.pMax)));
+                    TGCVector3.Float3ArrayToTGCVector3(m.MeshData.pMin),
+                    TGCVector3.Float3ArrayToTGCVector3(m.MeshData.pMax)));
             }
             return TgcBoundingAxisAlignBox.computeFromBoundingBoxes(boundingBoxes);
         }
@@ -142,8 +142,8 @@ namespace TGC.Core.SceneLoader
                 meshExport.MeshData.name = tgcMesh.Name;
                 meshExport.MeshData.layerName = tgcMesh.Layer;
                 meshExport.MeshRenderType = tgcMesh.RenderType;
-                meshExport.MeshData.pMin = TGCVector3.Vector3ToFloat3Array(tgcMesh.BoundingBox.PMin);
-                meshExport.MeshData.pMax = TGCVector3.Vector3ToFloat3Array(tgcMesh.BoundingBox.PMax);
+                meshExport.MeshData.pMin = TGCVector3.TGCVector3ToFloat3Array(tgcMesh.BoundingBox.PMin);
+                meshExport.MeshData.pMax = TGCVector3.TGCVector3ToFloat3Array(tgcMesh.BoundingBox.PMax);
                 meshExport.MeshData.userProperties = tgcMesh.UserProperties;
                 meshExport.MeshData.alphaBlending = tgcMesh.AlphaBlendEnable;
 
@@ -190,7 +190,7 @@ namespace TGC.Core.SceneLoader
                     //TODO: la rotación no se exporta correctamente cuando la malla original esta rotada
 
                     //Posicion, rotacion y escala con diferencia de la malla original
-                    meshExport.MeshData.position = TGCVector3.Vector3ToFloat3Array(tgcMesh.Position - parentInstance.Position);
+                    meshExport.MeshData.position = TGCVector3.TGCVector3ToFloat3Array(tgcMesh.Position - parentInstance.Position);
                     var rotQuat = TGCQuaternion.RotationYawPitchRoll(tgcMesh.Rotation.Y, tgcMesh.Rotation.X,
                         tgcMesh.Rotation.Z);
                     var parentRotQuat = TGCQuaternion.RotationYawPitchRoll(parentInstance.Rotation.Y,
@@ -201,7 +201,7 @@ namespace TGC.Core.SceneLoader
                         tgcMesh.Scale.Y / parentInstance.Scale.Y,
                         tgcMesh.Scale.Z / parentInstance.Scale.Z
                         );
-                    meshExport.MeshData.scale = TGCVector3.Vector3ToFloat3Array(scale);
+                    meshExport.MeshData.scale = TGCVector3.TGCVector3ToFloat3Array(scale);
                 }
 
                 return meshExport;
@@ -773,13 +773,13 @@ namespace TGC.Core.SceneLoader
 
             //BoundingBox que une ambas
             var bboxes = new List<TgcBoundingAxisAlignBox>();
-            bboxes.Add(new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(mExp1.MeshData.pMin),
-                TGCVector3.Float3ArrayToVector3(mExp1.MeshData.pMax)));
-            bboxes.Add(new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToVector3(mExp2.MeshData.pMin),
-                TGCVector3.Float3ArrayToVector3(mExp2.MeshData.pMax)));
+            bboxes.Add(new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToTGCVector3(mExp1.MeshData.pMin),
+                TGCVector3.Float3ArrayToTGCVector3(mExp1.MeshData.pMax)));
+            bboxes.Add(new TgcBoundingAxisAlignBox(TGCVector3.Float3ArrayToTGCVector3(mExp2.MeshData.pMin),
+                TGCVector3.Float3ArrayToTGCVector3(mExp2.MeshData.pMax)));
             var appendenBbox = TgcBoundingAxisAlignBox.computeFromBoundingBoxes(bboxes);
-            meshExpAppended.MeshData.pMin = TGCVector3.Vector3ToFloat3Array(appendenBbox.PMin);
-            meshExpAppended.MeshData.pMax = TGCVector3.Vector3ToFloat3Array(appendenBbox.PMax);
+            meshExpAppended.MeshData.pMin = TGCVector3.TGCVector3ToFloat3Array(appendenBbox.PMin);
+            meshExpAppended.MeshData.pMax = TGCVector3.TGCVector3ToFloat3Array(appendenBbox.PMax);
 
             //coordinatesIndices
             meshExpAppended.MeshData.coordinatesIndices =
@@ -1307,8 +1307,8 @@ namespace TGC.Core.SceneLoader
 
                 //sceneBoundingBox
                 var sceneBoundingBoxNode = doc.CreateElement("sceneBoundingBox");
-                sceneBoundingBoxNode.SetAttribute("min", TGCVector3.PrintVector3(sceneBoundingBox.PMin));
-                sceneBoundingBoxNode.SetAttribute("max", TGCVector3.PrintVector3(sceneBoundingBox.PMax));
+                sceneBoundingBoxNode.SetAttribute("min", TGCVector3.PrintTGCVector3(sceneBoundingBox.PMin));
+                sceneBoundingBoxNode.SetAttribute("max", TGCVector3.PrintTGCVector3(sceneBoundingBox.PMax));
                 root.AppendChild(sceneBoundingBoxNode);
 
                 //materials

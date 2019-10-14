@@ -62,7 +62,7 @@ namespace TGC.Examples.Transformations
             // 6) Transformar un punto en base al movimiento de una matriz de transformacion
             var p = new TGCVector3(10, 5, 10);
             var transformedVec4 = TGCVector3.Transform(p, movimientoFinal);
-            //Devuelve un Vector4 poque estan las coordenadas homogeneas
+            //Devuelve un TGCVector4 poque estan las coordenadas homogeneas
             var transformedVec3 = new TGCVector3(transformedVec4.X, transformedVec4.Y, transformedVec4.Z);
             //Ignoramos la componente W
 

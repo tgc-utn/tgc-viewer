@@ -38,7 +38,7 @@ namespace TGC.Examples.Bullet.Physics
 
             //Se crea una caja de tamaño 20 con rotaciones y origien en 10,100,10 y 1kg de masa.
             var boxShape = new BoxShape(10, 10, 10);
-            var boxTransform = TGCMatrix.RotationYawPitchRoll(MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI).ToBsMatrix;
+            var boxTransform = TGCMatrix.RotationYawPitchRoll(MathUtil.SIMD_HALF_PI, MathUtil.SIMD_QUARTER_PI, MathUtil.SIMD_2_PI).ToBulletMatrix();
             boxTransform.Origin = new TGCVector3(10, 100, 10).ToBulletVector3();
             DefaultMotionState boxMotionState = new DefaultMotionState(boxTransform);
             //Es importante calcular la inercia caso contrario el objeto no rotara.
@@ -51,7 +51,7 @@ namespace TGC.Examples.Bullet.Physics
             var ballShape = new SphereShape(10);
             var ballTransform = TGCMatrix.Identity;
             ballTransform.Origin = new TGCVector3(0, 50, 0);
-            var ballMotionState = new DefaultMotionState(ballTransform.ToBsMatrix);
+            var ballMotionState = new DefaultMotionState(ballTransform.ToBulletMatrix());
             //Podriamos no calcular la inercia para que no rote, pero es correcto que rote tambien.
             var ballLocalInertia = ballShape.CalculateLocalInertia(1f);
             var ballInfo = new RigidBodyConstructionInfo(1, ballMotionState, ballShape, ballLocalInertia);

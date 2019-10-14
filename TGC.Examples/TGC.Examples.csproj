@@ -364,7 +364,6 @@
     <Compile Include="UserControls\Networking\TgcSocketServer.cs" />
     <Compile Include="UserControls\Networking\TgcSocketServerInfo.cs" />
     <Compile Include="UserControls\TgcUserVars.cs" />
-    <Compile Include="WorkshopShaders\BasicShader.cs" />
     <Compile Include="WorkshopShaders\ComboRata.cs" />
     <Compile Include="WorkshopShaders\DepthOfField.cs" />
     <Compile Include="WorkshopShaders\Distorsiones.cs" />
