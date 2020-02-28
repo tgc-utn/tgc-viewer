@@ -167,6 +167,7 @@
     <Compile Include="Lights\EjemploPointLight.cs" />
     <Compile Include="Lights\EjemploSpotLight.cs" />
     <Compile Include="MathExamples\EjemploMatematicaVarios.cs" />
+    <Compile Include="Transformations\EjemploTrackball.cs" />
     <Compile Include="Transformations\EjemploTransformaciones.cs" />
     <Compile Include="MeshExamples\EjemploTriangulosYPlanos.cs" />
     <Compile Include="Optimization\GrillaRegular\EjemploGrillaRegular.cs" />
