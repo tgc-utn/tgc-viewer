@@ -74,7 +74,8 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public static TGCQuaternion Identity
         {
-            get { return new TGCQuaternion(1f, 1f, 1f, 1f); }
+            get { return new TGCQuaternion(Quaternion.Identity); }
+            
         }
 
         /// <summary>
