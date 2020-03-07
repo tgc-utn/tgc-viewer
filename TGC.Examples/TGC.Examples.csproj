@@ -134,6 +134,7 @@
     <Compile Include="Multiplayer\VehiculosMultiplayer.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />
     <Compile Include="ShadersExamples\BasicVariousShaders.cs" />
+    <Compile Include="ShadersExamples\BlinnPhongShading.cs" />
     <Compile Include="ShadersExamples\DemoShaders.cs" />
     <Compile Include="ShadersExamples\PhongShadingTgc.cs" />
     <Compile Include="ShadersExamples\EjemploShaderTgcMesh.cs" />
@@ -483,6 +484,7 @@
     <None Include="Resources\512x512\image-x-generic.png" />
     <None Include="Resources\32x32\folder.png" />
     <None Include="Resources\32x32\system-file-manager.png" />
+    <Content Include="Shaders\Blinn.fx" />
     <Content Include="Shaders\BumpMapping.fx" />
     <Content Include="Shaders\BumpMappingNoTangent.fx" />
     <Content Include="Shaders\Cel.fx" />
