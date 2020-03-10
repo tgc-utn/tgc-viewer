@@ -147,7 +147,6 @@ namespace TGC.Examples.ShadersExamples
             lightBox.Color = Color.Yellow;
             lightBox.Size = TGCVector3.One * 10.0f;
             lightBox.updateValues();
-            lightBox.Transform = TGCMatrix.Scaling(new TGCVector3(10f, 10f, 10f));
         }
 
         private void ConfigureModifiers()
