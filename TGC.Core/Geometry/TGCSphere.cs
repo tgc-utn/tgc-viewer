@@ -417,7 +417,7 @@ namespace TGC.Core.Geometry
                         catch (Exception e)
                         {
                             //Arreglar esto... y despues quitar el try catch :(
-                            System.Console.WriteLine(e.Message);
+                            Console.WriteLine(e.Message);
                         }
                     }
                 }

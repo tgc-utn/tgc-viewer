@@ -2039,9 +2039,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="segmentInit">Punto de inicio del segmento</param>
         /// <param name="segmentEnd">Punto de fin del segmento</param>
-        /// <param name="cylinderInit">Punto inicial del cilindro</param>
-        /// <param name="cylinderEnd">Punto final del cilindro</param>
-        /// <param name="radius">Radio del cilindro</param>
+        /// <param name="cylinder">Cilindro orientable</param>
         /// <param name="t">Instante de colision</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>

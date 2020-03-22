@@ -210,7 +210,7 @@ namespace TGC.Examples.Lights
 
                 mesh.UpdateMeshTransform();
                 //Renderizar modelo
-                mesh.render();
+                mesh.Render();
             }
 
             //Renderizar meshes comunes

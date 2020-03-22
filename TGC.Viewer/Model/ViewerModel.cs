@@ -37,12 +37,11 @@ namespace TGC.Viewer.Model
         private ExampleLoader ExampleLoader { get; set; }
 
         /// <summary>
-        /// Inicia el device basado en el panel, el sonido, los inputs y carga los shaders basicos.
+        /// Inicia el device basado en el panel, el sonido y los inputs.
         /// </summary>
         /// <param name="form"> Ventana que contiene la aplicacion.</param>
         /// <param name="control"> Control donde van a correr los ejemplos.</param>
-        /// <param name="pathCommonShaders"> Ruta con los shaders basicos.</param>
-        public void InitGraphics(ViewerForm form, Control control, string pathCommonShaders)
+        public void InitGraphics(ViewerForm form, Control control)
         {
             ApplicationRunning = true;
             Form = form;
@@ -57,8 +56,22 @@ namespace TGC.Viewer.Model
 
             //Inicio sonido
             DirectSound = new TgcDirectSound();
-            DirectSound.InitializeD3DDevice(control);
+            try
+            {
+                DirectSound.InitializeD3DDevice(control);
+            }
+            catch (ApplicationException ex)
+            {
+                throw new Exception("No se pudo inicializar el sonido", ex);
+            }
+        }
 
+        /// <summary>
+        /// Carga los shaders basicos
+        /// </summary>
+        /// <param name="pathCommonShaders"> Ruta con los shaders basicos.</param>
+        public void InitShaders(string pathCommonShaders)
+        {
             //Cargar shaders del framework
             TGCShaders.Instance.LoadCommonShaders(pathCommonShaders, D3DDevice.Instance);
         }

@@ -82,7 +82,7 @@ namespace TGC.Examples.GeometryBasics
             var autoAdjust = autoAdjustModifier.Value;
 
             //Cambiar orienacion
-            var orientation = orientationModifier.Value;
+            var orientation = orientationModifier.Value.ToString();
             TgcPlane.Orientations or;
             if (orientation == "XY") or = TgcPlane.Orientations.XYplane;
             else if (orientation == "XZ") or = TgcPlane.Orientations.XZplane;
