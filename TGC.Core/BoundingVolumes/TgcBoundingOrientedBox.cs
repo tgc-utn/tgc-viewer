@@ -251,7 +251,7 @@ namespace TGC.Core.BoundingVolumes
         ///     Rotar OBB en los 3 ejes.
         ///     Es una rotacion relativa, sumando a lo que ya tenia antes de rotacion.
         /// </summary>
-        /// <param name="movement">Ángulo de rotación de cada eje en radianes</param>
+        /// <param name="rotation">Ángulo de rotación de cada eje en radianes</param>
         public void rotate(TGCVector3 rotation)
         {
             var rotM = TGCMatrix.RotationYawPitchRoll(rotation.Y, rotation.X, rotation.Z);

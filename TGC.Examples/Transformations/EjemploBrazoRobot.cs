@@ -54,7 +54,7 @@ namespace TGC.Examples.Transformations
         {
             var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\floor1.jpg");
             var center = TGCVector3.Empty;
-            var size = new TGCVector3(1f, 1f, 1f);
+            var size = TGCVector3.One;
             box = TGCBox.fromSize(center, size, texture);
             box.Transform = TGCMatrix.Identity;
             Camara = new TgcRotationalCamera(new TGCVector3(0f, 1.5f, 0f), 5f, Input);

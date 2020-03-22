@@ -577,9 +577,9 @@ namespace TGC.Core.SceneLoader
 
             AutoTransformEnable = false;
             AutoUpdateBoundingBox = true;
-            translation = new TGCVector3(0f, 0f, 0f);
-            rotation = new TGCVector3(0f, 0f, 0f);
-            scale = new TGCVector3(1f, 1f, 1f);
+            translation = TGCVector3.Empty;
+            rotation = TGCVector3.Empty;
+            scale = TGCVector3.One;
             transform = TGCMatrix.Identity;
 
             //Shader

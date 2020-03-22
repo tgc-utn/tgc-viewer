@@ -183,7 +183,7 @@ namespace TGC.Examples.Sound
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.RotateY(rotAngle);
+                personaje.Rotation += new TGCVector3(0, rotAngle, 0);
                 camaraInterna.rotateY(rotAngle);
             }
 
