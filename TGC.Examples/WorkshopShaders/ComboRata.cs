@@ -115,15 +115,15 @@ namespace TGC.Examples.WorkshopShaders
                     float pos_z = mesh.BoundingBox.PMin.Z * kz + mesh.BoundingBox.PMax.Z * (1 - kz);
 
                     TgcSkeletalMesh enemigo = skeletalLoader.loadMeshAndAnimationsFromFile(MediaDir + "SkeletalAnimations\\BasicHuman\\" + "CombineSoldier-TgcSkeletalMesh.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\", new string[] { MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Walk-TgcSkeletalAnim.xml", });
-                    //TODO remove AutoTransformEnable dependency
-                    enemigo.AutoTransformEnable = true;
-
                     enemigos.Add(enemigo);
 
                     //Configurar animacion inicial
                     enemigos[cant_enemigos].playAnimation("Walk", true);
                     enemigos[cant_enemigos].Position = new TGCVector3(pos_x, 1f, pos_z);
                     enemigos[cant_enemigos].Scale = new TGCVector3(0.3f, 0.3f, 0.3f);
+                    enemigos[cant_enemigos].Transform = TGCMatrix.Scaling(enemigos[cant_enemigos].Scale) *
+                        TGCMatrix.RotationYawPitchRoll(enemigos[cant_enemigos].Rotation.Y, enemigos[cant_enemigos].Rotation.X, enemigos[cant_enemigos].Rotation.Z) *
+                        TGCMatrix.Translation(enemigos[cant_enemigos].Position);
                     enemigo_an[cant_enemigos] = 0;
                     cant_enemigos++;
                 }
@@ -161,8 +161,8 @@ namespace TGC.Examples.WorkshopShaders
                 TGCVector3 vel = new TGCVector3((float)Math.Sin(an), 0, (float)Math.Cos(an));
                 //Mover personaje
                 TGCVector3 lastPos = enemigos[t].Position;
-                enemigos[t].Move(vel * speed);
-                enemigos[t].Rotation = new TGCVector3(0, (float)Math.PI + an, 0);           // +(float)Math.PI/2
+                enemigos[t].Position += (vel * speed);
+                enemigos[t].Rotation += new TGCVector3(0, (float)Math.PI / 2 + an, 0);
 
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
                 bool collide = false;
@@ -183,6 +183,7 @@ namespace TGC.Examples.WorkshopShaders
                     enemigo_an[t] += rnd.Next(0, 100) / 100.0f;
                 }
 
+                enemigos[t].Transform = TGCMatrix.Scaling(enemigos[t].Scale) * TGCMatrix.RotationY(enemigos[t].Rotation.Y) * TGCMatrix.Translation(enemigos[t].Position);
                 enemigos[t].updateAnimation(ElapsedTime);
             }
 

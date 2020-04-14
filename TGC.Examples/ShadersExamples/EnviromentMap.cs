@@ -117,11 +117,11 @@ namespace TGC.Examples.ShadersExamples
             avion = scene3.Meshes[0];
 
             mesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
-            mesh.Position = new TGCVector3(0f, 0f, 0f);
+            mesh.Position = TGCVector3.Empty;
             var size = mesh.BoundingBox.calculateSize();
             largo_tanque = Math.Abs(size.Z);
             alto_tanque = Math.Abs(size.Y) * mesh.Scale.Y;
-            avion.Scale = new TGCVector3(1f, 1f, 1f);
+            avion.Scale = TGCVector3.One;
             avion.Position = new TGCVector3(3000f, 550f, 0f);
             dir_avion = new TGCVector3(0, 0, 1);
             size = palmera.BoundingBox.calculateSize();

@@ -12,7 +12,7 @@ namespace TGC.Examples.Camara
         public static float DEFAULT_ZOOM_FACTOR = 0.15f;
         public static float DEFAULT_CAMERA_DISTANCE = 10f;
         public static float DEFAULT_ROTATION_SPEED = 100f;
-        public static TGCVector3 DEFAULT_DOWN = new TGCVector3(0f, -1f, 0f);
+        public static TGCVector3 DEFAULT_DOWN = TGCVector3.Down;
 
         /// <summary>
         ///     Crea camara con valores por defecto.
@@ -29,7 +29,7 @@ namespace TGC.Examples.Camara
             DiffY = 0f;
             DiffZ = 1f;
             PanSpeed = 0.01f;
-            UpVector = new TGCVector3(0f, 1f, 0f);
+            UpVector = TGCVector3.Up;
             base.SetCamera(NextPos, LookAt, UpVector);
         }
 

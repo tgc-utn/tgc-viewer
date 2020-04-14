@@ -55,7 +55,16 @@ namespace TGC.Viewer.UI
             }
 
             //Iniciar graficos
-            Model.InitGraphics(this, panel3D, settings.CommonShaders);
+            try
+            {
+                Model.InitGraphics(this, panel3D);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ocurrio un problema al inicializar DX", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            Model.InitShaders(settings.CommonShaders);
 
             try
             {

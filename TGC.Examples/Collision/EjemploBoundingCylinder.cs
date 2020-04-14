@@ -76,7 +76,8 @@ namespace TGC.Examples.Collision
             var size = personaje.BoundingBox.PMax.Y - personaje.BoundingBox.PMin.Y;
             personaje.Position = new TGCVector3(0, -3f, 0);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.RotateY(FastMath.PI);
+            personaje.Rotation = new TGCVector3(0, FastMath.PI, 0);
+            personaje.Transform = TGCMatrix.RotationY(personaje.Rotation.Y) * TGCMatrix.Translation(personaje.Position);
 
             //Objetos estaticos, pueden ser mesh o objetos simplificados.
             var loader = new TgcSceneLoader();

@@ -16,7 +16,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -134,6 +134,7 @@
     <Compile Include="Multiplayer\VehiculosMultiplayer.cs" />
     <Compile Include="ShadersExamples\BasicShader.cs" />
     <Compile Include="ShadersExamples\BasicVariousShaders.cs" />
+    <Compile Include="ShadersExamples\BlinnPhongShading.cs" />
     <Compile Include="ShadersExamples\DemoShaders.cs" />
     <Compile Include="ShadersExamples\PhongShadingTgc.cs" />
     <Compile Include="ShadersExamples\EjemploShaderTgcMesh.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Lights\EjemploPointLight.cs" />
     <Compile Include="Lights\EjemploSpotLight.cs" />
     <Compile Include="MathExamples\EjemploMatematicaVarios.cs" />
+    <Compile Include="Transformations\EjemploTrackball.cs" />
     <Compile Include="Transformations\EjemploTransformaciones.cs" />
     <Compile Include="MeshExamples\EjemploTriangulosYPlanos.cs" />
     <Compile Include="Optimization\GrillaRegular\EjemploGrillaRegular.cs" />
@@ -484,6 +486,7 @@
     <None Include="Resources\512x512\image-x-generic.png" />
     <None Include="Resources\32x32\folder.png" />
     <None Include="Resources\32x32\system-file-manager.png" />
+    <Content Include="Shaders\Blinn.fx" />
     <Content Include="Shaders\BumpMapping.fx" />
     <Content Include="Shaders\BumpMappingNoTangent.fx" />
     <Content Include="Shaders\Cel.fx" />

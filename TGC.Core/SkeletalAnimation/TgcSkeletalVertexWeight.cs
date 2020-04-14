@@ -24,8 +24,8 @@ namespace TGC.Core.SkeletalAnimation
         ///     huesos.
         ///     Si tiene menos de 4 weights completa con 0.
         /// </summary>
-        /// <param name="vector4">Valores de Weights</param>
-        /// <param name="vector4_2">Indices de huesos</param>
+        /// <param name="blendWeights">Valores de Weights</param>
+        /// <param name="blendIndices">Indices de huesos</param>
         public void createVector4WeightsAndIndices(out TGCVector4 blendWeights, out TGCVector4 blendIndices)
         {
             blendWeights = new TGCVector4(

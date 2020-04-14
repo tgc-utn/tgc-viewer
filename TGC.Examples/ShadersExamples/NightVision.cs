@@ -202,7 +202,7 @@ namespace TGC.Examples.ShadersExamples
                     // escapando
                     case 1:
                         dir_escape.Normalize();
-                        m.RotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y + 3.1415f);
+                        m.Rotation = new TGCVector3(m.Rotation.X, (float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y + 3.1415f, m.Rotation.Z);
                         m.Position += dir_escape * (vel_bot * ElapsedTime);
                         var X = m.Position.X;
                         var Z = m.Position.Z;
@@ -223,14 +223,14 @@ namespace TGC.Examples.ShadersExamples
                         dir_escape.Normalize();
                         if (Math.Abs(dir_escape.Z) > 0.01f)
                         {
-                            m.RotateY((float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y);
+                            m.Rotation = new TGCVector3(m.Rotation.X, (float)Math.Atan2(dir_escape.X, dir_escape.Z) - m.Rotation.Y, m.Rotation.Z);
                             m.Position += dir_escape * (-60 * ElapsedTime);
                         }
                         m.playAnimation("Run", true, 20);
                         break;
 
                     case 99:
-                        m.RotateZ(3.1415f * 0.5f - m.Rotation.Z);
+                        m.Rotation = new TGCVector3(m.Rotation.X, m.Rotation.Y, 3.1415f * 0.5f - m.Rotation.Z);
                         m.playAnimation("StandBy", true);
                         break;
                 }
