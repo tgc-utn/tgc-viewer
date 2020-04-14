@@ -82,7 +82,7 @@
     </Reference>
     <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2909.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
+	  <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
@@ -147,6 +147,8 @@
     <Compile Include="ShadersExamples\NightVision.cs" />
     <Compile Include="ShadersExamples\OutRun.cs" />
     <Compile Include="ShadersExamples\ParallaxOcclusion.cs" />
+    <Compile Include="ShadersExamples\PBR.cs" />
+    <Compile Include="ShadersExamples\PBRConIBL.cs" />
     <Compile Include="ShadersExamples\PhongShading.cs" />
     <Compile Include="ShadersExamples\ShadowMap.cs" />
     <Compile Include="ShadersExamples\ToonShading.cs" />
@@ -506,6 +508,8 @@
     <Content Include="Shaders\GaussianBlur.fx" />
     <Content Include="Shaders\HDR.fx" />
     <Content Include="Shaders\MultiDiffuseLights.fx" />
+    <Content Include="Shaders\PBRIBL.fx" />
+    <Content Include="Shaders\PBR.fx" />
     <Content Include="Shaders\PostProcess.fx" />
     <Content Include="Shaders\Varios.fx" />
     <Content Include="Shaders\WorkshopShaders\BasicShader.fx" />
