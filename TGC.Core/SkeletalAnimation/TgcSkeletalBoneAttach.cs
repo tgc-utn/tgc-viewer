@@ -21,7 +21,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Crear un modelo adjunto a un hueso
         /// </summary>
-        /// <param name="model">Modelo a adjuntar</param>
+        /// <param name="mesh">Modelo a adjuntar</param>
         /// <param name="bone">Hueso al cual adjuntarse</param>
         /// <param name="offset">Offset desde el cual el modelo sigue al hueso</param>
         public TgcSkeletalBoneAttach(TgcMesh mesh, TgcSkeletalBone bone, TGCMatrix offset)

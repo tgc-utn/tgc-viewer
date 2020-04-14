@@ -85,7 +85,7 @@ namespace TGC.Examples.ShadersExamples
             // le asigno el efecto a las mallas
             foreach (var T in scene.Meshes)
             {
-                T.Scale = new TGCVector3(1f, 1f, 1f);
+                T.Scale = TGCVector3.One;
                 T.Effect = effect;
             }
             avion.Effect = effect;

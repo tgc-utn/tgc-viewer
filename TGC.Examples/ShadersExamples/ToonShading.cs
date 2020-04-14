@@ -57,7 +57,7 @@ namespace TGC.Examples.ShadersExamples
             scene = loader.loadSceneFromFile(MediaDir + "ModelosTgc\\Teapot\\Teapot-TgcScene.xml");
 
             mesh = scene.Meshes[0];
-            mesh.Scale = new TGCVector3(1f, 1f, 1f);
+            mesh.Scale = TGCVector3.One;
             mesh.Position = new TGCVector3(-100f, -5f, 0f);
 
             // Arreglo las normales

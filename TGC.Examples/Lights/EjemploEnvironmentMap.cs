@@ -164,7 +164,7 @@ namespace TGC.Examples.Lights
                 mesh.Effect.SetValue("texCubeMap", cubeMap);
 
                 //Renderizar modelo
-                mesh.render();
+                mesh.Render();
             }
 
             //Renderizar mesh de luz

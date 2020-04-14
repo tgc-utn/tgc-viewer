@@ -81,8 +81,8 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("lightPosition", lightPos);
             mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
 
-            mesh.Rotation = new TGCVector3(mesh.Rotation.X, mesh.Rotation.Y - ElapsedTime / 2, mesh.Rotation.Z);
-            mesh.Transform = TGCMatrix.RotationY(mesh.Rotation.Y);            
+            mesh.Rotation -= new TGCVector3(0, ElapsedTime / 2, 0);
+            mesh.Transform = TGCMatrix.RotationY(mesh.Rotation.Y);
 
             mesh.Render();
 

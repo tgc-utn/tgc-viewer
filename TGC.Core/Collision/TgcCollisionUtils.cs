@@ -110,7 +110,7 @@ namespace TGC.Core.Collision
         ///     La dirección del Ray puede estar sin normalizar.
         /// </summary>
         /// <param name="ray">Ray</param>
-        /// <param name="a">AABB</param>
+        /// <param name="aabb">AABB</param>
         /// <param name="q">Punto de intersección</param>
         /// <returns>True si hay colisión</returns>
         public static bool intersectRayAABB(TgcRay ray, TgcBoundingAxisAlignBox aabb, out TGCVector3 q)
@@ -126,7 +126,7 @@ namespace TGC.Core.Collision
         ///     La dirección del Ray puede estar sin normalizar.
         /// </summary>
         /// <param name="ray">Ray</param>
-        /// <param name="a">AABB</param>
+        /// <param name="aabb">AABB</param>
         /// <param name="q">Punto de intersección</param>
         /// <returns>True si hay colisión</returns>
         public static bool intersectRayAABB(TgcRay.RayStruct ray, TgcBoundingAxisAlignBox.AABBStruct aabb, out TGCVector3 q)
@@ -321,7 +321,7 @@ namespace TGC.Core.Collision
         ///     Indica si un BoundingSphere colisiona con un BoundingBox.
         /// </summary>
         /// <param name="sphere">BoundingSphere</param>
-        /// <param name="aabb">BoundingBox</param>
+        /// <param name="obb">BoundingBox</param>
         /// <returns>True si hay colisión</returns>
         public static bool testSphereOBB(TgcBoundingSphere sphere, TgcBoundingOrientedBox obb)
         {
@@ -332,7 +332,7 @@ namespace TGC.Core.Collision
         ///     Indica si un BoundingSphere colisiona con un BoundingBox.
         /// </summary>
         /// <param name="sphere">BoundingSphere</param>
-        /// <param name="aabb">BoundingBox</param>
+        /// <param name="obb">BoundingBox</param>
         /// <returns>True si hay colisión</returns>
         public static bool testSphereOBB(TgcBoundingSphere.SphereStruct sphere, TgcBoundingOrientedBox.OBBStruct obb)
         {
@@ -804,12 +804,11 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="p0">Punto inicial del segmento</param>
         /// <param name="p1">Punto final del segmento</param>
-        /// <param name="s">BoundingSphere</param>
+        /// <param name="sphere">BoundingSphere</param>
         /// <param name="t">Distancia de colision del segmento</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectSegmentSphere(TGCVector3 p0, TGCVector3 p1, TgcBoundingSphere sphere, out float t,
-            out TGCVector3 q)
+        public static bool intersectSegmentSphere(TGCVector3 p0, TGCVector3 p1, TgcBoundingSphere sphere, out float t, out TGCVector3 q)
         {
             var segmentDir = p1 - p0;
             var ray = new TgcRay(p0, segmentDir);
@@ -1048,7 +1047,7 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Dado el segmento ab y el punto p, determina el punto mas cercano sobre el segmento ab.
         /// </summary>
-        /// <param name="c">Punto a testear</param>
+        /// <param name="p">Punto a testear</param>
         /// <param name="a">Inicio del segmento ab</param>
         /// <param name="b">Fin del segmento ab</param>
         /// <param name="t">Valor que cumple la ecuacion d(t) = a + t*(b - a)</param>
@@ -1635,9 +1634,9 @@ namespace TGC.Core.Collision
         ///     Devuelve el nuevo polígono recortado.
         ///     Algoritmo de Sutherland-Hodgman
         /// </summary>
-        /// <param name="poly">Vértices del polígono a recortar</param>
+        /// <param name="polyVertices">Vértices del polígono a recortar</param>
         /// <param name="p">Plano con el cual se recorta</param>
-        /// <param name="clippedPoly">Vértices del polígono recortado></param>
+        /// <param name="clippedPolyVertices">Vértices del polígono recortado></param>
         /// <returns>True si el polígono recortado es válido. False si está degenerado</returns>
         public static bool clipConvexPolygon(TGCVector3[] polyVertices, TGCPlane p, out TGCVector3[] clippedPolyVertices)
         {
@@ -1848,14 +1847,13 @@ namespace TGC.Core.Collision
         ///     Basado en paper Tomas Moller: http://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
         /// </summary>
         /// <param name="ray">Ray</param>
-        /// <param name="a">Vertice 1 del triangulo</param>
-        /// <param name="b">Vertice 2 del triangulo</param>
-        /// <param name="c">Vertice 3 del triangulo</param>
+        /// <param name="v1">Vertice 1 del triangulo</param>
+        /// <param name="v2">Vertice 2 del triangulo</param>
+        /// <param name="v3">Vertice 3 del triangulo</param>
         /// <param name="t">Instante de colision</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
-        public static bool intersectRayTriangle(TgcRay ray, TGCVector3 v1, TGCVector3 v2, TGCVector3 v3, out float t,
-            out TGCVector3 q)
+        public static bool intersectRayTriangle(TgcRay ray, TGCVector3 v1, TGCVector3 v2, TGCVector3 v3, out float t, out TGCVector3 q)
         {
             q = TGCVector3.Empty;
             t = -1;
@@ -2041,9 +2039,7 @@ namespace TGC.Core.Collision
         /// </summary>
         /// <param name="segmentInit">Punto de inicio del segmento</param>
         /// <param name="segmentEnd">Punto de fin del segmento</param>
-        /// <param name="cylinderInit">Punto inicial del cilindro</param>
-        /// <param name="cylinderEnd">Punto final del cilindro</param>
-        /// <param name="radius">Radio del cilindro</param>
+        /// <param name="cylinder">Cilindro orientable</param>
         /// <param name="t">Instante de colision</param>
         /// <param name="q">Punto de colision</param>
         /// <returns>True si hay colision</returns>
@@ -2323,13 +2319,13 @@ namespace TGC.Core.Collision
         ///     Indica si un Cilindro colisiona con una Esfera.
         ///     Solo indica si hay colision o no. No va mas en detalle.
         /// </summary>
-        /// <param name="sphere">Esfera</param>
+        /// <param name="sphereCenter">Centro de la Esfera</param>
+        /// <param name="sphereRadius">Radio de la Esfera</param>
         /// <param name="cylCenter">Centro o posicion del cilindro</param>
         /// <param name="cylHalfLength">Media altura del cilindro</param>
         /// <param name="cylRadius">Radio del cilindro</param>
         /// <returns>True si hay colision</returns>
-        private static bool testSphereCylinder(TGCVector3 sphereCenter, float sphereRadius, TGCVector3 cylCenter,
-            float cylHalfLength, float cylRadius)
+        private static bool testSphereCylinder(TGCVector3 sphereCenter, float sphereRadius, TGCVector3 cylCenter, float cylHalfLength, float cylRadius)
         {
             var distanceY = FastMath.Abs(sphereCenter.Y - cylCenter.Y);
 
@@ -2503,8 +2499,8 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Testear si hay olision entre un OBB y un AABB
         /// </summary>
-        /// <param name="a">OBB</param>
-        /// <param name="b">AABB</param>
+        /// <param name="obb">OBB</param>
+        /// <param name="aabb">AABB</param>
         /// <returns>True si hay colision</returns>
         public static bool testObbAABB(TgcBoundingOrientedBox obb, TgcBoundingAxisAlignBox aabb)
         {
@@ -2514,8 +2510,8 @@ namespace TGC.Core.Collision
         /// <summary>
         ///     Testear si hay olision entre un OBB y un AABB
         /// </summary>
-        /// <param name="a">OBB</param>
-        /// <param name="b">AABB</param>
+        /// <param name="obb">OBB</param>
+        /// <param name="aabb">AABB</param>
         /// <returns>True si hay colision</returns>
         public static bool testObbAABB(TgcBoundingOrientedBox.OBBStruct obb, TgcBoundingAxisAlignBox.AABBStruct aabb)
         {
