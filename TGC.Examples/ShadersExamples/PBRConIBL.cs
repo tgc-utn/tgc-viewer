@@ -26,7 +26,7 @@ namespace TGC.Examples.Shaders
         private List<Surface> depthStencils = new List<Surface>();
         private List<PBRTexturedMesh> pbrTexturedMeshes = new List<PBRTexturedMesh>();
         private List<PBRMesh> pbrMeshes = new List<PBRMesh>();
-        private Texture brdfLUT;
+        private Texture bdrfLUT;
         
         private List<Light> lights;
         private List<TGCBox> lightBoxes;
@@ -133,7 +133,6 @@ namespace TGC.Examples.Shaders
             InitializeUnitCube();
             InitializeTextures();
             InitializeFullScreenQuad();
-            InitializeMaterials();
 
             Camara = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
         }
@@ -187,7 +186,7 @@ namespace TGC.Examples.Shaders
 
             effect.SetValue("irradianceMap", irradianceMap);
             effect.SetValue("prefilterMap", prefilterMap);
-            effect.SetValue("brdfLut", brdfLUT);
+            effect.SetValue("brdfLut", bdrfLUT);
 
             pbrMeshes.ForEach(mesh => mesh.Apply());
 
@@ -203,7 +202,7 @@ namespace TGC.Examples.Shaders
 
         private void RenderBDRFLut(Device device)
         {
-            D3DDevice.Instance.Device.SetRenderTarget(0, brdfLUT.GetSurfaceLevel(0));
+            D3DDevice.Instance.Device.SetRenderTarget(0, bdrfLUT.GetSurfaceLevel(0));
 
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             device.BeginScene();
@@ -222,7 +221,7 @@ namespace TGC.Examples.Shaders
 
 
             if (save)
-                TextureLoader.Save(ShadersDir + "brdflut.bmp", ImageFileFormat.Bmp, brdfLUT);
+                TextureLoader.Save(ShadersDir + "brdflut.bmp", ImageFileFormat.Bmp, bdrfLUT);
         }
 
         private void RenderPrefilterMap(Device device)
@@ -388,6 +387,15 @@ namespace TGC.Examples.Shaders
         {
             meshes.ForEach(m => m.Dispose());
             pbrMesh.Dispose();
+            effect.Dispose();
+            cubeMap.Dispose();
+            irradianceMap.Dispose();
+            prefilterMap.Dispose();
+            depthStencils.ForEach(depthStencil => depthStencil.Dispose());
+            bdrfLUT.Dispose();
+            lightBoxes.ForEach(lightBox => lightBox.Dispose());
+            unitCube.Dispose();
+            fullQuadVertexBuffer.Dispose();
         }
 
         private void InitializeScene()
@@ -533,7 +541,7 @@ namespace TGC.Examples.Shaders
 
             prefilterMap = new CubeTexture(device, 128, 0, Usage.RenderTarget, Format.A16B16G16R16F, Pool.Default);
 
-            brdfLUT = new Texture(device, 512, 512, 1, Usage.RenderTarget, Format.A16B16G16R16F, Pool.Default);
+            bdrfLUT = new Texture(device, 512, 512, 1, Usage.RenderTarget, Format.A16B16G16R16F, Pool.Default);
         }
 
         private void InitializeFullScreenQuad()
@@ -552,9 +560,5 @@ namespace TGC.Examples.Shaders
             fullQuadVertexBuffer.SetData(vertices, 0, LockFlags.None);
         }
 
-        private void InitializeMaterials()
-        {
-
-        }
     }
 }
