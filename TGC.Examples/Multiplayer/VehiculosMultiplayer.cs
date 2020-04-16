@@ -56,8 +56,7 @@ namespace TGC.Examples.Multiplayer
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -288,7 +287,7 @@ namespace TGC.Examples.Multiplayer
             //Camara en 3ra persona
             camaraInterna.resetValues();
             camaraInterna = new TgcThirdPersonCamera(meshPrincipal.Position, 100, 400);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
         }
 
         /// <summary>

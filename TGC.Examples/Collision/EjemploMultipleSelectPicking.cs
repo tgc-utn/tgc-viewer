@@ -79,13 +79,11 @@ namespace TGC.Examples.Collision
             selectionBox.BoundingBox.setRenderColor(Color.Red);
             selecting = false;
 
-            Camara.SetCamera(new TGCVector3(250f, 250f, 250f), TGCVector3.Empty);
+            Camera.SetCamera(new TGCVector3(250f, 250f, 250f), TGCVector3.Empty);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
@@ -139,8 +137,6 @@ namespace TGC.Examples.Collision
                     }
                 }
             }
-
-            PostUpdate();
         }
 
         public override void Render()

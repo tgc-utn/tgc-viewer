@@ -53,13 +53,12 @@ namespace TGC.Examples.MeshExamples
 
             sceneRecover = loader.loadSceneFromFile(r.filePath);
 
-            Camara.SetCamera(new TGCVector3(-30f, 80f, -100f), new TGCVector3(0f, 75f, 180f));
+            Camera.SetCamera(new TGCVector3(-30f, 80f, -100f), new TGCVector3(0f, 75f, 180f));
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -67,8 +66,8 @@ namespace TGC.Examples.MeshExamples
             PreRender();
 
             sceneRecover.RenderAll();
-            DrawText.drawText("Camera pos: " + TGCVector3.PrintTGCVector3(Camara.Position), 5, 20, Color.Red);
-            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintTGCVector3(Camara.LookAt), 5, 40, Color.Red);
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintTGCVector3(Camera.Position), 5, 20, Color.Red);
+            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintTGCVector3(Camera.LookAt), 5, 40, Color.Red);
             PostRender();
         }
 

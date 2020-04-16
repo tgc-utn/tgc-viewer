@@ -125,13 +125,12 @@ namespace TGC.Examples.Animation
             attachment.updateValues();
 
             //Configurar camara
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 70, 0), 200, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0, 70, 0), 200, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

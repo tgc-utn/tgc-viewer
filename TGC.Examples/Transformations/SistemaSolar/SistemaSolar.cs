@@ -77,13 +77,12 @@ namespace TGC.Examples.Transformations.SistemaSolar
             });
 
             //Camara en primera persona
-            Camara = new TgcRotationalCamera(new TGCVector3(0f, 200f, 1000f), 500f, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0f, 200f, 1000f), 500f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

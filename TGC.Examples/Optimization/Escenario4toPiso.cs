@@ -40,8 +40,8 @@ namespace TGC.Examples.Optimization
 
         public override void Init()
         {
-            //FPS Camara
-            Camara = new TgcFpsCamera(new TGCVector3(-140f, 40f, -50f), 200f, 200f, Input);
+            //FPS Camera
+            Camera = new TgcFpsCamera(new TGCVector3(-140f, 40f, -50f), 200f, 200f, Input);
 
             //Modifier para habilitar o deshabilitar FrustumCulling
             cullingModifier = AddBoolean("culling", "Frustum culling", true);
@@ -62,8 +62,7 @@ namespace TGC.Examples.Optimization
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

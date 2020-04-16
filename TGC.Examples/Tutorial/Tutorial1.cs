@@ -85,13 +85,11 @@ namespace TGC.Examples.Tutorial
             //centrarse sobre un objeto y permitir rotar y hacer zoom con el mouse.
             //Con clic izquierdo del mouse se rota la cámara, con el derecho se traslada y con la rueda se hace zoom.
             //Otras cámaras disponibles (a modo de ejemplo) son: FpsCamera (1ra persona) y ThirdPersonCamera (3ra persona).
-            Camara = new TgcRotationalCamera(box1.BoundingBox.calculateBoxCenter(), box1.BoundingBox.calculateBoxRadius() * 5, Input);
+            Camera = new TgcRotationalCamera(box1.BoundingBox.calculateBoxCenter(), box1.BoundingBox.calculateBoxRadius() * 5, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             //En cada cuadro de render rotamos la caja con cierta velocidad (en radianes)
             //Siempre tenemos que multiplicar las velocidades por el elapsedTime.
             //De esta forma la velocidad de rotacion es independiente de la potencia del CPU.
@@ -109,8 +107,6 @@ namespace TGC.Examples.Tutorial
             }
 
             box3.Transform = TGCMatrix.RotationYawPitchRoll(box3.Rotation.Y, box3.Rotation.X, box3.Rotation.Z) * TGCMatrix.Translation(box3.Position);
-
-            PostUpdate();
         }
 
         /// <summary>

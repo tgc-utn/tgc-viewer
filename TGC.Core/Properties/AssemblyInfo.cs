@@ -8,12 +8,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TGC.Core")]
 [assembly:
     AssemblyDescription(
-        "Libreria de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA)."
-        )]
+"Biblioteca de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA).")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TGC - UTN.BA")]
 [assembly: AssemblyProduct("TGC.Core")]
-[assembly: AssemblyCopyright("Copyright ©  2016 - 2017")]
+[assembly: AssemblyCopyright("Copyright ©  2016 - 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -38,5 +37,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("2.3.4.0")]
-[assembly: AssemblyFileVersion("2.3.4.0")]
+[assembly: AssemblyVersion("2.4.1.0")]
+[assembly: AssemblyFileVersion("2.4.1.0")]

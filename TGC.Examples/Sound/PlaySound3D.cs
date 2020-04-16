@@ -125,7 +125,7 @@ namespace TGC.Examples.Sound
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 250, 500);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
 
             //Ejecutar en loop los sonidos
             foreach (var s in sonidos)
@@ -136,8 +136,7 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

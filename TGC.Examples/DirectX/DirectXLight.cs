@@ -73,7 +73,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
-            Camara = new TgcRotationalCamera(TGCVector3.Empty, 10f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 10f, Input);
 
             //El tipo de mesh para seleccionar.
             selectedMeshModifier = AddInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
@@ -109,8 +109,7 @@ namespace TGC.Examples.DirectX
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

@@ -104,14 +104,13 @@ namespace TGC.Examples.MeshExamples
             normalsModifier = AddBoolean("normals", "normals", true);
             planesModifier = AddBoolean("planes", "planes", false);
 
-            //Camera
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
+            //Camara
+            Camera = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

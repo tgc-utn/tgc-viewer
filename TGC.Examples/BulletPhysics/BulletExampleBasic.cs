@@ -1,22 +1,22 @@
 ﻿using System.Windows.Forms;
 using TGC.Core.Mathematica;
-using TGC.Examples.Bullet.Physics;
+using TGC.Examples.BulletPhysics.Physics;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 
-namespace TGC.Examples.Bullet
+namespace TGC.Examples.BulletPhysics
 {
-    public class BulletExample3 : TGCExampleViewer
+    public class BulletExampleBasic : TGCExampleViewer
     {
         private PhysicsGame physicsExample;
 
-        public BulletExample3(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+        public BulletExampleBasic(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "BulletPhysics";
-            Name = "Box and Sphere";
-            Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\".";
+            Name = "Box vs Sphere";
+            Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\". Ejecutar con Update constante activado en el menu.";
         }
 
         public override void Init()
@@ -26,17 +26,14 @@ namespace TGC.Examples.Bullet
 
             UserVars.addVar("MeshCount");
 
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 100, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0, 30, 0), 200, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            physicsExample.Update();
+            physicsExample.Update(LastUpdateTime, TimeBetweenFrames);
 
             UserVars.setValue("MeshCount", physicsExample.GetElements());
-
-            PostUpdate();
         }
 
         public override void Render()

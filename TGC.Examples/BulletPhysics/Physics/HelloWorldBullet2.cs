@@ -7,7 +7,7 @@ using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 
-namespace TGC.Examples.Bullet.Physics
+namespace TGC.Examples.BulletPhysics.Physics
 {
     public class HelloWorldBullet2 : PhysicsGame
     {
@@ -26,7 +26,7 @@ namespace TGC.Examples.Bullet.Physics
             return boxBodys.Count + ballBodys.Count;
         }
 
-        public override void Init(BulletExample3 ctx)
+        public override void Init(BulletExampleBasic ctx)
         {
             base.Init(ctx);
 
@@ -62,9 +62,9 @@ namespace TGC.Examples.Bullet.Physics
             sphereMesh.updateValues();
         }
 
-        public override void Update()
+        public override void Update(float lastFrameTime, float timeBetweenFrames)
         {
-            dynamicsWorld.StepSimulation(1 / 60f, 10);
+            dynamicsWorld.StepSimulation(lastFrameTime, 10, timeBetweenFrames);
 
             if (Ctx2.Input.keyUp(Key.A))
             {
@@ -82,8 +82,8 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx2.Input.keyUp(Key.Space))
             {
-                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10, 1f, new TGCVector3(Ctx2.Camara.Position.X, Ctx2.Camara.Position.Y, Ctx2.Camara.Position.Z));
-                ballBody.LinearVelocity = new TGCVector3(-Ctx2.Camara.Position.X, -Ctx2.Camara.Position.Y, -Ctx2.Camara.Position.Z).ToBulletVector3() * 0.2f;
+                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10, 1f, new TGCVector3(Ctx2.Camera.Position.X, Ctx2.Camera.Position.Y, Ctx2.Camera.Position.Z));
+                ballBody.LinearVelocity = new TGCVector3(-Ctx2.Camera.Position.X, -Ctx2.Camera.Position.Y, -Ctx2.Camera.Position.Z).ToBulletVector3() * 0.2f;
                 ballBody.Restitution = 0.9f;
                 ballBodys.Add(ballBody);
                 dynamicsWorld.AddRigidBody(ballBody);

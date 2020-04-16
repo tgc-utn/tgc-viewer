@@ -67,7 +67,7 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        /// Carga los shaders basicos
+        /// Carga los shaders basicos.
         /// </summary>
         /// <param name="pathCommonShaders"> Ruta con los shaders basicos.</param>
         public void InitShaders(string pathCommonShaders)
@@ -107,8 +107,8 @@ namespace TGC.Viewer.Model
         /// <summary>
         /// Ejemplo actual de la aplicacion.
         /// </summary>
-        /// <returns></returns>
-        public TgcExample CurrentExample()
+        /// <returns>Ejemplo</returns>
+        public TGCExample CurrentExample()
         {
             return ExampleLoader.CurrentExample;
         }
@@ -118,8 +118,8 @@ namespace TGC.Viewer.Model
         /// </summary>
         /// <param name="defaultExampleName"> Nombre del ejemplo.</param>
         /// <param name="defaultExampleCategory"> Categoria del ejemplo.</param>
-        /// <returns></returns>
-        public TgcExample GetExampleByName(string defaultExampleName, string defaultExampleCategory)
+        /// <returns>Ejemplo que tiene el nombre dado y la categoria</returns>
+        public TGCExample GetExampleByName(string defaultExampleName, string defaultExampleCategory)
         {
             return ExampleLoader.GetExampleByName(defaultExampleName, defaultExampleCategory);
         }
@@ -137,8 +137,7 @@ namespace TGC.Viewer.Model
                     //Solo renderizamos si la aplicacion tiene foco, para no consumir recursos innecesarios
                     if (Form.ApplicationActive())
                     {
-                        ExampleLoader.CurrentExample.Update();
-                        ExampleLoader.CurrentExample.Render();
+                        ExampleLoader.CurrentExample.Tick();
                     }
                     else
                     {
@@ -154,7 +153,7 @@ namespace TGC.Viewer.Model
         /// <summary>
         /// Le activa o desactiva la herramienta de wireframe al ejemplo.
         /// </summary>
-        /// <param name="state"> Estado que se quiere de la herramienta.</param>
+        /// <param name="state">Estado que se quiere de la herramienta.</param>
         public void Wireframe(bool state)
         {
             if (state)
@@ -170,16 +169,25 @@ namespace TGC.Viewer.Model
         /// <summary>
         /// Le activa o desactiva el contador de FPS al ejemplo.
         /// </summary>
-        /// <param name="state"> Estado que se quiere de la herramienta.</param>
+        /// <param name="state">Estado que se quiere de la herramienta.</param>
         public void ContadorFPS(bool state)
         {
-            ExampleLoader.CurrentExample.FPS = state;
+            ExampleLoader.CurrentExample.FPSText = state;
+        }
+
+        /// <summary>
+        /// Le activa o desactiva al ejemplo que corra a render constante.
+        /// </summary>
+        /// <param name="state">Estado que se quiere de la herramienta.</param>
+        public void FixedUpdate(bool state)
+        {
+            ExampleLoader.CurrentExample.FixedUpdateEnable = state;
         }
 
         /// <summary>
         /// Le activa o desactiva los ejes cartesianos al ejemplo.
         /// </summary>
-        /// <param name="state"> Estado que se quiere de la herramienta.</param>
+        /// <param name="state">Estado que se quiere de la herramienta.</param>
         public void AxisLines(bool state)
         {
             ExampleLoader.CurrentExample.AxisLinesEnable = state;
@@ -189,15 +197,13 @@ namespace TGC.Viewer.Model
         ///  Arranca a ejecutar un ejemplo.
         ///  Para el ejemplo anterior, si hay alguno.
         /// </summary>
-        /// <param name="example"></param>
-        public void ExecuteExample(TgcExample example)
+        /// <param name="example">Ejemplo a ejecutar.</param>
+        public void ExecuteExample(TGCExample example)
         {
             StopCurrentExample();
 
             //Ejecutar Init
             ExampleLoader.CurrentExample = example;
-            //TODO esto no me cierra mucho OnResetDevice
-            OnResetDevice(D3DDevice.Instance.Device, null);
             example.ResetDefaultConfig();
             example.DirectSound = DirectSound;
             example.Input = Input;
@@ -216,6 +222,9 @@ namespace TGC.Viewer.Model
             }
         }
 
+        /// <summary>
+        /// Dispose del ejemplo actual y de los recursos de framework.
+        /// </summary>
         public void Dispose()
         {
             ApplicationRunning = false;
@@ -241,7 +250,7 @@ namespace TGC.Viewer.Model
         /// <summary>
         /// Actualiza el aspect ratio segun el estado del panel.
         /// </summary>
-        /// <param name="panel"></param>
+        /// <param name="panel">Panel sobre el cual se va a establecer el aspect ratio.</param>
         public void UpdateAspectRatio(Panel panel)
         {
             D3DDevice.Instance.UpdateAspectRatioAndProjection(panel.Width, panel.Height);
@@ -251,31 +260,10 @@ namespace TGC.Viewer.Model
         /// Obtiene el ejemplo del nodo seleccionado.
         /// </summary>
         /// <param name="selectedNode"></param>
-        /// <returns></returns>
-        public TgcExample GetExampleByTreeNode(TreeNode selectedNode)
+        /// <returns>Ejemplo seleccionado</returns>
+        public TGCExample GetExampleByTreeNode(TreeNode selectedNode)
         {
             return ExampleLoader.GetExampleByTreeNode(selectedNode);
-        }
-
-        /// <summary>
-        /// Cuando el Direct3D Device se resetea.
-        /// Se reinica el ejemplo actual, si hay alguno.
-        /// </summary>
-        public void OnResetDevice()
-        {
-            var exampleBackup = ExampleLoader.CurrentExample;
-
-            if (exampleBackup != null)
-            {
-                StopCurrentExample();
-            }
-
-            DoResetDevice();
-
-            if (exampleBackup != null)
-            {
-                ExecuteExample(exampleBackup);
-            }
         }
 
         /// <summary>
@@ -291,21 +279,20 @@ namespace TGC.Viewer.Model
         /// </summary>
         public void OnResetDevice(object sender, EventArgs e)
         {
-            //TODO antes hacia esto que no entiendo porque GuiController.Instance.onResetDevice();
-            //pero solo detenia el ejemplo ejecutaba doResetDevice y lo volvia a cargar...
-            DoResetDevice();
-        }
+            var exampleBackup = ExampleLoader.CurrentExample;
 
-        /// <summary>
-        /// Hace las operaciones de Reset del device.
-        /// </summary>
-        public void DoResetDevice()
-        {
-            //Default values para el device
-            ExampleLoader.CurrentExample.DeviceDefaultValues();
+            if (exampleBackup != null)
+            {
+                StopCurrentExample();
+            }
 
-            //Reset Timer
-            ExampleLoader.CurrentExample.ResetTimer();
+            //TODO no se si necesito hacer esto, ya que ExecuteExample lo vuelve a hacer, pero no valide si hay algun caso que no exista un ejemplo actual.
+            D3DDevice.Instance.DefaultValues();
+
+            if (exampleBackup != null)
+            {
+                ExecuteExample(exampleBackup);
+            }
         }
     }
 }

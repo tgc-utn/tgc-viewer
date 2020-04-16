@@ -204,6 +204,14 @@ namespace TGC.Viewer.UI
         }
 
         /// <summary>
+        /// Activa o desactiva la opcion de correr a update constante.
+        /// </summary>
+        private void FixedUpdate()
+        {
+            Model.FixedUpdate(updateConstanteToolStripMenuItem.Checked);
+        }
+
+        /// <summary>
         /// Activa o desactiva la opcion de los ejes cartesianos.
         /// </summary>
         private void AxisLines()
@@ -215,13 +223,14 @@ namespace TGC.Viewer.UI
         /// Ejecuta un ejemplo particular.
         /// </summary>
         /// <param name="example">Ejemplo a ejecutar.</param>
-        private void ExecuteExample(TgcExample example)
+        private void ExecuteExample(TGCExample example)
         {
             try
             {
                 Model.ExecuteExample(example);
-                ContadorFPS();
                 AxisLines();
+                ContadorFPS();
+                FixedUpdate();
                 Wireframe();
 
                 toolStripStatusCurrentExample.Text = "Ejemplo actual: " + example.Name;
@@ -281,6 +290,11 @@ namespace TGC.Viewer.UI
         private void fpsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ContadorFPS();
+        }
+
+        private void updateConstanteToolMenuItem_Click(object sender, EventArgs e)
+        {
+            FixedUpdate();
         }
 
         private void axisToolStripMenuItem_Click(object sender, EventArgs e)

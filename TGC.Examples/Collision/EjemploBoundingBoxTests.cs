@@ -95,12 +95,11 @@ namespace TGC.Examples.Collision
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(mesh.Position, 30, -75);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
         }
 
         public override void Update()
         {
-            PreUpdate();
             var velocidadCaminar = VELOCIDAD_DESPLAZAMIENTO * ElapsedTime;
 
             //Calcular proxima posicion de personaje segun Input
@@ -201,7 +200,6 @@ namespace TGC.Examples.Collision
             {
                 obb.setRenderColor(Color.Yellow);
             }
-            PostUpdate();
         }
 
         public override void Render()

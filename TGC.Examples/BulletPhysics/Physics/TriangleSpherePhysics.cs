@@ -8,7 +8,7 @@ using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 
-namespace TGC.Examples.Bullet.Physics
+namespace TGC.Examples.BulletPhysics.Physics
 {
     internal class TriangleSpherePhysics
     {
@@ -61,9 +61,10 @@ namespace TGC.Examples.Bullet.Physics
             director = new TGCVector3(1, 0, 0);
         }
 
-        public void Update(TgcD3dInput input)
+        public void Update(TgcD3dInput input, float lastFrameTime, float timeBetweenFrames)
         {
-            dynamicsWorld.StepSimulation(1 / 60f, 100);
+            dynamicsWorld.StepSimulation(lastFrameTime, 10, timeBetweenFrames);
+
             var strength = 1.50f;
             var angle = 5;
 

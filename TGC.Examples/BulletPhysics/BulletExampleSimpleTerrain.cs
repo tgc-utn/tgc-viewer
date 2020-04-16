@@ -1,21 +1,22 @@
 ﻿using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Core.Terrain;
-using TGC.Examples.Bullet.Physics;
+using TGC.Examples.BulletPhysics.Physics;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 
-namespace TGC.Examples.Bullet
+namespace TGC.Examples.BulletPhysics
 {
-    public class SurfaceVsSphere : TGCExampleViewer
+    public class BulletExampleSimpleTerrain : TGCExampleViewer
     {
-        public SurfaceVsSphere(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel) : base(mediaDir, shadersDir, userVars, modifiersPanel)
+        public BulletExampleSimpleTerrain(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel) : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "BulletPhysics";
             Name = "Triangles vs Sphere";
             Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\". " +
-                "Donde se emplea una esfera para el personaje, un terreno generado por un heighmap con muchos triangulos para que la misma colisione como terreno.";
+                "Donde se emplea una esfera para el personaje, un terreno generado por un heighmap con muchos triangulos para que la misma colisione como terreno. " +
+                "Ejecutar con Update constante activado en el menu.";
         }
 
         //Terreno
@@ -35,15 +36,12 @@ namespace TGC.Examples.Bullet
             physicsExample.SetTriangleDataVB(terrain.getData());
             physicsExample.Init(MediaDir);
 
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 1000, Input);
+            Camera = new TgcRotationalCamera(terrain.Center + new TGCVector3(0, 500, 0), 2000, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            physicsExample.Update(Input);
-            //UserVars.setValue("Tgccito_Position", physicsExample.GetCharacterPosition());
-            PostUpdate();
+            physicsExample.Update(Input, LastUpdateTime, TimeBetweenFrames);
         }
 
         public override void Render()

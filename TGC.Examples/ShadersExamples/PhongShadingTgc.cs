@@ -63,13 +63,12 @@ namespace TGC.Examples.ShadersExamples
             specularExModifier = AddFloat("specularEx", 0, 40, 20f);
 
             //Centrar camara rotacional respecto a este mesh
-            Camara = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camera = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -103,7 +102,7 @@ namespace TGC.Examples.ShadersExamples
             {
                 //Cargar variables shader
                 mesh.Effect.SetValue("lightPosition", TGCVector3.TGCVector3ToFloat4Array(lightPos));
-                mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
+                mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camera.Position));
                 mesh.Effect.SetValue("ambientColor", ColorValue.FromColor(ambientModifier.Value));
                 mesh.Effect.SetValue("diffuseColor", ColorValue.FromColor(diffuseModifier.Value));
                 mesh.Effect.SetValue("specularColor", ColorValue.FromColor(specularModifier.Value));

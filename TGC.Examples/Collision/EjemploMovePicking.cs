@@ -82,14 +82,13 @@ namespace TGC.Examples.Collision
 
             //Camara en tercera persona
             camaraInterna = new TgcThirdPersonCamera(mesh.Position, 800, 1500);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
             speedModifier = AddFloat("speed", 1000, 5000, 2500);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

@@ -97,7 +97,7 @@ namespace TGC.Examples.WorkshopShaders
             effect.Technique = "DIFFUSE_MAP";
 
             //Camara en primera persona
-            Camara.SetCamera(new TGCVector3(0, 60, 200), new TGCVector3(0, 0, 0));
+            Camera.SetCamera(new TGCVector3(0, 60, 200), new TGCVector3(0, 0, 0));
 
             //Cargar personaje con animaciones
             TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
@@ -147,12 +147,8 @@ namespace TGC.Examples.WorkshopShaders
 
         public override void Update()
         {
-            PreUpdate();
-
             mesh.Rotation += new TGCVector3(0, ElapsedTime * 1.2f, 0);
             mesh.Transform = TGCMatrix.Scaling(mesh.Scale) * TGCMatrix.RotationY(mesh.Rotation.Y) * TGCMatrix.Translation(mesh.Position);
-
-            PostUpdate();
         }
 
         public override void Render()

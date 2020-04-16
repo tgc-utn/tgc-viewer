@@ -1,10 +1,6 @@
 ﻿using Microsoft.DirectX.Direct3D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -40,7 +36,8 @@ namespace TGC.Examples.ShadersExamples
             new CustomVertex.PositionTextured(-1, -1, 1, 0, 1),
             new CustomVertex.PositionTextured(1, -1, 1, 1, 1)
         };
-        VertexBuffer fullScreenQuad;
+
+        private VertexBuffer fullScreenQuad;
 
         private float timer;
 
@@ -92,7 +89,6 @@ namespace TGC.Examples.ShadersExamples
             }
     };
 
-
         public Bloom(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel) : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Post Process Shaders";
@@ -117,9 +113,8 @@ namespace TGC.Examples.ShadersExamples
             timer = 0.0f;
 
             rotational = new TgcRotationalCamera(new TGCVector3(20, 20, 0), 300, TgcRotationalCamera.DEFAULT_ZOOM_FACTOR * 0.5f, TgcRotationalCamera.DEFAULT_ROTATION_SPEED, Input);
-            Camara = rotational;
+            Camera = rotational;
         }
-
 
         public override void Update()
         {
@@ -131,7 +126,7 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("scene", sceneModifier.Value);
             effect.SetValue("bloom", bloomModifier.Value);
             effect.SetValue("toneMapping", toneMappingModifier.Value);
-            effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
+            effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array(Camera.Position));
 
             PostUpdate();
         }
@@ -189,7 +184,6 @@ namespace TGC.Examples.ShadersExamples
 
                 EndScene(device);
 
-
                 BeginScene(device, bloomVerticalFrameBuffer.GetSurfaceLevel(0), depthStencil);
 
                 effect.Technique = "VerticalBlur";
@@ -235,7 +229,7 @@ namespace TGC.Examples.ShadersExamples
             device.DepthStencilSurface = depth;
 
             device.BeginScene();
-            
+
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
         }
 
@@ -243,8 +237,6 @@ namespace TGC.Examples.ShadersExamples
         {
             device.EndScene();
         }
-
-
 
         public override void Dispose()
         {
@@ -294,7 +286,6 @@ namespace TGC.Examples.ShadersExamples
             sceneFrameBuffer = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
         }
 
-
         private void ConfigureBlinnForGround()
         {
             effect.SetValue("KAmbient", 0.3f);
@@ -302,6 +293,7 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("KSpecular", 0.25f);
             effect.SetValue("shininess", 3.0f);
         }
+
         private void ConfigureBlinnForTrafficLight()
         {
             effect.SetValue("KAmbient", 0.3f);
@@ -361,8 +353,5 @@ namespace TGC.Examples.ShadersExamples
             bloomModifier = AddBoolean("Bloom", "Add bloom", true);
             passesModifier = AddInt("Cantidad de pasadas de blur", 1, 30, 10);
         }
-
     }
-
-
 }

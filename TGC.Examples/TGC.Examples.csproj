@@ -82,7 +82,7 @@
     </Reference>
     <Reference Include="Microsoft.DirectX.Direct3DX, Version=1.0.2909.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
-	  <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2911.0\Microsoft.DirectX.Direct3DX.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <SpecificVersion>False</SpecificVersion>
@@ -90,25 +90,23 @@
     </Reference>
     <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Microsoft.DirectX.DirectSound">
       <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\DirectX for Managed Code\1.0.2902.0\Microsoft.DirectX.DirectSound.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BulletPhysics\BulletExampleWall.cs" />
-    <Compile Include="BulletPhysics\BulletExample3.cs" />
-    <Compile Include="BulletPhysics\BulletSurface.cs" />
-    <Compile Include="BulletPhysics\PhysicsGame\HelloWorldBullet.cs" />
-    <Compile Include="BulletPhysics\PhysicsGame\HelloWorldBullet2.cs" />
-    <Compile Include="BulletPhysics\PhysicsGame\PhysicsGame.cs" />
-    <Compile Include="BulletPhysics\PhysicsGame\TrianglePhysics.cs" />
-    <Compile Include="BulletPhysics\PhysicsGame\TriangleSpherePhysics.cs" />
-    <Compile Include="BulletPhysics\PhysicsGame\WallBullet.cs" />
-    <Compile Include="BulletPhysics\SurfaceVsSphere.cs" />
+    <Compile Include="BulletPhysics\BulletExampleBasic.cs" />
+    <Compile Include="BulletPhysics\BulletExampleSurface.cs" />
+    <Compile Include="BulletPhysics\Physics\HelloWorldBullet.cs" />
+    <Compile Include="BulletPhysics\Physics\HelloWorldBullet2.cs" />
+    <Compile Include="BulletPhysics\Physics\PhysicsGame.cs" />
+    <Compile Include="BulletPhysics\Physics\TrianglePhysics.cs" />
+    <Compile Include="BulletPhysics\Physics\TriangleSpherePhysics.cs" />
+    <Compile Include="BulletPhysics\Physics\WallBullet.cs" />
+    <Compile Include="BulletPhysics\BulletExampleSimpleTerrain.cs" />
     <Compile Include="Camara\TgcFpsCamera.cs" />
     <Compile Include="Camara\TgcRotationalCamera.cs" />
     <Compile Include="Camara\TgcSpringThirdPersonCamera.cs" />

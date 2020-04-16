@@ -603,7 +603,7 @@ namespace TGC.Examples.WorkshopShaders
             TGCMatrix matAnt = TGCMatrix.FromMatrix(sprite.Transform) * TGCMatrix.Identity;
             TGCVector2 scale = new TGCVector2(ex, ey);
             TGCVector2 offset = new TGCVector2(ox, oy);
-            sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(0, 0), 0, scale, new TGCVector2(0, 0), 0, offset) * RTQ;
+            sprite.Transform = TGCMatrix.Transformation2D(TGCVector2.Zero, 0, scale, TGCVector2.Zero, 0, offset) * RTQ;
 
             int item_desde = item_0;
             // Transicion entre dialogos
@@ -672,14 +672,14 @@ namespace TGC.Examples.WorkshopShaders
 
             // 4 - dibujo el cusor con la misma interface de prites
             sprite.Begin(SpriteFlags.AlphaBlend);
-            sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(0, 0), 0, new TGCVector2(1, 1), new TGCVector2(0, 0), 0, new TGCVector2(0, 0));
+            sprite.Transform = TGCMatrix.Transformation2D(TGCVector2.Zero, 0, TGCVector2.One, TGCVector2.Zero, 0, TGCVector2.Zero);
 
             // mano derecha
             float t = delay_move / delay_move0;
             TGCVector3 hand_pos = new TGCVector3(mouse_x, mouse_y, 0) * (1 - t) + new TGCVector3(mouse_x_ant, mouse_y_ant, 0) * t;
             if (cursores[(int)cursor_der] != null)
             {
-                sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(0, 0), 0, new TGCVector2(1, 1), TGCVector2.Zero, 0, new TGCVector2(0, 0));
+                sprite.Transform = TGCMatrix.Transformation2D(TGCVector2.Zero, 0, TGCVector2.One, TGCVector2.Zero, 0, TGCVector2.Zero);
                 sprite.Draw(cursores[(int)cursor_der], Rectangle.Empty, new TGCVector3(32, 32, 0), hand_pos, Color.FromArgb(255, 255, 255, 255));
             }
             sprite.End();
@@ -1404,7 +1404,7 @@ namespace TGC.Examples.WorkshopShaders
             TGCVector3 c0 = new TGCVector3(bitmaps[i].Width / 2, bitmaps[i].Height / 2, 0);
             // Determino la escala para que entre justo
             TGCVector2 scale2 = new TGCVector2((x1 - x0) / (float)bitmaps[i].Width, (y1 - y0) / (float)bitmaps[i].Height);
-            sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(pos.X, pos.Y), 0, scale2, new TGCVector2(0, 0), 0, new TGCVector2(0, 0));
+            sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(pos.X, pos.Y), 0, scale2, TGCVector2.Zero, 0, TGCVector2.Zero);
 
             Device d3dDevice = D3DDevice.Instance.Device;
             d3dDevice.SetTexture(0, null);

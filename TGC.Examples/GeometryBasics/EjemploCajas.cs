@@ -71,16 +71,13 @@ namespace TGC.Examples.GeometryBasics
             positionModifier = AddVertex3f("position", new TGCVector3(-100, -100, -100), new TGCVector3(100, 100, 100), TGCVector3.Empty);
             rotationModifier = AddVertex3f("rotation", new TGCVector3(-180, -180, -180), new TGCVector3(180, 180, 180), TGCVector3.Empty);
 
-            Camara = new TgcRotationalCamera(TGCVector3.Empty, 200f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 200f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
             //Actualizar parametros de la caja
             updateBox();
-
-            PostUpdate();
         }
 
         /// <summary>

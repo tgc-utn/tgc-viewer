@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
@@ -12,7 +7,6 @@ using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
@@ -66,17 +60,14 @@ namespace TGC.Examples.Transformations
 
             pickingRay = new TgcPickingRay(Input);
 
-            Camara.SetCamera(new TGCVector3(20f, 0f, 20f), new TGCVector3(-1f, 0f, -1f));
+            Camera.SetCamera(new TGCVector3(20f, 0f, 20f), new TGCVector3(-1f, 0f, -1f));
         }
-
 
         public override void Update()
         {
-            PreUpdate();
-
             currentPick = PerformPicking();
 
-            if(PickingInsideSphere())
+            if (PickingInsideSphere())
             {
                 if (dragging)
                 {
@@ -105,8 +96,6 @@ namespace TGC.Examples.Transformations
             }
 
             UpdateArrows();
-
-            PostUpdate();
         }
 
         public override void Render()
@@ -131,9 +120,6 @@ namespace TGC.Examples.Transformations
         {
             return currentPick.LengthSq() > 0.0f;
         }
-
-
-
 
         private TGCVector3 PerformPicking()
         {

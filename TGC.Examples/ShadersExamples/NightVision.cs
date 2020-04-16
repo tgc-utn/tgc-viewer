@@ -98,8 +98,8 @@ namespace TGC.Examples.ShadersExamples
             //Configurar Technique dentro del shader
             effect.Technique = "DefaultTechnique";
 
-            //Camara en primera personas
-            Camara = new TgcFpsCamera(new TGCVector3(-1000, 250, -1000), 1000f, 600f, Input);
+            //Camara en primera persona
+            Camera = new TgcFpsCamera(new TGCVector3(-1000, 250, -1000), 1000f, 600f, Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight,
                 DepthFormat.D24S8, MultiSampleType.None, 0, true);
@@ -148,13 +148,11 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            PreUpdate();
-
-            var pos = Camara.Position;
+            var pos = Camera.Position;
             if (pos.X < -2000 || pos.Z < -2000 || pos.X > 0 || pos.Z > 0)
             {
                 // reset pos camara
-                Camara.SetCamera(new TGCVector3(-1000, 250, -1000), new TGCVector3(0, 0, -1));
+                Camera.SetCamera(new TGCVector3(-1000, 250, -1000), new TGCVector3(0, 0, -1));
             }
 
             //Activar animacion de caminando
@@ -246,7 +244,7 @@ namespace TGC.Examples.ShadersExamples
                 {
                     timer_firing[i] += total_timer_firing;
                     pos_bala[i] = pos + new TGCVector3(rnd.Next(-10, 10), rnd.Next(-10, 10), rnd.Next(-10, 10));
-                    dir_bala[i] = Camara.LookAt - pos;
+                    dir_bala[i] = Camera.LookAt - pos;
                     dir_bala[i].Normalize();
                 }
                 else
@@ -254,8 +252,6 @@ namespace TGC.Examples.ShadersExamples
                     pos_bala[i] = pos_bala[i] + dir_bala[i] * (vel_bala * ElapsedTime);
                 }
             }
-
-            PostUpdate();
         }
 
         public override void Render()
@@ -292,7 +288,7 @@ namespace TGC.Examples.ShadersExamples
                 m.Render();
             }
 
-            DrawText.drawText("Pos: " + Camara.Position, 5, 20, Color.Yellow);
+            DrawText.drawText("Pos: " + Camera.Position, 5, 20, Color.Yellow);
 
             device.EndScene();
         }

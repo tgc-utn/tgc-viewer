@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
@@ -236,7 +235,7 @@ namespace TGC.Examples.ShadersExamples
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
             DefaultCamera = new TgcRotationalCamera(new TGCVector3(0, 200, 0), 5000, 0.1f, 1f, Input);
-            Camara = DefaultCamera;
+            Camera = DefaultCamera;
 
             LookFrom = new TGCVector3(0, 400, 2000);
             LookAt = new TGCVector3(0, 200, 0);
@@ -270,8 +269,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -376,11 +374,11 @@ namespace TGC.Examples.ShadersExamples
                 {
                     CamaraRot.CameraCenter = mesh.BoundingBox.calculateBoxCenter();
                     CamaraRot.UpdateCamera(ElapsedTime); //FIXME, puede que no haga falta esto.
-                    Camara = CamaraRot;
+                    Camera = CamaraRot;
                 }
                 else
                 {
-                    Camara = DefaultCamera;
+                    Camera = DefaultCamera;
                 }
             }
 
@@ -480,7 +478,7 @@ namespace TGC.Examples.ShadersExamples
             if (timer_preview > 0)
                 D3DDevice.Instance.Device.Transform.View = TGCMatrix.LookAtLH(LookFrom, LookAt, TGCVector3.Up).ToMatrix();
             else
-                D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix().ToMatrix();
+                D3DDevice.Instance.Device.Transform.View = Camera.GetViewMatrix().ToMatrix();
             // FIXME! esto no se bien para que lo hace aca.
 
             D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, near_plane, far_plane).ToMatrix();
@@ -488,7 +486,7 @@ namespace TGC.Examples.ShadersExamples
             // Cargo las var. del shader:
             effect.SetValue("g_txCubeMap", g_pCubeMap);
             effect.SetValue("fvLightPosition", new TGCVector4(0, 400, 0, 0));
-            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(timer_preview > 0 ? LookFrom : Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(timer_preview > 0 ? LookFrom : Camera.Position));
             effect.SetValue("time", time);
 
             // -----------------------------------------------------

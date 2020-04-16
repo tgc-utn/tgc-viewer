@@ -169,7 +169,7 @@ namespace TGC.Examples.Quake3Loader
                 }
 
                 // actualizo la posicion de la camara
-                //Camara.setCamera(camPos, camPos + lookDir);
+                //Camera.setCamera(camPos, camPos + lookDir);
                 Camera.move(camPos - Camera.getPosition());
 
                 if (!OnGround)

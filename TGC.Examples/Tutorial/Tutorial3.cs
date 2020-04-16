@@ -50,13 +50,11 @@ namespace TGC.Examples.Tutorial
 
             //Vamos a utilizar la camara en 3ra persona para que siga al objeto principal a medida que se mueve
             camaraInterna = new TgcThirdPersonCamera(mainMesh.Position, 200, 300);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             //Obtenemos acceso al objeto que maneja input de mouse y teclado del framework
             var input = Input;
 
@@ -91,7 +89,7 @@ namespace TGC.Examples.Tutorial
             //Multiplicar movimiento por velocidad y elapsedTime
             movement *= MOVEMENT_SPEED * ElapsedTime;
             mainMesh.Position = mainMesh.Position + movement;
-            mainMesh.Transform = TGCMatrix.Translation(mainMesh.Position);            
+            mainMesh.Transform = TGCMatrix.Translation(mainMesh.Position);
 
             //Chequear si el objeto principal en su nueva posición choca con alguno de los objetos de la escena.
             //Si es así, entonces volvemos a la posición original.
@@ -128,8 +126,6 @@ namespace TGC.Examples.Tutorial
 
             //Hacer que la camara en 3ra persona se ajuste a la nueva posicion del objeto
             camaraInterna.Target = mainMesh.Position;
-
-            PostUpdate();
         }
 
         public override void Render()

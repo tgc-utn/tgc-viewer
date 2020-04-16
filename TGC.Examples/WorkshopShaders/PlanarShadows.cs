@@ -59,7 +59,7 @@ namespace TGC.Examples.WorkshopShaders
             avion.Position = new TGCVector3(100f, 100f, 0f);
             dir_avion = new TGCVector3(0, 0, 1);
 
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 125), 50, 0.15f, 50f, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0, 20, 125), 50, 0.15f, 50f, Input);
 
             //Cargar Shader personalizado
             effect = TGCShaders.Instance.LoadEffect(ShadersDir + "WorkshopShaders\\PlanarShadows.fx");
@@ -82,8 +82,7 @@ namespace TGC.Examples.WorkshopShaders
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

@@ -57,13 +57,11 @@ namespace TGC.Examples.Transformations
             var size = TGCVector3.One;
             box = TGCBox.fromSize(center, size, texture);
             box.Transform = TGCMatrix.Identity;
-            Camara = new TgcRotationalCamera(new TGCVector3(0f, 1.5f, 0f), 5f, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0f, 1.5f, 0f), 5f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             // Los movimientos de teclado no validan que la mesh se atraviecen, solo modifican el angulo o traslacion.
             if (Input.keyDown(Key.A))
             {
@@ -161,8 +159,6 @@ namespace TGC.Examples.Transformations
             B = TGCMatrix.Translation(pivotePinzaDerecha.X, pivotePinzaDerecha.Y, pivotePinzaDerecha.Z);
             // Se calcula la matriz resultante, para utilizarse en render.
             transformacionPinzaDerecha = T * A * Rot * B;
-
-            PostUpdate();
         }
 
         public override void Render()

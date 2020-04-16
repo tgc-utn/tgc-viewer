@@ -78,7 +78,7 @@ namespace TGC.Examples.ShadersExamples
 
             var cameraPosition = new TGCVector3(0, 0, 125);
             var lookAt = TGCVector3.Empty;
-            Camara.SetCamera(cameraPosition, lookAt);
+            Camera.SetCamera(cameraPosition, lookAt);
         }
 
         private void CreateEffect()
@@ -88,7 +88,7 @@ namespace TGC.Examples.ShadersExamples
 
         private void CreateMesh()
         {
-            var lava = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "\\Texturas\\lava.jpg");
+            var lava = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\lava.jpg");
             var sphere = new TGCSphere(1, lava, TGCVector3.Empty);
             sphere.LevelOfDetail = 4;
             sphere.updateValues();
@@ -105,14 +105,12 @@ namespace TGC.Examples.ShadersExamples
             effectVectorArrow.BodyColor = Color.Red;
             effectVectorArrow.Thickness = 1;
             effectVectorArrow.Enabled = false;
-            effectVectorArrow.HeadSize = new TGCVector2(1, 1);
+            effectVectorArrow.HeadSize = TGCVector2.One;
             effectVectorArrow.updateValues();
         }
 
         public override void Update()
         {
-            this.PreUpdate();
-
             // Manejamos la entrada
             this.HandleInput();
 
@@ -124,7 +122,7 @@ namespace TGC.Examples.ShadersExamples
             this.effect.SetValue("matViewProj", D3DDevice.Instance.Device.Transform.View * D3DDevice.Instance.Device.Transform.Projection);
 
             // Le enviamos al shader la posicion de la camara
-            this.effect.SetValue("eyePosition", new[] { this.Camara.Position.X, this.Camara.Position.Y, this.Camara.Position.Z });
+            this.effect.SetValue("eyePosition", new[] { this.Camera.Position.X, this.Camera.Position.Y, this.Camera.Position.Z });
 
             // Actualizamos los modificadores
             this.rotation.Update();
@@ -148,18 +146,16 @@ namespace TGC.Examples.ShadersExamples
             this.effectVectorArrow.PStart = this.center.Value;
             this.effectVectorArrow.PEnd = realVector;
             this.effectVectorArrow.updateValues();
-
-            this.PostUpdate();
         }
 
         private void HandleInput()
         {
             if (Input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                Camara.SetCamera(Camara.Position + new TGCVector3(0, 10f, 0), Camara.LookAt);
-                if (Camara.Position.Y > 300f)
+                Camera.SetCamera(Camera.Position + new TGCVector3(0, 10f, 0), Camera.LookAt);
+                if (Camera.Position.Y > 300f)
                 {
-                    Camara.SetCamera(new TGCVector3(Camara.Position.X, 0f, Camara.Position.Z), Camara.LookAt);
+                    Camera.SetCamera(new TGCVector3(Camera.Position.X, 0f, Camera.Position.Z), Camera.LookAt);
                 }
             }
         }
