@@ -121,7 +121,7 @@ namespace TGC.Examples.Collision
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, new TGCVector3(0, 100, 0), 100, -400);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
@@ -151,8 +151,6 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            PreUpdate();
-
             //obtener velocidades de Modifiers
             var velocidadCaminar = velocidadCaminarModifier.Value;
             var velocidadRotacion = velocidadRotacionModifier.Value;
@@ -265,7 +263,7 @@ namespace TGC.Examples.Collision
             foreach (var mesh in escenario.Meshes)
             {
                 TGCVector3 q;
-                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, camaraInterna.Target,
+                if (TgcCollisionUtils.intersectSegmentAABB(Camera.Position, camaraInterna.Target,
                     mesh.BoundingBox, out q))
                 {
                     objectsBehind.Add(mesh);
@@ -275,7 +273,6 @@ namespace TGC.Examples.Collision
                     objectsInFront.Add(mesh);
                 }
             }
-            PostUpdate();
         }
 
         public override void Render()

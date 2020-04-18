@@ -47,7 +47,7 @@ namespace TGC.Examples.MeshExamples
             renderMethodModifier = AddEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(25);
 
-            Camara.SetCamera(new TGCVector3(40f, 20f, -70f), new TGCVector3(40f, 20f, -60f));
+            Camera.SetCamera(new TGCVector3(40f, 20f, -70f), new TGCVector3(40f, 20f, -60f));
         }
 
         private void createMeshes(int cajasPorCuadrante)
@@ -140,8 +140,7 @@ namespace TGC.Examples.MeshExamples
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

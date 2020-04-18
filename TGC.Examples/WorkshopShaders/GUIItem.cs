@@ -614,7 +614,7 @@ namespace TGC.Examples.WorkshopShaders
                 // Pero esta escala es local, del texto, que se aplica centra en centro del texto, luego de haberlo
                 // escalado por la escala global.
                 gui.sprite.Transform = gui.sprite.Transform * TGCMatrix.Transformation2D(new TGCVector2((center.X + ox) * ex, (center.Y + oy) * ey), 0, new TGCVector2(k, k),
-                        new TGCVector2(0, 0), 0, new TGCVector2(0, 0));
+                        TGCVector2.Zero, 0, TGCVector2.Zero);
             }
         }
 
@@ -664,7 +664,7 @@ namespace TGC.Examples.WorkshopShaders
                 // Determino la escala para que entre justo
                 TGCVector2 scale = new TGCVector2(k * ex * rc.Width / image_width, k * ey * rc.Height / image_height);
                 TGCVector2 offset = new TGCVector2(ox * ex, oy * ey);
-                gui.sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(center.X * ex, center.Y * ey), 0, scale, new TGCVector2(0, 0), 0, offset) * gui.RTQ;
+                gui.sprite.Transform = TGCMatrix.Transformation2D(new TGCVector2(center.X * ex, center.Y * ey), 0, scale, TGCVector2.Zero, 0, offset) * gui.RTQ;
                 gui.sprite.Draw(textura, c0, pos, Color.FromArgb(gui.alpha, 255, 255, 255).ToArgb());
             }
         }

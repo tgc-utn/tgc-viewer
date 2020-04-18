@@ -73,6 +73,16 @@ namespace TGC.Viewer.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap appointment_soon {
+            get {
+                object obj = ResourceManager.GetObject("appointment_soon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap edit_clear_all {
             get {
                 object obj = ResourceManager.GetObject("edit_clear_all", resourceCulture);
@@ -156,6 +166,16 @@ namespace TGC.Viewer.Properties {
         public static System.Drawing.Bitmap view_fullscreen {
             get {
                 object obj = ResourceManager.GetObject("view_fullscreen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap view_refresh {
+            get {
+                object obj = ResourceManager.GetObject("view_refresh", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

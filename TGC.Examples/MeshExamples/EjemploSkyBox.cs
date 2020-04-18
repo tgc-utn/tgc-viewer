@@ -61,28 +61,24 @@ namespace TGC.Examples.MeshExamples
             //Modifier para mover el skybox con la posicion de la caja con traslaciones.
             moveWithCameraModifier = AddBoolean("moveWithCamera", "Move With Camera", false);
 
-            Camara = new TgcFpsCamera(Input);
+            Camera = new TgcFpsCamera(Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             //Se cambia el valor por defecto del farplane para evitar cliping de farplane.
             D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(D3DDevice.Instance.FieldOfView, D3DDevice.Instance.AspectRatio,
                     D3DDevice.Instance.ZNearPlaneDistance, D3DDevice.Instance.ZFarPlaneDistance * 2f).ToMatrix();
 
             //Se actualiza la posicion del skybox.
             if (moveWithCameraModifier.Value)
-                skyBox.Center = Camara.Position;
-
-            PostUpdate();
+                skyBox.Center = Camera.Position;
         }
 
         public override void Render()
         {
             PreRender();
-            DrawText.drawText("Camera pos: " + TGCVector3.PrintTGCVector3(Camara.Position), 5, 20, Color.Red);
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintTGCVector3(Camera.Position), 5, 20, Color.Red);
             //Renderizar SkyBox
             skyBox.Render();
 

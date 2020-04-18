@@ -11,7 +11,7 @@ namespace TGC.Core.BoundingVolumes
     ///     Clase que representa el volumen del Frustum (vision actual).
     ///     Las normales de los planos del Frustum apuntan hacia adentro.
     ///     Tambien permite dibujar una malla debug del frustum
-    ///     Solo puede ser invocado cuando se esta ejecutando un bloque de Render() de un TgcExample
+    ///     Solo puede ser invocado cuando se esta ejecutando un bloque de Render() de un TGCExample
     /// </summary>
     public class TgcFrustum
     {

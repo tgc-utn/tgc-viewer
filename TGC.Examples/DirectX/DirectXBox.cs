@@ -247,13 +247,12 @@ namespace TGC.Examples.DirectX
 
             dir = 1;
 
-            Camara = new TgcRotationalCamera(TGCVector3.Empty, 20f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 20f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

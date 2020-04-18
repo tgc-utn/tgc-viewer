@@ -4,7 +4,7 @@ using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 
-namespace TGC.Examples.Bullet.Physics
+namespace TGC.Examples.BulletPhysics.Physics
 {
     public class HelloWorldBullet : PhysicsGame
     {
@@ -71,9 +71,9 @@ namespace TGC.Examples.Bullet.Physics
             sphereMesh.updateValues();
         }
 
-        public override void Update()
+        public override void Update(float elapsedTime, float timeBetweenFrames)
         {
-            dynamicsWorld.StepSimulation(1 / 60f, 10);
+            dynamicsWorld.StepSimulation(elapsedTime, 10, timeBetweenFrames);
         }
 
         /// <summary>

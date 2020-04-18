@@ -76,42 +76,42 @@ namespace TGC.Examples.Transformations.SistemaSolar
                 TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\MoonTexture.jpg")
             });
 
+            BackgroundColor = Color.Black;
+
             //Camara en primera persona
-            Camara = new TgcRotationalCamera(new TGCVector3(0f, 200f, 1000f), 500f, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0f, 200f, 1000f), 500f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
-        }
-
-        public override void Render()
-        {
-            //BackgroundColor
-            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            BeginScene();
-            ClearTextures();
-
-            //Actualizar transformacion y renderizar el sol
+            //Actualizar transformacion el sol
             sun.Transform = getSunTransform();
-            sun.Render();
-
-            //Actualizar transformacion y renderizar la tierra
+            //Actualizar transformacion la tierra
             earth.Transform = getEarthTransform();
-            earth.Render();
-
-            //Actualizar transformacion y renderizar la luna
+            //Actualizar transformacion la luna
             moon.Transform = getMoonTransform(earth.Transform);
-            moon.Render();
 
             axisRotation += AXIS_ROTATION_SPEED * ElapsedTime;
             earthAxisRotation += EARTH_AXIS_ROTATION_SPEED * ElapsedTime;
             earthOrbitRotation += EARTH_ORBIT_SPEED * ElapsedTime;
             moonOrbitRotation += MOON_ORBIT_SPEED * ElapsedTime;
-
+            
             //Limpiamos todas las transformaciones con la TGCMatrix identidad
             D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
+        }
+
+        public override void Render()
+        {
+            PreRender();
+
+            //Renderizar el sol
+            sun.Render();
+
+            //Renderizar la tierra
+            earth.Render();
+
+            //Renderizar la luna
+            moon.Render();
 
             PostRender();
         }

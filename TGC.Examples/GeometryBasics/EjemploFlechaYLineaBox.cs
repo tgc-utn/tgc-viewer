@@ -58,14 +58,12 @@ namespace TGC.Examples.GeometryBasics
             //Crear modifiers
             boxColorModifier = AddColor("boxColor", Color.Red);
 
-            //Camara FPS
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 10f, 0), 30f, Input);
+            //Camera FPS
+            Camera = new TgcRotationalCamera(new TGCVector3(0, 10f, 0), 30f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             var start = startModifier.Value;
             var end = endModifier.Value;
             var thickness = thicknessModifier.Value;
@@ -97,8 +95,6 @@ namespace TGC.Examples.GeometryBasics
             //Actualizar valores para hacerlos efectivos, ADVERTENCIA verificar que estemetodo crea los vertices nuevamente.
             //Recomendado de ser posible realizar transformaciones!!!
             box.updateValues();
-
-            PostUpdate();
         }
 
         public override void Render()

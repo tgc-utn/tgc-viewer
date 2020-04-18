@@ -64,15 +64,13 @@ namespace TGC.Examples.Engine2D
             acumlatedTime = 0f;
 
             //Camara estatica (es igual que definir un view matrix en cada render)
-            Camara.SetCamera(new TGCVector3(0, 0, -10), TGCVector3.Empty);
+            Camera.SetCamera(new TGCVector3(0, 0, -10), TGCVector3.Empty);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             //Actualizar valores al sprite interno.
-            sprite.Position = new TGCVector2(0f, 0f);
+            sprite.Position = TGCVector2.Zero;
             sprite.Scaling = new TGCVector2(0.5f, 0.5f);
             sprite.Rotation = 0f;
             //Internamente realiza TGCMatrix.Transformation2D(scalingCenter, 0, scaling, rotationCenter, rotation, position);
@@ -115,8 +113,6 @@ namespace TGC.Examples.Engine2D
             //Si ElapsedTime es muy chico (como suele pasar con buenas computadoras y poco procesamiento)
             //Al multiplicarlo por nuestra velocidad angular, se transformaran en "pequeñas rotaciones".
             rotationAnimate = rotationAnimate * TGCMatrix.RotationZ(FastMath.ToRad(25) * ElapsedTime);
-
-            PostUpdate();
         }
 
         public override void Render()

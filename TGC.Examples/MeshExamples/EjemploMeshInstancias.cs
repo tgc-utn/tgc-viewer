@@ -64,22 +64,21 @@ namespace TGC.Examples.MeshExamples
                 }
             }
 
-            //Camara en primera persona
-            Camara = new TgcFpsCamera(new TGCVector3(900f, 400f, 900f), Input);
+            //Camera en primera persona
+            Camera = new TgcFpsCamera(new TGCVector3(900f, 400f, 900f), Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
         {
             PreRender();
 
-            DrawText.drawText("Camera pos: " + TGCVector3.PrintTGCVector3(Camara.Position), 5, 20, System.Drawing.Color.Red);
-            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintTGCVector3(Camara.LookAt), 5, 40, System.Drawing.Color.Red);
+            DrawText.drawText("Camera pos: " + TGCVector3.PrintTGCVector3(Camera.Position), 5, 20, System.Drawing.Color.Red);
+            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintTGCVector3(Camera.LookAt), 5, 40, System.Drawing.Color.Red);
 
             //Renderizar suelo
             suelo.Render();

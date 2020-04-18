@@ -112,7 +112,7 @@ namespace TGC.Examples.Collision
 
             //Configurar camara en Tercera Persona y la asigno al TGC.
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 200, -300);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
 
             //Modifiers para modificar propiedades de la camara
             offsetHeightModifier = AddFloat("offsetHeight", 0, 300, 100);
@@ -122,7 +122,6 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            PreUpdate();
             var velocidadCaminar = 400f;
             var velocidadRotacion = 120f;
 
@@ -221,8 +220,6 @@ namespace TGC.Examples.Collision
 
             //Ajustar la posicion de la camara segun la colision con los objetos del escenario
             ajustarPosicionDeCamara();
-
-            PostUpdate();
         }
 
         public override void Render()

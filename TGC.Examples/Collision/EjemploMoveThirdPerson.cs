@@ -108,7 +108,7 @@ namespace TGC.Examples.Collision
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 200, -300);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
 
             //Modifier para ver BoundingBox
             showBoundingBoxModifier = AddBoolean("showBoundingBox", "Bouding Box", false);
@@ -121,7 +121,6 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            PreUpdate();
             //obtener velocidades de Modifiers
             var velocidadCaminar = velocidadCaminarModifier.Value;
             var velocidadRotacion = velocidadRotacionModifier.Value;
@@ -286,8 +285,6 @@ namespace TGC.Examples.Collision
 
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = personaje.Position;
-
-            PostUpdate();
         }
 
         public override void Render()

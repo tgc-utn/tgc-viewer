@@ -48,7 +48,7 @@ namespace TGC.Examples.MeshExamples
                     mesh.Transform = TGCMatrix.Scaling(mesh.Scale)
                         * TGCMatrix.RotationYawPitchRoll(mesh.Rotation.Y, mesh.Rotation.X, mesh.Rotation.Z)
                         * TGCMatrix.Translation(i * 100, 0, j * 100);
-                    
+
                     meshes.Add(mesh);
                     //Se agrega un callback function para informar cuando se realiza el dispose.
                     mesh.D3dMesh.Disposing += D3dMesh_Disposing;
@@ -70,7 +70,7 @@ namespace TGC.Examples.MeshExamples
 
             time = 0;
 
-            Camara = new TgcRotationalCamera(new TGCVector3(100f, 300f, 100f), 1500f, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(100f, 300f, 100f), 1500f, Input);
         }
 
         private void D3dMesh_Disposing(object sender, EventArgs e)
@@ -80,8 +80,7 @@ namespace TGC.Examples.MeshExamples
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

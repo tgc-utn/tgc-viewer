@@ -52,16 +52,13 @@ namespace TGC.Examples.GeometryBasics
             normalArrow = new TgcArrow();
             showNormalModifier = AddBoolean("showNormal", "Show normal", true);
 
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 5, 0), 50f, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0, 5, 0), 50f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
             //Actualizar parametros del quad
             updateQuad();
-
-            PostUpdate();
         }
 
         /// <summary>

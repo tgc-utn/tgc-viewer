@@ -73,7 +73,6 @@
     </Reference>
     <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -95,7 +94,7 @@
     <Compile Include="Text\TgcText2D.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
     <Compile Include="Direct3D\D3DDevice.cs" />
-    <Compile Include="Example\TgcExample.cs" />
+    <Compile Include="Example\TGCExample.cs" />
     <Compile Include="Fog\TgcFog.cs" />
     <Compile Include="Geometry\TgcArrow.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingAxisAlignBox.cs" />

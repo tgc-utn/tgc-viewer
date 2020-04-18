@@ -63,8 +63,8 @@ namespace TGC.Examples.MeshExamples
             textureModifier = AddTexture("texture", currentTexture);
             loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
 
-            //Configurar FPS Camara
-            Camara = new TgcFpsCamera(new TGCVector3(3200f, 450f, 1500f), Input);
+            //Configurar FPS Camera
+            Camera = new TgcFpsCamera(new TGCVector3(3200f, 450f, 1500f), Input);
 
             //UserVars para cantidad de vertices
             UserVars.addVar("Vertices", totalVertices);
@@ -73,8 +73,7 @@ namespace TGC.Examples.MeshExamples
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         /// <summary>
@@ -171,8 +170,8 @@ namespace TGC.Examples.MeshExamples
         public override void Render()
         {
             PreRender();
-            DrawText.drawText("Camera pos: " + TGCVector3.PrintTGCVector3(Camara.Position), 5, 20, Color.Red);
-            DrawText.drawText("Camera LookAt: " + TGCVector3.PrintTGCVector3(Camara.LookAt), 5, 40, Color.Red);
+            DrawText.drawText("Camara pos: " + TGCVector3.PrintTGCVector3(Camera.Position), 5, 20, Color.Red);
+            DrawText.drawText("Camara LookAt: " + TGCVector3.PrintTGCVector3(Camera.LookAt), 5, 40, Color.Red);
 
             //Ver si cambio el heightmap
             var selectedHeightmap = heightmapModifier.Value;

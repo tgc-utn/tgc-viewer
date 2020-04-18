@@ -60,7 +60,7 @@ namespace TGC.Examples.Lights
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new TGCVector3(200, 250, 175), 400f, 300f, Input);
+            Camera = new TgcFpsCamera(new TGCVector3(200, 250, 175), 400f, 300f, Input);
 
             //Mesh para la luz
             lightMesh = TGCBox.fromSize(new TGCVector3(10, 10, 10), Color.Red);
@@ -85,8 +85,7 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -131,7 +130,7 @@ namespace TGC.Examples.Lights
                     //Cargar variables shader de la luz
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(lightColorModifier.Value));
                     mesh.Effect.SetValue("lightPosition", TGCVector3.TGCVector3ToFloat4Array(lightPos));
-                    mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
+                    mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camera.Position));
                     mesh.Effect.SetValue("spotLightDir", TGCVector3.TGCVector3ToFloat3Array(lightDir));
                     mesh.Effect.SetValue("lightIntensity", lightIntensityModifier.Value);
                     mesh.Effect.SetValue("lightAttenuation", lightAttenuationModifier.Value);

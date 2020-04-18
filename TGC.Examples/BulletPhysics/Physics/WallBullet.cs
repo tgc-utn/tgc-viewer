@@ -7,7 +7,7 @@ using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 
-namespace TGC.Examples.Bullet.Physics
+namespace TGC.Examples.BulletPhysics.Physics
 {
     public class WallBullet : PhysicsGame
     {
@@ -77,14 +77,14 @@ namespace TGC.Examples.Bullet.Physics
             sphereMesh.updateValues();
         }
 
-        public override void Update()
+        public override void Update(float elapsedTime, float timeBetweenFrames)
         {
-            dynamicsWorld.StepSimulation(1 / 60f, 10);
+            dynamicsWorld.StepSimulation(elapsedTime, 10, timeBetweenFrames);
 
             if (Ctx.Input.keyUp(Key.Space))
             {
-                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10f, 1f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
-                var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBulletVector3();
+                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10f, 1f, new TGCVector3(Ctx.Camera.Position.X, Ctx.Camera.Position.Y, Ctx.Camera.Position.Z));
+                var dir = new TGCVector3(Ctx.Camera.LookAt.X - Ctx.Camera.Position.X, Ctx.Camera.LookAt.Y - Ctx.Camera.Position.Y, Ctx.Camera.LookAt.Z - Ctx.Camera.Position.Z).ToBulletVector3();
                 dir.Normalize();
                 ballBody.LinearVelocity = dir * 900;
                 ballBody.LinearFactor = TGCVector3.One.ToBulletVector3();
@@ -96,8 +96,8 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx.Input.keyUp(Key.Q))
             {
-                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10f, 10f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
-                var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBulletVector3();
+                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10f, 10f, new TGCVector3(Ctx.Camera.Position.X, Ctx.Camera.Position.Y, Ctx.Camera.Position.Z));
+                var dir = new TGCVector3(Ctx.Camera.LookAt.X - Ctx.Camera.Position.X, Ctx.Camera.LookAt.Y - Ctx.Camera.Position.Y, Ctx.Camera.LookAt.Z - Ctx.Camera.Position.Z).ToBulletVector3();
                 dir.Normalize();
                 ballBody.LinearVelocity = dir * 900;
                 ballBody.LinearFactor = TGCVector3.One.ToBulletVector3();
@@ -109,8 +109,8 @@ namespace TGC.Examples.Bullet.Physics
 
             if (Ctx.Input.keyUp(Key.W))
             {
-                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10f, 0.1f, new TGCVector3(Ctx.Camara.Position.X, Ctx.Camara.Position.Y, Ctx.Camara.Position.Z));
-                var dir = new TGCVector3(Ctx.Camara.LookAt.X - Ctx.Camara.Position.X, Ctx.Camara.LookAt.Y - Ctx.Camara.Position.Y, Ctx.Camara.LookAt.Z - Ctx.Camara.Position.Z).ToBulletVector3();
+                var ballBody = BulletRigidBodyFactory.Instance.CreateBall(10f, 0.1f, new TGCVector3(Ctx.Camera.Position.X, Ctx.Camera.Position.Y, Ctx.Camera.Position.Z));
+                var dir = new TGCVector3(Ctx.Camera.LookAt.X - Ctx.Camera.Position.X, Ctx.Camera.LookAt.Y - Ctx.Camera.Position.Y, Ctx.Camera.LookAt.Z - Ctx.Camera.Position.Z).ToBulletVector3();
                 dir.Normalize();
                 ballBody.LinearVelocity = dir * 900;
                 ballBody.LinearFactor = TGCVector3.One.ToBulletVector3();

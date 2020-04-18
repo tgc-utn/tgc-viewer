@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TGC - UTN.BA")]
 [assembly: AssemblyProduct("TGC.Examples")]
-[assembly: AssemblyCopyright("Copyright © 2009 - 2017")]
+[assembly: AssemblyCopyright("Copyright © 2009 - 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,5 +34,5 @@ using System.Runtime.InteropServices;
 // Puede especificar todos los valores o puede establecer como valores predeterminados los números de revisión y generación
 // mediante el asterisco ('*'), como se muestra a continuación:
 
-[assembly: AssemblyVersion("2.3.4.0")]
-[assembly: AssemblyFileVersion("2.3.4.0")]
+[assembly: AssemblyVersion("2.4.1.0")]
+[assembly: AssemblyFileVersion("2.4.1.0")]

@@ -116,13 +116,12 @@ namespace TGC.Examples.GeometryBasics
             UserVars.setValue("Triangle 3 vertices", data.Length);
 
             //Configurar camara en rotacion
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 0.5f, 0), 7.5f, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0, 0.5f, 0), 7.5f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

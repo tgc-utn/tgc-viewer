@@ -64,8 +64,20 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //Ver si cambio el WAV
+            var filePath = wavFileModifier.Value;
+            loadSound(filePath);
+
+            //Controlo el input de teclado
+            if (Input.keyPressed(Key.Y))
+            {
+                var playLoop = playLoopModifier.Value;
+                sound.play(playLoop);
+            }
+            else if (Input.keyPressed(Key.O))
+            {
+                sound.stop();
+            }
         }
 
         /// <summary>
@@ -95,21 +107,6 @@ namespace TGC.Examples.Sound
         public override void Render()
         {
             PreRender();
-
-            //Ver si cambio el WAV
-            var filePath = wavFileModifier.Value;
-            loadSound(filePath);
-
-            //Contro el input de teclado
-            if (Input.keyPressed(Key.Y))
-            {
-                var playLoop = playLoopModifier.Value;
-                sound.play(playLoop);
-            }
-            else if (Input.keyPressed(Key.O))
-            {
-                sound.stop();
-            }
 
             //Render texto
             currentSoundText.render();

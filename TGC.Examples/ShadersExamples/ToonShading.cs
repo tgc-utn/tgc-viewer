@@ -92,7 +92,7 @@ namespace TGC.Examples.ShadersExamples
             specularModifier = AddFloat("Specular", 0, 1, 0.5f);
             specularPowerModifier = AddFloat("SpecularPower", 1, 100, 16);
 
-            Camara = new TgcRotationalCamera(new TGCVector3(20, 20, 0), 300, TgcRotationalCamera.DEFAULT_ZOOM_FACTOR, 1.5f, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(20, 20, 0), 300, TgcRotationalCamera.DEFAULT_ZOOM_FACTOR, 1.5f, Input);
 
             // Creo un depthbuffer sin multisampling, para que sea compatible con el render to texture
 
@@ -167,8 +167,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -179,7 +178,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", TGCVector3.TGCVector3ToFloat3Array(lightPosition));
-            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camera.Position));
             effect.SetValue("k_la", ambientModifier.Value);
             effect.SetValue("k_ld", diffuseModifier.Value);
             effect.SetValue("k_ls", specularModifier.Value);

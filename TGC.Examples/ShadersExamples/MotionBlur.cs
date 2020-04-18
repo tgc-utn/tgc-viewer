@@ -55,7 +55,7 @@ namespace TGC.Examples.ShadersExamples
             mesh.Effect = effect;
 
             //Camara
-            Camara = new TgcRotationalCamera(TGCVector3.Empty, 150f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 150f, Input);
 
             // stencil
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
@@ -97,13 +97,9 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            PreUpdate();
-
             time += ElapsedTime;
             float r = 40;
             mesh.Transform = TGCMatrix.Translation(r * (float)Math.Cos(time * 0.5), 0, 0 * (float)Math.Sin(time * 0.5));
-
-            PostUpdate();
         }
 
         public void renderScene(string technique)

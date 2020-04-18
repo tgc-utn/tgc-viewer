@@ -49,7 +49,7 @@ namespace TGC.Examples.Optimization
             scene.setMeshesEnabled(false);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(TGCVector3.Empty, 800f, 600f, Input);
+            Camera = new TgcFpsCamera(TGCVector3.Empty, 800f, 600f, Input);
 
             //Modifiers
             portalRenderingModifier = AddBoolean("portalRendering", "PortalRendering", true);
@@ -65,8 +65,7 @@ namespace TGC.Examples.Optimization
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -77,7 +76,7 @@ namespace TGC.Examples.Optimization
             if (enablePortalRendering)
             {
                 //Actualizar visibilidad con PortalRendering
-                scene.PortalRendering.updateVisibility(Camara.Position, Frustum);
+                scene.PortalRendering.updateVisibility(Camera.Position, Frustum);
             }
             else
             {

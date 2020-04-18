@@ -1,10 +1,7 @@
 using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
-using TGC.Core.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.Textures;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 using TGC.Examples.UserControls.Modifier;
@@ -48,13 +45,11 @@ namespace TGC.Examples.Transformations
 
             baseScaleRotation = TGCMatrix.Scaling(new TGCVector3(0.05f, 0.05f, 0.05f)) * TGCMatrix.RotationY(FastMath.PI_HALF);
 
-            Camara.SetCamera(new TGCVector3(0f, 1f, -25f), new TGCVector3(0f, 1f, 200f));
+            Camera.SetCamera(new TGCVector3(0f, 1f, -25f), new TGCVector3(0f, 1f, 200f));
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             var rot = rotacionModifier.Value;
             rot.X = Geometry.DegreeToRadian(rot.X);
             rot.Y = Geometry.DegreeToRadian(rot.Y);
@@ -72,11 +67,9 @@ namespace TGC.Examples.Transformations
 
             TGCQuaternion rotation = rotationX * rotationY * rotationZ;
 
-            quaternionMesh.Transform = baseScaleRotation * 
-                TGCMatrix.RotationTGCQuaternion(rotation) * 
+            quaternionMesh.Transform = baseScaleRotation *
+                TGCMatrix.RotationTGCQuaternion(rotation) *
                 baseQuaternionTranslation;
-
-            PostUpdate();
         }
 
         public override void Render()

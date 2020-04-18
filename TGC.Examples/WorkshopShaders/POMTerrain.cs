@@ -228,7 +228,7 @@ namespace TGC.Examples.WorkshopShaders
         private Texture g_pBaseTexture;
         private Texture g_pHeightmap;
         private POMTerrain terrain;
-        private TGCVector2 pos = new TGCVector2(0, 0);
+        private TGCVector2 pos = TGCVector2.Zero;
         private float dir_an = 0;
         private float kvel = 1.0f;
 
@@ -277,13 +277,11 @@ namespace TGC.Examples.WorkshopShaders
             terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "Heightmap3.jpg", 100f, 2.25f, new TGCVector3(0, 0, 0));
             terrain.loadTexture(MediaDir + "Heighmaps\\" + "TerrainTexture3.jpg");
 
-            Camara.SetCamera(new TGCVector3(-350, 1000, -1100), new TGCVector3(0, 0, 0), TGCVector3.Up);
+            Camera.SetCamera(new TGCVector3(-350, 1000, -1100), new TGCVector3(0, 0, 0), TGCVector3.Up);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             Device d3dDevice = D3DDevice.Instance.Device;
 
             // Actualizo la direccion
@@ -309,6 +307,11 @@ namespace TGC.Examples.WorkshopShaders
             TGCVector3 lookAt = new TGCVector3(pos_s.X, H + 1.5f, pos_s.Y);
             d3dDevice.Transform.View = TGCMatrix.LookAtLH(lookFrom, lookAt, TGCVector3.Up);
             effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(lookFrom));
+        }
+
+        protected override void PostUpdate()
+        {
+            // Ya se maneja en el update, por eso lo sobreescribo vacio.
         }
 
         public override void Render()

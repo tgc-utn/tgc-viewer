@@ -11,7 +11,7 @@ using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Textures;
 
-namespace TGC.Examples.Bullet.Physics
+namespace TGC.Examples.BulletPhysics.Physics
 {
     public class TrianglePhysics
     {
@@ -235,9 +235,9 @@ namespace TGC.Examples.Bullet.Physics
             director = new TGCVector3(0, 0, 1);
         }
 
-        public void Update(TgcD3dInput input)
+        public void Update(TgcD3dInput input, float elapsedTime, float timeBetweenFrames)
         {
-            dynamicsWorld.StepSimulation(1 / 60f, 100);
+            dynamicsWorld.StepSimulation(elapsedTime, 10, timeBetweenFrames);
             var strength = 10.30f;
             var angle = 5;
             var moving = false;

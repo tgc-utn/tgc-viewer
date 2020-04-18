@@ -1,10 +1,6 @@
 ﻿using Microsoft.DirectX.Direct3D;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -37,7 +33,6 @@ namespace TGC.Examples.ShadersExamples
 
         private bool previousValue;
 
-
         public BlinnPhongShading(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
@@ -54,17 +49,15 @@ namespace TGC.Examples.ShadersExamples
             InitializePlanes();
             InitializeLightBox();
 
-
             D3DDevice.Instance.Device.RenderState.CullMode = Cull.CounterClockwise;
 
             BackgroundColor = Color.DarkGray;
 
-            Camara = new TgcFpsCamera(new TGCVector3(0, 80f, 0), 300f, 0f, Input);
+            Camera = new TgcFpsCamera(new TGCVector3(0, 80f, 0), 300f, 0f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
             lightBox.Transform = TGCMatrix.Translation(lightPositionModifier.Value);
 
             effect.SetValue("ambientColor", ColorValue.FromColor(ambientColorModifier.Value));
@@ -75,20 +68,17 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("KSpecular", specularModifier.Value);
             effect.SetValue("shininess", specularPowerModifier.Value);
             effect.SetValue("lightPosition", TGCVector3.TGCVector3ToFloat3Array(lightPositionModifier.Value));
-            effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
+            effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array(Camera.Position));
 
-            if(!toggleBlinn.Value.Equals(previousValue))
+            if (!toggleBlinn.Value.Equals(previousValue))
             {
-                if(toggleBlinn.Value)
+                if (toggleBlinn.Value)
                     planes[0].Technique = "Blinn";
                 else
                     planes[0].Technique = "Phong";
                 previousValue = toggleBlinn.Value;
             }
-
-            PostUpdate();
         }
-
 
         public override void Render()
         {
@@ -137,7 +127,7 @@ namespace TGC.Examples.ShadersExamples
             planes[1].Transform = TGCMatrix.RotationY(FastMath.PI) * planes[1].Transform;
             planes[3].Transform = TGCMatrix.RotationY(FastMath.PI) * planes[3].Transform;
 
-            planes.ForEach(plane => { plane.Effect = effect; plane.Technique = "Wall"; }) ;
+            planes.ForEach(plane => { plane.Effect = effect; plane.Technique = "Wall"; });
             planes[0].Technique = "Blinn";
         }
 
@@ -162,6 +152,5 @@ namespace TGC.Examples.ShadersExamples
             toggleBlinn = AddBoolean("Blinn Phong", "Usar Blinn Phong", true);
             previousValue = toggleBlinn.Value;
         }
-
     }
 }

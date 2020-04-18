@@ -9,7 +9,7 @@ using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
 
-namespace TGC.Examples.Tutorial.Physics
+namespace TGC.Examples.BulletPhysics.Physics
 {
     public class CubePhysic
     {
@@ -84,7 +84,7 @@ namespace TGC.Examples.Tutorial.Physics
             dynamicsWorld.AddRigidBody(floorBody);
 
             var loader = new TgcSceneLoader();
-            ///Se crea una caja para que haga las veces del Hummer dentro del modelo físico
+            //Se crea una caja para que haga las veces del Hummer dentro del modelo físico
             TgcTexture texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"\MeshCreator\Scenes\Deposito\Textures\box4.jpg");
             TGCBox boxMesh1 = TGCBox.fromSize(new TGCVector3(20, 20, 20), texture);
             boxMesh1.Position = new TGCVector3(0, 10, 0);
@@ -106,10 +106,10 @@ namespace TGC.Examples.Tutorial.Physics
             fowardback = new TGCVector3(0, 0, 1);
         }
 
-        public void Update(TgcD3dInput input)
+        public void Update(TgcD3dInput input, float elapsedTime, float timeBetweenFrames)
         {
             var strength = 30.30f;
-            dynamicsWorld.StepSimulation(1 / 60f, 100);
+            dynamicsWorld.StepSimulation(elapsedTime, 10, timeBetweenFrames);
 
             #region Comportamiento
 

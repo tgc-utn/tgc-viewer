@@ -125,19 +125,11 @@ namespace TGC.Examples.Animation
             attachment.updateValues();
 
             //Configurar camara
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 70, 0), 200, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0, 70, 0), 200, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
             //Ver si cambio la animacion
             var anim = animationModifier.Value.ToString();
             if (!anim.Equals(selectedAnim))
@@ -185,6 +177,12 @@ namespace TGC.Examples.Animation
 
             //Solo malla o esqueleto, depende lo seleccionado
             mesh.RenderSkeleton = renderSkeleton;
+        }
+
+        public override void Render()
+        {
+            PreRender();
+
             mesh.Render();
 
             //Se puede renderizar todo mucho mas simple (sin esqueleto) de la siguiente forma:

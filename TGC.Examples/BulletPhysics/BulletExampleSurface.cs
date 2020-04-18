@@ -5,14 +5,14 @@ using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
-using TGC.Examples.Bullet.Physics;
+using TGC.Examples.BulletPhysics.Physics;
 using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 
-namespace TGC.Examples.Bullet
+namespace TGC.Examples.BulletPhysics
 {
-    public class BulletSurface : TGCExampleViewer
+    public class BulletExampleSurface : TGCExampleViewer
     {
         //Fisica
         private TrianglePhysics physicsExample;
@@ -25,12 +25,14 @@ namespace TGC.Examples.Bullet
         private string technique;
         private Texture terrainTexture;
 
-        public BulletSurface(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
+        public BulletExampleSurface(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "BulletPhysics";
             Name = "Triangles + Regular Shapes vs Capsule";
-            Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\". Donde se emplea una capsula para el personaje, un terreno generado matematicamente con muchos triangulos y elementos varios para colisionar.";
+            Description = "Ejemplo de como poder utilizar el motor de fisica Bullet con \"BulletSharp + TGC.Core\". " +
+                          "Donde se emplea una capsula para el personaje, un terreno generado matematicamente con muchos triangulos y elementos varios para colisionar." +
+                          "Ejecutar con Update constante activado en el menu.";
         }
 
         public override void Init()
@@ -84,10 +86,10 @@ namespace TGC.Examples.Bullet
                     vertexes = +vertexes + 4;
 
                     //Coordendas de textura
-                    var t1 = new TGCVector2(0, 0);
+                    var t1 = TGCVector2.Zero;
                     var t2 = new TGCVector2(0, 1);
                     var t3 = new TGCVector2(1, 0);
-                    var t4 = new TGCVector2(1, 1);
+                    var t4 = TGCVector2.One;
 
                     //Cargar triangulo 1
                     data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
@@ -109,7 +111,7 @@ namespace TGC.Examples.Bullet
             vertexBuffer.SetData(data, 0, LockFlags.None);
 
             //Rotar e invertir textura
-            var b = (Bitmap)Image.FromFile(MediaDir + "//Texturas//pasto.jpg");
+            var b = (Bitmap)Image.FromFile(MediaDir + "Texturas/pasto.jpg");
             b.RotateFlip(RotateFlipType.Rotate90FlipX);
             terrainTexture = Texture.FromBitmap(D3DDevice.Instance.Device, b, Usage.AutoGenerateMipMap, Pool.Managed);
 
@@ -123,15 +125,13 @@ namespace TGC.Examples.Bullet
 
             UserVars.addVar("Tgccito_Position");
 
-            Camara = new TgcRotationalCamera(new TGCVector3(0, 20, 0), 1000, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0, 200, 0), 800, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            physicsExample.Update(Input);
+            physicsExample.Update(Input, ElapsedTime, TimeBetweenFrames);
             UserVars.setValue("Tgccito_Position", physicsExample.GetCharacterPosition());
-            PostUpdate();
         }
 
         public override void Render()
