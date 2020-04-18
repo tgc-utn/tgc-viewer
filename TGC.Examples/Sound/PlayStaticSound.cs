@@ -64,7 +64,20 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
+            //Ver si cambio el WAV
+            var filePath = wavFileModifier.Value;
+            loadSound(filePath);
+
+            //Controlo el input de teclado
+            if (Input.keyPressed(Key.Y))
+            {
+                var playLoop = playLoopModifier.Value;
+                sound.play(playLoop);
+            }
+            else if (Input.keyPressed(Key.O))
+            {
+                sound.stop();
+            }
         }
 
         /// <summary>
@@ -94,21 +107,6 @@ namespace TGC.Examples.Sound
         public override void Render()
         {
             PreRender();
-
-            //Ver si cambio el WAV
-            var filePath = wavFileModifier.Value;
-            loadSound(filePath);
-
-            //Contro el input de teclado
-            if (Input.keyPressed(Key.Y))
-            {
-                var playLoop = playLoopModifier.Value;
-                sound.play(playLoop);
-            }
-            else if (Input.keyPressed(Key.O))
-            {
-                sound.stop();
-            }
 
             //Render texto
             currentSoundText.render();

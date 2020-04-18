@@ -94,7 +94,7 @@ namespace TGC.Examples.Collision
             obb.rotate(new TGCVector3(0, FastMath.PI / 4, 0));
 
             //Configurar camara en Tercer Persona
-            camaraInterna = new TgcThirdPersonCamera(mesh.Position, 30, -75);
+            camaraInterna = new TgcThirdPersonCamera(mesh.Position, 50, -110);
             Camera = camaraInterna;
         }
 

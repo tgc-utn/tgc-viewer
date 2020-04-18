@@ -33,13 +33,6 @@ namespace TGC.Examples.Transformations
 
         public override void Update()
         {
-            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
             // 1) Crear una matriz de transformacion (de 4x4 para 3D) con la identidad
             var m = TGCMatrix.Identity;
 
@@ -113,10 +106,13 @@ namespace TGC.Examples.Transformations
                 vAux.X * inverseView.M12 + vAux.Y * inverseView.M22 + vAux.Z * inverseView.M32,
                 vAux.X * inverseView.M13 + vAux.Y * inverseView.M23 + vAux.Z * inverseView.M33);
             //Con origin y direction formamos una recta que hay que buscar interseccion contra todos los objetos del escenario y quedarnos con la mas cercana a la camara
+        }
 
-            DrawText.drawText(
-                "Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.", 5, 50,
-                Color.Yellow);
+        public override void Render()
+        {
+            PreRender();
+
+            DrawText.drawText("Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.", 5, 50, Color.Yellow);
 
             PostRender();
         }

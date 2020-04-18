@@ -33,13 +33,6 @@ namespace TGC.Examples.MathExamples
 
         public override void Update()
         {
-            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
             // 1) Crear un vector en 3D
             var v = new TGCVector3(0, 19, -1759.21f);
 
@@ -73,10 +66,13 @@ namespace TGC.Examples.MathExamples
             var componenteZ = FastMath.Cos(rotacionY);
             float velocidadMovimiento = 100; //Ojo que este valor deberia siempre multiplicarse por el elapsedTime
             var movimientoAdelante = new TGCVector3(componenteX * velocidadMovimiento, 0, componenteZ * velocidadMovimiento);
+        }
 
-            DrawText.drawText(
-                "Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.", 5, 50,
-                Color.Yellow);
+        public override void Render()
+        {
+            PreRender();
+
+            DrawText.drawText("Este ejemplo no muestra nada por pantalla. Sino que es para leer el codigo y sus comentarios.", 5, 50, Color.Yellow);
 
             PostRender();
         }

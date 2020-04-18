@@ -73,7 +73,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
-            Camera = new TgcRotationalCamera(TGCVector3.Empty, 10f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 15f, Input);
 
             //El tipo de mesh para seleccionar.
             selectedMeshModifier = AddInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
@@ -105,6 +105,9 @@ namespace TGC.Examples.DirectX
             angleXModifier = AddFloat("angleX", 0, 0.005f, 0.0f);
             angleYModifier = AddFloat("angleY", 0, 0.005f, 0.0f);
             angleZModifier = AddFloat("angleZ", 0, 0.005f, 0.0f);
+
+            //Pongo el fondo negro
+            BackgroundColor = Color.Black;
         }
 
         public override void Update()
@@ -114,10 +117,7 @@ namespace TGC.Examples.DirectX
 
         public override void Render()
         {
-            //Pongo el fondo negro
-            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            BeginScene();
-            ClearTextures();
+            PreRender();
 
             //Obtener valores de Modifiers
             var vAngleX = angleXModifier.Value;

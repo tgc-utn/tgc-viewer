@@ -130,13 +130,6 @@ namespace TGC.Examples.Animation
 
         public override void Update()
         {
-            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
             //Ver si cambio la animacion
             var anim = animationModifier.Value.ToString();
             if (!anim.Equals(selectedAnim))
@@ -184,6 +177,12 @@ namespace TGC.Examples.Animation
 
             //Solo malla o esqueleto, depende lo seleccionado
             mesh.RenderSkeleton = renderSkeleton;
+        }
+
+        public override void Render()
+        {
+            PreRender();
+
             mesh.Render();
 
             //Se puede renderizar todo mucho mas simple (sin esqueleto) de la siguiente forma:
