@@ -1,5 +1,6 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -62,7 +63,8 @@ namespace TGC.Examples.Others
 
         public override void Update()
         {
-            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
+            mesh.Rotation -= new TGCVector3(0, ElapsedTime / 2, 0);
+            mesh.Transform = TGCMatrix.RotationY(mesh.Rotation.Y);
         }
 
         public override void Render()
@@ -80,8 +82,6 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("lightPosition", lightPos);
             mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camera.Position));
 
-            mesh.Rotation -= new TGCVector3(0, ElapsedTime / 2, 0);
-            mesh.Transform = TGCMatrix.RotationY(mesh.Rotation.Y);
 
             mesh.Render();
 
