@@ -77,9 +77,9 @@ namespace TGC.Examples.BulletPhysics.Physics
             sphereMesh.updateValues();
         }
 
-        public override void Update(float lastFrameTime, float timeBetweenFrames)
+        public override void Update(float elapsedTime, float timeBetweenFrames)
         {
-            dynamicsWorld.StepSimulation(lastFrameTime, 10, timeBetweenFrames);
+            dynamicsWorld.StepSimulation(elapsedTime, 10, timeBetweenFrames);
 
             if (Ctx.Input.keyUp(Key.Space))
             {

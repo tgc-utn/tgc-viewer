@@ -106,10 +106,10 @@ namespace TGC.Examples.BulletPhysics.Physics
             fowardback = new TGCVector3(0, 0, 1);
         }
 
-        public void Update(TgcD3dInput input, float lastFrameTime, float timeBetweenFrames)
+        public void Update(TgcD3dInput input, float elapsedTime, float timeBetweenFrames)
         {
             var strength = 30.30f;
-            dynamicsWorld.StepSimulation(lastFrameTime, 10, timeBetweenFrames);
+            dynamicsWorld.StepSimulation(elapsedTime, 10, timeBetweenFrames);
 
             #region Comportamiento
 

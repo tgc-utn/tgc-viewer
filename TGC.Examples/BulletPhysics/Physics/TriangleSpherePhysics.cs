@@ -61,9 +61,9 @@ namespace TGC.Examples.BulletPhysics.Physics
             director = new TGCVector3(1, 0, 0);
         }
 
-        public void Update(TgcD3dInput input, float lastFrameTime, float timeBetweenFrames)
+        public void Update(TgcD3dInput input, float elapsedTime, float timeBetweenFrames)
         {
-            dynamicsWorld.StepSimulation(lastFrameTime, 10, timeBetweenFrames);
+            dynamicsWorld.StepSimulation(elapsedTime, 10, timeBetweenFrames);
 
             var strength = 1.50f;
             var angle = 5;

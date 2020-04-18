@@ -187,9 +187,9 @@ namespace TGC.Core.Example
         /// </summary>
         protected virtual void UnlimitedTick()
         {
+            UnlimitedUpdateClock();
+
             PreUpdate();
-            LastUpdateTime += ElapsedTime;
-            UpdateInput();
             Update();
             PostUpdate();
 
@@ -201,8 +201,7 @@ namespace TGC.Core.Example
         /// </summary>
         protected virtual void FixedTick()
         {
-            PreUpdate();
-            LastUpdateTime += ElapsedTime;
+            FixedUpdateClock();
 
             // Tambien es posible que en ciertas maquinas sea necesario agregar:
             // double MaxSkipFrames; constant maximum of frames to skip in the update loop (important to not stall the system on slower computers)
@@ -211,12 +210,12 @@ namespace TGC.Core.Example
 
             while (LastUpdateTime >= TimeBetweenFrames)
             {
-                UpdateInput();
+                PreUpdate();
                 Update();
+                PostUpdate();
                 LastUpdateTime -= TimeBetweenFrames;
             }
 
-            PostUpdate();
             Render();
         }
 
@@ -236,14 +235,14 @@ namespace TGC.Core.Example
         /// </summary>
         protected virtual void PreUpdate()
         {
-            UpdateClock();
-            //Por como esta implementado el manejo de Inputs, el mismo tiene estados y para no tener problemas en el update a intervalos constantes se quita de aca y se pone dentro de la condicion.
-            //UpdateInput();
+            // Para poder permitir intervalos constantes se saco el UpdateClock un nivel arriba.
+            //UpdateClock();
+            UpdateInput();
             UpdateSounds3D();
         }
 
         /// <summary>
-        /// Metodos a ejecutar despues del update, se acutalizan la Matriz de View y el Frustum de la Camara.
+        /// Metodos a ejecutar despues del update, se actualizan la Matriz de View y el Frustum de la Camara.
         /// </summary>
         protected virtual void PostUpdate()
         {
@@ -271,16 +270,27 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Actualiza el elapsedTime, importante invocar en cada update loop.
+        /// Actualiza el elapsedTime, importante invocar en cada update loop. Para el loop unlimited.
         /// </summary>
-        protected void UpdateClock()
+        protected virtual void UnlimitedUpdateClock()
         {
-            ElapsedTime = Timer.FrameTime;
+            LastUpdateTime = Timer.FrameTime;
             Timer.Set();
+            ElapsedTime = LastUpdateTime;
         }
 
         /// <summary>
-        /// Acutaliza el Input.
+        /// Actualiza el elapsedTime, importante invocar en cada update loop. Para el loop fixed.
+        /// </summary>
+        protected virtual void FixedUpdateClock()
+        {
+            LastUpdateTime += Timer.FrameTime;
+            Timer.Set();
+            ElapsedTime = TimeBetweenFrames;
+        }
+
+        /// <summary>
+        /// Actualiza el Input.
         /// </summary>
         protected void UpdateInput()
         {
@@ -297,7 +307,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Acutaliza el Frustum.
+        /// Actualiza el Frustum.
         /// </summary>
         protected void UpdateFrustum()
         {
