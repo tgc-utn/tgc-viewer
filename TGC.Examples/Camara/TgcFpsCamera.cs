@@ -58,7 +58,7 @@ namespace TGC.Examples.Camara
             this.Input = input;
             this.positionEye = TGCVector3.Empty;
             this.mouseCenter = new Point(D3DDevice.Instance.Device.Viewport.Width / 2, D3DDevice.Instance.Device.Viewport.Height / 2);
-            this.RotationSpeed = 0.1f;
+            this.RotationSpeed = 10f;
             this.MovementSpeed = 500f;
             this.JumpSpeed = 500f;
             this.directionView = new TGCVector3(0, 0, -1);
