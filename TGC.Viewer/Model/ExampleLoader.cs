@@ -149,7 +149,7 @@ namespace TGC.Viewer.Model
                             continue;
                         }
 
-                        if (type.BaseType.Equals(typeof(TGCExampleViewer)))
+                        if (type.BaseType == typeof(TGCExampleViewer) || type.BaseType == typeof(TGCExampleViewerNetworking))
                         {
                             var obj = Activator.CreateInstance(type, MediaDirectory, ShadersDirectory, userVars, ModifiersPanel);
                             var example = (TGCExampleViewer)obj;

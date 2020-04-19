@@ -1,6 +1,5 @@
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
-using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -81,7 +80,6 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("specularExp", 10f);
             mesh.Effect.SetValue("lightPosition", lightPos);
             mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camera.Position));
-
 
             mesh.Render();
 

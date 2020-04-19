@@ -222,8 +222,6 @@ namespace TGC.Examples.Sound
         {
             PreRender();
 
-           
-
             //Render piso
             piso.Render();
 

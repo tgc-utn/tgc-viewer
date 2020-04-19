@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Drawing;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
+using TGC.Core.Text;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 
@@ -16,25 +17,35 @@ namespace TGC.Examples.Multiplayer
     {
         private List<Socket> clients;
         private int recibido;
-        private Socket serverSocket;
+        private Socket listener;
+        private TgcText2D text;
 
         public EjemploServer(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "Multiplayer";
             Name = "EjemploServer";
-            Description = "EjemploServer.";
+            Description = "Ejemplo Server.";
         }
 
         public override void Init()
         {
-            var ipAddress = Dns.GetHostAddresses("localhost");
-            var Ipep = new IPEndPoint(ipAddress[0], 4444);
-            serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            BackgroundColor = Color.Black;
 
-            serverSocket.Blocking = false;
-            serverSocket.Bind(Ipep);
-            serverSocket.Listen(32);
+            text = new TgcText2D();
+            text.Text = "";
+            text.Align = TgcText2D.TextAlign.RIGHT;
+            text.Position = new Point(50, 75);
+            text.Size = new Size(300, 100);
+            text.Color = Color.Green;
+
+            var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            var localEP = new IPEndPoint(ipHostInfo.AddressList[0], 4444);
+            listener = new Socket(localEP.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+            listener.Blocking = false;
+            listener.Bind(localEP);
+            listener.Listen(32);
 
             clients = new List<Socket>();
 
@@ -42,20 +53,21 @@ namespace TGC.Examples.Multiplayer
             BinaryFormatter f = new BinaryFormatter();
             MemoryStream stream = new MemoryStream();
             f.Serialize(stream, new object());
-            serverSocket.Send(stream.ToArray());
+            listener.Send(stream.ToArray());
             */
+        }
+
+        public override void Tick()
+        {
+            //Sobre escribo el metodo Tick para se corra todo el tiempo el render y el update.
+            UnlimitedTick();
         }
 
         public override void Update()
         {
-            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
-        }
-
-        public override void Render()
-        {
-            if (serverSocket.Poll(0, SelectMode.SelectRead))
+            if (listener.Poll(0, SelectMode.SelectRead))
             {
-                var clientSocket = serverSocket.Accept();
+                var clientSocket = listener.Accept();
                 clients.Add(clientSocket);
             }
 
@@ -70,7 +82,7 @@ namespace TGC.Examples.Multiplayer
                         if (recv > 0)
                         {
                             var msg = Encoding.ASCII.GetString(data, 0, recv);
-                            Debug.WriteLine(msg);
+                            text.Text += msg + "\n";
 
                             var msgRta = "Recibido" + recibido++;
                             clientSocket.Send(Encoding.ASCII.GetBytes(msgRta));
@@ -94,14 +106,22 @@ namespace TGC.Examples.Multiplayer
             }
         }
 
+        public override void Render()
+        {
+            PreRender();
+            DrawText.drawText("Este ejemplo solo es el Server, debe conectar clientes, una vez conectado un cliente espere uno instantes para ver los mensajes.", 5, 50, Color.DarkCyan);
+            text.render();
+            PostRender();
+        }
+
         public override void Dispose()
         {
             foreach (var clientSocket in clients)
             {
                 clientSocket.Close();
             }
-            serverSocket.Shutdown(SocketShutdown.Both);
-            serverSocket.Close();
+            listener.Shutdown(SocketShutdown.Both);
+            listener.Close();
         }
     }
 }

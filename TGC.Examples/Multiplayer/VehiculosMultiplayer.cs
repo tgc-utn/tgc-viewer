@@ -27,10 +27,9 @@ namespace TGC.Examples.Multiplayer
     ///     El server simplemente recibe y redirige la información.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class VehiculosMultiplayer : TGCExampleViewer
+    public class VehiculosMultiplayer : TGCExampleViewerNetworking
     {
         private float acumulatedTime;
-        private TGCNetworkingModifier networkingMod;
 
         public VehiculosMultiplayer(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -43,7 +42,7 @@ namespace TGC.Examples.Multiplayer
         public override void Init()
         {
             //Crear Modifier de Networking
-            networkingMod = AddNetworking("Networking", "VehiculosServer", "VehiculosClient");
+            Init("Networking", "VehiculosServer", "VehiculosClient", TgcSocketMessages.DEFAULT_PORT);
 
             acumulatedTime = 0;
 
@@ -54,6 +53,12 @@ namespace TGC.Examples.Multiplayer
             initClient();
         }
 
+        public override void Tick()
+        {
+            //Sobre escribo el metodo Tick para se corra todo el tiempo el render y el update.
+            UnlimitedTick();
+        }
+
         public override void Update()
         {
             //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
@@ -61,27 +66,29 @@ namespace TGC.Examples.Multiplayer
 
         public override void Render()
         {
+            PreRender();
             //Actualizar siempre primero todos los valores de red.
             //Esto hace que el cliente y el servidor reciban todos los mensajes y actualicen su estado interno
-            networkingMod.updateNetwork();
+            updateNetwork();
 
             //Analizar eventos en el server
-            if (networkingMod.Server.Online)
+            if (Server.Online)
             {
                 updateServer();
             }
 
             //Analizar eventos en el cliente
-            if (networkingMod.Client.Online)
+            if (Client.Online)
             {
                 updateClient();
             }
+            PostRender();
         }
 
         public override void Dispose()
         {
             //Cierra todas las conexiones
-            networkingMod.dispose();
+            base.Dispose();
 
             piso.Dispose();
 
@@ -155,26 +162,26 @@ namespace TGC.Examples.Multiplayer
         private void updateServer()
         {
             //Iterar sobre todos los nuevos clientes que se conectaron
-            for (var i = 0; i < networkingMod.NewClientsCount; i++)
+            for (var i = 0; i < NewClientsCount; i++)
             {
                 //Al llamar a nextNewClient() consumimos el aviso de conexion de un nuevo cliente
-                var clientInfo = networkingMod.nextNewClient();
+                var clientInfo = nextNewClient();
                 atenderNuevoCliente(clientInfo);
             }
 
             //Iterar sobre todos los nuevos clientes que se desconectaron
-            for (var i = 0; i < networkingMod.DisconnectedClientsCount; i++)
+            for (var i = 0; i < DisconnectedClientsCount; i++)
             {
                 //Al llamar a nextNewClient() consumimos el aviso de desconexión de un nuevo cliente
-                var clientInfo = networkingMod.nextDisconnectedClient();
+                var clientInfo = nextDisconnectedClient();
                 atenderClienteDesconectado(clientInfo);
             }
 
             //Atender mensajes recibidos
-            for (var i = 0; i < networkingMod.Server.ReceivedMessagesCount; i++)
+            for (var i = 0; i < Server.ReceivedMessagesCount; i++)
             {
                 //El primer mensaje es el header de nuestro protocolo del ejemplo
-                var clientMsg = networkingMod.Server.nextReceivedMessage();
+                var clientMsg = Server.nextReceivedMessage();
                 var msg = clientMsg.Msg;
                 var msgType = (MyClientProtocol)msg.readNext();
 
@@ -193,14 +200,14 @@ namespace TGC.Examples.Multiplayer
         private void atenderNuevoCliente(TgcSocketClientInfo clientInfo)
         {
             //Si el cupo está lleno, desconectar cliente
-            if (networkingMod.Server.Clients.Count > vehiculosData.Length)
+            if (Server.Clients.Count > vehiculosData.Length)
             {
-                networkingMod.Server.disconnectClient(clientInfo.PlayerId);
+                Server.disconnectClient(clientInfo.PlayerId);
             }
             //Darla la información inicial al cliente
             else
             {
-                var currentClientIndex = networkingMod.Server.Clients.Count - 1;
+                var currentClientIndex = Server.Clients.Count - 1;
                 var data = vehiculosData[currentClientIndex];
                 data.playerID = clientInfo.PlayerId;
 
@@ -211,20 +218,20 @@ namespace TGC.Examples.Multiplayer
                 msg.write(data);
                 //También le enviamos la información de los demás clientes hasta el momento
                 //Cantidad de clientes que hay
-                msg.write(networkingMod.Server.Clients.Count - 1);
+                msg.write(Server.Clients.Count - 1);
                 //Data de todos los clientes anteriores, salvo el ultimo que es el nuevo agregado recien
-                for (var i = 0; i < networkingMod.Server.Clients.Count - 1; i++)
+                for (var i = 0; i < Server.Clients.Count - 1; i++)
                 {
                     msg.write(vehiculosData[i]);
                 }
 
-                networkingMod.Server.sendToClient(clientInfo.PlayerId, msg);
+                Server.sendToClient(clientInfo.PlayerId, msg);
 
                 //Avisar a todos los demás clientes conectados (excepto este) que hay uno nuevo
                 var msg2 = new TgcSocketSendMsg();
                 msg2.write(MyServerProtocol.OtroClienteConectado);
                 msg2.write(data);
-                networkingMod.Server.sendToAllExceptOne(clientInfo.PlayerId, msg2);
+                Server.sendToAllExceptOne(clientInfo.PlayerId, msg2);
             }
         }
 
@@ -234,7 +241,7 @@ namespace TGC.Examples.Multiplayer
             var msg = new TgcSocketSendMsg();
             msg.write(MyServerProtocol.OtroClienteDesconectado);
             msg.write(clientInfo.PlayerId);
-            networkingMod.Server.sendToClient(clientInfo.PlayerId, msg);
+            Server.sendToClient(clientInfo.PlayerId, msg);
 
             //Extender para permitir que se conecten nuevos ususarios
         }
@@ -252,7 +259,7 @@ namespace TGC.Examples.Multiplayer
             sendMsg.write(MyServerProtocol.ActualizarUbicaciones);
             sendMsg.write(clientMsg.PlayerId);
             sendMsg.write(newPos);
-            networkingMod.Server.sendToAllExceptOne(clientMsg.PlayerId, sendMsg);
+            Server.sendToAllExceptOne(clientMsg.PlayerId, sendMsg);
         }
 
         #endregion Cosas del Server
@@ -283,11 +290,6 @@ namespace TGC.Examples.Multiplayer
             //Crear piso
             var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack2\\rock_wall.jpg");
             piso = TGCBox.fromSize(new TGCVector3(0, -60, 0), new TGCVector3(5000, 5, 5000), pisoTexture);
-
-            //Camara en 3ra persona
-            camaraInterna.resetValues();
-            camaraInterna = new TgcThirdPersonCamera(meshPrincipal.Position, 100, 400);
-            Camera = camaraInterna;
         }
 
         /// <summary>
@@ -296,10 +298,10 @@ namespace TGC.Examples.Multiplayer
         private void updateClient()
         {
             //Analizar los mensajes recibidos
-            for (var i = 0; i < networkingMod.Client.ReceivedMessagesCount; i++)
+            for (var i = 0; i < Client.ReceivedMessagesCount; i++)
             {
                 //El primer mensaje es el header de nuestro protocolo del ejemplo
-                var msg = networkingMod.Client.nextReceivedMessage();
+                var msg = Client.nextReceivedMessage();
                 var msgType = (MyServerProtocol)msg.readNext();
 
                 //Ver que tipo de mensaje es
@@ -338,7 +340,7 @@ namespace TGC.Examples.Multiplayer
                     var msg = new TgcSocketSendMsg();
                     msg.write(MyClientProtocol.PosicionActualizada);
                     msg.write(meshPrincipal.Transform);
-                    networkingMod.Client.send(msg);
+                    Client.send(msg);
                 }
             }
         }
@@ -358,6 +360,11 @@ namespace TGC.Examples.Multiplayer
 
             //Ubicarlo en escenario
             meshPrincipal.Position = vehiculoData.initialPos;
+
+            //Camara en 3ra persona
+            camaraInterna = new TgcThirdPersonCamera(meshPrincipal.Position, 100, 400);
+            camaraInterna.resetValues();
+            Camera = camaraInterna;
 
             //Ver si ya habia mas clientes para cuando nosotros nos conectamos
             var otrosVehiculosCant = (int)msg.readNext();

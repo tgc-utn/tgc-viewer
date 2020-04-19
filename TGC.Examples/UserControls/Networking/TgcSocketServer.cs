@@ -64,8 +64,8 @@ namespace TGC.Examples.UserControls.Networking
         public static IPAddress getHostAddress()
         {
             var hostname = Dns.GetHostName();
-            var ipAddresses = Dns.GetHostAddresses(hostname);
-            return ipAddresses[0];
+            var ipHostInfo = Dns.GetHostEntry(hostname);
+            return ipHostInfo.AddressList[0];
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace TGC.Examples.UserControls.Networking
                 //Crear un socket en la IP local con el puerto especificado
                 ServerAddress = getHostAddress();
                 var Ipep = new IPEndPoint(ServerAddress, port);
-                serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                serverSocket = new Socket(Ipep.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 //Hacerlo no bloqueante
                 serverSocket.LingerState = new LingerOption(false, 0);

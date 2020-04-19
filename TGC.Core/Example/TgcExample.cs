@@ -170,7 +170,7 @@ namespace TGC.Core.Example
         /// Se ejecuta una vez por ciclo del render loop, decide si corre en intervalos constantes o sin limite basado en FixedUpdateEnable.
         /// Internamente ejecuta update y render.
         /// </summary>
-        public void Tick()
+        public virtual void Tick()
         {
             if (FixedUpdateEnable)
             {

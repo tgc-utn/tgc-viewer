@@ -1,6 +1,5 @@
 using Microsoft.DirectX.Direct3D;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
@@ -118,7 +117,7 @@ namespace TGC.Core.Geometry
         public TGCVector3 Scale
         {
             get { return TGCVector3.One; }
-            set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
+            set { Console.WriteLine("TODO esta bien que pase por aca?"); }
         }
 
         /// <summary>

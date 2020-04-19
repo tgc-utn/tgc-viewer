@@ -1,4 +1,3 @@
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
@@ -95,7 +94,7 @@ namespace TGC.Examples.Transformations.SistemaSolar
             earthAxisRotation += EARTH_AXIS_ROTATION_SPEED * ElapsedTime;
             earthOrbitRotation += EARTH_ORBIT_SPEED * ElapsedTime;
             moonOrbitRotation += MOON_ORBIT_SPEED * ElapsedTime;
-            
+
             //Limpiamos todas las transformaciones con la TGCMatrix identidad
             D3DDevice.Instance.Device.Transform.World = TGCMatrix.Identity.ToMatrix();
         }

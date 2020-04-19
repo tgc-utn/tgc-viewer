@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using TGC.Core.Text;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 using TGC.Examples.UserControls.Networking;
@@ -16,10 +16,10 @@ namespace TGC.Examples.Multiplayer
     ///     y el servidor lo imprime por consola.... o como hacer el TP de Operativo en 5 min.
     ///     Autor: Matías Leone, Leandro Barbagallo
     /// </summary>
-    public class EjemploNetworkingModifier : TGCExampleViewer
+    public class EjemploNetworkingModifier : TGCExampleViewerNetworking
     {
         private float acumulatedTime;
-        private TGCNetworkingModifier networkingMod;
+        private TgcText2D text;
 
         public EjemploNetworkingModifier(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -32,41 +32,47 @@ namespace TGC.Examples.Multiplayer
         public override void Init()
         {
             //Crear Modifier de Networking
-            networkingMod = AddNetworking("Networking", "MyServer", "MyClient");
+            Init("Networking", "MyServer", "MyClient", TgcSocketMessages.DEFAULT_PORT);
 
             acumulatedTime = 0;
+            BackgroundColor = Color.Black;
+
+            text = new TgcText2D();
+            text.Text = "";
+            text.Align = TgcText2D.TextAlign.RIGHT;
+            text.Position = new Point(50, 50);
+            text.Size = new Size(300, 100);
+            text.Color = Color.Green;
+        }
+
+        public override void Tick()
+        {
+            //Sobre escribo el metodo Tick para se corra todo el tiempo el render y el update.
+            UnlimitedTick();
         }
 
         public override void Update()
         {
-            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
-        }
-
-        public override void Render()
-        {
             //Actualizar siempre primero todos los valores de red.
             //Esto hace que el cliente y el servidor reciban todos los mensajes y actualicen su es
-            networkingMod.updateNetwork();
+            updateNetwork();
 
             //Si el server está online, analizar sus mensajes
-            if (networkingMod.Server.Online)
+            if (Server.Online)
             {
                 //Analizar los mensajes recibidos
-                for (var i = 0; i < networkingMod.Server.ReceivedMessagesCount; i++)
+                for (var i = 0; i < Server.ReceivedMessagesCount; i++)
                 {
                     //Leer el siguiente mensaje, cada vez que llamamos a nextReceivedMessage() consumimos un mensaje pendiente.
-                    var msg = networkingMod.Server.nextReceivedMessage();
+                    var msg = Server.nextReceivedMessage();
 
                     //Obtenter el primer elemento del mensaje, un string en este caso
-                    var strMsg = (string)msg.Msg.readNext();
-
-                    //Mostrar mensaje recibido en consola
-                    Debug.WriteLine(strMsg, Color.Green);
+                    text.Text += msg.Msg.readNext().ToString();
                 }
             }
 
             //Si el cliente está online, analizar sus mensajes
-            if (networkingMod.Client.Online)
+            if (Client.Online)
             {
                 //Mandamos un mensaje al server cada 1 segundo
                 acumulatedTime += ElapsedTime;
@@ -81,15 +87,22 @@ namespace TGC.Examples.Multiplayer
                     msg.write("Hello world - ElapsedTime: " + ElapsedTime);
 
                     //Enviar mensaje al server
-                    networkingMod.Client.send(msg);
+                    Client.send(msg);
                 }
             }
+        }
+
+        public override void Render()
+        {
+            PreRender();
+            text.render();
+            PostRender();
         }
 
         public override void Dispose()
         {
             //Cerrar todas las conexiones
-            networkingMod.dispose();
+            base.Dispose();
         }
     }
 }

@@ -5,7 +5,6 @@ using TGC.Core.Example;
 using TGC.Core.Mathematica;
 using TGC.Examples.UserControls;
 using TGC.Examples.UserControls.Modifier;
-using TGC.Examples.UserControls.Networking;
 
 namespace TGC.Examples.Example
 {
@@ -42,7 +41,7 @@ namespace TGC.Examples.Example
         /// Agrega un Modifier al panel y un espacio despues.
         /// </summary>
         /// <param name="tgcModifier">Modifier a agregar.</param>
-        private void AddModifier(UserControl tgcModifier)
+        protected void AddModifier(UserControl tgcModifier)
         {
             tgcModifier.Dock = DockStyle.Top;
             modifiersPanel.Controls.Add(tgcModifier);
@@ -166,40 +165,6 @@ namespace TGC.Examples.Example
             var intervalModifier = new TGCIntervalModifier(varName, values, defaultIndex);
             AddModifier(intervalModifier);
             return intervalModifier;
-        }
-
-        /// <summary>
-        /// Modifier para Networking.
-        /// Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
-        /// Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
-        /// </summary>
-        /// <param name="varName">Identificador del modifier.</param>
-        /// <param name="serverName">Nombre default que va a usar el servidor.</param>
-        /// <param name="clientName">Nombre default que va a usar cada cliente.</param>
-        /// <param name="port">Puerto en el cual se va a crear y buscar conexiones.</param>
-        /// <returns>Modificador creado.</returns>
-        public TGCNetworkingModifier AddNetworking(string varName, string serverName, string clientName, int port)
-        {
-            var networkingModifier = new TGCNetworkingModifier(varName, serverName, clientName, port);
-            AddModifier(networkingModifier);
-            return networkingModifier;
-        }
-
-        /// <summary>
-        /// Modifier para Networking.
-        /// Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
-        /// Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
-        /// Utiliza el puerto default del framework.
-        /// </summary>
-        /// <param name="varName">Identificador del modifier.</param>
-        /// <param name="serverName">Nombre default que va a usar el servidor.</param>
-        /// <param name="clientName">Nombre default que va a usar cada cliente.</param>
-        /// <returns>Modificador creado.</returns>
-        public TGCNetworkingModifier AddNetworking(string varName, string serverName, string clientName)
-        {
-            var networkingModifier = new TGCNetworkingModifier(varName, serverName, clientName, TgcSocketMessages.DEFAULT_PORT);
-            AddModifier(networkingModifier);
-            return networkingModifier;
         }
 
         /// <summary>
