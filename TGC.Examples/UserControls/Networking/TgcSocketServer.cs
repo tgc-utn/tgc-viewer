@@ -456,8 +456,10 @@ namespace TGC.Examples.UserControls.Networking
                 //Aceptar nuevo cliente
                 var clientSocket = serverSocket.Accept();
 
+                var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+
                 //Ver si es un tipo de conexion valido
-                if (clientSocket.AddressFamily == AddressFamily.InterNetwork &&
+                if ((clientSocket.AddressFamily == ipHostInfo.AddressList[0].AddressFamily) &&
                     clientSocket.SocketType == SocketType.Stream &&
                     clientSocket.ProtocolType == ProtocolType.Tcp)
                 {

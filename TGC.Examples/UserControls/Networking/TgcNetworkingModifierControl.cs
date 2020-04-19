@@ -23,6 +23,9 @@ namespace TGC.Examples.UserControls.Networking
 
         public TgcNetworkingModifierControl(string modifierName, string serverName, string clientName, int port, TGCExampleViewerNetworking example) : this()
         {
+            tgcModifierTitleBar.setModifierName(modifierName);
+            tgcModifierTitleBar.setContentPanel(contentPanel);
+
             this.example = example;
             textBoxServerName.Text = serverName;
             SelectedPlayerId = -1;
