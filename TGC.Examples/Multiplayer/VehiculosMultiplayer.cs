@@ -146,7 +146,7 @@ namespace TGC.Examples.Multiplayer
         private void initServerData()
         {
             //Configurar datos para los 4 clientes posibles del servidor
-            var mediaPath = MediaDir + "ModelosTgc\\";
+            var mediaPath = MediaDir + "MeshCreator\\Meshes\\Vehiculos\\";
             vehiculosData = new[]
             {
                 new VehiculoData(new TGCVector3(0, 0, 0), mediaPath + "TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml"),

@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX;
+using System;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Mathematica
@@ -6,6 +7,7 @@ namespace TGC.Core.Mathematica
     /// <summary>
     /// Describes and manipulates a vector in two-dimensional (2-D) space.
     /// </summary>
+    [Serializable]
     public struct TGCVector2
     {
         /// <summary>

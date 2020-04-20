@@ -212,7 +212,7 @@ namespace TGC.Examples.Example
         /// </summary>
         internal void deleteClient(int playerId)
         {
-            //server.disconnectClient(playerId, null);
+            Server.disconnectClient(playerId);
         }
 
         /// <summary>
