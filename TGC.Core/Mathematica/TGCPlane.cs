@@ -1,10 +1,12 @@
 ﻿using Microsoft.DirectX;
+using System;
 
 namespace TGC.Core.Mathematica
 {
     /// <summary>
     /// Describes and manipulates a plane.
     /// </summary>
+    [Serializable]
     public struct TGCPlane
     {
         /// <summary>

@@ -124,6 +124,7 @@
     <Compile Include="DirectX\DirectXBox.cs" />
     <Compile Include="DirectX\DirectXLight.cs" />
     <Compile Include="Engine2D\Transforms2D.cs" />
+    <Compile Include="Example\TGCExampleViewerNetworking.cs" />
     <Compile Include="Lights\TgcMeshBumpMapping.cs" />
     <Compile Include="Multiplayer\EjemploClient.cs" />
     <Compile Include="Multiplayer\EjemploNetworkingModifier.cs" />
@@ -336,12 +337,6 @@
       <DependentUpon>TGCVertex3fModifier.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Networking\TgcLanBrowser.cs" />
-    <Compile Include="UserControls\Networking\TGCNetworkingModifier.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\Networking\TGCNetworkingModifier.Designer.cs">
-      <DependentUpon>TGCNetworkingModifier.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\Networking\TgcNetworkingModifierClientsDialog.cs">
       <SubType>Form</SubType>
     </Compile>

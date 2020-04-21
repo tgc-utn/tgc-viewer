@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using TGC.Core.Utils;
+using TGC.Examples.Example;
 
 namespace TGC.Examples.UserControls.Networking
 {
@@ -12,14 +13,20 @@ namespace TGC.Examples.UserControls.Networking
     public partial class TgcNetworkingModifierControl : UserControl
     {
         private readonly TgcNetworkingModifierClientsDialog clientsDialog;
-        private readonly TGCNetworkingModifier modifier;
+        private readonly TGCExampleViewerNetworking example;
         private readonly TgcNetworkingModifierServersDialog serversDialog;
 
-        public TgcNetworkingModifierControl(TGCNetworkingModifier modifier, string serverName, string clientName)
+        private TgcNetworkingModifierControl()
         {
             InitializeComponent();
+        }
 
-            this.modifier = modifier;
+        public TgcNetworkingModifierControl(string modifierName, string serverName, string clientName, int port, TGCExampleViewerNetworking example) : this()
+        {
+            tgcModifierTitleBar.setModifierName(modifierName);
+            tgcModifierTitleBar.setContentPanel(contentPanel);
+
+            this.example = example;
             textBoxServerName.Text = serverName;
             SelectedPlayerId = -1;
 
@@ -38,7 +45,7 @@ namespace TGC.Examples.UserControls.Networking
         /// <summary>
         ///     Servidores disponibles
         /// </summary>
-        public List<TgcSocketClient.TgcAvaliableServer> AvaliableServers => modifier.AvaliableServers;
+        public List<TgcSocketClient.TgcAvaliableServer> AvaliableServers => example.AvaliableServers;
 
         public int SelectedPlayerId { get; set; }
 
@@ -50,7 +57,7 @@ namespace TGC.Examples.UserControls.Networking
         private void buttonCreateServer_Click(object sender, EventArgs e)
         {
             var serverName = getServerName();
-            var result = modifier.createServer(serverName);
+            var result = example.createServer(serverName);
             if (result)
             {
                 buttonCloseServer.Enabled = true;
@@ -93,7 +100,7 @@ namespace TGC.Examples.UserControls.Networking
         /// </summary>
         private void buttonConnectedClients_Click(object sender, EventArgs e)
         {
-            // TODO clientsDialog.ShowDialog(GuiController.Instance.MainForm);
+            clientsDialog.ShowDialog();
         }
 
         /// <summary>
@@ -111,7 +118,7 @@ namespace TGC.Examples.UserControls.Networking
         /// </summary>
         private void buttonCloseServer_Click(object sender, EventArgs e)
         {
-            modifier.closeServer();
+            example.closeServer();
 
             buttonConnectedClients.Enabled = false;
             buttonCloseServer.Enabled = false;
@@ -125,7 +132,7 @@ namespace TGC.Examples.UserControls.Networking
         /// </summary>
         public void deleteClient(int playerId)
         {
-            modifier.deleteClient(playerId);
+            example.deleteClient(playerId);
         }
 
         /// <summary>
@@ -134,7 +141,7 @@ namespace TGC.Examples.UserControls.Networking
         private void buttonJoinServer_Click(object sender, EventArgs e)
         {
             serversDialog.prepareDialog();
-            // TODO serversDialog.ShowDialog(GuiController.Instance.MainForm);
+            serversDialog.ShowDialog();
         }
 
         /// <summary>
@@ -142,7 +149,7 @@ namespace TGC.Examples.UserControls.Networking
         /// </summary>
         public void searchServers()
         {
-            modifier.searchServers();
+            example.searchServers();
         }
 
         /// <summary>
@@ -158,7 +165,7 @@ namespace TGC.Examples.UserControls.Networking
         /// </summary>
         public bool connectToServer(int selectedServer, string clientName)
         {
-            return modifier.connectToServer(selectedServer, clientName);
+            return example.connectToServer(selectedServer, clientName);
         }
 
         /// <summary>
@@ -171,7 +178,7 @@ namespace TGC.Examples.UserControls.Networking
             textBoxCurrentServer.Text = serverInfo.Name;
             textBoxCurrentServer.BackColor = Color.Green;
             textBoxPlayerId.Text = playerId.ToString();
-            textBoxServerIp.Text = modifier.Client.ServerInfo.Address.ToString();
+            textBoxServerIp.Text = example.Client.ServerInfo.Address.ToString();
         }
 
         /// <summary>
@@ -179,7 +186,7 @@ namespace TGC.Examples.UserControls.Networking
         /// </summary>
         private void buttonDisconnect_Click(object sender, EventArgs e)
         {
-            modifier.disconnectFromServer();
+            example.disconnectFromServer();
             buttonDisconnect.Enabled = false;
             textBoxCurrentServer.Text = "";
             textBoxCurrentServer.BackColor = Color.Red;

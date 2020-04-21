@@ -1,10 +1,12 @@
 ﻿using Microsoft.DirectX;
+using System;
 
 namespace TGC.Core.Mathematica
 {
     /// <summary>
     /// Describes and manipulates a matrix.
     /// </summary>
+    [Serializable]
     public struct TGCMatrix
     {
         /// <summary>

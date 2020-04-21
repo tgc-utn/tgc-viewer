@@ -1,21 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using TGC.Examples.UserControls;
+using TGC.Examples.UserControls.Networking;
 
-namespace TGC.Examples.UserControls.Networking
+namespace TGC.Examples.Example
 {
     /// <summary>
     ///     Modifier para Networking.
     ///     Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
     ///     Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
     /// </summary>
-    public partial class TGCNetworkingModifier : UserControl
+    public partial class TGCExampleViewerNetworking : TGCExampleViewer
     {
         private readonly Queue<TgcSocketClientInfo> disconnectedClients;
-        private readonly TgcNetworkingModifierControl networkingControl;
         private readonly Queue<TgcSocketClientInfo> newConnectedClients;
-        private readonly int port;
+        private TgcNetworkingModifierControl networkingModifier;
+        private int port;
         private bool clientConnected;
+
+        public TGCExampleViewerNetworking(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel) : base(mediaDir, shadersDir, userVars, modifiersPanel)
+        {
+            Server = new TgcSocketServer();
+            Client = new TgcSocketClient();
+            AvaliableServers = new List<TgcSocketClient.TgcAvaliableServer>();
+            newConnectedClients = new Queue<TgcSocketClientInfo>();
+            disconnectedClients = new Queue<TgcSocketClientInfo>();
+        }
 
         /// <summary>
         ///     Crea el modificador de Networking
@@ -24,22 +35,47 @@ namespace TGC.Examples.UserControls.Networking
         /// <param name="serverName">Nombre default que va a usar el servidor</param>
         /// <param name="clientName">Nombre default que va a usar cada cliente</param>
         /// <param name="port">Puerto en el cual se va a crear y buscar conexiones</param>
-        public TGCNetworkingModifier(string varName, string serverName, string clientName, int port)
+        public void Init(string varName, string serverName, string clientName, int port)
         {
-            InitializeComponent();
-
-            Server = new TgcSocketServer();
-            Client = new TgcSocketClient();
             this.port = port;
             clientConnected = false;
-            networkingControl = new TgcNetworkingModifierControl(this, serverName, clientName);
-            AvaliableServers = new List<TgcSocketClient.TgcAvaliableServer>();
+            AddNetworking(varName, serverName, clientName, port);
+        }
 
-            newConnectedClients = new Queue<TgcSocketClientInfo>();
-            disconnectedClients = new Queue<TgcSocketClientInfo>();
+        /// <summary>
+        /// Modifier para Networking.
+        /// Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
+        /// Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
+        /// </summary>
+        /// <param name="varName">Identificador del modifier.</param>
+        /// <param name="serverName">Nombre default que va a usar el servidor.</param>
+        /// <param name="clientName">Nombre default que va a usar cada cliente.</param>
+        /// <param name="port">Puerto en el cual se va a crear y buscar conexiones.</param>
+        /// <returns>Modificador creado.</returns>
+        public TgcNetworkingModifierControl AddNetworking(string varName, string serverName, string clientName, int port)
+        {
+            // TODO no deberia pasar this
+            networkingModifier = new TgcNetworkingModifierControl(varName, serverName, clientName, port, this);
+            AddModifier(networkingModifier);
+            return networkingModifier;
+        }
 
-            //FIXME este modifier no fue migrado a la nueva forma.
-            //contentPanel.Controls.Add(networkingControl);
+        /// <summary>
+        /// Modifier para Networking.
+        /// Permite crear servidores y conectarse a estos como cliente, mediante conexiones TCP/IP utilizando DirectPlay.
+        /// Abstrae todo el manejo interno de DirectPlay para el manejo de conexiones.
+        /// Utiliza el puerto default del framework.
+        /// </summary>
+        /// <param name="varName">Identificador del modifier.</param>
+        /// <param name="serverName">Nombre default que va a usar el servidor.</param>
+        /// <param name="clientName">Nombre default que va a usar cada cliente.</param>
+        /// <returns>Modificador creado.</returns>
+        public TgcNetworkingModifierControl AddNetworking(string varName, string serverName, string clientName)
+        {
+            // TODO no deberia pasar this
+            networkingModifier = new TgcNetworkingModifierControl(varName, serverName, clientName, TgcSocketMessages.DEFAULT_PORT, this);
+            AddModifier(networkingModifier);
+            return networkingModifier;
         }
 
         /// <summary>
@@ -107,7 +143,7 @@ namespace TGC.Examples.UserControls.Networking
                 {
                     var clientInfo = Server.nextNewClient();
                     newConnectedClients.Enqueue(clientInfo);
-                    networkingControl.addClient(clientInfo);
+                    networkingModifier.addClient(clientInfo);
                 }
 
                 //Clientes desconectados
@@ -116,7 +152,7 @@ namespace TGC.Examples.UserControls.Networking
                 {
                     var clientInfo = Server.nextDisconnectedClient();
                     disconnectedClients.Enqueue(clientInfo);
-                    networkingControl.onClientDisconnected(clientInfo);
+                    networkingModifier.onClientDisconnected(clientInfo);
                 }
             }
         }
@@ -154,12 +190,12 @@ namespace TGC.Examples.UserControls.Networking
             if (clientConnected && Client.Status == TgcSocketClientInfo.ClientStatus.Disconnected)
             {
                 clientConnected = false;
-                networkingControl.serverDisconnected();
+                networkingModifier.serverDisconnected();
             }
             else if (!clientConnected && Client.Status == TgcSocketClientInfo.ClientStatus.Connected)
             {
                 clientConnected = true;
-                networkingControl.clientConnectedToServer(Client.ServerInfo, Client.PlayerId);
+                networkingModifier.clientConnectedToServer(Client.ServerInfo, Client.PlayerId);
             }
         }
 
@@ -176,7 +212,7 @@ namespace TGC.Examples.UserControls.Networking
         /// </summary>
         internal void deleteClient(int playerId)
         {
-            //server.disconnectClient(playerId, null);
+            Server.disconnectClient(playerId);
         }
 
         /// <summary>
@@ -185,7 +221,7 @@ namespace TGC.Examples.UserControls.Networking
         internal void searchServers()
         {
             AvaliableServers = Client.findLanServers(port);
-            foreach (var server in AvaliableServers) networkingControl.addServerToList(server);
+            foreach (var server in AvaliableServers) networkingModifier.addServerToList(server);
         }
 
         /// <summary>
@@ -206,10 +242,25 @@ namespace TGC.Examples.UserControls.Networking
             Client.disconnectClient();
         }
 
+        public override void Init()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Render()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
-        ///     Limpia todas las conexiones que se hayan abierto
+        /// Limpia todas las conexiones que se hayan abierto
         /// </summary>
-        public void dispose()
+        public override void Dispose()
         {
             Server.disconnectServer();
         }

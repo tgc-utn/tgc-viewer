@@ -7,6 +7,7 @@ namespace TGC.Core.Mathematica
     /// <summary>
     /// Describes and manipulates a vector in four-dimensional (4-D) space.
     /// </summary>
+    [Serializable]
     public struct TGCVector4
     {
         /// <summary>
