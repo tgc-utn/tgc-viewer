@@ -206,9 +206,9 @@ namespace TGC.Viewer.UI
         /// <summary>
         /// Activa o desactiva la opcion de correr a update constante.
         /// </summary>
-        private void FixedUpdate()
+        private void FixedTick()
         {
-            Model.FixedUpdate(updateConstanteToolStripMenuItem.Checked);
+            Model.FixedTick(tickConstanteToolStripMenuItem.Checked);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace TGC.Viewer.UI
                 Model.ExecuteExample(example);
                 AxisLines();
                 ContadorFPS();
-                FixedUpdate();
+                FixedTick();
                 Wireframe();
 
                 toolStripStatusCurrentExample.Text = "Ejemplo actual: " + example.Name;
@@ -292,9 +292,9 @@ namespace TGC.Viewer.UI
             ContadorFPS();
         }
 
-        private void updateConstanteToolMenuItem_Click(object sender, EventArgs e)
+        private void tickConstanteToolMenuItem_Click(object sender, EventArgs e)
         {
-            FixedUpdate();
+            FixedTick();
         }
 
         private void axisToolStripMenuItem_Click(object sender, EventArgs e)

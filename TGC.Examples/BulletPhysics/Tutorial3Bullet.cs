@@ -60,7 +60,7 @@ namespace TGC.Examples.BulletPhysics
 
         public override void Update()
         {
-            physicsExample.Update(Input, ElapsedTime, TimeBetweenFrames);
+            physicsExample.Update(Input, ElapsedTime, TimeBetweenUpdates);
             UserVars.setValue("HummerPositionX", physicsExample.getHummer().Position.X);
             UserVars.setValue("HummerPositionY", physicsExample.getHummer().Position.Y);
             UserVars.setValue("HummerPositionZ", physicsExample.getHummer().Position.Z);

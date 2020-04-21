@@ -176,12 +176,12 @@ namespace TGC.Viewer.Model
         }
 
         /// <summary>
-        /// Le activa o desactiva al ejemplo que corra a render constante.
+        /// Le activa o desactiva al ejemplo que corra a update constante.
         /// </summary>
         /// <param name="state">Estado que se quiere de la herramienta.</param>
-        public void FixedUpdate(bool state)
+        public void FixedTick(bool state)
         {
-            ExampleLoader.CurrentExample.FixedUpdateEnable = state;
+            ExampleLoader.CurrentExample.FixedTickEnable = state;
         }
 
         /// <summary>

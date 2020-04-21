@@ -28,7 +28,7 @@ namespace TGC.Examples.BulletPhysics
 
         public override void Update()
         {
-            physicsExample.Update(ElapsedTime, TimeBetweenFrames);
+            physicsExample.Update(ElapsedTime, TimeBetweenUpdates);
         }
 
         public override void Render()

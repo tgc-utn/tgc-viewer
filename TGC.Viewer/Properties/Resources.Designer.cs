@@ -143,6 +143,16 @@ namespace TGC.Viewer.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap image_x_generic {
+            get {
+                object obj = ResourceManager.GetObject("image_x_generic", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap preferences_desktop {
             get {
                 object obj = ResourceManager.GetObject("preferences_desktop", resourceCulture);

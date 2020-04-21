@@ -31,7 +31,7 @@ namespace TGC.Examples.BulletPhysics
 
         public override void Update()
         {
-            physicsExample.Update(ElapsedTime, TimeBetweenFrames);
+            physicsExample.Update(ElapsedTime, TimeBetweenUpdates);
 
             UserVars.setValue("MeshCount", physicsExample.GetElements());
         }

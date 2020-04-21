@@ -1,5 +1,6 @@
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using System.Threading;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
@@ -48,7 +49,9 @@ namespace TGC.Core.Example
             AxisLines = new TgcAxisLines();
             AxisLinesEnable = true;
             FPSText = true;
-            TimeBetweenFrames = 1F / FPS_60;
+            TimeBetweenRenders = 1F / FPS_60;
+            TimeBetweenUpdates = 1F / FPS_60;
+            LastRenderTime = 0;
             LastUpdateTime = 0;
             ElapsedTime = -1;
             Camera = new TgcCamera();
@@ -75,14 +78,18 @@ namespace TGC.Core.Example
         public float ElapsedTime { get; set; }
 
         /// <summary>
-        /// Tiempo que paso desde el ultimo frame.
+        /// Tiempo que paso desde el ultimo render.
+        /// </summary>
+        public float LastRenderTime { get; set; }
+        /// <summary>
+        /// Tiempo que paso desde el ultimo update.
         /// </summary>
         public float LastUpdateTime { get; set; }
 
         /// <summary>
-        /// Habilita/Deshabilita el update a intervalo constante.
+        /// Habilita/Deshabilita el render loop a intervalo constante.
         /// </summary>
-        public bool FixedUpdateEnable { get; set; }
+        public bool FixedTickEnable { get; set; }
 
         /// <summary>
         /// Activa o desactiva el contador de frames por segundo.
@@ -90,9 +97,14 @@ namespace TGC.Core.Example
         public bool FPSText { get; set; }
 
         /// <summary>
-        /// Tiempo que va a pasar entre frames = 1/fps deseados.
+        /// Tiempo que va a pasar entre render = 1/fps deseados.
         /// </summary>
-        public float TimeBetweenFrames { get; set; }
+        public float TimeBetweenRenders { get; set; }
+
+        /// <summary>
+        /// Tiempo que va a pasar entre updates = 1/fps deseados.
+        /// </summary>
+        public float TimeBetweenUpdates { get; set; }
 
         /// <summary>
         /// Habilita/Deshabilita el dibujado de los ejes cartesianos.
@@ -167,12 +179,12 @@ namespace TGC.Core.Example
         public abstract void Init();
 
         /// <summary>
-        /// Se ejecuta una vez por ciclo del render loop, decide si corre en intervalos constantes o sin limite basado en FixedUpdateEnable.
+        /// Se ejecuta una vez por ciclo del render loop, decide si corre en intervalos constantes o sin limite basado en FixedTickEnable.
         /// Internamente ejecuta update y render.
         /// </summary>
         public virtual void Tick()
         {
-            if (FixedUpdateEnable)
+            if (FixedTickEnable)
             {
                 FixedTick();
             }
@@ -197,7 +209,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Tick con los FPS constantes, el limite esta puesto por TimeBetweenFrames.
+        /// Tick con los FPS constantes, el limite esta puesto por TimeBetweenUpdate.
         /// </summary>
         protected virtual void FixedTick()
         {
@@ -205,18 +217,25 @@ namespace TGC.Core.Example
 
             // Tambien es posible que en ciertas maquinas sea necesario agregar:
             // double MaxSkipFrames; constant maximum of frames to skip in the update loop (important to not stall the system on slower computers)
-            // while(LastFrameTime >= TimeBetweenFrames && nLoops < maxSkipFrames)
+            // while(LastFrameTime >= TimeBetweenUpdate && nLoops < maxSkipFrames)
             // Acumular un loop mas nLoops++;
 
-            while (LastUpdateTime >= TimeBetweenFrames)
+            while (LastUpdateTime >= TimeBetweenUpdates)
             {
                 PreUpdate();
                 Update();
                 PostUpdate();
-                LastUpdateTime -= TimeBetweenFrames;
+                LastUpdateTime -= TimeBetweenUpdates;
             }
 
-            Render();
+            while (LastRenderTime >= TimeBetweenRenders)
+            {
+                Render();
+                LastRenderTime -= TimeBetweenRenders;
+            }
+
+            // Como durante muchos ciclos no se hace nada mas que actualizar el clock, se duerme para no consumir gran cantidad de CPU.
+            Thread.Sleep(1);
         }
 
         /// <summary>
@@ -274,9 +293,11 @@ namespace TGC.Core.Example
         /// </summary>
         protected virtual void UnlimitedUpdateClock()
         {
-            LastUpdateTime = Timer.FrameTime;
+            var FrameTime = Timer.FrameTime;
             Timer.Set();
-            ElapsedTime = LastUpdateTime;
+            LastUpdateTime = FrameTime;
+            LastRenderTime = FrameTime;
+            ElapsedTime = FrameTime;
         }
 
         /// <summary>
@@ -284,9 +305,11 @@ namespace TGC.Core.Example
         /// </summary>
         protected virtual void FixedUpdateClock()
         {
-            LastUpdateTime += Timer.FrameTime;
+            var FrameTime = Timer.FrameTime;
             Timer.Set();
-            ElapsedTime = TimeBetweenFrames;
+            LastUpdateTime += FrameTime;
+            LastRenderTime += FrameTime;
+            ElapsedTime = TimeBetweenRenders;
         }
 
         /// <summary>
@@ -401,6 +424,7 @@ namespace TGC.Core.Example
         {
             Timer.Reset();
             ElapsedTime = -1;
+            LastRenderTime = 0;
             LastUpdateTime = 0;
         }
 

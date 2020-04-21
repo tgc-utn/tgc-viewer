@@ -130,7 +130,7 @@ namespace TGC.Examples.BulletPhysics
 
         public override void Update()
         {
-            physicsExample.Update(Input, ElapsedTime, TimeBetweenFrames);
+            physicsExample.Update(Input, ElapsedTime, TimeBetweenUpdates);
             UserVars.setValue("Tgccito_Position", physicsExample.GetCharacterPosition());
         }
 

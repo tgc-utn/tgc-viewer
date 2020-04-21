@@ -38,7 +38,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.fpsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.axisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateConstanteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tickConstanteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wireframeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -115,7 +115,7 @@
             this.toolStripSeparator1,
             this.fpsToolStripMenuItem,
             this.axisToolStripMenuItem,
-            this.updateConstanteToolStripMenuItem,
+            this.tickConstanteToolStripMenuItem,
             this.wireframeToolStripMenuItem,
             this.toolStripSeparator2,
             this.resetToolStripMenuItem});
@@ -129,14 +129,14 @@
             this.fullExampleToolStripMenuItem.Image = global::TGC.Viewer.Properties.Resources.view_fullscreen;
             this.fullExampleToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.fullExampleToolStripMenuItem.Name = "fullExampleToolStripMenuItem";
-            this.fullExampleToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.fullExampleToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.fullExampleToolStripMenuItem.Text = "Maximizar ejemplo";
             this.fullExampleToolStripMenuItem.Click += new System.EventHandler(this.fullExampleToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(186, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
             // 
             // fpsToolStripMenuItem
             // 
@@ -144,7 +144,7 @@
             this.fpsToolStripMenuItem.Image = global::TGC.Viewer.Properties.Resources.ICON_RENDER_ANIMATION;
             this.fpsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.fpsToolStripMenuItem.Name = "fpsToolStripMenuItem";
-            this.fpsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.fpsToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.fpsToolStripMenuItem.Text = "Contador FPS";
             this.fpsToolStripMenuItem.Click += new System.EventHandler(this.fpsToolStripMenuItem_Click);
             // 
@@ -154,19 +154,19 @@
             this.axisToolStripMenuItem.Image = global::TGC.Viewer.Properties.Resources.ICON_MANIPUL;
             this.axisToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.axisToolStripMenuItem.Name = "axisToolStripMenuItem";
-            this.axisToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.axisToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.axisToolStripMenuItem.Text = "Ejes cartesianos";
             this.axisToolStripMenuItem.Click += new System.EventHandler(this.axisToolStripMenuItem_Click);
             // 
-            // updateConstanteToolStripMenuItem
+            // tickConstanteToolStripMenuItem
             // 
-            this.updateConstanteToolStripMenuItem.CheckOnClick = true;
-            this.updateConstanteToolStripMenuItem.Image = global::TGC.Viewer.Properties.Resources.appointment_soon;
-            this.updateConstanteToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.updateConstanteToolStripMenuItem.Name = "updateConstanteToolStripMenuItem";
-            this.updateConstanteToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.updateConstanteToolStripMenuItem.Text = "Update constante";
-            this.updateConstanteToolStripMenuItem.Click += new System.EventHandler(this.updateConstanteToolMenuItem_Click);
+            this.tickConstanteToolStripMenuItem.CheckOnClick = true;
+            this.tickConstanteToolStripMenuItem.Image = global::TGC.Viewer.Properties.Resources.appointment_soon;
+            this.tickConstanteToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tickConstanteToolStripMenuItem.Name = "tickConstanteToolStripMenuItem";
+            this.tickConstanteToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.tickConstanteToolStripMenuItem.Text = "Render a intervalo constante";
+            this.tickConstanteToolStripMenuItem.Click += new System.EventHandler(this.tickConstanteToolMenuItem_Click);
             // 
             // wireframeToolStripMenuItem
             // 
@@ -174,21 +174,21 @@
             this.wireframeToolStripMenuItem.Image = global::TGC.Viewer.Properties.Resources.ICON_WIRE;
             this.wireframeToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.wireframeToolStripMenuItem.Name = "wireframeToolStripMenuItem";
-            this.wireframeToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.wireframeToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.wireframeToolStripMenuItem.Text = "Wireframe";
             this.wireframeToolStripMenuItem.Click += new System.EventHandler(this.wireframeToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(186, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
             // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Image = global::TGC.Viewer.Properties.Resources.edit_clear_all;
             this.resetToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.resetToolStripMenuItem.Text = "Reiniciar visualización";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
@@ -205,7 +205,7 @@
             this.opcionesToolStripMenuItem.Image = global::TGC.Viewer.Properties.Resources.preferences_desktop;
             this.opcionesToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.opcionesToolStripMenuItem.Name = "opcionesToolStripMenuItem";
-            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.opcionesToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.opcionesToolStripMenuItem.Text = "Opciones...";
             this.opcionesToolStripMenuItem.Click += new System.EventHandler(this.opcionesToolStripMenuItem_Click);
             // 
@@ -475,7 +475,7 @@
         private System.Windows.Forms.ToolStripMenuItem herramientasToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem opcionesToolStripMenuItem;
         private System.Windows.Forms.Panel panelModifiers;
-        private System.Windows.Forms.ToolStripMenuItem updateConstanteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tickConstanteToolStripMenuItem;
     }
 }
 
