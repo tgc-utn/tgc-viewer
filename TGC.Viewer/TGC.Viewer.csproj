@@ -144,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="IconoTgc.ico" />
+    <None Include="Resources\16x16\image-x-generic.png" />
     <None Include="Resources\16x16\view-refresh.png" />
     <None Include="Resources\16x16\appointment-soon.png" />
     <None Include="Resources\16x16\ICON_RENDER_ANIMATION.png" />
