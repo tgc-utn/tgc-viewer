@@ -111,7 +111,7 @@ namespace TGC.Viewer.Model
         /// </summary>
         /// <param name="treeView"> Nodo donde buscar.</param>
         /// <param name="category"> Categoria a buscar.</param>
-        /// <returns></returns>
+        /// <returns>Nodo buscado o null.</returns>
         private TreeNode TreeNodeExists(TreeView treeView, string category)
         {
             foreach (TreeNode n in treeView.Nodes)

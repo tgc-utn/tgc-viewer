@@ -134,7 +134,7 @@ namespace TGC.Examples.DirectX
             LightRotationMatrix *= TGCMatrix.Translation(lightDistance, 0, 0);
             LightRotationMatrix *= TGCMatrix.RotationYawPitchRoll(angleX, angleY, angleZ);
             D3DDevice.Instance.Device.Lights[0].Position = TGCVector3.TransformCoordinate(TGCVector3.Empty, LightRotationMatrix);
-            lightVectorToCenter = TGCVector3.FromVector3(D3DDevice.Instance.Device.Lights[0].Position);
+            lightVectorToCenter = new TGCVector3(D3DDevice.Instance.Device.Lights[0].Position);
             D3DDevice.Instance.Device.Lights[0].Direction = -D3DDevice.Instance.Device.Lights[0].Position;
             D3DDevice.Instance.Device.Lights[0].Direction.Normalize();
             D3DDevice.Instance.Device.Lights[0].Update();
@@ -258,7 +258,7 @@ namespace TGC.Examples.DirectX
                 teapotMeshNormalsVB[i * 2].Position = verts[i].Position;
 
                 //El extremo del vector normal es la posicion mas la normal en si misma. Se escala para que se mas proporcionada.
-                teapotMeshNormalsVB[i * 2 + 1].Position = verts[i].Position + TGCVector3.Scale(TGCVector3.FromVector3(verts[i].Normal), 1 / 10f);
+                teapotMeshNormalsVB[i * 2 + 1].Position = verts[i].Position + TGCVector3.Scale(new TGCVector3(verts[i].Normal), 1 / 10f);
                 teapotMeshNormalsVB[i * 2].Color = teapotMeshNormalsVB[i * 2 + 1].Color = Color.Yellow.ToArgb();
             }
 

@@ -58,7 +58,7 @@ namespace TGC.Examples.MeshExamples
         {
             PreRender();
 
-            mesh.render();
+            mesh.Render();
 
             PostRender();
         }
@@ -99,7 +99,7 @@ namespace TGC.Examples.MeshExamples
         ///     Se redefine este método para customizar el renderizado de este modelo.
         ///     Se agrega la palabra "new" al método para indiciar que está redefinido.
         /// </summary>
-        public new void render()
+        public new void Render()
         {
             //Cambiamos a modo WireFrame
             D3DDevice.Instance.Device.RenderState.FillMode = FillMode.WireFrame;

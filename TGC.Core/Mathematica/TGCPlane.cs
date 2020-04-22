@@ -268,7 +268,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves the DXPlane.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>DX Plane.</returns>
         private Plane ToPlane()
         {
             return this.dxPlane;

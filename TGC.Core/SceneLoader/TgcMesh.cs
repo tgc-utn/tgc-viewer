@@ -1060,7 +1060,7 @@ namespace TGC.Core.SceneLoader
                     var vBox = vertices[j];
 
                     //vertices
-                    v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), transform);
+                    v.Position = TGCVector3.TransformCoordinate(new TGCVector3(vBox.Position), transform);
 
                     //normals
                     v.Normal = TGCVector3.Empty;
@@ -1117,7 +1117,7 @@ namespace TGC.Core.SceneLoader
                     var vBox = vertices[j];
 
                     //vertices
-                    v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), transform);
+                    v.Position = TGCVector3.TransformCoordinate(new TGCVector3(vBox.Position), transform);
 
                     //normals
                     v.Normal = TGCVector3.Empty;
@@ -1285,7 +1285,7 @@ namespace TGC.Core.SceneLoader
                     var vPlane = vertices[j];
 
                     //vertices
-                    v.Position = TGCVector3.FromVector3(vPlane.Position);
+                    v.Position = new TGCVector3(vPlane.Position);
 
                     //normals
                     v.Normal = (Normal ?? TGCVector3.Empty);

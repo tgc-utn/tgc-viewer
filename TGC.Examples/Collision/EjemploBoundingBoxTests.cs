@@ -66,8 +66,7 @@ namespace TGC.Examples.Collision
             triangle[0] = new CustomVertex.PositionColored(-100, 0, 0, Color.Green.ToArgb());
             triangle[1] = new CustomVertex.PositionColored(0, 0, 50, Color.Green.ToArgb());
             triangle[2] = new CustomVertex.PositionColored(0, 100, 0, Color.Green.ToArgb());
-            triagleAABB = TgcBoundingAxisAlignBox.computeFromPoints(new[]
-                {TGCVector3.FromVector3(triangle[0].Position), TGCVector3.FromVector3(triangle[1].Position), TGCVector3.FromVector3(triangle[2].Position)});
+            triagleAABB = TgcBoundingAxisAlignBox.computeFromPoints(new[] { new TGCVector3(triangle[0].Position), new TGCVector3(triangle[1].Position), new TGCVector3(triangle[2].Position) });
 
             //box2
             box2 = TGCBox.fromSize(new TGCVector3(-50, 10, -20), new TGCVector3(15, 15, 15), Color.Violet);
@@ -157,7 +156,7 @@ namespace TGC.Examples.Collision
             camaraInterna.Target = mesh.Position;
 
             //Detectar colision con triangulo
-            if (TgcCollisionUtils.testTriangleAABB(TGCVector3.FromVector3(triangle[0].Position), TGCVector3.FromVector3(triangle[1].Position), TGCVector3.FromVector3(triangle[2].Position),
+            if (TgcCollisionUtils.testTriangleAABB(new TGCVector3(triangle[0].Position), new TGCVector3(triangle[1].Position), new TGCVector3(triangle[2].Position),
                 mesh.BoundingBox))
             {
                 triangle[0].Color = Color.Red.ToArgb();

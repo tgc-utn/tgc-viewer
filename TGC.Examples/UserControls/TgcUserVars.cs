@@ -73,7 +73,7 @@ namespace TGC.Examples.UserControls
         ///     Devuelve el valor de la variable especificada
         /// </summary>
         /// <param name="?">Identificador de la variable</param>
-        /// <returns></returns>
+        /// <returns>Valor que contiene la variable</returns>
         public object getValue(string name)
         {
             var row = findRowByVarName(name);

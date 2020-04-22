@@ -233,11 +233,9 @@ namespace TGC.Core.Example
                 Render();
                 LastRenderTime = 0;
             }
-            else
-            {
-                // Como durante muchos ciclos no se hace nada mas que actualizar el clock, se duerme para no consumir gran cantidad de CPU.
-                Thread.Sleep(1);
-            }
+
+            // Como durante muchos ciclos no se hace nada mas que actualizar el clock, se duerme para no consumir gran cantidad de CPU.
+            Thread.Sleep(1);
         }
 
         /// <summary>
