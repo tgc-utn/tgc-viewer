@@ -228,14 +228,16 @@ namespace TGC.Core.Example
                 LastUpdateTime -= TimeBetweenUpdates;
             }
 
-            while (LastRenderTime >= TimeBetweenRenders)
+            if (LastRenderTime >= TimeBetweenRenders)
             {
                 Render();
-                LastRenderTime -= TimeBetweenRenders;
+                LastRenderTime = 0;
             }
-
-            // Como durante muchos ciclos no se hace nada mas que actualizar el clock, se duerme para no consumir gran cantidad de CPU.
-            Thread.Sleep(1);
+            else
+            {
+                // Como durante muchos ciclos no se hace nada mas que actualizar el clock, se duerme para no consumir gran cantidad de CPU.
+                Thread.Sleep(1);
+            }
         }
 
         /// <summary>
@@ -309,7 +311,7 @@ namespace TGC.Core.Example
             Timer.Set();
             LastUpdateTime += FrameTime;
             LastRenderTime += FrameTime;
-            ElapsedTime = TimeBetweenRenders;
+            ElapsedTime = TimeBetweenUpdates;
         }
 
         /// <summary>
