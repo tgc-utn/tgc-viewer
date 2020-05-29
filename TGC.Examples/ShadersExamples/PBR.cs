@@ -3,9 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Geometry;
@@ -20,7 +17,6 @@ using TGC.Examples.UserControls.Modifier;
 
 namespace TGC.Examples.ShadersExamples
 {
-
     public class PBR : TGCExampleViewer
     {
         public enum Material
@@ -46,6 +42,7 @@ namespace TGC.Examples.ShadersExamples
         {
             public TGCVector3 Position;
             public TGCVector3 Color;
+
             public void SetLight(int index, Effect effect)
             {
                 effect.SetValue("lights[" + index + "].Position", TGCVector3.TGCVector3ToFloat3Array(Position));
@@ -60,7 +57,6 @@ namespace TGC.Examples.ShadersExamples
             Description = "Ejemplo de PBR regular";
         }
 
-
         public override void Init()
         {
             InitializeLights();
@@ -70,7 +66,7 @@ namespace TGC.Examples.ShadersExamples
             InitializeLightBoxes();
             InitializeMaterials();
 
-            Camara = new TgcRotationalCamera(TGCVector3.Empty, 80f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 80f, 1f, Input);
         }
 
         public override void Update()
@@ -79,11 +75,12 @@ namespace TGC.Examples.ShadersExamples
 
             UpdateMaterial();
 
-            effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
+            effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array(Camera.Position));
             textures.ForEach(texture => texture.Update());
 
             PostUpdate();
         }
+
         public override void Render()
         {
             PreRender();
@@ -99,8 +96,6 @@ namespace TGC.Examples.ShadersExamples
             lightBoxes.ForEach(l => l.Dispose());
             sphereMesh.Dispose();
         }
-
-
 
         private void InitializeSphere()
         {
@@ -196,7 +191,6 @@ namespace TGC.Examples.ShadersExamples
             lights.Add(lightFour);
         }
 
-
         private void InitializeTextures()
         {
             var defaultTexturePath = MediaDir + "Texturas\\PBR\\Harsh-Metal\\";
@@ -239,31 +233,33 @@ namespace TGC.Examples.ShadersExamples
         private void UpdateMaterial()
         {
             var value = (Material)materials.Value;
-            if(!value.Equals(current))
+            if (!value.Equals(current))
             {
                 var defaultTexturePath = MediaDir + "Texturas\\PBR\\";
                 current = value;
-                switch(current)
+                switch (current)
                 {
                     case Material.RUSTED_METAL:
                         defaultTexturePath += "Harsh-Metal";
                         break;
+
                     case Material.MARBLE:
                         defaultTexturePath += "Marble";
                         break;
+
                     case Material.GOLD:
                         defaultTexturePath += "Gold";
                         break;
+
                     case Material.METAL:
                         defaultTexturePath += "Metal";
                         break;
+
                     case Material.GRASS:
                         defaultTexturePath += "Ground";
                         break;
                 }
                 defaultTexturePath += "\\";
-
-
 
                 albedo.SetValue(defaultTexturePath + "Color.jpg");
 
@@ -281,14 +277,13 @@ namespace TGC.Examples.ShadersExamples
                 roughness.SetValue(defaultTexturePath + "Roughness.jpg");
             }
         }
-
     }
-
 
     // Helper for texture changes, unrelated with the concept
     public class TGCTextureAutoUpdateModifier
     {
         public event EventHandler OnTextureChange;
+
         private TgcTexture texture;
         private string name, path, setPath;
 
@@ -298,7 +293,6 @@ namespace TGC.Examples.ShadersExamples
             path = "";
             setPath = "";
         }
-
 
         public TgcTexture Texture { get => texture; }
 
@@ -330,6 +324,5 @@ namespace TGC.Examples.ShadersExamples
         {
             texture.dispose();
         }
-
     }
 }

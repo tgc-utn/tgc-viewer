@@ -14,7 +14,7 @@ using TGC.Examples.Camara;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 
-namespace TGC.Examples.Shaders
+namespace TGC.Examples.ShadersExamples
 {
     public class PBRConIBL : TGCExampleViewer
     {
@@ -27,7 +27,7 @@ namespace TGC.Examples.Shaders
         private List<PBRTexturedMesh> pbrTexturedMeshes = new List<PBRTexturedMesh>();
         private List<PBRMesh> pbrMeshes = new List<PBRMesh>();
         private Texture bdrfLUT;
-        
+
         private List<Light> lights;
         private List<TGCBox> lightBoxes;
         private TgcMesh unitCube;
@@ -40,6 +40,7 @@ namespace TGC.Examples.Shaders
         {
             public TGCVector3 Position;
             public TGCVector3 Color;
+
             public void SetLight(int index, Effect effect)
             {
                 effect.SetValue("lights[" + index + "].Position", TGCVector3.TGCVector3ToFloat3Array(Position));
@@ -114,6 +115,7 @@ namespace TGC.Examples.Shaders
                 mesh.Render();
             }
         }
+
         public PBRConIBL(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel) : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
             Category = "PBR";
@@ -123,9 +125,8 @@ namespace TGC.Examples.Shaders
 
         public override void Init()
         {
-
             effect = TGCShaders.Instance.LoadEffect(ShadersDir + "PBRIBL.fx");
-            
+
             InitializeScene();
             InitializePBRMesh();
             InitializeLights();
@@ -134,14 +135,17 @@ namespace TGC.Examples.Shaders
             InitializeTextures();
             InitializeFullScreenQuad();
 
-            Camara = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
+            FixedTickEnable = true;
+
+            Camera = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
         }
 
         private float time = 0.0f;
+
         public override void Update()
         {
             PreUpdate();
-            effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
+            effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array(Camera.Position));
             effect.SetValue("time", time);
             time += ElapsedTime;
             PostUpdate();
@@ -170,7 +174,7 @@ namespace TGC.Examples.Shaders
                 if (save)
                     save = false;
 
-                device.Transform.View = Camara.GetViewMatrix();
+                device.Transform.View = Camera.GetViewMatrix();
                 device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), deviceInstance.AspectRatio, 1f, 2000f).ToMatrix();
 
                 device.SetRenderTarget(0, oldRenderTarget);
@@ -193,7 +197,7 @@ namespace TGC.Examples.Shaders
             pbrTexturedMeshes.ForEach(mesh => mesh.Apply());
 
             lightBoxes.ForEach(lightBox => lightBox.Render());
-            
+
             RenderAxis();
             RenderFPS();
             device.EndScene();
@@ -219,7 +223,6 @@ namespace TGC.Examples.Shaders
 
             device.EndScene();
 
-
             if (save)
                 TextureLoader.Save(ShadersDir + "brdflut.bmp", ImageFileFormat.Bmp, bdrfLUT);
         }
@@ -231,7 +234,7 @@ namespace TGC.Examples.Shaders
             unitCube.Technique = "Prefilter";
             effect.SetValue("cubeMap", cubeMap);
             int mipLevels = 5;
-            for(int lod = 0; lod < mipLevels; lod++)
+            for (int lod = 0; lod < mipLevels; lod++)
             {
                 float roughness = (float)lod / (float)(mipLevels - 1);
                 effect.SetValue("passRoughness", roughness);
@@ -272,19 +275,21 @@ namespace TGC.Examples.Shaders
 
         private void RenderToPrefilterMapFace(CubeMapFace face, int lod)
         {
+            var device = D3DDevice.Instance.Device;
+
             var cubeMapFace = prefilterMap.GetCubeMapSurface(face, lod);
-            D3DDevice.Instance.Device.SetRenderTarget(0, cubeMapFace);
+            device.SetRenderTarget(0, cubeMapFace);
 
             TGCMatrix lookAt = LookAtFromCubeMapFace(face, TGCVector3.Empty);
 
-            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            D3DDevice.Instance.Device.Transform.View = lookAt;
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            device.Transform.View = lookAt;
 
-            D3DDevice.Instance.Device.BeginScene();
+            device.BeginScene();
 
             unitCube.Render();
 
-            D3DDevice.Instance.Device.EndScene();
+            device.EndScene();
 
             if (save)
                 SurfaceLoader.Save(ShadersDir + "prefilter_" + lod + "_" + face.ToString() + ".bmp", ImageFileFormat.Bmp, cubeMapFace);
@@ -319,7 +324,7 @@ namespace TGC.Examples.Shaders
             D3DDevice.Instance.Device.DepthStencilSurface = depthStencils[(int)face];
 
             TGCMatrix lookAt = LookAtFromCubeMapFace(face, position);
-            
+
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             D3DDevice.Instance.Device.Transform.View = lookAt;
 
@@ -328,11 +333,9 @@ namespace TGC.Examples.Shaders
             RenderBaseScene();
 
             D3DDevice.Instance.Device.EndScene();
-            
+
             if (save)
-            {
                 SurfaceLoader.Save(ShadersDir + "cubemap_" + face.ToString() + ".bmp", ImageFileFormat.Bmp, cubeMapFace);
-            }            
         }
 
         private Color ColorFromCubeMapFace(CubeMapFace face)
@@ -341,16 +344,22 @@ namespace TGC.Examples.Shaders
             {
                 case CubeMapFace.PositiveX:
                     return Color.Red;
+
                 case CubeMapFace.PositiveZ:
                     return Color.Blue;
+
                 case CubeMapFace.PositiveY:
                     return Color.Green;
+
                 case CubeMapFace.NegativeX:
                     return Color.Orange;
+
                 case CubeMapFace.NegativeZ:
                     return Color.Cyan;
+
                 case CubeMapFace.NegativeY:
                     return Color.Yellow;
+
                 default:
                     throw new Exception("Invalid cubemap face");
             }
@@ -358,25 +367,30 @@ namespace TGC.Examples.Shaders
 
         private TGCMatrix LookAtFromCubeMapFace(CubeMapFace face, TGCVector3 position)
         {
-            switch(face)
+            switch (face)
             {
                 case CubeMapFace.PositiveX:
                     return TGCMatrix.LookAtLH(position, position + new TGCVector3(1f, 0f, 0f), TGCVector3.Up);
+
                 case CubeMapFace.PositiveZ:
                     return TGCMatrix.LookAtLH(position, position + new TGCVector3(0f, 0f, 1f), TGCVector3.Up);
+
                 case CubeMapFace.PositiveY:
                     return TGCMatrix.LookAtLH(position, position + TGCVector3.Up, new TGCVector3(0f, 0f, -1f));
+
                 case CubeMapFace.NegativeX:
                     return TGCMatrix.LookAtLH(position, position + new TGCVector3(-1f, 0f, 0f), TGCVector3.Up);
+
                 case CubeMapFace.NegativeZ:
                     return TGCMatrix.LookAtLH(position, position + new TGCVector3(0f, 0f, -1f), TGCVector3.Up);
+
                 case CubeMapFace.NegativeY:
                     return TGCMatrix.LookAtLH(position, position + -TGCVector3.Up, new TGCVector3(0f, 0f, 1f));
+
                 default:
                     throw new Exception("Invalid cubemap face");
             }
         }
-
 
         private void RenderBaseScene()
         {
@@ -438,7 +452,7 @@ namespace TGC.Examples.Shaders
             var marble = new PBRTexturedMesh("Marble", texturePath, scaling * TGCMatrix.Translation(0f, 100f, -100f), pbrMesh);
             var ground = new PBRTexturedMesh("Ground", texturePath, scaling * TGCMatrix.Translation(0f, 100f, -200f), pbrMesh);
             var metal = new PBRTexturedMesh("Metal", texturePath, scaling * TGCMatrix.Translation(0f, 100f, 200f), pbrMesh);
-            pbrTexturedMeshes.AddRange(new List<PBRTexturedMesh>{harsh, gold, marble, ground, metal});
+            pbrTexturedMeshes.AddRange(new List<PBRTexturedMesh> { harsh, gold, marble, ground, metal });
 
             var greenSomething = new PBRMesh(new TGCVector3(0.05f, 0.74f, 0.3f), 0.5f, 0.5f, scaling * TGCMatrix.Translation(0f, 100f, 400f), pbrMesh);
             var redRubber = new PBRMesh(new TGCVector3(1f, 0.05f, 0.1f), 0.1f, 0.9f, scaling * TGCMatrix.Translation(0f, 100f, 300f), pbrMesh);
@@ -522,7 +536,7 @@ namespace TGC.Examples.Shaders
 
             unitCube = box.ToMesh("cube");
             unitCube.Transform = TGCMatrix.Scaling(1f, 1f, 1f);
-            unitCube.Effect = effect;            
+            unitCube.Effect = effect;
             unitCube.DiffuseMaps = new TgcTexture[0];
             unitCube.RenderType = TgcMesh.MeshRenderType.VERTEX_COLOR;
             box.Dispose();
@@ -559,6 +573,5 @@ namespace TGC.Examples.Shaders
             fullQuadVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionTextured), 4, device, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
             fullQuadVertexBuffer.SetData(vertices, 0, LockFlags.None);
         }
-
     }
 }

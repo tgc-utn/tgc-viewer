@@ -276,18 +276,20 @@ float4 PSCubeIrradiance(CubeVertexShaderOutput input) : COLOR0
 	float3 up = float3(0.0, 1.0, 0.0);
 	float3 right = cross(up, N);
 	up = cross(N, right);
+    
+    float sampleDelta = 0.025;
+	float nrSamples = 0.0;
 
-	float sampleDelta = 0.05;
-	float nrSamples = 0.0f;
-
-	float phi = 0.0f;
-	float theta = 0.0f;
-	while (phi < (2.0 * 3.14))
+	float phi = 0.0;
+    float theta = 0.0;
+    
+    while (phi < (2.0 * 3.14))
 	{
 		while (theta < (0.5 * 3.14))
 		{
+            float displacedTheta = theta - (0.25 * 3.14);
 			// spherical to cartesian (in tangent space)
-			float3 tangentSample = float3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+            float3 tangentSample = float3(sin(displacedTheta) * cos(phi), sin(displacedTheta) * sin(phi), cos(displacedTheta));
 			// tangent space to world
 			float3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * N;
 
@@ -307,7 +309,7 @@ float4 PSCubeIrradiance(CubeVertexShaderOutput input) : COLOR0
 	// Esta posicion va perfectamente con las coordenadas de textura necesarias para el cubemap
 	// Usamos texCUBE sin lod para tener la maxima resolucion de mipmap
 	//float3 cubeMapSampled = texCUBE(texCubeMap, input.MeshPosition).rgb;
-	//return float4(cubeMapSampled, 1.0);
+	//return float4(cubeMapSampled, 1.0);*/
 }
 
 float DistributionGGX(float3 N, float3 H, float roughness)
@@ -401,7 +403,7 @@ float4 PSCubePrefilter(CubeVertexShaderOutput input) : COLOR0
 			float HdotV = max(dot(H, V), 0.0);
 			float pdf = D * NdotH / (4.0 * HdotV) + 0.0001;
 
-			float resolution = 512.0; // resolution of source cubemap (per face)
+			float resolution = 128.0; // resolution of source cubemap (per face)
 			float saTexel = 4.0 * PI / (6.0 * resolution * resolution);
 			float saSample = 1.0 / (float(SAMPLE_COUNT) * pdf + 0.0001);
 
@@ -541,9 +543,8 @@ float4 PSPBR(PBRVertexShaderOutput input) : COLOR0
 
 	float3 V = normalize(eyePosition - input.WorldPosition);
 	float3 R = reflect(-V, N);
-	float3 positionView = normalize(input.WorldPosition - eyePosition);
-	float3 reflection = float3(reflect(positionView, normalize(input.WorldNormal)));
-	// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
+	
+    // calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
 	// of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
 	float3 F0 = float3(0.04, 0.04, 0.04);
 	F0 = lerp(F0, albedo, metallic);
@@ -597,14 +598,14 @@ float4 PSPBR(PBRVertexShaderOutput input) : COLOR0
 	float3 diffuse = irradiance * albedo;
 
 	// sample both the pre-filter map and the BRDF lut and combine them together as per the Split-Sum approximation to get the IBL specular part.
-	const float MAX_REFLECTION_LOD = 5.0;
+	const float MAX_REFLECTION_LOD = 4.0;
 	float3 prefilteredColor = texCUBElod(texPrefilterMap, float4(R, roughness * MAX_REFLECTION_LOD)).rgb;
-	float2 brdf = tex2D(texbrdfLUT, float2(max(dot(input.WorldNormal, V), 0.0), roughness)).rg;
-	float3 specular = prefilteredColor * (F * brdf.x + brdf.y);
+    float2 brdf = tex2D(texbrdfLUT, float2(max(0.0, dot(input.WorldNormal, V)), roughness)).rg;
+	float3 specular = prefilteredColor * (kS * brdf.x + brdf.y);
 
 	float3 ambient = (kD * diffuse + specular) * ao;
-
-	float3 color = ambient + Lo;
+    
+    float3 color = ambient + Lo;
 
 	// HDR tonemapping
 	color = color / (color + float3(1, 1, 1));
