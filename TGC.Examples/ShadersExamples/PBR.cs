@@ -66,7 +66,7 @@ namespace TGC.Examples.ShadersExamples
             InitializeLightBoxes();
             InitializeMaterials();
 
-            Camera = new TgcRotationalCamera(TGCVector3.Empty, 80f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 80f, 1f, Input);
         }
 
         public override void Update()

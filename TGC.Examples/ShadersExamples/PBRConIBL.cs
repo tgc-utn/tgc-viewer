@@ -135,6 +135,7 @@ namespace TGC.Examples.ShadersExamples
             InitializeTextures();
             InitializeFullScreenQuad();
 
+            FixedTickEnable = true;
             Camera = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
         }
 
@@ -273,19 +274,21 @@ namespace TGC.Examples.ShadersExamples
 
         private void RenderToPrefilterMapFace(CubeMapFace face, int lod)
         {
+            var device = D3DDevice.Instance.Device;
+
             var cubeMapFace = prefilterMap.GetCubeMapSurface(face, lod);
-            D3DDevice.Instance.Device.SetRenderTarget(0, cubeMapFace);
+            device.SetRenderTarget(0, cubeMapFace);
 
             TGCMatrix lookAt = LookAtFromCubeMapFace(face, TGCVector3.Empty);
 
-            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            D3DDevice.Instance.Device.Transform.View = lookAt;
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            device.Transform.View = lookAt;
 
-            D3DDevice.Instance.Device.BeginScene();
+            device.BeginScene();
 
             unitCube.Render();
 
-            D3DDevice.Instance.Device.EndScene();
+            device.EndScene();
 
             if (save)
                 SurfaceLoader.Save(ShadersDir + "prefilter_" + lod + "_" + face.ToString() + ".bmp", ImageFileFormat.Bmp, cubeMapFace);
@@ -331,9 +334,7 @@ namespace TGC.Examples.ShadersExamples
             D3DDevice.Instance.Device.EndScene();
 
             if (save)
-            {
                 SurfaceLoader.Save(ShadersDir + "cubemap_" + face.ToString() + ".bmp", ImageFileFormat.Bmp, cubeMapFace);
-            }
         }
 
         private Color ColorFromCubeMapFace(CubeMapFace face)

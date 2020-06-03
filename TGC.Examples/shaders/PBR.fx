@@ -184,18 +184,16 @@ float4 PSPBR(PBRVertexShaderOutput input) : COLOR0
 	float3 normal = getNormalFromMap(input.TextureCoordinates, input.WorldPosition, input.WorldNormal);
 	float3 view = normalize(eyePosition - input.WorldPosition);
 
-	// calculate reflectance at normal incidence; if dia-electric (like plastic) use F0 
-	// of 0.04 and if it's a metal, use the albedo color as F0 (metallic workflow)    
 	float3 F0 = float3(0.04, 0.04, 0.04);
 	F0 = lerp(F0, albedo, metallic);
 	
-	// reflectance equation
+	// Reflectance equation
 	float3 Lo = float3(0.0, 0.0, 0.0);
 	for (int i = 0; i < 4; ++i)
 	{
-		// Calculate per-light radiance
 		float3 light = normalize(lights[i].Position - input.WorldPosition);
 		float3 halfVector = normalize(view + light);
+        
 		float distance = length(lights[i].Position - input.WorldPosition);
 		float attenuation = 1.0 / (distance);
 		float3 radiance = lights[i].Color * attenuation;
@@ -206,39 +204,32 @@ float4 PSPBR(PBRVertexShaderOutput input) : COLOR0
 		float3 F = fresnelSchlick(max(dot(halfVector, view), 0.0), F0);
 
 		float3 nominator = NDF * G * F;
-		float denominator = 4 * max(dot(normal, view), 0.0) + 0.001; // 0.001 to prevent divide by zero.
+		float denominator = 4 * max(dot(normal, view), 0.0) + 0.001;
 		float3 specular = nominator / denominator;
 
-		// kS is equal to Fresnel
 		float3 kS = F;
-		// For energy conservation, the diffuse and specular light can't
-		// be above 1.0 (unless the surface emits light); to preserve this
-		// relationship the diffuse component (kD) should equal 1.0 - kS.
+        
 		float3 kD = float3(1, 1, 1) - kS;
-		// multiply kD by the inverse metalness such that only non-metals 
-		// have diffuse lighting, or a linear blend if partly metal (pure metals
-		// have no diffuse light).
+        
 		kD *= 1.0 - metallic;
 
-		// scale light by NdotL
+		// Scale light by NdotL
 		float NdotL = max(dot(normal, light), 0.0);
 
-		// add to outgoing radiance Lo
-		Lo += (kD * NdotL * albedo / PI + specular) * radiance;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+		Lo += (kD * NdotL * albedo / PI + specular) * radiance;
 	}
 
-	// ambient lighting (note that the next IBL tutorial will replace 
-	// this ambient lighting with environment lighting).
 	float3 ambient = float3(0.03, 0.03, 0.03) * albedo * ao;
 
-	float3 color = ambient + Lo;
+    float3 color = ambient + Lo;
 
 	// HDR tonemapping
 	color = color / (color + float3(1, 1, 1));
-	// gamma correct
+    
+	// Gamma correct
 	color = pow(color, float3(1.0 / 2.2, 1.0 / 2.2, 1.0 / 2.2));
 
-	return float4(color * 1.5, 1.0);
+	return float4(color, 1.0);
 }
 
 technique PBR
