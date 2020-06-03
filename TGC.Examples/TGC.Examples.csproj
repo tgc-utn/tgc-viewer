@@ -121,6 +121,7 @@
     <Compile Include="Collision\SphereCollision\BoundingBoxCollider.cs" />
     <Compile Include="Collision\SphereCollision\Collider.cs" />
     <Compile Include="Collision\SphereCollision\SphereCollisionManager.cs" />
+    <Compile Include="Deferred\DeferredRendering.cs" />
     <Compile Include="DirectX\DirectXBox.cs" />
     <Compile Include="DirectX\DirectXLight.cs" />
     <Compile Include="Engine2D\Transforms2D.cs" />
@@ -493,6 +494,7 @@
     <Content Include="Shaders\Common\TgcSkeletalMeshPointLightShader.fx" />
     <Content Include="Shaders\Common\TgcSkeletalMeshShader.fx" />
     <Content Include="Shaders\Common\Varios.fx" />
+    <Content Include="Shaders\Deferred.fx" />
     <Content Include="Shaders\DynamicLights.fx" />
     <Content Include="Shaders\Ejemplo1.fx" />
     <Content Include="Shaders\EjemploBoxDirectX.fx" />
