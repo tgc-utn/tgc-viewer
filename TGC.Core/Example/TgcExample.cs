@@ -81,6 +81,7 @@ namespace TGC.Core.Example
         /// Tiempo que paso desde el ultimo render.
         /// </summary>
         public float LastRenderTime { get; set; }
+
         /// <summary>
         /// Tiempo que paso desde el ultimo update.
         /// </summary>

@@ -3,9 +3,6 @@ using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
@@ -38,10 +35,11 @@ namespace TGC.Examples.Deferred
         private bool lastValue = true;
 
         private TGCMatrix quadSizes = TGCMatrix.Scaling(0.2f, 0.2f, 0.2f);
-        struct Light
+
+        private struct Light
         {
-            TGCVector3 position;
-            TGCVector3 color;
+            private TGCVector3 position;
+            private TGCVector3 color;
 
             public Light(TGCVector3 position, TGCVector3 color)
             {
@@ -55,7 +53,6 @@ namespace TGC.Examples.Deferred
                 effect.SetValue("lights[" + index + "].Color", TGCVector3.TGCVector3ToFloat3Array(color));
             }
         }
-
 
         public DeferredRendering(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel) : base(mediaDir, shadersDir, userVars, modifiersPanel)
         {
@@ -87,17 +84,17 @@ namespace TGC.Examples.Deferred
             Camera = new TgcFpsCamera(Input);
         }
 
-        float time = 0.0f;
+        private float time = 0.0f;
+
         public override void Update()
         {
             deferredEffect.SetValue("time", time);
-            deferredEffect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array( Camera.Position));
+            deferredEffect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat3Array(Camera.Position));
 
             D3DDevice.Instance.Device.RenderState.FillMode = Input.keyDown(Key.J) ? FillMode.WireFrame : FillMode.Solid;
 
             time += ElapsedTime;
         }
-
 
         public override void Render()
         {
@@ -144,7 +141,7 @@ namespace TGC.Examples.Deferred
 
                 device.EndScene();
 
-                #endregion
+                #endregion Pasada MultipleRenderTargets
 
                 #region Pasada Integradora
 
@@ -157,7 +154,6 @@ namespace TGC.Examples.Deferred
                 device.DepthStencilSurface = defaultDepth;
 
                 device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-
 
                 device.BeginScene();
 
@@ -182,7 +178,6 @@ namespace TGC.Examples.Deferred
                 if (visualizeRenderTargets.Value)
                 {
                     deferredEffect.Technique = "RenderTargets";
-
 
                     deferredEffect.SetValue("target", 0);
                     deferredEffect.SetValue("matQuad", (quadSizes * TGCMatrix.Translation(-0.5f, -0.5f, 0f)).ToMatrix());
@@ -210,9 +205,7 @@ namespace TGC.Examples.Deferred
                     device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
                     deferredEffect.EndPass();
                     deferredEffect.End();
-
                 }
-
 
                 RenderAxis();
                 RenderFPS();
@@ -221,8 +214,7 @@ namespace TGC.Examples.Deferred
 
                 device.Present();
 
-
-                #endregion
+                #endregion Pasada Integradora
 
                 positionRenderTarget.Dispose();
                 normalsRenderTarget.Dispose();
@@ -230,18 +222,16 @@ namespace TGC.Examples.Deferred
             }
         }
 
-
         public override void Dispose()
         {
             meshes.ForEach(mesh => mesh.Dispose());
         }
 
-
         private void InitializeLights()
         {
             random = new Random();
             lights = new List<Light>();
-            for(int index = 0; index < 50; index++)
+            for (int index = 0; index < 50; index++)
             {
                 var position = new TGCVector3(RandomNumber(-200.0f, 200f), RandomNumber(2f, 50f), RandomNumber(-800f, 800f));
                 var color = new TGCVector3(RandomNumber(0.0f, 1f), RandomNumber(0f, 1f), RandomNumber(0f, 1f));
@@ -295,7 +285,5 @@ namespace TGC.Examples.Deferred
         {
             return (float)random.NextDouble() * (maximum - minimum) + minimum;
         }
-
-
     }
 }
