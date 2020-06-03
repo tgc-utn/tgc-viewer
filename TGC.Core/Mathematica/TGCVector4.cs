@@ -7,6 +7,7 @@ namespace TGC.Core.Mathematica
     /// <summary>
     /// Describes and manipulates a vector in four-dimensional (4-D) space.
     /// </summary>
+    [Serializable]
     public struct TGCVector4
     {
         /// <summary>
@@ -464,7 +465,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         /// <param name="vector">Array of source TGCVector4 structures.</param>
         /// <param name="sourceMatrix">Source TGCMatrix structure.</param>
-        /// <returns></returns>
+        /// <returns>Array de DX Vector4.</returns>
         public static TGCVector4[] Transform(TGCVector4[] vector, TGCMatrix sourceMatrix)
         {
             throw new NotImplementedException();
@@ -473,7 +474,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves the DirectX of a 4-D vector
         /// </summary>
-        /// <returns></returns>
+        /// <returns>DX Vector4</returns>
         private Vector4 ToVector4()
         {
             return dxVector4;
@@ -482,7 +483,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Cast TGCVector4 to DX Vector4
         /// </summary>
-        /// <param name="vector">TGCVector4 to become into Vector4</param>
+        /// <param name="vector">TGCVector4 to become into DX Vector4</param>
         public static implicit operator Vector4(TGCVector4 vector)
         {
             return vector.ToVector4();
@@ -493,19 +494,24 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Convierte un color base(255,255,255,255) a un Vector4(1f,1f,1f,1f).
         /// </summary>
-        /// <param name="color"></param>
-        /// <returns></returns>
+        /// <param name="color">Color a convertir a DX Vector4.</param>
+        /// <returns>DX Vector4 conteniendo las componentes del Color.</returns>
         public static Vector4 ColorToVector4(Color color)
         {
             return Vector4.Normalize(new Vector4(color.R, color.G, color.B, color.A));
         }
 
-        public static Vector4[] TGCVector4ArrayToVector4Array(TGCVector4[] vector)
+        /// <summary>
+        /// Convierte un Array de TGCVector4 a un Array de DX Vector4
+        /// </summary>
+        /// <param name="vectores">Array de vectores.</param>
+        /// <returns>Array con los DX Vector4.</returns>
+        public static Vector4[] TGCVector4ArrayToVector4Array(TGCVector4[] vectores)
         {
-            Vector4[] ret = new Vector4[vector.Length];
-            for (int i = 0; i < vector.Length; i++)
+            Vector4[] ret = new Vector4[vectores.Length];
+            for (int i = 0; i < vectores.Length; i++)
             {
-                ret[i] = vector[i].ToVector4();
+                ret[i] = vectores[i].ToVector4();
             }
             return ret;
         }

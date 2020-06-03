@@ -19,7 +19,7 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
@@ -144,6 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="IconoTgc.ico" />
+    <None Include="Resources\16x16\image-x-generic.png" />
+    <None Include="Resources\16x16\view-refresh.png" />
+    <None Include="Resources\16x16\appointment-soon.png" />
     <None Include="Resources\16x16\ICON_RENDER_ANIMATION.png" />
     <None Include="Resources\16x16\ICON_WIRE.png" />
     <None Include="Resources\16x16\ICON_MANIPUL.png" />

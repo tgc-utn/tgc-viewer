@@ -34,9 +34,7 @@ namespace TGC.Examples.Engine2D.Spaceship
 
         public override void Update()
         {
-            PreUpdate();
             gameManager.Update(ElapsedTime);
-            PostUpdate();
         }
 
         public override void Render()

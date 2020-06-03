@@ -1,9 +1,7 @@
 using Microsoft.DirectX.Direct3D;
 using System.Windows.Forms;
-using TGC.Core.Direct3D;
-using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
-using TGC.Core.Textures;
+using TGC.Core.SceneLoader;
 using TGC.Examples.Example;
 using TGC.Examples.UserControls;
 using TGC.Examples.UserControls.Modifier;
@@ -17,8 +15,12 @@ namespace TGC.Examples.Transformations
     {
         private TGCVertex3fModifier rotacionModifier;
 
-        private TGCBox boxEuler;
-        private TGCBox boxTGCQuaternion;
+        private TGCMatrix baseScaleRotation;
+        private TGCMatrix baseEulerTranslation;
+        private TGCMatrix baseQuaternionTranslation;
+
+        private TgcMesh eulerMesh;
+        private TgcMesh quaternionMesh;
 
         public EjemploTGCQuaternions(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -30,52 +32,60 @@ namespace TGC.Examples.Transformations
 
         public override void Init()
         {
-            var textureEuler = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg");
-            boxEuler = TGCBox.fromSize(new TGCVector3(-50, 0, 0), new TGCVector3(50, 50, 50), textureEuler);
+            var loader = new TgcSceneLoader();
+            TgcScene scene = loader.loadSceneFromFile(MediaDir + "\\XWing\\xwing-TgcScene.xml");
 
-            var textureQuat = TgcTexture.createTexture(D3DDevice.Instance.Device,
-                MediaDir + "Texturas\\paredMuyRugosa.jpg");
-            boxTGCQuaternion = TGCBox.fromSize(new TGCVector3(50, 0, 0), new TGCVector3(50, 50, 50), textureQuat);
+            eulerMesh = scene.Meshes[0];
+            quaternionMesh = scene.Meshes[0].clone("quat");
+
+            baseEulerTranslation = TGCMatrix.Translation(new TGCVector3(-10.0f, 0.0f, 0.0f));
+            baseQuaternionTranslation = TGCMatrix.Translation(new TGCVector3(10.0f, 0.0f, 0.0f));
 
             rotacionModifier = AddVertex3f("Rotacion", TGCVector3.Empty, new TGCVector3(360, 360, 360), TGCVector3.Empty);
 
-            Camara.SetCamera(new TGCVector3(0f, 1f, -200f), new TGCVector3(0f, 1f, 500f));
+            baseScaleRotation = TGCMatrix.Scaling(new TGCVector3(0.05f, 0.05f, 0.05f)) * TGCMatrix.RotationY(FastMath.PI_HALF);
+
+            Camera.SetCamera(new TGCVector3(0f, 1f, -25f), new TGCVector3(0f, 1f, 200f));
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             var rot = rotacionModifier.Value;
             rot.X = Geometry.DegreeToRadian(rot.X);
             rot.Y = Geometry.DegreeToRadian(rot.Y);
             rot.Z = Geometry.DegreeToRadian(rot.Z);
 
             //Rotacion Euler
-            boxEuler.Transform = TGCMatrix.RotationYawPitchRoll(rot.Y, rot.X, rot.Z) *
-                                 TGCMatrix.Translation(boxEuler.Position);
+            eulerMesh.Transform = baseScaleRotation *
+                TGCMatrix.RotationYawPitchRoll(rot.Y, rot.X, rot.Z) *
+                baseEulerTranslation;
 
             //Rotacion TGCQuaternion
-            var q = TGCQuaternion.RotationYawPitchRoll(rot.Y, rot.X, rot.Z);
-            boxTGCQuaternion.Transform = TGCMatrix.RotationTGCQuaternion(q) * TGCMatrix.Translation(boxTGCQuaternion.Position);
+            TGCQuaternion rotationX = TGCQuaternion.RotationAxis(new TGCVector3(1.0f, 0.0f, 0.0f), rot.X);
+            TGCQuaternion rotationY = TGCQuaternion.RotationAxis(new TGCVector3(0.0f, 1.0f, 0.0f), rot.Y);
+            TGCQuaternion rotationZ = TGCQuaternion.RotationAxis(new TGCVector3(0.0f, 0.0f, 1.0f), rot.Z);
 
-            PostUpdate();
+            TGCQuaternion rotation = rotationX * rotationY * rotationZ;
+
+            quaternionMesh.Transform = baseScaleRotation *
+                TGCMatrix.RotationTGCQuaternion(rotation) *
+                baseQuaternionTranslation;
         }
 
         public override void Render()
         {
             PreRender();
 
-            boxEuler.Render();
-            boxTGCQuaternion.Render();
+            eulerMesh.Render();
+            quaternionMesh.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            boxEuler.Dispose();
-            boxTGCQuaternion.Dispose();
+            eulerMesh.Dispose();
+            quaternionMesh.Dispose();
         }
     }
 }

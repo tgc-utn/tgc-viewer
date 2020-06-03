@@ -67,7 +67,7 @@ namespace TGC.Examples.UserControls.Networking
                 //Conectar con el server, en forma no bloqueante
                 var address = IPAddress.Parse(ip);
                 var Ipep = new IPEndPoint(address, port);
-                clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                clientSocket = new Socket(Ipep.Address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 clientSocket.Connect(Ipep);
                 clientSocket.Blocking = false;
 

@@ -577,9 +577,9 @@ namespace TGC.Core.SceneLoader
 
             AutoTransformEnable = false;
             AutoUpdateBoundingBox = true;
-            translation = new TGCVector3(0f, 0f, 0f);
-            rotation = new TGCVector3(0f, 0f, 0f);
-            scale = new TGCVector3(1f, 1f, 1f);
+            translation = TGCVector3.Empty;
+            rotation = TGCVector3.Empty;
+            scale = TGCVector3.One;
             transform = TGCMatrix.Identity;
 
             //Shader
@@ -1060,7 +1060,7 @@ namespace TGC.Core.SceneLoader
                     var vBox = vertices[j];
 
                     //vertices
-                    v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), transform);
+                    v.Position = TGCVector3.TransformCoordinate(new TGCVector3(vBox.Position), transform);
 
                     //normals
                     v.Normal = TGCVector3.Empty;
@@ -1117,7 +1117,7 @@ namespace TGC.Core.SceneLoader
                     var vBox = vertices[j];
 
                     //vertices
-                    v.Position = TGCVector3.TransformCoordinate(TGCVector3.FromVector3(vBox.Position), transform);
+                    v.Position = TGCVector3.TransformCoordinate(new TGCVector3(vBox.Position), transform);
 
                     //normals
                     v.Normal = TGCVector3.Empty;
@@ -1285,7 +1285,7 @@ namespace TGC.Core.SceneLoader
                     var vPlane = vertices[j];
 
                     //vertices
-                    v.Position = TGCVector3.FromVector3(vPlane.Position);
+                    v.Position = new TGCVector3(vPlane.Position);
 
                     //normals
                     v.Normal = (Normal ?? TGCVector3.Empty);

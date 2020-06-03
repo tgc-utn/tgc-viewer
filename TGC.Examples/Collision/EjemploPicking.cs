@@ -64,7 +64,7 @@ namespace TGC.Examples.Collision
             //Iniciarlizar PickingRay
             pickingRay = new TgcPickingRay(Input);
 
-            Camara.SetCamera(new TGCVector3(100f, 100f, -500f), new TGCVector3(100f, 100f, -250f));
+            Camera.SetCamera(new TGCVector3(100f, 100f, -500f), new TGCVector3(100f, 100f, -250f));
 
             //Crear caja para marcar en que lugar hubo colision
             collisionPointMesh = TGCBox.fromSize(new TGCVector3(3, 3, 3), Color.Red);
@@ -78,14 +78,6 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
             //Si hacen clic con el mouse, ver si hay colision RayAABB
             if (Input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
@@ -106,6 +98,11 @@ namespace TGC.Examples.Collision
                     }
                 }
             }
+        }
+
+        public override void Render()
+        {
+            PreRender();
 
             //Renderizar modelos
             foreach (var box in boxes)

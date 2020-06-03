@@ -64,7 +64,7 @@ namespace TGC.Examples.ShadersExamples
             effect = TGCShaders.Instance.LoadEffect(TGCShaders.Instance.CommonShadersPath + "TgcFogShader.fx");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
+            Camera = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
             //Modifiers para configurar valores de niebla
             fogShaderModifier = AddBoolean("FogShader", "FogShader", true);
@@ -78,8 +78,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -105,7 +104,7 @@ namespace TGC.Examples.ShadersExamples
             {
                 // Cargamos las variables de shader, color del fog.
                 effect.SetValue("ColorFog", fog.Color.ToArgb());
-                effect.SetValue("CameraPos", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
+                effect.SetValue("CameraPos", TGCVector3.TGCVector3ToFloat4Array(Camera.Position));
                 effect.SetValue("StartFogDistance", fog.StartDistance);
                 effect.SetValue("EndFogDistance", fog.EndDistance);
                 effect.SetValue("Density", fog.Density);

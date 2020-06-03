@@ -1,10 +1,12 @@
 ﻿using Microsoft.DirectX;
+using System;
 
 namespace TGC.Core.Mathematica
 {
     /// <summary>
     /// Describes and manipulates a plane.
     /// </summary>
+    [Serializable]
     public struct TGCPlane
     {
         /// <summary>
@@ -266,7 +268,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         /// Retrieves the DXPlane.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>DX Plane.</returns>
         private Plane ToPlane()
         {
             return this.dxPlane;

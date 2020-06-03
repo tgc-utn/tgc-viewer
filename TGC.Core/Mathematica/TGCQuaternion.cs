@@ -1,10 +1,12 @@
 ﻿using Microsoft.DirectX;
+using System;
 
 namespace TGC.Core.Mathematica
 {
     /// <summary>
     /// Describes a quaternion.
     /// </summary>
+    [Serializable]
     public struct TGCQuaternion
     {
         /// <summary>
@@ -74,7 +76,7 @@ namespace TGC.Core.Mathematica
         /// </summary>
         public static TGCQuaternion Identity
         {
-            get { return new TGCQuaternion(1f, 1f, 1f, 1f); }
+            get { return new TGCQuaternion(Quaternion.Identity); }
         }
 
         /// <summary>

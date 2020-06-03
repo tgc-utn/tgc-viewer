@@ -138,7 +138,7 @@ namespace TGC.Examples.Lights
             }
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new TGCVector3(0, 50, 100), Input);
+            Camera = new TgcFpsCamera(new TGCVector3(0, 50, 100), Input);
 
             //Modifiers
             reflectionModifier = AddFloat("reflection", 0, 1, 0.2f);
@@ -155,8 +155,7 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -177,7 +176,7 @@ namespace TGC.Examples.Lights
                 mesh.Technique = currentTechnique;
             }
 
-            var eyePosition = Camara.Position;
+            var eyePosition = Camera.Position;
 
             //Renderizar meshes con BumpMapping
             foreach (var mesh in bumpMeshes)
@@ -210,7 +209,7 @@ namespace TGC.Examples.Lights
 
                 mesh.UpdateMeshTransform();
                 //Renderizar modelo
-                mesh.render();
+                mesh.Render();
             }
 
             //Renderizar meshes comunes

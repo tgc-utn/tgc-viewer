@@ -67,7 +67,7 @@ namespace TGC.Examples.Optimization.Octree
             octree.createDebugOctreeMeshes();
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
+            Camera = new TgcFpsCamera(new TGCVector3(1500, 800, 0), Input);
 
             showOctreeModifier = AddBoolean("showOctree", "Show Octree", false);
             showTerrainModifier = AddBoolean("showTerrain", "Show Terrain", true);
@@ -75,8 +75,7 @@ namespace TGC.Examples.Optimization.Octree
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

@@ -8,12 +8,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TGC.Viewer")]
 [assembly:
     AssemblyDescription(
-        "Es un motor de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA)."
-        )]
+"Es un framwork de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA).")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TGC - UTN.BA")]
 [assembly: AssemblyProduct("TGC.Viewer")]
-[assembly: AssemblyCopyright("Copyright © 2009 - 2018")]
+[assembly: AssemblyCopyright("Copyright © 2009 - 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,5 +34,5 @@ using System.Runtime.InteropServices;
 //      Revisión
 //
 
-[assembly: AssemblyVersion("2.3.4.0")]
-[assembly: AssemblyFileVersion("2.3.4.0")]
+[assembly: AssemblyVersion("2.4.1.0")]
+[assembly: AssemblyFileVersion("2.4.1.0")]

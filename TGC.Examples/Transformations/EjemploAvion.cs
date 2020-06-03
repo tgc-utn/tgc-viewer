@@ -37,17 +37,15 @@ namespace TGC.Examples.Transformations
         {
             var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\floor1.jpg");
             var center = new TGCVector3(0, 0, 0);
-            var size = new TGCVector3(1f, 1f, 1f);
+            var size = TGCVector3.One;
             box = TGCBox.fromSize(center, size, texture);
 
             box.Transform = TGCMatrix.Identity;
-            Camara = new TgcRotationalCamera(new TGCVector3(0f, 1.5f, 0f), 20f, Input);
+            Camera = new TgcRotationalCamera(new TGCVector3(0f, 1.5f, 0f), 20f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             // Los movimientos de teclado no validan que la mesh se atraviecen, solo modifican el angulo o traslacion.
             if (Input.keyDown(Key.W))
             {
@@ -80,8 +78,6 @@ namespace TGC.Examples.Transformations
             var R3 = TGCMatrix.RotationX(angHelice);
 
             transformacionHelice = R3 * T2 * transformacionAvion;
-
-            PostUpdate();
         }
 
         public override void Render()

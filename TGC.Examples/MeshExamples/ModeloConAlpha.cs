@@ -43,21 +43,17 @@ namespace TGC.Examples.MeshExamples
             //Modifier para activar o desactivar el alpha
             alphaModifier = AddBoolean("alpha", "Alpha blend", true);
 
-            Camara = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(), scene.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camera = new TgcRotationalCamera(scene.BoundingBox.calculateBoxCenter(), scene.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             var alpha = alphaModifier.Value;
 
             foreach (var mesh in scene.Meshes)
             {
                 mesh.AlphaBlendEnable = alpha;
             }
-
-            PostUpdate();
         }
 
         public override void Render()

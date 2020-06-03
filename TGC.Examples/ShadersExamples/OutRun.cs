@@ -93,8 +93,8 @@ namespace TGC.Examples.ShadersExamples
             //Configurar Technique dentro del shader
             effect.Technique = "DefaultTechnique";
 
-            //Configurar FPS Camara
-            Camara.SetCamera(new TGCVector3(315.451f, 40, -464.28490f), new TGCVector3(315.451f, 40, -465.28490f));
+            //Configurar FPS Camera
+            Camera.SetCamera(new TGCVector3(315.451f, 40, -464.28490f), new TGCVector3(315.451f, 40, -465.28490f));
 
             reset_pos();
 
@@ -156,8 +156,6 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            PreUpdate();
-
             if (Input.keyPressed(Key.P))
                 paused = !paused;
 
@@ -204,11 +202,9 @@ namespace TGC.Examples.ShadersExamples
             car.Transform = CalcularMatriz(pos, car_Scale, -dir);
 
             // actualizo la camara
-            Camara.SetCamera(pos - dir * dist_cam + desf, pos + desf);
-            //this.Camara.SetCamera(new TGCVector3(500, 4000, 500), TGCVector3.Empty);
-            Camara.UpdateCamera(ElapsedTime);
-
-            PostUpdate();
+            Camera.SetCamera(pos - dir * dist_cam + desf, pos + desf);
+            //this.Camera.SetCamera(new TGCVector3(500, 4000, 500), TGCVector3.Empty);
+            Camera.UpdateCamera(ElapsedTime);
         }
 
         public override void Render()
@@ -269,7 +265,7 @@ namespace TGC.Examples.ShadersExamples
             effect.EndPass();
             effect.End();
 
-            //TgcDrawText.Instance.drawText("Pos: " + this.Camara.Position, 0, 0, Color.Yellow);
+            //TgcDrawText.Instance.drawText("Pos: " + this.Camera.Position, 0, 0, Color.Yellow);
             //TgcDrawText.Instance.drawText("Look At: " + CamaraManager.Instance.CurrentCamera.getLookAt(), 500, 0, Color.Yellow);
 
             if (circuito.en_ruta)

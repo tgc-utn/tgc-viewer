@@ -73,13 +73,12 @@ namespace TGC.Examples.GeometryBasics
             UserVars.addVar("Vertices");
             UserVars.addVar("Triangulos");
 
-            Camara = new TgcRotationalCamera(TGCVector3.Empty, 50f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 50f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         /// <summary>

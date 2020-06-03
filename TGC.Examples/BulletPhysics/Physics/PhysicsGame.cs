@@ -1,12 +1,12 @@
 ﻿using BulletSharp;
 using TGC.Core.Mathematica;
 
-namespace TGC.Examples.Bullet.Physics
+namespace TGC.Examples.BulletPhysics.Physics
 {
     public abstract class PhysicsGame
     {
         protected BulletExampleWall Ctx;
-        protected BulletExample3 Ctx2;
+        protected BulletExampleBasic Ctx2;
         protected DiscreteDynamicsWorld dynamicsWorld;
         protected CollisionDispatcher dispatcher;
         protected DefaultCollisionConfiguration collisionConfiguration;
@@ -26,7 +26,7 @@ namespace TGC.Examples.Bullet.Physics
             dynamicsWorld.Gravity = new TGCVector3(0, -20f, 0).ToBulletVector3();
         }
 
-        public virtual void Init(BulletExample3 ctx)
+        public virtual void Init(BulletExampleBasic ctx)
         {
             Ctx2 = ctx;
             //Creamos el mundo fisico por defecto.
@@ -40,7 +40,7 @@ namespace TGC.Examples.Bullet.Physics
             dynamicsWorld.Gravity = new TGCVector3(0, -20f, 0).ToBulletVector3();
         }
 
-        public abstract void Update();
+        public abstract void Update(float lastFrameTime, float timeBetweenFrames);
 
         public abstract void Render();
 

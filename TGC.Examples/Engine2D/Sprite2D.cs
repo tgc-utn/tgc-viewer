@@ -85,13 +85,11 @@ namespace TGC.Examples.Engine2D
             box.Transform = TGCMatrix.RotationX(FastMath.QUARTER_PI);
 
             //Hacer que la camara se centre en el box3D
-            Camara = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(), box.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camera = new TgcRotationalCamera(box.BoundingBox.calculateBoxCenter(), box.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-
             //Actualizar valores cargados en modifiers
             sprite.Position = positionModifier.Value;
             sprite.Scaling = scalingModifier.Value;
@@ -105,8 +103,6 @@ namespace TGC.Examples.Engine2D
 
             //Actualizamos el estado de la animacion y renderizamos
             animatedSprite.update(ElapsedTime);
-
-            PostUpdate();
         }
 
         public override void Render()

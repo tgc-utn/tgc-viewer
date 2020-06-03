@@ -75,7 +75,7 @@ namespace TGC.Examples.Lights
             skeletalMesh.Transform = TGCMatrix.RotationY(skeletalMesh.Rotation.Y + FastMath.PI) * TGCMatrix.Translation(skeletalMesh.Position);
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new TGCVector3(250, 140, 150), Input);
+            Camera = new TgcFpsCamera(new TGCVector3(250, 140, 150), Input);
 
             //Mesh para la luz
             lightMesh = TGCBox.fromSize(new TGCVector3(10, 10, 10));
@@ -101,16 +101,12 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            PreUpdate();
-
             //Actualizo los valores de la luz
             lightMesh.Enabled = lightEnableModifier.Value;
             lightMesh.Position = lightPosModifier.Value;
             lightMesh.Transform = TGCMatrix.Translation(lightMesh.Position);
             lightMesh.Color = lightColorModifier.Value;
             lightMesh.updateValues();
-
-            PostUpdate();
         }
 
         public override void Render()
@@ -155,7 +151,7 @@ namespace TGC.Examples.Lights
                     //Cargar variables shader de la luz
                     mesh.Effect.SetValue("lightColor", ColorValue.FromColor(lightMesh.Color));
                     mesh.Effect.SetValue("lightPosition", TGCVector3.TGCVector3ToFloat4Array(lightMesh.Position));
-                    mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
+                    mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camera.Position));
                     mesh.Effect.SetValue("lightIntensity", lightIntensityModifier.Value);
                     mesh.Effect.SetValue("lightAttenuation", lightAttenuationModifier.Value);
 
@@ -177,7 +173,7 @@ namespace TGC.Examples.Lights
                 //Cargar variables shader de la luz
                 skeletalMesh.Effect.SetValue("lightColor", ColorValue.FromColor(lightMesh.Color));
                 skeletalMesh.Effect.SetValue("lightPosition", TGCVector3.TGCVector3ToFloat4Array(lightMesh.Position));
-                skeletalMesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
+                skeletalMesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camera.Position));
                 skeletalMesh.Effect.SetValue("lightIntensity", lightIntensityModifier.Value);
                 skeletalMesh.Effect.SetValue("lightAttenuation", lightAttenuationModifier.Value);
 

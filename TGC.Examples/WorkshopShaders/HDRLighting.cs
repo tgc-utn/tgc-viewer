@@ -103,9 +103,9 @@ namespace TGC.Examples.WorkshopShaders
             //Configurar Technique dentro del shader
             effect.Technique = "DefaultTechnique";
 
-            //Camara en primera personas
+            //Camara en primera persona
             TGCVector3 positionEye = new TGCVector3(-944.1269f, 100f, -1033.307f);
-            Camara = new TgcFpsCamera(positionEye, 300, 10, Input);
+            Camera = new TgcFpsCamera(positionEye, 300, 10, Input);
 
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth, d3dDevice.PresentationParameters.BackBufferHeight, DepthFormat.D24S8, MultiSampleType.None, 0, true);
 
@@ -154,11 +154,7 @@ namespace TGC.Examples.WorkshopShaders
 
         public override void Update()
         {
-            PreUpdate();
-
-            Camara.UpdateCamera(ElapsedTime);
-
-            PostUpdate();
+            Camera.UpdateCamera(ElapsedTime);
         }
 
         public override void Render()

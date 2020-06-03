@@ -55,7 +55,16 @@ namespace TGC.Viewer.UI
             }
 
             //Iniciar graficos
-            Model.InitGraphics(this, panel3D, settings.CommonShaders);
+            try
+            {
+                Model.InitGraphics(this, panel3D);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ocurrio un problema al inicializar DX", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            Model.InitShaders(settings.CommonShaders);
 
             try
             {
@@ -195,6 +204,14 @@ namespace TGC.Viewer.UI
         }
 
         /// <summary>
+        /// Activa o desactiva la opcion de correr a update constante.
+        /// </summary>
+        private void FixedTick()
+        {
+            Model.FixedTick(tickConstanteToolStripMenuItem.Checked);
+        }
+
+        /// <summary>
         /// Activa o desactiva la opcion de los ejes cartesianos.
         /// </summary>
         private void AxisLines()
@@ -206,13 +223,14 @@ namespace TGC.Viewer.UI
         /// Ejecuta un ejemplo particular.
         /// </summary>
         /// <param name="example">Ejemplo a ejecutar.</param>
-        private void ExecuteExample(TgcExample example)
+        private void ExecuteExample(TGCExample example)
         {
             try
             {
                 Model.ExecuteExample(example);
-                ContadorFPS();
                 AxisLines();
+                ContadorFPS();
+                FixedTick();
                 Wireframe();
 
                 toolStripStatusCurrentExample.Text = "Ejemplo actual: " + example.Name;
@@ -272,6 +290,11 @@ namespace TGC.Viewer.UI
         private void fpsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ContadorFPS();
+        }
+
+        private void tickConstanteToolMenuItem_Click(object sender, EventArgs e)
+        {
+            FixedTick();
         }
 
         private void axisToolStripMenuItem_Click(object sender, EventArgs e)

@@ -7,6 +7,7 @@ namespace TGC.Core.Mathematica
     /// <summary>
     /// Describes and manipulates a vector in three-dimensional (3-D) space.
     /// </summary>
+    [Serializable]
     public struct TGCVector3
     {
         /// <summary>
@@ -772,7 +773,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         ///     Imprime un TGCVector3 de la forma [150.0,150.0,150.0]
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String para poder visualizar las coordenadas del Vector.</returns>
         public static string PrintTGCVector3(float x, float y, float z)
         {
             return "[" + TgcParserUtils.printFloat(x) +

@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
@@ -117,11 +116,11 @@ namespace TGC.Examples.ShadersExamples
             avion = scene3.Meshes[0];
 
             mesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
-            mesh.Position = new TGCVector3(0f, 0f, 0f);
+            mesh.Position = TGCVector3.Empty;
             var size = mesh.BoundingBox.calculateSize();
             largo_tanque = Math.Abs(size.Z);
             alto_tanque = Math.Abs(size.Y) * mesh.Scale.Y;
-            avion.Scale = new TGCVector3(1f, 1f, 1f);
+            avion.Scale = TGCVector3.One;
             avion.Position = new TGCVector3(3000f, 550f, 0f);
             dir_avion = new TGCVector3(0, 0, 1);
             size = palmera.BoundingBox.calculateSize();
@@ -167,7 +166,7 @@ namespace TGC.Examples.ShadersExamples
             CamaraRot = new TgcRotationalCamera(mesh.BoundingBox.calculateBoxCenter(), mesh.BoundingBox.calculateBoxRadius() * 2, Input);
             CamaraRot.CameraDistance = 300;
             CamaraRot.RotationSpeed = 1.5f;
-            Camara = CamaraRot;
+            Camera = CamaraRot;
 
             kx = kc = 0.5f;
             reflexionModifier = AddFloat("Reflexion", 0, 1, kx);
@@ -177,8 +176,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -205,7 +203,7 @@ namespace TGC.Examples.ShadersExamples
 
             //Cargar variables de shader
             effect.SetValue("fvLightPosition", new TGCVector4(0, 400, 0, 0));
-            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camera.Position));
             effect.SetValue("kx", reflexionModifier.Value);
             effect.SetValue("kc", refraccionModifier.Value);
             effect.SetValue("usar_fresnel", fresnelModifier.Value);
@@ -322,7 +320,7 @@ namespace TGC.Examples.ShadersExamples
             //TextureLoader.Save("test.bmp", ImageFileFormat.Bmp, g_pCubeMap);
 
             // Restauro el estado de las transformaciones
-            D3DDevice.Instance.Device.Transform.View = Camara.GetViewMatrix().ToMatrix();
+            D3DDevice.Instance.Device.Transform.View = Camera.GetViewMatrix().ToMatrix();
             D3DDevice.Instance.Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(Geometry.DegreeToRadian(45.0f), aspectRatio, 1f, 10000f).ToMatrix();
 
             // dibujo pp dicho

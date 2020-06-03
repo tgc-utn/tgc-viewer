@@ -1,7 +1,6 @@
 ﻿using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
@@ -102,7 +101,7 @@ namespace TGC.Core.Geometry
         public virtual TGCVector3 Scale
         {
             get { return scale; }
-            set { Debug.WriteLine("TODO esta bien que pase por aca?"); }
+            set { Console.WriteLine("TODO esta bien que pase por aca?"); }
         }
 
         /// <summary>
@@ -417,7 +416,7 @@ namespace TGC.Core.Geometry
                         catch (Exception e)
                         {
                             //Arreglar esto... y despues quitar el try catch :(
-                            System.Console.WriteLine(e.Message);
+                            Console.WriteLine(e.Message);
                         }
                     }
                 }

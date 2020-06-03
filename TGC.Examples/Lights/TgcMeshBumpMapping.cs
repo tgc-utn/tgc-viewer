@@ -64,7 +64,7 @@ namespace TGC.Examples.Lights
         ///     Es el mismo código del render() pero con la sección de "MeshRenderType.DIFFUSE_MAP" ampliada
         ///     para Shaders.
         /// </summary>
-        public new void render()
+        public new void Render()
         {
             if (!enabled)
                 return;

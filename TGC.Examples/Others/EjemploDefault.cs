@@ -57,13 +57,13 @@ namespace TGC.Examples.Others
             helpForm = new EjemploDefaultHelpForm(helpRtf);
 
             //Camara
-            Camara = new TgcRotationalCamera(TGCVector3.Empty, 150f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 150f, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            mesh.Rotation -= new TGCVector3(0, ElapsedTime / 2, 0);
+            mesh.Transform = TGCMatrix.RotationY(mesh.Rotation.Y);
         }
 
         public override void Render()
@@ -79,10 +79,7 @@ namespace TGC.Examples.Others
             mesh.Effect.SetValue("specularColor", ColorValue.FromColor(Color.White));
             mesh.Effect.SetValue("specularExp", 10f);
             mesh.Effect.SetValue("lightPosition", lightPos);
-            mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camara.Position));
-
-            mesh.Rotation = new TGCVector3(mesh.Rotation.X, mesh.Rotation.Y - ElapsedTime / 2, mesh.Rotation.Z);
-            mesh.Transform = TGCMatrix.RotationY(mesh.Rotation.Y);            
+            mesh.Effect.SetValue("eyePosition", TGCVector3.TGCVector3ToFloat4Array(Camera.Position));
 
             mesh.Render();
 

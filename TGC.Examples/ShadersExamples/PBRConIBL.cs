@@ -136,7 +136,6 @@ namespace TGC.Examples.ShadersExamples
             InitializeFullScreenQuad();
 
             FixedTickEnable = true;
-
             Camera = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
         }
 

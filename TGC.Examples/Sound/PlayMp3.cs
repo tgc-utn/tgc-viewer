@@ -59,31 +59,6 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
-        }
-
-        /// <summary>
-        ///     Cargar un nuevo MP3 si hubo una variacion
-        /// </summary>
-        private void loadMp3(string filePath)
-        {
-            if (currentFile == null || currentFile != filePath)
-            {
-                currentFile = filePath;
-
-                //Cargar archivo
-                mp3Player.closeFile();
-                mp3Player.FileName = currentFile;
-
-                currentMusicText.Text = "Playing: " + new FileInfo(currentFile).Name;
-            }
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
             //Ver si cambio el MP3
             var filePath = mp3FileModifier.Value;
             loadMp3(filePath);
@@ -128,6 +103,28 @@ namespace TGC.Examples.Sound
                     mp3Player.stop();
                 }
             }
+        }
+
+        /// <summary>
+        ///     Cargar un nuevo MP3 si hubo una variacion
+        /// </summary>
+        private void loadMp3(string filePath)
+        {
+            if (currentFile == null || currentFile != filePath)
+            {
+                currentFile = filePath;
+
+                //Cargar archivo
+                mp3Player.closeFile();
+                mp3Player.FileName = currentFile;
+
+                currentMusicText.Text = "Playing: " + new FileInfo(currentFile).Name;
+            }
+        }
+
+        public override void Render()
+        {
+            PreRender();
 
             //Render texto
             currentMusicText.render();

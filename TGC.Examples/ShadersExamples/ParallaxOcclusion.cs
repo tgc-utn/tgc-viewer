@@ -103,7 +103,7 @@ namespace TGC.Examples.ShadersExamples
             rotCamera.CameraCenter = rotCamera.CameraCenter + new TGCVector3(0, 20f, 0);
             rotCamera.CameraDistance = 75;
             rotCamera.RotationSpeed = 50f;
-            Camara = rotCamera;
+            Camera = rotCamera;
 
             pom = false;
             phong = true;
@@ -112,8 +112,7 @@ namespace TGC.Examples.ShadersExamples
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -138,7 +137,7 @@ namespace TGC.Examples.ShadersExamples
             effect.SetValue("min_cant_samples", minSampleModifier.Value);
             effect.SetValue("max_cant_samples", maxSampleModifier.Value);
             effect.SetValue("fHeightMapScale", heightMapScaleModifier.Value);
-            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camera.Position));
 
             device.EndScene();
             effect.SetValue("time", time);

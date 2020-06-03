@@ -73,7 +73,7 @@ namespace TGC.Examples.DirectX
             D3DDevice.Instance.Device.RenderState.Lighting = true;
 
             //Configurar camara rotacional
-            Camara = new TgcRotationalCamera(TGCVector3.Empty, 10f, Input);
+            Camera = new TgcRotationalCamera(TGCVector3.Empty, 15f, Input);
 
             //El tipo de mesh para seleccionar.
             selectedMeshModifier = AddInterval("SelectedMesh", new[] { "Teapot", "Face" }, 0);
@@ -105,20 +105,19 @@ namespace TGC.Examples.DirectX
             angleXModifier = AddFloat("angleX", 0, 0.005f, 0.0f);
             angleYModifier = AddFloat("angleY", 0, 0.005f, 0.0f);
             angleZModifier = AddFloat("angleZ", 0, 0.005f, 0.0f);
+
+            //Pongo el fondo negro
+            BackgroundColor = Color.Black;
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
         {
-            //Pongo el fondo negro
-            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            BeginScene();
-            ClearTextures();
+            PreRender();
 
             //Obtener valores de Modifiers
             var vAngleX = angleXModifier.Value;
@@ -135,7 +134,7 @@ namespace TGC.Examples.DirectX
             LightRotationMatrix *= TGCMatrix.Translation(lightDistance, 0, 0);
             LightRotationMatrix *= TGCMatrix.RotationYawPitchRoll(angleX, angleY, angleZ);
             D3DDevice.Instance.Device.Lights[0].Position = TGCVector3.TransformCoordinate(TGCVector3.Empty, LightRotationMatrix);
-            lightVectorToCenter = TGCVector3.FromVector3(D3DDevice.Instance.Device.Lights[0].Position);
+            lightVectorToCenter = new TGCVector3(D3DDevice.Instance.Device.Lights[0].Position);
             D3DDevice.Instance.Device.Lights[0].Direction = -D3DDevice.Instance.Device.Lights[0].Position;
             D3DDevice.Instance.Device.Lights[0].Direction.Normalize();
             D3DDevice.Instance.Device.Lights[0].Update();
@@ -259,7 +258,7 @@ namespace TGC.Examples.DirectX
                 teapotMeshNormalsVB[i * 2].Position = verts[i].Position;
 
                 //El extremo del vector normal es la posicion mas la normal en si misma. Se escala para que se mas proporcionada.
-                teapotMeshNormalsVB[i * 2 + 1].Position = verts[i].Position + TGCVector3.Scale(TGCVector3.FromVector3(verts[i].Normal), 1 / 10f);
+                teapotMeshNormalsVB[i * 2 + 1].Position = verts[i].Position + TGCVector3.Scale(new TGCVector3(verts[i].Normal), 1 / 10f);
                 teapotMeshNormalsVB[i * 2].Color = teapotMeshNormalsVB[i * 2 + 1].Color = Color.Yellow.ToArgb();
             }
 

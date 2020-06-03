@@ -42,7 +42,7 @@ namespace TGC.Core.Sound
         /// </summary>
         public TGCVector3 Position
         {
-            get { return TGCVector3.FromVector3(Buffer3d.Position); }
+            get { return new TGCVector3(Buffer3d.Position); }
             set { Buffer3d.Position = value; }
         }
 

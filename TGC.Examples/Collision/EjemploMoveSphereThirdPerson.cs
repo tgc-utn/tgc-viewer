@@ -93,7 +93,9 @@ namespace TGC.Examples.Collision
             //Escalarlo porque es muy grande
             personaje.Position = new TGCVector3(0, 500, -100);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.RotateY(Geometry.DegreeToRadian(180f));
+            personaje.Rotation = new TGCVector3(0, Geometry.DegreeToRadian(180f), 0);
+            personaje.Transform = TGCMatrix.RotationY(personaje.Rotation.Y) * TGCMatrix.Translation(personaje.Position);
+
             //Escalamos el personaje ya que sino la escalera es demaciado grande.
             personaje.Scale = new TGCVector3(1.5f, 1.5f, 1.5f);
 
@@ -119,7 +121,7 @@ namespace TGC.Examples.Collision
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, new TGCVector3(0, 100, 0), 100, -400);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
@@ -149,8 +151,6 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            PreUpdate();
-
             //obtener velocidades de Modifiers
             var velocidadCaminar = velocidadCaminarModifier.Value;
             var velocidadRotacion = velocidadRotacionModifier.Value;
@@ -263,7 +263,7 @@ namespace TGC.Examples.Collision
             foreach (var mesh in escenario.Meshes)
             {
                 TGCVector3 q;
-                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, camaraInterna.Target,
+                if (TgcCollisionUtils.intersectSegmentAABB(Camera.Position, camaraInterna.Target,
                     mesh.BoundingBox, out q))
                 {
                     objectsBehind.Add(mesh);
@@ -273,7 +273,6 @@ namespace TGC.Examples.Collision
                     objectsInFront.Add(mesh);
                 }
             }
-            PostUpdate();
         }
 
         public override void Render()

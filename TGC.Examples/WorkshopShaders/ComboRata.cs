@@ -96,8 +96,8 @@ namespace TGC.Examples.WorkshopShaders
             maxSampleModifier = AddFloat("maxSample", 11f, 50f, 50f);
             heightMapScaleModifier = AddFloat("HeightMapScale", 0.001f, 0.5f, 0.1f);
 
-            Camara = new TgcFpsCamera(new TGCVector3(147.2558f, 8.0f, 262.2509f), 100f, 10f, Input);
-            Camara.SetCamera(new TGCVector3(147.2558f, 8.0f, 262.2509f), new TGCVector3(148.2558f, 8.0f, 263.2509f));
+            Camera = new TgcFpsCamera(new TGCVector3(147.2558f, 8.0f, 262.2509f), 100f, 10f, Input);
+            Camera.SetCamera(new TGCVector3(147.2558f, 8.0f, 262.2509f), new TGCVector3(148.2558f, 8.0f, 263.2509f));
 
             //Cargar personaje con animaciones
             TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
@@ -115,15 +115,15 @@ namespace TGC.Examples.WorkshopShaders
                     float pos_z = mesh.BoundingBox.PMin.Z * kz + mesh.BoundingBox.PMax.Z * (1 - kz);
 
                     TgcSkeletalMesh enemigo = skeletalLoader.loadMeshAndAnimationsFromFile(MediaDir + "SkeletalAnimations\\BasicHuman\\" + "CombineSoldier-TgcSkeletalMesh.xml", MediaDir + "SkeletalAnimations\\BasicHuman\\", new string[] { MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Walk-TgcSkeletalAnim.xml", });
-                    //TODO remove AutoTransformEnable dependency
-                    enemigo.AutoTransformEnable = true;
-
                     enemigos.Add(enemigo);
 
                     //Configurar animacion inicial
                     enemigos[cant_enemigos].playAnimation("Walk", true);
                     enemigos[cant_enemigos].Position = new TGCVector3(pos_x, 1f, pos_z);
                     enemigos[cant_enemigos].Scale = new TGCVector3(0.3f, 0.3f, 0.3f);
+                    enemigos[cant_enemigos].Transform = TGCMatrix.Scaling(enemigos[cant_enemigos].Scale) *
+                        TGCMatrix.RotationYawPitchRoll(enemigos[cant_enemigos].Rotation.Y, enemigos[cant_enemigos].Rotation.X, enemigos[cant_enemigos].Rotation.Z) *
+                        TGCMatrix.Translation(enemigos[cant_enemigos].Position);
                     enemigo_an[cant_enemigos] = 0;
                     cant_enemigos++;
                 }
@@ -151,8 +151,6 @@ namespace TGC.Examples.WorkshopShaders
 
         public override void Update()
         {
-            PreUpdate();
-
             Random rnd = new Random();
             float speed = 20f * ElapsedTime;
             for (int t = 0; t < cant_enemigos; ++t)
@@ -161,8 +159,8 @@ namespace TGC.Examples.WorkshopShaders
                 TGCVector3 vel = new TGCVector3((float)Math.Sin(an), 0, (float)Math.Cos(an));
                 //Mover personaje
                 TGCVector3 lastPos = enemigos[t].Position;
-                enemigos[t].Move(vel * speed);
-                enemigos[t].Rotation = new TGCVector3(0, (float)Math.PI + an, 0);           // +(float)Math.PI/2
+                enemigos[t].Position += (vel * speed);
+                enemigos[t].Rotation += new TGCVector3(0, (float)Math.PI / 2 + an, 0);
 
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
                 bool collide = false;
@@ -183,10 +181,9 @@ namespace TGC.Examples.WorkshopShaders
                     enemigo_an[t] += rnd.Next(0, 100) / 100.0f;
                 }
 
+                enemigos[t].Transform = TGCMatrix.Scaling(enemigos[t].Scale) * TGCMatrix.RotationY(enemigos[t].Rotation.Y) * TGCMatrix.Translation(enemigos[t].Position);
                 enemigos[t].updateAnimation(ElapsedTime);
             }
-
-            PostUpdate();
         }
 
         public override void Render()
@@ -200,7 +197,7 @@ namespace TGC.Examples.WorkshopShaders
             effect.SetValue("min_cant_samples", minSampleModifier.Value);
             effect.SetValue("max_cant_samples", maxSampleModifier.Value);
             effect.SetValue("fHeightMapScale", heightMapScaleModifier.Value);
-            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camara.Position));
+            effect.SetValue("fvEyePosition", TGCVector3.TGCVector3ToFloat3Array(Camera.Position));
 
             effect.SetValue("time", time);
             effect.SetValue("aux_Tex", g_pBaseTexture);
@@ -308,7 +305,7 @@ namespace TGC.Examples.WorkshopShaders
             float max_dist = 80;
             foreach (TgcSkeletalMesh m in enemigos)
             {
-                TGCVector3 pos_personaje = Camara.Position;
+                TGCVector3 pos_personaje = Camera.Position;
                 TGCVector3 pos_enemigo = m.Position * 1;
                 float dist = (pos_personaje - pos_enemigo).Length();
 
@@ -346,8 +343,8 @@ namespace TGC.Examples.WorkshopShaders
             gui.TextOut(20, H - 140, "Elapsed Time:" + Math.Round(time), Color.LightSteelBlue);
 
             // dibujo los enemigos
-            TGCVector3 pos_personaje = Camara.Position;
-            TGCVector3 dir_view = Camara.LookAt - pos_personaje;
+            TGCVector3 pos_personaje = Camera.Position;
+            TGCVector3 dir_view = Camera.LookAt - pos_personaje;
             TGCVector2 dir_v = new TGCVector2(dir_view.X, dir_view.Z);
             dir_v.Normalize();
             TGCVector2 dir_w = new TGCVector2(dir_v.Y, -dir_v.X);

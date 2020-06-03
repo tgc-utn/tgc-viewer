@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Drawing;
@@ -85,7 +84,7 @@ namespace TGC.Examples.ShadersExamples
             // le asigno el efecto a las mallas
             foreach (var T in scene.Meshes)
             {
-                T.Scale = new TGCVector3(1f, 1f, 1f);
+                T.Scale = TGCVector3.One;
                 T.Effect = effect;
             }
             avion.Effect = effect;
@@ -122,13 +121,12 @@ namespace TGC.Examples.ShadersExamples
             rotCamera.CameraCenter = rotCamera.CameraCenter + new TGCVector3(0, 50f, 0);
             rotCamera.CameraDistance = 300;
             rotCamera.RotationSpeed = 50f;
-            Camara = rotCamera;
+            Camera = rotCamera;
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
@@ -156,7 +154,7 @@ namespace TGC.Examples.ShadersExamples
             // Shadow maps:
             D3DDevice.Instance.Device.EndScene(); // termino el thread anterior
 
-            Camara.UpdateCamera(ElapsedTime);
+            Camera.UpdateCamera(ElapsedTime);
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //Genero el shadow map

@@ -61,13 +61,12 @@ namespace TGC.Examples.GeometryBasics
             updateTGCPlane();
 
             //Ajustar camara segun tamano de la pared
-            Camara = new TgcRotationalCamera(plane.BoundingBox.calculateBoxCenter(), plane.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camera = new TgcRotationalCamera(plane.BoundingBox.calculateBoxCenter(), plane.BoundingBox.calculateBoxRadius() * 2, Input);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         /// <summary>
@@ -82,7 +81,7 @@ namespace TGC.Examples.GeometryBasics
             var autoAdjust = autoAdjustModifier.Value;
 
             //Cambiar orienacion
-            var orientation = orientationModifier.Value;
+            var orientation = orientationModifier.Value.ToString();
             TgcPlane.Orientations or;
             if (orientation == "XY") or = TgcPlane.Orientations.XYplane;
             else if (orientation == "XZ") or = TgcPlane.Orientations.XZplane;

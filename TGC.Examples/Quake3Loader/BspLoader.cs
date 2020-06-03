@@ -1,7 +1,6 @@
 ﻿using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -73,7 +72,7 @@ namespace TGC.Examples.Quake3Loader
         /// <returns>Mapa cargado</returns>
         public BspMap loadBsp(string bspFilePath, string mediaPath)
         {
-            Debug.WriteLine("Cargando BSP file: " + bspFilePath);
+            Console.WriteLine("Cargando BSP file: " + bspFilePath);
 
             var bspMap = new BspMap();
 
@@ -146,7 +145,7 @@ namespace TGC.Examples.Quake3Loader
             bspMap.Data.entdata = enc.GetString(arrayByte, header.lumps[(int)LumpEnum.Entities].fileofs,
                 header.lumps[(int)LumpEnum.Entities].filelen);
 
-            Debug.WriteLine(bspMap.Data.entdata);
+            Console.WriteLine(bspMap.Data.entdata);
 
             //leafs
             offset = header.lumps[(int)LumpEnum.Leafs].fileofs;
@@ -565,7 +564,7 @@ namespace TGC.Examples.Quake3Loader
                     else
                     {
                         //logea el shader que no se pudo cargar
-                        Debug.WriteLine("ID:" + i + " " + shader_text);
+                        Console.WriteLine("ID:" + i + " " + shader_text);
                     }
                 }
             }
@@ -582,7 +581,7 @@ namespace TGC.Examples.Quake3Loader
         /// <param name="targetFolder">Carpeta destino</param>
         public void packLevel(BspMap bspMap, string mediaPath, string targetFolder)
         {
-            Debug.WriteLine("Empaquetando: nivel: " + bspMap.Data.filePath);
+            Console.WriteLine("Empaquetando: nivel: " + bspMap.Data.filePath);
             //copia el archivo bsp en la carpeta maps
             var mapa = bspMap.Data.filePath.Substring(bspMap.Data.filePath.LastIndexOf("\\") + 1);
             fileCopy(bspMap.Data.filePath, targetFolder + "\\maps\\" + mapa);

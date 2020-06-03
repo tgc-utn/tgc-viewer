@@ -125,7 +125,7 @@ namespace TGC.Examples.Sound
 
             //Configurar camara en Tercer Persona
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 250, 500);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
 
             //Ejecutar en loop los sonidos
             foreach (var s in sonidos)
@@ -136,14 +136,6 @@ namespace TGC.Examples.Sound
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
@@ -183,7 +175,7 @@ namespace TGC.Examples.Sound
             {
                 //Rotar personaje y la camara, hay que multiplicarlo por el tiempo transcurrido para no atarse a la velocidad el hardware
                 var rotAngle = Geometry.DegreeToRadian(rotate * ElapsedTime);
-                personaje.RotateY(rotAngle);
+                personaje.Rotation += new TGCVector3(0, rotAngle, 0);
                 camaraInterna.rotateY(rotAngle);
             }
 
@@ -218,8 +210,17 @@ namespace TGC.Examples.Sound
                 }
             }
 
+            personaje.Transform = TGCMatrix.Scaling(personaje.Scale)
+                                  * TGCMatrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z)
+                                  * TGCMatrix.Translation(personaje.Position);
+
             //Hacer que la camara siga al personaje en su nueva posicion
             camaraInterna.Target = personaje.Position;
+        }
+
+        public override void Render()
+        {
+            PreRender();
 
             //Render piso
             piso.Render();
@@ -231,10 +232,6 @@ namespace TGC.Examples.Sound
             }
 
             //Render personaje
-            personaje.Transform = TGCMatrix.Scaling(personaje.Scale)
-                * TGCMatrix.RotationYawPitchRoll(personaje.Rotation.Y, personaje.Rotation.X, personaje.Rotation.Z)
-                * TGCMatrix.Translation(personaje.Position);
-
             personaje.Render();
 
             PostRender();

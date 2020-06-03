@@ -1,5 +1,5 @@
 ﻿using Microsoft.DirectX.Direct3D;
-using System.Diagnostics;
+using System;
 using System.Windows.Forms;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
@@ -126,7 +126,7 @@ namespace TGC.Core.Direct3D
             Height = control.Height;
 
             var caps = Manager.GetDeviceCaps(Manager.Adapters.Default.Adapter, DeviceType.Hardware);
-            Debug.WriteLine("Max primitive count:" + caps.MaxPrimitiveCount);
+            Console.WriteLine("Max primitive count:" + caps.MaxPrimitiveCount);
 
             CreateFlags flags;
             if (caps.DeviceCaps.SupportsHardwareTransformAndLight)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX;
+using System;
 using TGC.Core.Utils;
 
 namespace TGC.Core.Mathematica
@@ -6,6 +7,7 @@ namespace TGC.Core.Mathematica
     /// <summary>
     /// Describes and manipulates a vector in two-dimensional (2-D) space.
     /// </summary>
+    [Serializable]
     public struct TGCVector2
     {
         /// <summary>
@@ -566,7 +568,7 @@ namespace TGC.Core.Mathematica
         /// <summary>
         ///     Imprime un TGCVector2 de la forma [150.0,150.0]
         /// </summary>
-        /// <returns></returns>
+        /// <returns>String para poder visualizar las coordenadas del Vector.</returns>
         public static string PrintVector2(float x, float y)
         {
             return "[" + TgcParserUtils.printFloat(x) + "," + TgcParserUtils.printFloat(y) + "]";

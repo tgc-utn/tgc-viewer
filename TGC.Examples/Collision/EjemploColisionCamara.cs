@@ -107,11 +107,12 @@ namespace TGC.Examples.Collision
             personaje.Position = new TGCVector3(100, 0, 100);
             personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
             //Rotarlo 180° porque esta mirando para el otro lado
-            personaje.RotateY(Geometry.DegreeToRadian(180f));
+            personaje.Rotation += new TGCVector3(0, Geometry.DegreeToRadian(180f), 0);
+            personaje.Transform = TGCMatrix.RotationY(personaje.Rotation.Y) * TGCMatrix.Translation(personaje.Position);
 
             //Configurar camara en Tercera Persona y la asigno al TGC.
             camaraInterna = new TgcThirdPersonCamera(personaje.Position, 200, -300);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
 
             //Modifiers para modificar propiedades de la camara
             offsetHeightModifier = AddFloat("offsetHeight", 0, 300, 100);
@@ -121,7 +122,6 @@ namespace TGC.Examples.Collision
 
         public override void Update()
         {
-            PreUpdate();
             var velocidadCaminar = 400f;
             var velocidadRotacion = 120f;
 
@@ -220,8 +220,6 @@ namespace TGC.Examples.Collision
 
             //Ajustar la posicion de la camara segun la colision con los objetos del escenario
             ajustarPosicionDeCamara();
-
-            PostUpdate();
         }
 
         public override void Render()

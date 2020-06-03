@@ -1,4 +1,3 @@
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using System.Windows.Forms;
@@ -56,7 +55,7 @@ namespace TGC.Examples.Lights
             scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new TGCVector3(260f, 170f, 390f), 400f, 300f, Input);
+            Camera = new TgcFpsCamera(new TGCVector3(260f, 170f, 390f), 400f, 300f, Input);
 
             //Cargar Shader personalizado de MultiDiffuseLights
             /*
@@ -98,8 +97,7 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()

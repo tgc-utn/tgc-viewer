@@ -75,8 +75,7 @@ namespace TGC.Examples.MeshExamples
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         /// <summary>
@@ -108,7 +107,7 @@ namespace TGC.Examples.MeshExamples
             currentScene = loader.loadSceneFromFile(path);
 
             //Ajustar camara en base al tamano del objeto
-            Camara = new TgcRotationalCamera(currentScene.BoundingBox.calculateBoxCenter(), currentScene.BoundingBox.calculateBoxRadius() * 2, Input);
+            Camera = new TgcRotationalCamera(currentScene.BoundingBox.calculateBoxCenter(), currentScene.BoundingBox.calculateBoxRadius() * 2, Input);
 
             //Calcular cantidad de triangulos y texturas
             var triangleCount = 0;

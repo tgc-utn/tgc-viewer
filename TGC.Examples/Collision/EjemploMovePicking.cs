@@ -82,20 +82,12 @@ namespace TGC.Examples.Collision
 
             //Camara en tercera persona
             camaraInterna = new TgcThirdPersonCamera(mesh.Position, 800, 1500);
-            Camara = camaraInterna;
+            Camera = camaraInterna;
             speedModifier = AddFloat("speed", 1000, 5000, 2500);
         }
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
-        }
-
-        public override void Render()
-        {
-            PreRender();
-
             //Si hacen clic con el mouse, ver si hay colision con el suelo
             if (Input.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
@@ -160,6 +152,11 @@ namespace TGC.Examples.Collision
                     applyMovement = false;
                 }
             }
+        }
+
+        public override void Render()
+        {
+            PreRender();
 
             //Mostrar caja con lugar en el que se hizo click, solo si hay movimiento
             if (applyMovement)

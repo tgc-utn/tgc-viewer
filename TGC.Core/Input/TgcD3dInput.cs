@@ -71,14 +71,14 @@ namespace TGC.Core.Input
             mouseMovement = new TGCVector2[2];
             for (var i = 0; i < mouseMovement.Length; i++)
             {
-                mouseMovement[i] = new TGCVector2(0.0f, 0.0f);
+                mouseMovement[i] = TGCVector2.Zero;
             }
 
             //Inicializar historyBuffer
             historyBuffer = new TGCVector2[HISTORY_BUFFER_SIZE];
             for (var i = 0; i < historyBuffer.Length; i++)
             {
-                historyBuffer[i] = new TGCVector2(0.0f, 0.0f);
+                historyBuffer[i] = TGCVector2.Zero;
             }
 
             //Inicializar ubicacion del cursor

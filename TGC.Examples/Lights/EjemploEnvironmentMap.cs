@@ -97,7 +97,7 @@ namespace TGC.Examples.Lights
             m4.Dispose();
 
             //Camara en 1ra persona
-            Camara = new TgcFpsCamera(new TGCVector3(200, 60, 50), Input);
+            Camera = new TgcFpsCamera(new TGCVector3(200, 60, 50), Input);
 
             //Cargar Shader personalizado para EnviromentMap
             effect = TGCShaders.Instance.LoadEffect(ShadersDir + "EnvironmentMap.fx");
@@ -128,18 +128,17 @@ namespace TGC.Examples.Lights
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
         {
             PreRender();
 
-            //Actualzar posicion de la luz
+            //Actualizar posicion de la luz
             var lightPos = lightPosModifier.Value;
             lightMesh.Position = lightPos;
-            var eyePosition = Camara.Position;
+            var eyePosition = Camera.Position;
 
             //Renderizar meshes
             foreach (var mesh in meshes)
@@ -164,7 +163,7 @@ namespace TGC.Examples.Lights
                 mesh.Effect.SetValue("texCubeMap", cubeMap);
 
                 //Renderizar modelo
-                mesh.render();
+                mesh.Render();
             }
 
             //Renderizar mesh de luz

@@ -69,7 +69,7 @@ namespace TGC.Core.KeyFrameLoader
         /// </summary>
         /// <param name="mesh">Mesh de DirectX</param>
         /// <param name="renderType">Formato de renderizado de la malla</param>
-        /// <param name="coordinatesIndices">Datos parseados de la malla</param>
+        /// <param name="originalData">Datos parseados de la malla</param>
         public TgcKeyFrameMesh(Mesh mesh, string name, MeshRenderType renderType, OriginalData originalData)
         {
             initData(mesh, name, renderType, originalData);
@@ -517,9 +517,9 @@ namespace TGC.Core.KeyFrameLoader
 
             //variables de movimiento
             AutoTransformEnable = false;
-            translation = new TGCVector3(0f, 0f, 0f);
-            rotation = new TGCVector3(0f, 0f, 0f);
-            scale = new TGCVector3(1f, 1f, 1f);
+            translation = TGCVector3.Empty;
+            rotation = TGCVector3.Empty;
+            scale = TGCVector3.One;
             Transform = TGCMatrix.Identity;
 
             //variables de animacion

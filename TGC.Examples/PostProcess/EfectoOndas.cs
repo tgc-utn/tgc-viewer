@@ -85,8 +85,8 @@ namespace TGC.Examples.PostProcess
             var scene = loader.loadSceneFromFile(MediaDir + "MeshCreator\\Scenes\\Deposito\\Deposito-TgcScene.xml");
             meshes = scene.Meshes;
 
-            //Camara en primera personas
-            Camara = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
+            //Camara en primera persona
+            Camera = new TgcFpsCamera(new TGCVector3(250, 160, -570), Input);
 
             //Modifier para variar tamano de ondas
             activarEfectoModifier = AddBoolean("activar_efecto", "Activar efecto", true);
@@ -96,8 +96,7 @@ namespace TGC.Examples.PostProcess
 
         public override void Update()
         {
-            PreUpdate();
-            PostUpdate();
+            //  Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones ante ellas.
         }
 
         public override void Render()
