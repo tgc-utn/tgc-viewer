@@ -104,7 +104,7 @@
     <Compile Include="Collision\TgcCollisionUtils.cs" />
     <Compile Include="Geometry\TgcConvexPolygon.cs" />
     <Compile Include="Geometry\TgcConvexPolyhedron.cs" />
-    <Compile Include="Geometry\TgcCylinder.cs" />
+    <Compile Include="Geometry\TGCCylinder.cs" />
     <Compile Include="Geometry\TGCBoxDebug.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingElipsoid.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingCylinderFixedY.cs" />

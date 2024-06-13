@@ -9,7 +9,7 @@ namespace TGC.Core.Textures
     /// <summary>
     ///     Encapsula una textura de DirectX junto con información adicional
     /// </summary>
-    public class TGCTexture
+    public class TGCTexture : IDisposable
     {
         /// <summary>
         ///     Crear textura de TGC

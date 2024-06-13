@@ -6,7 +6,7 @@ namespace TGC.Core.Sound
     /// <summary>
     ///     Herramienta para reproducir un sonido WAV estatico
     /// </summary>
-    public class TGCStaticSound
+    public class TGCStaticSound : IDisposable
     {
         /// <summary>
         ///     Buffer con la informacion del sonido cargado

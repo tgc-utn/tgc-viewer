@@ -28,7 +28,7 @@ namespace TGC.Examples.GeometryBasics
         private TGCVertex3fModifier rotationModifier;
 
         private string currentTexture;
-        private TgcCylinder cylinder;
+        private TGCCylinder cylinder;
 
         public EjemploCilindro(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -40,7 +40,7 @@ namespace TGC.Examples.GeometryBasics
 
         public override void Init()
         {
-            cylinder = new TgcCylinder(TGCVector3.Empty, 2, 4);
+            cylinder = new TGCCylinder(TGCVector3.Empty, 2, 4);
 
             cylinder.AlphaBlendEnable = true;
 
@@ -75,7 +75,7 @@ namespace TGC.Examples.GeometryBasics
             if (texturePath != currentTexture)
             {
                 currentTexture = texturePath;
-                cylinder.setTexture(TGCTexture.CreateTexture(D3DDevice.Instance.Device, currentTexture));
+                cylinder.SetTexture(TGCTexture.CreateTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
             cylinder.UseTexture = useTextureModifier.Value;
@@ -90,7 +90,7 @@ namespace TGC.Examples.GeometryBasics
             var color = colorModifier.Value;
             cylinder.Color = Color.FromArgb(alpha, color);
 
-            cylinder.updateValues();
+            cylinder.UpdateValues();
 
             cylinder.Transform = TGCMatrix.Scaling(cylinder.Scale) * TGCMatrix.RotationYawPitchRoll(cylinder.Rotation.Y, cylinder.Rotation.X, cylinder.Rotation.Z) * TGCMatrix.Translation(cylinder.Position);
 

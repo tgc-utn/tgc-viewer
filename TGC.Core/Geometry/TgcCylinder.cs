@@ -1,6 +1,6 @@
-﻿using Microsoft.DirectX.Direct3D;
-using System;
+﻿using System;
 using System.Drawing;
+using Microsoft.DirectX.Direct3D;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
@@ -10,7 +10,7 @@ using TGC.Core.Textures;
 
 namespace TGC.Core.Geometry
 {
-    public class TgcCylinder : IRenderObject, ITransformObject
+    public class TGCCylinder : IRenderObject, ITransformObject
     {
         private const int END_CAPS_RESOLUTION = 40;
         private int color;
@@ -21,30 +21,30 @@ namespace TGC.Core.Geometry
 
         private bool useTexture;
 
-        public TgcCylinder(TGCVector3 _center, float _topRadius, float _bottomRadius, float _halfLength)
+        public TGCCylinder(TGCVector3 center, float topRadius, float bottomRadius, float halfLength)
         {
-            TopRadius = _topRadius;
-            BottomRadius = _bottomRadius;
-            BoundingCylinder = new TgcBoundingCylinder(_center, FastMath.Max(TopRadius, BottomRadius), _halfLength);
+            TopRadius = topRadius;
+            BottomRadius = bottomRadius;
+            BoundingCylinder = new TgcBoundingCylinder(center, FastMath.Max(TopRadius, BottomRadius), halfLength);
 
             color = Color.Red.ToArgb();
 
             manualTransformation = TGCMatrix.Identity;
             AutoTransformEnable = false;
 
-            initialize();
+            Initialize();
         }
 
-        public TgcCylinder(TGCVector3 _center, float _radius, float _halfLength)
-            : this(_center, _radius, _radius, _halfLength)
+        public TGCCylinder(TGCVector3 center, float radius, float halfLength)
+            : this(center, radius, radius, halfLength)
         {
             //nothing to do
         }
 
         public Color Color
         {
-            get { return Color.FromArgb(color); }
-            set { color = value.ToArgb(); }
+            get => Color.FromArgb(color);
+            set => color = value.ToArgb();
         }
 
         /// <summary>
@@ -63,13 +63,17 @@ namespace TGC.Core.Geometry
         /// </summary>
         public bool UseTexture
         {
-            get { return useTexture; }
+            get => useTexture;
             set
             {
                 if (value)
-                    useTextureShader();
+                {
+                    UseTextureShader();
+                }
                 else
-                    useColorShader();
+                {
+                    UseColorShader();
+                }
             }
         }
 
@@ -80,8 +84,8 @@ namespace TGC.Core.Geometry
         /// </summary>
         public float Length
         {
-            get { return BoundingCylinder.Length; }
-            set { BoundingCylinder.Length = value; }
+            get => BoundingCylinder.Length;
+            set => BoundingCylinder.Length = value;
         }
 
         /// <summary>
@@ -101,7 +105,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public float Radius
         {
-            get { return BoundingCylinder.Radius; }
+            get => BoundingCylinder.Radius;
             set
             {
                 TopRadius = value;
@@ -114,21 +118,11 @@ namespace TGC.Core.Geometry
         /// </summary>
         public TGCVector3 Center
         {
-            get { return BoundingCylinder.Center; }
-            set { BoundingCylinder.Center = value; }
+            get => BoundingCylinder.Center;
+            set => BoundingCylinder.Center = value;
         }
 
         public bool AlphaBlendEnable { get; set; }
-
-        /// <summary>
-        ///     Actualiza la posicion e inclinacion del cilindro
-        /// </summary>
-        public void updateValues()
-        {
-            BoundingCylinder.Radius = FastMath.Max(FastMath.Abs(TopRadius), FastMath.Abs(BottomRadius));
-            BoundingCylinder.updateValues();
-            updateDraw();
-        }
 
         public void Render()
         {
@@ -139,9 +133,14 @@ namespace TGC.Core.Geometry
             }
 
             if (texture != null)
+            {
                 TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", texture);
+            }
             else
+            {
                 TexturesManager.Instance.clear(0);
+            }
+
             TexturesManager.Instance.clear(1);
 
             TGCShaders.Instance.SetShaderMatrix(Effect, Transform);
@@ -163,36 +162,50 @@ namespace TGC.Core.Geometry
 
         public void Dispose()
         {
-            if (texture != null) texture.Dispose();
+            if (texture != null)
+            {
+                texture.Dispose();
+            }
+
             sideTrianglesVertices = null;
             BoundingCylinder.Dispose();
         }
 
-        private void initialize()
+        /// <summary>
+        ///     Actualiza la posicion e inclinacion del cilindro
+        /// </summary>
+        public void UpdateValues()
+        {
+            BoundingCylinder.Radius = FastMath.Max(FastMath.Abs(TopRadius), FastMath.Abs(BottomRadius));
+            BoundingCylinder.updateValues();
+            UpdateDraw();
+        }
+
+        private void Initialize()
         {
             var capsResolution = END_CAPS_RESOLUTION;
 
             //cara lateral: un vertice por cada vertice de cada tapa, mas dos para cerrarla
             sideTrianglesVertices = new CustomVertex.PositionColoredTextured[2 * capsResolution + 2];
 
-            useColorShader();
-            updateValues();
+            UseColorShader();
+            UpdateValues();
         }
 
-        private void useColorShader()
+        private void UseColorShader()
         {
             Effect = TGCShaders.Instance.VariosShader;
             Technique = TGCShaders.T_POSITION_COLORED;
             useTexture = false;
         }
 
-        private void useTextureShader()
+        private void UseTextureShader()
         {
             Technique = TGCShaders.T_POSITION_COLORED_TEXTURED;
             useTexture = true;
         }
 
-        private void updateDraw()
+        private void UpdateDraw()
         {
             //vectores utilizados para el dibujado
             var upVector = TGCVector3.Up;
@@ -226,7 +239,8 @@ namespace TGC.Core.Geometry
 
                 //triangulos de la cara lateral (strip)
                 sideTrianglesVertices[2 * i] = new CustomVertex.PositionColoredTextured(topCapDraw[i], color, u, 0);
-                sideTrianglesVertices[2 * i + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[i], color, u, 1);
+                sideTrianglesVertices[2 * i + 1] =
+                    new CustomVertex.PositionColoredTextured(bottomCapDraw[i], color, u, 1);
 
                 //rotamos el vector de dibujado
                 n.TransformNormal(rotationMatrix);
@@ -234,7 +248,8 @@ namespace TGC.Core.Geometry
             }
 
             //cerramos la cara lateral
-            sideTrianglesVertices[2 * capsResolution] = new CustomVertex.PositionColoredTextured(topCapDraw[0], color, 1,
+            sideTrianglesVertices[2 * capsResolution] = new CustomVertex.PositionColoredTextured(topCapDraw[0], color,
+                1,
                 0);
             sideTrianglesVertices[2 * capsResolution + 1] = new CustomVertex.PositionColoredTextured(bottomCapDraw[0],
                 color, 1, 1);
@@ -243,11 +258,14 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Setea la textura
         /// </summary>
-        public void setTexture(TGCTexture _texture)
+        public void SetTexture(TGCTexture texture)
         {
             if (texture != null)
+            {
                 texture.Dispose();
-            texture = _texture;
+            }
+
+            texture = texture;
         }
 
         #region Transformation
@@ -258,35 +276,40 @@ namespace TGC.Core.Geometry
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en True.
         /// </summary>
-        [Obsolete("Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
+        [Obsolete(
+            "Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
         public bool AutoTransformEnable { get; set; }
 
         public TGCMatrix Transform
         {
             get
             {
-                if (AutoTransformEnable) return BoundingCylinder.Transform;
+                if (AutoTransformEnable)
+                {
+                    return BoundingCylinder.Transform;
+                }
+
                 return manualTransformation;
             }
-            set { manualTransformation = value; }
+            set => manualTransformation = value;
         }
 
         public TGCVector3 Position
         {
-            get { return BoundingCylinder.Center; }
-            set { BoundingCylinder.Center = value; }
+            get => BoundingCylinder.Center;
+            set => BoundingCylinder.Center = value;
         }
 
         public TGCVector3 Rotation
         {
-            get { return BoundingCylinder.Rotation; }
-            set { BoundingCylinder.Rotation = value; }
+            get => BoundingCylinder.Rotation;
+            set => BoundingCylinder.Rotation = value;
         }
 
         public TGCVector3 Scale
         {
-            get { return TGCVector3.One; }
-            set { Console.WriteLine("TODO esta bien que pase por aca?"); }
+            get => TGCVector3.One;
+            set => Console.WriteLine("TODO esta bien que pase por aca?");
         }
 
         /// <summary>

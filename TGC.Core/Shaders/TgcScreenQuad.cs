@@ -1,4 +1,5 @@
 ﻿using Microsoft.DirectX.Direct3D;
+using System;
 using TGC.Core.Direct3D;
 
 namespace TGC.Core.Shaders
@@ -6,7 +7,7 @@ namespace TGC.Core.Shaders
     /// <summary>
     ///     Utilidad para crear y renderizar un FullScreen Quad, util para efectos de post-procesado
     /// </summary>
-    public class TGCScreenQuad
+    public class TGCScreenQuad : IDisposable
     {
         /// <summary>
         ///     Crear quad

@@ -10,7 +10,7 @@ namespace TGC.Core.Sound
     ///     Solo se pueden cargar sonidos WAV que sean MONO (1 channel).
     ///     Sonidos stereos (2 channels) no pueden ser utilizados.
     /// </summary>
-    public class TGC3DSound
+    public class TGC3DSound : IDisposable
     {
         /// <summary>
         ///     Crea un sonido 3D
