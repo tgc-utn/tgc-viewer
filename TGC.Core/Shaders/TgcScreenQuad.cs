@@ -4,19 +4,18 @@ using TGC.Core.Direct3D;
 namespace TGC.Core.Shaders
 {
     /// <summary>
-    ///     Utilidad para crear y renderizar un FullScreen Quad, útil para efectos de post-procesado
+    ///     Utilidad para crear y renderizar un FullScreen Quad, util para efectos de post-procesado
     /// </summary>
-    public class TgcScreenQuad
+    public class TGCScreenQuad
     {
         /// <summary>
         ///     Crear quad
         /// </summary>
-        public TgcScreenQuad()
+        public TGCScreenQuad()
         {
             //Se crean 2 triangulos (o Quad) con las dimensiones de la pantalla con sus posiciones ya transformadas
             // x = -1 es el extremo izquiedo de la pantalla, x = 1 es el extremo derecho
-            // Lo mismo para la Y con arriba y abajo
-            // la Z en 1 simpre
+            // Lo mismo para la Y con arriba y abajo la Z en 1 siempre
             CustomVertex.PositionTextured[] screenQuadVertices =
             {
                 new CustomVertex.PositionTextured(-1, 1, 1, 0, 0),
@@ -38,10 +37,10 @@ namespace TGC.Core.Shaders
 
         /// <summary>
         ///     Render de quad con shader.
-        ///     Setear previamente todos los parámetros de shader y technique correspondiente.
+        ///     Setear previamente todos los parametros de shader y technique correspondiente.
         ///     Limpiar la pantalla segun sea necesario
         /// </summary>
-        public void render(Effect effect)
+        public void Render(Effect effect)
         {
             D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
             D3DDevice.Instance.Device.SetStreamSource(0, ScreenQuadVB, 0);
@@ -56,7 +55,7 @@ namespace TGC.Core.Shaders
         /// <summary>
         ///     Liberar recursos
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
             ScreenQuadVB.Dispose();
         }

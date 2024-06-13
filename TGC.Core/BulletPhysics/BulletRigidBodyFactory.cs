@@ -6,23 +6,25 @@ using TGC.Core.SceneLoader;
 namespace TGC.Core.BulletPhysics
 {
     /// <summary>
-    /// Clase encargada de generear todos los rigid bodies que necesitemos para añadir a la simulacion de BulletSharp.
+    ///     Clase encargada de generear todos los rigid bodies que necesitemos para agregar a la simulacion de BulletSharp.
     /// </summary>
     public class BulletRigidBodyFactory
     {
         /// <summary>
-        /// Constructor privado para el Singleton
+        ///     Constructor privado para el Singleton
         /// </summary>
-        private BulletRigidBodyFactory() { }
+        private BulletRigidBodyFactory()
+        {
+        }
 
         /// <summary>
-        /// Permite acceder a la instancia del Singleton.
+        ///     Permite acceder a la instancia del Singleton.
         /// </summary>
         public static BulletRigidBodyFactory Instance { get; } = new BulletRigidBodyFactory();
 
         /// <summary>
-        ///  Se crea una caja con una masa (si se quiere que sea estatica la masa debe ser 0),
-        ///  con dimensiones x(ancho), y(alto), z(profundidad), Rotacion de ejes Yaw, Pitch, Roll y un coeficiente de rozamiento.
+        ///     Se crea una caja con una masa (si se quiere que sea estatica la masa debe ser 0), con dimensiones x(ancho),
+        ///     y(alto), z(profundidad), Rotacion de ejes Yaw, Pitch, Roll y un coeficiente de rozamiento.
         /// </summary>
         /// <param name="size">Tamaño de la Cajas</param>
         /// <param name="mass">Masa de la Caja</param>
@@ -33,12 +35,13 @@ namespace TGC.Core.BulletPhysics
         /// <param name="friction">Coeficiente de rozamiento de la Caja</param>
         /// <param name="inertia">Booleano para calcular inercia o no</param>
         /// <returns>Rigid Body de la caja</returns>
-        public RigidBody CreateBox(TGCVector3 size, float mass, TGCVector3 position, float yaw, float pitch, float roll, float friction, bool inertia)
+        public RigidBody CreateBox(TGCVector3 size, float mass, TGCVector3 position, float yaw, float pitch, float roll,
+            float friction, bool inertia)
         {
             var boxShape = new BoxShape(size.X, size.Y, size.Z);
             var boxTransform = TGCMatrix.RotationYawPitchRoll(yaw, pitch, roll).ToBulletMatrix();
             boxTransform.Origin = position.ToBulletVector3();
-            DefaultMotionState boxMotionState = new DefaultMotionState(boxTransform);
+            var boxMotionState = new DefaultMotionState(boxTransform);
             var boxLocalInertia = TGCVector3.Empty.ToBulletVector3();
 
             if (inertia)
@@ -55,9 +58,8 @@ namespace TGC.Core.BulletPhysics
         }
 
         /// <summary>
-        /// Se crea una capsula a partir de un radio, altura, posicion, masa y si se dedea o no calcular
-        /// la inercia. Esto es importante ya que sin inercia no se generan rotaciones que no se
-        /// controlen en forma particular.
+        ///     Se crea una capsula a partir de un radio, altura, posicion, masa y si se dedea o no calcular la inercia. Esto es
+        ///     importante ya que sin inercia no se generan rotaciones que no se controlen en forma particular.
         /// </summary>
         /// <param name="radius">Radio de la Capsula</param>
         /// <param name="height">Altura de la Capsula</param>
@@ -76,8 +78,7 @@ namespace TGC.Core.BulletPhysics
             var capsuleMotionState = new DefaultMotionState(capsuleTransform.ToBulletMatrix());
             RigidBodyConstructionInfo capsuleRigidBodyInfo;
 
-            //Calculamos o no el momento de inercia dependiendo de que comportamiento
-            //queremos que tenga la capsula.
+            //Calculamos o no el momento de inercia dependiendo de que comportamiento queremos que tenga la capsula.
             if (!needInertia)
             {
                 capsuleRigidBodyInfo = new RigidBodyConstructionInfo(mass, capsuleMotionState, capsuleShape);
@@ -85,19 +86,19 @@ namespace TGC.Core.BulletPhysics
             else
             {
                 var capsuleInertia = capsuleShape.CalculateLocalInertia(mass);
-                capsuleRigidBodyInfo = new RigidBodyConstructionInfo(mass, capsuleMotionState, capsuleShape, capsuleInertia);
+                capsuleRigidBodyInfo =
+                    new RigidBodyConstructionInfo(mass, capsuleMotionState, capsuleShape, capsuleInertia);
             }
 
             var localCapsuleRigidBody = new RigidBody(capsuleRigidBodyInfo);
             localCapsuleRigidBody.LinearFactor = TGCVector3.One.ToBulletVector3();
-            //Dado que hay muchos parametros a configurar el RigidBody lo ideal es que
-            //cada caso se configure segun lo que se necesite.
+            //Dado que hay muchos parametros a configurar el RigidBody lo ideal es que cada caso se configure segun lo que se necesite.
 
             return localCapsuleRigidBody;
         }
 
         /// <summary>
-        /// Se crea una esfera a partir de un radio, masa y posicion devolviendo el cuerpo rigido de una esfera.
+        ///     Se crea una esfera a partir de un radio, masa y posicion devolviendo el cuerpo rigido de una esfera.
         /// </summary>
         /// <param name="radius">Radio de una esfera</param>
         /// <param name="mass">Masa de la esfera</param>
@@ -108,8 +109,7 @@ namespace TGC.Core.BulletPhysics
             //Creamos la forma de la esfera a partir de un radio
             var ballShape = new SphereShape(radius);
 
-            //Armamos las matrices de transformacion de la esfera a partir de la posicion con la que queremos ubicarla
-            //y el estado de movimiento de la misma.
+            //Armamos las matrices de transformacion de la esfera a partir de la posicion con la que queremos ubicarla y el estado de movimiento de la misma.
             var ballTransform = TGCMatrix.Identity;
             ballTransform.Origin = position;
             var ballMotionState = new DefaultMotionState(ballTransform.ToBulletMatrix());
@@ -125,17 +125,18 @@ namespace TGC.Core.BulletPhysics
         }
 
         /// <summary>
-        /// Crea una coleccion de triangulos para Bullet a partir de los triangulos generados por un heighmap
-        /// o una coleccion de triangulos a partir de un Custom Vertex Buffer con vertices del tipo Position Texured.
-        /// Se utilizo el codigo de un snippet de Bullet http://www.bulletphysics.org/mediawiki-1.5.8/index.php?title=Code_Snippets
+        ///     Crea una coleccion de triangulos para Bullet a partir de los triangulos generados por un heighmap o una coleccion
+        ///     de triangulos a partir de un Custom Vertex Buffer con vertices del tipo Position Texured.
+        ///     Se utilizo el codigo de un snippet de Bullet
+        ///     http://www.bulletphysics.org/mediawiki-1.5.8/index.php?title=Code_Snippets
         /// </summary>
         /// <param name="triangleDataVB">Custom Vertex Buffer que puede ser de un Heightmap</param>
         /// <returns>Rigid Body del terreno</returns>
-        public RigidBody CreateSurfaceFromHeighMap(CustomVertex.PositionTextured[] triangleDataVB)
+        public RigidBody CreateSurfaceFromHeightMap(CustomVertex.PositionTextured[] triangleDataVB)
         {
             //Triangulos
             var triangleMesh = new TriangleMesh();
-            int i = 0;
+            var i = 0;
             TGCVector3 vector0;
             TGCVector3 vector1;
             TGCVector3 vector2;
@@ -148,19 +149,20 @@ namespace TGC.Core.BulletPhysics
 
                 i = i + 3;
 
-                triangleMesh.AddTriangle(vector0.ToBulletVector3(), vector1.ToBulletVector3(), vector2.ToBulletVector3());
+                triangleMesh.AddTriangle(vector0.ToBulletVector3(), vector1.ToBulletVector3(),
+                    vector2.ToBulletVector3());
             }
 
             CollisionShape meshCollisionShape = new BvhTriangleMeshShape(triangleMesh, true);
             var meshMotionState = new DefaultMotionState();
             var meshRigidBodyInfo = new RigidBodyConstructionInfo(0, meshMotionState, meshCollisionShape);
-            RigidBody meshRigidBody = new RigidBody(meshRigidBodyInfo);
+            var meshRigidBody = new RigidBody(meshRigidBodyInfo);
 
             return meshRigidBody;
         }
 
         /// <summary>
-        /// Se arma un cilindro a partir de las dimensiones, una posicion y su masa.
+        ///     Se arma un cilindro a partir de las dimensiones, una posicion y su masa.
         /// </summary>
         /// <param name="dimensions">Dimensiones en x,y,z del Cilindro</param>
         /// <param name="position">Posicion del Cilindro</param>
@@ -178,15 +180,16 @@ namespace TGC.Core.BulletPhysics
 
             //Calculamos el momento de inercia
             var cylinderLocalInertia = cylinderShape.CalculateLocalInertia(mass);
-            var cylinderInfo = new RigidBodyConstructionInfo(mass, cylinderMotionState, cylinderShape, cylinderLocalInertia);
+            var cylinderInfo =
+                new RigidBodyConstructionInfo(mass, cylinderMotionState, cylinderShape, cylinderLocalInertia);
 
             //Creamos el cuerpo rigido a partir del de la informacion de cuerpo rigido.
-            RigidBody cylinderBody = new RigidBody(cylinderInfo);
+            var cylinderBody = new RigidBody(cylinderInfo);
             return cylinderBody;
         }
 
         /// <summary>
-        /// Se crea uncuerpo rigido a partir de un TgcMesh, pero no tiene masa por lo que va a ser estatico.
+        ///     Se crea uncuerpo rigido a partir de un TgcMesh, pero no tiene masa por lo que va a ser estatico.
         /// </summary>
         /// <param name="mesh">TgcMesh</param>
         /// <returns>Cuerpo rigido de un Mesh</returns>
@@ -194,14 +197,15 @@ namespace TGC.Core.BulletPhysics
         {
             var vertexCoords = mesh.getVertexPositions();
 
-            TriangleMesh triangleMesh = new TriangleMesh();
-            for (int i = 0; i < vertexCoords.Length; i = i + 3)
+            var triangleMesh = new TriangleMesh();
+            for (var i = 0; i < vertexCoords.Length; i = i + 3)
             {
-                triangleMesh.AddTriangle(vertexCoords[i].ToBulletVector3(), vertexCoords[i + 1].ToBulletVector3(), vertexCoords[i + 2].ToBulletVector3());
+                triangleMesh.AddTriangle(vertexCoords[i].ToBulletVector3(), vertexCoords[i + 1].ToBulletVector3(),
+                    vertexCoords[i + 2].ToBulletVector3());
             }
 
             var transformationMatrix = TGCMatrix.RotationYawPitchRoll(0, 0, 0).ToBulletMatrix();
-            DefaultMotionState motionState = new DefaultMotionState(transformationMatrix);
+            var motionState = new DefaultMotionState(transformationMatrix);
 
             var bulletShape = new BvhTriangleMeshShape(triangleMesh, false);
             var boxLocalInertia = bulletShape.CalculateLocalInertia(0);

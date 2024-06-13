@@ -15,9 +15,9 @@ namespace TGC.Examples.Engine2D
     /// </summary>
     public class Texto2D : TGCExampleViewer
     {
-        private TgcText2D text1;
-        private TgcText2D text2;
-        private TgcText2D text3;
+        private TGCText2D text1;
+        private TGCText2D text2;
+        private TGCText2D text3;
 
         public Texto2D(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -30,22 +30,22 @@ namespace TGC.Examples.Engine2D
         public override void Init()
         {
             //Crear texto 1, basico
-            text1 = new TgcText2D();
+            text1 = new TGCText2D();
             text1.Text = "Texto de prueba";
 
             //Crear texto 2, especificando color, alineacion, posicion, tamano y fuente.
-            text2 = new TgcText2D();
+            text2 = new TGCText2D();
             text2.Text = "Texto largo que no entra en el ancho especificado, y se hace WordWrap.";
             text2.Color = Color.BlueViolet;
-            text2.Align = TgcText2D.TextAlign.LEFT;
+            text2.Align = TGCText2D.TextAlign.LEFT;
             text2.Position = new Point(300, 100);
             text2.Size = new Size(300, 100);
             text2.changeFont(new Font("TimesNewRoman", 25, FontStyle.Bold | FontStyle.Italic));
 
             //Crear texto 3, especificando color, alineacion, posicion y tamano.
-            text3 = new TgcText2D();
+            text3 = new TGCText2D();
             text3.Text = "Texto alineado a la derecha con color.";
-            text3.Align = TgcText2D.TextAlign.RIGHT;
+            text3.Align = TGCText2D.TextAlign.RIGHT;
             text3.Position = new Point(50, 50);
             text3.Size = new Size(300, 100);
             text3.Color = Color.Gold;
@@ -61,9 +61,9 @@ namespace TGC.Examples.Engine2D
             PreRender();
 
             //Renderizar los tres textoss
-            text1.render();
-            text2.render();
-            text3.render();
+            text1.Render();
+            text2.Render();
+            text3.Render();
 
             PostRender();
         }

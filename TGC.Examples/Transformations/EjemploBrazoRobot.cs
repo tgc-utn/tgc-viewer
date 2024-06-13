@@ -52,7 +52,7 @@ namespace TGC.Examples.Transformations
 
         public override void Init()
         {
-            var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\floor1.jpg");
+            var texture = TGCTexture.CreateTexture(MediaDir + "MeshCreator\\Textures\\Metal\\floor1.jpg");
             var center = TGCVector3.Empty;
             var size = TGCVector3.One;
             box = TGCBox.fromSize(center, size, texture);

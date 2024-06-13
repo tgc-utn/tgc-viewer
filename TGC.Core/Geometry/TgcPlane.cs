@@ -65,7 +65,7 @@ namespace TGC.Core.Geometry
         /// <param name="texture">Textura de la pared</param>
         /// <param name="uTile">Cantidad de tile de la textura en coordenada U</param>
         /// <param name="vTile">Cantidad de tile de la textura en coordenada V</param>
-        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture, float uTile, float vTile)
+        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TGCTexture texture, float uTile, float vTile)
             : this()
         {
             setTexture(texture);
@@ -88,7 +88,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Dimensiones de la pared. Uno de los valores será ignorado, según la orientación elegida</param>
         /// <param name="orientation">Orientacion de la pared</param>
         /// <param name="texture">Textura de la pared</param>
-        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TgcTexture texture)
+        public TgcPlane(TGCVector3 origin, TGCVector3 size, Orientations orientation, TGCTexture texture)
             : this()
         {
             setTexture(texture);
@@ -123,7 +123,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Textura de la pared
         /// </summary>
-        public TgcTexture Texture { get; private set; }
+        public TGCTexture Texture { get; private set; }
 
         /// <summary>
         ///     Shader del mesh
@@ -217,7 +217,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public void Dispose()
         {
-            Texture.dispose();
+            Texture.Dispose();
         }
 
         /// <summary>
@@ -312,11 +312,11 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Configurar textura de la pared.
         /// </summary>
-        public void setTexture(TgcTexture texture)
+        public void setTexture(TGCTexture texture)
         {
             if (Texture != null)
             {
-                Texture.dispose();
+                Texture.Dispose();
             }
             Texture = texture;
         }

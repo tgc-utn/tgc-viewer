@@ -88,7 +88,7 @@ namespace TGC.Examples.ShadersExamples
 
         private void CreateMesh()
         {
-            var lava = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\lava.jpg");
+            var lava = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\lava.jpg");
             var sphere = new TGCSphere(1, lava, TGCVector3.Empty);
             sphere.LevelOfDetail = 4;
             sphere.updateValues();
@@ -134,7 +134,7 @@ namespace TGC.Examples.ShadersExamples
             this.showArrow.Update();
 
             // Hacemos uso de los valores de los modificadores actualizados
-            // (Excepto el Wireframe, eso se usa en el Render)
+            // (Excepto el Wireframe, eso se usa en el render)
             this.mesh.Transform = this.scale * TGCMatrix.RotationYawPitchRoll(this.rotation.Value, 0, 0) * TGCMatrix.Translation(this.center.Value);
             this.effect.SetValue("factor", this.factor.Value);
             TGCVector3 realVector = this.center.Value + this.effectVector.Value;

@@ -45,7 +45,7 @@ namespace TGC.Examples.ShadersExamples
         {
             Category = "Post Process Shaders";
             Name = "Toon Shading";
-            Description = "Ejemplo de Render no-realistico.";
+            Description = "Ejemplo de render no-realistico.";
         }
 
         public override void Init()
@@ -188,7 +188,7 @@ namespace TGC.Examples.ShadersExamples
 
             // dibujo la escena una textura
             effect.Technique = "DefaultTechnique";
-            // guardo el Render target anterior y seteo la textura como render target
+            // guardo el render target anterior y seteo la textura como render target
             var pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             var pSurf = g_pRenderTarget.GetSurfaceLevel(0);
             D3DDevice.Instance.Device.SetRenderTarget(0, pSurf);

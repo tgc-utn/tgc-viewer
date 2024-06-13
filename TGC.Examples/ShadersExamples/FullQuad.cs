@@ -108,7 +108,7 @@ namespace TGC.Examples.ShadersExamples
 
             // dibujo la escena una textura
             effect.Technique = "DefaultTechnique";
-            // guardo el Render target anterior y seteo la textura como render target
+            // guardo el render target anterior y seteo la textura como render target
             var pOldRT = device.GetRenderTarget(0);
             var pSurf = g_pRenderTarget.GetSurfaceLevel(0);
             if (activar_efecto)

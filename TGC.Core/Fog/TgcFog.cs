@@ -7,13 +7,13 @@ namespace TGC.Core.Fog
     /// <summary>
     ///     Herramienta para manipular el efecto de Niebla provisto por Direct3D
     /// </summary>
-    public class TgcFog
+    public class TGCFog
     {
         private Color color;
 
-        public TgcFog()
+        public TGCFog()
         {
-            resetValues();
+            ResetValues();
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace TGC.Core.Fog
         /// <summary>
         ///     Configura los valores iniciales del efecto
         /// </summary>
-        public void resetValues()
+        public void ResetValues()
         {
             Enabled = false;
             StartDistance = 0.5f;
@@ -62,7 +62,7 @@ namespace TGC.Core.Fog
         ///     Actualiza todos los valores de la niebla.
         ///     Activa o desactiva efectivamente el efecto, según como se haya configurado.
         /// </summary>
-        public void updateValues()
+        public void UpdateValues()
         {
             if (Enabled)
             {

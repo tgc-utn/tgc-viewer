@@ -28,7 +28,7 @@ namespace TGC.Examples.GeometryBasics
         private TGCVertex2fModifier tilingModifier;
         private TGCBooleanModifier autoAdjustModifier;
 
-        private TgcTexture currentTexture;
+        private TGCTexture currentTexture;
         private TgcPlane plane;
 
         public EjemploTGCPlane(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
@@ -50,7 +50,7 @@ namespace TGC.Examples.GeometryBasics
 
             //Modifier de textura
             var texturePath = MediaDir + "Texturas\\Quake\\TexturePack2\\brick1_1.jpg";
-            currentTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, texturePath);
+            currentTexture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, texturePath);
             textureModifier = AddTexture("texture", currentTexture.FilePath);
 
             //Crear pared
@@ -91,7 +91,7 @@ namespace TGC.Examples.GeometryBasics
             var text = textureModifier.Value;
             if (text != currentTexture.FilePath)
             {
-                currentTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, text);
+                currentTexture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, text);
                 plane.setTexture(currentTexture);
             }
 

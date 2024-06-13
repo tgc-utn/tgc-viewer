@@ -237,7 +237,7 @@ namespace TGC.Examples.ShadersExamples
 
         /// <summary>
         ///     Metodo que se llama cuando termina la ejecucion del ejemplo.
-        ///     Hacer dispose() de todos los objetos creados.
+        ///     Hacer Dispose() de todos los objetos creados.
         /// </summary>
         public override void Dispose()
         {

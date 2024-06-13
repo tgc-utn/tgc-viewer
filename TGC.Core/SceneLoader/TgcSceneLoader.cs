@@ -314,12 +314,12 @@ namespace TGC.Core.SceneLoader
             //Configurar Material y Textura para un solo SubSet
             var matAux = materialsArray[meshData.materialId];
             Material[] meshMaterials;
-            TgcTexture[] meshTextures;
+            TGCTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
                 meshMaterials = new[] { matAux.materialId };
                 meshTextures = new[]
-                {TgcTexture.createTexture(D3DDevice.Instance.Device, matAux.textureFileName, matAux.texturePath)};
+                {TGCTexture.CreateTexture(D3DDevice.Instance.Device, matAux.textureFileName, matAux.texturePath)};
             }
 
             //Configurar Material y Textura para varios SubSet
@@ -332,18 +332,18 @@ namespace TGC.Core.SceneLoader
 
                 //Cargar array de Materials y Texturas
                 meshMaterials = new Material[matAux.subMaterials.Length];
-                meshTextures = new TgcTexture[matAux.subMaterials.Length];
+                meshTextures = new TGCTexture[matAux.subMaterials.Length];
                 for (var m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
-                    meshTextures[m] = TgcTexture.createTexture(D3DDevice.Instance.Device,
+                    meshTextures[m] = TGCTexture.CreateTexture(D3DDevice.Instance.Device,
                         matAux.subMaterials[m].textureFileName,
                         matAux.subMaterials[m].texturePath);
                 }
             }
 
             //Cargar lightMap
-            var lightMap = TgcTexture.createTexture(D3DDevice.Instance.Device, meshData.lightmap,
+            var lightMap = TGCTexture.CreateTexture(D3DDevice.Instance.Device, meshData.lightmap,
                 mediaPath + sceneData.lightmapsDir + "\\" + meshData.lightmap);
 
             //Crear mesh de TGC
@@ -429,12 +429,12 @@ namespace TGC.Core.SceneLoader
             //Configurar Material y Textura para un solo SubSet
             var matAux = materialsArray[meshData.materialId];
             Material[] meshMaterials;
-            TgcTexture[] meshTextures;
+            TGCTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
                 meshMaterials = new[] { matAux.materialId };
                 meshTextures = new[]
-                {TgcTexture.createTexture(D3DDevice.Instance.Device, matAux.textureFileName, matAux.texturePath)};
+                {TGCTexture.CreateTexture(D3DDevice.Instance.Device, matAux.textureFileName, matAux.texturePath)};
             }
 
             //Configurar Material y Textura para varios SubSet
@@ -447,11 +447,11 @@ namespace TGC.Core.SceneLoader
 
                 //Cargar array de Materials y Texturas
                 meshMaterials = new Material[matAux.subMaterials.Length];
-                meshTextures = new TgcTexture[matAux.subMaterials.Length];
+                meshTextures = new TGCTexture[matAux.subMaterials.Length];
                 for (var m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
-                    meshTextures[m] = TgcTexture.createTexture(D3DDevice.Instance.Device,
+                    meshTextures[m] = TGCTexture.CreateTexture(D3DDevice.Instance.Device,
                         matAux.subMaterials[m].textureFileName,
                         matAux.subMaterials[m].texturePath);
                 }

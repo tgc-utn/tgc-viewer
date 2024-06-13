@@ -100,7 +100,7 @@ namespace TGC.Examples.GeometryBasics
                 {
                     currentTexture = texturePath;
                     sphere.setColor(color);
-                    sphere.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
+                    sphere.setTexture(TGCTexture.CreateTexture(D3DDevice.Instance.Device, currentTexture));
                 }
             }
             else sphere.setColor(color);

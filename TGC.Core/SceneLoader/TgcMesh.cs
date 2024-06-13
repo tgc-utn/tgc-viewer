@@ -42,15 +42,16 @@ namespace TGC.Core.SceneLoader
         }
 
         protected TgcBoundingAxisAlignBox boundingBox;
+        
         protected Mesh d3dMesh;
 
-        protected TgcTexture[] diffuseMaps;
+        protected TGCTexture[] diffuseMaps;
 
         protected bool enabled;
 
         protected string layer;
 
-        protected TgcTexture lightMap;
+        protected TGCTexture lightMap;
 
         protected Material[] materials;
 
@@ -105,7 +106,7 @@ namespace TGC.Core.SceneLoader
             //Cargar datos en base al original
             initData(parentInstance.d3dMesh, name, parentInstance.renderType);
             //Si no se hace clone luego no pueden cambiar las texturas.
-            diffuseMaps = new TgcTexture[parentInstance.diffuseMaps.Length];
+            diffuseMaps = new TGCTexture[parentInstance.diffuseMaps.Length];
             for (var i = 0; i < diffuseMaps.Length; i++)
             {
                 diffuseMaps[i] = parentInstance.diffuseMaps[i].Clone();
@@ -178,7 +179,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Array de texturas para DiffuseMap
         /// </summary>
-        public TgcTexture[] DiffuseMaps
+        public TGCTexture[] DiffuseMaps
         {
             get { return diffuseMaps; }
             set { diffuseMaps = value; }
@@ -187,7 +188,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Textura de LightMap
         /// </summary>
-        public TgcTexture LightMap
+        public TGCTexture LightMap
         {
             get { return lightMap; }
             set { lightMap = value; }
@@ -212,7 +213,7 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Tipo de formato de Render de esta malla
+        ///     Tipo de formato de render de esta malla
         /// </summary>
         public MeshRenderType RenderType
         {
@@ -250,7 +251,7 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Cantidad de triángulos de la malla
+        ///     Cantidad de triangulos de la malla
         /// </summary>
         public int NumberTriangles
         {
@@ -295,7 +296,7 @@ namespace TGC.Core.SceneLoader
             //Cargar matrices para el shader
             setShaderMatrix();
 
-            //Renderizar segun el tipo de Render de la malla
+            //Renderizar segun el tipo de render de la malla
             Effect.Technique = Technique;
             var numPasses = Effect.Begin(0);
             switch (renderType)
@@ -306,7 +307,7 @@ namespace TGC.Core.SceneLoader
                     TexturesManager.Instance.clear(0);
                     TexturesManager.Instance.clear(1);
 
-                    //Iniciar Shader e iterar sobre sus Render Passes
+                    //Iniciar Shader e iterar sobre sus render passes
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Iniciar pasada de shader
@@ -322,7 +323,7 @@ namespace TGC.Core.SceneLoader
                     //Hacer reset de Lightmap
                     TexturesManager.Instance.clear(1);
 
-                    //Iniciar Shader e iterar sobre sus Render Passes
+                    //Iniciar Shader e iterar sobre sus render passes
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Dibujar cada subset con su DiffuseMap correspondiente
@@ -342,7 +343,7 @@ namespace TGC.Core.SceneLoader
 
                 case MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
 
-                    //Iniciar Shader e iterar sobre sus Render Passes
+                    //Iniciar Shader e iterar sobre sus render passes
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Cargar lightmap
@@ -374,7 +375,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Libera los recursos de la malla.
         ///     Si la malla es una instancia se deshabilita pero no se liberan recursos.
-        ///     Si la malla es el original y tiene varias instancias adjuntadas, se hace dispose() también de las instancias.
+        ///     Si la malla es el original y tiene varias instancias adjuntadas, se hace Dispose() tambien de las instancias.
         /// </summary>
         public void Dispose()
         {
@@ -412,14 +413,14 @@ namespace TGC.Core.SceneLoader
                 {
                     if (diffuseMaps[i] != null)
                     {
-                        diffuseMaps[i].dispose();
+                        diffuseMaps[i].Dispose();
                     }
                 }
                 diffuseMaps = null;
             }
             if (lightMap != null)
             {
-                lightMap.dispose();
+                lightMap.Dispose();
                 lightMap = null;
             }
 
@@ -442,9 +443,9 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     En True hace que la matriz de transformacion (Transform) de la malla se actualiza en
-        ///     cada cuadro en forma automática, según los valores de: Position, Rotation, Scale.
+        ///     cada cuadro en forma automatica, segun los valores de: Position, Rotation, Scale.
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
-        ///     Por default está en True.
+        ///     Por default esta en True.
         /// </summary>
         [Obsolete("Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
         public bool AutoTransformEnable { get; set; }
@@ -463,7 +464,7 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Rotación absoluta de la malla
+        ///     Rotacion absoluta de la malla
         /// </summary>
         public TGCVector3 Rotation
         {
@@ -472,7 +473,7 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Escalado absoluto de la malla;
+        ///     Escalado absoluto de la malla
         /// </summary>
         public TGCVector3 Scale
         {
@@ -535,7 +536,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Rota la malla respecto del eje X
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
+        /// <param name="angle">Angulo de rotación en radianes</param>
         [Obsolete]
         public void RotateX(float angle)
         {
@@ -545,7 +546,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Rota la malla respecto del eje Y
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
+        /// <param name="angle">Angulo de rotación en radianes</param>
         [Obsolete]
         public void RotateY(float angle)
         {
@@ -555,7 +556,7 @@ namespace TGC.Core.SceneLoader
         /// <summary>
         ///     Rota la malla respecto del eje Z
         /// </summary>
-        /// <param name="angle">Ángulo de rotación en radianes</param>
+        /// <param name="angle">Angulo de rotación en radianes</param>
         [Obsolete]
         public void RotateZ(float angle)
         {
@@ -628,7 +629,7 @@ namespace TGC.Core.SceneLoader
         }
 
         /// <summary>
-        ///     Devuelve un array con todas las posiciones de los vértices de la malla
+        ///     Devuelve un array con todas las posiciones de los vertices de la malla
         /// </summary>
         /// <returns>Array creado</returns>
         public TGCVector3[] getVertexPositions()
@@ -788,7 +789,7 @@ namespace TGC.Core.SceneLoader
         ///     Permite cambiar las texturas de DiffuseMap de esta malla
         /// </summary>
         /// <param name="newDiffuseMaps">Array de nuevas texturas. Tiene que tener la misma cantidad que el original</param>
-        public void changeDiffuseMaps(TgcTexture[] newDiffuseMaps)
+        public void changeDiffuseMaps(TGCTexture[] newDiffuseMaps)
         {
             //Solo aplicar si la malla tiene texturas
             if (renderType == MeshRenderType.DIFFUSE_MAP || renderType == MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP)
@@ -801,7 +802,7 @@ namespace TGC.Core.SceneLoader
                 //Liberar texturas anteriores
                 foreach (var t in diffuseMaps)
                 {
-                    t.dispose();
+                    t.Dispose();
                 }
 
                 //Asignar nuevas texturas
@@ -816,12 +817,12 @@ namespace TGC.Core.SceneLoader
         ///     No se controla si esa textura ya esta repetida en el mesh.
         /// </summary>
         /// <param name="newDiffuseMap">Nueva textura</param>
-        public void addDiffuseMap(TgcTexture newDiffuseMap)
+        public void addDiffuseMap(TGCTexture newDiffuseMap)
         {
             //Solo aplicar si la malla tiene texturas
             if (renderType == MeshRenderType.DIFFUSE_MAP || renderType == MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP)
             {
-                var newDiffuseMapsArray = new TgcTexture[diffuseMaps.Length + 1];
+                var newDiffuseMapsArray = new TGCTexture[diffuseMaps.Length + 1];
                 Array.Copy(diffuseMaps, newDiffuseMapsArray, diffuseMaps.Length);
                 newDiffuseMapsArray[newDiffuseMapsArray.Length - 1] = newDiffuseMap;
                 diffuseMaps = newDiffuseMapsArray;
@@ -851,7 +852,7 @@ namespace TGC.Core.SceneLoader
                 }
 
                 //Crear nuevo array sin la textura que se quiere eliminar
-                var newDiffuseMapsArray = new TgcTexture[diffuseMaps.Length - 1];
+                var newDiffuseMapsArray = new TGCTexture[diffuseMaps.Length - 1];
                 var w = 0;
                 for (var i = 0; i < diffuseMaps.Length; i++)
                 {
@@ -881,12 +882,12 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     Crea una nueva malla que es una instancia de esta malla original
-        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Reutiliza toda la geometria de la malla original sin duplicarla.
         ///     Solo se puede crear instancias a partir de originales.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
         /// <param name="translation">Traslación respecto de la malla original</param>
-        /// <param name="rotation">Rotación respecto de la malla original</param>
+        /// <param name="rotation">Rotacion respecto de la malla original</param>
         /// <param name="scale">Escala respecto de la malla original</param>
         public TgcMesh createMeshInstance(string name, TGCVector3 translation, TGCVector3 rotation, TGCVector3 scale)
         {
@@ -909,7 +910,7 @@ namespace TGC.Core.SceneLoader
 
         /// <summary>
         ///     Crea una nueva malla que es una instancia de esta malla original
-        ///     Reutiliza toda la geometría de la malla original sin duplicarla.
+        ///     Reutiliza toda la geometria de la malla original sin duplicarla.
         ///     Solo se puede crear instancias a partir de originales.
         /// </summary>
         /// <param name="name">Nombre de la malla</param>
@@ -966,7 +967,7 @@ namespace TGC.Core.SceneLoader
             //Clonar DiffuseMaps
             if (diffuseMaps != null)
             {
-                cloneMesh.diffuseMaps = new TgcTexture[diffuseMaps.Length];
+                cloneMesh.diffuseMaps = new TGCTexture[diffuseMaps.Length];
                 for (var i = 0; i < diffuseMaps.Length; i++)
                 {
                     cloneMesh.diffuseMaps[i] = diffuseMaps[i].Clone();
@@ -1019,7 +1020,7 @@ namespace TGC.Core.SceneLoader
             return null;
         }
 
-        public static TgcMesh FromTGCBox(string meshName, TgcTexture texture, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform, bool alphaBlendEnable)
+        public static TgcMesh FromTGCBox(string meshName, TGCTexture texture, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform, bool alphaBlendEnable)
         {
             TgcMesh tgcMesh;
 
@@ -1101,7 +1102,7 @@ namespace TGC.Core.SceneLoader
         /// <param name="texture">Textura a utilizar.</param>
         /// <param name="alphaBlendEnable">Habilita el AlphaBlending para los modelos.</param>
         /// <returns>Un nuevo TGCMesh basado en los parametros dados.</returns>
-        public static TgcMesh ToDiffuseMapMesh(string meshName, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform, TgcTexture texture, bool alphaBlendEnable)
+        public static TgcMesh ToDiffuseMapMesh(string meshName, CustomVertex.PositionColoredTextured[] vertices, TGCMatrix transform, TGCTexture texture, bool alphaBlendEnable)
         {
             //Crear Mesh
             var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed,
@@ -1158,7 +1159,7 @@ namespace TGC.Core.SceneLoader
             return tgcMesh;
         }
 
-        public static TgcMesh FromTGCSphere(string meshName, TgcTexture texture, List<int> indices, List<TGCSphere.Vertex.PositionColoredTexturedNormal> vertices, TGCMatrix transform, bool alphaBlendEnable)
+        public static TgcMesh FromTGCSphere(string meshName, TGCTexture texture, List<int> indices, List<TGCSphere.Vertex.PositionColoredTexturedNormal> vertices, TGCMatrix transform, bool alphaBlendEnable)
         {
             //Crear mesh con DiffuseMap
             if (texture != null)
@@ -1268,7 +1269,7 @@ namespace TGC.Core.SceneLoader
             }
         }
 
-        public static TgcMesh FromTGCPlane(string meshName, CustomVertex.PositionTextured[] vertices, TgcTexture texture, TGCVector3? Normal)
+        public static TgcMesh FromTGCPlane(string meshName, CustomVertex.PositionTextured[] vertices, TGCTexture texture, TGCVector3? Normal)
         {
             //Crear Mesh
             var d3dMesh = new Mesh(vertices.Length / 3, vertices.Length, MeshFlags.Managed, TgcSceneLoader.DiffuseMapVertexElements, D3DDevice.Instance.Device);

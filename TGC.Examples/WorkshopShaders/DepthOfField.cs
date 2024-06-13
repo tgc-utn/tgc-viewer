@@ -99,7 +99,7 @@ namespace TGC.Examples.WorkshopShaders
             effect.SetValue("blur_k", blurFactorModifier.Value);
 
             // dibujo la escena una textura
-            // guardo el Render target anterior y seteo la textura como render target
+            // guardo el render target anterior y seteo la textura como render target
             Surface pOldRT = d3dDevice.GetRenderTarget(0);
             Surface pSurf = g_pRenderTarget.GetSurfaceLevel(0);
             if (activar_efecto)

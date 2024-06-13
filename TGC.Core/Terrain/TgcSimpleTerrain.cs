@@ -11,7 +11,7 @@ namespace TGC.Core.Terrain
     /// <summary>
     ///     Permite crear la malla de un terreno en base a una textura de Heightmap
     /// </summary>
-    public class TgcSimpleTerrain : IRenderObject
+    public class TGCSimpleTerrain : IRenderObject
     {
         protected Effect effect;
 
@@ -21,7 +21,7 @@ namespace TGC.Core.Terrain
         private VertexBuffer vbTerrain;
         private CustomVertex.PositionTextured[] data;
 
-        public TgcSimpleTerrain()
+        public TGCSimpleTerrain()
         {
             Enabled = true;
             AlphaBlendEnable = false;
@@ -35,7 +35,7 @@ namespace TGC.Core.Terrain
         ///     Devuelve la informacion de Custom Vertex Buffer del HeightMap cargado
         /// </summary>
         /// <returns>Custom Vertex Buffer de tipo PositionTextured</returns>
-        public CustomVertex.PositionTextured[] getData()
+        public CustomVertex.PositionTextured[] GetData()
         {
             return data;
         }
@@ -134,7 +134,7 @@ namespace TGC.Core.Terrain
         /// <param name="scaleXZ">Escala para los ejes X y Z</param>
         /// <param name="scaleY">Escala para el eje Y</param>
         /// <param name="center">Centro de la malla del terreno</param>
-        public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, TGCVector3 center)
+        public void LoadHeightmap(string heightmapPath, float scaleXZ, float scaleY, TGCVector3 center)
         {
             Center = center;
 
@@ -145,7 +145,7 @@ namespace TGC.Core.Terrain
             }
 
             //cargar heightmap
-            HeightmapData = loadHeightMap(D3DDevice.Instance.Device, heightmapPath);
+            HeightmapData = LoadHeightMap(D3DDevice.Instance.Device, heightmapPath);
             float width = HeightmapData.GetLength(0);
             float length = HeightmapData.GetLength(1);
 
@@ -203,7 +203,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Carga la textura del terreno
         /// </summary>
-        public void loadTexture(string path)
+        public void LoadTexture(string path)
         {
             //Dispose textura anterior, si habia
             if (terrainTexture != null && !terrainTexture.Disposed)
@@ -220,7 +220,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Carga los valores del Heightmap en una matriz
         /// </summary>
-        protected int[,] loadHeightMap(Device d3dDevice, string path)
+        protected int[,] LoadHeightMap(Device d3dDevice, string path)
         {
             var bitmap = (Bitmap)Image.FromFile(path);
             var width = bitmap.Size.Width;

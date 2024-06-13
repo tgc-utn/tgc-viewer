@@ -113,7 +113,7 @@ namespace TGC.Examples.ShadersExamples
             ClearTextures();
             var device = D3DDevice.Instance.Device;
 
-            // guardo el Render target anterior y seteo la textura como render target
+            // guardo el render target anterior y seteo la textura como render target
             var pOldRT = device.GetRenderTarget(0);
             var pSurf = g_pVel1.GetSurfaceLevel(0);
             device.SetRenderTarget(0, pSurf);

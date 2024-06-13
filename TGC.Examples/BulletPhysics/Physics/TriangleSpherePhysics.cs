@@ -46,7 +46,7 @@ namespace TGC.Examples.BulletPhysics.Physics
             dynamicsWorld.Gravity = new TGCVector3(0, -100f, 0).ToBulletVector3();
 
             //Creamos el terreno
-            var meshRigidBody = BulletRigidBodyFactory.Instance.CreateSurfaceFromHeighMap(triangleDataVB);
+            var meshRigidBody = BulletRigidBodyFactory.Instance.CreateSurfaceFromHeightMap(triangleDataVB);
             dynamicsWorld.AddRigidBody(meshRigidBody);
 
             //Creamos la esfera del dragon
@@ -55,7 +55,7 @@ namespace TGC.Examples.BulletPhysics.Physics
             dragonBall.Restitution = 1f;
             dragonBall.Friction = 1;
             dynamicsWorld.AddRigidBody(dragonBall);
-            var textureDragonBall = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\dragonball.jpg");
+            var textureDragonBall = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\dragonball.jpg");
             sphereMesh = new TGCSphere(1, textureDragonBall, TGCVector3.Empty);
             sphereMesh.updateValues();
             director = new TGCVector3(1, 0, 0);

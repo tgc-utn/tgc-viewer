@@ -221,7 +221,7 @@ namespace TGC.Examples.Example
         }
 
         /// <summary>
-        /// Vuelve la configuracion de Render y otras cosas a los valores iniciales.
+        /// Vuelve la configuracion de render y otras cosas a los valores iniciales.
         /// </summary>
         public override void ResetDefaultConfig()
         {

@@ -136,7 +136,7 @@ namespace TGC.Examples.Quake3Loader
                 //Renderizado normal
                 else
                 {
-                    //render
+                    //Render
                     mesh.Render();
 
                     //deshabilitar para la proxima vuelta
@@ -166,7 +166,7 @@ namespace TGC.Examples.Quake3Loader
             fx.SetValue("g_mViewProj", mViewProj);
             fx.SetValue("g_time", time);
 
-            TgcTexture originalTexture = null;
+            TGCTexture originalTexture = null;
 
             if (mesh.DiffuseMaps != null)
                 originalTexture = mesh.DiffuseMaps[0];
@@ -181,10 +181,10 @@ namespace TGC.Examples.Quake3Loader
                     mesh.DiffuseMaps[0] = shader.Stages[j].Textures[0];
                 }
 
-                //mesh.render();
-                D3DDevice.Instance.Device.SetTexture(0, mesh.DiffuseMaps[0].D3dTexture);
+                //mesh.Render();
+                D3DDevice.Instance.Device.SetTexture(0, mesh.DiffuseMaps[0].D3DTexture);
                 if (mesh.LightMap != null)
-                    D3DDevice.Instance.Device.SetTexture(1, mesh.LightMap.D3dTexture);
+                    D3DDevice.Instance.Device.SetTexture(1, mesh.LightMap.D3DTexture);
                 else
                     D3DDevice.Instance.Device.SetTexture(1, null);
 

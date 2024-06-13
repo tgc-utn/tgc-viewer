@@ -23,7 +23,7 @@ namespace TGC.Examples.Others
         private readonly float[] lightPos = { 0, 50, 300 };
         private EjemploDefaultHelpForm helpForm;
         private TgcMesh mesh;
-        private TgcText2D textHelp;
+        private TGCText2D textHelp;
 
         public EjemploDefault(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -44,12 +44,12 @@ namespace TGC.Examples.Others
             mesh.Technique = TGCShaders.Instance.GetTGCMeshTechnique(mesh.RenderType);
 
             //Texto help
-            textHelp = new TgcText2D();
+            textHelp = new TGCText2D();
             textHelp.Position = new Point(15, 260);
             textHelp.Size = new Size(500, 100);
             textHelp.changeFont(new Font("TimesNewRoman", 16, FontStyle.Regular));
             textHelp.Color = Color.Yellow;
-            textHelp.Align = TgcText2D.TextAlign.LEFT;
+            textHelp.Align = TGCText2D.TextAlign.LEFT;
             textHelp.Text = "ÅøPor donde empezar? Presionar \"H\"";
 
             //Help form
@@ -83,7 +83,7 @@ namespace TGC.Examples.Others
 
             mesh.Render();
 
-            textHelp.render();
+            textHelp.Render();
 
             //Help
             if (Input.keyPressed(Key.H))

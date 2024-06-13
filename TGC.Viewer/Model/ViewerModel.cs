@@ -24,7 +24,7 @@ namespace TGC.Viewer.Model
         /// <summary>
         /// Controlador de sonido.
         /// </summary>
-        private TgcDirectSound DirectSound { get; set; }
+        private TGCDirectSound DirectSound { get; set; }
 
         /// <summary>
         /// Controlador de inputs.
@@ -55,7 +55,7 @@ namespace TGC.Viewer.Model
             Input.Initialize(Form, control);
 
             //Inicio sonido
-            DirectSound = new TgcDirectSound();
+            DirectSound = new TGCDirectSound();
             try
             {
                 DirectSound.InitializeD3DDevice(control);
@@ -170,7 +170,7 @@ namespace TGC.Viewer.Model
         /// Le activa o desactiva el contador de FPS al ejemplo.
         /// </summary>
         /// <param name="state">Estado que se quiere de la herramienta.</param>
-        public void ContadorFPS(bool state)
+        public void FPSCounter(bool state)
         {
             ExampleLoader.CurrentExample.FPSText = state;
         }
@@ -233,7 +233,7 @@ namespace TGC.Viewer.Model
 
             //Liberar Device al finalizar la aplicacion
             D3DDevice.Instance.Dispose();
-            TexturesPool.Instance.clearAll();
+            TexturesPool.Instance.ClearAll();
         }
 
         /// <summary>

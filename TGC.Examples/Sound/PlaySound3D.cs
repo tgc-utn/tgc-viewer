@@ -39,7 +39,7 @@ namespace TGC.Examples.Sound
         private TgcMesh personaje;
 
         private TGCBox piso;
-        private List<Tgc3dSound> sonidos;
+        private List<TGC3DSound> sonidos;
 
         public PlaySound3D(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -52,7 +52,7 @@ namespace TGC.Examples.Sound
         public override void Init()
         {
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
+            var pisoTexture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             piso = TGCBox.fromSize(new TGCVector3(5000, 5, 5000), pisoTexture);
             piso.Transform = TGCMatrix.Scaling(piso.Scale)
                         * TGCMatrix.RotationYawPitchRoll(piso.Rotation.Y, piso.Rotation.X, piso.Rotation.Z)
@@ -61,13 +61,13 @@ namespace TGC.Examples.Sound
 
             //Cargar obstaculos y posicionarlos. Los obstaculos se crean con TgcBox en lugar de cargar un modelo.
             obstaculos = new List<TGCBox>();
-            sonidos = new List<Tgc3dSound>();
+            sonidos = new List<TGC3DSound>();
             TGCBox obstaculo;
-            Tgc3dSound sound;
+            TGC3DSound sound;
 
             //Obstaculo 1
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 150, 80),
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack3\\goo2.jpg"));
+                TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack3\\goo2.jpg"));
             obstaculo.Position = new TGCVector3(-250, 0, 0);
             obstaculo.Transform = TGCMatrix.Scaling(obstaculo.Scale)
                         * TGCMatrix.RotationYawPitchRoll(obstaculo.Rotation.Y, obstaculo.Rotation.X, obstaculo.Rotation.Z)
@@ -77,27 +77,27 @@ namespace TGC.Examples.Sound
             //Sondio obstaculo 1
             //OJO, solo funcionan sonidos WAV Mono (No stereo). Hacer boton der => Propiedades sobre el archivo
             //y tiene que decir "1 Channel".
-            sound = new Tgc3dSound(MediaDir + "Sound\\armonía, continuo.wav", obstaculo.Position, DirectSound.DsDevice);
+            sound = new TGC3DSound(MediaDir + "Sound\\armonía, continuo.wav", obstaculo.Position, DirectSound.DsDevice);
             //Hay que configurar la mínima distancia a partir de la cual se empieza a atenuar el sonido 3D
             sound.MinDistance = 50f;
             sonidos.Add(sound);
 
             //Obstaculo 2
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 300, 80),
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                TGCTexture.CreateTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\lun_dirt.jpg"));
             obstaculo.Position = new TGCVector3(250, 0, 800);
             obstaculo.Transform = TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 2
-            sound = new Tgc3dSound(MediaDir + "Sound\\viento helado.wav", obstaculo.Position, DirectSound.DsDevice);
+            sound = new TGC3DSound(MediaDir + "Sound\\viento helado.wav", obstaculo.Position, DirectSound.DsDevice);
             sound.MinDistance = 50f;
             sonidos.Add(sound);
 
             //Obstaculo 3
             obstaculo = TGCBox.fromSize(new TGCVector3(80, 100, 150),
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                TGCTexture.CreateTexture(D3DDevice.Instance.Device,
                     MediaDir + "Texturas\\Quake\\TexturePack3\\Metal2_1.jpg"));
             obstaculo.Position = new TGCVector3(500, 0, -400);
             obstaculo.Transform = TGCMatrix.Scaling(obstaculo.Scale)
@@ -106,7 +106,7 @@ namespace TGC.Examples.Sound
             obstaculos.Add(obstaculo);
 
             //Sondio obstaculo 3
-            sound = new Tgc3dSound(MediaDir + "Sound\\risa de maníaco.wav", obstaculo.Position, DirectSound.DsDevice);
+            sound = new TGC3DSound(MediaDir + "Sound\\risa de maníaco.wav", obstaculo.Position, DirectSound.DsDevice);
             sound.MinDistance = 50f;
             sonidos.Add(sound);
 
@@ -130,7 +130,7 @@ namespace TGC.Examples.Sound
             //Ejecutar en loop los sonidos
             foreach (var s in sonidos)
             {
-                s.play(true);
+                s.Play(true);
             }
         }
 
@@ -248,7 +248,7 @@ namespace TGC.Examples.Sound
 
             foreach (var sound in sonidos)
             {
-                sound.dispose();
+                sound.Dispose();
             }
         }
     }

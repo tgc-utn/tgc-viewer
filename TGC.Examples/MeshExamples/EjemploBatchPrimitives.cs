@@ -16,9 +16,9 @@ namespace TGC.Examples.MeshExamples
     {
         private TGCEnumModifier renderMethodModifier;
 
-        private TgcTexture box1Texture;
-        private TgcTexture box2Texture;
-        private TgcTexture box3Texture;
+        private TGCTexture box1Texture;
+        private TGCTexture box2Texture;
+        private TGCTexture box3Texture;
         private TGCBox[] cajasNivel1;
         private TGCBox[] cajasNivel2;
         private TGCBox[] cajasNivel3;
@@ -40,9 +40,9 @@ namespace TGC.Examples.MeshExamples
 
         public override void Init()
         {
-            box1Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
-            box2Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
-            box3Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg");
+            box1Texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
+            box2Texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
+            box3Texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg");
 
             renderMethodModifier = AddEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(25);

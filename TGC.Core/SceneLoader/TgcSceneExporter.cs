@@ -1131,7 +1131,7 @@ namespace TGC.Core.SceneLoader
             }
 
             //Cargar texturas y attributeBuffer
-            TgcTexture[] textures = null;
+            TGCTexture[] textures = null;
             Material[] materials = null;
             if (mesh1.RenderType == TgcMesh.MeshRenderType.DIFFUSE_MAP)
             {
@@ -1148,7 +1148,7 @@ namespace TGC.Core.SceneLoader
                 }
 
                 //Texturas del mesh1
-                textures = new TgcTexture[mesh1.DiffuseMaps.Length + mesh2.DiffuseMaps.Length];
+                textures = new TGCTexture[mesh1.DiffuseMaps.Length + mesh2.DiffuseMaps.Length];
                 var tIdx = 0;
                 foreach (var t in mesh1.DiffuseMaps)
                 {

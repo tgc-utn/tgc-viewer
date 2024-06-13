@@ -149,7 +149,7 @@ namespace TGC.Viewer.UI
 
             Model.UpdateAspectRatio(panel3D);
             Model.Wireframe(wireframeToolStripMenuItem.Checked);
-            Model.ContadorFPS(fpsToolStripMenuItem.Checked);
+            Model.FPSCounter(fpsToolStripMenuItem.Checked);
             Model.AxisLines(axisToolStripMenuItem.Checked);
         }
 
@@ -200,7 +200,7 @@ namespace TGC.Viewer.UI
         /// </summary>
         private void ContadorFPS()
         {
-            Model.ContadorFPS(fpsToolStripMenuItem.Checked);
+            Model.FPSCounter(fpsToolStripMenuItem.Checked);
         }
 
         /// <summary>

@@ -60,19 +60,19 @@ namespace TGC.Examples.Transformations.SistemaSolar
             sun = loader.loadSceneFromFile(sphere).Meshes[0];
             sun.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\SunTexture.jpg")
+                TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\SunTexture.jpg")
             });
 
             earth = loader.loadSceneFromFile(sphere).Meshes[0];
             earth.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\EarthTexture.jpg")
+                TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\EarthTexture.jpg")
             });
 
             moon = loader.loadSceneFromFile(sphere).Meshes[0];
             moon.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\MoonTexture.jpg")
+                TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "SistemaSolar\\MoonTexture.jpg")
             });
 
             BackgroundColor = Color.Black;

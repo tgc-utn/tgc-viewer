@@ -9,16 +9,16 @@ namespace TGC.Core.Textures
     /// <summary>
     ///     Encapsula una textura de DirectX junto con información adicional
     /// </summary>
-    public class TgcTexture
+    public class TGCTexture
     {
         /// <summary>
         ///     Crear textura de TGC
         /// </summary>
-        public TgcTexture(string fileName, string filePath, Texture d3dTexture, bool inPool)
+        public TGCTexture(string fileName, string filePath, Texture d3DTexture, bool inPool)
         {
             FileName = fileName;
             FilePath = filePath;
-            D3dTexture = d3dTexture;
+            D3DTexture = d3DTexture;
             InPool = inPool;
         }
 
@@ -35,7 +35,7 @@ namespace TGC.Core.Textures
         /// <summary>
         ///     Textura de DirectX
         /// </summary>
-        public Texture D3dTexture { get; private set; }
+        public Texture D3DTexture { get; private set; }
 
         /// <summary>
         ///     Indica si la textura fue creada dentro del TexturesPool de texturas del framework
@@ -47,7 +47,7 @@ namespace TGC.Core.Textures
         /// </summary>
         public int Width
         {
-            get { return D3dTexture.GetLevelDescription(0).Width; }
+            get { return D3DTexture.GetLevelDescription(0).Width; }
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace TGC.Core.Textures
         /// </summary>
         public int Height
         {
-            get { return D3dTexture.GetLevelDescription(0).Height; }
+            get { return D3DTexture.GetLevelDescription(0).Height; }
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace TGC.Core.Textures
         ///     Calcula el Aspect Ratio de la imagen
         /// </summary>
         /// <returns>Aspect Ratio</returns>
-        public float getAspectRatio()
+        public float GetAspectRatio()
         {
             return (float)Width / Height;
         }
@@ -78,12 +78,12 @@ namespace TGC.Core.Textures
         /// <summary>
         ///     Libera los recursos de la textura
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
-            //dispose de textura dentro de pool
+            //Dispose de textura dentro de pool
             if (InPool)
             {
-                TexturesPool.Instance.disposeTexture(FilePath);
+                TexturesPool.Instance.DisposeTexture(FilePath);
 
                 /*TODO creo que esto no hace falta, lo hace solo DirectX
                 //Si hubo un dispose fisico, quitar del TexturesManager
@@ -94,13 +94,13 @@ namespace TGC.Core.Textures
                 */
             }
 
-            //dispose de textura fuera de pool
+            //Dispose de textura fuera de pool
             else
             {
-                if (D3dTexture != null && !D3dTexture.Disposed)
+                if (D3DTexture != null && !D3DTexture.Disposed)
                 {
-                    D3dTexture.Dispose();
-                    D3dTexture = null;
+                    D3DTexture.Dispose();
+                    D3DTexture = null;
                 }
             }
         }
@@ -114,16 +114,16 @@ namespace TGC.Core.Textures
         ///     Crear una nueva textura igual a esta.
         /// </summary>
         /// <returns>Textura clonada</returns>
-        public TgcTexture Clone()
+        public TGCTexture Clone()
         {
-            TgcTexture cloneTexture;
+            TGCTexture cloneTexture;
             if (InPool)
             {
-                cloneTexture = createTexture(FilePath);
+                cloneTexture = CreateTexture(FilePath);
             }
             else
             {
-                cloneTexture = createTextureNoPool(FilePath);
+                cloneTexture = CreateTextureNoPool(FilePath);
             }
             return cloneTexture;
         }
@@ -138,12 +138,12 @@ namespace TGC.Core.Textures
         /// <param name="fileName">Nombre de la textura. Ejemplo: miTextura.jpg</param>
         /// <param name="filePath">Ruta completa de la textura. Ejemplo: C:\Texturas\miTextura.jpg</param>
         /// <returns>Textura creada</returns>
-        public static TgcTexture createTexture(Device d3dDevice, string fileName, string filePath)
+        public static TGCTexture CreateTexture(Device d3dDevice, string fileName, string filePath)
         {
             try
             {
-                var d3dTexture = TexturesPool.Instance.createTexture(d3dDevice, filePath);
-                return new TgcTexture(fileName, filePath, d3dTexture, true);
+                var d3dTexture = TexturesPool.Instance.CreateTexture(d3dDevice, filePath);
+                return new TGCTexture(fileName, filePath, d3dTexture, true);
             }
             catch (Exception ex)
             {
@@ -159,10 +159,10 @@ namespace TGC.Core.Textures
         /// <param name="d3dDevice">Device de Direct3D</param>
         /// <param name="filePath">Ruta completa de la textura. Ejemplo: C:\Texturas\miTextura.jpg</param>
         /// <returns>Textura creada</returns>
-        public static TgcTexture createTexture(Device d3dDevice, string filePath)
+        public static TGCTexture CreateTexture(Device d3dDevice, string filePath)
         {
             var fInfo = new FileInfo(filePath);
-            return createTexture(d3dDevice, fInfo.Name, filePath);
+            return CreateTexture(d3dDevice, fInfo.Name, filePath);
         }
 
         /// <summary>
@@ -172,9 +172,9 @@ namespace TGC.Core.Textures
         /// </summary>
         /// <param name="filePath">Ruta completa de la textura. Ejemplo: C:\Texturas\miTextura.jpg</param>
         /// <returns>Textura creada</returns>
-        public static TgcTexture createTexture(string filePath)
+        public static TGCTexture CreateTexture(string filePath)
         {
-            return createTexture(D3DDevice.Instance.Device, filePath);
+            return CreateTexture(D3DDevice.Instance.Device, filePath);
         }
 
         /// <summary>
@@ -186,13 +186,13 @@ namespace TGC.Core.Textures
         /// <param name="filePath">Ruta completa de la textura. Ejemplo: C:\Texturas\miTextura.jpg</param>
         /// <param name="d3dTexture">Textura de DirectX ya cargada por el usuario</param>
         /// <returns>Textura creada</returns>
-        public static TgcTexture createTexture(Device d3dDevice, string fileName, string filePath, Texture d3dTexture)
+        public static TGCTexture CreateTexture(Device d3dDevice, string fileName, string filePath, Texture d3dTexture)
         {
             try
             {
                 filePath = filePath.Replace("\\\\", "\\");
-                var d3dTexture2 = TexturesPool.Instance.createTexture(d3dDevice, filePath, d3dTexture);
-                return new TgcTexture(fileName, filePath, d3dTexture2, true);
+                var d3dTexture2 = TexturesPool.Instance.CreateTexture(d3dDevice, filePath, d3dTexture);
+                return new TGCTexture(fileName, filePath, d3dTexture2, true);
             }
             catch (Exception ex)
             {
@@ -208,12 +208,12 @@ namespace TGC.Core.Textures
         /// <param name="fileName">Nombre de la textura. Ejemplo: miTextura.jpg</param>
         /// <param name="filePath">Ruta completa de la textura. Ejemplo: C:\Texturas\miTextura.jpg</param>
         /// <returns>Textura creada</returns>
-        public static TgcTexture createTextureNoPool(Device d3dDevice, string fileName, string filePath)
+        public static TGCTexture CreateTextureNoPool(Device d3dDevice, string fileName, string filePath)
         {
             try
             {
                 var d3dTexture = TextureLoader.FromFile(d3dDevice, filePath);
-                return new TgcTexture(fileName, filePath, d3dTexture, false);
+                return new TGCTexture(fileName, filePath, d3dTexture, false);
             }
             catch (Exception ex)
             {
@@ -229,10 +229,10 @@ namespace TGC.Core.Textures
         /// <param name="d3dDevice">Device de Direct3D</param>
         /// <param name="filePath">Ruta completa de la textura. Ejemplo: C:\Texturas\miTextura.jpg</param>
         /// <returns>Textura creada</returns>
-        public static TgcTexture createTextureNoPool(Device d3dDevice, string filePath)
+        public static TGCTexture CreateTextureNoPool(Device d3dDevice, string filePath)
         {
             var fInfo = new FileInfo(filePath);
-            return createTextureNoPool(d3dDevice, fInfo.Name, filePath);
+            return CreateTextureNoPool(d3dDevice, fInfo.Name, filePath);
         }
 
         /// <summary>
@@ -242,9 +242,9 @@ namespace TGC.Core.Textures
         /// </summary>
         /// <param name="filePath">Ruta completa de la textura. Ejemplo: C:\Texturas\miTextura.jpg</param>
         /// <returns>Textura creada</returns>
-        public static TgcTexture createTextureNoPool(string filePath)
+        public static TGCTexture CreateTextureNoPool(string filePath)
         {
-            return createTextureNoPool(D3DDevice.Instance.Device, filePath);
+            return CreateTextureNoPool(D3DDevice.Instance.Device, filePath);
         }
 
         #endregion Creacion Static

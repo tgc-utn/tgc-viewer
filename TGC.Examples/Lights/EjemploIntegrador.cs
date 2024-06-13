@@ -120,8 +120,8 @@ namespace TGC.Examples.Lights
                     path = split[0] + "_NormalMap.png";
 
                     //Convertir TgcMesh a TgcMeshBumpMapping
-                    var normalMap = TgcTexture.createTexture(path);
-                    TgcTexture[] normalMapArray = { normalMap };
+                    var normalMap = TGCTexture.CreateTexture(path);
+                    TGCTexture[] normalMapArray = { normalMap };
                     var bumpMesh = TgcMeshBumpMapping.fromTgcMesh(mesh, normalMapArray);
                     bumpMesh.Effect = effect;
                     bumpMesh.Technique = "EnvironmentMapTechnique";

@@ -13,7 +13,7 @@ namespace TGC.Examples.Optimization.Quadtree
     public class Quadtree
     {
         private readonly QuadtreeBuilder builder;
-        private List<TgcBoxDebug> debugQuadtreeBoxes;
+        private List<TGCBoxDebug> debugQuadtreeBoxes;
         private List<TgcMesh> modelos;
         private QuadtreeNode quadtreeRootNode;
         private TgcBoundingAxisAlignBox sceneBounds;

@@ -24,9 +24,9 @@ namespace TGC.Examples.ShadersExamples
     public class EfectoNiebla : TGCExampleViewer
     {
         private Effect effect;
-        private TgcFog fog;
+        private TGCFog fog;
         private TgcScene scene;
-        private TgcSkyBox skyBox;
+        private TGCSkyBox skyBox;
         private TGCBooleanModifier fogShaderModifier;
         private TGCFloatModifier startDistanceModifier;
         private TGCFloatModifier endDistanceModifier;
@@ -44,16 +44,16 @@ namespace TGC.Examples.ShadersExamples
         public override void Init()
         {
             //Crear SkyBox
-            skyBox = new TgcSkyBox();
+            skyBox = new TGCSkyBox();
             skyBox.Center = new TGCVector3(0, 500, 0);
             skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "lostatseaday_lf.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Left, texturesPath + "lostatseaday_lf.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
             skyBox.Init();
 
             //Cargar escenario de Isla
@@ -73,7 +73,7 @@ namespace TGC.Examples.ShadersExamples
             densityModifier = AddFloat("density", 0, 1, 0.0025f);
             colorModifier = AddColor("color", Color.LightGray);
 
-            fog = new TgcFog();
+            fog = new TGCFog();
         }
 
         public override void Update()
@@ -97,7 +97,7 @@ namespace TGC.Examples.ShadersExamples
 
             if (fog.Enabled)
             {
-                fog.updateValues();
+                fog.UpdateValues();
             }
 
             if (fogShader)
@@ -127,7 +127,7 @@ namespace TGC.Examples.ShadersExamples
                 mesh.Render();
             }
 
-            //skyBox.render();
+            //skyBox.Render();
 
             foreach (var mesh in scene.Meshes)
             {

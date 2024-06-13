@@ -52,7 +52,7 @@ namespace TGC.Examples.Collision
         private TgcArrow directionArrow;
         private TgcScene escenario;
         private TgcSkeletalMesh personaje;
-        private TgcSkyBox skyBox;
+        private TGCSkyBox skyBox;
 
         private float jumping;
 
@@ -85,7 +85,7 @@ namespace TGC.Examples.Collision
             //Le cambiamos la textura para diferenciarlo un poco
             personaje.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                TGCTexture.CreateTexture(D3DDevice.Instance.Device,
                     MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
             });
             //Configurar animacion inicial
@@ -124,16 +124,16 @@ namespace TGC.Examples.Collision
             Camera = camaraInterna;
 
             //Crear SkyBox
-            skyBox = new TgcSkyBox();
+            skyBox = new TGCSkyBox();
             skyBox.Center = TGCVector3.Empty;
             skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox3\\";
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "Up.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "Down.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "Left.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "Right.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "Back.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "Front.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Up, texturesPath + "Up.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Down, texturesPath + "Down.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Left, texturesPath + "Left.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Right, texturesPath + "Right.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Front, texturesPath + "Back.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Back, texturesPath + "Front.jpg");
             skyBox.Init();
 
             //Modifier para ver BoundingBox

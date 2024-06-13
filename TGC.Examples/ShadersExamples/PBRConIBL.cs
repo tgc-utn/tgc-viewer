@@ -52,20 +52,20 @@ namespace TGC.Examples.ShadersExamples
         {
             private TgcMesh mesh;
             private TGCMatrix transform;
-            private TgcTexture albedo, metallic, normal, roughness;
+            private TGCTexture albedo, metallic, normal, roughness;
 
             public PBRTexturedMesh(string name, string texturePath, TGCMatrix transform, TgcMesh mesh)
             {
                 var basePBR = texturePath + "PBR\\" + name + "\\";
                 var device = D3DDevice.Instance.Device;
 
-                albedo = TgcTexture.createTexture(device, basePBR + "Color.jpg");
-                normal = TgcTexture.createTexture(device, basePBR + "Normal.jpg");
+                albedo = TGCTexture.CreateTexture(device, basePBR + "Color.jpg");
+                normal = TGCTexture.CreateTexture(device, basePBR + "Normal.jpg");
                 if (File.Exists(basePBR + "Metalness.jpg"))
-                    metallic = TgcTexture.createTexture(device, basePBR + "Metalness.jpg");
+                    metallic = TGCTexture.CreateTexture(device, basePBR + "Metalness.jpg");
                 else
-                    metallic = TgcTexture.createTexture(device, texturePath + "green.bmp");
-                roughness = TgcTexture.createTexture(device, basePBR + "Roughness.jpg");
+                    metallic = TGCTexture.CreateTexture(device, texturePath + "green.bmp");
+                roughness = TGCTexture.CreateTexture(device, basePBR + "Roughness.jpg");
 
                 this.mesh = mesh;
                 this.transform = transform;
@@ -77,10 +77,10 @@ namespace TGC.Examples.ShadersExamples
                 var meshEffect = mesh.Effect;
 
                 meshEffect.SetValue("textured", true);
-                meshEffect.SetValue("albedoTexture", albedo.D3dTexture);
-                meshEffect.SetValue("metallicTexture", metallic.D3dTexture);
-                meshEffect.SetValue("normalTexture", normal.D3dTexture);
-                meshEffect.SetValue("roughnessTexture", roughness.D3dTexture);
+                meshEffect.SetValue("albedoTexture", albedo.D3DTexture);
+                meshEffect.SetValue("metallicTexture", metallic.D3DTexture);
+                meshEffect.SetValue("normalTexture", normal.D3DTexture);
+                meshEffect.SetValue("roughnessTexture", roughness.D3DTexture);
 
                 mesh.Render();
             }
@@ -428,7 +428,7 @@ namespace TGC.Examples.ShadersExamples
         private void InitializePBRMesh()
         {
             // Got to set a texture, else the translation to mesh does not map UV
-            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\white.bmp");
+            var texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\white.bmp");
 
             var sphere = new TGCSphere();
             sphere.Radius = 40.0f;
@@ -439,7 +439,7 @@ namespace TGC.Examples.ShadersExamples
             pbrMesh = sphere.toMesh("sphere");
             pbrMesh.Effect = effect;
             pbrMesh.Technique = "PBRIBL";
-            pbrMesh.DiffuseMaps = new TgcTexture[0];
+            pbrMesh.DiffuseMaps = new TGCTexture[0];
             pbrMesh.RenderType = TgcMesh.MeshRenderType.VERTEX_COLOR;
             sphere.Dispose();
 
@@ -529,14 +529,14 @@ namespace TGC.Examples.ShadersExamples
         private void InitializeUnitCube()
         {
             var box = new TGCBox();
-            box.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\white.bmp"));
+            box.setTexture(TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\white.bmp"));
             box.Size = TGCVector3.One;
             box.updateValues();
 
             unitCube = box.ToMesh("cube");
             unitCube.Transform = TGCMatrix.Scaling(1f, 1f, 1f);
             unitCube.Effect = effect;
-            unitCube.DiffuseMaps = new TgcTexture[0];
+            unitCube.DiffuseMaps = new TGCTexture[0];
             unitCube.RenderType = TgcMesh.MeshRenderType.VERTEX_COLOR;
             box.Dispose();
         }

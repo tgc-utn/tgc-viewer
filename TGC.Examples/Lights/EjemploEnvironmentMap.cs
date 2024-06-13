@@ -57,9 +57,9 @@ namespace TGC.Examples.Lights
             cubeMap = TextureLoader.FromCubeFile(D3DDevice.Instance.Device, MediaDir + "CubeMap.dds");
 
             //Crear 3 paredes y un piso con textura comun y textura de normalMap
-            var diffuseMap = TgcTexture.createTexture(MediaDir + "Texturas//BM_DiffuseMap_pared.jpg");
-            var normalMap = TgcTexture.createTexture(MediaDir + "Texturas//BM_NormalMap.jpg");
-            TgcTexture[] normalMapArray = { normalMap };
+            var diffuseMap = TGCTexture.CreateTexture(MediaDir + "Texturas//BM_DiffuseMap_pared.jpg");
+            var normalMap = TGCTexture.CreateTexture(MediaDir + "Texturas//BM_NormalMap.jpg");
+            TGCTexture[] normalMapArray = { normalMap };
 
             var paredSur = TGCBox.fromExtremes(new TGCVector3(-200, 0, -210), new TGCVector3(200, 100, -200), diffuseMap);
             paredSur.Transform = TGCMatrix.Translation(paredSur.Position);

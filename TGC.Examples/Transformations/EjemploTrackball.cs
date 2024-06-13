@@ -148,7 +148,7 @@ namespace TGC.Examples.Transformations
 
         private void InitializeSphere()
         {
-            var transparentTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\transparent.png");
+            var transparentTexture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\transparent.png");
 
             boundingSphere = new TgcBoundingSphere(TGCVector3.Empty, radius);
 

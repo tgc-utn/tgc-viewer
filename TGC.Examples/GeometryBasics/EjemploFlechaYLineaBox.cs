@@ -28,7 +28,7 @@ namespace TGC.Examples.GeometryBasics
         private TGCColorModifier boxColorModifier;
 
         private TgcArrow arrow;
-        private TgcBoxDebug box;
+        private TGCBoxDebug box;
 
         public EjemploFlechaYLineaBox(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -53,7 +53,7 @@ namespace TGC.Examples.GeometryBasics
             headColorModifier = AddColor("headColor", Color.LightBlue);
 
             //Crea linea generica
-            box = new TgcBoxDebug();
+            box = new TGCBoxDebug();
 
             //Crear modifiers
             boxColorModifier = AddColor("boxColor", Color.Red);

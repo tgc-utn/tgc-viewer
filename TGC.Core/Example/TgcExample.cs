@@ -57,8 +57,8 @@ namespace TGC.Core.Example
             Camera = new TgcCamera();
             Timer = new HighResolutionTimer();
             Frustum = new TgcFrustum();
-            //DirectSound = new TgcDirectSound(); Por ahora lo carga el Model
-            DrawText = new TgcText2D();
+            //DirectSound = new TGCDirectSound(); Por ahora lo carga el Model
+            DrawText = new TGCText2D();
             //Input = new TgcD3dInput(); Por ahora lo carga el Model
             BackgroundColor = DefaultClearColor;
 
@@ -161,12 +161,12 @@ namespace TGC.Core.Example
         /// <summary>
         /// Herramienta para manipular el Device de DirectSound.
         /// </summary>
-        public TgcDirectSound DirectSound { get; set; }
+        public TGCDirectSound DirectSound { get; set; }
 
         /// <summary>
         /// Herramienta para poder dibujar texto en la pantalla.
         /// </summary>
-        public TgcText2D DrawText { get; set; }
+        public TGCText2D DrawText { get; set; }
 
         /// <summary>
         /// Herramienta para el manejo del Input.
@@ -437,7 +437,7 @@ namespace TGC.Core.Example
         public abstract void Dispose();
 
         /// <summary>
-        /// Vuelve la configuracion de Render y otras cosas a la configuracion inicial.
+        /// Vuelve la configuracion de render y otras cosas a la configuracion inicial.
         /// </summary>
         public virtual void ResetDefaultConfig()
         {

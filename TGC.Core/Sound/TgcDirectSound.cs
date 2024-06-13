@@ -8,7 +8,7 @@ namespace TGC.Core.Sound
     /// <summary>
     ///     Herramienta para manipular el Device de DirectSound
     /// </summary>
-    public class TgcDirectSound
+    public class TGCDirectSound
     {
         private Buffer primaryBuffer;
 

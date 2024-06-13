@@ -75,7 +75,7 @@ namespace TGC.Examples.GeometryBasics
             if (texturePath != currentTexture)
             {
                 currentTexture = texturePath;
-                cylinder.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
+                cylinder.setTexture(TGCTexture.CreateTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
             cylinder.UseTexture = useTextureModifier.Value;

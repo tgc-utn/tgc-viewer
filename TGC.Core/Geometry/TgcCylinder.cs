@@ -17,7 +17,7 @@ namespace TGC.Core.Geometry
 
         private TGCMatrix manualTransformation;
         private CustomVertex.PositionColoredTextured[] sideTrianglesVertices; //triangle strip
-        private TgcTexture texture;
+        private TGCTexture texture;
 
         private bool useTexture;
 
@@ -163,7 +163,7 @@ namespace TGC.Core.Geometry
 
         public void Dispose()
         {
-            if (texture != null) texture.dispose();
+            if (texture != null) texture.Dispose();
             sideTrianglesVertices = null;
             BoundingCylinder.Dispose();
         }
@@ -243,10 +243,10 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Setea la textura
         /// </summary>
-        public void setTexture(TgcTexture _texture)
+        public void setTexture(TGCTexture _texture)
         {
             if (texture != null)
-                texture.dispose();
+                texture.Dispose();
             texture = _texture;
         }
 

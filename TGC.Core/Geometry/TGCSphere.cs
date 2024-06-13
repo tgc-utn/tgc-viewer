@@ -112,7 +112,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Textura de la esfera
         /// </summary>
-        public TgcTexture Texture { get; private set; }
+        public TGCTexture Texture { get; private set; }
 
         /// <summary>
         ///     Shader del mesh
@@ -278,9 +278,9 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Configurar textura de la esfera y setea la technique POSITION_TEXTURED.
         /// </summary>
-        public virtual void setTexture(TgcTexture texture)
+        public virtual void setTexture(TGCTexture texture)
         {
-            if (Texture != null) Texture.dispose();
+            if (Texture != null) Texture.Dispose();
 
             Texture = texture;
 
@@ -328,12 +328,12 @@ namespace TGC.Core.Geometry
         /// <param name="radius"></param>
         /// <param name="texture"></param>
         /// <param name="center"></param>
-        public TGCSphere(float radius, TgcTexture texture, TGCVector3 center)
+        public TGCSphere(float radius, TGCTexture texture, TGCVector3 center)
         {
             configure(radius, Color.White, texture, center);
         }
 
-        protected void configure(float radius, Color color, TgcTexture texture, TGCVector3 center)
+        protected void configure(float radius, Color color, TGCTexture texture, TGCVector3 center)
         {
             AutoTransformEnable = false;
             Transform = TGCMatrix.Identity;
@@ -712,7 +712,7 @@ namespace TGC.Core.Geometry
         {
             if (Texture != null)
             {
-                Texture.dispose();
+                Texture.Dispose();
                 Texture = null;
             }
 

@@ -15,11 +15,11 @@ namespace TGC.Core.KeyFrameLoader
     /// </summary>
     public class TgcKeyFrameLoader
     {
-        private readonly Dictionary<string, TgcTexture> texturesDict;
+        private readonly Dictionary<string, TGCTexture> texturesDict;
 
         public TgcKeyFrameLoader()
         {
-            texturesDict = new Dictionary<string, TgcTexture>();
+            texturesDict = new Dictionary<string, TGCTexture>();
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace TGC.Core.KeyFrameLoader
             //Configurar Material y Textura para un solo SubSet
             var matAux = materialsArray[meshData.materialId];
             Material[] meshMaterials;
-            TgcTexture[] meshTextures;
+            TGCTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
                 meshMaterials = new[] { matAux.materialId };
@@ -290,7 +290,7 @@ namespace TGC.Core.KeyFrameLoader
 
                 //Cargar array de Materials y Texturas
                 meshMaterials = new Material[matAux.subMaterials.Length];
-                meshTextures = new TgcTexture[matAux.subMaterials.Length];
+                meshTextures = new TGCTexture[matAux.subMaterials.Length];
                 for (var m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
@@ -407,14 +407,14 @@ namespace TGC.Core.KeyFrameLoader
             if (materialData.fileName != null)
             {
                 //revisar que esa imagen no se haya cargado previamente
-                TgcTexture texture;
+                TGCTexture texture;
                 if (texturesDict.ContainsKey(materialData.fileName))
                 {
                     texture = texturesDict[materialData.fileName];
                 }
                 else
                 {
-                    texture = TgcTexture.createTexture(D3DDevice.Instance.Device, materialData.fileName,
+                    texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, materialData.fileName,
                         texturesPath + "\\" + materialData.fileName);
                     texturesDict[materialData.fileName] = texture;
                     //TODO usar para algo el OFFSET y el TILING
@@ -436,7 +436,7 @@ namespace TGC.Core.KeyFrameLoader
         {
             public Material materialId;
             public TgcKeyFrameLoaderMaterialAux[] subMaterials;
-            public TgcTexture texture;
+            public TGCTexture texture;
         }
 
         #region Mesh FVF

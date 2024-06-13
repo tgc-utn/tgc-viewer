@@ -18,7 +18,7 @@ namespace TGC.Examples.PostProcess
     ///     Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "Shaders/EjemploShaderTgcMesh".
-    ///     Muestra como utilizar la tenica de Render Target para lograr efectos de Post-Procesado.
+    ///     Muestra como utilizar la tenica de render target para lograr efectos de Post-Procesado.
     ///     Toda la escena no se dibuja a pantalla sino que se dibuja a una textura auxiliar.
     ///     Luego se crea un unico mesh (un Quad) que ocupa toda la pantalla y se le carga como textura
     ///     esta imagen generada antes.
@@ -45,7 +45,7 @@ namespace TGC.Examples.PostProcess
         {
             Category = "Post Process Shaders";
             Name = "Texture Distortion Ondas";
-            Description = "Graba la escena a un Render Target y luego con un pixel shader distorsiona la imagen con ondas de senos.";
+            Description = "Graba la escena a un render target y luego con un pixel shader distorsiona la imagen con ondas de senos.";
         }
 
         public override void Init()
@@ -66,7 +66,7 @@ namespace TGC.Examples.PostProcess
                 CustomVertex.PositionTextured.Format, Pool.Default);
             screenQuadVB.SetData(screenQuadVertices, 0, LockFlags.None);
 
-            //Creamos un Render Targer sobre el cual se va a dibujar la pantalla
+            //Creamos un render target sobre el cual se va a dibujar la pantalla
             renderTarget2D = new Texture(D3DDevice.Instance.Device, D3DDevice.Instance.Device.PresentationParameters.BackBufferWidth,
                 D3DDevice.Instance.Device.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.X8R8G8B8, Pool.Default);
 
@@ -103,8 +103,8 @@ namespace TGC.Examples.PostProcess
         {
             ClearTextures();
 
-            //Cargamos el Render Targer al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
-            //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro Render Target.
+            //Cargamos el render target al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
+            //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro render target.
             pOldRT = D3DDevice.Instance.Device.GetRenderTarget(0);
             pOldDS = D3DDevice.Instance.Device.DepthStencilSurface;
             var pSurf = renderTarget2D.GetSurfaceLevel(0);
@@ -112,16 +112,16 @@ namespace TGC.Examples.PostProcess
             D3DDevice.Instance.Device.DepthStencilSurface = depthStencil;
             D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
-            //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
+            //Dibujamos la escena comun, pero en vez de a la pantalla al render target
             drawSceneToRenderTarget(D3DDevice.Instance.Device);
 
-            //Liberar memoria de surface de Render Target
+            //Liberar memoria de surface de render target
             pSurf.Dispose();
 
             //Si quisieramos ver que se dibujo, podemos guardar el resultado a una textura en un archivo para debugear su resultado (ojo, es lento)
             //TextureLoader.Save(this.ShadersDir + "render_target.bmp", ImageFileFormat.Bmp, renderTarget2D);
 
-            //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
+            //Ahora volvemos a restaurar el render target original (osea dibujar a la pantalla)
             D3DDevice.Instance.Device.SetRenderTarget(0, pOldRT);
             D3DDevice.Instance.Device.DepthStencilSurface = pOldDS;
 
@@ -130,7 +130,7 @@ namespace TGC.Examples.PostProcess
         }
 
         /// <summary>
-        ///     Dibujamos toda la escena pero en vez de a la pantalla, la dibujamos al Render Target que se cargo antes.
+        ///     Dibujamos toda la escena pero en vez de a la pantalla, la dibujamos al render target que se cargo antes.
         ///     Es como si dibujaramos a una textura auxiliar, que luego podemos utilizar.
         /// </summary>
         private void drawSceneToRenderTarget(Device d3dDevice)
@@ -144,7 +144,7 @@ namespace TGC.Examples.PostProcess
                 m.Render();
             }
 
-            //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
+            //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al render target que cargamos antes
             d3dDevice.EndScene();
         }
 

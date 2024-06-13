@@ -33,9 +33,9 @@ namespace TGC.Core.Textures
         /// </summary>
         /// <param name="stage">Stage en el cual configurar la textura</param>
         /// <param name="texture">Textura a configurar</param>
-        public void set(int stage, TgcTexture texture)
+        public void set(int stage, TGCTexture texture)
         {
-            D3DDevice.Instance.Device.SetTexture(stage, texture.D3dTexture);
+            D3DDevice.Instance.Device.SetTexture(stage, texture.D3DTexture);
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace TGC.Core.Textures
         /// <param name="effect">Shader</param>
         /// <param name="parameterName">Nombre del parámetro en el Shader</param>
         /// <param name="texture">Textura a aplicar</param>
-        public void shaderSet(Effect effect, string parameterName, TgcTexture texture)
+        public void shaderSet(Effect effect, string parameterName, TGCTexture texture)
         {
-            effect.SetValue(parameterName, texture.D3dTexture);
+            effect.SetValue(parameterName, texture.D3DTexture);
         }
 
         /// <summary>

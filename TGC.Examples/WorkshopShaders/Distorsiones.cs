@@ -115,7 +115,7 @@ namespace TGC.Examples.WorkshopShaders
 
             // dibujo la escena una textura
             effect.Technique = "DefaultTechnique";
-            // guardo el Render target anterior y seteo la textura como render target
+            // guardo el render target anterior y seteo la textura como render target
             Surface pOldRT = d3dDevice.GetRenderTarget(0);
             Surface pSurf = g_pRenderTarget.GetSurfaceLevel(0);
             d3dDevice.SetRenderTarget(0, pSurf);

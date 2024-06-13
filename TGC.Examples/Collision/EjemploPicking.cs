@@ -47,7 +47,7 @@ namespace TGC.Examples.Collision
             //Cargar 25 cajas formando una matriz
             var loader = new TgcSceneLoader();
             boxes = new List<TGCBox>();
-            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
+            var texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\granito.jpg");
             var boxSize = new TGCVector3(30, 30, 30);
             for (var i = 0; i < 5; i++)

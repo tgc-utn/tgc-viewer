@@ -333,12 +333,12 @@ namespace TGC.Examples.Optimization.Octree
         /// <summary>
         ///     Dibujar meshes que representan los sectores del Octree
         /// </summary>
-        public List<TgcBoxDebug> createDebugOctreeMeshes(OctreeNode rootNode, TgcBoundingAxisAlignBox sceneBounds)
+        public List<TGCBoxDebug> createDebugOctreeMeshes(OctreeNode rootNode, TgcBoundingAxisAlignBox sceneBounds)
         {
             var pMax = sceneBounds.PMax;
             var pMin = sceneBounds.PMin;
 
-            var debugBoxes = new List<TgcBoxDebug>();
+            var debugBoxes = new List<TGCBoxDebug>();
             doCreateOctreeDebugBox(rootNode, debugBoxes,
                 pMin.X, pMin.Y, pMin.Z,
                 pMax.X, pMax.Y, pMax.Z, 0);
@@ -346,7 +346,7 @@ namespace TGC.Examples.Optimization.Octree
             return debugBoxes;
         }
 
-        private void doCreateOctreeDebugBox(OctreeNode node, List<TgcBoxDebug> debugBoxes,
+        private void doCreateOctreeDebugBox(OctreeNode node, List<TGCBoxDebug> debugBoxes,
             float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
         {
@@ -408,7 +408,7 @@ namespace TGC.Examples.Optimization.Octree
         /// <summary>
         ///     Construir caja debug
         /// </summary>
-        private TgcBoxDebug createDebugBox(float boxLowerX, float boxLowerY, float boxLowerZ,
+        private TGCBoxDebug createDebugBox(float boxLowerX, float boxLowerY, float boxLowerZ,
             float boxUpperX, float boxUpperY, float boxUpperZ, int step)
         {
             //Determinar color y grosor según profundidad
@@ -443,7 +443,7 @@ namespace TGC.Examples.Optimization.Octree
             }
 
             //Crear caja Debug
-            var box = TgcBoxDebug.fromExtremes(
+            var box = TGCBoxDebug.fromExtremes(
                 new TGCVector3(boxLowerX, boxLowerY, boxLowerZ),
                 new TGCVector3(boxUpperX, boxUpperY, boxUpperZ),
                 c, thickness);

@@ -51,7 +51,7 @@ namespace TGC.Examples.Tutorial
         public override void Init()
         {
             //Todos los recursos que se van a necesitar (objetos 3D, meshes, texturas, etc) se deben cargar en el metodo init().
-            //Crearlos cada vez en el metodo render() es un error grave. Destruye la performance y suele provocar memory leaks.
+            //Crearlos cada vez en el metodo Render() es un error grave. Destruye la performance y suele provocar memory leaks.
 
             //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
             var center = TGCVector3.Empty;
@@ -68,7 +68,7 @@ namespace TGC.Examples.Tutorial
             //madera, cemento, ladrillo, pasto, etc). Se encuentran en la carpeta del framework: Media\MeshCreator\Textures
             //Podemos acceder al path de la carpeta "Media" utilizando la variable "this.MediaDir".
             //Esto evita que tengamos que hardcodear el path de instalación del framework.
-            var texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Madera\\cajaMadera3.jpg");
+            var texture = TGCTexture.CreateTexture(MediaDir + "MeshCreator\\Textures\\Madera\\cajaMadera3.jpg");
 
             //Creamos una caja 3D ubicada en (10, 0, 0) y la textura como color.
             center = new TGCVector3(15, 0, 0);
@@ -77,7 +77,7 @@ namespace TGC.Examples.Tutorial
 
             //Creamos una caja 3D con textura
             center = new TGCVector3(-15, 0, 0);
-            texture = TgcTexture.createTexture(MediaDir + "MeshCreator\\Textures\\Metal\\cajaMetal.jpg");
+            texture = TGCTexture.CreateTexture(MediaDir + "MeshCreator\\Textures\\Metal\\cajaMetal.jpg");
             box3 = TGCBox.fromSize(center, size, texture);
 
             //Ubicar la camara del framework mirando al centro de este objeto.
@@ -115,7 +115,7 @@ namespace TGC.Examples.Tutorial
         ///     Antes de llamar a este método el framework limpia toda la pantalla.
         ///     Por lo tanto para que un objeto se vea hay volver a dibujarlo siempre.
         ///     La variable elapsedTime indica la cantidad de segundos que pasaron entre esta invocación
-        ///     y la anterior de render(). Es útil para animar e interpolar valores.
+        ///     y la anterior de Render(). Es útil para animar e interpolar valores.
         /// </summary>
         public override void Render()
         {
