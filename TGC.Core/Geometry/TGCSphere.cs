@@ -387,7 +387,7 @@ namespace TGC.Core.Geometry
         public virtual TGCVector3 Scale
         {
             get => scale;
-            set => Console.WriteLine("TODO esta bien que pase por aca?");
+            set => Console.WriteLine("TODO esta bien que pase por aca? value=" + value);
         }
 
         /// <summary>
@@ -845,10 +845,10 @@ namespace TGC.Core.Geometry
                                     vertices[indices[um[0]]].Tu + UVTiling.X);
                             }
                             else if (!esPolo(vertices[indices[u1[0]]]))
-                                // Caso:
-                                // 1 vertice con u=1 y dos con u<0.5
+                            // Caso:
+                            // 1 vertice con u=1 y dos con u<0.5
 
-                                // El u del vertice con u=1 pasa a ser 0
+                            // El u del vertice con u=1 pasa a ser 0
                             {
                                 indices[u1[0]] = dupWithU(vertices, indices, duplicados, u1[0], UVOffset.X);
                             }
@@ -865,10 +865,7 @@ namespace TGC.Core.Geometry
                 for (var i = 0; i < indices.Count; i += 3) //Por cada triangulo
                 {
                     var iipolo = i;
-                    for (; iipolo < i + 3 && indices[iipolo] != polos[p]; iipolo++)
-                    {
-                        ;
-                    }
+                    //for (; iipolo < i + 3 && indices[iipolo] != polos[p]; iipolo++) ;
 
                     //Si un vertice es el polo
                     if (iipolo < i + 3)

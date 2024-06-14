@@ -1,5 +1,5 @@
-﻿using Microsoft.DirectX.Direct3D;
-using System;
+﻿using System;
+using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
 
 namespace TGC.Core.Shaders
@@ -37,6 +37,14 @@ namespace TGC.Core.Shaders
         public VertexBuffer ScreenQuadVB { get; set; }
 
         /// <summary>
+        ///     Liberar recursos
+        /// </summary>
+        public void Dispose()
+        {
+            ScreenQuadVB.Dispose();
+        }
+
+        /// <summary>
         ///     Render de quad con shader.
         ///     Setear previamente todos los parametros de shader y technique correspondiente.
         ///     Limpiar la pantalla segun sea necesario
@@ -51,14 +59,6 @@ namespace TGC.Core.Shaders
             D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             effect.EndPass();
             effect.End();
-        }
-
-        /// <summary>
-        ///     Liberar recursos
-        /// </summary>
-        public void Dispose()
-        {
-            ScreenQuadVB.Dispose();
         }
     }
 }

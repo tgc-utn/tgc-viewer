@@ -17,7 +17,6 @@ namespace TGC.Core.Geometry
 
         private TGCMatrix manualTransformation;
         private CustomVertex.PositionColoredTextured[] sideTrianglesVertices; //triangle strip
-        private TGCTexture texture;
 
         private bool useTexture;
 
@@ -40,6 +39,8 @@ namespace TGC.Core.Geometry
         {
             //nothing to do
         }
+
+        private TGCTexture Texture { get; }
 
         public Color Color
         {
@@ -132,9 +133,9 @@ namespace TGC.Core.Geometry
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
             }
 
-            if (texture != null)
+            if (Texture != null)
             {
-                TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", texture);
+                TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", Texture);
             }
             else
             {
@@ -162,9 +163,9 @@ namespace TGC.Core.Geometry
 
         public void Dispose()
         {
-            if (texture != null)
+            if (Texture != null)
             {
-                texture.Dispose();
+                Texture.Dispose();
             }
 
             sideTrianglesVertices = null;
@@ -309,7 +310,7 @@ namespace TGC.Core.Geometry
         public TGCVector3 Scale
         {
             get => TGCVector3.One;
-            set => Console.WriteLine("TODO esta bien que pase por aca?");
+            set => Console.WriteLine("TODO esta bien que pase por aca? value=" + value);
         }
 
         /// <summary>

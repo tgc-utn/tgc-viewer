@@ -1,5 +1,5 @@
-using Microsoft.DirectX.DirectSound;
 using System;
+using Microsoft.DirectX.DirectSound;
 using TGC.Core.Mathematica;
 
 namespace TGC.Core.Sound
@@ -42,8 +42,8 @@ namespace TGC.Core.Sound
         /// </summary>
         public TGCVector3 Position
         {
-            get { return new TGCVector3(Buffer3d.Position); }
-            set { Buffer3d.Position = value; }
+            get => new TGCVector3(Buffer3d.Position);
+            set => Buffer3d.Position = value;
         }
 
         /// <summary>
@@ -52,8 +52,20 @@ namespace TGC.Core.Sound
         /// </summary>
         public float MinDistance
         {
-            get { return Buffer3d.MinDistance; }
-            set { Buffer3d.MinDistance = value; }
+            get => Buffer3d.MinDistance;
+            set => Buffer3d.MinDistance = value;
+        }
+
+        /// <summary>
+        ///     Liberar recursos del sonido
+        /// </summary>
+        public void Dispose()
+        {
+            if (SoundBuffer != null && !SoundBuffer.Disposed)
+            {
+                SoundBuffer.Dispose();
+                SoundBuffer = null;
+            }
         }
 
         /// <summary>
@@ -129,18 +141,6 @@ namespace TGC.Core.Sound
         public void Stop()
         {
             SoundBuffer.Stop();
-        }
-
-        /// <summary>
-        ///     Liberar recursos del sonido
-        /// </summary>
-        public void Dispose()
-        {
-            if (SoundBuffer != null && !SoundBuffer.Disposed)
-            {
-                SoundBuffer.Dispose();
-                SoundBuffer = null;
-            }
         }
     }
 }

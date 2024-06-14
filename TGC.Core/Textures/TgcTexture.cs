@@ -1,7 +1,7 @@
-﻿using Microsoft.DirectX.Direct3D;
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
+using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
 
 namespace TGC.Core.Textures
@@ -45,35 +45,17 @@ namespace TGC.Core.Textures
         /// <summary>
         ///     Ancho de la textura
         /// </summary>
-        public int Width
-        {
-            get { return D3DTexture.GetLevelDescription(0).Width; }
-        }
+        public int Width => D3DTexture.GetLevelDescription(0).Width;
 
         /// <summary>
         ///     Alto de la textura
         /// </summary>
-        public int Height
-        {
-            get { return D3DTexture.GetLevelDescription(0).Height; }
-        }
+        public int Height => D3DTexture.GetLevelDescription(0).Height;
 
         /// <summary>
         ///     Dimensiones de la textura
         /// </summary>
-        public Size Size
-        {
-            get { return new Size(Width, Height); }
-        }
-
-        /// <summary>
-        ///     Calcula el Aspect Ratio de la imagen
-        /// </summary>
-        /// <returns>Aspect Ratio</returns>
-        public float GetAspectRatio()
-        {
-            return (float)Width / Height;
-        }
+        public Size Size => new Size(Width, Height);
 
         /// <summary>
         ///     Libera los recursos de la textura
@@ -105,6 +87,15 @@ namespace TGC.Core.Textures
             }
         }
 
+        /// <summary>
+        ///     Calcula el Aspect Ratio de la imagen
+        /// </summary>
+        /// <returns>Aspect Ratio</returns>
+        public float GetAspectRatio()
+        {
+            return (float)Width / Height;
+        }
+
         public override string ToString()
         {
             return FileName;
@@ -125,6 +116,7 @@ namespace TGC.Core.Textures
             {
                 cloneTexture = CreateTextureNoPool(FilePath);
             }
+
             return cloneTexture;
         }
 

@@ -1,5 +1,5 @@
-using Microsoft.DirectX.DirectSound;
 using System;
+using Microsoft.DirectX.DirectSound;
 
 namespace TGC.Core.Sound
 {
@@ -12,6 +12,18 @@ namespace TGC.Core.Sound
         ///     Buffer con la informacion del sonido cargado
         /// </summary>
         public SecondaryBuffer SoundBuffer { get; private set; }
+
+        /// <summary>
+        ///     Liberar recursos del sonido
+        /// </summary>
+        public void Dispose()
+        {
+            if (SoundBuffer != null && !SoundBuffer.Disposed)
+            {
+                SoundBuffer.Dispose();
+                SoundBuffer = null;
+            }
+        }
 
         /// <summary>
         ///     Carga un archivo WAV de audio, indicando el volumen del mismo
@@ -79,18 +91,6 @@ namespace TGC.Core.Sound
         public void Stop()
         {
             SoundBuffer.Stop();
-        }
-
-        /// <summary>
-        ///     Liberar recursos del sonido
-        /// </summary>
-        public void Dispose()
-        {
-            if (SoundBuffer != null && !SoundBuffer.Disposed)
-            {
-                SoundBuffer.Dispose();
-                SoundBuffer = null;
-            }
         }
     }
 }
