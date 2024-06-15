@@ -23,7 +23,7 @@ namespace TGC.Core.Geometry
             VertexElement.VertexDeclarationEnd
         };
 
-        public static VertexDeclaration PositionColoredTexturedNormal_Declaration =
+        public static readonly VertexDeclaration PositionColoredTexturedNormalDeclaration =
             new VertexDeclaration(D3DDevice.Instance.Device, PositionColoredTexturedNormal_VertexElements);
 
         public struct PositionColoredTexturedNormal
@@ -43,19 +43,17 @@ namespace TGC.Core.Geometry
             {
             }
 
-            public PositionColoredTexturedNormal(float X, float Y, float Z, int color, float Tu1, float Tv1,
-                float NX,
-                float NY, float NZ)
+            public PositionColoredTexturedNormal(float x, float y, float z, int color, float tu1, float tv1, float nx, float ny, float nz)
             {
-                this.X = X;
-                this.Y = Y;
-                this.Z = Z;
+                this.X = x;
+                this.Y = y;
+                this.Z = z;
                 Color = color;
-                Tu = Tu1;
-                Tv = Tv1;
-                this.NX = NX;
-                this.NY = NY;
-                this.NZ = NZ;
+                Tu = tu1;
+                Tv = tv1;
+                this.NX = nx;
+                this.NY = ny;
+                this.NZ = nz;
             }
 
             public TGCVector3 GetPosition()
