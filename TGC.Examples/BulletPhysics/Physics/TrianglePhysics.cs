@@ -130,7 +130,7 @@ namespace TGC.Examples.BulletPhysics.Physics
             sphereMesh = new TGCSphere(1, texturePokeball, TGCVector3.Empty);
 
             //Tgc no crea el vertex buffer hasta invocar a update values.
-            sphereMesh.updateValues();
+            sphereMesh.UpdateValues();
 
             #endregion Esfera
 

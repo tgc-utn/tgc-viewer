@@ -1159,7 +1159,7 @@ namespace TGC.Core.SceneLoader
             return tgcMesh;
         }
 
-        public static TgcMesh FromTGCSphere(string meshName, TGCTexture texture, List<int> indices, List<TGCSphere.Vertex.PositionColoredTexturedNormal> vertices, TGCMatrix transform, bool alphaBlendEnable)
+        public static TgcMesh FromTGCSphere(string meshName, TGCTexture texture, List<int> indices, List<Vertex.PositionColoredTexturedNormal> vertices, TGCMatrix transform, bool alphaBlendEnable)
         {
             //Crear mesh con DiffuseMap
             if (texture != null)
@@ -1178,10 +1178,10 @@ namespace TGC.Core.SceneLoader
                         var vSphere = vertices[indices[j]];
 
                         //vertices
-                        v.Position = TGCVector3.TransformCoordinate(vSphere.getPosition(), transform);
+                        v.Position = TGCVector3.TransformCoordinate(vSphere.GetPosition(), transform);
 
                         //normals
-                        v.Normal = vSphere.getNormal();
+                        v.Normal = vSphere.GetNormal();
 
                         //texture coordinates diffuseMap
                         v.Tu = vSphere.Tu;
@@ -1235,10 +1235,10 @@ namespace TGC.Core.SceneLoader
                         var vSphere = vertices[indices[j]];
 
                         //vertices
-                        v.Position = TGCVector3.TransformCoordinate(vSphere.getPosition(), transform);
+                        v.Position = TGCVector3.TransformCoordinate(vSphere.GetPosition(), transform);
 
                         //normals
-                        v.Normal = vSphere.getNormal();
+                        v.Normal = vSphere.GetNormal();
 
                         //color
                         v.Color = vSphere.Color;

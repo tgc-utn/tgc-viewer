@@ -68,7 +68,7 @@ namespace TGC.Examples.BulletPhysics.Physics
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
             sphereMesh = new TGCSphere(1, texture.Clone(), TGCVector3.Empty);
             //Tgc no crea el vertex buffer hasta invocar a update values.
-            sphereMesh.updateValues();
+            sphereMesh.UpdateValues();
         }
 
         public override void Update(float elapsedTime, float timeBetweenFrames)

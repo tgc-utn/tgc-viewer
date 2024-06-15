@@ -17,6 +17,7 @@ namespace TGC.Core.Geometry
 
         private TGCMatrix manualTransformation;
         private CustomVertex.PositionColoredTextured[] sideTrianglesVertices; //triangle strip
+        private TGCTexture texture;
 
         private bool useTexture;
 
@@ -39,8 +40,6 @@ namespace TGC.Core.Geometry
         {
             //nothing to do
         }
-
-        private TGCTexture Texture { get; }
 
         public Color Color
         {
@@ -133,9 +132,9 @@ namespace TGC.Core.Geometry
                 D3DDevice.Instance.Device.RenderState.AlphaTestEnable = true;
             }
 
-            if (Texture != null)
+            if (texture != null)
             {
-                TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", Texture);
+                TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", texture);
             }
             else
             {
@@ -163,9 +162,9 @@ namespace TGC.Core.Geometry
 
         public void Dispose()
         {
-            if (Texture != null)
+            if (texture != null)
             {
-                Texture.Dispose();
+                texture.Dispose();
             }
 
             sideTrianglesVertices = null;
@@ -261,12 +260,12 @@ namespace TGC.Core.Geometry
         /// </summary>
         public void SetTexture(TGCTexture texture)
         {
-            if (texture != null)
+            if (this.texture != null)
             {
-                texture.Dispose();
+                this.texture.Dispose();
             }
 
-            texture = texture;
+            this.texture = texture;
         }
 
         #region Transformation

@@ -433,10 +433,10 @@ namespace TGC.Examples.ShadersExamples
             var sphere = new TGCSphere();
             sphere.Radius = 40.0f;
             sphere.LevelOfDetail = 3;
-            sphere.setTexture(texture);
-            sphere.updateValues();
+            sphere.SetTexture(texture);
+            sphere.UpdateValues();
 
-            pbrMesh = sphere.toMesh("sphere");
+            pbrMesh = sphere.ToMesh("sphere");
             pbrMesh.Effect = effect;
             pbrMesh.Technique = "PBRIBL";
             pbrMesh.DiffuseMaps = new TGCTexture[0];

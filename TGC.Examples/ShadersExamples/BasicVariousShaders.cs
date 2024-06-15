@@ -91,9 +91,9 @@ namespace TGC.Examples.ShadersExamples
             var lava = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\lava.jpg");
             var sphere = new TGCSphere(1, lava, TGCVector3.Empty);
             sphere.LevelOfDetail = 4;
-            sphere.updateValues();
+            sphere.UpdateValues();
 
-            this.mesh = sphere.toMesh("Mesh");
+            this.mesh = sphere.ToMesh("Mesh");
 
             this.mesh.Effect = this.effect;
         }

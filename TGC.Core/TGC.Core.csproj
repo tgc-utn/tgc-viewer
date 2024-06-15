@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BulletPhysics\BulletRigidBodyFactory.cs" />
+    <Compile Include="Geometry\GeometryProvider.cs" />
     <Compile Include="Geometry\TgcArrow.cs" />
     <Compile Include="Geometry\TgcBox.cs" />
     <Compile Include="Geometry\TgcBoxDebug.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Geometry\TGCSphere.cs" />
     <Compile Include="Geometry\TgcTriangle.cs" />
     <Compile Include="Geometry\TgcTriangleArray.cs" />
+    <Compile Include="Geometry\Vertex.cs" />
     <Compile Include="Mathematica\TGCMatrix.cs" />
     <Compile Include="Mathematica\TGCPlane.cs" />
     <Compile Include="Mathematica\TGCQuaternion.cs" />

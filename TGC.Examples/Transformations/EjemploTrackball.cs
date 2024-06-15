@@ -154,7 +154,7 @@ namespace TGC.Examples.Transformations
 
             sphere = new TGCSphere(1.0f, transparentTexture, TGCVector3.Empty);
             sphere.AlphaBlendEnable = true;
-            sphere.updateValues();
+            sphere.UpdateValues();
             sphere.Transform = TGCMatrix.Scaling(new TGCVector3(radius, radius, radius));
         }
 

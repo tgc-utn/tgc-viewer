@@ -57,7 +57,7 @@ namespace TGC.Examples.BulletPhysics.Physics
             dynamicsWorld.AddRigidBody(dragonBall);
             var textureDragonBall = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\dragonball.jpg");
             sphereMesh = new TGCSphere(1, textureDragonBall, TGCVector3.Empty);
-            sphereMesh.updateValues();
+            sphereMesh.UpdateValues();
             director = new TGCVector3(1, 0, 0);
         }
 

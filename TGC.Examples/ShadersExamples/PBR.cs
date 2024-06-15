@@ -105,10 +105,10 @@ namespace TGC.Examples.ShadersExamples
             var sphere = new TGCSphere();
             sphere.Radius = 40.0f;
             sphere.LevelOfDetail = 3;
-            sphere.setTexture(texture);
-            sphere.updateValues();
+            sphere.SetTexture(texture);
+            sphere.UpdateValues();
 
-            sphereMesh = sphere.toMesh("sphere");
+            sphereMesh = sphere.ToMesh("sphere");
             sphereMesh.Transform = TGCMatrix.Scaling(TGCVector3.One * 30f);
             sphereMesh.Effect = effect;
             sphereMesh.Technique = "PBR";
