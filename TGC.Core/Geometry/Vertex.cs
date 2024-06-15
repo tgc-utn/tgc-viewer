@@ -6,7 +6,7 @@ namespace TGC.Core.Geometry
 {
     public class Vertex
     {
-        public static readonly VertexElement[] PositionColoredTexturedNormal_VertexElements =
+        public static readonly VertexElement[] PositionColoredTexturedNormalVertexElements =
         {
             new VertexElement(0, 0, DeclarationType.Float3,
                 DeclarationMethod.Default,
@@ -24,7 +24,7 @@ namespace TGC.Core.Geometry
         };
 
         public static readonly VertexDeclaration PositionColoredTexturedNormalDeclaration =
-            new VertexDeclaration(D3DDevice.Instance.Device, PositionColoredTexturedNormal_VertexElements);
+            new VertexDeclaration(D3DDevice.Instance.Device, PositionColoredTexturedNormalVertexElements);
 
         public struct PositionColoredTexturedNormal
         {
@@ -43,17 +43,18 @@ namespace TGC.Core.Geometry
             {
             }
 
-            public PositionColoredTexturedNormal(float x, float y, float z, int color, float tu1, float tv1, float nx, float ny, float nz)
+            public PositionColoredTexturedNormal(float x, float y, float z, int color, float tu1, float tv1, float nx,
+                float ny, float nz)
             {
-                this.X = x;
-                this.Y = y;
-                this.Z = z;
+                X = x;
+                Y = y;
+                Z = z;
                 Color = color;
                 Tu = tu1;
                 Tv = tv1;
-                this.NX = nx;
-                this.NY = ny;
-                this.NZ = nz;
+                NX = nx;
+                NY = ny;
+                NZ = nz;
             }
 
             public TGCVector3 GetPosition()

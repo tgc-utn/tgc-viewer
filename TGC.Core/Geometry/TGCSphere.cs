@@ -754,7 +754,7 @@ namespace TGC.Core.Geometry
             TGCShaders.Instance.SetShaderMatrix(Effect, Transform);
             Effect.Technique = Technique;
 
-            D3DDevice.Instance.Device.VertexDeclaration = Vertex.PositionColoredTexturedNormal_Declaration;
+            D3DDevice.Instance.Device.VertexDeclaration = Vertex.PositionColoredTexturedNormalDeclaration;
             D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
             var oldIndex = D3DDevice.Instance.Device.Indices;
             D3DDevice.Instance.Device.Indices = indexBuffer;

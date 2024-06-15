@@ -4,7 +4,7 @@ using TGC.Core.Mathematica;
 
 namespace TGC.Core.Geometry
 {
-    /// <remarks> http://gamedev.stackexchange.com/questions/31308/algorithm-for-creating-spheres David Lively</remarks>
+    /// <remarks> https://gamedev.stackexchange.com/questions/31308/algorithm-for-creating-spheres David Lively</remarks>
     public static class GeometryProvider
     {
         /// <summary> Divide cada triangulo en cuatro.</summary>
@@ -56,11 +56,10 @@ namespace TGC.Core.Geometry
         /// <param name="i0"></param>
         /// <param name="i1"></param>
         /// <returns></returns>
-        private static int GetMidpointIndex(Dictionary<string, int> midpointIndices, List<TGCVector3> vertices,
-            int i0,
+        private static int GetMidpointIndex(Dictionary<string, int> midpointIndices, List<TGCVector3> vertices, int i0,
             int i1)
         {
-            var edgeKey = string.Format("{0}_{1}", Math.Min(i0, i1), Math.Max(i0, i1));
+            var edgeKey = $"{Math.Min(i0, i1)}_{Math.Max(i0, i1)}";
 
             var midpointIndex = -1;
 
@@ -157,24 +156,24 @@ namespace TGC.Core.Geometry
                 indices[i] += vertices.Count;
             }
 
-            var X = 0.525731112119133606f;
-            var Z = 0.850650808352039932f;
+            var x = 0.525731112119133606f;
+            var z = 0.850650808352039932f;
 
             vertices.AddRange(
                 new[]
                 {
-                    new TGCVector3(-X, 0f, Z),
-                    new TGCVector3(X, 0f, Z),
-                    new TGCVector3(-X, 0f, -Z),
-                    new TGCVector3(X, 0f, -Z),
-                    new TGCVector3(0f, Z, X),
-                    new TGCVector3(0f, Z, -X),
-                    new TGCVector3(0f, -Z, X),
-                    new TGCVector3(0f, -Z, -X),
-                    new TGCVector3(Z, X, 0f),
-                    new TGCVector3(-Z, X, 0f),
-                    new TGCVector3(Z, -X, 0f),
-                    new TGCVector3(-Z, -X, 0f)
+                    new TGCVector3(-x, 0f, z),
+                    new TGCVector3(x, 0f, z),
+                    new TGCVector3(-x, 0f, -z),
+                    new TGCVector3(x, 0f, -z),
+                    new TGCVector3(0f, z, x),
+                    new TGCVector3(0f, z, -x),
+                    new TGCVector3(0f, -z, x),
+                    new TGCVector3(0f, -z, -x),
+                    new TGCVector3(z, x, 0f),
+                    new TGCVector3(-z, x, 0f),
+                    new TGCVector3(z, -x, 0f),
+                    new TGCVector3(-z, -x, 0f)
                 }
             );
         }
