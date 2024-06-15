@@ -100,19 +100,19 @@ namespace TGC.Examples.ShadersExamples
         private void InitializeSphere()
         {
             // Got to set a texture, else the translation to mesh does not map UV
-            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\white.bmp");
+            var texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\white.bmp");
 
             var sphere = new TGCSphere();
             sphere.Radius = 40.0f;
             sphere.LevelOfDetail = 3;
-            sphere.setTexture(texture);
-            sphere.updateValues();
+            sphere.SetTexture(texture);
+            sphere.UpdateValues();
 
-            sphereMesh = sphere.toMesh("sphere");
+            sphereMesh = sphere.ToMesh("sphere");
             sphereMesh.Transform = TGCMatrix.Scaling(TGCVector3.One * 30f);
             sphereMesh.Effect = effect;
             sphereMesh.Technique = "PBR";
-            sphereMesh.DiffuseMaps = new TgcTexture[0];
+            sphereMesh.DiffuseMaps = new TGCTexture[0];
             sphereMesh.RenderType = TgcMesh.MeshRenderType.VERTEX_COLOR;
             sphere.Dispose();
         }
@@ -222,7 +222,7 @@ namespace TGC.Examples.ShadersExamples
         private void OnTextureChange(object sender, EventArgs e)
         {
             var modifier = (TGCTextureAutoUpdateModifier)sender;
-            effect.SetValue(modifier.Name, modifier.Texture.D3dTexture);
+            effect.SetValue(modifier.Name, modifier.Texture.D3DTexture);
         }
 
         private void InitializeMaterials()
@@ -284,7 +284,7 @@ namespace TGC.Examples.ShadersExamples
     {
         public event EventHandler OnTextureChange;
 
-        private TgcTexture texture;
+        private TGCTexture texture;
         private string name, path, setPath;
 
         public TGCTextureAutoUpdateModifier(string name)
@@ -294,7 +294,7 @@ namespace TGC.Examples.ShadersExamples
             setPath = "";
         }
 
-        public TgcTexture Texture { get => texture; }
+        public TGCTexture Texture { get => texture; }
 
         public string Name { get => name; }
 
@@ -315,14 +315,14 @@ namespace TGC.Examples.ShadersExamples
         private void ChangeTexture()
         {
             if (texture != null)
-                texture.dispose();
-            texture = TgcTexture.createTexture(D3DDevice.Instance.Device, path);
+                texture.Dispose();
+            texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, path);
             OnTextureChange.Invoke(this, EventArgs.Empty);
         }
 
         public void Dispose()
         {
-            texture.dispose();
+            texture.Dispose();
         }
     }
 }

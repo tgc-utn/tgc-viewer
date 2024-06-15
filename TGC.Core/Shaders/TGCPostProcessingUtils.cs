@@ -5,7 +5,7 @@ namespace TGC.Core.Shaders
     /// <summary>
     ///     Utilidades generales para shaders de post-procesado
     /// </summary>
-    public abstract class TgcPostProcessingUtils
+    public abstract class TGCPostProcessingUtils
     {
         /// <summary>
         ///     Calcular 15 offsets y weights para usar en un shader de Gaussian Blur de doble pasada (horizontal y vertical)

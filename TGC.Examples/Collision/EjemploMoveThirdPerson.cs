@@ -56,7 +56,7 @@ namespace TGC.Examples.Collision
         public override void Init()
         {
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
+            var pisoTexture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
             piso = new TgcPlane(new TGCVector3(-500, -60, -500), new TGCVector3(1000, 0, 1000), TgcPlane.Orientations.XZplane, pisoTexture);
 
             //Cargar obstaculos y posicionarlos. Los obstáculos se crean con TgcBox en lugar de cargar un modelo.
@@ -64,17 +64,17 @@ namespace TGC.Examples.Collision
             TGCBox obstaculo;
 
             //Obstaculo 1
-            obstaculo = TGCBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
+            obstaculo = TGCBox.fromSize(new TGCVector3(-100, 0, 0), new TGCVector3(80, 150, 80), TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculo.Transform = TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
             //Obstaculo 2
-            obstaculo = TGCBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
+            obstaculo = TGCBox.fromSize(new TGCVector3(50, 0, 200), new TGCVector3(80, 300, 80), TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg"));
             obstaculo.Transform = TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
             //Obstaculo 3
-            obstaculo = TGCBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150), TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
+            obstaculo = TGCBox.fromSize(new TGCVector3(300, 0, 100), new TGCVector3(80, 100, 150), TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg"));
             obstaculo.Transform = TGCMatrix.Translation(obstaculo.Position);
             obstaculos.Add(obstaculo);
 
@@ -93,7 +93,7 @@ namespace TGC.Examples.Collision
             //Le cambiamos la textura para diferenciarlo un poco
             personaje.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
+                TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
             });
 
             //Configurar animacion inicial

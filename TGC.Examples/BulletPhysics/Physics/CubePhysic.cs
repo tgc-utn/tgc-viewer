@@ -85,7 +85,7 @@ namespace TGC.Examples.BulletPhysics.Physics
 
             var loader = new TgcSceneLoader();
             //Se crea una caja para que haga las veces del Hummer dentro del modelo físico
-            TgcTexture texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"\MeshCreator\Scenes\Deposito\Textures\box4.jpg");
+            TGCTexture texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + @"\MeshCreator\Scenes\Deposito\Textures\box4.jpg");
             TGCBox boxMesh1 = TGCBox.fromSize(new TGCVector3(20, 20, 20), texture);
             boxMesh1.Position = new TGCVector3(0, 10, 0);
             hummer = boxMesh1.ToMesh("box");

@@ -11,7 +11,7 @@ namespace TGC.Core.Geometry
     /// <summary>
     ///     Herramienta para dibujar una caja 3D que muestra solo sus aristas, con grosor configurable.
     /// </summary>
-    public class TgcBoxDebug : IRenderObject
+    public class TGCBoxDebug : IRenderObject
     {
         /// <summary>
         ///     Cantidad de vertices total de la caja
@@ -24,7 +24,7 @@ namespace TGC.Core.Geometry
 
         private readonly VertexBuffer vertexBuffer;
 
-        public TgcBoxDebug()
+        public TGCBoxDebug()
         {
             vertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionColored), VERTICES_COUNT,
                 D3DDevice.Instance.Device,
@@ -292,9 +292,9 @@ namespace TGC.Core.Geometry
         /// <param name="center">Centro de la caja</param>
         /// <param name="size">Tamaño de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromSize(TGCVector3 center, TGCVector3 size)
+        public static TGCBoxDebug fromSize(TGCVector3 center, TGCVector3 size)
         {
-            var box = new TgcBoxDebug();
+            var box = new TGCBoxDebug();
             box.setPositionSize(center, size);
             box.updateValues();
             return box;
@@ -307,9 +307,9 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromSize(TGCVector3 center, TGCVector3 size, Color color)
+        public static TGCBoxDebug fromSize(TGCVector3 center, TGCVector3 size, Color color)
         {
-            var box = new TgcBoxDebug();
+            var box = new TGCBoxDebug();
             box.setPositionSize(center, size);
             box.Color = color;
             box.updateValues();
@@ -324,9 +324,9 @@ namespace TGC.Core.Geometry
         /// <param name="color">Color de la caja</param>
         /// <param name="thickness">Grosor de las aristas de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromSize(TGCVector3 center, TGCVector3 size, Color color, float thickness)
+        public static TGCBoxDebug fromSize(TGCVector3 center, TGCVector3 size, Color color, float thickness)
         {
-            var box = new TgcBoxDebug();
+            var box = new TGCBoxDebug();
             box.setPositionSize(center, size);
             box.Color = color;
             box.Thickness = thickness;
@@ -340,9 +340,9 @@ namespace TGC.Core.Geometry
         /// <param name="pMin">Punto mínimo</param>
         /// <param name="pMax">Punto máximo</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromExtremes(TGCVector3 pMin, TGCVector3 pMax)
+        public static TGCBoxDebug fromExtremes(TGCVector3 pMin, TGCVector3 pMax)
         {
-            var box = new TgcBoxDebug();
+            var box = new TGCBoxDebug();
             box.PMin = pMin;
             box.PMax = pMax;
             box.updateValues();
@@ -356,9 +356,9 @@ namespace TGC.Core.Geometry
         /// <param name="pMax">Punto máximo</param>
         /// <param name="color">Color de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color)
+        public static TGCBoxDebug fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color)
         {
-            var box = new TgcBoxDebug();
+            var box = new TGCBoxDebug();
             box.PMin = pMin;
             box.PMax = pMax;
             box.Color = color;
@@ -374,9 +374,9 @@ namespace TGC.Core.Geometry
         /// <param name="color">Color de la caja</param>
         /// <param name="thickness">Grosor de las aristas de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TgcBoxDebug fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color, float thickness)
+        public static TGCBoxDebug fromExtremes(TGCVector3 pMin, TGCVector3 pMax, Color color, float thickness)
         {
-            var box = new TgcBoxDebug();
+            var box = new TGCBoxDebug();
             box.PMin = pMin;
             box.PMax = pMax;
             box.Color = color;

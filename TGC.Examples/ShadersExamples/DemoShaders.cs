@@ -59,7 +59,7 @@ namespace TGC.Examples.ShadersExamples
         private TgcMesh palmera, canoa;
         private TgcScene scene, scene2, scene3, scene4;
 
-        private TgcSkyBox skyBox;
+        private TGCSkyBox skyBox;
 
         // enviroment map
         private MySimpleTerrain terrain;
@@ -97,16 +97,16 @@ namespace TGC.Examples.ShadersExamples
 
             // ------------------------------------------------------------
             // Crear SkyBox:
-            skyBox = new TgcSkyBox();
+            skyBox = new TGCSkyBox();
             skyBox.Center = TGCVector3.Empty;
             skyBox.Size = new TGCVector3(8000, 8000, 8000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox1\\";
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.SkyEpsilon = 50f;
             skyBox.Init();
 

@@ -48,18 +48,18 @@ namespace TGC.Examples.BulletPhysics.Physics
             dynamicsWorld.AddRigidBody(ballBody);
 
             //Cargamos objetos de render del framework.
-            var floorTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, Ctx2.MediaDir + @"Texturas\granito.jpg");
+            var floorTexture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, Ctx2.MediaDir + @"Texturas\granito.jpg");
             floorMesh = new TgcPlane(new TGCVector3(-2000, 0, -2000), new TGCVector3(4000, 0f, 4000), TgcPlane.Orientations.XZplane, floorTexture);
 
-            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, Ctx2.MediaDir + @"MeshCreator\Scenes\Deposito\Textures\boxMetal.jpg");
+            var texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, Ctx2.MediaDir + @"MeshCreator\Scenes\Deposito\Textures\boxMetal.jpg");
             //Es importante crear todos los mesh con centro en el 0,0,0 y que este coincida con el centro de masa definido caso contrario rotaria de otra forma diferente a la dada por el motor de fisica.
             boxMesh = TGCBox.fromSize(new TGCVector3(20, 20, 20), texture);
 
-            texture = TgcTexture.createTexture(D3DDevice.Instance.Device, Ctx2.MediaDir + @"Texturas\pokeball.jpg");
+            texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, Ctx2.MediaDir + @"Texturas\pokeball.jpg");
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
             sphereMesh = new TGCSphere(1, texture, TGCVector3.Empty);
             //Tgc no crea el vertex buffer hasta invocar a update values.
-            sphereMesh.updateValues();
+            sphereMesh.UpdateValues();
         }
 
         public override void Update(float elapsedTime, float timeBetweenFrames)
@@ -96,7 +96,7 @@ namespace TGC.Examples.BulletPhysics.Physics
         /// Antes de llamar a este metodo el framework limpia toda la pantalla.
         /// Por lo tanto para que un objeto se vea hay volver a dibujarlo siempre.
         /// La variable elapsedTime indica la cantidad de segundos que pasaron entre esta invocacion
-        /// y la anterior de render(). Es util para animar e interpolar valores.
+        /// y la anterior de Render(). Es util para animar e interpolar valores.
         /// </summary>
         public override void Render()
         {

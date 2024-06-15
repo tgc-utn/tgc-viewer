@@ -1,28 +1,40 @@
-using Microsoft.DirectX.DirectSound;
 using System;
+using Microsoft.DirectX.DirectSound;
 
 namespace TGC.Core.Sound
 {
     /// <summary>
-    ///     Herramienta para reproducir un sonido WAV estático
+    ///     Herramienta para reproducir un sonido WAV estatico
     /// </summary>
-    public class TgcStaticSound
+    public class TGCStaticSound : IDisposable
     {
         /// <summary>
-        ///     Buffer con la información del sonido cargado
+        ///     Buffer con la informacion del sonido cargado
         /// </summary>
         public SecondaryBuffer SoundBuffer { get; private set; }
+
+        /// <summary>
+        ///     Liberar recursos del sonido
+        /// </summary>
+        public void Dispose()
+        {
+            if (SoundBuffer != null && !SoundBuffer.Disposed)
+            {
+                SoundBuffer.Dispose();
+                SoundBuffer = null;
+            }
+        }
 
         /// <summary>
         ///     Carga un archivo WAV de audio, indicando el volumen del mismo
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
         /// <param name="volume">Volumen del mismo</param>
-        public void loadSound(string soundPath, int volume, Device device)
+        public void LoadSound(string soundPath, int volume, Device device)
         {
             try
             {
-                dispose();
+                Dispose();
 
                 var bufferDescription = new BufferDescription();
                 if (volume != -1)
@@ -47,50 +59,38 @@ namespace TGC.Core.Sound
         ///     Carga un archivo WAV de audio, con el volumen default del mismo
         /// </summary>
         /// <param name="soundPath">Path del archivo WAV</param>
-        public void loadSound(string soundPath, Device device)
+        public void LoadSound(string soundPath, Device device)
         {
-            loadSound(soundPath, -1, device);
+            LoadSound(soundPath, -1, device);
         }
 
         /// <summary>
         ///     Reproduce el sonido, indicando si se hace con Loop.
-        ///     Si ya se está reproduciedo, no vuelve a empezar.
+        ///     Si ya se esta reproduciendo, no vuelve a empezar.
         /// </summary>
         /// <param name="playLoop">TRUE para reproducir en loop</param>
-        public void play(bool playLoop)
+        public void Play(bool playLoop)
         {
             SoundBuffer.Play(0, playLoop ? BufferPlayFlags.Looping : BufferPlayFlags.Default);
         }
 
         /// <summary>
         ///     Reproduce el sonido, sin Loop.
-        ///     Si ya se está reproduciedo, no vuelve a empezar.
+        ///     Si ya se esta reproduciedo, no vuelve a empezar.
         /// </summary>
-        public void play()
+        public void Play()
         {
-            play(false);
+            Play(false);
         }
 
         /// <summary>
-        ///     Pausa la ejecución del sonido.
+        ///     Pausa la ejecucion del sonido.
         ///     Si el sonido no se estaba ejecutando, no hace nada.
-        ///     Si se hace stop() y luego play(), el sonido continua desde donde había dejado la última vez.
+        ///     Si se hace Stop() y luego Play(), el sonido continua desde donde habaa dejado la ultima vez.
         /// </summary>
-        public void stop()
+        public void Stop()
         {
             SoundBuffer.Stop();
-        }
-
-        /// <summary>
-        ///     Liberar recursos del sonido
-        /// </summary>
-        public void dispose()
-        {
-            if (SoundBuffer != null && !SoundBuffer.Disposed)
-            {
-                SoundBuffer.Dispose();
-                SoundBuffer = null;
-            }
         }
     }
 }

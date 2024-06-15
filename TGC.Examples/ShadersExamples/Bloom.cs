@@ -93,7 +93,7 @@ namespace TGC.Examples.ShadersExamples
         {
             Category = "Post Process Shaders";
             Name = "Bloom";
-            Description = "Graba lo luminoso en un Render Target, graba la escena en otro Render Target y luego aplica Bloom.";
+            Description = "Graba lo luminoso en un render target, graba la escena en otro render target y luego aplica bloom.";
         }
 
         public override void Init()
@@ -260,7 +260,7 @@ namespace TGC.Examples.ShadersExamples
 
         private void InitializeFloor()
         {
-            var floor = TgcTexture.createTexture(MediaDir + "Texturas\\tierra.jpg");
+            var floor = TGCTexture.CreateTexture(MediaDir + "Texturas\\tierra.jpg");
             var planeSize = new TGCVector3(200f, 0f, 200f);
             var planeMesh = new TgcPlane(TGCVector3.Scale(planeSize, -0.5f), planeSize, TgcPlane.Orientations.XZplane, floor, 5f, 5f);
             planeMesh.updateValues();

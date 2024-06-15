@@ -6,7 +6,7 @@ using Font = System.Drawing.Font;
 
 namespace TGC.Core.Text
 {
-    public class TgcText2D : IDisposable
+    public class TGCText2D : IDisposable
     {
         /// <summary>
         ///     Alternativas de alineación del texto
@@ -25,7 +25,7 @@ namespace TGC.Core.Text
 
         private Rectangle rectangle;
 
-        public TgcText2D()
+        public TGCText2D()
         {
             TextSprite = new Sprite(D3DDevice.Instance.Device);
             changeTextAlign(TextAlign.CENTER);
@@ -91,7 +91,7 @@ namespace TGC.Core.Text
             D3dFont.Dispose();
         }
 
-        public void render()
+        public void Render()
         {
             TextSprite.Begin(SpriteFlags.AlphaBlend);
             D3dFont.DrawText(TextSprite, Text, rectangle, Format, Color);

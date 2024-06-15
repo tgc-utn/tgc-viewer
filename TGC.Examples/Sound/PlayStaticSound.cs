@@ -23,9 +23,9 @@ namespace TGC.Examples.Sound
         private TGCBooleanModifier playLoopModifier;
 
         private string currentFile;
-        private TgcText2D currentSoundText;
-        private TgcText2D instruccionesText;
-        private TgcStaticSound sound;
+        private TGCText2D currentSoundText;
+        private TGCText2D instruccionesText;
+        private TGCStaticSound sound;
 
         public PlayStaticSound(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -38,14 +38,14 @@ namespace TGC.Examples.Sound
         public override void Init()
         {
             //Texto para el sonido actual
-            currentSoundText = new TgcText2D();
+            currentSoundText = new TGCText2D();
             currentSoundText.Text = "No sound";
             currentSoundText.Position = new Point(50, 20);
             currentSoundText.Color = Color.Gold;
             currentSoundText.changeFont(new Font(FontFamily.GenericMonospace, 16, FontStyle.Italic));
 
             //Texto de instrucciones
-            instruccionesText = new TgcText2D();
+            instruccionesText = new TGCText2D();
             instruccionesText.Text = "Y = Play, O = Stop.";
             instruccionesText.Position = new Point(50, 60);
             instruccionesText.Color = Color.Green;
@@ -72,11 +72,11 @@ namespace TGC.Examples.Sound
             if (Input.keyPressed(Key.Y))
             {
                 var playLoop = playLoopModifier.Value;
-                sound.play(playLoop);
+                sound.Play(playLoop);
             }
             else if (Input.keyPressed(Key.O))
             {
-                sound.stop();
+                sound.Stop();
             }
         }
 
@@ -92,13 +92,13 @@ namespace TGC.Examples.Sound
                 //Borrar sonido anterior
                 if (sound != null)
                 {
-                    sound.dispose();
+                    sound.Dispose();
                     sound = null;
                 }
 
                 //Cargar sonido
-                sound = new TgcStaticSound();
-                sound.loadSound(currentFile, DirectSound.DsDevice);
+                sound = new TGCStaticSound();
+                sound.LoadSound(currentFile, DirectSound.DsDevice);
 
                 currentSoundText.Text = "Playing: " + new FileInfo(currentFile).Name;
             }
@@ -109,15 +109,15 @@ namespace TGC.Examples.Sound
             PreRender();
 
             //Render texto
-            currentSoundText.render();
-            instruccionesText.render();
+            currentSoundText.Render();
+            instruccionesText.Render();
 
             PostRender();
         }
 
         public override void Dispose()
         {
-            sound.dispose();
+            sound.Dispose();
         }
     }
 }

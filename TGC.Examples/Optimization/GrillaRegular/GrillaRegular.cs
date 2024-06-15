@@ -19,7 +19,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
         //Tamaños de celda de la grilla
         private readonly float CELL_WIDTH = 400;
 
-        private List<TgcBoxDebug> debugBoxes;
+        private List<TGCBoxDebug> debugBoxes;
         private GrillaRegularNode[,,] grid;
 
         private List<TgcMesh> modelos;
@@ -104,7 +104,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
         /// </summary>
         public void createDebugMeshes()
         {
-            debugBoxes = new List<TgcBoxDebug>();
+            debugBoxes = new List<TGCBoxDebug>();
 
             for (var x = 0; x < grid.GetUpperBound(0); x++)
             {
@@ -113,7 +113,7 @@ namespace TGC.Examples.Optimization.GrillaRegular
                     for (var z = 0; z < grid.GetUpperBound(2); z++)
                     {
                         var node = grid[x, y, z];
-                        var box = TgcBoxDebug.fromExtremes(node.BoundingBox.PMin, node.BoundingBox.PMax, Color.Red);
+                        var box = TGCBoxDebug.fromExtremes(node.BoundingBox.PMin, node.BoundingBox.PMax, Color.Red);
 
                         debugBoxes.Add(box);
                     }

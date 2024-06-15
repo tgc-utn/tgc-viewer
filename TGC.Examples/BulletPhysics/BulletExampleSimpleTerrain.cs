@@ -20,20 +20,20 @@ namespace TGC.Examples.BulletPhysics
         }
 
         //Terreno
-        private TgcSimpleTerrain terrain;
+        private TGCSimpleTerrain terrain;
 
         //Fisica
         private TriangleSpherePhysics physicsExample;
 
         public override void Init()
         {
-            terrain = new TgcSimpleTerrain();
+            terrain = new TGCSimpleTerrain();
             var position = TGCVector3.Empty;
-            terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg", 20, 0.5f, position);
-            terrain.loadTexture(MediaDir + "Heighmaps\\" + "grass.jpg");
+            terrain.LoadHeightmap(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg", 20, 0.5f, position);
+            terrain.LoadTexture(MediaDir + "Heighmaps\\" + "grass.jpg");
 
             physicsExample = new TriangleSpherePhysics();
-            physicsExample.SetTriangleDataVB(terrain.getData());
+            physicsExample.SetTriangleDataVB(terrain.GetData());
             physicsExample.Init(MediaDir);
 
             Camera = new TgcRotationalCamera(terrain.Center + new TGCVector3(0, 500, 0), 2000, Input);

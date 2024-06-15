@@ -1,13 +1,14 @@
-﻿using Microsoft.DirectX.Direct3D;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Microsoft.DirectX.Direct3D;
 using TGC.Core.Mathematica;
 using TGC.Core.Textures;
 
 namespace TGC.Core.Direct3D
 {
     /// <summary>
-    /// Un dispositivo representa elementos primitivos, crea recursos, controla las variables de nivel de sistema, y obtiene y establece paletas.
+    ///     Un dispositivo representa elementos primitivos, crea recursos, controla las variables de nivel de sistema, y
+    ///     obtiene y establece paletas.
     /// </summary>
     public class D3DDevice
     {
@@ -15,17 +16,19 @@ namespace TGC.Core.Direct3D
         private PresentParameters d3dpp;
 
         /// <summary>
-        /// Constructor privado para el Singleton
+        ///     Constructor privado para el Singleton
         /// </summary>
-        private D3DDevice() { }
+        private D3DDevice()
+        {
+        }
 
         /// <summary>
-        /// Permite acceder a la instancia del Singleton.
+        ///     Permite acceder a la instancia del Singleton.
         /// </summary>
         public static D3DDevice Instance { get; } = new D3DDevice();
 
         /// <summary>
-        /// Device de DirectX 3D para crear primitivas
+        ///     Device de DirectX 3D para crear primitivas
         /// </summary>
         public Device Device { get; set; }
 
@@ -98,9 +101,9 @@ namespace TGC.Core.Direct3D
         }
 
         /// <summary>
-        /// Habilita los points sprites.
-        /// Estaba este comentario antes, asi que lo dejo con default false.
-        /// INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
+        ///     Habilita los points sprites.
+        ///     Estaba este comentario antes, asi que lo dejo con default false.
+        ///     INEXPLICABLE PERO ESTO HACE QUE MI NOTEBOOK SE CUELGUE CON LA PANTALLA EN NEGRO!!!!!!!!!!
         /// </summary>
         public void EnableParticles()
         {
@@ -116,7 +119,7 @@ namespace TGC.Core.Direct3D
         }
 
         /// <summary>
-        /// Inicializa el Device de DirectX con lo parametros del Control.
+        ///     Inicializa el Device de DirectX con lo parametros del Control.
         /// </summary>
         /// <param name="control"> Control donde va a ejecutar el Device.</param>
         public void InitializeD3DDevice(Control control)
@@ -130,9 +133,14 @@ namespace TGC.Core.Direct3D
 
             CreateFlags flags;
             if (caps.DeviceCaps.SupportsHardwareTransformAndLight)
+            {
                 flags = CreateFlags.HardwareVertexProcessing;
+            }
             else
+            {
                 flags = CreateFlags.SoftwareVertexProcessing;
+            }
+
             d3dpp = CreatePresentationParameters();
 
             //Crear Graphics Device
@@ -152,7 +160,7 @@ namespace TGC.Core.Direct3D
 
             //Antialiasing
             if (Manager.CheckDeviceMultiSampleType(Manager.Adapters.Default.Adapter, DeviceType.Hardware,
-                Manager.Adapters.Default.CurrentDisplayMode.Format, true, MultiSampleType.NonMaskable))
+                    Manager.Adapters.Default.CurrentDisplayMode.Format, true, MultiSampleType.NonMaskable))
             {
                 d3dpp.MultiSample = MultiSampleType.NonMaskable;
                 d3dpp.MultiSampleQuality = 0;
@@ -171,7 +179,8 @@ namespace TGC.Core.Direct3D
             Width = width;
             Height = height;
             //hay que actualizar tambien la matriz de proyeccion, sino sigue viendo mal.
-            Device.Transform.Projection = TGCMatrix.PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance, ZFarPlaneDistance).ToMatrix();
+            Device.Transform.Projection = TGCMatrix
+                .PerspectiveFovLH(FieldOfView, AspectRatio, ZNearPlaneDistance, ZFarPlaneDistance).ToMatrix();
             //FALTA TODO ESTO DE ABAJO....
             //DefaultValues();
             //Device.Reset(d3dpp);

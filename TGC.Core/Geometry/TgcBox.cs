@@ -154,7 +154,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Textura de la caja
         /// </summary>
-        public TgcTexture Texture { get; private set; }
+        public TGCTexture Texture { get; private set; }
 
         /// <summary>
         ///     Offset UV de textura
@@ -226,7 +226,7 @@ namespace TGC.Core.Geometry
         {
             if (Texture != null)
             {
-                Texture.dispose();
+                Texture.Dispose();
             }
             if (vertexBuffer != null && !vertexBuffer.Disposed)
             {
@@ -381,11 +381,11 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Configurar textura de la pared
         /// </summary>
-        public void setTexture(TgcTexture texture)
+        public void setTexture(TGCTexture texture)
         {
             if (Texture != null)
             {
-                Texture.dispose();
+                Texture.Dispose();
             }
             Texture = texture;
             Technique = TGCShaders.T_POSITION_COLORED_TEXTURED;
@@ -525,7 +525,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TGCBox fromSize(TGCVector3 center, TGCVector3 size, TgcTexture texture)
+        public static TGCBox fromSize(TGCVector3 center, TGCVector3 size, TGCTexture texture)
         {
             var box = fromSize(center, size);
             box.setTexture(texture);
@@ -559,7 +559,7 @@ namespace TGC.Core.Geometry
         /// <param name="size">Tamaño de la caja</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TGCBox fromSize(TGCVector3 size, TgcTexture texture)
+        public static TGCBox fromSize(TGCVector3 size, TGCTexture texture)
         {
             return fromSize(TGCVector3.Empty, size, texture);
         }
@@ -600,7 +600,7 @@ namespace TGC.Core.Geometry
         /// <param name="pMax">Punto máximo</param>
         /// <param name="texture">Textura de la caja</param>
         /// <returns>Caja creada</returns>
-        public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, TgcTexture texture)
+        public static TGCBox fromExtremes(TGCVector3 pMin, TGCVector3 pMax, TGCTexture texture)
         {
             var box = fromExtremes(pMin, pMax);
             box.setTexture(texture);

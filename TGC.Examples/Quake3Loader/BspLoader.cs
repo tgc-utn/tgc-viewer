@@ -17,13 +17,13 @@ namespace TGC.Examples.Quake3Loader
     /// </summary>
     public class BspLoader
     {
-        private static TgcTexture emptyTexture;
-        private static TgcTexture emptyLightMap;
+        private static TGCTexture emptyTexture;
+        private static TGCTexture emptyLightMap;
         private readonly List<QShaderData> shadersData;
-        private TgcTexture[] lightMaps;
+        private TGCTexture[] lightMaps;
         private QShaderData[] shaderXTextura;
         private string[] textureFullPath;
-        private TgcTexture[] textures;
+        private TGCTexture[] textures;
 
         /// <summary>
         ///     Crear Loader
@@ -51,7 +51,7 @@ namespace TGC.Examples.Quake3Loader
 
             // TextureLoader.Save("emptyTexture.jpg", ImageFileFormat.Jpg, texture);
 
-            emptyTexture = new TgcTexture("emptyTexture.jpg", "emptyTexture.jpg", texture, false);
+            emptyTexture = new TGCTexture("emptyTexture.jpg", "emptyTexture.jpg", texture, false);
 
             texture = new Texture(D3DDevice.Instance.Device, 1, 1, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
             graphicsStream = texture.LockRectangle(0, LockFlags.None);
@@ -61,7 +61,7 @@ namespace TGC.Examples.Quake3Loader
 
             // TextureLoader.Save("emptyLightMap.jpg", ImageFileFormat.Jpg, texture);
 
-            emptyLightMap = new TgcTexture("emptyLightMap.jpg", "emptyLightMap.jpg", texture, false);
+            emptyLightMap = new TGCTexture("emptyLightMap.jpg", "emptyLightMap.jpg", texture, false);
         }
 
         /// <summary>
@@ -443,7 +443,7 @@ namespace TGC.Examples.Quake3Loader
             if (lightmap == null)
                 tgcLightMap = emptyLightMap;
 
-            var meshTextures = new TgcTexture[1];
+            var meshTextures = new TGCTexture[1];
             if (texture != null)
             {
                 meshTextures[0] = texture;
@@ -493,7 +493,7 @@ namespace TGC.Examples.Quake3Loader
         /// </summary>
         private void loadTextures(BspMap bspMap, string mediaPath)
         {
-            textures = new TgcTexture[bspMap.Data.shaders.Length];
+            textures = new TGCTexture[bspMap.Data.shaders.Length];
             shaderXTextura = new QShaderData[bspMap.Data.shaders.Length];
             textureFullPath = new string[bspMap.Data.shaders.Length];
 
@@ -507,7 +507,7 @@ namespace TGC.Examples.Quake3Loader
                 {
                     var tex = TextureLoader.FromFile(D3DDevice.Instance.Device, file);
                     textureFullPath[i] = file;
-                    textures[i] = new TgcTexture(Path.GetFileName(file), file, tex, false);
+                    textures[i] = new TGCTexture(Path.GetFileName(file), file, tex, false);
                 }
 
                 //Si no tiene textura entonces tiene un shader
@@ -587,7 +587,7 @@ namespace TGC.Examples.Quake3Loader
             fileCopy(bspMap.Data.filePath, targetFolder + "\\maps\\" + mapa);
 
             //salva todas las texturas y los shaders
-            textures = new TgcTexture[bspMap.Data.shaders.Length];
+            textures = new TGCTexture[bspMap.Data.shaders.Length];
             shaderXTextura = new QShaderData[bspMap.Data.shaders.Length];
             textureFullPath = new string[bspMap.Data.shaders.Length];
 
@@ -662,7 +662,7 @@ namespace TGC.Examples.Quake3Loader
         {
             const int LIGHTMAP_SIZE = 128 * 128;
             var cant_lmaps = bspMap.Data.lightBytes.Length / (LIGHTMAP_SIZE * 3);
-            lightMaps = new TgcTexture[cant_lmaps];
+            lightMaps = new TGCTexture[cant_lmaps];
             var lightInfo = new int[LIGHTMAP_SIZE];
 
             for (var i = 0; i < cant_lmaps; i++)
@@ -686,7 +686,7 @@ namespace TGC.Examples.Quake3Loader
                 var filename = "qlight" + i + ".jpg";
                 //TextureLoader.Save(filename, ImageFileFormat.Jpg, tex);
 
-                lightMaps[i] = new TgcTexture(filename, filename, tex, false);
+                lightMaps[i] = new TGCTexture(filename, filename, tex, false);
             }
         }
 

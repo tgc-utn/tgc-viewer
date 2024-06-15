@@ -1,6 +1,6 @@
 # tgc-viewer
-[![Build status](https://ci.appveyor.com/api/projects/status/72r1a74noxa4t7c5?svg=true)](https://ci.appveyor.com/project/rejurime/tgc-viewer)
-[![BCH compliance](https://bettercodehub.com/edge/badge/tgc-utn/tgc-viewer?branch=master)](https://bettercodehub.com/)
+[![Build status](https://ci.appveyor.com/api/projects/status/72r1a74noxa4t7c5/branch/master?svg=true)](https://ci.appveyor.com/project/rejurime/tgc-viewer/branch/master)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/9555aa1c989b495c9869392722faa5d2)](https://app.codacy.com/gh/tgc-utn/tgc-viewer/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![GitHub issues](https://img.shields.io/github/issues/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/issues)
 [![GitHub stars](https://img.shields.io/github/stars/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/tgc-utn/tgc-viewer.svg)](https://github.com/tgc-utn/tgc-viewer/network)
@@ -9,7 +9,7 @@
 
 Es un framework de renderizado 3D académico utilizado para realizar los trabajos prácticos de la asignatura electiva Técnicas de Gráficos por Computadora (TGC) en la carrera de Ingeniería en Sistemas de Información. Universidad Tecnológica Nacional, Facultad Regional Buenos Aires (UTN-FRBA).
 
-[Técnicas de Gráficos por Computadora](http://tgc-utn.github.io/)
+[Técnicas de Gráficos por Computadora](https://tgc-utn.github.io/)
 
 ## Características
 * [.NET Framework](https://www.microsoft.com/net)
@@ -21,13 +21,13 @@ Es un framework de renderizado 3D académico utilizado para realizar los trabajo
 * [TGC tools](https://github.com/tgc-utn/tgc-tools)
 * Level editor
 * Exportación para los modelos de [SketchUp](https://www.sketchup.com) (beta)
-* Plugins para la exportación de modelos desde [3Ds MAX](http://www.autodesk.com/education/free-software/3ds-max) (outdate)
+* Plugins para la exportación de modelos desde [3Ds MAX](https://www.autodesk.com/education/free-software/3ds-max) (outdate)
 
 ## Requisitos
 * API gráfica
-    * [DirectX 9 SDK](http://www.microsoft.com/en-us/download/details.aspx?displaylang=en&id=6812)
+  * [DirectX 9 SDK](https://www.microsoft.com/en-us/download/details.aspx?id=6812)
 * IDEs compatibles
-    * [Visual Studio Community Edition](https://www.visualstudio.com/vs/community)
+  * [Visual Studio Community Edition](https://www.visualstudio.com/vs/community)
 
 ## Recursos
 * [adwaita-icon-theme](https://gitlab.gnome.org/GNOME/adwaita-icon-theme)

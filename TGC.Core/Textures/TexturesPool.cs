@@ -1,17 +1,17 @@
-﻿using Microsoft.DirectX.Direct3D;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.DirectX.Direct3D;
 
 namespace TGC.Core.Textures
 {
     /// <summary>
-    ///     TexturesPool para reutilizar texturas de igual path
+    ///     TexturesPool para reutilizar texturas de igual path.
     /// </summary>
     public class TexturesPool
     {
         private readonly Dictionary<string, PoolItem> texturesPool;
 
         /// <summary>
-        /// Constructor privado para el Singleton.
+        ///     Constructor privado para el Singleton.
         /// </summary>
         private TexturesPool()
         {
@@ -19,7 +19,7 @@ namespace TGC.Core.Textures
         }
 
         /// <summary>
-        /// Permite acceder a la instancia del Singleton.
+        ///     Permite acceder a la instancia del Singleton.
         /// </summary>
         public static TexturesPool Instance { get; } = new TexturesPool();
 
@@ -27,16 +27,16 @@ namespace TGC.Core.Textures
         ///     Agrega una textura al pool.
         ///     Si no existe la crea. Sino reutiliza una existente.
         /// </summary>
-        public Texture createTexture(Device d3dDevice, string filePath)
+        public Texture CreateTexture(Device d3dDevice, string filePath)
         {
-            return createTexture(d3dDevice, filePath, null);
+            return CreateTexture(d3dDevice, filePath, null);
         }
 
         /// <summary>
         ///     Agrega una textura al pool.
         ///     Si no existe la crea. Sino reutiliza una existente.
         /// </summary>
-        public Texture createTexture(Device d3dDevice, string filePath, Texture d3dTexture)
+        public Texture CreateTexture(Device d3dDevice, string filePath, Texture d3dTexture)
         {
             //Si no existe, crear textura
             if (!texturesPool.ContainsKey(filePath))
@@ -46,23 +46,42 @@ namespace TGC.Core.Textures
                 {
                     d3dTexture = TextureLoader.FromFile(d3dDevice, filePath);
                 }
+
                 newItem.Texture = d3dTexture;
                 newItem.FilePath = filePath;
                 newItem.References = 0;
                 texturesPool.Add(filePath, newItem);
             }
 
-            //aumentar las referencias a esta textura
+            //Aumentar las referencias a esta textura
             var item = texturesPool[filePath];
             item.References++;
             return item.Texture;
         }
 
         /// <summary>
-        ///     Hace Dispose de una textura del pool, pero solo si nadie mas la está utilizando.
+        ///     Devuelve una lista con todas las texturas del Pool.
         /// </summary>
-        /// <returns>True si se hizo un Dispose físico</returns>
-        public bool disposeTexture(string filePath)
+        public List<PoolItem> GetAllTextures()
+        {
+            var textures = new List<PoolItem>();
+            foreach (var entry in texturesPool)
+            {
+                var item = entry.Value;
+                if (item.Texture != null && !item.Texture.Disposed)
+                {
+                    textures.Add(item);
+                }
+            }
+
+            return textures;
+        }
+
+        /// <summary>
+        ///     Hace dispose de una textura del pool, pero solo si nadie mas la está utilizando.
+        /// </summary>
+        /// <returns>True si se hizo un dispose físico</returns>
+        public bool DisposeTexture(string filePath)
         {
             if (texturesPool.ContainsKey(filePath))
             {
@@ -79,18 +98,20 @@ namespace TGC.Core.Textures
                     {
                         item.Texture.Dispose();
                     }
+
                     //Quitar del pool
                     texturesPool.Remove(filePath);
                     return true;
                 }
             }
+
             return false;
         }
 
         /// <summary>
-        ///     Limpia todos los elementos del pool
+        ///     Limpia todos los elementos del pool.
         /// </summary>
-        public void clearAll()
+        public void ClearAll()
         {
             foreach (var entry in texturesPool)
             {
@@ -100,22 +121,8 @@ namespace TGC.Core.Textures
                     item.Texture.Dispose();
                 }
             }
+
             texturesPool.Clear();
-        }
-
-        /// <summary>
-        ///     Item con informacion de la textura
-        /// </summary>
-        private class PoolItem
-        {
-            public string FilePath;
-            public int References;
-            public Texture Texture;
-
-            public override string ToString()
-            {
-                return FilePath + ", [" + References + "]";
-            }
         }
     }
 }

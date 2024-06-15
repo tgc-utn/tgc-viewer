@@ -105,8 +105,8 @@ namespace TGC.Examples.ShadersExamples
 
         private void InitializePlanes()
         {
-            var baldosas = TgcTexture.createTexture(MediaDir + "Texturas\\baldosasceramica.jpg");
-            var lisa = TgcTexture.createTexture(MediaDir + "Texturas\\paredLisa.jpg");
+            var baldosas = TGCTexture.CreateTexture(MediaDir + "Texturas\\baldosasceramica.jpg");
+            var lisa = TGCTexture.CreateTexture(MediaDir + "Texturas\\paredLisa.jpg");
 
             List<TgcPlane> planeCollection = new List<TgcPlane>
             {

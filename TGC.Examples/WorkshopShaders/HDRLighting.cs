@@ -23,8 +23,8 @@ namespace TGC.Examples.WorkshopShaders
         private TGCIntervalModifier adaptacionPupilaModifier;
 
         private List<TgcMesh> meshes;
-        private TgcSkyBox skyBox;
-        private TgcSimpleTerrain terrain;
+        private TGCSkyBox skyBox;
+        private TGCSimpleTerrain terrain;
         private TgcMesh pasto, arbol, arbusto;
         private Effect effect;
         private Surface g_pDepthStencil;     // Depth-stencil buffer
@@ -76,21 +76,21 @@ namespace TGC.Examples.WorkshopShaders
             arbusto = scene4.Meshes[0];
 
             //Cargar terreno: cargar heightmap y textura de color
-            terrain = new TgcSimpleTerrain();
-            terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg", 20, 0.3f, new TGCVector3(0, -115, 0));
-            terrain.loadTexture(MediaDir + "Heighmaps\\" + "grass.jpg");
+            terrain = new TGCSimpleTerrain();
+            terrain.LoadHeightmap(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg", 20, 0.3f, new TGCVector3(0, -115, 0));
+            terrain.LoadTexture(MediaDir + "Heighmaps\\" + "grass.jpg");
 
             //Crear SkyBox
-            skyBox = new TgcSkyBox();
+            skyBox = new TGCSkyBox();
             skyBox.Center = new TGCVector3(0, 500, 0);
             skyBox.Size = new TGCVector3(10000, 10000, 10000);
             string texturesPath = MediaDir + "Texturas\\Quake\\SkyBox2\\";
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lun4_up.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lun4_dn.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "lun4_lf.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lun4_rt.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lun4_bk.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lun4_ft.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Up, texturesPath + "lun4_up.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Down, texturesPath + "lun4_dn.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Left, texturesPath + "lun4_lf.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Right, texturesPath + "lun4_rt.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Front, texturesPath + "lun4_bk.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Back, texturesPath + "lun4_ft.jpg");
             skyBox.Init();
 
             //Cargar Shader personalizado
@@ -189,7 +189,7 @@ namespace TGC.Examples.WorkshopShaders
 
             // dibujo la escena una textura
             effect.Technique = "DefaultTechnique";
-            // guardo el Render target anterior y seteo la textura como render target
+            // guardo el render target anterior y seteo la textura como render target
             Surface pOldRT = d3dDevice.GetRenderTarget(0);
             Surface pSurf = g_pRenderTarget.GetSurfaceLevel(0);
             d3dDevice.SetRenderTarget(0, pSurf);

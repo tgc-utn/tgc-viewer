@@ -12,7 +12,7 @@ namespace TGC.Examples.Lights
     ///     Mesh para ser utilizado en efectos de BumpMapping.
     ///     El efecto de BumpMapping requiere que cada vertice tenga ademas de la normal, la tangente y la binormal.
     ///     Esta clase tiene utilidades para calcular estos dos vectores.
-    ///     Extendemos de TgcMesh para poder redefinir el método render() y agregar datos
+    ///     Extendemos de TgcMesh para poder redefinir el método Render() y agregar datos
     ///     de tangent y binormal al VertexBuffer que son necesarios para el efecto de BumpMapping
     /// </summary>
     public class TgcMeshBumpMapping : TgcMesh
@@ -57,11 +57,11 @@ namespace TGC.Examples.Lights
         /// <summary>
         ///     Mapa de normales para BumpMapping, uno para cada subset del mesh
         /// </summary>
-        public TgcTexture[] NormalMaps { get; set; }
+        public TGCTexture[] NormalMaps { get; set; }
 
         /// <summary>
         ///     Se redefine este método para agregar shaders.
-        ///     Es el mismo código del render() pero con la sección de "MeshRenderType.DIFFUSE_MAP" ampliada
+        ///     Es el mismo código del Render() pero con la sección de "MeshRenderType.DIFFUSE_MAP" ampliada
         ///     para Shaders.
         /// </summary>
         public new void Render()
@@ -92,7 +92,7 @@ namespace TGC.Examples.Lights
 
                 case MeshRenderType.DIFFUSE_MAP:
 
-                    //Iniciar Shader e iterar sobre sus Render Passes
+                    //Iniciar Shader e iterar sobre sus render passes
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Dibujar cada subset con su Material y DiffuseMap correspondiente
@@ -136,7 +136,7 @@ namespace TGC.Examples.Lights
         ///     Crear un TgcMeshBumpMapping en base a un TgcMesh y su normalMap.
         ///     Solo esta soportado un TgcMehs MeshRenderType = DiffuseMap
         /// </summary>
-        public static TgcMeshBumpMapping fromTgcMesh(TgcMesh mesh, TgcTexture[] normalMaps)
+        public static TgcMeshBumpMapping fromTgcMesh(TgcMesh mesh, TGCTexture[] normalMaps)
         {
             if (mesh.RenderType != MeshRenderType.DIFFUSE_MAP)
             {
@@ -251,7 +251,7 @@ namespace TGC.Examples.Lights
             }
 
             //Clonar texturas y materials
-            var diffuseMaps = new TgcTexture[mesh.DiffuseMaps.Length];
+            var diffuseMaps = new TGCTexture[mesh.DiffuseMaps.Length];
             var materials = new Material[mesh.Materials.Length];
             for (var i = 0; i < mesh.DiffuseMaps.Length; i++)
             {

@@ -23,7 +23,7 @@ namespace TGC.Examples.MeshExamples
     {
         private TGCBooleanModifier moveWithCameraModifier;
 
-        private TgcSkyBox skyBox;
+        private TGCSkyBox skyBox;
 
         public CrearSkyBox(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -36,7 +36,7 @@ namespace TGC.Examples.MeshExamples
         public override void Init()
         {
             //Crear SkyBox
-            skyBox = new TgcSkyBox();
+            skyBox = new TGCSkyBox();
             skyBox.Center = TGCVector3.Empty;
             skyBox.Size = new TGCVector3(10000, 10000, 10000);
 
@@ -46,14 +46,14 @@ namespace TGC.Examples.MeshExamples
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox1\\";
 
             //Configurar las texturas para cada una de las 6 caras
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
 
             //Hay veces es necesario invertir las texturas Front y Back si se pasa de un sistema RightHanded a uno LeftHanded
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.SkyEpsilon = 25f;
             //Inicializa todos los valores para crear el SkyBox
             skyBox.Init();

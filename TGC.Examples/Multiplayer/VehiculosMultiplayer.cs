@@ -288,7 +288,7 @@ namespace TGC.Examples.Multiplayer
         private void initClient()
         {
             //Crear piso
-            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack2\\rock_wall.jpg");
+            var pisoTexture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\Quake\\TexturePack2\\rock_wall.jpg");
             piso = TGCBox.fromSize(new TGCVector3(0, -60, 0), new TGCVector3(5000, 5, 5000), pisoTexture);
         }
 

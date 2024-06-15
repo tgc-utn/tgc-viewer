@@ -6,7 +6,7 @@
 /* Variables comunes */
 /**************************************************************************************/
 
-//Scene Render Target
+//Scene render target
 texture texSceneRT;
 sampler SceneRT = sampler_state
 {

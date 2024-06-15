@@ -34,7 +34,7 @@ VS_OUTPUT_DEFAULT vs_default(VS_INPUT_DEFAULT Input)
     return (Output);
 }
 
-//Textura del Render target 2D
+//Textura del render target 2D
 texture render_target2D;
 sampler RenderTarget = sampler_state
 {

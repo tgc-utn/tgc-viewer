@@ -15,7 +15,7 @@ namespace TGC.Core.Terrain
     ///     Luego de creado, si se modifica cualquier valor del mismo, se debe llamar a updateValues()
     ///     para que tome efecto.
     /// </summary>
-    public class TgcSkyBox : IRenderObject
+    public class TGCSkyBox : IRenderObject
     {
         /// <summary>
         ///     Caras del SkyBox
@@ -35,7 +35,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Crear un SkyBox vacio
         /// </summary>
-        public TgcSkyBox()
+        public TGCSkyBox()
         {
             Faces = new TgcMesh[6];
             FaceTextures = new string[6];
@@ -137,7 +137,7 @@ namespace TGC.Core.Terrain
         /// </summary>
         /// <param name="face">Cara del SkyBox</param>
         /// <param name="texturePath">Path de la textura</param>
-        public void setFaceTexture(SkyFaces face, string texturePath)
+        public void SetFaceTexture(SkyFaces face, string texturePath)
         {
             FaceTextures[(int)face] = texturePath;
         }
@@ -160,7 +160,7 @@ namespace TGC.Core.Terrain
                 {
                     var data = vb.Lock(0, 0, LockFlags.None);
                     var colorRgb = Color.ToArgb();
-                    cargarVertices(skyFace, data, colorRgb);
+                    CargarVertices(skyFace, data, colorRgb);
                     vb.Unlock();
                 }
 
@@ -168,7 +168,7 @@ namespace TGC.Core.Terrain
                 using (var ib = m.IndexBuffer)
                 {
                     var ibArray = new short[6];
-                    cargarIndices(ibArray);
+                    CargarIndices(ibArray);
                     ib.SetData(ibArray, 0, LockFlags.None);
                 }
 
@@ -181,7 +181,7 @@ namespace TGC.Core.Terrain
                 faceMesh.AutoTransformEnable = false;
 
                 //textura
-                var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, FaceTextures[i]);
+                var texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, FaceTextures[i]);
                 faceMesh.DiffuseMaps = new[] { texture };
 
                 Faces[i] = faceMesh;
@@ -191,32 +191,32 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Crear Vertices segun la cara pedida
         /// </summary>
-        private void cargarVertices(SkyFaces face, GraphicsStream data, int color)
+        private void CargarVertices(SkyFaces face, GraphicsStream data, int color)
         {
             switch (face)
             {
                 case SkyFaces.Up:
-                    cargarVerticesUp(data, color);
+                    CargarVerticesUp(data, color);
                     break;
 
                 case SkyFaces.Down:
-                    cargarVerticesDown(data, color);
+                    CargarVerticesDown(data, color);
                     break;
 
                 case SkyFaces.Front:
-                    cargarVerticesFront(data, color);
+                    CargarVerticesFront(data, color);
                     break;
 
                 case SkyFaces.Back:
-                    cargarVerticesBack(data, color);
+                    CargarVerticesBack(data, color);
                     break;
 
                 case SkyFaces.Right:
-                    cargarVerticesRight(data, color);
+                    CargarVerticesRight(data, color);
                     break;
 
                 case SkyFaces.Left:
-                    cargarVerticesLeft(data, color);
+                    CargarVerticesLeft(data, color);
                     break;
             }
         }
@@ -224,7 +224,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Crear vertices para la cara Up
         /// </summary>
-        private void cargarVerticesUp(GraphicsStream data, int color)
+        private void CargarVerticesUp(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
             var n = TGCVector3.Up;
@@ -281,7 +281,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Crear vertices para la cara Down
         /// </summary>
-        private void cargarVerticesDown(GraphicsStream data, int color)
+        private void CargarVerticesDown(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
             var n = TGCVector3.Down;
@@ -338,7 +338,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Crear vertices para la cara Front
         /// </summary>
-        private void cargarVerticesFront(GraphicsStream data, int color)
+        private void CargarVerticesFront(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
             var n = TGCVector3.Down;
@@ -395,7 +395,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Crear vertices para la cara Back
         /// </summary>
-        private void cargarVerticesBack(GraphicsStream data, int color)
+        private void CargarVerticesBack(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
             var n = TGCVector3.Down;
@@ -452,7 +452,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Crear vertices para la cara Right
         /// </summary>
-        private void cargarVerticesRight(GraphicsStream data, int color)
+        private void CargarVerticesRight(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
             var n = TGCVector3.Down;
@@ -509,7 +509,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Crear vertices para la cara Left
         /// </summary>
-        private void cargarVerticesLeft(GraphicsStream data, int color)
+        private void CargarVerticesLeft(GraphicsStream data, int color)
         {
             TgcSceneLoader.DiffuseMapVertex v;
             var n = TGCVector3.Down;
@@ -566,7 +566,7 @@ namespace TGC.Core.Terrain
         /// <summary>
         ///     Generar array de indices
         /// </summary>
-        private void cargarIndices(short[] ibArray)
+        private void CargarIndices(short[] ibArray)
         {
             var i = 0;
             ibArray[i++] = 0;

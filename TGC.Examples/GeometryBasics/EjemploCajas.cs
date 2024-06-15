@@ -40,7 +40,7 @@ namespace TGC.Examples.GeometryBasics
 
         private TGCBox box;
         private string currentTexture;
-        private TgcBoxDebug debugBox;
+        private TGCBoxDebug debugBox;
 
         public EjemploCajas(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -55,7 +55,7 @@ namespace TGC.Examples.GeometryBasics
             //Crear caja vacia
             box = new TGCBox();
             //Crear caja debug vacia
-            debugBox = new TgcBoxDebug();
+            debugBox = new TGCBoxDebug();
             currentTexture = null;
 
             //Modifiers para vararis sus parametros
@@ -90,7 +90,7 @@ namespace TGC.Examples.GeometryBasics
             if (texturePath != currentTexture)
             {
                 currentTexture = texturePath;
-                box.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
+                box.setTexture(TGCTexture.CreateTexture(D3DDevice.Instance.Device, currentTexture));
             }
 
             var size = sizeModifier.Value;

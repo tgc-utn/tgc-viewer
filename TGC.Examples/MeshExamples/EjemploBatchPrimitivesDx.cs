@@ -19,9 +19,9 @@ namespace TGC.Examples.MeshExamples
         private const float boxSize = 3f;
         private const int boxPerSquare = 50;
         private readonly int totalBoxes = boxPerSquare * boxPerSquare;
-        private TgcTexture box1Texture;
-        private TgcTexture box2Texture;
-        private TgcTexture box3Texture;
+        private TGCTexture box1Texture;
+        private TGCTexture box2Texture;
+        private TGCTexture box3Texture;
         private RenderMethod currentRenderMethod;
         private Mesh[] meshes;
 
@@ -37,9 +37,9 @@ namespace TGC.Examples.MeshExamples
 
         public override void Init()
         {
-            box1Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
-            box2Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
-            box3Texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg");
+            box1Texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
+            box2Texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\tierra.jpg");
+            box3Texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\madera.jpg");
 
             renderMethodModifier = AddEnum("Render Method", typeof(RenderMethod), RenderMethod.Unsorted);
             createMeshes(D3DDevice.Instance.Device);
@@ -89,11 +89,11 @@ namespace TGC.Examples.MeshExamples
                     //Forzar a proposito el cambio de textura
                     D3DDevice.Instance.Device.SetTexture(0, null);
                     D3DDevice.Instance.Device.SetTexture(1, null);
-                    D3DDevice.Instance.Device.SetTexture(0, box3Texture.D3dTexture);
-                    D3DDevice.Instance.Device.SetTexture(0, box2Texture.D3dTexture);
-                    D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3dTexture);
+                    D3DDevice.Instance.Device.SetTexture(0, box3Texture.D3DTexture);
+                    D3DDevice.Instance.Device.SetTexture(0, box2Texture.D3DTexture);
+                    D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3DTexture);
 
-                    D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3dTexture);
+                    D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3DTexture);
 
                     D3DDevice.Instance.Device.Transform.World = TGCMatrix.Translation(boxSize * 2 * i, 0, boxSize * 2 * j).ToMatrix();
                     meshes[i].DrawSubset(0);
@@ -109,7 +109,7 @@ namespace TGC.Examples.MeshExamples
             //Un solo texture change
             D3DDevice.Instance.Device.SetTexture(0, null);
             D3DDevice.Instance.Device.SetTexture(1, null);
-            D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3dTexture);
+            D3DDevice.Instance.Device.SetTexture(0, box1Texture.D3DTexture);
 
             for (var i = 0; i < boxPerSquare; i++)
             {

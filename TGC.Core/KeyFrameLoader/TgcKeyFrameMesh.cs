@@ -154,7 +154,7 @@ namespace TGC.Core.KeyFrameLoader
         /// <summary>
         ///     Array de texturas para DiffuseMap
         /// </summary>
-        public TgcTexture[] DiffuseMaps { get; set; }
+        public TGCTexture[] DiffuseMaps { get; set; }
 
         /// <summary>
         ///     Indica si la malla esta habilitada para ser renderizada
@@ -176,7 +176,7 @@ namespace TGC.Core.KeyFrameLoader
         }
 
         /// <summary>
-        ///     Tipo de formato de Render de esta malla
+        ///     Tipo de formato de render de esta malla
         /// </summary>
         public MeshRenderType RenderType { get; set; }
 
@@ -271,7 +271,7 @@ namespace TGC.Core.KeyFrameLoader
             //Cargar matrices para el shader
             setShaderMatrix();
 
-            //Renderizar segun el tipo de Render de la malla
+            //Renderizar segun el tipo de render de la malla
             effect.Technique = technique;
             var numPasses = effect.Begin(0);
             switch (RenderType)
@@ -282,7 +282,7 @@ namespace TGC.Core.KeyFrameLoader
                     TexturesManager.Instance.clear(0);
                     TexturesManager.Instance.clear(1);
 
-                    //Iniciar Shader e iterar sobre sus Render Passes
+                    //Iniciar Shader e iterar sobre sus render passes
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Iniciar pasada de shader
@@ -297,7 +297,7 @@ namespace TGC.Core.KeyFrameLoader
                     //Hacer reset de Lightmap
                     TexturesManager.Instance.clear(1);
 
-                    //Iniciar Shader e iterar sobre sus Render Passes
+                    //Iniciar Shader e iterar sobre sus render passes
                     for (var n = 0; n < numPasses; n++)
                     {
                         //Dibujar cada subset con su DiffuseMap correspondiente
@@ -359,7 +359,7 @@ namespace TGC.Core.KeyFrameLoader
             {
                 for (var i = 0; i < DiffuseMaps.Length; i++)
                 {
-                    DiffuseMaps[i].dispose();
+                    DiffuseMaps[i].Dispose();
                 }
                 DiffuseMaps = null;
             }
@@ -925,7 +925,7 @@ namespace TGC.Core.KeyFrameLoader
         ///     Permite cambiar las texturas de DiffuseMap de esta malla
         /// </summary>
         /// <param name="newDiffuseMaps">Array de nuevas texturas. Tiene que tener la misma cantidad que el original</param>
-        public void changeDiffuseMaps(TgcTexture[] newDiffuseMaps)
+        public void changeDiffuseMaps(TGCTexture[] newDiffuseMaps)
         {
             //Solo aplicar si la malla tiene texturas
             if (RenderType == MeshRenderType.DIFFUSE_MAP)
@@ -938,7 +938,7 @@ namespace TGC.Core.KeyFrameLoader
                 //Liberar texturas anteriores
                 foreach (var t in DiffuseMaps)
                 {
-                    t.dispose();
+                    t.Dispose();
                 }
 
                 //Asignar nuevas texturas

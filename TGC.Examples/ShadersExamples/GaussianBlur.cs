@@ -18,7 +18,7 @@ namespace TGC.Examples.ShadersExamples
     ///     Unidades Involucradas:
     ///     # Unidad 8 - Adaptadores de Video - Shaders
     ///     Ejemplo avanzado. Ver primero ejemplo "PostProcess/EfectoBlur"
-    ///     Muestra como utilizar la tenica de Render Target para lograr efectos de Post-Procesado.
+    ///     Muestra como utilizar la tenica de render target para lograr efectos de Post-Procesado.
     ///     Toda la escena no se dibuja a pantalla sino que se dibuja a una textura auxiliar.
     ///     Luego esa textura es renderizada con una pasada de Gaussian blur horizontal.
     ///     Y por ultimo se hace otra pasada mas de Gaussian blur pero vertical.
@@ -42,7 +42,7 @@ namespace TGC.Examples.ShadersExamples
         {
             Category = "Post Process Shaders";
             Name = "Gaussian Blur";
-            Description = "Graba la escena a un Render Target y luego con un pixel shader se borronea la imagen con Gaussian Blur.";
+            Description = "Graba la escena a un render target y luego con un pixel shader se borronea la imagen con Gaussian Blur.";
         }
 
         public override void Init()
@@ -127,7 +127,7 @@ namespace TGC.Examples.ShadersExamples
 
             // dibujo la escena una textura
             effect.Technique = "DefaultTechnique";
-            // guardo el Render target anterior y seteo la textura como render target
+            // guardo el render target anterior y seteo la textura como render target
             var pOldRT = device.GetRenderTarget(0);
             var pSurf = g_pRenderTarget.GetSurfaceLevel(0);
             if (activar_efecto)

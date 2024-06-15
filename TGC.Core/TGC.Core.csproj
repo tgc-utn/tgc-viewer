@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TGC.Core</RootNamespace>
     <AssemblyName>TGC.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -80,6 +80,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BulletPhysics\BulletRigidBodyFactory.cs" />
+    <Compile Include="Geometry\GeometryProvider.cs" />
+    <Compile Include="Geometry\TgcArrow.cs" />
+    <Compile Include="Geometry\TgcBox.cs" />
+    <Compile Include="Geometry\TgcBoxDebug.cs" />
+    <Compile Include="Geometry\TgcConvexPolygon.cs" />
+    <Compile Include="Geometry\TgcConvexPolyhedron.cs" />
+    <Compile Include="Geometry\TGCCylinder.cs" />
+    <Compile Include="Geometry\TGCGeometry.cs" />
+    <Compile Include="Geometry\TgcLine.cs" />
+    <Compile Include="Geometry\TgcPlane.cs" />
+    <Compile Include="Geometry\TgcQuad.cs" />
+    <Compile Include="Geometry\TGCSphere.cs" />
+    <Compile Include="Geometry\TgcTriangle.cs" />
+    <Compile Include="Geometry\TgcTriangleArray.cs" />
+    <Compile Include="Geometry\Vertex.cs" />
     <Compile Include="Mathematica\TGCMatrix.cs" />
     <Compile Include="Mathematica\TGCPlane.cs" />
     <Compile Include="Mathematica\TGCQuaternion.cs" />
@@ -90,31 +105,20 @@
     <Compile Include="MeshFactory\DefaultSkeletalMeshFactory.cs" />
     <Compile Include="MeshFactory\IMeshFactory.cs" />
     <Compile Include="MeshFactory\ISkeletalMeshFactory.cs" />
-    <Compile Include="Text\TgcText2D.cs" />
+    <Compile Include="Textures\PoolItem.cs" />
+    <Compile Include="Text\TGCText2D.cs" />
     <Compile Include="Camara\TgcCamera.cs" />
     <Compile Include="Direct3D\D3DDevice.cs" />
     <Compile Include="Example\TGCExample.cs" />
-    <Compile Include="Fog\TgcFog.cs" />
-    <Compile Include="Geometry\TgcArrow.cs" />
+    <Compile Include="Fog\TGCFog.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingAxisAlignBox.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingCylinder.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingSphere.cs" />
-    <Compile Include="Geometry\TGCBox.cs" />
     <Compile Include="Collision\TgcCollisionUtils.cs" />
-    <Compile Include="Geometry\TgcConvexPolygon.cs" />
-    <Compile Include="Geometry\TgcConvexPolyhedron.cs" />
-    <Compile Include="Geometry\TgcCylinder.cs" />
-    <Compile Include="Geometry\TgcBoxDebug.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingElipsoid.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingCylinderFixedY.cs" />
     <Compile Include="BoundingVolumes\TgcFrustum.cs" />
-    <Compile Include="Geometry\TgcLine.cs" />
     <Compile Include="BoundingVolumes\TgcBoundingOrientedBox.cs" />
-    <Compile Include="Geometry\TgcPlane.cs" />
-    <Compile Include="Geometry\TGCQuad.cs" />
-    <Compile Include="Geometry\TGCSphere.cs" />
-    <Compile Include="Geometry\TgcTriangle.cs" />
-    <Compile Include="Geometry\TgcTriangleArray.cs" />
     <Compile Include="HighResolutionTimer.cs" />
     <Compile Include="Input\TgcD3dInput.cs" />
     <Compile Include="Interpolation\InterpoladorLineal.cs" />
@@ -152,8 +156,8 @@
     <Compile Include="SceneLoader\TgcSceneExporter.cs" />
     <Compile Include="SceneLoader\TgcSceneLoader.cs" />
     <Compile Include="SceneLoader\TgcSceneParser.cs" />
-    <Compile Include="Shaders\TgcPostProcessingUtils.cs" />
-    <Compile Include="Shaders\TgcScreenQuad.cs" />
+    <Compile Include="Shaders\TGCPostProcessingUtils.cs" />
+    <Compile Include="Shaders\TGCScreenQuad.cs" />
     <Compile Include="Shaders\TGCShaders.cs" />
     <Compile Include="SkeletalAnimation\TgcSkeletalAnimation.cs" />
     <Compile Include="SkeletalAnimation\TgcSkeletalAnimationBoneData.cs" />
@@ -168,15 +172,15 @@
     <Compile Include="SkeletalAnimation\TgcSkeletalMeshData.cs" />
     <Compile Include="SkeletalAnimation\TgcSkeletalParser.cs" />
     <Compile Include="SkeletalAnimation\TgcSkeletalVertexWeight.cs" />
-    <Compile Include="Sound\Tgc3dSound.cs" />
-    <Compile Include="Sound\TgcDirectSound.cs" />
-    <Compile Include="Sound\TgcMp3Player.cs" />
-    <Compile Include="Sound\TgcStaticSound.cs" />
-    <Compile Include="Terrain\TgcSimpleTerrain.cs" />
-    <Compile Include="Terrain\TgcSkyBox.cs" />
+    <Compile Include="Sound\TGC3DSound.cs" />
+    <Compile Include="Sound\TGCDirectSound.cs" />
+    <Compile Include="Sound\TGCMP3Player.cs" />
+    <Compile Include="Sound\TGCStaticSound.cs" />
+    <Compile Include="Terrain\TGCSimpleTerrain.cs" />
+    <Compile Include="Terrain\TGCSkyBox.cs" />
     <Compile Include="Textures\TexturesManager.cs" />
     <Compile Include="Textures\TexturesPool.cs" />
-    <Compile Include="Textures\TgcTexture.cs" />
+    <Compile Include="Textures\TGCTexture.cs" />
     <Compile Include="TgcAxisLines.cs" />
     <Compile Include="Mathematica\FastMath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -184,11 +188,11 @@
     <Compile Include="Utils\ValidationUtils.cs" />
     <Compile Include="Collision\TgcPickingRay.cs" />
     <Compile Include="Collision\TgcRay.cs" />
-    <Compile Include="Geometry\TGCGeometry.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets" Condition="Exists('..\packages\BulletSharp.0.11.1\build\net40-client\BulletSharp.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

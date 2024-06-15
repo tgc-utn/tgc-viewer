@@ -37,7 +37,7 @@ namespace TGC.Examples.MeshExamples
         public override void Init()
         {
             //Crear suelo
-            var pisoTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
+            var pisoTexture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\pasto.jpg");
             suelo = new TgcPlane(new TGCVector3(-500, 0, -500), new TGCVector3(2000, 0, 2000), TgcPlane.Orientations.XZplane, pisoTexture, 10f, 10f);
 
             //Cargar modelo de palmera original

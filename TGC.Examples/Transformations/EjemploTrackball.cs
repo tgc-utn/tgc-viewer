@@ -148,13 +148,13 @@ namespace TGC.Examples.Transformations
 
         private void InitializeSphere()
         {
-            var transparentTexture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\transparent.png");
+            var transparentTexture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\transparent.png");
 
             boundingSphere = new TgcBoundingSphere(TGCVector3.Empty, radius);
 
             sphere = new TGCSphere(1.0f, transparentTexture, TGCVector3.Empty);
             sphere.AlphaBlendEnable = true;
-            sphere.updateValues();
+            sphere.UpdateValues();
             sphere.Transform = TGCMatrix.Scaling(new TGCVector3(radius, radius, radius));
         }
 

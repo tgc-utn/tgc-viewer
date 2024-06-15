@@ -8,7 +8,7 @@ namespace TGC.Core.Sound
     /// <summary>
     ///     Herramienta para reproducir archivos MP3s
     /// </summary>
-    public class TgcMp3Player
+    public class TGCMP3Player
     {
         /// <summary>
         ///     Estados del reproductor
@@ -21,7 +21,7 @@ namespace TGC.Core.Sound
             Stopped
         }
 
-        // Constante con la longitud máxima de un nombre de archivo.
+        // Constante con la longitud maxima de un nombre de archivo.
         private const int MAX_PATH = 260;
 
         // Constante con el formato de archivo a reproducir.
@@ -36,10 +36,10 @@ namespace TGC.Core.Sound
         public string FileName { get; set; }
 
         /// <summary>
-        ///     Inicia la reproducción del archivo MP3.
+        ///     Inicia la reproduccion del archivo MP3.
         ///     <param name="playLoop">True para reproducir en loop</param>
         /// </summary>
-        public void play(bool playLoop)
+        public void Play(bool playLoop)
         {
             // Nos cersioramos que hay un archivo que reproducir.
             if (FileName != "")
@@ -47,7 +47,7 @@ namespace TGC.Core.Sound
                 // intentamos iniciar la reproducción.
                 if (LoadFile())
                 {
-                    var command = new StringBuilder("play ");
+                    var command = new StringBuilder("Play ");
                     command.Append(WINMM_FILE_ALIAS);
                     if (playLoop)
                     {
@@ -72,11 +72,11 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        ///     Pausa la reproducción en proceso.
+        ///     Pausa la reproduccion en proceso.
         /// </summary>
-        public void pause()
+        public void Pause()
         {
-            // Enviamos el comando de pausa mediante la función mciSendString,
+            // Enviamos el comando de pausa mediante la funcion mciSendString,
             var mciResul = mciSendString("pause " + WINMM_FILE_ALIAS, null, 0, 0);
             if (mciResul != 0)
             {
@@ -85,11 +85,11 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        ///     Continúa con la reproducción actual.
+        ///     Continua con la reproduccion actual.
         /// </summary>
-        public void resume()
+        public void Resume()
         {
-            // Enviamos el comando de pausa mediante la función mciSendString,
+            // Enviamos el comando de pausa mediante la funcion mciSendString,
             var mciResul = mciSendString("resume " + WINMM_FILE_ALIAS, null, 0, 0);
             if (mciResul != 0)
             {
@@ -98,32 +98,32 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        ///     Detiene la reproducción del archivo de audio.
+        ///     Detiene la reproduccion del archivo de audio.
         /// </summary>
-        public void stop()
+        public void Stop()
         {
-            // Detenemos la reproducción, mediante el comando adecuado.
-            mciSendString("stop " + WINMM_FILE_ALIAS, null, 0, 0);
+            // Detenemos la reproduccion, mediante el comando adecuado.
+            mciSendString("Stop " + WINMM_FILE_ALIAS, null, 0, 0);
         }
 
         /// <summary>
-        ///     Detiene la reproducción actual y cierra el archivo de audio.
+        ///     Detiene la reproduccion actual y cierra el archivo de audio.
         /// </summary>
-        public void closeFile()
+        public void CloseFile()
         {
-            // Establecemos los comando detener reproducción y cerrar archivo.
-            mciSendString("stop " + WINMM_FILE_ALIAS, null, 0, 0);
+            // Establecemos los comando detener reproduccion y cerrar archivo.
+            mciSendString("Stop " + WINMM_FILE_ALIAS, null, 0, 0);
             mciSendString("Close " + WINMM_FILE_ALIAS, null, 0, 0);
         }
 
         /// <summary>
-        ///     Obtiene el estado de la reproducción en proceso.
+        ///     Obtiene el estado de la reproduccion en proceso.
         /// </summary>
         /// <returns>Estado del reproducto</returns>
-        public States getStatus()
+        public States GetStatus()
         {
             var sbBuffer = new StringBuilder(MAX_PATH);
-            // Obtenemos la información mediante el comando adecuado.
+            // Obtenemos la informacion mediante el comando adecuado.
             mciSendString("status " + WINMM_FILE_ALIAS + " mode", sbBuffer, MAX_PATH, 0);
             var strState = sbBuffer.ToString();
 
@@ -145,7 +145,7 @@ namespace TGC.Core.Sound
         /// <summary>
         ///     Mueve el apuntador de archivo al inicio del mismo.
         /// </summary>
-        public void goToBeginning()
+        public void GoToBeginning()
         {
             // Establecemos la cadena de comando para mover el apuntador del archivo,
             // al inicio de este.
@@ -159,7 +159,7 @@ namespace TGC.Core.Sound
         /// <summary>
         ///     Mueve el apuntador de archivo al final del mismo.
         /// </summary>
-        public void goToEnd()
+        public void GoToEnd()
         {
             // Establecemos la cadena de comando para mover el apuntador del archivo,
             // al final de este.
@@ -196,7 +196,7 @@ namespace TGC.Core.Sound
         #region Metodos auxiliares
 
         /// <summary>
-        ///     Método para convertir un nombre de archivo largo en uno corto,
+        ///     Metodo para convertir un nombre de archivo largo en uno corto,
         ///     necesario para usarlo como parámetro de la función MciSendString.
         /// </summary>
         /// <param name="nombreLargo">Nombre y ruta del archivo a convertir.</param>
@@ -214,7 +214,7 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        ///     Método que convierte un nombre de archivo corto, en uno largo.
+        ///     Metodo que convierte un nombre de archivo corto, en uno largo.
         /// </summary>
         /// <param name="NombreCorto">Nombre del archivo a convertir.</param>
         /// <returns>Cadena con el nombre de archivo resultante.</returns>
@@ -227,11 +227,11 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        ///     Método para convertir los mensajes de error numéricos, generados por la
+        ///     Metodo para convertir los mensajes de error numéricos, generados por la
         ///     función mciSendString, en su correspondiente cadena de caracteres.
         /// </summary>
         /// <param name="ErrorCode">
-        ///     Código de error devuelto por la función
+        ///     Codigo de error devuelto por la función
         ///     mciSendString
         /// </param>
         /// <returns>Cadena de tipo string, con el mensaje de error</returns>
@@ -242,7 +242,7 @@ namespace TGC.Core.Sound
             var sbBuffer = new StringBuilder(MAX_PATH);
             // Obtenemos la cadena de mensaje.
             if (mciGetErrorString(ErrorCode, sbBuffer, MAX_PATH) != 0)
-                // Sí la función ha tenido éxito, valor devuelto diferente de 0,
+                // Sí la funcion ha tenido éxito, valor devuelto diferente de 0,
                 // devolvemos el valor del buffer, formateado a string.
                 return sbBuffer.ToString();
             return "";
@@ -252,7 +252,7 @@ namespace TGC.Core.Sound
         ///     Abre el archivo MP3 específicado.
         /// </summary>
         /// <returns>
-        ///     Verdadero si se tuvo éxito al abrir el archivo
+        ///     Verdadero si se tuvo exito al abrir el archivo
         ///     falso en caso contrario.
         /// </returns>
         private bool LoadFile()
@@ -262,10 +262,10 @@ namespace TGC.Core.Sound
             // obtenemos el nombre corto del archivo.
             var nombreCorto = NombreCorto(FileName);
             // intentamos abrir el archivo, utilizando su nombre corto
-            // y asignándole un alias para trabajar con él.
+            // y asignandole un alias para trabajar con él.
             if (mciSendString("open " + nombreCorto + " type " + WINMM_FILE_TYPE +
                               " alias " + WINMM_FILE_ALIAS, null, 0, 0) == 0)
-                // si el resultado es igual a 0, la función tuvo éxito,
+                // si el resultado es igual a 0, la funcion tuvo exito,
                 // devolvemos verdadero.
                 return true;
             return false;
@@ -283,12 +283,12 @@ namespace TGC.Core.Sound
         public event ReproductorMessageHandler ReproductorMessageEvent;
 
         /// <summary>
-        /// Inicia la reproducción desde una posición específica.
+        /// Inicia la reproducción desde una posicion especifica.
         /// </summary>
         /// <param name="Desde">Nuevo valor de la posición a iniciar</param>
         public void PlayFrom(long Desde)
         {
-            int mciResul = mciSendString("play " + sAlias + " from " +
+            int mciResul = mciSendString("Play " + sAlias + " from " +
             (Desde * 1000).ToString(), null, 0, 0);
             if (mciResul != 0)
             {
@@ -297,12 +297,12 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        /// Modifica la velocidad actual de reproducción.
+        /// Modifica la velocidad actual de reproduccion.
         /// </summary>
         /// <param name="Tramas">Nuevo valor de la velocidad.</param>
         public void setSpeed(int speed)
         {
-            // Establecemos la nueva velocidad pasando como parámetro,
+            // Establecemos la nueva velocidad pasando como parametro,
             // la cadena adecuada, incluyendo el nuevo valor de la velocidad,
             // medido en tramas por segundo.
             int mciResul = mciSendString("set " + sAlias + " tempo " +
@@ -314,7 +314,7 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        /// Devuelve el número de dispositivos de salida,
+        /// Devuelve el numero de dispositivos de salida,
         /// instalados en nuestro sistema.
         /// </summary>
         /// <returns>Número de dispositivos.</returns>
@@ -324,9 +324,9 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        /// Mueve el apuntador del archivo a la posición especificada.
+        /// Mueve el apuntador del archivo a la posicion especificada.
         /// </summary>
-        /// <param name="NuevaPosicion">Nueva posición</param>
+        /// <param name="NuevaPosicion">Nueva posicion</param>
         public void Reposicionar(int NuevaPosicion)
         {
             // Enviamos la cadena de comando adecuada a la función mciSendString,
@@ -341,7 +341,7 @@ namespace TGC.Core.Sound
         }
 
         /// <summary>
-        /// Calcula la posición actual del apuntador del archivo.
+        /// Calcula la posicion actual del apuntador del archivo.
         /// </summary>
         /// <returns>Posición actual</returns>
         public long CalcularPosicion()
@@ -361,9 +361,9 @@ namespace TGC.Core.Sound
                 return 0L;
         }
         /// <summary>
-        /// Devuelve una cadena con la información de posición del apuntador del archivo.
+        /// Devuelve una cadena con la informacion de posición del apuntador del archivo.
         /// </summary>
-        /// <returns>Cadena con la información.</returns>
+        /// <returns>Cadena con la informacion.</returns>
         public string Posicion()
         {
             // obtenemos los segundos.
@@ -388,9 +388,9 @@ namespace TGC.Core.Sound
                 return "";
         }
         /// <summary>
-        /// Cálcula el tamaño del archivo abierto para reproducción.
+        /// Calcula el tamano del archivo abierto para reproduccion.
         /// </summary>
-        /// <returns>Tamaño en segundos del archivo.</returns>
+        /// <returns>Tamano en segundos del archivo.</returns>
         public long CalcularTamaño()
         {
             StringBuilder sbBuffer = new StringBuilder(MAX_PATH);
@@ -398,7 +398,7 @@ namespace TGC.Core.Sound
             // Obtenemos el largo del archivo, en millisegundos.
             mciSendString("status " + sAlias + " length", sbBuffer, MAX_PATH, 0);
 
-            // Sí el buffer contiene información,
+            // Si el buffer contiene informacion,
             if (sbBuffer.ToString() != "")
                 // la devolvemos, formateando la salida a entero largo;
                 return long.Parse(sbBuffer.ToString()) / 1000;
@@ -406,12 +406,12 @@ namespace TGC.Core.Sound
                 return 0L;
         }
         /// <summary>
-        /// Obtiene una cadena con la información sobre el tamaño (largo) del archivo.
+        /// Obtiene una cadena con la información sobre el tamano (largo) del archivo.
         /// </summary>
         /// <returns>Largo del archivo de audio.</returns>
-        public string Tamaño()
+        public string Tamano()
         {
-            long sec = CalcularTamaño();
+            long sec = CalcularTamano();
             long mins;
 
             // Si la cantidad de segundos es menor que 60 (1 minuto),

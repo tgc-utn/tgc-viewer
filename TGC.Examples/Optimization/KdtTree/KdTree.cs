@@ -13,7 +13,7 @@ namespace TGC.Examples.Optimization.KdtTree
     public class KdTree
     {
         private readonly KdTreeBuilder builder;
-        private List<TgcBoxDebug> debugKdTreeBoxes;
+        private List<TGCBoxDebug> debugKdTreeBoxes;
         private KdTreeNode kdtreeRootNode;
         private List<TgcMesh> modelos;
         private TgcBoundingAxisAlignBox sceneBounds;

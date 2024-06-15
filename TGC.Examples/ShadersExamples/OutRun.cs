@@ -38,9 +38,9 @@ namespace TGC.Examples.ShadersExamples
         public bool paused;
         public TGCVector3 pos;
         public float rotationSpeed = 0.1f;
-        private TgcSkyBox skyBox;
+        private TGCSkyBox skyBox;
 
-        private TgcSimpleTerrain terrain;
+        private TGCSimpleTerrain terrain;
         public float vel = 100f;
 
         public OutRun(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
@@ -60,22 +60,22 @@ namespace TGC.Examples.ShadersExamples
             circuito = new F1Circuit(MediaDir);
 
             //Cargar terreno: cargar heightmap y textura de color
-            terrain = new TgcSimpleTerrain();
-            terrain.loadHeightmap(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg",
+            terrain = new TGCSimpleTerrain();
+            terrain.LoadHeightmap(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg",
                 20, 0.1f, new TGCVector3(0, -125, 0));
-            terrain.loadTexture(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg");
+            terrain.LoadTexture(MediaDir + "Heighmaps\\" + "TerrainTexture2.jpg");
 
             //Crear SkyBox
-            skyBox = new TgcSkyBox();
+            skyBox = new TGCSkyBox();
             skyBox.Center = new TGCVector3(0, 500, 0);
             skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "Texturas\\Quake\\SkyBox LostAtSeaDay\\";
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "lostatseaday_lf.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Up, texturesPath + "lostatseaday_up.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Down, texturesPath + "lostatseaday_dn.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Left, texturesPath + "lostatseaday_lf.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Right, texturesPath + "lostatseaday_rt.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Front, texturesPath + "lostatseaday_bk.jpg");
+            skyBox.SetFaceTexture(TGCSkyBox.SkyFaces.Back, texturesPath + "lostatseaday_ft.jpg");
             skyBox.Init();
 
             var loader = new TgcSceneLoader();
@@ -214,7 +214,7 @@ namespace TGC.Examples.ShadersExamples
             var device = D3DDevice.Instance.Device;
             effect.Technique = "DefaultTechnique";
 
-            // guardo el Render target anterior y seteo la textura como render target
+            // guardo el render target anterior y seteo la textura como render target
             var pOldRT = device.GetRenderTarget(0);
             var pSurf = g_pRenderTarget.GetSurfaceLevel(0);
             device.SetRenderTarget(0, pSurf);

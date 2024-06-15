@@ -50,7 +50,7 @@ namespace TGC.Examples.MeshExamples
                         * TGCMatrix.Translation(i * 100, 0, j * 100);
 
                     meshes.Add(mesh);
-                    //Se agrega un callback function para informar cuando se realiza el dispose.
+                    //Se agrega un callback function para informar cuando se realiza el Dispose.
                     mesh.D3dMesh.Disposing += D3dMesh_Disposing;
                 }
             }

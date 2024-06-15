@@ -362,7 +362,7 @@ namespace TGC.Examples.Quake3Loader
                     }
                 }
 
-                // Since we found the brushes, we can go back up and stop recursing at this level
+                // Since we found the brushes, we can go back up and Stop recursing at this level
                 return;
             }
 

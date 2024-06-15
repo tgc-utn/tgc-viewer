@@ -67,7 +67,7 @@ namespace TGC.Core.SkeletalAnimation
         /// </summary>
         protected Mesh d3dMesh;
 
-        protected TgcTexture[] diffuseMaps;
+        protected TGCTexture[] diffuseMaps;
 
         protected Effect effect;
 
@@ -205,7 +205,7 @@ namespace TGC.Core.SkeletalAnimation
         /// <summary>
         ///     Array de texturas para DiffuseMap
         /// </summary>
-        public TgcTexture[] DiffuseMaps
+        public TGCTexture[] DiffuseMaps
         {
             get { return diffuseMaps; }
             set { diffuseMaps = value; }
@@ -254,7 +254,7 @@ namespace TGC.Core.SkeletalAnimation
         }
 
         /// <summary>
-        ///     Tipo de formato de Render de esta malla
+        ///     Tipo de formato de render de esta malla
         /// </summary>
         public MeshRenderType RenderType
         {
@@ -423,7 +423,7 @@ namespace TGC.Core.SkeletalAnimation
             //Renderizar malla
             if (!renderSkeleton)
             {
-                //Renderizar segun el tipo de Render de la malla
+                //Renderizar segun el tipo de render de la malla
                 effect.Technique = technique;
                 var numPasses = effect.Begin(0);
                 switch (renderType)
@@ -434,7 +434,7 @@ namespace TGC.Core.SkeletalAnimation
                         TexturesManager.Instance.clear(0);
                         TexturesManager.Instance.clear(1);
 
-                        //Iniciar Shader e iterar sobre sus Render Passes
+                        //Iniciar Shader e iterar sobre sus render passes
                         for (var n = 0; n < numPasses; n++)
                         {
                             //Iniciar pasada de shader
@@ -449,7 +449,7 @@ namespace TGC.Core.SkeletalAnimation
                         //Hacer reset de Lightmap
                         TexturesManager.Instance.clear(1);
 
-                        //Iniciar Shader e iterar sobre sus Render Passes
+                        //Iniciar Shader e iterar sobre sus render passes
                         for (var n = 0; n < numPasses; n++)
                         {
                             //Dibujar cada subset con su DiffuseMap correspondiente
@@ -521,7 +521,7 @@ namespace TGC.Core.SkeletalAnimation
             {
                 for (var i = 0; i < diffuseMaps.Length; i++)
                 {
-                    diffuseMaps[i].dispose();
+                    diffuseMaps[i].Dispose();
                 }
                 diffuseMaps = null;
             }
@@ -1320,7 +1320,7 @@ namespace TGC.Core.SkeletalAnimation
         ///     Permite cambiar las texturas de DiffuseMap de esta malla
         /// </summary>
         /// <param name="newDiffuseMaps">Array de nuevas texturas. Tiene que tener la misma cantidad que el original</param>
-        public void changeDiffuseMaps(TgcTexture[] newDiffuseMaps)
+        public void changeDiffuseMaps(TGCTexture[] newDiffuseMaps)
         {
             //Solo aplicar si la malla tiene texturas
             if (renderType == MeshRenderType.DIFFUSE_MAP)
@@ -1333,7 +1333,7 @@ namespace TGC.Core.SkeletalAnimation
                 //Liberar texturas anteriores
                 foreach (var t in diffuseMaps)
                 {
-                    t.dispose();
+                    t.Dispose();
                 }
 
                 //Asignar nuevas texturas

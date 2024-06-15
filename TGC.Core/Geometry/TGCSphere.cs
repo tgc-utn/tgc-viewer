@@ -1,7 +1,7 @@
-﻿using Microsoft.DirectX.Direct3D;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Microsoft.DirectX.Direct3D;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Direct3D;
 using TGC.Core.Mathematica;
@@ -12,10 +12,51 @@ using TGC.Core.Textures;
 namespace TGC.Core.Geometry
 {
     /// <summary>
-    /// Herramienta para crear una esfera 3D de tamaño variable, con color, nivel de detalle y Textura.
+    ///     Herramienta para crear una esfera 3D de tamaño variable, con color, nivel de detalle y Textura.
     /// </summary>
     public class TGCSphere : IRenderObject, ITransformObject
     {
+        /// <summary>
+        ///     Crear un nuevo TgcSphere igual a este
+        /// </summary>
+        /// <returns>Sphere clonado</returns>
+        public virtual TGCSphere Clone()
+        {
+            var cloneSphere = new TGCSphere(radius, Color, translation);
+
+            if (Texture != null)
+            {
+                cloneSphere.SetTexture(Texture.Clone());
+            }
+
+            cloneSphere.AutoTransformEnable = AutoTransformEnable;
+            cloneSphere.Transform = Transform;
+            cloneSphere.Rotation = Rotation;
+            cloneSphere.AlphaBlendEnable = AlphaBlendEnable;
+            cloneSphere.uvOffset = uvOffset;
+
+            cloneSphere.UpdateValues();
+
+            return cloneSphere;
+        }
+
+        /// <summary>
+        ///     Convierte el TgcSphere en un TgcMesh
+        /// </summary>
+        /// <param name="meshName">Nombre de la malla que se va a crear</param>
+        public TgcMesh ToMesh(string meshName)
+        {
+            //Obtener matriz para transformar vertices
+            if (AutoTransformEnable)
+            {
+                Transform = TGCMatrix.Scaling(radius, radius, radius) *
+                            TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *
+                            TGCMatrix.Translation(translation);
+            }
+
+            return TgcMesh.FromTGCSphere(meshName, Texture, indices, vertices, Transform, AlphaBlendEnable);
+        }
+
         #region FIELDS
 
         private IndexBuffer indexBuffer;
@@ -25,12 +66,9 @@ namespace TGC.Core.Geometry
         private List<Vertex.PositionColoredTexturedNormal> vertices;
         private TGCVector3 rotation;
         private TGCVector3 scale;
-        private int verticesCount;
-        private int triangleCount;
         private int levelOfDetail;
         private float radius;
         private TGCVector3 translation;
-        private TgcBoundingSphere boundingSphere;
         private TGCVector2 uvOffset;
         private TGCVector2 uvTiling;
         private bool inflate;
@@ -52,29 +90,27 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Cantidad de vertices
         /// </summary>
-        public int VertexCount
-        {
-            get { return verticesCount; }
-        }
+        public int VertexCount { get; private set; }
 
         /// <summary>
         ///     Cantidad de triangulos
         /// </summary>
-        public int TriangleCount
-        {
-            get { return triangleCount; }
-        }
+        public int TriangleCount { get; private set; }
 
         /// <summary>
         ///     Radio de la esfera
         /// </summary>
         public float Radius
         {
-            get { return radius; }
+            get => radius;
             set
             {
-                if (value > 0) radius = value;
-                updateBoundingVolume();
+                if (value > 0)
+                {
+                    radius = value;
+                }
+
+                UpdateBoundingVolume();
             }
         }
 
@@ -83,7 +119,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public int LevelOfDetail
         {
-            get { return levelOfDetail; }
+            get => levelOfDetail;
             set
             {
                 if (value != levelOfDetail)
@@ -100,8 +136,8 @@ namespace TGC.Core.Geometry
         /// </summary>
         public virtual TGCVector3 Scale
         {
-            get { return scale; }
-            set { Console.WriteLine("TODO esta bien que pase por aca?"); }
+            get => scale;
+            set => Console.WriteLine("TODO esta bien que pase por aca? value=" + value);
         }
 
         /// <summary>
@@ -112,7 +148,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Textura de la esfera
         /// </summary>
-        public TgcTexture Texture { get; private set; }
+        public TGCTexture Texture { get; private set; }
 
         /// <summary>
         ///     Shader del mesh
@@ -139,7 +175,8 @@ namespace TGC.Core.Geometry
         ///     En False se respeta lo que el usuario haya cargado a mano en la matriz.
         ///     Por default está en False.
         /// </summary>
-        [Obsolete("Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
+        [Obsolete(
+            "Utilizar esta propiedad en juegos complejos se pierde el control, es mejor utilizar transformaciones con matrices.")]
         public bool AutoTransformEnable { get; set; }
 
         /// <summary>
@@ -147,11 +184,11 @@ namespace TGC.Core.Geometry
         /// </summary>
         public TGCVector3 Position
         {
-            get { return translation; }
+            get => translation;
             set
             {
                 translation = value;
-                updateBoundingVolume();
+                UpdateBoundingVolume();
             }
         }
 
@@ -160,8 +197,8 @@ namespace TGC.Core.Geometry
         /// </summary>
         public TGCVector3 Rotation
         {
-            get { return rotation; }
-            set { rotation = value; }
+            get => rotation;
+            set => rotation = value;
         }
 
         /// <summary>
@@ -172,10 +209,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     BoundingSphere de la esfera
         /// </summary>
-        public TgcBoundingSphere BoundingSphere
-        {
-            get { return boundingSphere; }
-        }
+        public TgcBoundingSphere BoundingSphere { get; private set; }
 
         /// <summary>
         ///     Habilita el renderizado con AlphaBlending para los modelos
@@ -189,7 +223,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public TGCVector2 UVOffset
         {
-            get { return uvOffset; }
+            get => uvOffset;
             set
             {
                 if (uvOffset != value)
@@ -205,7 +239,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public TGCVector2 UVTiling
         {
-            get { return uvTiling; }
+            get => uvTiling;
             set
             {
                 if (uvTiling != value)
@@ -229,7 +263,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public eBasePoly BasePoly
         {
-            get { return basePoly; }
+            get => basePoly;
             set
             {
                 if (basePoly != value)
@@ -245,7 +279,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         public bool Inflate
         {
-            get { return inflate; }
+            get => inflate;
             set
             {
                 if (inflate != value)
@@ -264,23 +298,29 @@ namespace TGC.Core.Geometry
         ///     Configurar color de la esfera y setea la technique POSITION_COLORED. Unsetea la textura.
         /// </summary>
         /// <param name="color"></param>
-        public virtual void setColor(Color color)
+        public virtual void SetColor(Color color)
         {
             Texture = null;
 
             Technique = TGCShaders.T_POSITION_COLORED;
 
-            if (this.Color != color) mustUpdate = true;
+            if (Color != color)
+            {
+                mustUpdate = true;
+            }
 
-            this.Color = color;
+            Color = color;
         }
 
         /// <summary>
         ///     Configurar textura de la esfera y setea la technique POSITION_TEXTURED.
         /// </summary>
-        public virtual void setTexture(TgcTexture texture)
+        public virtual void SetTexture(TGCTexture texture)
         {
-            if (Texture != null) Texture.dispose();
+            if (Texture != null)
+            {
+                Texture.Dispose();
+            }
 
             Texture = texture;
 
@@ -292,11 +332,11 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="position">Centro de la esfera</param>
         /// <param name="radius">Radio de la esfera</param>
-        protected virtual void setPositionRadius(TGCVector3 position, float radius)
+        protected virtual void SetPositionRadius(TGCVector3 position, float radius)
         {
             translation = position;
             this.radius = radius;
-            updateBoundingVolume();
+            UpdateBoundingVolume();
         }
 
         #endregion SETTERS
@@ -319,7 +359,7 @@ namespace TGC.Core.Geometry
         /// <param name="center"></param>
         public TGCSphere(float radius, Color color, TGCVector3 center)
         {
-            configure(radius, color, null, center);
+            Configure(radius, color, null, center);
         }
 
         /// <summary>
@@ -328,12 +368,12 @@ namespace TGC.Core.Geometry
         /// <param name="radius"></param>
         /// <param name="texture"></param>
         /// <param name="center"></param>
-        public TGCSphere(float radius, TgcTexture texture, TGCVector3 center)
+        public TGCSphere(float radius, TGCTexture texture, TGCVector3 center)
         {
-            configure(radius, Color.White, texture, center);
+            Configure(radius, Color.White, texture, center);
         }
 
-        protected void configure(float radius, Color color, TgcTexture texture, TGCVector3 center)
+        protected void Configure(float radius, Color color, TGCTexture texture, TGCVector3 center)
         {
             AutoTransformEnable = false;
             Transform = TGCMatrix.Identity;
@@ -345,14 +385,20 @@ namespace TGC.Core.Geometry
             uvOffset = TGCVector2.Zero;
 
             //BoundingSphere
-            boundingSphere = new TgcBoundingSphere();
+            BoundingSphere = new TgcBoundingSphere();
 
             //Shader
             Effect = TGCShaders.Instance.VariosShader;
 
             //Tipo de vertice y technique
-            if (texture != null) setTexture(texture);
-            else setColor(color);
+            if (texture != null)
+            {
+                SetTexture(texture);
+            }
+            else
+            {
+                SetColor(color);
+            }
 
             basePoly = eBasePoly.ICOSAHEDRON;
             levelOfDetail = 2;
@@ -369,17 +415,27 @@ namespace TGC.Core.Geometry
         ///     Vuelve a crear la esfera si hubo cambio en el nivel de detalle, color o coordenadas de textura o si ForceUpdate
         ///     esta en true.
         /// </summary>
-        public virtual void updateValues()
+        public virtual void UpdateValues()
         {
-            if (!mustUpdate && !ForceUpdate) return;
+            if (!mustUpdate && !ForceUpdate)
+            {
+                return;
+            }
 
-            if (indexBuffer != null && !indexBuffer.Disposed) indexBuffer.Dispose();
-            if (vertexBuffer != null && !vertexBuffer.Disposed) vertexBuffer.Dispose();
+            if (indexBuffer != null && !indexBuffer.Disposed)
+            {
+                indexBuffer.Dispose();
+            }
+
+            if (vertexBuffer != null && !vertexBuffer.Disposed)
+            {
+                vertexBuffer.Dispose();
+            }
 
             //Obtengo las posiciones de los vertices e indices de la esfera
             List<TGCVector3> positions;
 
-            createSphereSubdividingAPolyhedron(out positions, out indices);
+            CreateSphereSubdividingAPolyhedron(out positions, out indices);
 
             ///////
 
@@ -403,7 +459,7 @@ namespace TGC.Core.Geometry
                 vertices.Add(new Vertex.PositionColoredTexturedNormal(pos, c, UVTiling.X * u + UVOffset.X,
                     UVTiling.Y * v + UVOffset.Y, pos));
 
-                if (u == 1 || esPolo(vertices[i]))
+                if (u == 1 || IsPolo(vertices[i]))
                 {
                     iverticesU1.Add(i);
 
@@ -423,12 +479,12 @@ namespace TGC.Core.Geometry
             }
 
             //Corrijo los triangulos que tienen mal las coordenadas debido a vertices compartidos
-            fixTexcoords(vertices, indices, iverticesU1, polos);
+            FixTexcoords(vertices, indices, iverticesU1, polos);
 
-            verticesCount = vertices.Count;
-            triangleCount = indices.Count / 3;
+            VertexCount = vertices.Count;
+            TriangleCount = indices.Count / 3;
 
-            vertexBuffer = new VertexBuffer(typeof(Vertex.PositionColoredTexturedNormal), verticesCount,
+            vertexBuffer = new VertexBuffer(typeof(Vertex.PositionColoredTexturedNormal), VertexCount,
                 D3DDevice.Instance.Device,
                 Usage.Dynamic | Usage.WriteOnly, Vertex.PositionColoredTexturedNormal.Format, Pool.Default);
             vertexBuffer.SetData(vertices.ToArray(), 0, LockFlags.None);
@@ -446,7 +502,7 @@ namespace TGC.Core.Geometry
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="indices"></param>
-        protected void createSphereSubdividingAPolyhedron(out List<TGCVector3> vertices, out List<int> indices)
+        protected void CreateSphereSubdividingAPolyhedron(out List<TGCVector3> vertices, out List<int> indices)
         {
             indices = new List<int>();
             vertices = new List<TGCVector3>();
@@ -463,14 +519,20 @@ namespace TGC.Core.Geometry
             }
 
             for (var i = 0; i < levelOfDetail; i++)
+            {
                 GeometryProvider.Subdivide(vertices, indices);
+            }
 
             if (Inflate)
+            {
                 for (var i = 0; i < vertices.Count; i++)
+                {
                     vertices[i] = TGCVector3.Normalize(vertices[i]);
+                }
+            }
         }
 
-        protected bool esPolo(Vertex.PositionColoredTexturedNormal v)
+        protected bool IsPolo(Vertex.PositionColoredTexturedNormal v)
         {
             return v.X == 0 && v.Z == 0;
         }
@@ -482,7 +544,7 @@ namespace TGC.Core.Geometry
         /// <param name="indices"></param>
         /// <param name="iverticesU1"></param>
         /// <param name="polos"></param>
-        protected virtual void fixTexcoords(List<Vertex.PositionColoredTexturedNormal> vertices, List<int> indices,
+        protected virtual void FixTexcoords(List<Vertex.PositionColoredTexturedNormal> vertices, List<int> indices,
             List<int> iverticesU1, int[] polos)
         {
             var duplicados = new Dictionary<int, int>();
@@ -502,35 +564,44 @@ namespace TGC.Core.Geometry
                         var i3 = indices[i + 2];
 
                         //Solo me importan los que tienen un vertice con u=1(fin de la textura) y otro menor a 0.5 (comienzo de la textura)
-                        if ((!esPolo(vertices[i1]) && vertices[i1].Tu < U0p5) ||
-                            (!esPolo(vertices[i2]) && vertices[i2].Tu < U0p5) ||
-                            (!esPolo(vertices[i3]) && vertices[i3].Tu < U0p5))
+                        if ((!IsPolo(vertices[i1]) && vertices[i1].Tu < U0p5) ||
+                            (!IsPolo(vertices[i2]) && vertices[i2].Tu < U0p5) ||
+                            (!IsPolo(vertices[i3]) && vertices[i3].Tu < U0p5))
                         {
                             var u1 = new List<int>();
                             var um = new List<int>();
 
                             //Clasifico cada vertice segun su Tu1
                             for (var j = 0; j < 3; j++)
-                                if (vertices[indices[i + j]].Tu == U1 || esPolo(vertices[indices[i + j]]))
+                            {
+                                if (vertices[indices[i + j]].Tu == U1 || IsPolo(vertices[indices[i + j]]))
+                                {
                                     u1.Add(i + j);
-                                else if (vertices[indices[i + j]].Tu < U0p5) um.Add(i + j);
+                                }
+                                else if (vertices[indices[i + j]].Tu < U0p5)
+                                {
+                                    um.Add(i + j);
+                                }
+                            }
 
-                            if (um.Count == 1 && !(esPolo(vertices[indices[u1[0]]]) && vertices[indices[um[0]]].X >= 0))
+                            if (um.Count == 1 && !(IsPolo(vertices[indices[u1[0]]]) && vertices[indices[um[0]]].X >= 0))
                             {
                                 //Casos:
                                 //2 vertices con u=1 o uno con u=1 y otro con u>0.5
                                 //1 vertice es el polo, y uno de los vertices esta al final de la textura y otro al principio
 
                                 //La coordenada textura del de u >0.5 pasa a ser 1+u
-                                indices[um[0]] = dupWithU(vertices, indices, duplicados, um[0],
+                                indices[um[0]] = DupWithU(vertices, indices, duplicados, um[0],
                                     vertices[indices[um[0]]].Tu + UVTiling.X);
                             }
-                            else if (!esPolo(vertices[indices[u1[0]]]))
+                            else if (!IsPolo(vertices[indices[u1[0]]]))
                                 // Caso:
                                 // 1 vertice con u=1 y dos con u<0.5
 
                                 // El u del vertice con u=1 pasa a ser 0
-                                indices[u1[0]] = dupWithU(vertices, indices, duplicados, u1[0], UVOffset.X);
+                            {
+                                indices[u1[0]] = DupWithU(vertices, indices, duplicados, u1[0], UVOffset.X);
+                            }
                         }
                     }
                 }
@@ -544,7 +615,11 @@ namespace TGC.Core.Geometry
                 for (var i = 0; i < indices.Count; i += 3) //Por cada triangulo
                 {
                     var iipolo = i;
-                    for (; iipolo < i + 3 && indices[iipolo] != polos[p]; iipolo++) ;
+                    while (iipolo < i + 3 && indices[iipolo] != polos[p])
+                    {
+                        iipolo++;
+                    }
+
                     //Si un vertice es el polo
                     if (iipolo < i + 3)
                     {
@@ -552,7 +627,13 @@ namespace TGC.Core.Geometry
 
                         var n = 0;
                         //Guardo los vertices que no son polos.
-                        for (var j = 0; j < 3; j++) if (i + j != iipolo) u[n++] = vertices[indices[i + j]];
+                        for (var j = 0; j < 3; j++)
+                        {
+                            if (i + j != iipolo)
+                            {
+                                u[n++] = vertices[indices[i + j]];
+                            }
+                        }
 
                         var minU = FastMath.Min(u[0].Tu, u[1].Tu);
 
@@ -562,16 +643,29 @@ namespace TGC.Core.Geometry
                         var zeroXZ = u[0];
                         var noRectangulo = false;
 
-                        if (u[0].X != 0 && u[0].Z != 0) zeroXZ = u[0];
-                        else if (u[1].X != 0 && u[1].Z != 0) zeroXZ = u[1];
-                        else noRectangulo = true;
+                        if (u[0].X != 0 && u[0].Z != 0)
+                        {
+                            zeroXZ = u[0];
+                        }
+                        else if (u[1].X != 0 && u[1].Z != 0)
+                        {
+                            zeroXZ = u[1];
+                        }
+                        else
+                        {
+                            noRectangulo = true;
+                        }
 
                         //Interpolo Tu1
                         if (basePoly.Equals(eBasePoly.ICOSAHEDRON) || noRectangulo)
 
+                        {
                             pole.Tu = minU + FastMath.Abs(u[0].Tu - u[1].Tu) / 2;
+                        }
                         else
+                        {
                             pole.Tu = zeroXZ.Tu;
+                        }
 
                         if (first) //Si es la primera vez que lo hago, modifico el vertice.
                         {
@@ -598,7 +692,7 @@ namespace TGC.Core.Geometry
         /// <param name="idx"></param>
         /// <param name="u"></param>
         /// <returns></returns>
-        protected static int dupWithU(List<Vertex.PositionColoredTexturedNormal> vertices, List<int> indices,
+        protected static int DupWithU(List<Vertex.PositionColoredTexturedNormal> vertices, List<int> indices,
             Dictionary<int, int> dDup, int idx, float u)
         {
             int newIndx;
@@ -612,7 +706,11 @@ namespace TGC.Core.Geometry
 
                 dDup.Add(indices[idx], newIndx);
             }
-            else newIndx = dDup[indices[idx]];
+            else
+            {
+                newIndx = dDup[indices[idx]];
+            }
+
             return newIndx;
         }
 
@@ -626,7 +724,9 @@ namespace TGC.Core.Geometry
         public virtual void Render()
         {
             if (!Enabled)
+            {
                 return;
+            }
 
             //transformacion
             if (AutoTransformEnable)
@@ -637,40 +737,52 @@ namespace TGC.Core.Geometry
             }
 
             //Activar AlphaBlending
-            activateAlphaBlend();
+            ActivateAlphaBlend();
 
             //renderizar
-            if (Texture != null) TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", Texture);
-            else TexturesManager.Instance.clear(0);
+            if (Texture != null)
+            {
+                TexturesManager.Instance.shaderSet(Effect, "texDiffuseMap", Texture);
+            }
+            else
+            {
+                TexturesManager.Instance.clear(0);
+            }
 
             TexturesManager.Instance.clear(1);
 
             TGCShaders.Instance.SetShaderMatrix(Effect, Transform);
             Effect.Technique = Technique;
 
-            D3DDevice.Instance.Device.VertexDeclaration = Vertex.PositionColoredTexturedNormal_Declaration;
+            D3DDevice.Instance.Device.VertexDeclaration = Vertex.PositionColoredTexturedNormalDeclaration;
             D3DDevice.Instance.Device.SetStreamSource(0, vertexBuffer, 0);
             var oldIndex = D3DDevice.Instance.Device.Indices;
             D3DDevice.Instance.Device.Indices = indexBuffer;
 
             //Render con shader
-            renderWithFill(D3DDevice.Instance.Device.RenderState.FillMode);
+            RenderWithFill(D3DDevice.Instance.Device.RenderState.FillMode);
 
             if (RenderEdges)
             {
-                if (Texture == null) Effect.Technique = TGCShaders.T_POSITION_TEXTURED;
-                else Effect.Technique = TGCShaders.T_POSITION_COLORED;
+                if (Texture == null)
+                {
+                    Effect.Technique = TGCShaders.T_POSITION_TEXTURED;
+                }
+                else
+                {
+                    Effect.Technique = TGCShaders.T_POSITION_COLORED;
+                }
 
-                renderWithFill(FillMode.WireFrame);
+                RenderWithFill(FillMode.WireFrame);
             }
 
             //Desactivar AlphaBlend
-            resetAlphaBlend();
+            ResetAlphaBlend();
 
             D3DDevice.Instance.Device.Indices = oldIndex;
         }
 
-        protected void renderWithFill(FillMode fillmode)
+        protected void RenderWithFill(FillMode fillmode)
         {
             var old = D3DDevice.Instance.Device.RenderState.FillMode;
             D3DDevice.Instance.Device.RenderState.FillMode = fillmode;
@@ -678,7 +790,7 @@ namespace TGC.Core.Geometry
             Effect.Begin(0);
             Effect.BeginPass(0);
             D3DDevice.Instance.Device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, VertexCount, 0,
-                triangleCount);
+                TriangleCount);
             Effect.EndPass();
             Effect.End();
             D3DDevice.Instance.Device.RenderState.FillMode = old;
@@ -687,7 +799,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Activar AlphaBlending, si corresponde
         /// </summary>
-        protected void activateAlphaBlend()
+        protected void ActivateAlphaBlend()
         {
             if (AlphaBlendEnable)
             {
@@ -699,7 +811,7 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Desactivar AlphaBlending
         /// </summary>
-        protected void resetAlphaBlend()
+        protected void ResetAlphaBlend()
         {
             D3DDevice.Instance.Device.RenderState.AlphaTestEnable = false;
             D3DDevice.Instance.Device.RenderState.AlphaBlendEnable = false;
@@ -712,14 +824,21 @@ namespace TGC.Core.Geometry
         {
             if (Texture != null)
             {
-                Texture.dispose();
+                Texture.Dispose();
                 Texture = null;
             }
 
-            if (vertexBuffer != null && !vertexBuffer.Disposed) vertexBuffer.Dispose();
-            if (indexBuffer != null && !indexBuffer.Disposed) indexBuffer.Dispose();
+            if (vertexBuffer != null && !vertexBuffer.Disposed)
+            {
+                vertexBuffer.Dispose();
+            }
 
-            boundingSphere.Dispose();
+            if (indexBuffer != null && !indexBuffer.Disposed)
+            {
+                indexBuffer.Dispose();
+            }
+
+            BoundingSphere.Dispose();
         }
 
         #endregion RENDER & DISPOSE
@@ -745,7 +864,7 @@ namespace TGC.Core.Geometry
             translation.Y += y;
             translation.Z += z;
 
-            updateBoundingVolume();
+            UpdateBoundingVolume();
         }
 
         /// <summary>
@@ -807,297 +926,11 @@ namespace TGC.Core.Geometry
         /// <summary>
         ///     Actualiza el BoundingSphere de la esfera
         /// </summary>
-        protected virtual void updateBoundingVolume()
+        protected virtual void UpdateBoundingVolume()
         {
             BoundingSphere.setValues(Position, Radius);
         }
 
         #endregion TRANSFORMATIONS
-
-        /// <summary>
-        ///     Crear un nuevo TgcSphere igual a este
-        /// </summary>
-        /// <returns>Sphere clonado</returns>
-        public virtual TGCSphere clone()
-        {
-            var cloneSphere = new TGCSphere(radius, Color, translation);
-
-            if (Texture != null) cloneSphere.setTexture(Texture.Clone());
-
-            cloneSphere.AutoTransformEnable = AutoTransformEnable;
-            cloneSphere.Transform = Transform;
-            cloneSphere.Rotation = Rotation;
-            cloneSphere.AlphaBlendEnable = AlphaBlendEnable;
-            cloneSphere.uvOffset = uvOffset;
-
-            cloneSphere.updateValues();
-
-            return cloneSphere;
-        }
-
-        /// <summary>
-        ///     Convierte el TgcSphere en un TgcMesh
-        /// </summary>
-        /// <param name="meshName">Nombre de la malla que se va a crear</param>
-        public TgcMesh toMesh(string meshName)
-        {
-            //Obtener matriz para transformar vertices
-            if (AutoTransformEnable)
-            {
-                Transform = TGCMatrix.Scaling(radius, radius, radius) *
-                            TGCMatrix.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) *
-                            TGCMatrix.Translation(translation);
-            }
-
-            return TgcMesh.FromTGCSphere(meshName, Texture, indices, vertices, Transform, AlphaBlendEnable);
-        }
-
-        /// <remarks> http://gamedev.stackexchange.com/questions/31308/algorithm-for-creating-spheres David Lively</remarks>
-        public static class GeometryProvider
-        {
-            /// <summary> Divide cada triangulo en cuatro.</summary>
-            /// <remarks>
-            ///     i0
-            ///     /  \
-            ///     m02-m01
-            ///     /  \ /  \
-            ///     i2---m12---i1
-            /// </remarks>
-            /// <param name="vectors"></param>
-            /// <param name="indices"></param>
-            public static void Subdivide(List<TGCVector3> vectors, List<int> indices)
-            {
-                var midpointIndices = new Dictionary<string, int>();
-
-                var newIndices = new List<int>(indices.Count * 4);
-
-                for (var i = 0; i < indices.Count - 2; i += 3)
-                {
-                    var i0 = indices[i];
-                    var i1 = indices[i + 1];
-                    var i2 = indices[i + 2];
-
-                    var m01 = GetMidpointIndex(midpointIndices, vectors, i0, i1);
-                    var m12 = GetMidpointIndex(midpointIndices, vectors, i1, i2);
-                    var m02 = GetMidpointIndex(midpointIndices, vectors, i2, i0);
-
-                    newIndices.AddRange(
-                        new[]
-                        {
-                        i0, m01, m02
-                        ,
-                        i1, m12, m01
-                        ,
-                        i2, m02, m12
-                        ,
-                        m02, m01, m12
-                        }
-                        );
-                }
-
-                indices.Clear();
-                indices.AddRange(newIndices);
-            }
-
-            /// <summary>
-            ///     Busca el indice del vertice que se encuentra entre los vertices i0 e i1, de no existir crea el vertice.
-            /// </summary>
-            /// <param name="midpointIndices"></param>
-            /// <param name="vertices"></param>
-            /// <param name="i0"></param>
-            /// <param name="i1"></param>
-            /// <returns></returns>
-            private static int GetMidpointIndex(Dictionary<string, int> midpointIndices, List<TGCVector3> vertices, int i0,
-                int i1)
-            {
-                var edgeKey = string.Format("{0}_{1}", Math.Min(i0, i1), Math.Max(i0, i1));
-
-                var midpointIndex = -1;
-
-                if (!midpointIndices.TryGetValue(edgeKey, out midpointIndex))
-                {
-                    var v0 = vertices[i0];
-                    var v1 = vertices[i1];
-
-                    var midpoint = (v0 + v1) * 0.5f;
-
-                    if (vertices.Contains(midpoint))
-                        midpointIndex = vertices.IndexOf(midpoint);
-                    else
-                    {
-                        midpointIndex = vertices.Count;
-                        vertices.Add(midpoint);
-                    }
-                }
-
-                return midpointIndex;
-            }
-
-            /// <summary>
-            ///     Retorna la posicion de los vertices y los indices de un cubo.
-            /// </summary>
-            /// <param name="vertices"></param>
-            /// <param name="indices"></param>
-            public static void Cube(List<TGCVector3> vertices, List<int> indices)
-            {
-                vertices.AddRange(new[]
-                {
-                new TGCVector3(-0.65f, -0.65f, -0.65f),
-                new TGCVector3(-0.65f, -0.65f, 0.65f),
-                new TGCVector3(-0.65f, 0.65f, -0.65f),
-                new TGCVector3(-0.65f, 0.65f, 0.65f),
-                new TGCVector3(0.65f, -0.65f, -0.65f),
-                new TGCVector3(0.65f, -0.65f, 0.65f),
-                new TGCVector3(0.65f, 0.65f, -0.65f),
-                new TGCVector3(0.65f, 0.65f, 0.65f)
-            });
-                indices.AddRange(new[]
-                {
-                0, 2, 6,
-                0, 6, 4,
-                7, 4, 6,
-                7, 5, 4,
-                7, 1, 5,
-                7, 3, 1,
-                0, 3, 2,
-                0, 1, 3,
-                0, 5, 1,
-                0, 4, 5,
-                7, 6, 2,
-                7, 2, 3
-            });
-            }
-
-            /// <summary>
-            ///     Retorna la posicion de los vertices y los indices de un icosaedro regular (Un d20)
-            /// </summary>
-            /// <param name="vertices"></param>
-            /// <param name="indices"></param>
-            public static void Icosahedron(List<TGCVector3> vertices, List<int> indices)
-            {
-                indices.AddRange(
-                    new[]
-                    {
-                    0, 4, 1,
-                    0, 9, 4,
-                    9, 5, 4,
-                    4, 5, 8,
-                    4, 8, 1,
-                    8, 10, 1,
-                    8, 3, 10,
-                    5, 3, 8,
-                    5, 2, 3,
-                    2, 7, 3,
-                    7, 10, 3,
-                    7, 6, 10,
-                    7, 11, 6,
-                    11, 0, 6,
-                    0, 1, 6,
-                    6, 1, 10,
-                    9, 0, 11,
-                    9, 11, 2,
-                    9, 2, 5,
-                    7, 2, 11
-                    });
-
-                for (var i = 0; i < indices.Count; i++) indices[i] += vertices.Count;
-
-                var X = 0.525731112119133606f;
-                var Z = 0.850650808352039932f;
-
-                vertices.AddRange(
-                    new[]
-                    {
-                    new TGCVector3(-X, 0f, Z),
-                    new TGCVector3(X, 0f, Z),
-                    new TGCVector3(-X, 0f, -Z),
-                    new TGCVector3(X, 0f, -Z),
-                    new TGCVector3(0f, Z, X),
-                    new TGCVector3(0f, Z, -X),
-                    new TGCVector3(0f, -Z, X),
-                    new TGCVector3(0f, -Z, -X),
-                    new TGCVector3(Z, X, 0f),
-                    new TGCVector3(-Z, X, 0f),
-                    new TGCVector3(Z, -X, 0f),
-                    new TGCVector3(-Z, -X, 0f)
-                    }
-                    );
-            }
-        }
-
-        public class Vertex
-        {
-            public static readonly VertexElement[] PositionColoredTexturedNormal_VertexElements =
-            {
-            new VertexElement(0, 0, DeclarationType.Float3,
-                DeclarationMethod.Default,
-                DeclarationUsage.Position, 0),
-            new VertexElement(0, 12, DeclarationType.Color,
-                DeclarationMethod.Default,
-                DeclarationUsage.Color, 0),
-            new VertexElement(0, 16, DeclarationType.Float2,
-                DeclarationMethod.Default,
-                DeclarationUsage.TextureCoordinate, 0),
-            new VertexElement(0, 24, DeclarationType.Float3,
-                DeclarationMethod.Default,
-                DeclarationUsage.Normal, 0),
-            VertexElement.VertexDeclarationEnd
-        };
-
-            public static VertexDeclaration PositionColoredTexturedNormal_Declaration =
-                new VertexDeclaration(D3DDevice.Instance.Device, PositionColoredTexturedNormal_VertexElements);
-
-            public struct PositionColoredTexturedNormal
-            {
-                public float X;
-                public float Y;
-                public float Z;
-                public int Color;
-                public float Tu;
-                public float Tv;
-                public float NX;
-                public float NY;
-                public float NZ;
-
-                public PositionColoredTexturedNormal(TGCVector3 pos, int color, float u, float v, TGCVector3 normal)
-                    : this(pos.X, pos.Y, pos.Z, color, u, v, normal.X, normal.Y, normal.Z)
-                {
-                }
-
-                public PositionColoredTexturedNormal(float X, float Y, float Z, int color, float Tu1, float Tv1, float NX,
-                    float NY, float NZ)
-                {
-                    this.X = X;
-                    this.Y = Y;
-                    this.Z = Z;
-                    Color = color;
-                    Tu = Tu1;
-                    Tv = Tv1;
-                    this.NX = NX;
-                    this.NY = NY;
-                    this.NZ = NZ;
-                }
-
-                public TGCVector3 getPosition()
-                {
-                    return new TGCVector3(X, Y, Z);
-                }
-
-                public TGCVector3 getNormal()
-                {
-                    return new TGCVector3(NX, NY, NZ);
-                }
-
-                public static VertexFormats Format
-                {
-                    get { return VertexFormats.PositionNormal | VertexFormats.Texture1 | VertexFormats.Diffuse; }
-                }
-
-                public override string ToString()
-                {
-                    return getPosition().ToString();
-                }
-            }
-        }
     }
 }

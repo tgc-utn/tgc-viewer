@@ -50,7 +50,7 @@ namespace TGC.Examples.Collision
         public override void Init()
         {
             //Cargar suelo
-            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg");
+            var texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + "Texturas\\granito.jpg");
             suelo = new TgcPlane(new TGCVector3(-5000, 0, -5000), new TGCVector3(10000, 0f, 10000), TgcPlane.Orientations.XZplane, texture);
 
             //Iniciarlizar PickingRay

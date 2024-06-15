@@ -13,7 +13,7 @@ namespace TGC.Examples.Optimization.Octree
     public class Octree
     {
         private readonly OctreeBuilder builder;
-        private List<TgcBoxDebug> debugOctreeBoxes;
+        private List<TGCBoxDebug> debugOctreeBoxes;
         private List<TgcMesh> modelos;
         private OctreeNode octreeRootNode;
         private TgcBoundingAxisAlignBox sceneBounds;

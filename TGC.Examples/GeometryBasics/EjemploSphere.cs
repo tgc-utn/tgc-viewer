@@ -99,11 +99,11 @@ namespace TGC.Examples.GeometryBasics
                 if (texturePath != currentTexture || !useTexture || (sphere.RenderEdges && sphere.Color != color))
                 {
                     currentTexture = texturePath;
-                    sphere.setColor(color);
-                    sphere.setTexture(TgcTexture.createTexture(D3DDevice.Instance.Device, currentTexture));
+                    sphere.SetColor(color);
+                    sphere.SetTexture(TGCTexture.CreateTexture(D3DDevice.Instance.Device, currentTexture));
                 }
             }
-            else sphere.setColor(color);
+            else sphere.SetColor(color);
 
             useTexture = bTexture;
 
@@ -123,7 +123,7 @@ namespace TGC.Examples.GeometryBasics
             sphere.UVTiling = tilingModifier.Value;
 
             //Actualizar valores en la caja.
-            sphere.updateValues();
+            sphere.UpdateValues();
         }
 
         public override void Render()

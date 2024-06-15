@@ -17,7 +17,7 @@ namespace TGC.Examples.Multiplayer
         private float acumulatedTime;
         private int mensaje;
         private Socket listener;
-        private TgcText2D text;
+        private TGCText2D text;
 
         public EjemploClient(string mediaDir, string shadersDir, TgcUserVars userVars, Panel modifiersPanel)
             : base(mediaDir, shadersDir, userVars, modifiersPanel)
@@ -31,9 +31,9 @@ namespace TGC.Examples.Multiplayer
         {
             BackgroundColor = Color.Black;
 
-            text = new TgcText2D();
+            text = new TGCText2D();
             text.Text = "";
-            text.Align = TgcText2D.TextAlign.RIGHT;
+            text.Align = TGCText2D.TextAlign.RIGHT;
             text.Position = new Point(50, 75);
             text.Size = new Size(300, 100);
             text.Color = Color.Green;
@@ -89,7 +89,7 @@ namespace TGC.Examples.Multiplayer
         {
             PreRender();
             DrawText.drawText("Este ejemplo solo es el Client, debe tener primero levantando un server...", 5, 50, Color.DarkCyan);
-            text.render();
+            text.Render();
             PostRender();
         }
 

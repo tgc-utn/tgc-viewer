@@ -45,7 +45,7 @@ namespace TGC.Examples.Collision
         public override void Init()
         {
             //Crear suelo
-            var texture = TgcTexture.createTexture(D3DDevice.Instance.Device,
+            var texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device,
                 MediaDir + "Texturas\\Quake\\quakeWall3.jpg");
             suelo = new TgcPlane(new TGCVector3(-500, 0, -500), new TGCVector3(1000, 0f, 1000), TgcPlane.Orientations.XZplane, texture);
 

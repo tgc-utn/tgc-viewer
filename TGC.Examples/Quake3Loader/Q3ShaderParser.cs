@@ -190,7 +190,7 @@ namespace TGC.Examples.Quake3Loader
                 {
                     //solo hay un mapa de bits
                     var tex = TextureLoader.FromFile(D3DDevice.Instance.Device, texpath);
-                    Textures.Add(new TgcTexture(Path.GetFileName(texpath), texpath, tex, false));
+                    Textures.Add(new TGCTexture(Path.GetFileName(texpath), texpath, tex, false));
                     AnimFreq = 0;
                 }
             }
@@ -208,7 +208,7 @@ namespace TGC.Examples.Quake3Loader
                     {
                         //solo hay un mapa de bits
                         var t = TextureLoader.FromFile(D3DDevice.Instance.Device, texpath);
-                        Textures.Add(new TgcTexture(Path.GetFileName(texpath), texpath, t, false));
+                        Textures.Add(new TGCTexture(Path.GetFileName(texpath), texpath, t, false));
                     }
                 }
             }
@@ -250,7 +250,7 @@ namespace TGC.Examples.Quake3Loader
 
         public bool DepthWriteOverride { get; set; }
 
-        public List<TgcTexture> Textures { get; set; } = new List<TgcTexture>();
+        public List<TGCTexture> Textures { get; set; } = new List<TGCTexture>();
 
         public float AnimTimeAcum { get; set; }
 

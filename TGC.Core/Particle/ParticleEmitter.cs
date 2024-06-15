@@ -37,7 +37,7 @@ namespace TGC.Core.Particle
 
         protected TGCVector3 speed;
 
-        protected TgcTexture texture;
+        protected TGCTexture texture;
         protected float tiempoAcumulado;
         protected VertexDeclaration vertexDeclaration;
 
@@ -76,7 +76,7 @@ namespace TGC.Core.Particle
             }
 
             //Cargo la textura que tendra cada particula
-            texture = TgcTexture.createTexture(D3DDevice.Instance.Device, texturePath);
+            texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, texturePath);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace TGC.Core.Particle
         /// <summary>
         ///     Textura utilizada
         /// </summary>
-        public TgcTexture Texture
+        public TGCTexture Texture
         {
             get { return texture; }
         }
@@ -176,8 +176,8 @@ namespace TGC.Core.Particle
         /// </summary>
         public void changeTexture(string texturePath)
         {
-            texture.dispose();
-            texture = TgcTexture.createTexture(D3DDevice.Instance.Device, texturePath);
+            texture.Dispose();
+            texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, texturePath);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace TGC.Core.Particle
         /// </summary>
         public void dispose()
         {
-            texture.dispose();
+            texture.Dispose();
             particlesAlive = null;
             particlesDead = null;
             particles = null;

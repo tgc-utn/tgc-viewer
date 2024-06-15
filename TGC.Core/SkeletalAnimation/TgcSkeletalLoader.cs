@@ -16,14 +16,14 @@ namespace TGC.Core.SkeletalAnimation
     /// </summary>
     public class TgcSkeletalLoader
     {
-        private readonly Dictionary<string, TgcTexture> texturesDict;
+        private readonly Dictionary<string, TGCTexture> texturesDict;
 
         /// <summary>
         ///     Crear un nuevo Loader
         /// </summary>
         public TgcSkeletalLoader()
         {
-            texturesDict = new Dictionary<string, TgcTexture>();
+            texturesDict = new Dictionary<string, TGCTexture>();
             MeshFactory = new DefaultSkeletalMeshFactory();
         }
 
@@ -468,7 +468,7 @@ namespace TGC.Core.SkeletalAnimation
             //Configurar Material y Textura para un solo SubSet
             var matAux = materialsArray[meshData.materialId];
             Material[] meshMaterials;
-            TgcTexture[] meshTextures;
+            TGCTexture[] meshTextures;
             if (matAux.subMaterials == null)
             {
                 meshMaterials = new[] { matAux.materialId };
@@ -485,7 +485,7 @@ namespace TGC.Core.SkeletalAnimation
 
                 //Cargar array de Materials y Texturas
                 meshMaterials = new Material[matAux.subMaterials.Length];
-                meshTextures = new TgcTexture[matAux.subMaterials.Length];
+                meshTextures = new TGCTexture[matAux.subMaterials.Length];
                 for (var m = 0; m < matAux.subMaterials.Length; m++)
                 {
                     meshMaterials[m] = matAux.subMaterials[m].materialId;
@@ -636,14 +636,14 @@ namespace TGC.Core.SkeletalAnimation
             if (materialData.fileName != null)
             {
                 //revisar que esa imagen no se haya cargado previamente
-                TgcTexture texture;
+                TGCTexture texture;
                 if (texturesDict.ContainsKey(materialData.fileName))
                 {
                     texture = texturesDict[materialData.fileName];
                 }
                 else
                 {
-                    texture = TgcTexture.createTexture(D3DDevice.Instance.Device, materialData.fileName,
+                    texture = TGCTexture.CreateTexture(D3DDevice.Instance.Device, materialData.fileName,
                         texturesPath + "\\" + materialData.fileName);
                     texturesDict[materialData.fileName] = texture;
                     //TODO usar para algo el OFFSET y el TILING
@@ -665,7 +665,7 @@ namespace TGC.Core.SkeletalAnimation
         {
             public Material materialId;
             public TgcSkeletalLoaderMaterialAux[] subMaterials;
-            public TgcTexture texture;
+            public TGCTexture texture;
         }
 
         #region Mesh FVF

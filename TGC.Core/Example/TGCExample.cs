@@ -1,6 +1,6 @@
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using System.Threading;
+using Microsoft.DirectX.Direct3D;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
@@ -13,32 +13,32 @@ using TGC.Core.Textures;
 namespace TGC.Core.Example
 {
     /// <summary>
-    /// Clase abstracta con las herramientas basicas para poder realizar un juego e interactuar con DirectX 9.
+    ///     Clase abstracta con las herramientas basicas para poder realizar un juego e interactuar con DirectX 9.
     /// </summary>
     public abstract class TGCExample
     {
         /// <summary>
-        /// Color por defecto que se usa para llenar la pantalla.
-        /// </summary>
-        private static readonly Color DefaultClearColor = Color.CornflowerBlue;
-
-        /// <summary>
-        /// FPS minimo para que un ejemplo, pero puede causar problemas con BulletSharp, revisar StepSimulation.
+        ///     FPS minimo para que un ejemplo, pero puede causar problemas con BulletSharp, revisar StepSimulation.
         /// </summary>
         protected const int FPS_30 = 30;
 
         /// <summary>
-        /// FPS deseado de obtener par aun ejemplo, deberia comportarse correctamente BulletSharp.
+        ///     FPS deseado de obtener par aun ejemplo, deberia comportarse correctamente BulletSharp.
         /// </summary>
         protected const int FPS_60 = 60;
 
         /// <summary>
-        /// FPS sobre lo esperado, pero puede causar problemas con BulletSharp, revisar StepSimulation.
+        ///     FPS sobre lo esperado, pero puede causar problemas con BulletSharp, revisar StepSimulation.
         /// </summary>
         protected const int FPS_120 = 120;
 
         /// <summary>
-        /// Crea un ejemplo con lo necesario para realizar un juego.
+        ///     Color por defecto que se usa para llenar la pantalla.
+        /// </summary>
+        private static readonly Color DefaultClearColor = Color.CornflowerBlue;
+
+        /// <summary>
+        ///     Crea un ejemplo con lo necesario para realizar un juego.
         /// </summary>
         /// <param name="mediaDir">Ruta donde estan los Media.</param>
         /// <param name="shadersDir">Ruta donde estan los Shaders.</param>
@@ -57,8 +57,8 @@ namespace TGC.Core.Example
             Camera = new TgcCamera();
             Timer = new HighResolutionTimer();
             Frustum = new TgcFrustum();
-            //DirectSound = new TgcDirectSound(); Por ahora lo carga el Model
-            DrawText = new TgcText2D();
+            //DirectSound = new TGCDirectSound(); Por ahora lo carga el Model
+            DrawText = new TGCText2D();
             //Input = new TgcD3dInput(); Por ahora lo carga el Model
             BackgroundColor = DefaultClearColor;
 
@@ -68,120 +68,121 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Color de fondo del ejemplo.
+        ///     Color de fondo del ejemplo.
         /// </summary>
         public Color BackgroundColor { get; set; }
 
         /// <summary>
-        /// Tiempo en segundos transcurridos desde el ultimo frame.
+        ///     Tiempo en segundos transcurridos desde el ultimo frame.
         /// </summary>
         public float ElapsedTime { get; set; }
 
         /// <summary>
-        /// Tiempo que paso desde el ultimo render.
+        ///     Tiempo que paso desde el ultimo render.
         /// </summary>
         public float LastRenderTime { get; set; }
 
         /// <summary>
-        /// Tiempo que paso desde el ultimo update.
+        ///     Tiempo que paso desde el ultimo update.
         /// </summary>
         public float LastUpdateTime { get; set; }
 
         /// <summary>
-        /// Habilita/Deshabilita el render loop a intervalo constante.
+        ///     Habilita/Deshabilita el render loop a intervalo constante.
         /// </summary>
         public bool FixedTickEnable { get; set; }
 
         /// <summary>
-        /// Activa o desactiva el contador de frames por segundo.
+        ///     Activa o desactiva el contador de frames por segundo.
         /// </summary>
         public bool FPSText { get; set; }
 
         /// <summary>
-        /// Tiempo que va a pasar entre render = 1/fps deseados.
+        ///     Tiempo que va a pasar entre render = 1/fps deseados.
         /// </summary>
         public float TimeBetweenRenders { get; set; }
 
         /// <summary>
-        /// Tiempo que va a pasar entre updates = 1/fps deseados.
+        ///     Tiempo que va a pasar entre updates = 1/fps deseados.
         /// </summary>
         public float TimeBetweenUpdates { get; set; }
 
         /// <summary>
-        /// Habilita/Deshabilita el dibujado de los ejes cartesianos.
+        ///     Habilita/Deshabilita el dibujado de los ejes cartesianos.
         /// </summary>
         public bool AxisLinesEnable { get; set; }
 
         /// <summary>
-        /// Utilidad para visualizar los ejes cartesianos.
+        ///     Utilidad para visualizar los ejes cartesianos.
         /// </summary>
         public TgcAxisLines AxisLines { get; set; }
 
         /// <summary>
-        /// Categoria a la que pertenece el ejemplo.
-        /// Influye en donde se va a haber en el arbol de la derecha de la pantalla.
+        ///     Categoria a la que pertenece el ejemplo.
+        ///     Influye en donde se va a haber en el arbol de la derecha de la pantalla.
         /// </summary>
         public string Category { get; set; }
 
         /// <summary>
-        /// Completar nombre del grupo en formato Grupo NN.
+        ///     Completar nombre del grupo en formato Grupo NN.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Completar con la descripcion del TP.
+        ///     Completar con la descripcion del TP.
         /// </summary>
         public string Description { get; set; }
 
         /// <summary>
-        /// Path de la carpeta Media que contiene el material de los ejemplos, como texturas, modelos 3D, sonido, etc.
+        ///     Path de la carpeta Media que contiene el material de los ejemplos, como texturas, modelos 3D, sonido, etc.
         /// </summary>
         public string MediaDir { get; set; }
 
         /// <summary>
-        /// Path de la carpeta Shaders que contiene todo los shaders genericos.
+        ///     Path de la carpeta Shaders que contiene todo los shaders genericos.
         /// </summary>
         public string ShadersDir { get; set; }
 
         /// <summary>
-        /// Camara que esta utilizando el ejemplo.
+        ///     Camara que esta utilizando el ejemplo.
         /// </summary>
         public TgcCamera Camera { get; set; }
 
         /// <summary>
-        /// Temporizador del juego de alta resolución.
+        ///     Temporizador del juego de alta resolución.
         /// </summary>
         private HighResolutionTimer Timer { get; }
 
         /// <summary>
-        /// La región que puede ser vista y renderizada por una cámara.
+        ///     La región que puede ser vista y renderizada por una cámara.
         /// </summary>
         public TgcFrustum Frustum { get; set; }
 
         /// <summary>
-        /// Herramienta para manipular el Device de DirectSound.
+        ///     Herramienta para manipular el Device de DirectSound.
         /// </summary>
-        public TgcDirectSound DirectSound { get; set; }
+        public TGCDirectSound DirectSound { get; set; }
 
         /// <summary>
-        /// Herramienta para poder dibujar texto en la pantalla.
+        ///     Herramienta para poder dibujar texto en la pantalla.
         /// </summary>
-        public TgcText2D DrawText { get; set; }
+        public TGCText2D DrawText { get; set; }
 
         /// <summary>
-        /// Herramienta para el manejo del Input.
+        ///     Herramienta para el manejo del Input.
         /// </summary>
         public TgcD3dInput Input { get; set; }
 
         /// <summary>
-        /// Se llama cuando el ejemplo es elegido para ejecutar.
-        /// Inicializar todos los recursos y configuraciones que se van a utilizar.
+        ///     Se llama cuando el ejemplo es elegido para ejecutar.
+        ///     Inicializar todos los recursos y configuraciones que se van a utilizar.
         /// </summary>
         public abstract void Init();
 
         /// <summary>
-        /// Se ejecuta una vez por ciclo del render loop, decide si corre en intervalos constantes o sin limite basado en FixedTickEnable.
-        /// Internamente ejecuta update y render.
+        ///     Se ejecuta una vez por ciclo del render loop, decide si corre en intervalos constantes o sin limite basado en
+        ///     FixedTickEnable.
+        ///     Internamente ejecuta update y render.
         /// </summary>
         public virtual void Tick()
         {
@@ -196,7 +197,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Tick sin limite por FPS.
+        ///     Tick sin limite por FPS.
         /// </summary>
         protected virtual void UnlimitedTick()
         {
@@ -210,7 +211,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Tick con los FPS constantes, el limite esta puesto por TimeBetweenUpdate.
+        ///     Tick con los FPS constantes, el limite esta puesto por TimeBetweenUpdate.
         /// </summary>
         protected virtual void FixedTick()
         {
@@ -240,18 +241,18 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Update de mi modelo.
+        ///     Update de mi modelo.
         /// </summary>
         public abstract void Update();
 
         /// <summary>
-        /// Se llama para renderizar cada cuadro del ejemplo.
+        ///     Se llama para renderizar cada cuadro del ejemplo.
         /// </summary>
         public abstract void Render();
 
         /// <summary>
-        /// Metodos a ejecutar antes del update.
-        /// Se actualiza el Clock y el Input.
+        ///     Metodos a ejecutar antes del update.
+        ///     Se actualiza el Clock y el Input.
         /// </summary>
         protected virtual void PreUpdate()
         {
@@ -262,7 +263,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Metodos a ejecutar despues del update, se actualizan la Matriz de View y el Frustum de la Camara.
+        ///     Metodos a ejecutar despues del update, se actualizan la Matriz de View y el Frustum de la Camara.
         /// </summary>
         protected virtual void PostUpdate()
         {
@@ -271,7 +272,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Metodos a ejecutar antes del render.
+        ///     Metodos a ejecutar antes del render.
         /// </summary>
         protected virtual void PreRender()
         {
@@ -280,7 +281,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Metodos a ejecutar cuando termino el render.
+        ///     Metodos a ejecutar cuando termino el render.
         /// </summary>
         protected virtual void PostRender()
         {
@@ -290,7 +291,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Actualiza el elapsedTime, importante invocar en cada update loop. Para el loop unlimited.
+        ///     Actualiza el elapsedTime, importante invocar en cada update loop. Para el loop unlimited.
         /// </summary>
         protected virtual void UnlimitedUpdateClock()
         {
@@ -302,7 +303,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Actualiza el elapsedTime, importante invocar en cada update loop. Para el loop fixed.
+        ///     Actualiza el elapsedTime, importante invocar en cada update loop. Para el loop fixed.
         /// </summary>
         protected virtual void FixedUpdateClock()
         {
@@ -314,7 +315,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Actualiza el Input.
+        ///     Actualiza el Input.
         /// </summary>
         protected void UpdateInput()
         {
@@ -322,7 +323,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Actualiza la Camara.
+        ///     Actualiza la Camara.
         /// </summary>
         protected void UpdateView()
         {
@@ -331,15 +332,16 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Actualiza el Frustum.
+        ///     Actualiza el Frustum.
         /// </summary>
         protected void UpdateFrustum()
         {
-            Frustum.updateVolume(TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.View), TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.Projection));
+            Frustum.updateVolume(TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.View),
+                TGCMatrix.FromMatrix(D3DDevice.Instance.Device.Transform.Projection));
         }
 
         /// <summary>
-        /// Actualiza el Listener3D.
+        ///     Actualiza el Listener3D.
         /// </summary>
         protected void UpdateSounds3D()
         {
@@ -347,7 +349,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Limpia la pantalla y inicia la escena 3D.
+        ///     Limpia la pantalla y inicia la escena 3D.
         /// </summary>
         protected void BeginRenderScene()
         {
@@ -356,7 +358,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Inicia la escena 3D.
+        ///     Inicia la escena 3D.
         /// </summary>
         public void BeginScene()
         {
@@ -364,7 +366,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Limpia las texturas.
+        ///     Limpia las texturas.
         /// </summary>
         protected void ClearTextures()
         {
@@ -372,7 +374,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Dibuja el indicador de los ejes cartesianos.
+        ///     Dibuja el indicador de los ejes cartesianos.
         /// </summary>
         protected void RenderAxis()
         {
@@ -383,7 +385,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Dibuja el contador de FPS si esta activo.
+        ///     Dibuja el contador de FPS si esta activo.
         /// </summary>
         protected void RenderFPS()
         {
@@ -394,7 +396,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Finaliza y presenta (se debe hacer al final del render) la escena 3D.
+        ///     Finaliza y presenta (se debe hacer al final del render) la escena 3D.
         /// </summary>
         protected void EndRenderScene()
         {
@@ -403,7 +405,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Finaliza una escena que se inicio con un BeginScene().
+        ///     Finaliza una escena que se inicio con un BeginScene().
         /// </summary>
         private static void EndScene()
         {
@@ -411,7 +413,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Valores default del Direct3D Device.
+        ///     Valores default del Direct3D Device.
         /// </summary>
         public void DeviceDefaultValues()
         {
@@ -419,7 +421,7 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Reinicia el timer para un nuevo juego.
+        ///     Reinicia el timer para un nuevo juego.
         /// </summary>
         public void ResetTimer()
         {
@@ -430,14 +432,14 @@ namespace TGC.Core.Example
         }
 
         /// <summary>
-        /// Se llama cuando el ejemplo es cerrado.
-        /// Liberar todos los recursos utilizados.
-        /// OBLIGATORIAMENTE!!!!
+        ///     Se llama cuando el ejemplo es cerrado.
+        ///     Liberar todos los recursos utilizados.
+        ///     OBLIGATORIAMENTE!!!!
         /// </summary>
         public abstract void Dispose();
 
         /// <summary>
-        /// Vuelve la configuracion de Render y otras cosas a la configuracion inicial.
+        ///     Vuelve la configuracion de render y otras cosas a la configuracion inicial.
         /// </summary>
         public virtual void ResetDefaultConfig()
         {

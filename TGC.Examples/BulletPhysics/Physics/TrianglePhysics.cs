@@ -103,7 +103,7 @@ namespace TGC.Examples.BulletPhysics.Physics
             #region Terreno
 
             //Creamos el RigidBody basico del Terreno
-            var meshRigidBody = BulletRigidBodyFactory.Instance.CreateSurfaceFromHeighMap(triangleDataVB);
+            var meshRigidBody = BulletRigidBodyFactory.Instance.CreateSurfaceFromHeightMap(triangleDataVB);
 
             //Agregamos algo de friccion al RigidBody ya que este va a interactuar con objetos moviles
             //del World
@@ -124,13 +124,13 @@ namespace TGC.Examples.BulletPhysics.Physics
             dynamicsWorld.AddRigidBody(pokeball);
 
             //Textura de pokebola
-            var texturePokeball = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\pokeball.jpg");
+            var texturePokeball = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\pokeball.jpg");
 
             //Se crea una esfera de tamaño 1 para escalarla luego (en render)
             sphereMesh = new TGCSphere(1, texturePokeball, TGCVector3.Empty);
 
             //Tgc no crea el vertex buffer hasta invocar a update values.
-            sphereMesh.updateValues();
+            sphereMesh.UpdateValues();
 
             #endregion Esfera
 
@@ -150,7 +150,7 @@ namespace TGC.Examples.BulletPhysics.Physics
             //Le cambiamos la textura para diferenciarlo un poco
             personaje.changeDiffuseMaps(new[]
             {
-                TgcTexture.createTexture(D3DDevice.Instance.Device,
+                TGCTexture.CreateTexture(D3DDevice.Instance.Device,
                     MediaDir + "SkeletalAnimations\\Robot\\Textures\\uvwGreen.jpg")
             });
 
@@ -164,7 +164,7 @@ namespace TGC.Examples.BulletPhysics.Physics
             var sizeBox = 20f;
 
             //Textura de caja
-            var textureBox = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"MeshCreator\Textures\Madera\cajaMadera2.jpg");
+            var textureBox = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + @"MeshCreator\Textures\Madera\cajaMadera2.jpg");
 
             box = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(sizeBox, sizeBox, sizeBox), 0, new TGCVector3(0, 12, 0), 0, 0, 0, 0.5f, true);
             dynamicsWorld.AddRigidBody(box);
@@ -191,7 +191,7 @@ namespace TGC.Examples.BulletPhysics.Physics
             #region Escalera
 
             var a = 0;
-            var textureStones = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\stones.bmp");
+            var textureStones = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\stones.bmp");
 
             //la altura de cualquier cubo que quiera subir una capsula debe ser menor a la mitad del radio
             var size = new TGCVector3(50, 4, 20);
@@ -213,7 +213,7 @@ namespace TGC.Examples.BulletPhysics.Physics
 
             #region Plataforma
 
-            textureStones = TgcTexture.createTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\cobblestone_quad.jpg");
+            textureStones = TGCTexture.CreateTexture(D3DDevice.Instance.Device, MediaDir + @"Texturas\cobblestone_quad.jpg");
             rigidBodyPlataforma = BulletRigidBodyFactory.Instance.CreateBox(new TGCVector3(50f, 15f, 50f), 0, new TGCVector3(200, 42.5f, 315), 0, 0, 0, 0.5f, true);
             dynamicsWorld.AddRigidBody(rigidBodyPlataforma);
             plataforma = TGCBox.fromSize(new TGCVector3(50f, 15f, 50f), textureStones);
