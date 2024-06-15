@@ -28,15 +28,15 @@ namespace TGC.Core.Geometry
 
         public struct PositionColoredTexturedNormal
         {
-            public float X;
-            public float Y;
-            public float Z;
-            public int Color;
-            public float Tu;
-            public float Tv;
-            public float NX;
-            public float NY;
-            public float NZ;
+            public float X { get; set; }
+            public float Y { get; set; }
+            public float Z { get; set; }
+            public int Color { get; set; }
+            public float Tu { get; set; }
+            public float Tv { get; set; }
+            public float NX { get; set; }
+            public float NY { get; set; }
+            public float NZ { get; set; }
 
             public PositionColoredTexturedNormal(TGCVector3 pos, int color, float u, float v, TGCVector3 normal)
                 : this(pos.X, pos.Y, pos.Z, color, u, v, normal.X, normal.Y, normal.Z)
