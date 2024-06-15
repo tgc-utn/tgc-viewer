@@ -1,5 +1,5 @@
-using Microsoft.DirectX.Direct3D;
 using System.Drawing;
+using Microsoft.DirectX.Direct3D;
 using TGC.Core.Direct3D;
 
 namespace TGC.Core.Fog
@@ -42,8 +42,8 @@ namespace TGC.Core.Fog
         /// </summary>
         public Color Color
         {
-            get { return color; }
-            set { color = value; }
+            get => color;
+            set => color = value;
         }
 
         /// <summary>
